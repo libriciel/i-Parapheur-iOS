@@ -13,4 +13,19 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#undef DEBUG_NO_SERVER_TRUST
+#define DEBUG_NO_SERVER_TRUST
+#define DEBUG_SERVER_HTTPS
+
+#ifdef DEBUG_NO_SERVER_TRUST
+
+#define DOWNLOAD_DOCUMENT_URL_PATTERN @"http://%@/alfresco/s%@?alf_ticket=%@"
+#define AUTH_API_URL_PATTERN @"http://%@/alfresco/s/parapheur/api/%@?alf_ticket=%@"
+#define API_URL_PATTERN @"http://%@/alfresco/s/parapheur/api/%@"
+
+#else
+
+#define DOWNLOAD_DOCUMENT_URL_PATTERN @"https://m.%@%@?alf_ticket=%@"
+#define AUTH_API_URL_PATTERN @"https://m.%@/parapheur/api/%@?alf_ticket=%@"
+#define API_URL_PATTERN @"https://m.%@/parapheur/api/%@"
+
+#endif
