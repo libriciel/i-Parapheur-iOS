@@ -20,9 +20,7 @@
 
 -(void) awakeFromNib {
     _retardBadge = [CustomBadge customBadgeWithString:@""];
-    
-    //[self addSubview:_lateBadge];
-    [_retardBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
+
     [_retardPlaceHolder addSubview:_retardBadge];
     [_filenameLabel setLineBreakMode:NSLineBreakByWordWrapping | NSLineBreakByTruncatingTail];
     

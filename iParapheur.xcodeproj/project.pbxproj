@@ -87,7 +87,6 @@
 		B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */; };
 		B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */; };
 		B4E5ED0A153AF87800BD514D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4E5ED09153AF87800BD514D /* SystemConfiguration.framework */; };
-		B4E62A8815889B78003445F4 /* icone_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E62A8715889B78003445F4 /* icone_ipad.png */; };
 		B4FF33D515473325006F7BF3 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C215473325006F7BF3 /* ReaderConstants.m */; };
 		B4FF33D615473325006F7BF3 /* ReaderDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C415473325006F7BF3 /* ReaderDocument.m */; };
 		B4FF33D715473325006F7BF3 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C615473325006F7BF3 /* ReaderViewController.m */; };
@@ -271,7 +270,6 @@
 		B4E5ECF9153AF72200BD514D /* ADLParapheurWallDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLParapheurWallDelegateProtocol.h; sourceTree = "<group>"; };
 		B4E5ECFA153AF72200BD514D /* ADLMacroes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLMacroes.h; sourceTree = "<group>"; };
 		B4E5ED09153AF87800BD514D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		B4E62A8715889B78003445F4 /* icone_ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icone_ipad.png; sourceTree = "<group>"; };
 		B4FF33C115473325006F7BF3 /* ReaderConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderConstants.h; sourceTree = "<group>"; };
 		B4FF33C215473325006F7BF3 /* ReaderConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderConstants.m; sourceTree = "<group>"; };
 		B4FF33C315473325006F7BF3 /* ReaderDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocument.h; sourceTree = "<group>"; };
@@ -643,7 +641,6 @@
 				B4A221B9162AA86900474A18 /* rejeter@2x.png */,
 				B4A221B1162AA6CF00474A18 /* viser.png */,
 				B4A221B0162AA6CF00474A18 /* viser@2x.png */,
-				B4E62A8715889B78003445F4 /* icone_ipad.png */,
 				B41B946C156227A6004D57A1 /* rounded-checkmark.png */,
 				B41B946D156227A6004D57A1 /* rounded-checkmark@2x.png */,
 				B41B946E156227A6004D57A1 /* rounded-fail.png */,
@@ -753,7 +750,6 @@
 				B41B9471156227A6004D57A1 /* rounded-checkmark@2x.png in Resources */,
 				B41B9472156227A6004D57A1 /* rounded-fail.png in Resources */,
 				B41B9473156227A6004D57A1 /* rounded-fail@2x.png in Resources */,
-				B4E62A8815889B78003445F4 /* icone_ipad.png in Resources */,
 				B429A96415B5BF7A003B8BF9 /* Settings.bundle in Resources */,
 				B41B60AD15F09D5300655827 /* ip-mailsec.jpg in Resources */,
 				B41B60AE15F09D5300655827 /* ip-signature.jpg in Resources */,

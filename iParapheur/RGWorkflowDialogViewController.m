@@ -52,6 +52,7 @@
 #import "ADLPasswordAlertView.h"
 #import "ADLRequester.h"
 #import "PrivateKey.h"
+#import "LGViewHUD.h"
 #import <NSData+Base64/NSData+Base64.h>
 #import <AJNotificationView/AJNotificationView.h>
 
@@ -64,8 +65,9 @@
 @synthesize annotationPublique;
 @synthesize finishButton;
 @synthesize action;
-@synthesize dossierRef;
+@synthesize dossiersRef;
 @synthesize certificateLabel = _certificateLabel, certificatesTableView = _certificatesTableView;
+@synthesize p12password;
 
 @synthesize pkeys = _pkeys;
 
@@ -130,7 +132,7 @@
 
     NSMutableDictionary *args = [[NSMutableDictionary alloc]
                           initWithObjectsAndKeys:
-                          [NSArray arrayWithObjects:dossierRef, nil], @"dossiers",
+                          dossiersRef, @"dossiers",
                           [annotationPublique text], @"annotPub",
                           [annotationPrivee text], @"annotPriv",
                           [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
@@ -180,23 +182,106 @@
     [finishButton release];
     [_certificateLabel release];
     [_certificatesTableView release];
+    [action release];
+    [dossiersRef release];
+    [_pkeys release];
+    [p12password release];
     [super dealloc];
 }
 
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
-    
-    [self dismissModalViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+    NSLog(@"MIKAF %@", answer);
+    if ([[answer objectForKey:@"_req"] isEqualToString:@"signature"]) {
+        LGViewHUD *hud = [LGViewHUD defaultHUD];
+        [hud hideWithAnimation:HUDAnimationHideFadeOut];
+
+        [self dismissModalViewControllerAnimated:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+    }
+    else if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
+        // get selected dossiers for some sign info action :)
+
+        NSMutableArray *hashes = [[NSMutableArray alloc] init];
+        NSMutableArray *dossiers = [[NSMutableArray alloc] init];
+        NSMutableArray *signatures = [[NSMutableArray alloc] init];
+
+        for (NSString *dossier in self.dossiersRef) {
+            NSDictionary *signInfo = [answer objectForKey:dossier];
+
+            if ([[signInfo objectForKey:@"format"] isEqualToString:@"CMS"]) {
+                [dossiers addObject:dossier];
+                [hashes addObject:[signInfo objectForKey:@"hash"]];
+            }
+
+        }
+
+
+        ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
+
+        PrivateKey *pkey = _currentPKey;
+
+        NSError *error = nil;
+
+
+        for (NSString *hash in hashes) {
+            NSData *hash_data = [keystore bytesFromHexString:hash];
+            error = nil;
+            NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
+                                       withPassword:[self p12password]
+                                            andData:hash_data
+                                              error:&error];
+
+            if (signature == nil && error != nil) {
+                [AJNotificationView showNoticeInView:self.view
+                                                type:AJNotificationTypeRed
+                                               title:[NSString stringWithFormat:@"Une erreur s'est produite lors de la signature"]
+                                     linedBackground:AJLinedBackgroundTypeStatic
+                                           hideAfter:2.5f];
+                NSLog(@"%@", error);
+                break;
+            }
+            else {
+                NSString *b64EncodedSignature = [signature base64EncodedString];
+                [signatures addObject:b64EncodedSignature];
+            }
+
+        }
+
+        if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
+            NSMutableDictionary *args = [[NSMutableDictionary alloc]
+                    initWithObjectsAndKeys:
+                            dossiers, @"dossiers",
+                            [annotationPublique text], @"annotPub",
+                            [annotationPrivee text], @"annotPriv",
+                            [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
+                            signatures, @"signatures",
+                            nil];
+
+            NSLog(@"%@", args);
+            ADLRequester *requester = [ADLRequester sharedRequester];
+
+
+            LGViewHUD *hud = [LGViewHUD defaultHUD];
+            hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
+            hud.topText=@"";
+            hud.bottomText=@"Chargement ...";
+            hud.activityIndicatorOn=YES;
+            [hud showInView:self.view];
+
+            [requester request:@"signature" andArgs:args delegate:self];
+
+        }
+    }
 
 }
 
--(void) didEndWithUnAuthorizedAccess {
-    
-}
-
--(void) didEndWithUnReachableNetwork {
-    
-}
+//-(void) didEndWithUnAuthorizedAccess {
+//
+//}
+//
+//-(void) didEndWithUnReachableNetwork {
+//
+//}
 
 #pragma mark - UITableView Datasource
 
@@ -230,7 +315,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // we selected a private key now fetching it
     
-    _currentPKey = [_pkeys objectAtIndex:[indexPath row]];
+    _currentPKey = [_pkeys objectAtIndex:(NSUInteger)[indexPath row]];
     
     // now we have a pkey we can activate Sign Button
     [finishButton setEnabled:YES];
@@ -241,39 +326,13 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         UITextField *passwordTextField = [alertView textFieldAtIndex:0];
-        
-        ADLRequester *requester = [ADLRequester sharedRequester];
+        [self setP12password:[passwordTextField text]];
 
-        NSData *documentPrincipal = [requester downloadDocumentNow:[[ADLSingletonState sharedSingletonState] currentPrincipalDocPath]];
-        ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-        PrivateKey *pkey = _currentPKey;
-        NSError *error = nil;
-        
-        NSData *signature = [keystore PKCS7Sign:[pkey p12Filename] withPassword:[passwordTextField text] andData:documentPrincipal error:&error];
-        
-        if (signature == nil && error != nil) {
-            [AJNotificationView showNoticeInView:self.view
-                                            type:AJNotificationTypeRed
-                                           title:[NSString stringWithFormat:@"Une erreur s'est produite lors de la signature"]
-                                 linedBackground:AJLinedBackgroundTypeStatic
-                                       hideAfter:2.5f];
-            return;
-        }
-        
-        NSString *b64sign = [signature base64EncodedString];
-        
-        NSMutableDictionary *args = [[NSMutableDictionary alloc]
-                                     initWithObjectsAndKeys:
-                                     [NSArray arrayWithObjects:dossierRef, nil], @"dossiers",
-                                     [annotationPublique text], @"annotPub",
-                                     [annotationPrivee text], @"annotPriv",
-                                     [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
-                                     nil];
-        
-        [args setObject:[NSArray arrayWithObject:b64sign] forKey:@"signatures"];
-        
-        [requester request:@"signature" andArgs:args delegate:self];
-        
+        ADLRequester *requester = [ADLRequester sharedRequester];
+        NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[self dossiersRef], @"dossiers", nil];
+        [requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+
+
     }
 }
 

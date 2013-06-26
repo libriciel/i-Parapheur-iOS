@@ -52,6 +52,7 @@
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
+#import "RGWorkflowDialogViewController.h"
 
 @implementation RGDeskViewController
 
@@ -60,13 +61,14 @@
 @synthesize detailViewController;
 @synthesize loadMoreButton;
 @synthesize searchBar;
+@synthesize selectedFilesArray;
+@synthesize batchButton, signButton, cancelButton;
 
 
 #pragma mark - UIViewController delegate
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
-    
+
     _loading = NO;
     
     
@@ -102,12 +104,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-    
+
+    [self setToolbarItems:[NSArray arrayWithObjects: batchButton, nil]];
+
    // [[self navigationItem] setTitle:@"coucou"];
     currentPage = 0;
     filesArray = [[NSMutableArray alloc] init];
+    selectedFilesArray = [[NSMutableArray alloc] init];
     [self loadDossiersWithPage:currentPage];
     self.tableView.contentOffset = CGPointMake(0, self.searchBar.frame.size.height);
+    [self.navigationController setToolbarHidden:NO];
 }
 
 -(void)loadDossiersWithPage:(int)page {
@@ -145,10 +151,26 @@
     
 }
 
+#pragma mark Actions
 - (IBAction)loadNextResultsPage:(id)sender {
     [self loadDossiersWithPage:++currentPage]; 
 }
 
+- (IBAction)toggleMultipleSelection:(id)sender {
+
+    [self.tableView setAllowsMultipleSelection:!self.tableView.allowsMultipleSelection];
+
+    if (!self.tableView.allowsMultipleSelection) {
+        [selectedFilesArray removeAllObjects];
+        [self setToolbarItems:[NSArray arrayWithObjects:batchButton, nil] animated:YES];
+
+    }
+    else {
+        [[self signButton] setEnabled:NO];
+        [self setToolbarItems:[NSArray arrayWithObjects:signButton, cancelButton, nil] animated:YES];
+    }
+    [self.tableView reloadData];
+}
 
 
 #pragma mark - UITableViewDatasource
@@ -158,33 +180,44 @@
 
 -(UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"FileCell";
-    
+
     RGFileCell *cell = (RGFileCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
+
     if(cell == nil) {
         cell = [[[RGFileCell alloc] init] autorelease];
     }
-    
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    
-    NSDictionary *dossier = [filesArray objectAtIndex:[indexPath row]];
-    // NSLog(@"%@", [dossier objectForKey:@"titre"]);
-    
+
+
+    if ([tableView allowsMultipleSelection]) {
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [cell setSelected:NO];
+    }
+    else {
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    }
+
+    NSDictionary *dossier = [filesArray objectAtIndex:(NSUInteger)[indexPath row]];
+
+    if ([tableView allowsMultipleSelection] && [selectedFilesArray containsObject:[dossier objectForKey:@"dossierRef"]]) {
+        [cell setSelected:YES];
+        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    }
+
     [[cell filenameLabel] setText:[dossier objectForKey:@"titre"]];
     [[cell typeLabel] setText:[NSString stringWithFormat:@"%@ / %@", [dossier objectForKey:@"type"], [dossier objectForKey:@"sousType"]]];
-    
+
     NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
     if (dateLimite != nil) {
         ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
         //[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
         NSDate *dueDate = [formatter dateFromString:dateLimite];
-        
+
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         [outputFormatter setDateFormat:@"dd MMM"];
-        
+
         NSString *fdate = [[outputFormatter stringFromDate:dueDate] retain];
         [[cell retardBadge] setBadgeText:fdate];
-        [[cell retardBadge] autoBadgeSizeWithString: [NSString stringWithFormat:@" %@ ", fdate]];
+        [[cell retardBadge] autoBadgeSizeWithString: [NSString stringWithFormat:@"%@", fdate]];
         [[cell retardBadge] setHidden:NO];
         [fdate release];
         [formatter release];
@@ -194,16 +227,43 @@
     else {
         [[cell retardBadge] setHidden:YES];
     }
-    
+
     return cell;
 }
 
--(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *file = [[self filesArray] objectAtIndex:[indexPath row]];
-    NSString *dossierRef = [file objectForKey:@"dossierRef"];
-    [[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *file = [[self filesArray] objectAtIndex:(NSUInteger) [indexPath row]];
+    NSString *dossierRef = [file objectForKey:@"dossierRef"];
+
+    RGFileCell *cell = (RGFileCell*)[self tableView:tableView cellForRowAtIndexPath:indexPath];
+    if ([tableView allowsMultipleSelection]) {
+        if ([selectedFilesArray containsObject:dossierRef]) {
+            [tableView deselectRowAtIndexPath:indexPath animated:NO];
+            [selectedFilesArray removeObject:dossierRef];
+            [cell setAccessoryType:UITableViewCellAccessoryNone];
+
+        }
+        else {
+            [selectedFilesArray addObject:dossierRef];
+            [tableView deselectRowAtIndexPath:indexPath animated:NO];
+            [cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
+
+        }
+
+        if ([selectedFilesArray count] > 0) {
+            [[self signButton] setEnabled:YES];
+        }
+        else {
+            [[self signButton] setEnabled:NO];
+        }
+
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+        [[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
+    }
 }
 
 
@@ -354,12 +414,18 @@
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if (_filtersPopover != nil) {
-        [_filtersPopover dismissPopoverAnimated:NO];
+    if ([[segue identifier] isEqualToString:@"signature"]) {
+        [(RGWorkflowDialogViewController *)[segue destinationViewController] setDossiersRef:[self selectedFilesArray]];
+        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
     }
-    
-    _filtersPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
-    [_filtersPopover setDelegate:self];
+    else {
+        if (_filtersPopover != nil) {
+            [_filtersPopover dismissPopoverAnimated:NO];
+        }
+
+        _filtersPopover = [(UIStoryboardPopoverSegue *) segue popoverController];
+        [_filtersPopover setDelegate:self];
+    }
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
@@ -371,6 +437,14 @@
 
 - (void)dealloc {
     [loadMoreButton release];
+    [deskRef release];
+    [filesArray release];
+    [detailViewController release];
+    [searchBar release];
+    [selectedFilesArray release];
+    [batchButton release];
+    [signButton release];
+    [cancelButton release];
     [super dealloc];
 }
 - (void)viewDidUnload {

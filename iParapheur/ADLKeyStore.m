@@ -20,6 +20,191 @@
 @implementation ADLKeyStore
 @synthesize managedObjectContext;
 
+static int PKCS7_type_is_other(PKCS7* p7)
+{
+    int isOther=1;
+
+    int nid=OBJ_obj2nid(p7->type);
+
+    switch( nid )
+    {
+        case NID_pkcs7_data:
+        case NID_pkcs7_signed:
+        case NID_pkcs7_enveloped:
+        case NID_pkcs7_signedAndEnveloped:
+        case NID_pkcs7_digest:
+        case NID_pkcs7_encrypted:
+            isOther=0;
+            break;
+        default:
+            isOther=1;
+    }
+
+    return isOther;
+
+}
+
+static ASN1_OCTET_STRING *PKCS7_get_octet_string(PKCS7 *p7)
+{
+    if ( PKCS7_type_is_data(p7))
+        return p7->d.data;
+    if ( PKCS7_type_is_other(p7) && p7->d.other
+            && (p7->d.other->type == V_ASN1_OCTET_STRING))
+        return p7->d.other->value.octet_string;
+    return NULL;
+}
+
+static int adl_do_pkcs7_signed_attrib(PKCS7_SIGNER_INFO *si, unsigned char *md_data, unsigned int md_len)
+{
+
+
+    /* Add signing time if not already present */
+    if (!PKCS7_get_signed_attribute(si, NID_pkcs9_signingTime))
+    {
+        if (!PKCS7_add0_attrib_signing_time(si, NULL))
+        {
+            PKCS7err(PKCS7_F_DO_PKCS7_SIGNED_ATTRIB,
+            ERR_R_MALLOC_FAILURE);
+            return 0;
+        }
+    }
+
+    if (!PKCS7_add1_attrib_digest(si, md_data, md_len))
+    {
+        PKCS7err(PKCS7_F_DO_PKCS7_SIGNED_ATTRIB, ERR_R_MALLOC_FAILURE);
+        return 0;
+    }
+
+    /* Now sign the attributes */
+    if (!PKCS7_SIGNER_INFO_sign(si))
+        return 0;
+
+    return 1;
+}
+
+
+
+int ADL_PKCS7_dataFinal(PKCS7 *p7, BIO *bio, unsigned char md_data [], unsigned int md_len)
+{
+    int ret=0;
+    int i,j;
+    BIO *btmp;
+    PKCS7_SIGNER_INFO *si;
+    STACK_OF(X509_ATTRIBUTE) *sk;
+    STACK_OF(PKCS7_SIGNER_INFO) *si_sk=NULL;
+    ASN1_OCTET_STRING *os=NULL;
+
+    i=OBJ_obj2nid(p7->type);
+    p7->state=PKCS7_S_HEADER;
+
+    switch (i)
+    {
+        case NID_pkcs7_data:
+            os = p7->d.data;
+            break;
+        case NID_pkcs7_signedAndEnveloped:
+            /* XXXXXXXXXXXXXXXX */
+            si_sk=p7->d.signed_and_enveloped->signer_info;
+            os = p7->d.signed_and_enveloped->enc_data->enc_data;
+            if (!os)
+            {
+                os=M_ASN1_OCTET_STRING_new();
+                if (!os)
+                {
+                    PKCS7err(PKCS7_F_PKCS7_DATAFINAL,ERR_R_MALLOC_FAILURE);
+                    goto err;
+                }
+                p7->d.signed_and_enveloped->enc_data->enc_data=os;
+            }
+            break;
+        case NID_pkcs7_enveloped:
+            /* XXXXXXXXXXXXXXXX */
+            os = p7->d.enveloped->enc_data->enc_data;
+            if (!os)
+            {
+                os=M_ASN1_OCTET_STRING_new();
+                if (!os)
+                {
+                    PKCS7err(PKCS7_F_PKCS7_DATAFINAL,ERR_R_MALLOC_FAILURE);
+                    goto err;
+                }
+                p7->d.enveloped->enc_data->enc_data=os;
+            }
+            break;
+        case NID_pkcs7_signed:
+            si_sk=p7->d.sign->signer_info;
+            os=PKCS7_get_octet_string(p7->d.sign->contents);
+            /* If detached data then the content is excluded */
+            if(PKCS7_type_is_data(p7->d.sign->contents) && p7->detached) {
+                M_ASN1_OCTET_STRING_free(os);
+                p7->d.sign->contents->d.data = NULL;
+            }
+            break;
+
+        case NID_pkcs7_digest:
+            os=PKCS7_get_octet_string(p7->d.digest->contents);
+            /* If detached data then the content is excluded */
+            if(PKCS7_type_is_data(p7->d.digest->contents) && p7->detached)
+            {
+                M_ASN1_OCTET_STRING_free(os);
+                p7->d.digest->contents->d.data = NULL;
+            }
+            break;
+
+        default:
+            PKCS7err(PKCS7_F_PKCS7_DATAFINAL,PKCS7_R_UNSUPPORTED_CONTENT_TYPE);
+            goto err;
+    }
+
+    if (si_sk != NULL)
+    {
+        for (i=0; i<sk_PKCS7_SIGNER_INFO_num(si_sk); i++)
+        {
+            si=sk_PKCS7_SIGNER_INFO_value(si_sk,i);
+            if (si->pkey == NULL)
+                continue;
+
+            j = OBJ_obj2nid(si->digest_alg->algorithm);
+
+            btmp=bio;
+
+
+            sk=si->auth_attr;
+
+            /* If there are attributes, we add the digest
+             * attribute and only sign the attributes */
+            if (sk_X509_ATTRIBUTE_num(sk) > 0)
+            {
+                if (!adl_do_pkcs7_signed_attrib(si, md_data, md_len))
+                    goto err;
+            }
+        }
+    }
+
+    if (!PKCS7_is_detached(p7) && !(os->flags & ASN1_STRING_FLAG_NDEF))
+    {
+        char *cont;
+        long contlen;
+        btmp=BIO_find_type(bio,BIO_TYPE_MEM);
+        if (btmp == NULL)
+        {
+            PKCS7err(PKCS7_F_PKCS7_DATAFINAL,PKCS7_R_UNABLE_TO_FIND_MEM_BIO);
+            goto err;
+        }
+        contlen = BIO_get_mem_data(btmp, &cont);
+        /* Mark the BIO read only then we can use its copy of the data
+         * instead of making an extra copy.
+         */
+        BIO_set_flags(btmp, BIO_FLAGS_MEM_RDONLY);
+        BIO_set_mem_eof_return(btmp, 0);
+        ASN1_STRING_set0(os, (unsigned char *)cont, contlen);
+    }
+    ret=1;
+    err:
+    return(ret);
+}
+
+
 
 NSData* X509_to_NSData(X509 *cert) {
     unsigned char *cert_data = NULL;
@@ -154,6 +339,27 @@ NSData* X509_to_NSData(X509 *cert) {
     return pkeys;
 }
 
+-(NSData*) bytesFromHexString:(NSString *)aString;
+{
+    NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:nil];
+
+    NSMutableData* data = [NSMutableData data];
+    int idx;
+    for (idx = 0; idx+2 <= theString.length; idx+=2) {
+        NSRange range = NSMakeRange(idx, 2);
+        NSString* hexStr = [theString substringWithRange:range];
+        NSScanner* scanner = [NSScanner scannerWithString:hexStr];
+        unsigned int intValue;
+        if ([scanner scanHexInt:&intValue])
+            [data appendBytes:&intValue length:1];
+    }
+    return data;
+}
+
+
+-(NSDictionary*)PKCS7BatchSign:(NSString*)p12Path withPassword:(NSString*)password andHashes:(NSDictionary *)hashes error:(NSError**) error {
+
+}
 
 -(NSData*)PKCS7Sign:(NSString*)p12Path withPassword:(NSString*)password andData:(NSData*)data error:(NSError**)error {
     /* Read PKCS12 */
@@ -167,128 +373,115 @@ NSData* X509_to_NSData(X509 *cert) {
     
     const char *p12_file_path = [p12Path cStringUsingEncoding:NSUTF8StringEncoding];
     const char *p12_password = [password cStringUsingEncoding:NSUTF8StringEncoding];
-    
+
     OpenSSL_add_all_algorithms();
     ERR_load_crypto_strings();
     EVP_add_digest(EVP_sha1());
-    
+    NSData *retVal = nil;
+
     if (!(fp = fopen(p12_file_path, "rb"))) {
-        fprintf(stderr, "Error opening file %s\n", p12_file_path);
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
-            
-        }
-        return NO;
+        NSString* localizedDescritpion = [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]];
+        [self emitFileIOError:error localizedDescritpion:localizedDescritpion];
     }
-    p12 = d2i_PKCS12_fp(fp, NULL);
-    fclose (fp);
-    if (!p12) {
-        fprintf(stderr, "Error reading PKCS#12 file\n");
-        ERR_print_errors_fp(stderr);
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
-            PKCS12_free(p12);
+    else {
+        p12 = d2i_PKCS12_fp(fp, NULL);
+        fclose(fp);
+        if (!p12) {
+            NSString* localizedDescritpion = [NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]];
+            [self emitFileIOError:error localizedDescritpion:localizedDescritpion];
         }
-        return NO;
-    }
-    if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
-        fprintf(stderr, "Error parsing PKCS#12 file\n");
-        ERR_print_errors_fp(stderr);
-        if (error) {
-            *error = [[NSError alloc] initWithDomain:P12ErrorDomain code:P12OpenErrorCode userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
-            
+        else {
+            if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
+                NSString *localizedDescription = [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]];
+                [self emitError:error localizedDescription:localizedDescription domain:P12ErrorDomain code:P12OpenErrorCode];
+            }
+            else {
+                retVal = [self signData:data pkey:pkey cert:cert];
+            }
         }
         PKCS12_free(p12);
-        
-        return NO;
     }
-    PKCS12_free(p12);
-    /*if (!(fp = fopen(argv[3], "w"))) {
-     fprintf(stderr, "Error opening file %s\n", argv[1]);
-     exit(1);
-     }*/
-    if (pkey) {
-        //  fprintf(stdout, "***Private Key***\n");
-        // PEM_write_PrivateKey(stdout, pkey, NULL, NULL, 0, NULL, NULL);
+
+    return retVal;
+}
+
+- (void)emitFileIOError:(NSError **)error localizedDescritpion:(NSString *)localizedDescritpion {
+    [self emitError:error localizedDescription:localizedDescritpion domain:NSPOSIXErrorDomain code:ENOENT];
+}
+
+- (void)emitError:(NSError **)error localizedDescription:(NSString *)localizedDescription domain:(NSString *)domain code:(int)code {
+#ifdef DEBUG_KEYSTORE
+    ERR_print_errors_fp(stderr);
+#endif
+    if (error) {
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:localizedDescription, NSLocalizedDescriptionKey, nil];
+        *error = [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
     }
-    if (cert) {
-        // fprintf(stdout, "***User Certificate***\n");
-        // PEM_write_X509_AUX(stdout, cert);
-        int len = 0;
-        alias = X509_alias_get0(cert, &len);
-        
-    }
-    if (ca && sk_X509_num(ca)) {
-        // fprintf(stdout, "***Other Certificates***\n");
-        //for (i = 0; i < sk_X509_num(ca); i++) {
-        //PEM_write_X509_AUX(stdout, sk_X509_value(ca, i));
-        // int len = 0;
-        
-        //  unsigned char *alias = X509_alias_get0(sk_X509_value(ca, i), &len);
-        //  printf("%s", alias);
-        
-        //}
-    }
-    
+}
+
+- (NSData *)signData:(NSData *)data pkey:(EVP_PKEY *)pkey cert:(X509 *)cert {
     BIO * bio_data = BIO_new(BIO_s_mem());
-    
+
     BIO_write(bio_data, [data bytes], [data length]);
-    
-    
+
+
     PKCS7 *p7 = PKCS7_new();
-	PKCS7_set_type(p7,NID_pkcs7_signed);
-    
-	PKCS7_SIGNER_INFO *si=PKCS7_add_signature(p7,cert,pkey,EVP_sha1());
-	if (si == NULL) goto err;
-    
-	/* If you do this then you get signing time automatically added */
-	PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT,
+    PKCS7_set_type(p7,NID_pkcs7_signed);
+
+    PKCS7_SIGNER_INFO *si=PKCS7_add_signature(p7,cert,pkey,EVP_sha1());
+
+    if (si == NULL) return nil;
+
+    /* If you do this then you get signing time automatically added */
+    PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT,
                                OBJ_nid2obj(NID_pkcs7_data));
-    
-	/* we may want to add more */
-	PKCS7_add_certificate(p7, cert);
-    
-	/* Set the content of the signed to 'data' */
-	PKCS7_content_new(p7, NID_pkcs7_data);
-    
+
+    /* we may want to add more */
+    PKCS7_add_certificate(p7, cert);
+
+    /* Set the content of the signed to 'data' */
+    PKCS7_content_new(p7, NID_pkcs7_data);
+
     PKCS7_set_detached(p7,1);
     BIO* p7bio;
-	
-    if ((p7bio=PKCS7_dataInit(p7,NULL)) == NULL) goto err;
+
+    if ((p7bio = PKCS7_dataInit(p7, NULL)) == NULL) {
+        return nil;
+    }
+
     int i = 0;
     char buf[255];
-	for (;;)
+    for (;;)
     {
 		i=BIO_read(bio_data,buf,sizeof(buf));
 		if (i <= 0) break;
 		BIO_write(p7bio,buf,i);
     }
-    
-	if (!PKCS7_dataFinal(p7,p7bio)) goto err;
-	BIO_free(p7bio);
-    
-    //TODO: write the signature in NSString + base 64 through bio or NSString+Base64.
-    //
+
+    if (!ADL_PKCS7_dataFinal(p7, p7bio, [data bytes], [data length])) {
+        return nil;
+    }
+    BIO_free(p7bio);
+
     BIO *signature_bio = BIO_new(BIO_s_mem());
-    
+
     PEM_write_bio_PKCS7(signature_bio, p7);
-    
-    (void)BIO_flush(signature_bio);
-    
+
+    (void) BIO_flush(signature_bio);
+
     char *outputBuffer;
     long outputLength = BIO_get_mem_data(signature_bio, &outputBuffer);
-    
-    NSData *retVal = [NSData dataWithBytes:outputBuffer length:outputLength];
-    
-    PEM_write_PKCS7(stdout,p7);
-	PKCS7_free(p7);
+
+    NSData *retVal = [NSData dataWithBytes:outputBuffer length:(NSUInteger)outputLength];
+
+#ifdef DEBUG
+    PEM_write_PKCS7(stdout, p7);
+#endif
+
+    PKCS7_free(p7);
     BIO_free_all(signature_bio);
-    
+
     return retVal;
-    
-err:
-    ERR_print_errors_fp(stderr);
-    return nil;
 }
 
 -(BOOL) addKey:(NSString *)p12Path withPassword:(NSString *)password error:(NSError**)error {

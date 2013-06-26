@@ -118,8 +118,6 @@
     [textView setText:dossierRef];
     _objects = [[[NSMutableArray alloc] init] retain];
     
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
-    
     [self hidesEveryThing];
     [[self dossierName] setText:[_dossier objectForKey:@"titre"]];
     [[self typeLabel] setText:[_dossier objectForKey:@"type"]];

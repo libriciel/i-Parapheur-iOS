@@ -63,5 +63,9 @@ enum {
 #pragma mark - Crypto methods
 -(NSData*)PKCS7Sign:(NSString*)p12Path withPassword:(NSString*)password andData:(NSData*)data error:(NSError**)error;
 
+
+#pragma mark - Utilities
+-(NSData*) bytesFromHexString:(NSString *)aString;
+
 @end
 

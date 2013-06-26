@@ -44,7 +44,7 @@
 
 @interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate>
 
-@property (retain, nonatomic) NSString *dossierRef;
+@property (retain, nonatomic) NSArray *dossiersRef;
 @property (retain, nonatomic) NSString *action;
 @property (retain, nonatomic) IBOutlet UITextView *annotationPrivee;
 @property (retain, nonatomic) IBOutlet UITextView *annotationPublique;
@@ -56,6 +56,8 @@
 @property (retain, nonatomic) NSArray *pkeys;
 @property (retain, nonatomic) IBOutlet UILabel *certificateLabel;
 @property (retain, nonatomic) IBOutlet UITableView *certificatesTableView;
+
+@property (retain, nonatomic) NSString *p12password;
 
 @property (retain, nonatomic) PrivateKey *currentPKey;
 

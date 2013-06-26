@@ -51,7 +51,6 @@
 @synthesize lateBadge = _lateBadge;
 @synthesize todoBadge = _todoBadge;
 @synthesize todoPlaceHolder;
-@synthesize latePlaceHolder;
 @synthesize bureauNameLabel;
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -95,13 +94,8 @@
     if (_todoBadge == nil) {
         _todoBadge = [CustomBadge customBadgeWithString:@"0"];
     }
-    //[self addSubview:_lateBadge];
-    [_todoBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
-    [self addSubview:_todoBadge];
-    
+    [[self todoPlaceHolder] addSubview:_todoBadge];
     [[self textLabel] setFont:[UIFont systemFontOfSize:20.0]];
-   // [[self todoPlaceHolder] setHidden:NO];
-    
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

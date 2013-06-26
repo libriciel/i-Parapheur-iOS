@@ -52,6 +52,8 @@
 }
 
 @property (nonatomic, retain) NSString* deskRef;
+
+@property (nonatomic, retain) NSMutableArray* selectedFilesArray;
 @property (nonatomic, retain) NSArray* filesArray;
 @property (nonatomic, retain) IBOutlet RGMasterViewController* detailViewController;
 @property (nonatomic, retain) UIView* originalView;
@@ -63,6 +65,11 @@
 @property (nonatomic) BOOL loading;
 @property (retain, nonatomic) UIPopoverController *filtersPopover;
 
+@property (retain, nonatomic) IBOutlet UIBarButtonItem *batchButton;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem *signButton;
+@property (retain, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
+
 - (IBAction)loadNextResultsPage:(id)sender;
+- (IBAction)toggleMultipleSelection:(id)sender;
 
 @end

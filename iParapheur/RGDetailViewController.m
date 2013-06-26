@@ -101,8 +101,7 @@
 - (void)configureView
 {
     // Update the user interface for the detail item.
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
-    
+
 }
 
 - (void)viewDidLoad

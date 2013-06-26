@@ -222,13 +222,13 @@
                 _signatureFormat = nil;
             }
         }
-        
+
         LGViewHUD *hud = [LGViewHUD defaultHUD];
         hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
         hud.topText=@"";
         hud.bottomText=@"Chargement ...";
         hud.activityIndicatorOn=YES;
-        
+
         [hud showInView:self.view];
     
     }
@@ -328,30 +328,12 @@
     hud.activityIndicatorOn=YES;
     
     [hud showInView:self.view];
-    
-  //  self.navigationItem.leftBarButtonItem = _documentsButton;
-  //  self.navigationItem.rightBarButtonItem = _detailsButton;
-    
-  //  [[self navigationController] popToRootViewControllerAnimated:YES];
 
 }
 
 
-- (void)dismissReaderViewController:(ReaderViewController *)viewController
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-    
-#if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
-    
-	[self.navigationController popViewControllerAnimated:YES];
-    
-#else // dismiss the modal view controller
-    
+- (void)dismissReaderViewController:(ReaderViewController *)viewController {
 	[self dismissModalViewControllerAnimated:YES];
-    
-#endif // DEMO_VIEW_CONTROLLER_PUSH
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -369,8 +351,7 @@
 }
 
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
         [((RGMasterViewController*) [segue destinationViewController]) setDossier:_dossier];
     }
@@ -419,6 +400,10 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [container release];
+    [_signatureFormat release];
+    [_annotations release];
+    [_dossier release];
+    [_readerViewController release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -483,7 +468,7 @@
 }
 
 -(void)shallDismissHUD:(LGViewHUD*)hud {
-    [hud hideWithAnimation:YES];
+    [hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
 
 @end
