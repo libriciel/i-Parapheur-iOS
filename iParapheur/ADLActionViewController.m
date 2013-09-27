@@ -122,9 +122,6 @@
 
 
 
-- (void)dealloc {
-    [super dealloc];
-}
 - (void)viewDidUnload {
     [self setTableView:nil];
     [self setTableView:nil];

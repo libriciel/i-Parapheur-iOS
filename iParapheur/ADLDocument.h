@@ -42,7 +42,7 @@
 
 @interface ADLDocument : NSObject
 
-@property (nonatomic, retain) NSData* documentData;
-@property (nonatomic, retain) NSString* documentMimetype;
+@property (nonatomic, strong) NSData* documentData;
+@property (nonatomic, strong) NSString* documentMimetype;
 +(id) documentWithData:(NSData*)data AndMimeType:(NSString*)mimeType;
 @end

@@ -90,18 +90,6 @@
     [super awakeFromNib];
 }
 
-- (void)dealloc
-{
-    [_detailViewController release];
-    [_objects release];
-    [circuitTable release];
-    [viserButton release];
-    [rejectButton release];
-    [dossierNameLabel release];
-    [sousTypeValueLabel release];
-    [typeValueLabel release];
-    [super dealloc];
-}
 
 - (void)viewDidLoad
 {
@@ -116,7 +104,7 @@
     */
     self.navigationItem.rightBarButtonItem=nil;
     [textView setText:dossierRef];
-    _objects = [[[NSMutableArray alloc] init] retain];
+    _objects = [[NSMutableArray alloc] init];
     
     [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
     
@@ -125,7 +113,7 @@
     [[self typeLabel] setText:[_dossier objectForKey:@"type"]];
     [[self sousTypeLabel] setText:[_dossier objectForKey:@"sousType"]];
     dossierRef = [_dossier objectForKey:@"dossierRef"];
-    documents = [[_dossier objectForKey:@"documents"] retain];
+    documents = [_dossier objectForKey:@"documents"];
     self.navigationItem.rightBarButtonItem = documentsButtonItem;
     [self getCircuit];
     [self showsEveryThing];
@@ -164,7 +152,7 @@
 }
 
 - (void) setDossierRef:(NSString *)_dossierRef {
-    dossierRef = [_dossierRef retain];
+    dossierRef = _dossierRef;
     ADLRequester *requester = [ADLRequester sharedRequester];
     
     NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef,
@@ -209,7 +197,7 @@
     ADLCircuitCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [[[ADLCircuitCell alloc] init] autorelease];
+        cell = [[ADLCircuitCell alloc] init];
     }
     
     NSDictionary *object = [_objects objectAtIndex:indexPath.row];
@@ -232,11 +220,9 @@
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         [outputFormatter setDateFormat:@"'le' dd/MM/yyyy 'à' HH:mm"];
         
-        NSString *validationDateStr = [[outputFormatter stringFromDate:validationDate] retain];
+        NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
         
         [[cell validationDate] setText:validationDateStr];
-        [outputFormatter release];
-        [validationDateStr release];
         
     
     }
@@ -244,7 +230,6 @@
         [[cell validationDate] setText:nil];
     }
     
-    [formatter release];
     
     NSString *imagePrefix = @"iw";
     if ([[object objectForKey:@"approved"] intValue] == 1) {
@@ -407,8 +392,6 @@
     readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
     [[self splitViewController] presentModalViewController:readerViewController animated:YES];
-    [document release];
-    [readerViewController release];
     
 }
 

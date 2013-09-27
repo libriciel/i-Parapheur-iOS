@@ -11,7 +11,7 @@
 
 @interface ADLFilterTypeTableViewController : UITableViewController<UITableViewDataSource, UITableViewDelegate, ADLParapheurWallDelegateProtocol>
 
-@property (retain, nonatomic) NSDictionary *typology;
+@property (strong, nonatomic) NSDictionary *typology;
 
 - (IBAction)resetFilters:(id)sender;
 

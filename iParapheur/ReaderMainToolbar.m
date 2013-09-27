@@ -206,7 +206,6 @@
 	markButton = nil;
 	markImageN = nil;
 	markImageY = nil;
-    [super dealloc];
 }
 
 - (void)setBookmarkState:(BOOL)state

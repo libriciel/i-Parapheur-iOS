@@ -10,6 +10,7 @@
 #import "ADLAPIRequests.h"
 #import "ADLSingletonState.h"
 #import "ADLNotifications.h"
+#import "ADLFilterSubTypeTableViewController.h"
 
 @interface ADLFilterTypeTableViewController ()
 
@@ -77,7 +78,7 @@
 -(void)didEndWithRequestAnswer:(NSDictionary *)answer {
     NSDictionary *typologie = [[answer objectForKey:@"data"] objectForKey:@"typology"];
     
-    _typology = [typologie retain];
+    _typology = typologie;
     [((UITableView*)[self view]) reloadData];
 }
 
@@ -88,7 +89,7 @@
     
     NSArray *subTypes = [_typology objectForKey:selectedKey];
     
-    [[segue destinationViewController] setSubTypes:subTypes];
+    ((ADLFilterSubTypeTableViewController *)[segue destinationViewController]).subTypes = subTypes;
     [[ADLSingletonState sharedSingletonState] setCurrentFilter:[NSMutableDictionary dictionaryWithObjectsAndKeys:selectedKey,@"ph:typeMetier", nil]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged object:nil];
 

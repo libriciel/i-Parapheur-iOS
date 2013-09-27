@@ -161,7 +161,6 @@
         alertView.p12Path = [pkey p12Filename];
         
         [alertView show];
-        [alertView release];
 
 
     }
@@ -174,14 +173,6 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void)dealloc {
-    [annotationPrivee release];
-    [annotationPublique release];
-    [finishButton release];
-    [_certificateLabel release];
-    [_certificatesTableView release];
-    [super dealloc];
-}
 
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
     
@@ -215,7 +206,7 @@
     UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
     
     if(cell == nil) {
-        cell = [[[UITableViewCell alloc] init] autorelease];
+        cell = [[UITableViewCell alloc] init];
     }
     
     PrivateKey *pkey = [_pkeys objectAtIndex:[indexPath row]];

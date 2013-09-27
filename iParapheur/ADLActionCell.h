@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ADLActionCell : UITableViewCell
-@property (nonatomic, retain) IBOutlet UILabel *actionLabel;
-@property (nonatomic, retain) IBOutlet UIImageView *imageView;
+@property (nonatomic, strong) IBOutlet UILabel *actionLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *imageView;
 
 @end

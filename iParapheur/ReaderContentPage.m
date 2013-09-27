@@ -434,7 +434,8 @@
     
 	if (fileURL != nil) // Check for non-nil file URL
 	{
-		_PDFDocRef = CGPDFDocumentCreateX((CFURLRef)fileURL, phrase);
+		//_PDFDocRef = CGPDFDocumentCreateX((CFURLRef)fileURL, phrase);
+        _PDFDocRef = CGPDFDocumentCreateX((__bridge CFURLRef)fileURL, phrase);
 		if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 		{
 			if (page < 1) page = 1; // Check the lower page bounds
@@ -515,7 +516,6 @@
 		CGPDFDocumentRelease(_PDFDocRef), _PDFDocRef = NULL;
 	}
     
-    [super dealloc];
 }
 
 

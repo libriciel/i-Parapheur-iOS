@@ -55,14 +55,14 @@
 @interface ADLAnnotationView : UIView
 
 
-@property (nonatomic, retain) UIButton *close;
-@property (nonatomic, retain) ADLPostItButton *postit;
+@property (nonatomic, strong) UIButton *close;
+@property (nonatomic, strong) ADLPostItButton *postit;
 
-@property (nonatomic, retain) ADLAnnotation *annotationModel;
+@property (nonatomic, strong) ADLAnnotation *annotationModel;
 
-@property (nonatomic, retain) ADLPostItView *postItView;
+@property (nonatomic, strong) ADLPostItView *postItView;
 
-@property (nonatomic, retain) ADLDrawingView *drawingView;
+@property (nonatomic, strong) ADLDrawingView *drawingView;
 
 @property (nonatomic) BOOL selected;
 @property (nonatomic) NSUInteger currentPage;

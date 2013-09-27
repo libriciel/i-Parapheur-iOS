@@ -46,7 +46,7 @@
     
 }
     
-@property (retain, nonatomic) NSArray *documents;
+@property (strong, nonatomic) NSArray *documents;
 
 
 @end

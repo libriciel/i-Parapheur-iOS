@@ -94,7 +94,7 @@
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if(cell == nil) {
-        cell = [[[UITableViewCell alloc] init] autorelease];
+        cell = [[UITableViewCell alloc] init];
     }
     
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];

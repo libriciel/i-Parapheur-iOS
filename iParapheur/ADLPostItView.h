@@ -11,7 +11,7 @@
 
 @interface ADLPostItView : UIView<UITextViewDelegate>
 
-@property (nonatomic, retain) ADLAnnotation *annotationModel;
-@property (nonatomic, retain) UILabel *label;
-@property (nonatomic, retain) UITextView *textView;
+@property (nonatomic, strong) ADLAnnotation *annotationModel;
+@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UITextView *textView;
 @end

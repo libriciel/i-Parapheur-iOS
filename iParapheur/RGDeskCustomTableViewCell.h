@@ -44,11 +44,11 @@
 @interface RGDeskCustomTableViewCell : UITableViewCell {
 }
 
-@property (nonatomic, retain) CustomBadge *todoBadge;
-@property (nonatomic, retain) CustomBadge *lateBadge;
+@property (nonatomic, strong) CustomBadge *todoBadge;
+@property (nonatomic, strong) CustomBadge *lateBadge;
 
-@property (nonatomic, retain) IBOutlet UIView *todoPlaceHolder;
-@property (nonatomic, retain) IBOutlet UIView *latePlaceHolder;
-@property (nonatomic, retain) IBOutlet UILabel *bureauNameLabel;
+@property (nonatomic, strong) IBOutlet UIView *todoPlaceHolder;
+@property (nonatomic, strong) IBOutlet UIView *latePlaceHolder;
+@property (nonatomic, strong) IBOutlet UILabel *bureauNameLabel;
 @end
 

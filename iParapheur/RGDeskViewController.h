@@ -51,17 +51,17 @@
     int currentPage;
 }
 
-@property (nonatomic, retain) NSString* deskRef;
-@property (nonatomic, retain) NSArray* filesArray;
-@property (nonatomic, retain) IBOutlet RGMasterViewController* detailViewController;
-@property (nonatomic, retain) UIView* originalView;
+@property (nonatomic, strong) NSString* deskRef;
+@property (nonatomic, strong) NSArray* filesArray;
+@property (nonatomic, strong) IBOutlet RGMasterViewController* detailViewController;
+@property (nonatomic, strong) UIView* originalView;
 
-@property (retain, nonatomic) IBOutlet UIButton *loadMoreButton;
-@property (retain, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) IBOutlet UIButton *loadMoreButton;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic) BOOL loading;
-@property (retain, nonatomic) UIPopoverController *filtersPopover;
+@property (strong, nonatomic) UIPopoverController *filtersPopover;
 
 - (IBAction)loadNextResultsPage:(id)sender;
 

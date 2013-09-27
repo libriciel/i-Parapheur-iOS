@@ -61,23 +61,23 @@
 }
 
 @property (strong, nonatomic) RGDetailViewController *detailViewController;
-@property (nonatomic, retain) IBOutlet UITextView *textView;
-@property (nonatomic, retain) IBOutlet UILabel *dossierName;
-@property (nonatomic, retain) IBOutlet UILabel *typeLabel;
-@property (nonatomic, retain) IBOutlet UILabel *sousTypeLabel;
-@property (retain, nonatomic) IBOutlet UILabel *dossierNameLabel;
-@property (retain, nonatomic) IBOutlet UITableView *circuitTable;
-@property (retain, nonatomic) IBOutlet UILabel *sousTypeValueLabel;
-@property (retain, nonatomic) IBOutlet UILabel *typeValueLabel;
+@property (nonatomic, strong) IBOutlet UITextView *textView;
+@property (nonatomic, strong) IBOutlet UILabel *dossierName;
+@property (nonatomic, strong) IBOutlet UILabel *typeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *sousTypeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *dossierNameLabel;
+@property (strong, nonatomic) IBOutlet UITableView *circuitTable;
+@property (strong, nonatomic) IBOutlet UILabel *sousTypeValueLabel;
+@property (strong, nonatomic) IBOutlet UILabel *typeValueLabel;
 
-@property (nonatomic, retain) IBOutlet UIBarButtonItem *documentsButtonItem;
-@property (retain, nonatomic) IBOutlet UIButton *viserButton;
-@property (retain, nonatomic) IBOutlet UIButton *rejectButton;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *documentsButtonItem;
+@property (strong, nonatomic) IBOutlet UIButton *viserButton;
+@property (strong, nonatomic) IBOutlet UIButton *rejectButton;
 
-@property (retain, nonatomic) NSDictionary *dossier;
+@property (strong, nonatomic) NSDictionary *dossier;
 
 
-@property (nonatomic, retain) NSString *dossierRef;
+@property (nonatomic, strong) NSString *dossierRef;
 - (IBAction)showVisuelPDF:(id)sender;
 //- (void)refreshViewWithDossier:(NSDictionary*)dossier;
 

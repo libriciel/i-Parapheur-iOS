@@ -18,13 +18,16 @@
 static ADLCredentialVault *sharedCredentialVault = nil;
 
 + (ADLCredentialVault *)sharedCredentialVault {
-    if (sharedCredentialVault == nil) {
-        sharedCredentialVault = [[super allocWithZone:NULL] init];
-    }
+    
+    static ADLCredentialVault *sharedCredentialVault = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedCredentialVault = [[self alloc] init];
+    });
     return sharedCredentialVault;
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
+/*+ (id)allocWithZone:(NSZone *)zone {
     return [[self sharedCredentialVault] retain];
 }
 
@@ -46,7 +49,7 @@ static ADLCredentialVault *sharedCredentialVault = nil;
 
 - (id)autorelease {
     return self;
-}
+}*/
 
 - (NSString*) buildKeyWithHost:(NSString*)host andLogin:(NSString*) login {
     return [NSString stringWithFormat:@"%@%@", host, login];

@@ -116,9 +116,9 @@ NSData* X509_to_NSData(X509 *cert) {
 
 -(NSString*) UUID {
     CFUUIDRef uuidObj = CFUUIDCreate(nil);
-    NSString *uuidString = (NSString*)CFUUIDCreateString(nil, uuidObj);
+    NSString *uuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(nil, uuidObj));
     CFRelease(uuidObj);
-    return [uuidString autorelease];
+    return uuidString;
 }
 
 #pragma mark - Public API
@@ -145,12 +145,10 @@ NSData* X509_to_NSData(X509 *cert) {
     [request setEntity:entity];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    [sortDescriptor release];
     [request setSortDescriptors:sortDescriptors];
     // Fetch the records and handle an error
     NSError *error;
     NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request error:&error];
-    [request release];
     return pkeys;
 }
 
@@ -239,53 +237,55 @@ NSData* X509_to_NSData(X509 *cert) {
 	PKCS7_set_type(p7,NID_pkcs7_signed);
     
 	PKCS7_SIGNER_INFO *si=PKCS7_add_signature(p7,cert,pkey,EVP_sha1());
-	if (si == NULL) goto err;
+	if (si != NULL) {
     
-	/* If you do this then you get signing time automatically added */
-	PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT,
-                               OBJ_nid2obj(NID_pkcs7_data));
-    
-	/* we may want to add more */
-	PKCS7_add_certificate(p7, cert);
-    
-	/* Set the content of the signed to 'data' */
-	PKCS7_content_new(p7, NID_pkcs7_data);
-    
-    PKCS7_set_detached(p7,1);
-    BIO* p7bio;
-	
-    if ((p7bio=PKCS7_dataInit(p7,NULL)) == NULL) goto err;
-    int i = 0;
-    char buf[255];
-	for (;;)
-    {
-		i=BIO_read(bio_data,buf,sizeof(buf));
-		if (i <= 0) break;
-		BIO_write(p7bio,buf,i);
+        /* If you do this then you get signing time automatically added */
+        PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT,
+                                   OBJ_nid2obj(NID_pkcs7_data));
+        
+        /* we may want to add more */
+        PKCS7_add_certificate(p7, cert);
+        
+        /* Set the content of the signed to 'data' */
+        PKCS7_content_new(p7, NID_pkcs7_data);
+        
+        PKCS7_set_detached(p7,1);
+        BIO* p7bio;
+        
+        if ((p7bio=PKCS7_dataInit(p7,NULL)) != NULL) {
+            int i = 0;
+            char buf[255];
+            for (;;)
+            {
+                i=BIO_read(bio_data,buf,sizeof(buf));
+                if (i <= 0) break;
+                BIO_write(p7bio,buf,i);
+            }
+            
+            if (PKCS7_dataFinal(p7,p7bio)) {
+                BIO_free(p7bio);
+                
+                //TODO: write the signature in NSString + base 64 through bio or NSString+Base64.
+                //
+                BIO *signature_bio = BIO_new(BIO_s_mem());
+                
+                PEM_write_bio_PKCS7(signature_bio, p7);
+                
+                (void)BIO_flush(signature_bio);
+                
+                char *outputBuffer;
+                long outputLength = BIO_get_mem_data(signature_bio, &outputBuffer);
+                
+                NSData *retVal = [NSData dataWithBytes:outputBuffer length:outputLength];
+                
+                PEM_write_PKCS7(stdout,p7);
+                PKCS7_free(p7);
+                BIO_free_all(signature_bio);
+                
+                return retVal;
+            }
+        }
     }
-    
-	if (!PKCS7_dataFinal(p7,p7bio)) goto err;
-	BIO_free(p7bio);
-    
-    //TODO: write the signature in NSString + base 64 through bio or NSString+Base64.
-    //
-    BIO *signature_bio = BIO_new(BIO_s_mem());
-    
-    PEM_write_bio_PKCS7(signature_bio, p7);
-    
-    (void)BIO_flush(signature_bio);
-    
-    char *outputBuffer;
-    long outputLength = BIO_get_mem_data(signature_bio, &outputBuffer);
-    
-    NSData *retVal = [NSData dataWithBytes:outputBuffer length:outputLength];
-    
-    PEM_write_PKCS7(stdout,p7);
-	PKCS7_free(p7);
-    BIO_free_all(signature_bio);
-    
-    return retVal;
-    
 err:
     ERR_print_errors_fp(stderr);
     return nil;
@@ -403,7 +403,6 @@ err:
         return NO;
     }
     
-    [request release];
     if ([array count] == 0) {
 
         NSString *newPath = [[[self applicationDataDirectory] path]

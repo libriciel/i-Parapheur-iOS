@@ -10,10 +10,10 @@
 
 @interface ADLAnnotation : NSObject
 
-@property (nonatomic, retain) NSString *uuid;
+@property (nonatomic, strong) NSString *uuid;
 @property (nonatomic) BOOL editable;
-@property (nonatomic, retain) NSString *text;
-@property (nonatomic, retain) NSString *author;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSString *author;
 @property (nonatomic) CGRect rect;
 
 

@@ -157,7 +157,6 @@
     
     [[self navigationController] popToRootViewControllerAnimated:YES];
 
-    [buttons release];
 }
 
 -(void) selectBureauAppeared:(NSNotification*) notification {
@@ -295,7 +294,6 @@
     
     [_readerViewController setAnnotationsEnabled:_isDocumentPrincipal];
     
-    [readerDocument release];
     
     _readerViewController.delegate = self;
     _readerViewController.view.frame = [[self view] frame];
@@ -418,8 +416,6 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [container release];
-    [super dealloc];
 }
 - (void)viewDidUnload {
     [self setContainer:nil];
@@ -429,7 +425,7 @@
 #pragma mark - Annotations Drawing view data Source
 
 -(NSArray*) annotationsForPage:(NSInteger)page {
-    NSMutableArray *annotsAtPage = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *annotsAtPage = [[NSMutableArray alloc] init];
     for (NSDictionary *etape in _annotations) {
         NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
         

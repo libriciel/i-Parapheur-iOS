@@ -63,11 +63,4 @@
     // Configure the view for the selected state
 }
 
-- (void)dealloc {
-    [_parapheurName release];
-    [_validationDate release];
-    [_validateurName release];
-    [_etapeTypeIcon release];
-    [super dealloc];
-}
 @end

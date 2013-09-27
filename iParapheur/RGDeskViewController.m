@@ -76,7 +76,6 @@
 		view.delegate = self;
 		[self.tableView addSubview:view];
 		_refreshHeaderView = view;
-		[view release];
         
 	}
     
@@ -162,7 +161,7 @@
     RGFileCell *cell = (RGFileCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if(cell == nil) {
-        cell = [[[RGFileCell alloc] init] autorelease];
+        cell = [[RGFileCell alloc] init];
     }
     
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -182,13 +181,10 @@
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         [outputFormatter setDateFormat:@"dd MMM"];
         
-        NSString *fdate = [[outputFormatter stringFromDate:dueDate] retain];
+        NSString *fdate = [outputFormatter stringFromDate:dueDate];
         [[cell retardBadge] setBadgeText:fdate];
         [[cell retardBadge] autoBadgeSizeWithString: [NSString stringWithFormat:@" %@ ", fdate]];
         [[cell retardBadge] setHidden:NO];
-        [fdate release];
-        [formatter release];
-        [outputFormatter release];
 
     }
     else {
@@ -296,11 +292,9 @@
                 @"15", @"pageSize",
                 nil];
         
-        [filters release];
     }
     
     
-    [pageStr release];
     
     [requester request:GETDOSSIERSHEADERS_API andArgs:args delegate:self];
     //[args release];
@@ -369,10 +363,6 @@
     }
 }
 
-- (void)dealloc {
-    [loadMoreButton release];
-    [super dealloc];
-}
 - (void)viewDidUnload {
     [self setLoadMoreButton:nil];
     [super viewDidUnload];

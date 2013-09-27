@@ -90,15 +90,8 @@ static LGViewHUD* defaultHUD = nil;
 }
 
 - (void)dealloc {
-	[backgroundView release];
-	[topLabel release];
-	[bottomLabel release];
-	[imageView release];
 	backgroundView=nil;
-	topLabel=nil;
-	bottomLabel=nil;
 	imageView=nil;
-    [super dealloc];
 }
 
 +(LGViewHUD*) defaultHUD {
@@ -153,7 +146,6 @@ static LGViewHUD* defaultHUD = nil;
 			//when applying an image, this will auto hide the HUD.
 			[activityIndicator removeFromSuperview];
 			imageView.hidden=NO;
-			[activityIndicator release];
 			activityIndicator=nil;
 		}
 	}
@@ -204,21 +196,18 @@ static LGViewHUD* defaultHUD = nil;
 	} else {
 		//invalidate current timer for hide if any.
 		[displayTimer invalidate];
-		[displayTimer release];
 		displayTimer=nil;
 	}
 }
 
 -(void) hideAfterDelay:(NSTimeInterval)delayDuration withAnimation:(HUDAnimation) animation{
 	[displayTimer invalidate];
-	[displayTimer release];
-	displayTimer = [[NSTimer timerWithTimeInterval:delayDuration target:self selector:@selector(displayTimeOut:) 
-										  userInfo:[NSNumber numberWithInt:animation] repeats:NO] retain];
+	displayTimer = [NSTimer timerWithTimeInterval:delayDuration target:self selector:@selector(displayTimeOut:) 
+										  userInfo:[NSNumber numberWithInt:animation] repeats:NO];
 	[[NSRunLoop mainRunLoop] addTimer:displayTimer forMode:NSRunLoopCommonModes];
 }
 
 -(void) displayTimeOut:(NSTimer*)timer {
-	[displayTimer release];
 	displayTimer=nil;
 	[self hideWithAnimation:(HUDAnimation)[[timer userInfo] intValue]];
 }

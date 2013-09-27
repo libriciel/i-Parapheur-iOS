@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ADLPasswordAlertView : UIAlertView
-@property (nonatomic, retain) NSString *p12Path;
+@property (nonatomic, strong) NSString *p12Path;
 @end

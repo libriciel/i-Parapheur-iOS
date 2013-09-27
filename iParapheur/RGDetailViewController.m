@@ -74,20 +74,13 @@
     return self;
 }*/
 
-- (void)dealloc
-{
-    [_detailItem release];
-    [_masterPopoverController release];
-    [super dealloc];
-}
 
 #pragma mark - Managing the detail item
 
 - (void)setDetailItem:(id)newDetailItem
 {
     if (_detailItem != newDetailItem) {
-        [_detailItem release];
-        _detailItem = [newDetailItem retain];
+        _detailItem = newDetailItem;
 
         // Update the view.
         [self configureView];
@@ -118,7 +111,6 @@
 		view.delegate = self;
 		[self.tableView addSubview:view];
 		_refreshHeaderView = view;
-		[view release];
         
 	}
     
@@ -163,7 +155,6 @@
         [hud showInView:self.view];
     }
     
-    [def release];
 }
 
 - (void)viewDidUnload
@@ -215,7 +206,6 @@
         
         [self loadBureaux:YES];
 
-        [def release];
     }
     else if ([s isEqual:GETBUREAUX_API]) {
         NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);

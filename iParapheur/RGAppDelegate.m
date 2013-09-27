@@ -63,11 +63,6 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize keyStore = _keyStore;
 
-- (void)dealloc
-{
-    [_window release];
-    [super dealloc];
-}
 
 //TODO move it to addKey ? seems legit
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -83,7 +78,6 @@
                 ADLPasswordAlertView *realert = [[ADLPasswordAlertView alloc] initWithTitle:@"Erreur de mot de passe" message:[alertView message] delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles:@"Confirmer", nil];
                 realert.p12Path = pwdAlertView.p12Path;
                 [realert show];
-                [realert release];
             }
             
             NSLog(@"error %@", [error localizedDescription]);
@@ -123,20 +117,17 @@
         alertView.p12Path = p12Path;
         
         [alertView show];
-        [alertView release];
     }
 
     
-    NSArray *keys = [[self.keyStore listPrivateKeys] retain];
+    NSArray *keys = [self.keyStore listPrivateKeys];
     for (PrivateKey *pkey in keys) {
         NSLog(@"commonName %@", pkey.commonName);
         NSLog(@"caName %@", pkey.caName);
         NSLog(@"p12Filename %@", pkey.p12Filename);
         NSString *cert = [[NSString alloc] initWithData:pkey.publicKey encoding:NSUTF8StringEncoding];
         NSLog(@"certData %@", cert);
-        [cert release];
     }
-    [keys release];
      
     return YES;
 }

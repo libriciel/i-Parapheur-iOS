@@ -60,13 +60,16 @@
 static ADLSingletonState *sharedSingletonState = nil;
 
 + (ADLSingletonState *)sharedSingletonState {
-    if (sharedSingletonState == nil) {
-        sharedSingletonState = [[super allocWithZone:NULL] init];
-    }
+    
+    static ADLSingletonState *sharedSingletonState = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedSingletonState = [[self alloc] init];
+    });
     return sharedSingletonState;
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
+/*+ (id)allocWithZone:(NSZone *)zone {
     return [[self sharedSingletonState] retain];
 }
 
@@ -88,7 +91,7 @@ static ADLSingletonState *sharedSingletonState = nil;
 
 - (id)autorelease {
     return self;
-}
+}*/
 
 
 @end

@@ -15,8 +15,8 @@
     NSOperationQueue *apiQueue;
 }
 
-@property (nonatomic, retain) NSRecursiveLock* lockApi;
-@property (nonatomic, retain) NSRecursiveLock* lockDoc;
+@property (nonatomic, strong) NSRecursiveLock* lockApi;
+@property (nonatomic, strong) NSRecursiveLock* lockDoc;
 
 +(ADLRequester *) sharedRequester;
 

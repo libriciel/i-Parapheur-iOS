@@ -80,7 +80,6 @@
         
         [self addGestureRecognizer:doubleTapGestureRecognizer];
         
-        [doubleTapGestureRecognizer release];
         // by default disable annotations
         _enabled = YES;
         _shallUpdateCurrent = NO;
@@ -452,8 +451,8 @@
 -(void) animateviewOnLongPressGesture:(CGPoint)touchPoint {
 #define GROW_ANIMATION_DURATION_SECONDS 0.15
 	
-	NSValue *touchPointValue = [[NSValue valueWithCGPoint:touchPoint] retain];
-	[UIView beginAnimations:nil context:touchPointValue];
+	NSValue *touchPointValue = [NSValue valueWithCGPoint:touchPoint];
+	[UIView beginAnimations:nil context:(__bridge void *)(touchPointValue)];
 	[UIView setAnimationDuration:GROW_ANIMATION_DURATION_SECONDS];
 	[UIView setAnimationDelegate:self];
 	//[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
@@ -502,8 +501,6 @@
             ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotModel];
             [a setDrawingView:self];
             [self addSubview:a];
-            [a release];
-            [annotModel release];
             
 
         }

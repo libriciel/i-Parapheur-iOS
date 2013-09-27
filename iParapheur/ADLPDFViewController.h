@@ -46,23 +46,23 @@
 
 @interface ADLPDFViewController : UIViewController<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
 
-@property (retain, nonatomic) IBOutlet UIView *container;
-@property (retain, nonatomic) NSDictionary *dossier;
-@property (retain, nonatomic) NSString *dossierRef;
+@property (strong, nonatomic) IBOutlet UIView *container;
+@property (strong, nonatomic) NSDictionary *dossier;
+@property (strong, nonatomic) NSString *dossierRef;
 
-@property (retain, nonatomic) ReaderViewController* readerViewController;
-@property (nonatomic, retain)  UIView* originalView;
-@property (retain, nonatomic) UIPopoverController *documentsPopover;
+@property (strong, nonatomic) ReaderViewController* readerViewController;
+@property (nonatomic, strong)  UIView* originalView;
+@property (strong, nonatomic) UIPopoverController *documentsPopover;
 
-@property (retain, nonatomic) UIPopoverController *actionPopover;
+@property (strong, nonatomic) UIPopoverController *actionPopover;
 
-@property (retain, nonatomic) IBOutlet UIBarButtonItem *detailsButton;
-@property (retain, nonatomic) IBOutlet UIBarButtonItem *documentsButton;
-@property (retain, nonatomic) IBOutlet UIBarButtonItem *actionButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *detailsButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *documentsButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 
-@property (retain, nonatomic) NSArray* annotations;
+@property (strong, nonatomic) NSArray* annotations;
 
-@property (retain, nonatomic) NSString* signatureFormat;
+@property (strong, nonatomic) NSString* signatureFormat;
 @property (assign, nonatomic) BOOL visaEnabled;
 
 @property (assign, nonatomic) BOOL isDocumentPrincipal;

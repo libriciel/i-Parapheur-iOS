@@ -50,7 +50,7 @@
     NSMutableDictionary *vault;
 }
 
-@property (nonatomic, retain) NSMutableDictionary *vault;
+@property (nonatomic, strong) NSMutableDictionary *vault;
 
 + (ADLCredentialVault*) sharedCredentialVault;
 

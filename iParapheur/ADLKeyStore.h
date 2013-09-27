@@ -53,7 +53,7 @@ enum {
 
 /* Only usable on the soft KeyStore*/
 
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 #pragma mark - Key Management methods
 -(void)resetKeyStore;

@@ -44,19 +44,19 @@
 
 @interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate>
 
-@property (retain, nonatomic) NSString *dossierRef;
-@property (retain, nonatomic) NSString *action;
-@property (retain, nonatomic) IBOutlet UITextView *annotationPrivee;
-@property (retain, nonatomic) IBOutlet UITextView *annotationPublique;
+@property (strong, nonatomic) NSString *dossierRef;
+@property (strong, nonatomic) NSString *action;
+@property (strong, nonatomic) IBOutlet UITextView *annotationPrivee;
+@property (strong, nonatomic) IBOutlet UITextView *annotationPublique;
 
-@property (retain, nonatomic) IBOutlet UIButton *finishButton;
+@property (strong, nonatomic) IBOutlet UIButton *finishButton;
 
-@property (retain, nonatomic) NSString *bureauCourant;
+@property (strong, nonatomic) NSString *bureauCourant;
 
-@property (retain, nonatomic) NSArray *pkeys;
-@property (retain, nonatomic) IBOutlet UILabel *certificateLabel;
-@property (retain, nonatomic) IBOutlet UITableView *certificatesTableView;
+@property (strong, nonatomic) NSArray *pkeys;
+@property (strong, nonatomic) IBOutlet UILabel *certificateLabel;
+@property (strong, nonatomic) IBOutlet UITableView *certificatesTableView;
 
-@property (retain, nonatomic) PrivateKey *currentPKey;
+@property (strong, nonatomic) PrivateKey *currentPKey;
 
 @end

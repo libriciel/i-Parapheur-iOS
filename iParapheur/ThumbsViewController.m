@@ -209,7 +209,6 @@
 	theThumbsView = nil;
 	mainToolbar = nil;
 	document = nil;
-    [super dealloc];
 }
 
 #pragma mark ThumbsMainToolbarDelegate methods
@@ -421,7 +420,6 @@
 	maskView = nil;
 	textLabel = nil;
 	bookMark = nil;
-    [super dealloc];
 }
 
 - (CGSize)maximumContentSize

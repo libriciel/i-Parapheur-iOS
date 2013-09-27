@@ -16,7 +16,6 @@
 
 @implementation ADLFilterSubTypeTableViewController
 
-@synthesize subTypes;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -50,8 +49,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (subTypes != nil) {
-        return [subTypes count];
+    if (self.subTypes != nil) {
+        return [self.subTypes count];
     }
     else {
         return 0;
@@ -64,7 +63,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
 
-    [[cell textLabel] setText:[subTypes objectAtIndex:[indexPath row]]];
+    [[cell textLabel] setText:[self.subTypes objectAtIndex:[indexPath row]]];
     
     return cell;
 }
@@ -112,7 +111,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *subType = [subTypes objectAtIndex:[indexPath row]];
+    NSString *subType = [self.subTypes objectAtIndex:[indexPath row]];
     NSMutableDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
     [currentFilter setObject:subType forKey:@"ph:soustypeMetier"];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged object:nil];

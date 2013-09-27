@@ -45,7 +45,7 @@
 @interface RGAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate, ADLParapheurWallDelegateProtocol>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (retain, nonatomic) IBOutlet UISplitViewController *splitViewController;
+@property (strong, nonatomic) IBOutlet UISplitViewController *splitViewController;
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;

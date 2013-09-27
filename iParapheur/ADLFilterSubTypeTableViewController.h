@@ -11,5 +11,5 @@
 @interface ADLFilterSubTypeTableViewController : UITableViewController<UITableViewDataSource, UITableViewDelegate>
 - (IBAction)closeFilterPopover:(id)sender;
 
-@property (nonatomic,retain) NSArray *subTypes;
+@property (nonatomic,strong) NSArray *subTypes;
 @end

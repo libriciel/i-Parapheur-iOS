@@ -22,6 +22,7 @@
 		1483D1DE165E852C000C6D0D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1483D1DD165E852C000C6D0D /* Security.framework */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
 		14EF518C16DF72A7003C2FB3 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14EF518B16DF72A7003C2FB3 /* Settings.storyboard */; };
+		882C40AD16FCBE0A00D824E9 /* icone_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E62A8715889B78003445F4 /* icone_ipad.png */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
 		B41B60AD15F09D5300655827 /* ip-mailsec.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B609F15F09D5200655827 /* ip-mailsec.jpg */; };
@@ -87,7 +88,6 @@
 		B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */; };
 		B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */; };
 		B4E5ED0A153AF87800BD514D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4E5ED09153AF87800BD514D /* SystemConfiguration.framework */; };
-		B4E62A8815889B78003445F4 /* icone_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E62A8715889B78003445F4 /* icone_ipad.png */; };
 		B4FF33D515473325006F7BF3 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C215473325006F7BF3 /* ReaderConstants.m */; };
 		B4FF33D615473325006F7BF3 /* ReaderDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C415473325006F7BF3 /* ReaderDocument.m */; };
 		B4FF33D715473325006F7BF3 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C615473325006F7BF3 /* ReaderViewController.m */; };
@@ -721,7 +721,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = RG;
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = B4E5EC98153AF65E00BD514D /* Build configuration list for PBXProject "iParapheur" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -748,12 +748,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				882C40AD16FCBE0A00D824E9 /* icone_ipad.png in Resources */,
 				B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */,
 				B41B9470156227A6004D57A1 /* rounded-checkmark.png in Resources */,
 				B41B9471156227A6004D57A1 /* rounded-checkmark@2x.png in Resources */,
 				B41B9472156227A6004D57A1 /* rounded-fail.png in Resources */,
 				B41B9473156227A6004D57A1 /* rounded-fail@2x.png in Resources */,
-				B4E62A8815889B78003445F4 /* icone_ipad.png in Resources */,
 				B429A96415B5BF7A003B8BF9 /* Settings.bundle in Resources */,
 				B41B60AD15F09D5300655827 /* ip-mailsec.jpg in Resources */,
 				B41B60AE15F09D5300655827 /* ip-signature.jpg in Resources */,
@@ -955,11 +955,16 @@
 /* Begin XCBuildConfiguration section */
 		B4E5ECD5153AF65F00BD514D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Emmanuel Peralta (9569UE9LAJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Emmanuel Peralta (9569UE9LAJ)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -974,8 +979,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				PROVISIONING_PROFILE = "81FDDAF3-ED3F-4503-B9F0-414AC4F2B1F8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1679719B-58F3-43B0-A316-B2DCD1BF9DD9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -983,11 +988,16 @@
 		};
 		B4E5ECD6153AF65F00BD514D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Emmanuel Peralta (9569UE9LAJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Emmanuel Peralta (9569UE9LAJ)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -996,8 +1006,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "81FDDAF3-ED3F-4503-B9F0-414AC4F2B1F8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1679719B-58F3-43B0-A316-B2DCD1BF9DD9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -1008,6 +1018,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1025,6 +1036,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1040,8 +1052,10 @@
 		};
 		B4E5ECDB153AF65F00BD514D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
@@ -1057,8 +1071,10 @@
 		};
 		B4E5ECDC153AF65F00BD514D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",

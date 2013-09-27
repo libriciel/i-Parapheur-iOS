@@ -45,5 +45,5 @@
 @interface RGSplitViewController : UISplitViewController<ADLParapheurWallDelegateProtocol> {
     id bureauView;
 }
-@property (nonatomic, retain) IBOutlet id bureauView;
+@property (nonatomic, strong) IBOutlet id bureauView;
 @end

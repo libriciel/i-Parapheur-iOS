@@ -118,7 +118,6 @@
         NSLog(@"%@", requestURL);
                 
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestURL];
-        [requestURL release];
         
         if (downloadingDocument) {
             [request setHTTPMethod:@"GET"];
@@ -136,10 +135,9 @@
         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop]
                                forMode:NSDefaultRunLoopMode];
         
-        _receivedData= [[NSMutableData data] retain];
+        _receivedData= [NSMutableData data];
         
         [connection start];
-        [request release];
         
     }
 }
@@ -166,8 +164,6 @@
     [self setIsExecuting: NO];
     [self setIsFinished: YES];
     [connection cancel];
-    [connection release];
-    [_receivedData release];
     _receivedData = nil;
     
 }
@@ -175,7 +171,7 @@
 
 
 - (SecCertificateRef)certificateFromFile:(NSString*)file {
-    CFDataRef adullact_g3_ca_data = (CFDataRef)[[NSFileManager defaultManager] contentsAtPath:file];
+    CFDataRef adullact_g3_ca_data = (__bridge CFDataRef)[[NSFileManager defaultManager] contentsAtPath:file];
     
     return SecCertificateCreateWithData (kCFAllocatorDefault, adullact_g3_ca_data);
 }
@@ -188,10 +184,12 @@
     SecCertificateRef adullact_mobile = [self certificateFromFile:adullact_mobile_path];
     
     
-    NSArray *anchors = [[NSArray alloc] initWithObjects: (id)adullact_mobile, nil];
+    //NSArray *anchors = [[NSArray alloc] initWithObjects: (id)adullact_mobile, nil];
+    NSArray *anchors = [[NSArray alloc] initWithObjects: (__bridge id)adullact_mobile, nil];
     
     SecTrustSetAnchorCertificatesOnly(trust, YES);
-    SecTrustSetAnchorCertificates(trust, (CFArrayRef)anchors);
+    //SecTrustSetAnchorCertificates(trust, (CFArrayRef)anchors);
+    SecTrustSetAnchorCertificates(trust, (__bridge CFArrayRef)anchors);
     
     NSURLCredential *newCredential = nil;
     
@@ -244,14 +242,11 @@
         [self setIsExecuting: NO];
         [self setIsFinished: YES];
         [connection cancel];
-        [connection release];
-        [_receivedData release];
         _receivedData = nil;
     }
     else {
         
         NSString *req = [[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding];
-        [req release];
     }
 }
 
@@ -263,8 +258,6 @@
         [self setIsExecuting: NO];
         [self setIsFinished: YES];
         [connection cancel];
-        [connection release];
-        [_receivedData release];
         _receivedData = nil;
     }
 }
@@ -285,7 +278,6 @@
     }
     [self setIsExecuting: NO];
     [self setIsFinished: YES];
-    [connection release];
     //[_connection release];
     //[_receivedData release];
 }
@@ -314,11 +306,5 @@
     return NO;
 }
 
-- (void)dealloc {
-    if (_receivedData != nil) {
-        [_receivedData release];
-    }
-    [super dealloc];
-}
 
 @end

@@ -75,7 +75,6 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Alert title when network error happens") message:[NSString stringWithFormat:@"%@", [[answer objectForKey:@"data"] objectForKey:@"ticket"]] delegate:nil cancelButtonTitle:NSLocalizedString(@"Dismiss", @"Alert view dismiss button") otherButtonTitles:nil];
         
         [alertView show];
-        [alertView release];
         //storing ticket ? lacks the host and login information
         //we should add it into the request process ?
         
@@ -85,7 +84,6 @@
         
         [vault addCredentialForHost:[collectivityDef host] andLogin:[collectivityDef username] withTicket:[[answer objectForKey:@"data"] objectForKey:@"ticket"]];
         
-        [collectivityDef release];
         
 
         

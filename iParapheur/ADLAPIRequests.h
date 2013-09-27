@@ -65,7 +65,6 @@
                             page, @"page", \
                             pageSize, @"pageSize", nil]; \
     API_REQUEST(GETDOSSIERSHEADERS_API, _args); \
-    [_args release]; \
 }
 
 #define API_GETDOSSIERHEADERS_FILTERED(bureauCourant, page, pageSize, _filters) \
@@ -76,7 +75,6 @@
         _filters, @"filters", \
         pageSize, @"pageSize", nil]; \
     API_REQUEST(GETDOSSIERSHEADERS_API, _args); \
-    [_args release]; \
 }
 
 #define API_GETDOSSIERHEADERS_GET_DOSSIERS(answer) \

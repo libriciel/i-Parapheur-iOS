@@ -64,8 +64,8 @@
     NSString *username;
 }
 
-@property (nonatomic, retain) NSString *host;
-@property (nonatomic, retain) NSString *username;
+@property (nonatomic, strong) NSString *host;
+@property (nonatomic, strong) NSString *username;
 
 +(ADLCollectivityDef*) copyDefaultCollectity;
 
