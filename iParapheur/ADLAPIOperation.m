@@ -51,6 +51,7 @@
     if (self = [super init]) {
         _documentPath = documentPath;
         downloadingDocument = YES;
+        get = YES;
         _collectivityDef = def;
         _isExecuting = NO;
         _isFinished = NO;
@@ -66,9 +67,23 @@
         self.args = args;
         self.collectivityDef = def;
         downloadingDocument = NO;
+        get = NO;
         self.delegate = delegate;
         _isExecuting = NO;
         _isFinished = NO; 
+    }
+    return self;
+}
+
+-(id)initWithRequest:(NSString *)request collectivityDef:(ADLCollectivityDef*)def delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+    if (self = [super init]) {
+        _request = request;
+        self.collectivityDef = def;
+        downloadingDocument = NO;
+        get = YES;
+        self.delegate = delegate;
+        _isExecuting = NO;
+        _isFinished = NO;
     }
     return self;
 }
@@ -93,7 +108,7 @@
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     
     if ([reachability currentReachabilityStatus] == NotReachable) {
-        if (_delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork:)])
+        if (_delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)])
             [_delegate didEndWithUnReachableNetwork];
     }
     else {
@@ -123,7 +138,12 @@
             [request setHTTPMethod:@"GET"];
         }
         else {
-            [request setHTTPMethod:@"POST"];
+            if (get) {
+                [request setHTTPMethod:@"GET"];
+            }
+            else {
+                [request setHTTPMethod:@"POST"];
+            }
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
             [request setHTTPBody:[_args JSONData]];
@@ -148,8 +168,8 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     if (!self.isCancelled) {
-        if (false && _delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork:)]) {
-            [_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork:) withObject:nil waitUntilDone:YES];
+        if (false && _delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)]) {
+            [_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork) withObject:nil waitUntilDone:YES];
         }
         else {
             UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
@@ -244,10 +264,10 @@
         [connection cancel];
         _receivedData = nil;
     }
-    else {
+    //else {
         
-        NSString *req = [[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding];
-    }
+        //NSString *req = [[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding];
+    //}
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {

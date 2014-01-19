@@ -40,7 +40,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "RGDetailViewController.h"
 
 @interface RGSplitViewController : UISplitViewController<ADLParapheurWallDelegateProtocol> {
     id bureauView;

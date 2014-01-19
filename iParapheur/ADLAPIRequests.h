@@ -35,6 +35,12 @@
     [_requester request:api andArgs:args delegate:self]; \
 }
 
+#define API_GET_REQUEST(api) \
+{ \
+ADLRequester *_requester = [ADLRequester sharedRequester]; \
+[_requester request:api delegate:self]; \
+}
+
 #pragma mark - login
 
 #define API_LOGIN(username, password) \
@@ -48,10 +54,9 @@
 
 #pragma mark - getBureaux
 
-#define API_GETBUREAUX(username) \
+#define API_GETBUREAUX() \
 { \
-    NSDictionary *_args = [NSDictionary dictionaryWithObjectsAndKeys:username, @"username", nil]; \
-    API_REQUEST(GETBUREAUX_API, _args); \
+    API_GET_REQUEST(GETBUREAUX_API); \
 }
 
 #define API_GETBUREAUX_GET_BUREAUX(answer) \

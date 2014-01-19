@@ -47,7 +47,7 @@
 #import "ADLPDFViewController.h"
 #import "ReaderContentView.h"
 #import "LGViewHUD.h"
-#import "RGMasterViewController.h"
+#import "RGDossierDetailViewController.h"
 #import "RGDocumentsView.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
@@ -57,7 +57,8 @@
 
 
 @interface ADLPDFViewController ()
-
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+- (void)configureView;
 @end
 
 @implementation ADLPDFViewController
@@ -74,10 +75,34 @@
 @synthesize container;
 
 
+#pragma mark - Managing the detail item
+
+- (void)setDetailItem:(id)newDetailItem
+{
+    if (_detailItem != newDetailItem) {
+        _detailItem = newDetailItem;
+        
+        // Update the view.
+        [self configureView];
+    }
+    
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+- (void)configureView
+{
+    // Update the user interface for the detail item.hide
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dossierSelected:) name:kDossierSelected object:nil];
     
     
@@ -92,8 +117,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDocumentWithIndex:) name:kshowDocumentWithIndex object:nil];
     
     self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = nil;
-    
+    //self.navigationItem.leftBarButtonItem = nil;
+    [self configureView];
 }
 
 
@@ -113,7 +138,7 @@
     
     //self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.rightBarButtonItems = nil;
-    self.navigationItem.leftBarButtonItem = nil;
+    //self.navigationItem.leftBarButtonItem = nil;
     
     [_actionPopover dismissPopoverAnimated:YES];
     [_documentsPopover dismissPopoverAnimated:YES];
@@ -150,9 +175,9 @@
     API_GETANNOTATIONS(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
     
     
-    NSArray *buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
+    NSArray *buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, _documentsButton, nil];
     
-    self.navigationItem.leftBarButtonItem = _documentsButton;
+    //self.navigationItem.leftBarButtonItem = _documentsButton;
     self.navigationItem.rightBarButtonItems = buttons;
     
     [[self navigationController] popToRootViewControllerAnimated:YES];
@@ -205,6 +230,8 @@
     if ([s isEqual:GETDOSSIER_API]) {
         _dossier = [answer copy];
         [self displayDocumentAt: 0];
+        
+        self.navigationController.title = [_dossier objectForKey:@"titre"];
         
         NSString *documentPrincipal = [[[_dossier objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
         [[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
@@ -347,7 +374,7 @@
     
 #else // dismiss the modal view controller
     
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:nil];
     
 #endif // DEMO_VIEW_CONTROLLER_PUSH
 }
@@ -370,7 +397,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
-        [((RGMasterViewController*) [segue destinationViewController]) setDossier:_dossier];
+        [((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_dossier];
     }
     
     if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
@@ -480,6 +507,23 @@
 
 -(void)shallDismissHUD:(LGViewHUD*)hud {
     [hud hideWithAnimation:YES];
+}
+
+#pragma mark - Split view
+
+- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
+{
+    barButtonItem.title = NSLocalizedString(@"Dossiers", @"Dossiers");
+    barButtonItem.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+    self.masterPopoverController = popoverController;
+}
+
+- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    // Called when the view is shown again in the split view, invalidating the button and popover controller.
+    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+    self.masterPopoverController = nil;
 }
 
 @end

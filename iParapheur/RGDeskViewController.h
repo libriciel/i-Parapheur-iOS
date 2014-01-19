@@ -40,12 +40,12 @@
 
 
 #import <UIKit/UIKit.h>
+#import "ADLFilterViewController.h"
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "RGMasterViewController.h"
-#import <EGORefreshTableHeaderView.h>
+#import "RGDossierDetailViewController.h"
 
-@interface RGDeskViewController : UITableViewController <EGORefreshTableHeaderDelegate,
-    UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource, UISearchBarDelegate, UIPopoverControllerDelegate> {
+@interface RGDeskViewController : UITableViewController <UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource, UISearchBarDelegate,
+    FilterDelegate> {
     NSMutableArray *filesArray;
     NSString *deskRef;
     int currentPage;
@@ -53,15 +53,13 @@
 
 @property (nonatomic, strong) NSString* deskRef;
 @property (nonatomic, strong) NSArray* filesArray;
-@property (nonatomic, strong) IBOutlet RGMasterViewController* detailViewController;
 @property (nonatomic, strong) UIView* originalView;
 
 @property (strong, nonatomic) IBOutlet UIButton *loadMoreButton;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 
-@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
 @property (nonatomic) BOOL loading;
-@property (strong, nonatomic) UIPopoverController *filtersPopover;
+
 
 - (IBAction)loadNextResultsPage:(id)sender;
 

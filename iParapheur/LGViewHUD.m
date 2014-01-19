@@ -5,7 +5,7 @@
 
 #import "LGViewHUD.h"
 #import <QuartzCore/QuartzCore.h>
-#import "ADLCloseButton.h";
+#import "ADLCloseButton.h"
 
 static LGViewHUD* defaultHUD = nil;
 
@@ -38,7 +38,7 @@ static LGViewHUD* defaultHUD = nil;
 		topLabel.font=[UIFont boldSystemFontOfSize:17];
 		topLabel.shadowColor=[UIColor blackColor];
 		topLabel.shadowOffset=CGSizeMake(1, 1);
-		topLabel.textAlignment=UITextAlignmentCenter;
+		topLabel.textAlignment=NSTextAlignmentCenter;
 		
 		bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height-2*offset/3.0, frame.size.width, offset/2)];
 		bottomLabel.backgroundColor=[UIColor clearColor];
@@ -47,7 +47,7 @@ static LGViewHUD* defaultHUD = nil;
 		bottomLabel.shadowColor=[UIColor blackColor];
 		bottomLabel.shadowOffset=CGSizeMake(1, 1);
 		
-		bottomLabel.textAlignment=UITextAlignmentCenter;
+		bottomLabel.textAlignment=NSTextAlignmentCenter;
 		image=nil;
 		
 		backgroundView= [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];

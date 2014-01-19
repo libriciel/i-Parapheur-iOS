@@ -45,7 +45,7 @@
 #import "ADLDrawingView.h"
 
 @interface ADLPDFViewController : UIViewController<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
-
+@property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) IBOutlet UIView *container;
 @property (strong, nonatomic) NSDictionary *dossier;
 @property (strong, nonatomic) NSString *dossierRef;

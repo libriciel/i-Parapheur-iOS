@@ -38,21 +38,43 @@
  * termes.
  */
 
+
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "JSONKit.h"
-#import "RGDeskViewController.h"
-#import <EGORefreshTableHeaderView.h>
+#import "ReaderViewController.h"
+#import "ADLPDFViewController.h"
 
-@interface RGDetailViewController : UITableViewController <EGORefreshTableHeaderDelegate ,UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource> {
+@class RGDetailViewController;
+
+@interface RGDossierDetailViewController : UIViewController<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate> {
+    
+    UITextView *textView;
+    UILabel *dossierName;
+    UILabel *typeLabel;
+    UILabel *sousTypeLabel;
+    UILabel *circuitLabel;
+    NSString *dossierRef;
+    NSArray *documents;
+    
+    NSArray *circuit;
+    
+
+    ReaderViewController *readerViewController;
 }
 
-@property (nonatomic, strong) NSArray *deskArray;
-@property (strong, nonatomic) id detailItem;
-@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic) BOOL loading;
+@property (strong, nonatomic) ADLPDFViewController *detailViewController;
+@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+@property (nonatomic, strong) IBOutlet UILabel *typeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *sousTypeLabel;
+@property (strong, nonatomic) IBOutlet UITableView *circuitTable;
+@property (strong, nonatomic) IBOutlet UILabel *circuitLabel;
+@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
-- (void)loadBureaux:(BOOL)displayHUD;
 
+@property (strong, nonatomic) NSDictionary *dossier;
+
+
+@property (nonatomic, strong) NSString *dossierRef;
+//- (void)refreshViewWithDossier:(NSDictionary*)dossier;
 
 @end

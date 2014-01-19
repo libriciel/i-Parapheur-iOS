@@ -170,13 +170,13 @@
 }
 
 - (IBAction)cancel:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
 
 }

@@ -46,6 +46,7 @@
 
 #import "RGDeskViewController.h"
 #import "RGMasterViewController.h"
+#import "ADLFilterViewController.h"
 #import "LGViewHUD.h"
 #import "RGFileCell.h"
 #import <ISO8601DateFormatter/ISO8601DateFormatter.h>
@@ -57,7 +58,6 @@
 
 @synthesize deskRef;
 @synthesize filesArray;
-@synthesize detailViewController;
 @synthesize loadMoreButton;
 @synthesize searchBar;
 
@@ -65,37 +65,21 @@
 #pragma mark - UIViewController delegate
 -(void)viewDidLoad {
     [super viewDidLoad];
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
+    //[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
     
     _loading = NO;
+    [[self.navigationItem backBarButtonItem] setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
     
-    
-    if (_refreshHeaderView == nil) {
-        
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-		view.delegate = self;
-		[self.tableView addSubview:view];
-		_refreshHeaderView = view;
-        
-	}
+    self.refreshControl = [[UIRefreshControl alloc]init];
+    [self.refreshControl setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
+    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kDossierActionComplete object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kFilterChanged object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeFilterPopover) name:kFilterPopoverShouldClose object:nil];
-    
-	//  update the last update date
-	[_refreshHeaderView refreshLastUpdatedDate];
-    
-}
-
--(void)closeFilterPopover {
-     [self popoverControllerDidDismissPopover:_filtersPopover];
 }
 
 -(void) refresh {
-   
+    [self.refreshControl beginRefreshing];
     [self loadDossiersWithPage:0];
 }
 
@@ -134,12 +118,12 @@
     else {
         API_GETDOSSIERHEADERS(deskRef, [NSNumber numberWithInteger:page], @"15");
     }
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
+    /*LGViewHUD *hud = [LGViewHUD defaultHUD];
     hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
     hud.topText=@"";
     hud.bottomText=@"Chargement ...";
     hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
+    [hud showInView:self.view];*/
     
     
 }
@@ -210,8 +194,7 @@
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
     _loading = NO;
     
-    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-    
+    [self.refreshControl endRefreshing];
     if (currentPage > 0) {
         [filesArray removeLastObject];
     }
@@ -265,7 +248,7 @@
    
     ADLRequester *requester = [ADLRequester sharedRequester];
     
-    NSString *pageStr = @"0";
+    //NSString *pageStr = @"0";
     NSDictionary *args = nil;
    
     if ([searchText isEqualToString:@""]) {
@@ -315,52 +298,19 @@
 
 }
 
-#pragma mark - Pull to refresh delegeate implementation
+#pragma mark - FilterDelegate protocol implementation
 
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refresh];
-}
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
-    return _loading;
-    
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-    
-	return [NSDate date]; // should return date data source was last changed
-    
-}
-
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    
+- (void)shouldReload:(NSDictionary *)filter {
+    [ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary: filter];
 }
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if (_filtersPopover != nil) {
-        [_filtersPopover dismissPopoverAnimated:NO];
-    }
+    /*if (_filterModal != nil) {
+        [_filterModal dismissViewControllerAnimated:NO completion:nil];
+    }*/
     
-    _filtersPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
-    [_filtersPopover setDelegate:self];
-}
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    if (_filtersPopover != nil && popoverController == _filtersPopover) {
-        [_filtersPopover dismissPopoverAnimated:YES];
-        _filtersPopover = nil;
-    }
+    ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
 }
 
 - (void)viewDidUnload {

@@ -39,101 +39,95 @@
  */
 
 //
-//  RGMasterViewController.m
+//  RGDetailViewController.m
 //  iParapheur
 //
 //
 
 #import "RGMasterViewController.h"
-#import "RGWorkflowDialogViewController.h"
-#import "RGDetailViewController.h"
-#import "RGReaderViewController.h"
-#import "RGAppDelegate.h"
-#import "RGDocumentsView.h"
-
-#import "ADLRequester.h"
 #import "ADLCredentialVault.h"
+#import "RGDeskCustomTableViewCell.h"
+#import "ADLNotifications.h"
+#import "ADLSingletonState.h"
+#import "ADLRequester.h"
 #import "ADLCollectivityDef.h"
-#import "ADLCircuitCell.h"
-#import <ISO8601DateFormatter/ISO8601DateFormatter.h>
-
 #import "LGViewHUD.h"
 
-@interface RGMasterViewController () {
-    NSMutableArray *_objects;
-    __weak UIPopoverController *documentsPopover;
-}
+@interface RGMasterViewController ()
+
 @end
 
 @implementation RGMasterViewController
-@synthesize documentsButtonItem;
-@synthesize viserButton;
-@synthesize detailViewController = _detailViewController;
-@synthesize dossierName;
-@synthesize textView;
-@synthesize dossierRef;
-@synthesize typeLabel;
-@synthesize sousTypeLabel;
-@synthesize dossierNameLabel;
-@synthesize circuitTable;
-@synthesize sousTypeValueLabel;
-@synthesize typeValueLabel;
-@synthesize rejectButton;
 
-- (void)awakeFromNib
+
+/*
+- (id)initWithFrame:(CGRect)frame
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-       /* self.clearsSelectionOnViewWillAppear = NO;*/
-        self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+    self = [super initWithFrame:frame];
+    if (self) {
+        
     }
-    documents = [[NSArray alloc] init];
-    [super awakeFromNib];
-}
+    return self;
+}*/
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-   /*
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+	// Do any additional setup after loading the view, typically from a nib
+    _deskArray = [[NSMutableArray alloc] init];
+    _loading = NO;
+    
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+    
+    self.refreshControl = [[UIRefreshControl alloc]init];
+    self.refreshControl.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+    [self.refreshControl addTarget:self action:@selector(loadBureaux) forControlEvents:UIControlEventValueChanged];
+    
+}
 
-    UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)] autorelease];
-    self.navigationItem.rightBarButtonItem = addButton;
-    self.detailViewController = (RGDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    */
-    self.navigationItem.rightBarButtonItem=nil;
-    [textView setText:dossierRef];
-    _objects = [[NSMutableArray alloc] init];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
     
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
+    if ([_deskArray count] == 0) {
+        API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
+                  /*
+        ADLRequester *requester = [ADLRequester sharedRequester];
+        [requester setDelegate:self];
+             
+        NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], @"username", [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"], @"password", nil];
+                
+        [requester request:LOGIN_API andArgs:args];*/
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared object:nil];
+
+}
+
+- (void)loadBureaux
+{
+    _loading = YES;
+    [self.refreshControl beginRefreshing];
+    //ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
+
+    API_GETBUREAUX();
     
-    [self hidesEveryThing];
-    [[self dossierName] setText:[_dossier objectForKey:@"titre"]];
-    [[self typeLabel] setText:[_dossier objectForKey:@"type"]];
-    [[self sousTypeLabel] setText:[_dossier objectForKey:@"sousType"]];
-    dossierRef = [_dossier objectForKey:@"dossierRef"];
-    documents = [_dossier objectForKey:@"documents"];
-    self.navigationItem.rightBarButtonItem = documentsButtonItem;
-    [self getCircuit];
-    [self showsEveryThing];
-    
+   
+    /*if (displayHUD == NO) {
+        LGViewHUD *hud = [LGViewHUD defaultHUD];
+        hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
+        hud.topText=@"";
+        hud.bottomText=@"Chargement ...";
+        hud.activityIndicatorOn=YES;
+        [hud showInView:self.view];
+    }*/
     
 }
 
 - (void)viewDidUnload
 {
-    [self setCircuitTable:nil];
-    [self setViserButton:nil];
-    [self setRejectButton:nil];
-    [self setDossierNameLabel:nil];
-    [self setSousTypeValueLabel:nil];
-    [self setTypeValueLabel:nil];
-    
-    //unregister observer
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+  
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -145,320 +139,95 @@
     }
 }
 
-- (void) dossierSelected:(NSNotification*)notification {
-    NSString *selectedDossierRef  = [notification object];
-   
-    [self setDossierRef:selectedDossierRef];
-}
 
-- (void) setDossierRef:(NSString *)_dossierRef {
-    dossierRef = _dossierRef;
-    ADLRequester *requester = [ADLRequester sharedRequester];
-    
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef,
-                          @"dossierRef", nil];
-    
-    [requester request:GETDOSSIER_API andArgs:args delegate:self];
-    
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
-
-}
-/*
-- (void)insertNewObject:(id)sender
-{
-    if (!_objects) {
-        _objects = [[NSMutableArray alloc] init];
-    }
-    [_objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-}*/
-
-#pragma mark - Table View
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return _objects.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"CircuitCell";
-    ADLCircuitCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil) {
-        cell = [[ADLCircuitCell alloc] init];
-    }
-    
-    NSDictionary *object = [_objects objectAtIndex:indexPath.row];
-   // cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [object objectForKey:@"parapheurName"], [object objectForKey:@"actionDemandee"]];
-    
-    [[cell parapheurName] setText:[object objectForKey:@"parapheurName"]];
-    if ([[object objectForKey:@"approved"] intValue] == 1) {
-    [[cell validateurName] setText:[object objectForKey:@"signataire"]];
-    }
-    else {
-        [[cell validateurName] setText:nil];
-    }
-    
-    ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
-    
-    NSString *validationDateIso = [object objectForKey:@"dateValidation"];
-    if (validationDateIso != nil && ![validationDateIso isEqualToString:@""]) {
-        NSDate * validationDate = [formatter dateFromString:validationDateIso];
-        
-        NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-        [outputFormatter setDateFormat:@"'le' dd/MM/yyyy 'à' HH:mm"];
-        
-        NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
-        
-        [[cell validationDate] setText:validationDateStr];
-        
-    
-    }
-    else {
-        [[cell validationDate] setText:nil];
-    }
-    
-    
-    NSString *imagePrefix = @"iw";
-    if ([[object objectForKey:@"approved"] intValue] == 1) {
-        imagePrefix = @"ip";
-    }
-    
-    NSString *action = [[object objectForKey:@"actionDemandee"] lowercaseString];
-    
-    [[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.jpg", imagePrefix, action ]]];
-    
-    return cell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [_objects removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }
-}
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-- (IBAction)showDocumentsViewController:(id)sender {
-    if (documentsPopover) 
-        [documentsPopover dismissPopoverAnimated:YES];
-    else
-        [self performSegueWithIdentifier:@"showDocumentsView" sender:sender];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        NSDate *object = [_objects objectAtIndex:indexPath.row];
-        self.detailViewController.detailItem = object;
-    }
-}
-/*
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = [_objects objectAtIndex:indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
-    }
-}*/
-
-- (void) getCircuit {
-    ADLRequester *requester = [ADLRequester sharedRequester];
-    
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:dossierRef,
-                          @"dossier", nil];
-    
-    [requester request:@"getCircuit" andArgs:args delegate:self];
-    
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
-}
 #pragma mark - Wall impl
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer{
     NSString *s = [answer objectForKey:@"_req"];
-    if ([s isEqual:GETDOSSIER_API]) {
-        //[deskArray removeAllObjects];
-        @synchronized(self)
-        {
-                        
-            [textView setText:[answer JSONString]];
-            
-            //[self refreshViewWithDossier:[answer objectForKey:@"data"]];
-        }
-        [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-        [self getCircuit];
-        [self showsEveryThing];
-    }
-    else if ([s isEqualToString:@"getCircuit"]) {
-        @synchronized(self)
-        {
-            [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-            /*if (_objects == nil) {
-             _objects = [[[NSMutableArray alloc] init] retain];
-             }*/
-            [_objects removeAllObjects];
-            [_objects addObjectsFromArray:[answer objectForKey:@"circuit"]];
-            [circuitTable reloadData];
+    _loading = NO;
+    [self.refreshControl endRefreshing];
+    if ([s isEqual:LOGIN_API]) {
+        
+        ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
+        ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
+        
+        [vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
+        
+        [self loadBureaux];
 
-            
-            /* Basic handling of actions. */
-            NSString *currentAction = nil;
-            for (NSDictionary* etape in _objects) {
-                if (![[etape objectForKey:@"approved"] isEqual:[NSNumber numberWithInt:1]]) {
-                    currentAction = [etape objectForKey:@"actionDemandee"];
-                    break;
-                }
-            }
-            
-            if ([currentAction isEqualToString:@"VISA"]) {
-                [[self viserButton] setHidden:NO];
-            }
-            else {
-                [[self viserButton] setHidden:YES];
-            }
-        }
-    }    
-}
-- (void)didEndWithUnReachableNetwork{
+    }
+    else if ([s isEqual:GETBUREAUX_API]) {
+        NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
+
+        [self setDeskArray:array];
+          
+        // add a cast to get rid of the warning since the view is indeed a table view it respons to reloadData
+        [(UITableView*)([self view]) reloadData];
+        
+        [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+        
+    }
     
+    //storing ticket ? lacks the host and login information
+    //we should add it into the request process ?
+       
+}
+
+- (void)didEndWithUnReachableNetwork{
+    [self.refreshControl endRefreshing];
 }
 
 - (void)didEndWithUnAuthorizedAccess {
-    
+    [self.refreshControl endRefreshing];
 }
 
-#pragma mark - View Refresh with data
+#pragma UITableDataSource delegate
 
-
-- (void) refreshCircuit:(NSDictionary*)circuit {
-    
-}
-
-#pragma mark - IBActions
-
-
-- (IBAction)showVisuelPDF:(id)sender {
-    NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
-    
-	NSString *filePath = [pdfs lastObject];
-    
-    ReaderDocument *document = [[ReaderDocument alloc] initWithFilePath:filePath password:nil];
-    
-    readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-    [readerViewController setDelegate:self];
-    
-    readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-
-    [[self splitViewController] presentModalViewController:readerViewController animated:YES];
-    
-}
-
-- (void) dismissReaderViewController:(ReaderViewController *)viewController {
-    // do nothing for now
-    [[self splitViewController] dismissModalViewControllerAnimated:YES];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    /*
-    if ([[segue identifier] isEqualToString:@"showDocumentsView"]) {
-        
-        if (documentsPopover) {
-            [documentsPopover dismissPopoverAnimated:NO];
-            [documentsPopover release];
-            documentsPopover = nil;
-        } 
-        documentsPopover = [[(UIStoryboardPopoverSegue *)segue popoverController] retain];
-        
-        [((RGDocumentsView
-           *)[segue destinationViewController]) setDocuments:documents];
-        
-        [((RGDocumentsView
-           *)[segue destinationViewController]) setSplitViewController:[self splitViewController]];
-        
-        [((RGDocumentsView
-           *)[segue destinationViewController]) setPopoverController:[(UIStoryboardPopoverSegue *)segue popoverController]];
-    }*/
-    
-    if ([[segue identifier] isEqualToString:@"viser"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossierRef:[self dossierRef]];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (_deskArray == nil) {
+        return 0;
     }
-    
-    if ([[segue identifier] isEqualToString:@"reject"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossierRef:[self dossierRef]];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
+    else {
+        return [_deskArray count];
     }
 }
 
--(void) presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated {
-    [super presentModalViewController:modalViewController animated:animated];
+// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"DeskCell";
+    
+    RGDeskCustomTableViewCell *cell = (RGDeskCustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    
+    NSDictionary *bureau = [ [self deskArray] objectAtIndex:[indexPath row]];
+    NSLog(@"%@", [bureau objectForKey:@"name"]);
+    [[cell bureauNameLabel] setText:[bureau objectForKey:@"name"]];
+   
+    NSNumber *a_traiter = [bureau objectForKey:@"a_traiter"];
+    
+    [[cell todoBadge] setBadgeText:[a_traiter stringValue]];
+    [[cell todoBadge] autoBadgeSizeWithString: [a_traiter stringValue]];
+    return cell;
+    
 }
 
-
--(void) hidesEveryThing {
-    [self setHiddenForEveryone:YES];
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *bureau = [[self deskArray] objectAtIndex:[indexPath row]];
+    NSLog(@"Selected Desk = %@", [bureau objectForKey:@"nodeRef"]);
+    
+    RGDeskViewController *controller = [[self storyboard] instantiateViewControllerWithIdentifier:@"DeskViewController"];
+    [controller setDeskRef:[bureau objectForKey:@"nodeRef"]];
+    [[self navigationController] pushViewController:controller animated:YES];
+    
+    [[controller navigationItem] setTitle:[bureau objectForKey:@"name"]];
+    
+    //[[self navigationController] setTitle:[bureau objectForKey:@"name"]];
+    
+    [[ADLSingletonState sharedSingletonState] setBureauCourant:[bureau objectForKey:@"nodeRef"]];
 
 }
-
--(void)showsEveryThing {
-    [self setHiddenForEveryone:NO];
-}
-
--(void)setHiddenForEveryone:(BOOL)val {
-    [dossierName setHidden:val];
-    [typeLabel setHidden:val];
-    [sousTypeLabel setHidden:val];
-    [circuitTable setHidden:val];
-    [dossierNameLabel setHidden:val];
-    [rejectButton setHidden:val];
-    [typeValueLabel setHidden:val];
-    [sousTypeValueLabel setHidden:val];
-}
-
-
-
 
 @end

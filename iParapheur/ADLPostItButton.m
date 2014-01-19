@@ -54,7 +54,7 @@
         CGContextTranslateCTM(context, 0.0f, CGRectGetHeight(self.frame));
         CGContextScaleCTM(context, 1.0f, -1.0f);
         
-        CGSize size = [@"Aa" sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12] constrainedToSize:CGSizeMake(100.0f, 100.0f) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize size = [@"Aa" sizeWithFont:[UIFont fontWithName:@"Helvetica" size:12] constrainedToSize:CGSizeMake(100.0f, 100.0f) lineBreakMode:NSLineBreakByWordWrapping];
         
         CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
         CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
