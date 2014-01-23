@@ -41,14 +41,42 @@
 #import <UIKit/UIKit.h>
 #import <CustomBadge.h>
 
-@interface RGFileCell : UITableViewCell {
-    
-}
+#define kCatchWidth 180
 
-@property (strong, nonatomic) IBOutlet UILabel *filenameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *typeLabel;
+@protocol RGFileCellDelegate;
+
+
+@interface RGFileCell : UITableViewCell <UIScrollViewDelegate>
+
+@property (strong, nonatomic) UILabel *dossierTitleLabel;
+@property (strong, nonatomic) UILabel *typologyLabel;
+@property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) CustomBadge *retardBadge;
-@property (strong, nonatomic) IBOutlet UIView *retardPlaceHolder;
+@property (strong, nonatomic) UIView *retardPlaceHolder;
+@property (strong, nonatomic) UIView *buttonsView;
+@property (strong, nonatomic) UIButton *validateButton;
+@property (strong, nonatomic) UIButton *moreButton;
+@property (strong, nonatomic) UIView *contentCellView;
+@property (strong, nonatomic) UISwitch *switchButton;
+
+@property (weak) id<RGFileCellDelegate> delegate;
+@property(nonatomic, readonly, weak) NSIndexPath* indexPath;
+@property(nonatomic, readonly, weak) UITableView* tableView;
+
+-(void) hideMenuOptions;
+
 @end
 
+@protocol RGFileCellDelegate <NSObject>
 
+@optional
+-(void) cell:(RGFileCell*)cell didSelectAtIndexPath:(NSIndexPath*) indexPath;
+-(void) cell:(RGFileCell*)cell didCheckAtIndexPath:(NSIndexPath*) indexPath;
+
+-(BOOL) canSelectCell:(RGFileCell*) cell;
+-(BOOL) canSwipeCell:(RGFileCell*) cell;
+
+-(void) willSwipeCell:(RGFileCell*) cell;
+-(void) willSelectCell:(RGFileCell*) cell;
+
+@end

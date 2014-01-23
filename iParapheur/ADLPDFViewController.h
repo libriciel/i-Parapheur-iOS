@@ -44,14 +44,22 @@
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
 
-@interface ADLPDFViewController : UIViewController<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
+@interface ADLPDFViewController : UIViewController
+    <ADLParapheurWallDelegateProtocol,
+    ReaderViewControllerDelegate,
+    UIPopoverControllerDelegate,
+    ADLDrawingViewDataSource,
+    LGViewHUDDelegate,
+    UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout>
+
+
 @property (strong, nonatomic) id detailItem;
-@property (strong, nonatomic) IBOutlet UIView *container;
 @property (strong, nonatomic) NSDictionary *dossier;
 @property (strong, nonatomic) NSString *dossierRef;
 
 @property (strong, nonatomic) ReaderViewController* readerViewController;
-@property (nonatomic, strong)  UIView* originalView;
+@property (nonatomic, strong) UIView* originalView;
 @property (strong, nonatomic) UIPopoverController *documentsPopover;
 
 @property (strong, nonatomic) UIPopoverController *actionPopover;
@@ -66,5 +74,11 @@
 @property (assign, nonatomic) BOOL visaEnabled;
 
 @property (assign, nonatomic) BOOL isDocumentPrincipal;
+
+// Used in batch mode
+
+@property (strong, nonatomic) UICollectionView* actionsCollectionView;
+@property (strong, nonatomic) NSMutableArray* actions;
+
 
 @end

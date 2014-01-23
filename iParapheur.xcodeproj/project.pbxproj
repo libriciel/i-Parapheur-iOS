@@ -40,6 +40,8 @@
 		9514BFF5187AA76100118B9C /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFF3187AA76100118B9C /* Icon-76.png */; };
 		9514BFF6187AA76100118B9C /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFF4187AA76100118B9C /* Icon-76@2x.png */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
+		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
+		958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
 		B41B60AD15F09D5300655827 /* ip-mailsec.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B609F15F09D5200655827 /* ip-mailsec.jpg */; };
@@ -203,6 +205,10 @@
 		9514BFF4187AA76100118B9C /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
 		952E2E531888185E005C8D97 /* ADLFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterViewController.h; sourceTree = "<group>"; };
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
+		954A7389188D371D00A13D1E /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
+		954A738A188D371D00A13D1E /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
+		958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CustomColors.h"; sourceTree = "<group>"; };
+		958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CustomColors.m"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B609C15F0962100655827 /* ADLCircuitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCircuitCell.h; sourceTree = "<group>"; };
 		B41B609D15F0962100655827 /* ADLCircuitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCircuitCell.m; sourceTree = "<group>"; };
@@ -570,6 +576,10 @@
 				14EF518B16DF72A7003C2FB3 /* Settings.storyboard */,
 				B4E5ECA9153AF65F00BD514D /* Supporting Files */,
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
+				954A7389188D371D00A13D1E /* NSString+Contains.h */,
+				954A738A188D371D00A13D1E /* NSString+Contains.m */,
+				958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */,
+				958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -914,6 +924,7 @@
 				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,
 				B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */,
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
+				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,
 				B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */,
 				B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */,
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
@@ -949,6 +960,7 @@
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
 				B44649E916241657002622DF /* ADLAnnotation.m in Sources */,
+				958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */,
 				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
 				142CDD8D1640260B009F4F84 /* ADLPostItButton.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,

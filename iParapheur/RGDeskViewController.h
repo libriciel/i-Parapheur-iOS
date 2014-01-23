@@ -43,24 +43,34 @@
 #import "ADLFilterViewController.h"
 #import "ADLParapheurWallDelegateProtocol.h"
 #import "RGDossierDetailViewController.h"
+#import "RGFileCell.h"
 
-@interface RGDeskViewController : UITableViewController <UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource, UISearchBarDelegate,
-    FilterDelegate> {
-    NSMutableArray *filesArray;
-    NSString *deskRef;
-    int currentPage;
-}
+@interface RGDeskViewController : UITableViewController
+        <UISplitViewControllerDelegate,
+        ADLParapheurWallDelegateProtocol,
+        UITableViewDataSource,
+        UITableViewDelegate,
+        UISearchDisplayDelegate,
+        RGFileCellDelegate,
+        FilterDelegate>
 
 @property (nonatomic, strong) NSString* deskRef;
-@property (nonatomic, strong) NSArray* filesArray;
+@property (nonatomic, strong) NSMutableArray* dossiersArray;
+@property (nonatomic, strong) NSMutableArray * filteredDossiersArray;
+
+@property (nonatomic, strong) NSMutableArray* selectedDossiersArray;
+
 @property (nonatomic, strong) UIView* originalView;
 
-@property (strong, nonatomic) IBOutlet UIButton *loadMoreButton;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 
-@property (nonatomic) BOOL loading;
+@property (strong, nonatomic) IBOutlet UIButton *loadMoreButton;
 
 
 - (IBAction)loadNextResultsPage:(id)sender;
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0);
+
 
 @end

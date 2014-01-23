@@ -175,6 +175,7 @@
     [self setDossierRef:selectedDossierRef];
 }
 
+
 - (void) setDossierRef:(NSString *)_dossierRef {
     dossierRef = _dossierRef;
     ADLRequester *requester = [ADLRequester sharedRequester];
