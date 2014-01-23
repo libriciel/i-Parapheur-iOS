@@ -74,7 +74,6 @@
 	thumbCellsQueue = nil;
 	thumbCellsVisible = nil;
 	touchedCell = nil;
-    [super dealloc];
 }
 
 - (void)requeueThumbCell:(ReaderThumbView *)tvCell

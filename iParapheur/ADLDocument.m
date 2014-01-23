@@ -12,7 +12,7 @@
 
 +(id) documentWithData:(NSData*)data AndMimeType:(NSString*)mimeType {
     
-    id retVal = [[[ADLDocument alloc] init] autorelease];
+    id retVal = [[ADLDocument alloc] init];
     
     [retVal setDocumentData:data];
     [retVal setDocumentMimetype:mimeType];

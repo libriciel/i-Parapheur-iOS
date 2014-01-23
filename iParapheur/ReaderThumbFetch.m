@@ -53,7 +53,6 @@
 		request.thumbView.operation = nil;
 	}
 	request = nil;
-    [super dealloc];
 }
 
 - (NSURL *)thumbFileURL
@@ -73,7 +72,7 @@
 	
 	NSURL *thumbURL = [self thumbFileURL];
 	CGImageRef imageRef = NULL;
-	CGImageSourceRef loadRef = CGImageSourceCreateWithURL((CFURLRef)thumbURL, NULL);
+	CGImageSourceRef loadRef = CGImageSourceCreateWithURL((__bridge CFURLRef)thumbURL, NULL);
 	
 	// Load the existing thumb image
 	if (loadRef != NULL) {

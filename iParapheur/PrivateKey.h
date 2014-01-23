@@ -44,10 +44,10 @@
 
 @interface PrivateKey : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * caName;
-@property (nonatomic, retain) NSString * commonName;
-@property (nonatomic, retain) NSString * p12Filename;
-@property (nonatomic, retain) NSData * publicKey;
-@property (nonatomic, retain) NSString * serialNumber;
+@property (nonatomic, strong) NSString * caName;
+@property (nonatomic, strong) NSString * commonName;
+@property (nonatomic, strong) NSString * p12Filename;
+@property (nonatomic, strong) NSData * publicKey;
+@property (nonatomic, strong) NSString * serialNumber;
 
 @end

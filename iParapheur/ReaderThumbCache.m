@@ -150,7 +150,6 @@
 - (void)dealloc
 {
 	thumbCache = nil;
-    [super dealloc];
 }
 
 - (id)thumbRequest:(ReaderThumbRequest *)request priority:(BOOL)priority

@@ -46,166 +46,135 @@
 
 #import "RGDeskViewController.h"
 #import "RGMasterViewController.h"
+#import "ADLFilterViewController.h"
 #import "LGViewHUD.h"
 #import "RGFileCell.h"
 #import <ISO8601DateFormatter/ISO8601DateFormatter.h>
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
-#import "RGWorkflowDialogViewController.h"
+#import "NSString+Contains.h"
+
+
+@interface RGDeskViewController()
+{
+    int _currentPage;
+}
+
+@property (nonatomic, weak) RGFileCell* swipedCell;
+@property (nonatomic, assign, getter = isInBatchMode) BOOL inBatchMode;
+
+@end
 
 @implementation RGDeskViewController
 
-@synthesize deskRef;
-@synthesize filesArray;
-@synthesize detailViewController;
-@synthesize loadMoreButton;
-@synthesize searchBar;
-@synthesize selectedFilesArray;
-@synthesize batchButton, signButton, cancelButton;
-
+@synthesize inBatchMode = _inBatchMode;
 
 #pragma mark - UIViewController delegate
 -(void)viewDidLoad {
     [super viewDidLoad];
+    //[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
 
-    _loading = NO;
+    [[self.navigationItem backBarButtonItem] setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
     
-    
-    if (_refreshHeaderView == nil) {
-        
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-		view.delegate = self;
-		[self.tableView addSubview:view];
-		_refreshHeaderView = view;
-		[view release];
-        
-	}
+    self.refreshControl = [[UIRefreshControl alloc]init];
+    [self.refreshControl setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
+    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kDossierActionComplete object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kFilterChanged object:nil];
+    self.searchDisplayController.searchResultsTableView.rowHeight = self.tableView.rowHeight;
+    [self.searchDisplayController.searchResultsTableView registerClass:[RGFileCell class]forCellReuseIdentifier:@"dossierCell"];
+    self.inBatchMode = NO;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeFilterPopover) name:kFilterPopoverShouldClose object:nil];
-    
-	//  update the last update date
-	[_refreshHeaderView refreshLastUpdatedDate];
-    
-}
-
--(void)closeFilterPopover {
-     [self popoverControllerDidDismissPopover:_filtersPopover];
 }
 
 -(void) refresh {
-   
+    [self.refreshControl beginRefreshing];
     [self loadDossiersWithPage:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
-
-    [self setToolbarItems:[NSArray arrayWithObjects: batchButton, nil]];
-
-   // [[self navigationItem] setTitle:@"coucou"];
-    currentPage = 0;
-    filesArray = [[NSMutableArray alloc] init];
-    selectedFilesArray = [[NSMutableArray alloc] init];
-    [self loadDossiersWithPage:currentPage];
-    self.tableView.contentOffset = CGPointMake(0, self.searchBar.frame.size.height);
-    [self.navigationController setToolbarHidden:NO];
+    
+    _currentPage = 0;
+    self.dossiersArray = [NSMutableArray new];
+    [self loadDossiersWithPage:_currentPage];
 }
 
--(void)loadDossiersWithPage:(int)page {
-  /*
-    ADLRequester *requester = [ADLRequester sharedRequester];
-    [requester setDelegate:self];
-    
-  
-    NSDictionary *args = [[NSDictionary alloc]
-                          initWithObjectsAndKeys:
-                          deskRef, @"bureauCourant",
-                          [NSNumber numberWithInteger:page], @"page",
-                          @"15", @"pageSize",
-                          nil];
-    
 
-    
-    [requester request:GETDOSSIERSHEADERS_API andArgs:args];
-*/
-    //
+-(void) setInBatchMode:(BOOL) value {
+    _inBatchMode = value;
+    [self.navigationController setToolbarHidden:!_inBatchMode animated:YES];
+}
+
+-(void)loadDossiersWithPage:(int)page
+{
     NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
     if (currentFilter != nil) {
-        API_GETDOSSIERHEADERS_FILTERED(deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
+        API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
     }
     else {
-        API_GETDOSSIERHEADERS(deskRef, [NSNumber numberWithInteger:page], @"15");
+        API_GETDOSSIERHEADERS(self.deskRef, [NSNumber numberWithInteger:page], @"15");
     }
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
-    
-    
 }
 
 #pragma mark Actions
 - (IBAction)loadNextResultsPage:(id)sender {
-    [self loadDossiersWithPage:++currentPage]; 
+    [self loadDossiersWithPage:++_currentPage]; 
 }
 
-- (IBAction)toggleMultipleSelection:(id)sender {
-
-    [self.tableView setAllowsMultipleSelection:!self.tableView.allowsMultipleSelection];
-
-    if (!self.tableView.allowsMultipleSelection) {
-        [selectedFilesArray removeAllObjects];
-        [self setToolbarItems:[NSArray arrayWithObjects:batchButton, nil] animated:YES];
-
+-(NSArray*) actionsForSelectedDossiers {
+    NSMutableArray* actions;
+    for (NSDictionary* dossier in self.selectedDossiersArray) {
+        NSArray* dossierActions = [self actionsForDossier:dossier];
+        if (!actions) { // the first dossier only
+            actions = [NSMutableArray arrayWithArray:dossierActions];
+        }
+        else {
+            [actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+        }
     }
-    else {
-        [[self signButton] setEnabled:NO];
-        [self setToolbarItems:[NSArray arrayWithObjects:signButton, cancelButton, nil] animated:YES];
-    }
-    [self.tableView reloadData];
+    return actions;
 }
 
+-(NSArray* ) actionsForDossier:(NSDictionary *) dossier {
+    static BOOL _even = NO;
+    _even = !_even;
+    if (_even) {
+        return [[NSArray alloc] initWithObjects:@"VISER", @"TDT", nil];
+    }
+    return [[NSArray alloc] initWithObjects:@"VISER", @"MAIL", @"REJETER", @"AVIS SUPPLEMENTAIRE", @"ENREGISTRER", @"RÉCUPÉRER", nil];
+}
 
 #pragma mark - UITableViewDatasource
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [filesArray count];
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return [self.filteredDossiersArray count];
+    } else {
+        return [self.dossiersArray count];
+    }
 }
 
 -(UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"FileCell";
-
-    RGFileCell *cell = (RGFileCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-
-    if(cell == nil) {
-        cell = [[[RGFileCell alloc] init] autorelease];
+    static NSString *CellIdentifier = @"dossierCell";
+    
+    RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell.delegate = self;
+    
+    NSDictionary *dossier;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+    } else {
+        dossier = [self.dossiersArray objectAtIndex:[indexPath row]];
     }
-
-
-    if ([tableView allowsMultipleSelection]) {
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
-        [cell setSelected:NO];
-    }
-    else {
-        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    }
-
-    NSDictionary *dossier = [filesArray objectAtIndex:(NSUInteger)[indexPath row]];
-
-    if ([tableView allowsMultipleSelection] && [selectedFilesArray containsObject:[dossier objectForKey:@"dossierRef"]]) {
-        [cell setSelected:YES];
-        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
-    }
-
-    [[cell filenameLabel] setText:[dossier objectForKey:@"titre"]];
-    [[cell typeLabel] setText:[NSString stringWithFormat:@"%@ / %@", [dossier objectForKey:@"type"], [dossier objectForKey:@"sousType"]]];
-
+    
+    // NSLog(@"%@", [dossier objectForKey:@"titre"]);
+    
+    cell.dossierTitleLabel.text = [dossier objectForKey:@"titre"];
+    cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", [dossier objectForKey:@"type"], [dossier objectForKey:@"sousType"]];
+    
     NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
     if (dateLimite != nil) {
         ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
@@ -214,73 +183,97 @@
 
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         [outputFormatter setDateFormat:@"dd MMM"];
-
-        NSString *fdate = [[outputFormatter stringFromDate:dueDate] retain];
-        [[cell retardBadge] setBadgeText:fdate];
-        [[cell retardBadge] autoBadgeSizeWithString: [NSString stringWithFormat:@"%@", fdate]];
-        [[cell retardBadge] setHidden:NO];
-        [fdate release];
-        [formatter release];
-        [outputFormatter release];
+        
+        NSString *fdate = [outputFormatter stringFromDate:dueDate];
+        cell.retardBadge.badgeText = fdate;
+        [cell.retardBadge autoBadgeSizeWithString: [NSString stringWithFormat:@" %@ ", fdate]];
+        [cell.retardBadge setHidden:NO];
 
     }
     else {
-        [[cell retardBadge] setHidden:YES];
+        [cell.retardBadge setHidden:YES];
     }
-
+    cell.switchButton.on = [self.selectedDossiersArray containsObject:[dossier objectForKey:@"dossierRef"]];
+    
     return cell;
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *file = [[self filesArray] objectAtIndex:(NSUInteger) [indexPath row]];
-    NSString *dossierRef = [file objectForKey:@"dossierRef"];
+#pragma mark UITableViewDelegate protocol implementation
 
-    RGFileCell *cell = (RGFileCell*)[self tableView:tableView cellForRowAtIndexPath:indexPath];
-    if ([tableView allowsMultipleSelection]) {
-        if ([selectedFilesArray containsObject:dossierRef]) {
-            [tableView deselectRowAtIndexPath:indexPath animated:NO];
-            [selectedFilesArray removeObject:dossierRef];
-            [cell setAccessoryType:UITableViewCellAccessoryNone];
-
+-(void) cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:NO];
+    
+    [cell.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    
+    if (!self.isInBatchMode) {
+        
+        NSString *dossierRef;
+        
+        if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
+            //        NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+            dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+            //[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
         }
         else {
-            [selectedFilesArray addObject:dossierRef];
-            [tableView deselectRowAtIndexPath:indexPath animated:NO];
-            [cell setAccessoryType:UITableViewCellAccessoryDetailDisclosureButton];
-
+            //        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+            dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
         }
-
-        if ([selectedFilesArray count] > 0) {
-            [[self signButton] setEnabled:YES];
-        }
-        else {
-            [[self signButton] setEnabled:NO];
-        }
-
-        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-    else {
+        [cell setSelected:YES animated:NO];
+        
         [[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
     }
+    
+    
 }
 
+-(void) cell:(RGFileCell *)cell didCheckAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.swipedCell hideMenuOptions];
+    [cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:YES];
+    NSString * dossierRef;
+    if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
+        dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+    }
+    else {
+        dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+    }
 
+    if ([self.selectedDossiersArray containsObject:dossierRef])
+    {
+        [self.selectedDossiersArray removeObject:dossierRef];
+        if (self.selectedDossiersArray.count == 0) {
+            [self setInBatchMode:NO];
+        }
+    }
+    else
+    {
+        [self.selectedDossiersArray addObject:dossierRef];
+        if (self.selectedDossiersArray.count == 1) {
+            [self setInBatchMode:YES];
+        }
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDidBatchSelectionChange object:[self actionsForSelectedDossiers]];
 
+}
+
+/*- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}*/
 
 #pragma mark - Wall delegate
 
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
-    _loading = NO;
     
-    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-    
-    if (currentPage > 0) {
-        [filesArray removeLastObject];
+    [self.refreshControl endRefreshing];
+    if (_currentPage > 0) {
+        [self.dossiersArray removeLastObject];
     }
     else {
-        [filesArray removeAllObjects];
+        [self.dossiersArray removeAllObjects];
     }
     NSArray *dossiers = API_GETDOSSIERHEADERS_GET_DOSSIERS(answer);
     
@@ -299,7 +292,7 @@
         }
     }
                  
-    [filesArray addObjectsFromArray:dossiers];
+    [self.dossiersArray addObjectsFromArray:dossiers];
     
     if ([dossiers count] > 15) {
         [[self loadMoreButton ] setHidden:NO];
@@ -307,6 +300,10 @@
     else {
         [[self loadMoreButton ] setHidden:YES];
     }
+    
+    self.filteredDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
+    
+    self.selectedDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
     
     [((UITableView*)[self view]) reloadData];
     
@@ -322,133 +319,66 @@
     
 }
 
-#pragma mark - Search Delegate
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBarClicked {
-    currentPage = 0;
-    NSString *searchText = [searchBarClicked text];
-   
-    ADLRequester *requester = [ADLRequester sharedRequester];
+-(void) filterDossiersForSearchText:(NSString*) searchText {
+    [self.filteredDossiersArray removeAllObjects];
     
-    NSString *pageStr = @"0";
-    NSDictionary *args = nil;
-   
-    if ([searchText isEqualToString:@""]) {
-        args = [[NSDictionary alloc]
-                initWithObjectsAndKeys:
-                deskRef, @"bureauCourant",
-                [NSNumber numberWithInteger:0], @"page",
-                @"15", @"pageSize",
-                nil];
-        
-    }
-    else {
-        NSMutableDictionary *filters = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-         [NSString stringWithFormat:@"*%@*",searchText], @"cm:name",nil];
-        
-        NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
-        [filters addEntriesFromDictionary:currentFilter];
-        
-        args = [[NSDictionary alloc]
-                initWithObjectsAndKeys:
-                deskRef, @"bureauCourant",
-                filters , @"filters",
-                [NSNumber numberWithInteger:0], @"page",
-                @"15", @"pageSize",
-                nil];
-        
-        [filters release];
-    }
-    
-    
-    [pageStr release];
-    
-    [requester request:GETDOSSIERSHEADERS_API andArgs:args delegate:self];
-    //[args release];
-    
-    
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
-    [filesArray removeAllObjects];
-    
-    [searchBar resignFirstResponder];
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-
-}
-
-#pragma mark - Pull to refresh delegeate implementation
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refresh];
-}
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
-    return _loading;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS %@)", @"titre", searchText];
+    [self.filteredDossiersArray addObjectsFromArray:[self.dossiersArray filteredArrayUsingPredicate:predicate]];
     
 }
 
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-    
-	return [NSDate date]; // should return date data source was last changed
-    
+
+#pragma mark - UISearchDisplayDelegate protocol implementation
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    // Tells the table data source to reload when text changes
+    [self filterDossiersForSearchText:searchString];
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
 }
 
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
+#pragma mark - FilterDelegate protocol implementation
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    
+- (void)shouldReload:(NSDictionary *)filter {
+    [ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary: filter];
 }
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"signature"]) {
-        [(RGWorkflowDialogViewController *)[segue destinationViewController] setDossiersRef:[self selectedFilesArray]];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
-    }
-    else {
-        if (_filtersPopover != nil) {
-            [_filtersPopover dismissPopoverAnimated:NO];
-        }
-
-        _filtersPopover = [(UIStoryboardPopoverSegue *) segue popoverController];
-        [_filtersPopover setDelegate:self];
-    }
+    /*if (_filterModal != nil) {
+        [_filterModal dismissViewControllerAnimated:NO completion:nil];
+    }*/
+    
+    ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    if (_filtersPopover != nil && popoverController == _filtersPopover) {
-        [_filtersPopover dismissPopoverAnimated:YES];
-        _filtersPopover = nil;
-    }
-}
-
-- (void)dealloc {
-    [loadMoreButton release];
-    [deskRef release];
-    [filesArray release];
-    [detailViewController release];
-    [searchBar release];
-    [selectedFilesArray release];
-    [batchButton release];
-    [signButton release];
-    [cancelButton release];
-    [super dealloc];
-}
 - (void)viewDidUnload {
     [self setLoadMoreButton:nil];
     [super viewDidUnload];
 }
+
+#pragma mark RGFileCellDataSource protocol implementation
+
+-(BOOL) canSelectCell:(RGFileCell *)cell {
+    return (!self.isInBatchMode);
+}
+
+-(BOOL) canSwipeCell:(RGFileCell *)cell {
+    return (!self.isInBatchMode && (self.swipedCell == cell));
+}
+
+-(void) willSwipeCell:(RGFileCell *)cell {
+    if (cell != self.swipedCell) {
+        [self.swipedCell hideMenuOptions];
+    }
+    self.swipedCell = cell;
+}
+
+-(void) willSelectCell:(RGFileCell *)cell {
+    if (self.swipedCell) {
+        [self.swipedCell hideMenuOptions];
+        self.swipedCell = nil;
+    }
+}
+
 @end

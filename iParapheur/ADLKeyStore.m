@@ -301,9 +301,9 @@ NSData* X509_to_NSData(X509 *cert) {
 
 -(NSString*) UUID {
     CFUUIDRef uuidObj = CFUUIDCreate(nil);
-    NSString *uuidString = (NSString*)CFUUIDCreateString(nil, uuidObj);
+    NSString *uuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(nil, uuidObj));
     CFRelease(uuidObj);
-    return [uuidString autorelease];
+    return uuidString;
 }
 
 #pragma mark - Public API
@@ -330,12 +330,10 @@ NSData* X509_to_NSData(X509 *cert) {
     [request setEntity:entity];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    [sortDescriptor release];
     [request setSortDescriptors:sortDescriptors];
     // Fetch the records and handle an error
     NSError *error;
     NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request error:&error];
-    [request release];
     return pkeys;
 }
 
@@ -596,7 +594,6 @@ NSData* X509_to_NSData(X509 *cert) {
         return NO;
     }
     
-    [request release];
     if ([array count] == 0) {
 
         NSString *newPath = [[[self applicationDataDirectory] path]

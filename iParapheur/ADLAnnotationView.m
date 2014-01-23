@@ -183,7 +183,7 @@
 			self.layer.shadowOpacity = 0.75;
 #endif
         
-        _annotationModel = [a retain];
+        _annotationModel = a;
         
         if ([_annotationModel text] != nil && ![[_annotationModel text] isEqualToString:@""]) {
             [_postit setHasText:YES];

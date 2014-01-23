@@ -78,12 +78,12 @@
 
 @property (nonatomic) BOOL hasBeenLongPressed;
 
-@property (nonatomic, retain) UIScrollView *parentScrollView;
-@property (nonatomic, retain) UIScrollView *superScrollView;
+@property (nonatomic, strong) UIScrollView *parentScrollView;
+@property (nonatomic, strong) UIScrollView *superScrollView;
 
-@property (nonatomic, retain) id<ADLDrawingViewDataSource> dataSource;
+@property (nonatomic, strong) id<ADLDrawingViewDataSource> dataSource;
 
-@property (nonatomic, retain) UILongPressGestureRecognizer *longPressGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @property (nonatomic) NSUInteger pageNumber;
 

@@ -1,4 +1,8 @@
 emmanuel.xcuserdatad
+xcuserdata
 Podfile.lock
 Pods
 iParapheur.xcworkspace
+.idea
+*~
+.DS_Store

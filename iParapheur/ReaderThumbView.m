@@ -61,7 +61,6 @@
 - (void)dealloc
 {
 	imageView = nil;
-    [super dealloc];
 }
 
 - (void)showImage:(UIImage *)image

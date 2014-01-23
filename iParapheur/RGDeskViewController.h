@@ -40,30 +40,32 @@
 
 
 #import <UIKit/UIKit.h>
+#import "ADLFilterViewController.h"
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "RGMasterViewController.h"
-#import <EGORefreshTableHeaderView.h>
+#import "RGDossierDetailViewController.h"
+#import "RGFileCell.h"
 
-@interface RGDeskViewController : UITableViewController <EGORefreshTableHeaderDelegate,
-    UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource, UISearchBarDelegate, UIPopoverControllerDelegate> {
-    NSMutableArray *filesArray;
-    NSString *deskRef;
-    int currentPage;
-}
+@interface RGDeskViewController : UITableViewController
+        <UISplitViewControllerDelegate,
+        ADLParapheurWallDelegateProtocol,
+        UITableViewDataSource,
+        UITableViewDelegate,
+        UISearchDisplayDelegate,
+        RGFileCellDelegate,
+        FilterDelegate>
 
-@property (nonatomic, retain) NSString* deskRef;
+@property (nonatomic, strong) NSString* deskRef;
+@property (nonatomic, strong) NSMutableArray* dossiersArray;
+@property (nonatomic, strong) NSMutableArray * filteredDossiersArray;
 
-@property (nonatomic, retain) NSMutableArray* selectedFilesArray;
-@property (nonatomic, retain) NSArray* filesArray;
-@property (nonatomic, retain) IBOutlet RGMasterViewController* detailViewController;
-@property (nonatomic, retain) UIView* originalView;
+@property (nonatomic, strong) NSMutableArray* selectedDossiersArray;
 
-@property (retain, nonatomic) IBOutlet UIButton *loadMoreButton;
-@property (retain, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (nonatomic, strong) UIView* originalView;
 
-@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
-@property (nonatomic) BOOL loading;
-@property (retain, nonatomic) UIPopoverController *filtersPopover;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+
+@property (strong, nonatomic) IBOutlet UIButton *loadMoreButton;
+
 
 @property (retain, nonatomic) IBOutlet UIBarButtonItem *batchButton;
 @property (retain, nonatomic) IBOutlet UIBarButtonItem *signButton;
@@ -71,5 +73,9 @@
 
 - (IBAction)loadNextResultsPage:(id)sender;
 - (IBAction)toggleMultipleSelection:(id)sender;
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0);
+
 
 @end

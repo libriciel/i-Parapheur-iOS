@@ -38,47 +38,18 @@
  * termes.
  */
 
-
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "ReaderViewController.h"
+#import "JSONKit.h"
+#import "RGDeskViewController.h"
 
-@class RGDetailViewController;
-
-@interface RGMasterViewController : UIViewController<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate> {
-    
-    UITextView *textView;
-    UILabel *dossierName;
-    UILabel *typeLabel;
-    UILabel *sousTypeLabel;
-    NSString *dossierRef;
-    NSArray *documents;
-    
-    NSArray *circuit;
-    
-
-    ReaderViewController *readerViewController;
+@interface RGMasterViewController : UITableViewController <UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource> {
 }
 
-@property (strong, nonatomic) RGDetailViewController *detailViewController;
-@property (nonatomic, retain) IBOutlet UITextView *textView;
-@property (nonatomic, retain) IBOutlet UILabel *dossierName;
-@property (nonatomic, retain) IBOutlet UILabel *typeLabel;
-@property (nonatomic, retain) IBOutlet UILabel *sousTypeLabel;
-@property (retain, nonatomic) IBOutlet UILabel *dossierNameLabel;
-@property (retain, nonatomic) IBOutlet UITableView *circuitTable;
-@property (retain, nonatomic) IBOutlet UILabel *sousTypeValueLabel;
-@property (retain, nonatomic) IBOutlet UILabel *typeValueLabel;
+@property (nonatomic, strong) NSArray *deskArray;
+@property (nonatomic) BOOL loading;
 
-@property (nonatomic, retain) IBOutlet UIBarButtonItem *documentsButtonItem;
-@property (retain, nonatomic) IBOutlet UIButton *viserButton;
-@property (retain, nonatomic) IBOutlet UIButton *rejectButton;
+- (void)loadBureaux;
 
-@property (retain, nonatomic) NSDictionary *dossier;
-
-
-@property (nonatomic, retain) NSString *dossierRef;
-- (IBAction)showVisuelPDF:(id)sender;
-//- (void)refreshViewWithDossier:(NSDictionary*)dossier;
 
 @end

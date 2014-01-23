@@ -5,7 +5,7 @@
 
 #import "LGViewHUD.h"
 #import <QuartzCore/QuartzCore.h>
-#import "ADLCloseButton.h";
+#import "ADLCloseButton.h"
 
 static LGViewHUD* defaultHUD = nil;
 
@@ -38,7 +38,7 @@ static LGViewHUD* defaultHUD = nil;
 		topLabel.font=[UIFont boldSystemFontOfSize:17];
 		topLabel.shadowColor=[UIColor blackColor];
 		topLabel.shadowOffset=CGSizeMake(1, 1);
-		topLabel.textAlignment=UITextAlignmentCenter;
+		topLabel.textAlignment=NSTextAlignmentCenter;
 		
 		bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height-2*offset/3.0, frame.size.width, offset/2)];
 		bottomLabel.backgroundColor=[UIColor clearColor];
@@ -47,7 +47,7 @@ static LGViewHUD* defaultHUD = nil;
 		bottomLabel.shadowColor=[UIColor blackColor];
 		bottomLabel.shadowOffset=CGSizeMake(1, 1);
 		
-		bottomLabel.textAlignment=UITextAlignmentCenter;
+		bottomLabel.textAlignment=NSTextAlignmentCenter;
 		image=nil;
 		
 		backgroundView= [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
@@ -90,15 +90,8 @@ static LGViewHUD* defaultHUD = nil;
 }
 
 - (void)dealloc {
-	[backgroundView release];
-	[topLabel release];
-	[bottomLabel release];
-	[imageView release];
 	backgroundView=nil;
-	topLabel=nil;
-	bottomLabel=nil;
 	imageView=nil;
-    [super dealloc];
 }
 
 +(LGViewHUD*) defaultHUD {
@@ -153,7 +146,6 @@ static LGViewHUD* defaultHUD = nil;
 			//when applying an image, this will auto hide the HUD.
 			[activityIndicator removeFromSuperview];
 			imageView.hidden=NO;
-			[activityIndicator release];
 			activityIndicator=nil;
 		}
 	}
@@ -204,21 +196,18 @@ static LGViewHUD* defaultHUD = nil;
 	} else {
 		//invalidate current timer for hide if any.
 		[displayTimer invalidate];
-		[displayTimer release];
 		displayTimer=nil;
 	}
 }
 
 -(void) hideAfterDelay:(NSTimeInterval)delayDuration withAnimation:(HUDAnimation) animation{
 	[displayTimer invalidate];
-	[displayTimer release];
-	displayTimer = [[NSTimer timerWithTimeInterval:delayDuration target:self selector:@selector(displayTimeOut:) 
-										  userInfo:[NSNumber numberWithInt:animation] repeats:NO] retain];
+	displayTimer = [NSTimer timerWithTimeInterval:delayDuration target:self selector:@selector(displayTimeOut:) 
+										  userInfo:[NSNumber numberWithInt:animation] repeats:NO];
 	[[NSRunLoop mainRunLoop] addTimer:displayTimer forMode:NSRunLoopCommonModes];
 }
 
 -(void) displayTimeOut:(NSTimer*)timer {
-	[displayTimer release];
 	displayTimer=nil;
 	[self hideWithAnimation:(HUDAnimation)[[timer userInfo] intValue]];
 }

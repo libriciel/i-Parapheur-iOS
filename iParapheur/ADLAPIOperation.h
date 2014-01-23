@@ -14,25 +14,27 @@
 
 @interface ADLAPIOperation : NSOperation <NSURLConnectionDelegate, NSURLConnectionDataDelegate> {
     BOOL downloadingDocument;
+    BOOL get;
     NSURLConnection *_connection;
 }
-@property (nonatomic, retain) NSString *documentPath;
-@property (nonatomic, retain) NSString *request;
-@property (nonatomic, retain) NSDictionary *args;
+@property (nonatomic, strong) NSString *documentPath;
+@property (nonatomic, strong) NSString *request;
+@property (nonatomic, strong) NSDictionary *args;
 
 @property(readonly) BOOL isExecuting;
 @property(readonly) BOOL isFinished;
 
-@property (nonatomic, retain) NSMutableData *receivedData;
-@property (nonatomic, retain) NSString *mimeType;
-@property (nonatomic, retain) ADLCollectivityDef* collectivityDef;
-@property (nonatomic, retain) NSObject<ADLParapheurWallDelegateProtocol> *delegate;
+@property (nonatomic, strong) NSMutableData *receivedData;
+@property (nonatomic, strong) NSString *mimeType;
+@property (nonatomic, strong) ADLCollectivityDef* collectivityDef;
+@property (nonatomic, strong) NSObject<ADLParapheurWallDelegateProtocol> *delegate;
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
 
 
 
 -(id)initWithDocumentPath:(NSString *)documentPath andCollectivityDef:(ADLCollectivityDef*)def delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 -(id)initWithRequest:(NSString*)request withArgs:(NSDictionary*)args andCollectivityDef:(ADLCollectivityDef*)def delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
+-(id)initWithRequest:(NSString *)request collectivityDef:(ADLCollectivityDef*)def delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 
 /*
 -(BOOL) isConcurrent;

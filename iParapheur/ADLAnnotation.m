@@ -60,7 +60,7 @@
 -(NSDictionary*) dictWithRect:(CGRect) rect {
     CGRect realRect = CGRectInset(rect, 14.0f, 14.0f);
     
-    NSMutableDictionary *rectDict = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary *rectDict = [[NSMutableDictionary alloc] init];
     
     NSMutableDictionary *topLeft = [[NSMutableDictionary alloc] init];
     [topLeft setObject:[NSNumber numberWithFloat:realRect.origin.x/72.0f * 150.0f] forKey:@"x"];
@@ -73,14 +73,12 @@
     [rectDict setObject:topLeft forKey:@"topLeft"];
     [rectDict setObject:bottomRight forKey:@"bottomRight"];
     
-    [topLeft release];
-    [bottomRight release];
     
     return rectDict;
 }
 
 -(NSDictionary*) dict {
-    NSMutableDictionary *annotation = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary *annotation = [[NSMutableDictionary alloc] init];
     
     if (_uuid != nil) {
         [annotation setObject:_uuid forKey:@"uuid"];

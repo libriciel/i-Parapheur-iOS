@@ -11,7 +11,7 @@
 @interface ADLActionViewController : UITableViewController
 @property (nonatomic, assign) BOOL signatureEnabled;
 @property (nonatomic, assign) BOOL visaEnabled;
-@property (nonatomic, retain) NSMutableArray *actions;
-@property (nonatomic, retain) NSMutableArray *labels;
+@property (nonatomic, strong) NSMutableArray *actions;
+@property (nonatomic, strong) NSMutableArray *labels;
 
 @end

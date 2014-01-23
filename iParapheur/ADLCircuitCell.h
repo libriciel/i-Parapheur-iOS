@@ -41,9 +41,9 @@
 #import <UIKit/UIKit.h>
 
 @interface ADLCircuitCell : UITableViewCell
-@property (retain, nonatomic) IBOutlet UILabel *parapheurName;
-@property (retain, nonatomic) IBOutlet UILabel *validationDate;
-@property (retain, nonatomic) IBOutlet UILabel *validateurName;
-@property (retain, nonatomic) IBOutlet UIImageView *etapeTypeIcon;
+@property (strong, nonatomic) IBOutlet UILabel *parapheurName;
+@property (strong, nonatomic) IBOutlet UILabel *validationDate;
+@property (strong, nonatomic) IBOutlet UILabel *validateurName;
+@property (strong, nonatomic) IBOutlet UIImageView *etapeTypeIcon;
 
 @end

@@ -49,7 +49,6 @@ static ADLRequester *sharedRequester = nil;
     ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
     ADLAPIOperation *downloadOperation = [[ADLAPIOperation alloc] initWithDocumentPath:path andCollectivityDef:def delegate:delegate];
     [downloadQueue addOperation:downloadOperation];
-    [downloadOperation release];
     //[def release];
     [_lockDoc unlock];
 }
@@ -64,7 +63,6 @@ static ADLRequester *sharedRequester = nil;
     [downloadQueue waitUntilAllOperationsAreFinished];
     
     NSData *documentData = [[downloadOperation receivedData] copy];
-    [downloadOperation release];
 
     return documentData;
 }
@@ -80,7 +78,20 @@ static ADLRequester *sharedRequester = nil;
 
     [apiQueue addOperation:apiRequestOperation];
 
-    [apiRequestOperation release];
+    
+    [_lockApi unlock];
+}
+
+-(void) request:(NSString*)request delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+    [_lockApi lock];
+    
+    NSLog(@"%@", request);
+    
+    ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
+    ADLAPIOperation *apiRequestOperation = [[ADLAPIOperation alloc] initWithRequest:request collectivityDef:def delegate:delegate];
+    
+    [apiQueue addOperation:apiRequestOperation];
+    
     
     [_lockApi unlock];
 }

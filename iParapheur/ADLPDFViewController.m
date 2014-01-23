@@ -47,17 +47,22 @@
 #import "ADLPDFViewController.h"
 #import "ReaderContentView.h"
 #import "LGViewHUD.h"
-#import "RGMasterViewController.h"
+#import "RGDossierDetailViewController.h"
 #import "RGDocumentsView.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
 #import "ADLAPIOperation.h"
 #import "ADLActionViewController.h"
+#import "UIColor+CustomColors.h"
+#import "UIColor+CustomColors.h"
 
+#define kActionButtonsWidth 300.0f
+#define kActionButtonsHeight 100.0f
 
 @interface ADLPDFViewController ()
-
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+- (void)configureView;
 @end
 
 @implementation ADLPDFViewController
@@ -71,15 +76,39 @@
     return self;
 }
 */
-@synthesize container;
 
+
+#pragma mark - Managing the detail item
+
+- (void)setDetailItem:(id)newDetailItem
+{
+    if (_detailItem != newDetailItem) {
+        _detailItem = newDetailItem;
+        
+        // Update the view.
+        [self configureView];
+    }
+    
+    if (self.masterPopoverController != nil) {
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+- (void)configureView
+{
+    // Update the user interface for the detail item.hide
+    
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+    self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dossierSelected:) name:kDossierSelected object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBatchSelectionChange:) name:kDidBatchSelectionChange object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(selectBureauAppeared:)
@@ -92,8 +121,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDocumentWithIndex:) name:kshowDocumentWithIndex object:nil];
     
     self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = nil;
-    
+    //self.navigationItem.leftBarButtonItem = nil;
+    self.actions = [NSMutableArray new];
+    [self configureView];
 }
 
 
@@ -113,13 +143,14 @@
     
     //self.navigationItem.rightBarButtonItem = nil;
     self.navigationItem.rightBarButtonItems = nil;
-    self.navigationItem.leftBarButtonItem = nil;
+    //self.navigationItem.leftBarButtonItem = nil;
     
     [_actionPopover dismissPopoverAnimated:YES];
     [_documentsPopover dismissPopoverAnimated:YES];
     _documentsPopover = nil;
     _actionPopover = nil;
     _readerViewController = nil;
+    _actionsCollectionView = nil;
 
 }
 
@@ -150,14 +181,53 @@
     API_GETANNOTATIONS(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
     
     
-    NSArray *buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
+    NSArray *buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, _documentsButton, nil];
     
-    self.navigationItem.leftBarButtonItem = _documentsButton;
+    //self.navigationItem.leftBarButtonItem = _documentsButton;
     self.navigationItem.rightBarButtonItems = buttons;
     
     [[self navigationController] popToRootViewControllerAnimated:YES];
 
-    [buttons release];
+}
+
+
+- (void) didBatchSelectionChange:(NSNotification*)notification {
+    NSArray *oldActions = [NSArray arrayWithArray:self.actions];
+
+    if (((NSArray*) notification.object).count == 0) {
+        [self resetViewState];
+    }
+    else {
+        if (!self.actionsCollectionView) {
+            [self resetViewState];
+            UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
+            self.actionsCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame) / 2.0f - kActionButtonsWidth / 2, kActionButtonsHeight / 2, kActionButtonsWidth, CGRectGetHeight(self.view.frame) - kActionButtonsHeight / 2) collectionViewLayout:layout];
+            [self.actionsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"actionCell"];
+
+            self.actionsCollectionView.backgroundColor = [UIColor clearColor];
+            self.actionsCollectionView.delegate = self;
+            self.actionsCollectionView.dataSource = self;
+            
+            [self.view addSubview:self.actionsCollectionView];
+        }
+        
+        [self.actionsCollectionView performBatchUpdates:
+         ^{
+             self.actions = [NSMutableArray arrayWithArray:notification.object];
+             NSArray *toDelete = [oldActions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.actions]];
+             NSArray *toAdd = [self.actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", oldActions]];
+             NSMutableArray *deletePaths = [[NSMutableArray alloc] initWithCapacity:toDelete.count];
+             NSMutableArray *addPaths = [[NSMutableArray alloc] initWithCapacity:toAdd.count];
+             for (NSString *action in toDelete) {
+                 [deletePaths addObject:[NSIndexPath indexPathForRow:[oldActions indexOfObject:action] inSection:0]];
+             }
+             for (int i = 0; i < toAdd.count; i++) {
+                 [addPaths addObject:[NSIndexPath indexPathForRow:(oldActions.count - toDelete.count + i) inSection:0]];
+             }
+             [self.actionsCollectionView deleteItemsAtIndexPaths:deletePaths];
+             [self.actionsCollectionView insertItemsAtIndexPaths:addPaths];
+         } completion:nil];
+    }
 }
 
 -(void) selectBureauAppeared:(NSNotification*) notification {
@@ -206,6 +276,8 @@
     if ([s isEqual:GETDOSSIER_API]) {
         _dossier = [answer copy];
         [self displayDocumentAt: 0];
+        
+        self.navigationController.navigationBar.topItem.title = [_dossier objectForKey:@"titre"];
         
         NSString *documentPrincipal = [[[_dossier objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
         [[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
@@ -295,7 +367,6 @@
     
     [_readerViewController setAnnotationsEnabled:_isDocumentPrincipal];
     
-    [readerDocument release];
     
     _readerViewController.delegate = self;
     _readerViewController.view.frame = [[self view] frame];
@@ -332,8 +403,21 @@
 }
 
 
-- (void)dismissReaderViewController:(ReaderViewController *)viewController {
-	[self dismissModalViewControllerAnimated:YES];
+- (void)dismissReaderViewController:(ReaderViewController *)viewController
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+    
+#if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
+    
+	[self.navigationController popViewControllerAnimated:YES];
+    
+#else // dismiss the modal view controller
+    
+	[self dismissViewControllerAnimated:YES completion:nil];
+    
+#endif // DEMO_VIEW_CONTROLLER_PUSH
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -353,7 +437,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
-        [((RGMasterViewController*) [segue destinationViewController]) setDossier:_dossier];
+        [((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_dossier];
     }
     
     if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
@@ -399,22 +483,15 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [container release];
-    [_signatureFormat release];
-    [_annotations release];
-    [_dossier release];
-    [_readerViewController release];
-    [super dealloc];
 }
 - (void)viewDidUnload {
-    [self setContainer:nil];
     [super viewDidUnload];
 }
 
 #pragma mark - Annotations Drawing view data Source
 
 -(NSArray*) annotationsForPage:(NSInteger)page {
-    NSMutableArray *annotsAtPage = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *annotsAtPage = [[NSMutableArray alloc] init];
     for (NSDictionary *etape in _annotations) {
         NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
         
@@ -470,5 +547,98 @@
 -(void)shallDismissHUD:(LGViewHUD*)hud {
     [hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
+
+#pragma mark - Split view
+
+- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
+{
+    barButtonItem.title = NSLocalizedString(@"Dossiers", @"Dossiers");
+    barButtonItem.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+    self.masterPopoverController = popoverController;
+}
+
+- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    // Called when the view is shown again in the split view, invalidating the button and popover controller.
+    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+    self.masterPopoverController = nil;
+}
+
+#pragma mark UICollectionViewDelegate protocol implementation (used in batch mode)
+
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return CGSizeMake(kActionButtonsWidth, kActionButtonsHeight);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    return kActionButtonsHeight / 2;
+}
+
+/*- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 10.0f;
+}*/
+
+
+
+#pragma mark UICollectionViewDataSource protocol implementation (used in batch mode)
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.actions.count;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"actionCell" forIndexPath:indexPath];
+    
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(cell.frame), CGRectGetHeight(cell.frame))];
+    NSString *action = [self.actions objectAtIndex:indexPath.row];
+    
+    [button setTitle:action forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    button.backgroundColor = [UIColor colorForAction:action];
+    
+    [button addTarget:self action:[self actionFromString:action] forControlEvents:UIControlEventTouchUpInside];
+    
+    [cell addSubview:button];
+    return cell;
+}
+
+-(SEL) actionFromString:(NSString*) action {
+    if ([action isEqualToString:@"SIGNER"]) {
+        return @selector(batchSign);
+    }
+    else if ([action isEqualToString:@"VISER"]) {
+        return @selector(batchVisa);
+    }
+    else if ([action isEqualToString:@"REJETER"]) {
+        return @selector(batchReject);
+    }
+    return @selector(batchUnknown);
+}
+
+-(void) batchSign {
+    NSLog(@"SIGNATURE");
+}
+
+-(void) batchVisa {
+    NSLog(@"VISA");
+}
+
+-(void) batchReject {
+    NSLog(@"REJET");
+}
+
+-(void) batchUnknown {
+    NSLog(@"INCONNU");
+}
+
 
 @end

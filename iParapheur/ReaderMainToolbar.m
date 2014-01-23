@@ -182,7 +182,7 @@
 			self.titleLabel = [[UILabel alloc] initWithFrame:titleRect];
 			
 			titleLabel.tag = 30;
-			titleLabel.textAlignment = UITextAlignmentCenter;
+			titleLabel.textAlignment = NSTextAlignmentCenter;
 			titleLabel.font = [UIFont systemFontOfSize:19.0f]; // 19 pt
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
@@ -191,7 +191,7 @@
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 			titleLabel.adjustsFontSizeToFitWidth = YES;
-			titleLabel.minimumFontSize = 14.0f;
+			titleLabel.minimumScaleFactor = 14.0f;
 			titleLabel.text = _title;
 
 			[self addSubview:titleLabel]; 
@@ -206,7 +206,6 @@
 	markButton = nil;
 	markImageN = nil;
 	markImageY = nil;
-    [super dealloc];
 }
 
 - (void)setBookmarkState:(BOOL)state

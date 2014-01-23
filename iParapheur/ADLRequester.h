@@ -15,13 +15,14 @@
     NSOperationQueue *apiQueue;
 }
 
-@property (nonatomic, retain) NSRecursiveLock* lockApi;
-@property (nonatomic, retain) NSRecursiveLock* lockDoc;
+@property (nonatomic, strong) NSRecursiveLock* lockApi;
+@property (nonatomic, strong) NSRecursiveLock* lockDoc;
 
 +(ADLRequester *) sharedRequester;
 
 -(void) downloadDocumentAt:(NSString*)path delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 -(void) request:(NSString*)request andArgs:(NSDictionary*)args delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
+-(void) request:(NSString*)request delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 -(NSData *) downloadDocumentNow: (NSString*)path;
 
 @end

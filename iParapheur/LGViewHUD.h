@@ -37,11 +37,11 @@ typedef enum {
 }
 
 /** The image displayed at the center of the HUD. Default is nil. */
-@property (readwrite, retain) UIImage* image;
+@property (readwrite, strong) UIImage* image;
 /** The top text of the HUD. Shortcut to the text of the topLabel property. */
-@property (readwrite, retain) NSString* topText;
+@property (readwrite, strong) NSString* topText;
 /** The bottom text of the HUD. Shortcut to the text of the bottomLabel property. */
-@property (readwrite, retain) NSString* bottomText;
+@property (readwrite, strong) NSString* bottomText;
 /** The top label of the HUD. (So that you can adjust its properties ...) */
 @property (readonly) UILabel* topLabel;
 /** The bottom label of the HUD. (So that you can adjust its properties ...) */
@@ -51,7 +51,7 @@ typedef enum {
 /** Diplays a large white activity indicator instead of the image if set to YES. 
  Default is NO. */ 
 @property (readwrite) BOOL activityIndicatorOn;
-@property (retain, nonatomic) NSObject<LGViewHUDDelegate> *delegate;
+@property (strong, nonatomic) NSObject<LGViewHUDDelegate> *delegate;
 
 /** Returns the default HUD singleton instance. */
 +(LGViewHUD*) defaultHUD;

@@ -163,7 +163,6 @@
         alertView.p12Path = [pkey p12Filename];
         
         [alertView show];
-        [alertView release];
 
 
     }
@@ -173,20 +172,7 @@
 }
 
 - (IBAction)cancel:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (void)dealloc {
-    [annotationPrivee release];
-    [annotationPublique release];
-    [finishButton release];
-    [_certificateLabel release];
-    [_certificatesTableView release];
-    [action release];
-    [dossiersRef release];
-    [_pkeys release];
-    [p12password release];
-    [super dealloc];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
@@ -195,7 +181,7 @@
         LGViewHUD *hud = [LGViewHUD defaultHUD];
         [hud hideWithAnimation:HUDAnimationHideFadeOut];
 
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
     }
     else if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
@@ -300,7 +286,7 @@
     UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
     
     if(cell == nil) {
-        cell = [[[UITableViewCell alloc] init] autorelease];
+        cell = [[UITableViewCell alloc] init];
     }
     
     PrivateKey *pkey = [_pkeys objectAtIndex:[indexPath row]];
