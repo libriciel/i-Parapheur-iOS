@@ -108,21 +108,25 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dossierSelected:) name:kDossierSelected object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBatchSelectionChange:) name:kDidBatchSelectionChange object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBatchSelectionChange:) name:kDidBatchSelectionChange object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(selectBureauAppeared:)
+                                             selector:@selector(clearDetail:)
                                                  name:kSelectBureauAppeared object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dossierActionComplete:)
+                                             selector:@selector(clearDetail:)
                                                  name:kDossierActionComplete object:nil];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(clearDetail:)
+                                                 name:kFilterChanged object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showDocumentWithIndex:) name:kshowDocumentWithIndex object:nil];
     
     self.navigationItem.rightBarButtonItem = nil;
     //self.navigationItem.leftBarButtonItem = nil;
-    self.actions = [NSMutableArray new];
+    //self.actions = [NSMutableArray new];
     [self configureView];
 }
 
@@ -150,13 +154,13 @@
     _documentsPopover = nil;
     _actionPopover = nil;
     _readerViewController = nil;
-    _actionsCollectionView = nil;
+    //_actionsCollectionView = nil;
 
 }
 
 #pragma mark - selector for observer
 
-- (void) dossierActionComplete: (NSNotification*) notification {
+- (void) clearDetail: (NSNotification*) notification {
     [self resetViewState];
 }
 
@@ -191,7 +195,7 @@
 }
 
 
-- (void) didBatchSelectionChange:(NSNotification*)notification {
+/*- (void) didBatchSelectionChange:(NSNotification*)notification {
     NSArray *oldActions = [NSArray arrayWithArray:self.actions];
 
     if (((NSArray*) notification.object).count == 0) {
@@ -228,11 +232,8 @@
              [self.actionsCollectionView insertItemsAtIndexPaths:addPaths];
          } completion:nil];
     }
-}
+}*/
 
--(void) selectBureauAppeared:(NSNotification*) notification {
-    [self resetViewState];
-}
 
 -(void) showDocumentWithIndex:(NSNotification*) notification {
     NSNumber* docIndex = [notification object];
@@ -565,16 +566,17 @@
     self.masterPopoverController = nil;
 }
 
-#pragma mark UICollectionViewDelegate protocol implementation (used in batch mode)
+//#pragma mark UICollectionViewDelegate protocol implementation (used in batch mode)
 
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+/*- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(kActionButtonsWidth, kActionButtonsHeight);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return kActionButtonsHeight / 2;
-}
+    //return kActionButtonsHeight / 2;
+    return 0.0f;
+}*/
 
 /*- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 10.0f;
@@ -582,7 +584,7 @@
 
 
 
-#pragma mark UICollectionViewDataSource protocol implementation (used in batch mode)
+/*#pragma mark UICollectionViewDataSource protocol implementation (used in batch mode)
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -638,7 +640,7 @@
 
 -(void) batchUnknown {
     NSLog(@"INCONNU");
-}
+}*/
 
 
 @end

@@ -45,7 +45,6 @@
 //
 
 #import "RGMasterViewController.h"
-#import "RGWorkflowDialogViewController.h"
 #import "RGMasterViewController.h"
 #import "RGReaderViewController.h"
 #import "RGAppDelegate.h"
@@ -430,16 +429,6 @@
         [((RGDocumentsView
            *)[segue destinationViewController]) setPopoverController:[(UIStoryboardPopoverSegue *)segue popoverController]];
     }*/
-    
-    if ([[segue identifier] isEqualToString:@"viser"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossierRef:[self dossierRef]];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
-    }
-    
-    if ([[segue identifier] isEqualToString:@"reject"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossierRef:[self dossierRef]];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
-    }
 }
 
 -(void) presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated {

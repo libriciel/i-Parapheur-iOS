@@ -22,7 +22,7 @@
 		1483D1DE165E852C000C6D0D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1483D1DD165E852C000C6D0D /* Security.framework */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
 		14EF518C16DF72A7003C2FB3 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14EF518B16DF72A7003C2FB3 /* Settings.storyboard */; };
-		882C40AD16FCBE0A00D824E9 /* icone_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E62A8715889B78003445F4 /* icone_ipad.png */; };
+		882C40AD16FCBE0A00D824E9 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		9514BFD8187AA3B700118B9C /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFD6187AA3B700118B9C /* Icon-72.png */; };
 		9514BFD9187AA3B700118B9C /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFD7187AA3B700118B9C /* Icon-72@2x.png */; };
 		9514BFE3187AA73800118B9C /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDB187AA73800118B9C /* Icon-Small-50.png */; };
@@ -40,6 +40,7 @@
 		9514BFF5187AA76100118B9C /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFF3187AA76100118B9C /* Icon-76.png */; };
 		9514BFF6187AA76100118B9C /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFF4187AA76100118B9C /* Icon-76@2x.png */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
+		9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9540519B1892BB8100018E80 /* ADLAPIHelper.m */; };
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
 		958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
@@ -205,6 +206,8 @@
 		9514BFF4187AA76100118B9C /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
 		952E2E531888185E005C8D97 /* ADLFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterViewController.h; sourceTree = "<group>"; };
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
+		9540519A1892BB8100018E80 /* ADLAPIHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAPIHelper.h; sourceTree = "<group>"; };
+		9540519B1892BB8100018E80 /* ADLAPIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAPIHelper.m; sourceTree = "<group>"; };
 		954A7389188D371D00A13D1E /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
 		954A738A188D371D00A13D1E /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
 		958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CustomColors.h"; sourceTree = "<group>"; };
@@ -647,6 +650,8 @@
 				1469DFF31675D8960064E8E7 /* ADLAPIOperation.h */,
 				1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */,
 				14F0C8551694B65800C0D720 /* ADLAPIRequests.h */,
+				9540519A1892BB8100018E80 /* ADLAPIHelper.h */,
+				9540519B1892BB8100018E80 /* ADLAPIHelper.m */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -718,16 +723,6 @@
 				B41B946E156227A6004D57A1 /* rounded-fail.png */,
 				B41B946F156227A6004D57A1 /* rounded-fail@2x.png */,
 				B4A5F0D8161DCA73007BA5D1 /* Localizable.strings */,
-				4168DB16662B179A3AE06F53 /* Icon-72.png */,
-				4168DD8F7EECF54AC93BC09C /* Icon-Small.png */,
-				4168D9F5D076BBC58F6E0649 /* Icon-Small-50@2x.png */,
-				4168D2AEE6177F133106F5FD /* iTunesArtwork@2x.png */,
-				4168DE5E9C1F5A28688A4394 /* iTunesArtwork.png */,
-				4168D76D273B4EBD003D79AD /* Icon@2x.png */,
-				4168D6A7C2554BDD67CC25C0 /* Icon-72@2x.png */,
-				4168DD9A4EA1812C20FE28CF /* Icon-Small-50.png */,
-				4168D24DA9EAEF996436D536 /* Icon.png */,
-				4168DC310D98AE0C2AA1FB48 /* Icon-Small@2x.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -832,7 +827,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				882C40AD16FCBE0A00D824E9 /* icone_ipad.png in Resources */,
+				882C40AD16FCBE0A00D824E9 /* (null) in Resources */,
 				9514BFE8187AA73800118B9C /* Icon@2x.png in Resources */,
 				B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */,
 				9514BFE4187AA73800118B9C /* Icon-Small-50@2x.png in Resources */,
@@ -930,6 +925,7 @@
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
 				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,
+				9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */,
 				B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */,
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
 				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,

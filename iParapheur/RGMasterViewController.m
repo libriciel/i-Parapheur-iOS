@@ -76,7 +76,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib
     _deskArray = [[NSMutableArray alloc] init];
-    _loading = NO;
     
     self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
     
@@ -105,7 +104,6 @@
 
 - (void)loadBureaux
 {
-    _loading = YES;
     [self.refreshControl beginRefreshing];
     //ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 
@@ -210,6 +208,12 @@
     
     [[cell todoBadge] setBadgeText:[a_traiter stringValue]];
     [[cell todoBadge] autoBadgeSizeWithString: [a_traiter stringValue]];
+    [cell.todoBadge setBadgeInsetColor:[UIColor blueColor]];
+    
+    NSNumber *en_retard = [bureau objectForKey:@"en_retard"];
+    
+    [[cell lateBadge] setBadgeText:[en_retard stringValue]];
+    [[cell lateBadge] autoBadgeSizeWithString: [en_retard stringValue]];
     return cell;
     
 }

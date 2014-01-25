@@ -356,7 +356,7 @@ NSData* X509_to_NSData(X509 *cert) {
 
 
 -(NSDictionary*)PKCS7BatchSign:(NSString*)p12Path withPassword:(NSString*)password andHashes:(NSDictionary *)hashes error:(NSError**) error {
-
+    return nil;
 }
 
 -(NSData*)PKCS7Sign:(NSString*)p12Path withPassword:(NSString*)password andData:(NSData*)data error:(NSError**)error {
@@ -367,7 +367,7 @@ NSData* X509_to_NSData(X509 *cert) {
     STACK_OF(X509) *ca = NULL;
     PKCS12 *p12;
     // int i = 0;
-    unsigned char *alias = NULL;
+    //unsigned char *alias = NULL;
     
     const char *p12_file_path = [p12Path cStringUsingEncoding:NSUTF8StringEncoding];
     const char *p12_password = [password cStringUsingEncoding:NSUTF8StringEncoding];
@@ -456,7 +456,7 @@ NSData* X509_to_NSData(X509 *cert) {
 		BIO_write(p7bio,buf,i);
     }
 
-    if (!ADL_PKCS7_dataFinal(p7, p7bio, [data bytes], [data length])) {
+    if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *)[data bytes], [data length])) {
         return nil;
     }
     BIO_free(p7bio);

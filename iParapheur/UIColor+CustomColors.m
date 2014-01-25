@@ -37,7 +37,7 @@
         return [UIColor blackColor];
     }
     
-    return [UIColor darkBlueColor];
+    return [UIColor lightGrayColor];
 }
 
 @end

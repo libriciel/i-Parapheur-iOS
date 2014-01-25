@@ -41,8 +41,8 @@
 
 
 #define kDossierSelected @"dossierSelected"
-#define kDidBatchSelectionChange @"didBatchSelectionChange"
 #define kSelectBureauAppeared @"selectBureauAppeared"
+#define kFilterChanged @"filterChanged"
 #define kSelectedBureau @"selectedBureau"
 #define kshowDocumentWithIndex @"showDocumentWithIndex"
 #define kDossierActionComplete @"actionOnDossierComplete"

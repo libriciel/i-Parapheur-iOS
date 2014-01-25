@@ -46,6 +46,7 @@
 
 #import "RGDeskViewController.h"
 #import "RGMasterViewController.h"
+#import "RGWorkflowDialogViewController.h"
 #import "ADLFilterViewController.h"
 #import "LGViewHUD.h"
 #import "RGFileCell.h"
@@ -54,15 +55,23 @@
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
 #import "NSString+Contains.h"
+#import "UIColor+CustomColors.h"
+#import "ADLAPIHelper.h"
 
 
 @interface RGDeskViewController()
 {
     int _currentPage;
+    UIBarButtonItem *moreBarButtonItem;
 }
 
 @property (nonatomic, weak) RGFileCell* swipedCell;
 @property (nonatomic, assign, getter = isInBatchMode) BOOL inBatchMode;
+@property (nonatomic, retain, readonly) NSArray* possibleMainActions;
+@property (nonatomic, retain, readonly) NSArray* actionsWithoutAnnotation;
+@property (nonatomic, retain) NSString* mainAction;
+@property (nonatomic, retain) NSArray* secondaryActions;
+
 
 @end
 
@@ -99,20 +108,50 @@
     
     _currentPage = 0;
     self.dossiersArray = [NSMutableArray new];
+    _possibleMainActions = [NSArray arrayWithObjects:@"VISER", @"SIGNER", @"TDT", @"MAILSEC", @"ARCHIVER", nil];
+    _actionsWithoutAnnotation = [NSArray arrayWithObjects:@"RECUPERER", @"SUPPRIMER", @"SECRETARIAT", nil];
     [self loadDossiersWithPage:_currentPage];
 }
 
 
 -(void) setInBatchMode:(BOOL) value {
     _inBatchMode = value;
-    [self.navigationController setToolbarHidden:!_inBatchMode animated:YES];
+    
 }
 
 -(void)loadDossiersWithPage:(int)page
 {
     NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
     if (currentFilter != nil) {
-        API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
+        //API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
+        
+        // TYPES
+        NSMutableArray *types = [NSMutableArray new];
+        for (NSString *type in [currentFilter objectForKey:@"types"]) {
+            [types addObject:[NSDictionary dictionaryWithObject:type forKey:@"ph:typeMetier"]];
+        }
+        // SOUS TYPES
+        NSMutableArray *sousTypes = [NSMutableArray new];
+        for (NSString *sousType in [currentFilter objectForKey:@"sousTypes"]) {
+            [sousTypes addObject:[NSDictionary dictionaryWithObject:sousType forKey:@"ph:soustypeMetier"]];
+        }
+        
+        // TITRE
+        NSDictionary *titre = [NSDictionary dictionaryWithObject:
+                               [NSArray arrayWithObject:
+                                [NSDictionary dictionaryWithObject:
+                                 [NSString stringWithFormat:@"*%@*", [currentFilter objectForKey:@"titre"]]
+                                                            forKey:@"cm:title"]]
+                                                          forKey:@"or"];
+        
+        NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:
+                                  [NSArray arrayWithObjects:
+                                   [NSDictionary dictionaryWithObject:types forKey:@"or"],
+                                   [NSDictionary dictionaryWithObject:sousTypes forKey:@"or"],
+                                    titre,
+                                    nil] forKey:@"and"];
+
+        API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", [currentFilter objectForKey:@"banette"], filtersDictionnary);
     }
     else {
         API_GETDOSSIERHEADERS(self.deskRef, [NSNumber numberWithInteger:page], @"15");
@@ -120,6 +159,98 @@
 }
 
 #pragma mark Actions
+
+-(void) updateToolBar
+{
+    if (self.isInBatchMode) {
+        if (self.navigationController.toolbarHidden) {
+            [self.navigationController setToolbarHidden:NO animated:YES];
+        }
+        NSArray *actions = [self actionsForSelectedDossiers];
+        // Normalement il n'y a toujours qu'une seule action principale.
+        NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
+        self.secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
+        
+        NSMutableArray *toolbarItems = [[NSMutableArray alloc] initWithCapacity:3];
+        
+        [toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil]];
+        
+        if (self.secondaryActions.count > 0) {
+            UIButton *moreActions = [UIButton buttonWithType:UIButtonTypeCustom];
+            moreActions.backgroundColor = [UIColor darkGrayColor];
+            moreActions.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
+            [moreActions setTitle:@"Plus" forState:UIControlStateNormal];
+            [moreActions setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [moreActions addTarget:self action:@selector(showMoreActions:) forControlEvents:UIControlEventTouchUpInside];
+            moreBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:moreActions];
+            [toolbarItems addObject:moreBarButtonItem];
+        }
+
+        if (mainActions.count > 0) {
+            self.mainAction = [mainActions objectAtIndex:0];
+            UIButton *mainAction = [UIButton buttonWithType:UIButtonTypeCustom];
+            mainAction.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            //mainAction.titleLabel.font = [UIFont systemFontOfSize:14.0f];
+            mainAction.backgroundColor = [UIColor darkGreenColor];
+            mainAction.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
+            [mainAction setTitle:[ADLAPIHelper actionNameForAction:self.mainAction] forState:UIControlStateNormal];
+            [mainAction setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [mainAction addTarget:self action:@selector(mainActionPressed) forControlEvents:UIControlEventTouchUpInside];
+            
+            [toolbarItems addObject:[[UIBarButtonItem alloc] initWithCustomView:mainAction]];
+        }
+                [self.navigationController.toolbar setItems:[NSArray arrayWithArray:toolbarItems] animated:YES];
+    }
+    else {
+        [self.navigationController setToolbarHidden:YES animated:YES];
+        moreBarButtonItem = nil;
+    }
+}
+
+-(void) mainActionPressed {
+    if (self.mainAction) {
+        @try {
+            [self performSegueWithIdentifier:self.mainAction sender:self];
+        }
+        @catch (NSException *exception) {
+            [[[UIAlertView alloc] initWithTitle:@"Action impossible" message:@"Vous ne pouvez pas effectuer cette action sur tablette." delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+        }
+        @finally {}
+    }
+}
+
+-(void) showMoreActions:(id) sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:@"Traitement par lot"
+                                  delegate:self
+                                  cancelButtonTitle:nil
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:nil];
+    for (NSString *action in self.secondaryActions) {
+        NSString *actionName = [ADLAPIHelper actionNameForAction:action];
+        [actionSheet addButtonWithTitle:actionName];
+    }
+    [actionSheet addButtonWithTitle:@"Annuler"];
+    
+    
+    // Find the barButtonItem
+    UIBarButtonItem *moreItem = nil;
+    
+    for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
+        if ([(UIView*)sender isDescendantOfView:item.customView]) {
+            moreItem = item;
+            break;
+        }
+    }
+    if (moreItem) {
+        [actionSheet showFromBarButtonItem:moreItem animated:YES];
+    }
+    //[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
+    else {
+        [actionSheet showFromRect:((UIView*)sender).frame inView:self.view animated:YES];
+    }
+}
+
 - (IBAction)loadNextResultsPage:(id)sender {
     [self loadDossiersWithPage:++_currentPage]; 
 }
@@ -127,7 +258,7 @@
 -(NSArray*) actionsForSelectedDossiers {
     NSMutableArray* actions;
     for (NSDictionary* dossier in self.selectedDossiersArray) {
-        NSArray* dossierActions = [self actionsForDossier:dossier];
+        NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
         if (!actions) { // the first dossier only
             actions = [NSMutableArray arrayWithArray:dossierActions];
         }
@@ -138,23 +269,15 @@
     return actions;
 }
 
--(NSArray* ) actionsForDossier:(NSDictionary *) dossier {
-    static BOOL _even = NO;
-    _even = !_even;
-    if (_even) {
-        return [[NSArray alloc] initWithObjects:@"VISER", @"TDT", nil];
-    }
-    return [[NSArray alloc] initWithObjects:@"VISER", @"MAIL", @"REJETER", @"AVIS SUPPLEMENTAIRE", @"ENREGISTRER", @"RÉCUPÉRER", nil];
-}
 
 #pragma mark - UITableViewDatasource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    //if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [self.filteredDossiersArray count];
-    } else {
-        return [self.dossiersArray count];
-    }
+    //} else {
+    //    return [self.dossiersArray count];
+    //}
 }
 
 -(UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -164,105 +287,54 @@
     cell.delegate = self;
     
     NSDictionary *dossier;
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
+    //if (tableView == self.searchDisplayController.searchResultsTableView) {
         dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
-    } else {
-        dossier = [self.dossiersArray objectAtIndex:[indexPath row]];
-    }
+    //} else {
+    //    dossier = [self.dossiersArray objectAtIndex:[indexPath row]];
+    //}
     
     // NSLog(@"%@", [dossier objectForKey:@"titre"]);
     
     cell.dossierTitleLabel.text = [dossier objectForKey:@"titre"];
     cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", [dossier objectForKey:@"type"], [dossier objectForKey:@"sousType"]];
     
+    if ([[[dossier objectForKey:@"actions"] objectForKey:@"sign"] boolValue] || [[[dossier objectForKey:@"actions"] objectForKey:@"archive"] boolValue]) {
+        //actionName = API_ACTION_NAME_FOR_ACTION([dossier objectForKey:@"actionDemandee"]);
+
+        NSString *actionName = [ADLAPIHelper actionNameForAction:[dossier objectForKey:@"actionDemandee"]];
+        
+        [cell.validateButton setTitle:actionName forState:UIControlStateNormal];
+    }
+    else {
+        cell.validateButton.hidden = YES;
+    }
+    
+    
     NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
     if (dateLimite != nil) {
         ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
         //[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
         NSDate *dueDate = [formatter dateFromString:dateLimite];
-
+        
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-        [outputFormatter setDateFormat:@"dd MMM"];
+        [outputFormatter setDateStyle:NSDateFormatterShortStyle];
+        [outputFormatter setTimeStyle:NSDateFormatterNoStyle];
+        //[outputFormatter setDateFormat:@"dd MMM"];
         
         NSString *fdate = [outputFormatter stringFromDate:dueDate];
         cell.retardBadge.badgeText = fdate;
-        [cell.retardBadge autoBadgeSizeWithString: [NSString stringWithFormat:@" %@ ", fdate]];
+        [cell.retardBadge autoBadgeSizeWithString: fdate];
         [cell.retardBadge setHidden:NO];
 
     }
     else {
         [cell.retardBadge setHidden:YES];
     }
-    cell.switchButton.on = [self.selectedDossiersArray containsObject:[dossier objectForKey:@"dossierRef"]];
+    cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
     
     return cell;
 }
 
-
-#pragma mark UITableViewDelegate protocol implementation
-
--(void) cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath
-{
-    [cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:NO];
-    
-    [cell.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    
-    if (!self.isInBatchMode) {
-        
-        NSString *dossierRef;
-        
-        if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
-            //        NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
-            dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
-            //[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
-        }
-        else {
-            //        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-            dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
-        }
-        [cell setSelected:YES animated:NO];
-        
-        [[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
-    }
-    
-    
-}
-
--(void) cell:(RGFileCell *)cell didCheckAtIndexPath:(NSIndexPath *)indexPath
-{
-    [self.swipedCell hideMenuOptions];
-    [cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:YES];
-    NSString * dossierRef;
-    if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
-        dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
-    }
-    else {
-        dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
-    }
-
-    if ([self.selectedDossiersArray containsObject:dossierRef])
-    {
-        [self.selectedDossiersArray removeObject:dossierRef];
-        if (self.selectedDossiersArray.count == 0) {
-            [self setInBatchMode:NO];
-        }
-    }
-    else
-    {
-        [self.selectedDossiersArray addObject:dossierRef];
-        if (self.selectedDossiersArray.count == 1) {
-            [self setInBatchMode:YES];
-        }
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDidBatchSelectionChange object:[self actionsForSelectedDossiers]];
-
-}
-
-/*- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
-}*/
 
 #pragma mark - Wall delegate
 
@@ -301,7 +373,7 @@
         [[self loadMoreButton ] setHidden:YES];
     }
     
-    self.filteredDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
+    self.filteredDossiersArray = [NSArray arrayWithArray:self.dossiersArray];
     
     self.selectedDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
     
@@ -320,36 +392,43 @@
 }
 
 -(void) filterDossiersForSearchText:(NSString*) searchText {
-    [self.filteredDossiersArray removeAllObjects];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS %@)", @"titre", searchText];
-    [self.filteredDossiersArray addObjectsFromArray:[self.dossiersArray filteredArrayUsingPredicate:predicate]];
+    if (searchText && (searchText.length > 0)) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS[cd] %@)", @"titre", searchText];
+        self.filteredDossiersArray = [self.dossiersArray filteredArrayUsingPredicate:predicate];
+    }
+    else {
+        self.filteredDossiersArray = [NSArray arrayWithArray:self.dossiersArray];
+    }
     
 }
 
 
-#pragma mark - UISearchDisplayDelegate protocol implementation
+#pragma mark - UISearchBarDelegate protocol implementation
 
--(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    // Tells the table data source to reload when text changes
-    [self filterDossiersForSearchText:searchString];
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self filterDossiersForSearchText:searchText];
+    [self.tableView reloadData];
 }
 
 #pragma mark - FilterDelegate protocol implementation
 
 - (void)shouldReload:(NSDictionary *)filter {
     [ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary: filter];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged object:nil];
+    [self refresh];
 }
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    /*if (_filterModal != nil) {
-        [_filterModal dismissViewControllerAnimated:NO completion:nil];
-    }*/
     
-    ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
+    if ([segue.identifier isEqualToString:@"filterSegue"]) {
+        ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
+    }
+    else {
+        ((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = [self.selectedDossiersArray valueForKey:@"dossierRef"];
+        ((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;
+    }
 }
 
 - (void)viewDidUnload {
@@ -357,10 +436,103 @@
     [super viewDidUnload];
 }
 
-#pragma mark RGFileCellDataSource protocol implementation
+#pragma mark UIActionSheetDelegate protocol implementation
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex < self.secondaryActions.count) {
+        NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
+        @try {
+            [self performSegueWithIdentifier:action sender:self];
+        }
+        @catch (NSException *exception) {
+            [[[UIAlertView alloc] initWithTitle:@"Action impossible" message:@"Vous ne pouvez pas effectuer cette action sur tablette." delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+        }
+        @finally {}
+    }
+}
+
+#pragma mark RGFileCellDelegate protocol implementation
+
+-(void) cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:NO];
+    
+    [cell.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    
+    //if (!self.isInBatchMode) {
+        
+        NSString *dossierRef;
+        
+        if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
+            //        NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+            dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+            //[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
+        }
+        else {
+            //        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+            dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+        }
+        [cell setSelected:YES animated:NO];
+        
+        [[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
+    //}
+    
+    
+}
+
+-(void) cell:(RGFileCell *)cell didCheckAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.swipedCell hideMenuOptions];
+    //[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:YES];
+    NSDictionary * dossier;
+    //if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
+        dossier = [self.filteredDossiersArray objectAtIndex:indexPath.row];
+    //}
+    //else {
+    //    dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+    //}
+    
+    if ([self.selectedDossiersArray containsObject:dossier])
+    {
+        [self.selectedDossiersArray removeObject:dossier];
+        if (self.selectedDossiersArray.count == 0) {
+            [self setInBatchMode:NO];
+        }
+    }
+    else
+    {
+        [self.selectedDossiersArray addObject:dossier];
+        if (self.selectedDossiersArray.count == 1) {
+            [self setInBatchMode:YES];
+        }
+    }
+    [self updateToolBar];
+    
+}
+
+-(void) cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
+    NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+    self.secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
+    self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+    [self showMoreActions:cell];
+}
+
+-(void) cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
+    NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+    NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
+    if (mainActions.count > 0) {
+        self.mainAction = [mainActions objectAtIndex:0];
+        self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+        [self mainActionPressed];
+        
+    }
+}
+
 
 -(BOOL) canSelectCell:(RGFileCell *)cell {
-    return (!self.isInBatchMode);
+    return YES;
 }
 
 -(BOOL) canSwipeCell:(RGFileCell *)cell {

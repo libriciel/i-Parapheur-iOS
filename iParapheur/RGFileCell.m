@@ -65,7 +65,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     self.moreButton.frame = CGRectMake(0, 0, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
     [self.moreButton setTitle:@"Plus" forState:UIControlStateNormal];
     [self.moreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.moreButton addTarget:self action:@selector(userPressedMoreButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.moreButton addTarget:self action:@selector(userPressedMoreButton) forControlEvents:UIControlEventTouchUpInside];
     [self.buttonsView addSubview:self.moreButton];
     
     // VALIDATE
@@ -75,7 +75,9 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     self.validateButton.frame = CGRectMake(kCatchWidth / 2.0f, 0, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
     [self.validateButton setTitle:@"Valider" forState:UIControlStateNormal];
     [self.validateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.validateButton addTarget:self action:@selector(userPressedValidateButton:) forControlEvents:UIControlEventTouchUpInside];
+    self.validateButton.titleLabel.lineBreakMode = (NSLineBreakByWordWrapping);
+    self.validateButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.validateButton addTarget:self action:@selector(userPressedValidateButton) forControlEvents:UIControlEventTouchUpInside];
     [self.buttonsView addSubview:self.validateButton];
     
     // Create and add the "normal" list item
@@ -83,36 +85,33 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     self.contentCellView.backgroundColor = [UIColor whiteColor];
     [self.scrollView addSubview:self.contentCellView];
     //Titre du dossier
-    self.dossierTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0f, 0.0f, CGRectGetWidth(self.bounds) - 75.0f, CGRectGetHeight(self.bounds)*0.60f)];
+    self.dossierTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0f, 0.0f, CGRectGetWidth(self.bounds) - 75.0f, CGRectGetHeight(self.bounds)*0.4f)];
     [self.dossierTitleLabel setLineBreakMode:NSLineBreakByWordWrapping | NSLineBreakByTruncatingTail];
     //self.dossierTitleLabel.textAlignment = NSTextAlignmentRight;
     [self.contentCellView addSubview:self.dossierTitleLabel];
     //Typologie
-    self.typologyLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0f, CGRectGetHeight(self.bounds)*0.60f, CGRectGetWidth(self.bounds) - 75.0f, CGRectGetHeight(self.bounds)*0.40f)];
+    self.typologyLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0f, CGRectGetHeight(self.bounds)*0.4f, CGRectGetWidth(self.bounds) - 75.0f, CGRectGetHeight(self.bounds)*0.4f)];
     self.typologyLabel.lineBreakMode = (NSLineBreakByWordWrapping | NSLineBreakByTruncatingTail);
     self.typologyLabel.font = [UIFont systemFontOfSize:14];
     //self.typologyLabel.textAlignment = NSTextAlignmentRight;
     [self.contentCellView addSubview:self.typologyLabel];
     
     // SWITCH
-    self.switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(5.0f, 15.0f, 20.0f, 20.0f)];
+    self.switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(5.0f, 20.0f, 20.0f, 20.0f)];
     self.switchButton.on = NO;
     [self.switchButton addTarget:self action:@selector(userDidCheckCell:) forControlEvents:(UIControlEventValueChanged | UIControlEventTouchDragInside)];
     [self.contentCellView addSubview:self.switchButton];
     
-    
-    /*_retardBadge = [CustomBadge customBadgeWithString:@""];
-     
-     //[self addSubview:_lateBadge];
-     [_retardBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
-     [_retardPlaceHolder addSubview:_retardBadge];*/
+    // RETARD
+    self.retardPlaceHolder = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetHeight(self.bounds) - 25.0f, 20.0f, 20.0f)];
+    self.retardBadge = [CustomBadge customBadgeWithString:@""];
+    [self.retardBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
+    [self.retardPlaceHolder addSubview:self.retardBadge];
+    [self.contentCellView addSubview:self.retardPlaceHolder];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideMenuOptions) name:RGFileCellShouldHideMenuNotification object:nil];
 }
 
--(void) setActionName:(NSString*) name {
-    self.validateButton.titleLabel.text = name;
-}
 
 -(BOOL) isCheckded {
     return [self.checkBox isSelected];
@@ -140,12 +139,16 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     }
 }
 
-- (void)userPressedValidateButton:(id)sender {
-    NSLog(@"VALIDER");
+- (void)userPressedValidateButton {
+    if ([self.delegate respondsToSelector:@selector(cell:didTouchMainButtonAtIndexPath:)]) {
+        [self.delegate cell:self didTouchMainButtonAtIndexPath:self.indexPath];
+    }
 }
 
-- (void)userPressedMoreButton:(id)sender {
-    NSLog(@"PLUS");
+- (void)userPressedMoreButton {
+    if ([self.delegate respondsToSelector:@selector(cell:didTouchSecondaryButtonAtIndexPath:)]) {
+        [self.delegate cell:self didTouchSecondaryButtonAtIndexPath:self.indexPath];
+    }
 }
 
 -(UITableView*) tableView {

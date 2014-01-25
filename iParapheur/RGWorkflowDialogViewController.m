@@ -51,6 +51,7 @@
 #import "RGAppDelegate.h"
 #import "ADLPasswordAlertView.h"
 #import "ADLRequester.h"
+#import "ADLAPIHelper.h"
 #import "PrivateKey.h"
 #import "LGViewHUD.h"
 #import <NSData+Base64/NSData+Base64.h>
@@ -61,15 +62,7 @@
 @end
 
 @implementation RGWorkflowDialogViewController
-@synthesize annotationPrivee;
-@synthesize annotationPublique;
-@synthesize finishButton;
-@synthesize action;
-@synthesize dossiersRef;
-@synthesize certificateLabel = _certificateLabel, certificatesTableView = _certificatesTableView;
-@synthesize p12password;
 
-@synthesize pkeys = _pkeys;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,38 +76,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
 
-}
-
-- (void)viewDidUnload
-{
-    [self setAnnotationPrivee:nil];
-    [self setAnnotationPublique:nil];
-    [self setFinishButton:nil];
-    [self setCertificateLabel:nil];
-    [self setCertificatesTableView:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if ([action isEqualToString:@"viser"]) {
-        [finishButton setTitle:@"Viser" forState:UIControlStateNormal];
-        [_certificateLabel setHidden:YES];
-        [_certificatesTableView setHidden:YES];
+    self.navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:self.action];
+    if ([self.action isEqualToString:@"SIGNER"]) {
+        [self.navigationBar.topItem.rightBarButtonItem setEnabled:NO];
     }
-    else if ([action isEqualToString:@"reject"]) {
-        [finishButton setTitle:@"Rejeter" forState:UIControlStateNormal];
-        [_certificateLabel setHidden:YES];
-        [_certificatesTableView setHidden:YES];
-    }
-    else if ([action isEqualToString:@"signature"]) {
-        [finishButton setTitle:@"Signer" forState:UIControlStateNormal];
-        [finishButton setEnabled:NO];
-        
+    else {
+        [self.certificateLabel setHidden:YES];
+        [self.certificatesTableView setHidden:YES];
+        if ([self.action isEqualToString:@"REJETER"]) {
+            self.annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
+        }
     }
     ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
     
@@ -132,21 +109,29 @@
 
     NSMutableDictionary *args = [[NSMutableDictionary alloc]
                           initWithObjectsAndKeys:
-                          dossiersRef, @"dossiers",
-                          [annotationPublique text], @"annotPub",
-                          [annotationPrivee text], @"annotPriv",
+                          self.dossiersRef, @"dossiers",
+                          [self.annotationPublique text], @"annotPub",
+                          [self.annotationPrivee text], @"annotPriv",
                           [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
                           nil];
     
     
 
-    if ([action isEqualToString:@"viser"]) {
+    if ([self.action isEqualToString:@"VISER"]) {
+        [self showHud];
         [requester request:@"visa" andArgs:args delegate:self];
     }
-    else if ([action isEqualToString:@"reject"]) {
-        [requester request:@"reject" andArgs:args delegate:self];
+    else if ([self.action isEqualToString:@"REJETER"]) {
+        if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
+            [self showHud];
+            [requester request:@"reject" andArgs:args delegate:self];
+        }
+        else {
+            [[[UIAlertView alloc] initWithTitle:@"Attention" message:@"Veuillez saisir le motif de votre rejet" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles:nil] show];
+        }
+        
     }
-    else if ([action isEqualToString:@"signature"]) {
+    else if ([self.action isEqualToString:@"SIGNER"]) {
         // create signatures array
         PrivateKey *pkey = _currentPKey;
         
@@ -175,12 +160,38 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void) showHud {
+    LGViewHUD *hud = [LGViewHUD defaultHUD];
+    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
+    hud.topText=@"";
+    hud.bottomText=@"Chargement ...";
+    hud.activityIndicatorOn=YES;
+    [hud showInView:self.view];
+}
+
+- (void) hideHud {
+    LGViewHUD *hud = [LGViewHUD defaultHUD];
+    [hud hideWithAnimation:HUDAnimationHideFadeOut];
+}
+
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
     NSLog(@"MIKAF %@", answer);
-    if ([[answer objectForKey:@"_req"] isEqualToString:@"signature"]) {
-        LGViewHUD *hud = [LGViewHUD defaultHUD];
-        [hud hideWithAnimation:HUDAnimationHideFadeOut];
+    
+    if ([[answer objectForKey:@"_req"] isEqualToString:@"visa"]) {
+        
+        [self hideHud];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+    }
+    else if ([[answer objectForKey:@"_req"] isEqualToString:@"reject"]) {
 
+        [self hideHud];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+    }
+    else if ([[answer objectForKey:@"_req"] isEqualToString:@"signature"]) {
+        
+        [self hideHud];
         [self dismissViewControllerAnimated:YES completion:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
     }
@@ -237,8 +248,8 @@
             NSMutableDictionary *args = [[NSMutableDictionary alloc]
                     initWithObjectsAndKeys:
                             dossiers, @"dossiers",
-                            [annotationPublique text], @"annotPub",
-                            [annotationPrivee text], @"annotPriv",
+                            [self.annotationPublique text], @"annotPub",
+                            [self.annotationPrivee text], @"annotPriv",
                             [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
                             signatures, @"signatures",
                             nil];
@@ -246,13 +257,7 @@
             NSLog(@"%@", args);
             ADLRequester *requester = [ADLRequester sharedRequester];
 
-
-            LGViewHUD *hud = [LGViewHUD defaultHUD];
-            hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-            hud.topText=@"";
-            hud.bottomText=@"Chargement ...";
-            hud.activityIndicatorOn=YES;
-            [hud showInView:self.view];
+            [self showHud];
 
             [requester request:@"signature" andArgs:args delegate:self];
 
@@ -265,9 +270,10 @@
 //
 //}
 //
-//-(void) didEndWithUnReachableNetwork {
-//
-//}
+
+-(void) didEndWithUnReachableNetwork {
+    [[[UIAlertView alloc] initWithTitle:@"Erreur" message:@"Une erreur est survenue lors de l'envoi de la requête" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+}
 
 #pragma mark - UITableView Datasource
 
@@ -304,7 +310,7 @@
     _currentPKey = [_pkeys objectAtIndex:(NSUInteger)[indexPath row]];
     
     // now we have a pkey we can activate Sign Button
-    [finishButton setEnabled:YES];
+    [self.navigationBar.topItem.rightBarButtonItem setEnabled:YES];
 }
 
 #pragma mark - UIAlertView delegate

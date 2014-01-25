@@ -50,13 +50,14 @@
         ADLParapheurWallDelegateProtocol,
         UITableViewDataSource,
         UITableViewDelegate,
-        UISearchDisplayDelegate,
+        UIActionSheetDelegate,
+        UISearchBarDelegate,
         RGFileCellDelegate,
         FilterDelegate>
 
 @property (nonatomic, strong) NSString* deskRef;
 @property (nonatomic, strong) NSMutableArray* dossiersArray;
-@property (nonatomic, strong) NSMutableArray * filteredDossiersArray;
+@property (nonatomic, strong) NSArray * filteredDossiersArray;
 
 @property (nonatomic, strong) NSMutableArray* selectedDossiersArray;
 
@@ -67,12 +68,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *loadMoreButton;
 
 
-@property (retain, nonatomic) IBOutlet UIBarButtonItem *batchButton;
-@property (retain, nonatomic) IBOutlet UIBarButtonItem *signButton;
-@property (retain, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
-
 - (IBAction)loadNextResultsPage:(id)sender;
-- (IBAction)toggleMultipleSelection:(id)sender;
 
 //- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0);

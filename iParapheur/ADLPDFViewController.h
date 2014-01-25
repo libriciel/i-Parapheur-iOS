@@ -49,9 +49,9 @@
     ReaderViewControllerDelegate,
     UIPopoverControllerDelegate,
     ADLDrawingViewDataSource,
-    LGViewHUDDelegate,
-    UICollectionViewDataSource,
-    UICollectionViewDelegateFlowLayout>
+    LGViewHUDDelegate
+    /*UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout*/>
 
 
 @property (strong, nonatomic) id detailItem;
@@ -77,8 +77,8 @@
 
 // Used in batch mode
 
-@property (strong, nonatomic) UICollectionView* actionsCollectionView;
-@property (strong, nonatomic) NSMutableArray* actions;
+//@property (strong, nonatomic) UICollectionView* actionsCollectionView;
+//@property (strong, nonatomic) NSMutableArray* actions;
 
 
 @end

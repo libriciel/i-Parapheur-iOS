@@ -95,6 +95,7 @@
         _todoBadge = [CustomBadge customBadgeWithString:@"0"];
     }
     [[self todoPlaceHolder] addSubview:_todoBadge];
+    [[self latePlaceHolder] addSubview:_lateBadge];
     [[self textLabel] setFont:[UIFont systemFontOfSize:20.0]];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

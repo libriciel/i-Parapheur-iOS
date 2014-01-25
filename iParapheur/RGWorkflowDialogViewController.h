@@ -44,12 +44,12 @@
 
 @interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate>
 
-@property (strong, nonatomic) NSString *dossierRef;
+@property (strong, nonatomic) NSArray *dossiersRef;
 @property (strong, nonatomic) NSString *action;
-@property (strong, nonatomic) IBOutlet UITextView *annotationPrivee;
+@property (strong, nonatomic) IBOutlet UILabel *annotationPubliqueLabel;
 @property (strong, nonatomic) IBOutlet UITextView *annotationPublique;
-
-@property (strong, nonatomic) IBOutlet UIButton *finishButton;
+@property (strong, nonatomic) IBOutlet UITextView *annotationPrivee;
+@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
 @property (strong, nonatomic) NSString *bureauCourant;
 

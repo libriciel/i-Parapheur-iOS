@@ -54,15 +54,15 @@
     }
     
     if (self.signatureEnabled) {
-        [_actions addObject:@"signature"];
+        [_actions addObject:@"SIGNER"];
         [_labels addObject:@"Signer"];
     }
     else if (self.visaEnabled) {
-        [_actions addObject:@"viser"];
+        [_actions addObject:@"VISER"];
         [_labels addObject:@"Viser"];
     }
     
-    [_actions addObject:@"reject"];
+    [_actions addObject:@"REJETER"];
     [_labels addObject:@"Rejeter"];
     [[self tableView] reloadData];
 }
@@ -78,15 +78,15 @@
 {
     NSString *dossierRef = [[ADLSingletonState sharedSingletonState] dossierCourant];
     NSArray *dossiers = [NSArray arrayWithObject:dossierRef];
-    if ([[segue identifier] isEqualToString:@"viser"]) {
+    if ([[segue identifier] isEqualToString:@"VISER"]) {
         [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
         [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
     }
-    else if ([[segue identifier] isEqualToString:@"reject"]) {
+    else if ([[segue identifier] isEqualToString:@"REJETER"]) {
         [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
         [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];        
     }
-    else if ([[segue identifier] isEqualToString:@"signature"]) {
+    else if ([[segue identifier] isEqualToString:@"SIGNER"]) {
         [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
         [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
     }
@@ -106,7 +106,7 @@
     }
     
     [[cell actionLabel] setText:[_labels objectAtIndex:[indexPath row]]];
-    if ([[_actions objectAtIndex:[indexPath row]] isEqualToString:@"reject"]) {
+    if ([[_actions objectAtIndex:[indexPath row]] isEqualToString:@"REJETER"]) {
         UIImage *rejectImg = [UIImage imageNamed:@"rejeter.png"];
         [[cell imageView] setImage:rejectImg];
     }

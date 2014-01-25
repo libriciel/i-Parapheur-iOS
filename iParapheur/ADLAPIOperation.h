@@ -36,6 +36,7 @@
 -(id)initWithRequest:(NSString*)request withArgs:(NSDictionary*)args andCollectivityDef:(ADLCollectivityDef*)def delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 -(id)initWithRequest:(NSString *)request collectivityDef:(ADLCollectivityDef*)def delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 
+
 /*
 -(BOOL) isConcurrent;
 -(BOOL) isExecuting;

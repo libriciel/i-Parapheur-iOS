@@ -72,15 +72,17 @@ ADLRequester *_requester = [ADLRequester sharedRequester]; \
     API_REQUEST(GETDOSSIERSHEADERS_API, _args); \
 }
 
-#define API_GETDOSSIERHEADERS_FILTERED(bureauCourant, page, pageSize, _filters) \
-{ \
-    NSDictionary *_args = [[NSDictionary alloc] initWithObjectsAndKeys: \
-        bureauCourant, @"bureauCourant", \
-        page, @"page", \
-        _filters, @"filters", \
-        pageSize, @"pageSize", nil]; \
-    API_REQUEST(GETDOSSIERSHEADERS_API, _args); \
-}
+#define API_GETDOSSIERHEADERS_FILTERED(bureauCourant, page, pageSize, banette, filters) \
+    API_GETDOSSIER_GET_FILTER_REQUEST_BODY(bureauCourant, page, pageSize, banette, filters)\
+    API_REQUEST(GETDOSSIERSHEADERS_API, _body);
+
+#define API_GETDOSSIER_GET_FILTER_REQUEST_BODY(bureauCourant, page, pageSize, banette, filters) \
+    NSDictionary *_body = [[NSDictionary alloc] initWithObjectsAndKeys: \
+    bureauCourant, @"bureauCourant", \
+    page, @"page", \
+    filters, @"filters", \
+    banette, @"parent", \
+    pageSize, @"pageSize", nil];
 
 #define API_GETDOSSIERHEADERS_GET_DOSSIERS(answer) \
     [answer objectForKey:@"dossiers"]
