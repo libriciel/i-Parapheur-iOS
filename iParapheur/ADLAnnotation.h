@@ -14,6 +14,8 @@
 @property (nonatomic) BOOL editable;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) NSString *author;
+// TODO
+@property (nonatomic, strong) NSString *date;
 @property (nonatomic) CGRect rect;
 
 

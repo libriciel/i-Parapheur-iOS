@@ -51,7 +51,11 @@
 @implementation ADLCloseButton
 
 - (id)initWithFrame:(CGRect)frame {
-    if ((self = [super initWithFrame:frame])) {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setTitle:@"X" forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.titleLabel.font = [UIFont fontWithName:@"Chalkduster" size:22];
 		CGFloat radius = self.bounds.size.width / 2;
 		CGFloat borderWidth = self.bounds.size.width / 10;
         
@@ -78,7 +82,7 @@
     return self;
 }
 
-- (void)drawRect:(CGRect)rect {
+/*- (void)drawRect:(CGRect)rect {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGContextSetShouldAntialias(ctx, true);
     
@@ -108,6 +112,6 @@
 	CGContextStrokePath(ctx);
     
 	CGContextRestoreGState(ctx);
-}
+}*/
 
 @end

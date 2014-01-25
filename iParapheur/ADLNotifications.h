@@ -48,3 +48,15 @@
 #define kDossierActionComplete @"actionOnDossierComplete"
 #define kFilterChanged @"filterChanged"
 #define kFilterPopoverShouldClose @"filterPopoverShouldClose"
+
+#define SHOW_HUD \
+LGViewHUD *hud = [LGViewHUD defaultHUD]; \
+hud.image=[UIImage imageNamed:@"rounded-checkmark.png"]; \
+hud.topText=@""; \
+hud.bottomText=@"Chargement ..."; \
+hud.activityIndicatorOn=YES; \
+[hud setDelegate:self]; \
+[hud showInView:self.view];
+
+#define HIDE_HUD \
+[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationHideFadeOut];

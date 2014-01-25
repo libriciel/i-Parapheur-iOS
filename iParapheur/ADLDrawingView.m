@@ -44,7 +44,6 @@
 //
 
 #import "ADLDrawingView.h"
-#import "ADLAnnotationView.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
@@ -196,9 +195,9 @@
 }
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
-    if (_hittedView == nil && _enabled) {
+    if (!_hittedView && _enabled) {
         CGPoint touchPoint = [gestureRecognizer locationInView:self];
-        CGRect annotFrame = [self clipRectInView:CGRectMake(touchPoint.x, touchPoint.y, 100, 100)];
+        CGRect annotFrame = [self clipRectInView:CGRectMake(touchPoint.x, touchPoint.y, kAnnotationMinHeight, kAnnotationMinWidth)];
         _currentAnnotView = [[ADLAnnotationView alloc] initWithFrame:annotFrame];
         [_currentAnnotView setContentScaleFactor:[_parentScrollView contentScaleFactor]];
         
@@ -224,7 +223,7 @@
 - (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
     CGPoint touchPoint = [gestureRecognizer locationInView:self];
     
-    if (_hittedView != nil && _enabled) {
+    if (_hittedView && _enabled) {
         [self animateviewOnLongPressGesture:touchPoint];
     }
     
@@ -251,10 +250,8 @@
             
             
             if (hitted != self) {
-                if ([(ADLAnnotationView*)hitted postItView] != nil) {
-                    [[(ADLAnnotationView*)hitted postItView] removeFromSuperview];
-                    [(ADLAnnotationView*)hitted setPostItView:nil];
-                }
+                
+                [(ADLAnnotationView*)hitted handleTouchInside];
                 //if (_hasBeenLongPressed) {
                 _parentScrollView.scrollEnabled = NO;
                 _superScrollView.scrollEnabled = NO;
@@ -345,7 +342,7 @@
                 [_hittedView setFrame:frame];
                 [_hittedView setNeedsDisplay];
             }
-            else if (_hittedView != nil && _hasBeenLongPressed) {
+            else if (_hittedView && _hasBeenLongPressed) {
                 CGRect frame = [_hittedView frame];
                 
                 frame.origin.x = point.x - _dx;

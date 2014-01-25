@@ -16,8 +16,8 @@
 		CGFloat borderWidth = self.bounds.size.width / 10;
         
 		self.layer.backgroundColor = [[UIColor yellowColor] CGColor];
-		self.layer.borderColor = [[UIColor whiteColor] CGColor];
-		self.layer.borderWidth = borderWidth;
+		//self.layer.borderColor = [[UIColor whiteColor] CGColor];
+		//self.layer.borderWidth = borderWidth;
 		//self.layer.cornerRadius = radius;
         
 		if ([self.layer respondsToSelector:@selector(setShadowOffset:)])
@@ -42,13 +42,13 @@
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextSetShouldAntialias(context, true);
     
-	CGFloat borderWidth = self.bounds.size.width / 10;
+	//CGFloat borderWidth = self.bounds.size.width / 10;
     
 	CGContextSaveGState(context);
     
-	CGContextSetLineCap(context, kCGLineCapRound);
-	CGContextSetLineWidth(context, borderWidth);
-	CGContextSetStrokeColorWithColor(context, [[UIColor whiteColor] CGColor]);
+	//CGContextSetLineCap(context, kCGLineCapRound);
+	//CGContextSetLineWidth(context, borderWidth);
+	//CGContextSetStrokeColorWithColor(context, [[UIColor whiteColor] CGColor]);
     
     if ([self hasText]) {
         CGContextTranslateCTM(context, 0.0f, CGRectGetHeight(self.frame));

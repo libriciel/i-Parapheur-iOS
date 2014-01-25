@@ -44,19 +44,11 @@
 //
 
 #import "ADLAnnotationView.h"
-#import "ADLCloseButton.h"
-#import "ADLPostitView.h"
-#import "ADLPostItButton.h"
-#import "ADLDrawingView.h"
 
 #define SHOW_RULES 0
 
-@implementation ADLAnnotationView
 
-@synthesize selected = _selected;
-@synthesize annotationModel = _annotationModel;
-@synthesize postItView = _postItView;
-@synthesize drawingView = _drawingView;
+@implementation ADLAnnotationView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -70,35 +62,11 @@
         self.backgroundColor = [UIColor clearColor];
         
         
-        _selected = NO;
+        self.selected = NO;
         
-        /* Cut here to disable _close button */
-        CGRect buttonFrame = frame;
-
-        buttonFrame.origin.x = 0;
-        buttonFrame.origin.y = 0;
-        buttonFrame.size.width = 24;
-        buttonFrame.size.height = 24;
+        [self addButtons];
         
-        _close = [[ADLCloseButton alloc] initWithFrame:buttonFrame];
-        
-        [_close addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchDown];
-        
-        [_close setHidden:YES];
-        [_close setNeedsDisplay];
-        
-        
-        CGRect postitFrame = CGRectMake(CGRectGetWidth(frame) - 24.0f, 0.0f, 24.0f ,24.0f);
-        
-        _postit = [[ADLPostItButton alloc] initWithFrame:postitFrame];
-       // [_postit setFrame:postitFrame];
-        [_postit addTarget:self action:@selector(postItButtonHitted) forControlEvents:UIControlEventTouchDown];
-        [_postit setHidden:YES];
-        
-        [self addSubview:_close];
-        [self addSubview:_postit];
-        
-        _annotationModel = [[ADLAnnotation alloc] init];
+        self.annotationModel = [[ADLAnnotation alloc] init];
 
         
 //disable the shadowlayer for now it's to consuming
@@ -122,10 +90,21 @@
 }
 
 -(void) setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    CGRect postitFrame = CGRectMake(CGRectGetWidth(frame) - 24.0f, 0.0f, 24.0f ,24.0f);
-    [_postit setFrame:postitFrame];
+    if (frame.size.height < kAnnotationMinHeight) {
+        frame.size.height = kAnnotationMinHeight;
+    }
+    if (frame.size.width < kAnnotationMinWidth) {
+        frame.size.width = kAnnotationMinWidth;
+    }
     
+    [super setFrame:frame];
+    // ATTENTION : on doit utiliser bounds et non frame pour les boutons pour
+    // gérer l'augmentation du scale lors du déplacement (bounds n'est pas affecté par le scale)
+    CGRect postitFrame = CGRectMake(CGRectGetWidth(self.bounds) - kFingerSize, 0.0f, kFingerSize ,kFingerSize);
+    [self.postItButton setFrame:postitFrame];
+    
+    CGRect infoFrame = CGRectMake(0.0f, CGRectGetHeight(self.bounds) - kFingerSize, kFingerSize ,kFingerSize);
+    [self.infoButton setFrame:infoFrame];
 }
 
 -(id)initWithAnnotation:(ADLAnnotation*)a {
@@ -140,33 +119,9 @@
         self.backgroundColor = [UIColor clearColor];
         
         
-        _selected = NO;
+        self.selected = NO;
         
-        /* Cut here to disable _close button */
-        CGRect buttonFrame = frame;
-        
-        buttonFrame.origin.x = 0;
-        buttonFrame.origin.y = 0;
-        buttonFrame.size.width = 24;
-        buttonFrame.size.height = 24;
-        
-        _close = [[ADLCloseButton alloc] initWithFrame:buttonFrame];
-        
-        [_close addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchDown];
-        
-        [_close setHidden:YES];
-        [_close setNeedsDisplay];
-        
-        
-        CGRect postitFrame = CGRectMake(CGRectGetWidth(frame) - 24.0f, 0.0f, 24.0f ,24.0f);
-        
-        _postit = [[ADLPostItButton alloc] initWithFrame:postitFrame];
-        [_postit addTarget:self action:@selector(postItButtonHitted) forControlEvents:UIControlEventTouchDown];
-        [_postit setHidden:YES];
-        
-        [self addSubview:_close];
-        [self addSubview:_postit];
-        
+        [self addButtons];
         
         //disable the shadowlayer for now it's to consuming
 #if 0
@@ -183,10 +138,10 @@
 			self.layer.shadowOpacity = 0.75;
 #endif
         
-        _annotationModel = a;
+        self.annotationModel = a;
         
-        if ([_annotationModel text] != nil && ![[_annotationModel text] isEqualToString:@""]) {
-            [_postit setHasText:YES];
+        if ([self.annotationModel text] != nil && ![[self.annotationModel text] isEqualToString:@""]) {
+            //[self.postItButton setHasText:YES];
         }
         
         
@@ -194,62 +149,113 @@
     return self;
 }
 
+- (void) addButtons {
+    /* Cut here to disable _close button */
+    CGRect buttonFrame = self.frame;
+    
+    buttonFrame.origin.x = 0;
+    buttonFrame.origin.y = 0;
+    buttonFrame.size.width = kFingerSize;
+    buttonFrame.size.height = kFingerSize;
+    // CLOSE BUTTON
+    self.closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
+    [self.closeButton setTitle:@"X" forState:UIControlStateNormal];
+    [self.closeButton addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+    [self.closeButton setHidden:YES];
+    [self.closeButton setNeedsDisplay];
+    
+    // INFO BUTTON
+    buttonFrame.origin.y = CGRectGetHeight(self.frame) - buttonFrame.size.height;
+    self.infoButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
+    [self.infoButton setTitle:@"i" forState:UIControlStateNormal];
+    [self.infoButton addTarget:self action:@selector(infoButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+    [self.infoButton setHidden:YES];
+    [self.infoButton setNeedsDisplay];
+    
+    //POST IT BUTTON
+    buttonFrame.origin.x = CGRectGetWidth(self.frame) - buttonFrame.size.width;
+    buttonFrame.origin.y = 0.0f;
+    CGRect postitFrame = buttonFrame;
+    self.postItButton = [[ADLAnnotationButton alloc] initWithFrame:postitFrame];
+    [self.postItButton setTitle:@"Aa" forState:UIControlStateNormal];
+    [self.postItButton addTarget:self action:@selector(postItButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+    [self.postItButton setHidden:YES];
+    
+    
+    [self addSubview:self.closeButton];
+    [self addSubview:self.infoButton];
+    [self addSubview:self.postItButton];
+
+}
+
 -(void)setSelected:(BOOL)selected {
     _selected = selected;
-    [_close setHidden:!_selected];
-    [_postit setHidden:!_selected];
-    ADLPostItView *postIt = _postItView;
+    [self.closeButton setHidden:!_selected];
+    [self.postItButton setHidden:!_selected];
+    [self.infoButton setHidden:!_selected];
     [self setNeedsDisplay];
 
-    if (postIt != nil && selected == NO) {
-        [postIt setHidden:YES];
-        [postIt removeFromSuperview];
-        [((ADLDrawingView*)[self superview]) updateAnnotation:_annotationModel];
-        _postItView = nil;
-        //[postIt release];
+    if ((self.postItView) && !_selected) {
+        [self.postItView setHidden:YES];
+        [self.postItView removeFromSuperview];
+        [((ADLDrawingView*)[self superview]) updateAnnotation:self.annotationModel];
+        self.postItView = nil;
+    }
+    if ((self.infoView) && !_selected) {
+        [self.infoView setHidden:YES];
+        [self.infoView removeFromSuperview];
+        self.infoView = nil;
     }
 }
 
 -(BOOL)isResizing {
-    return !CGPointEqualToPoint(_anchor, CGPointZero);
+    return !CGPointEqualToPoint(self.anchor, CGPointZero);
 }
 
 /* notify when removed */
 
-- (void)closeButtonHitted {
-    if ([_annotationModel uuid] != nil) {
-        [_drawingView removeAnnotation:_annotationModel];
+- (void) closeButtonHitted {
+    if ([self.annotationModel uuid] != nil) {
+        [self.drawingView removeAnnotation:self.annotationModel];
     }
     [self removeFromSuperview];
 }
 
-- (void)postItButtonHitted {
-    ADLPostItView *postit = [[ADLPostItView alloc] initWithFrame:CGRectMake(CGRectGetMaxX([self frame]),CGRectGetMinY([self frame ]),100, 100)];
- 
-    [postit setAnnotationModel: [self annotationModel]];
-    
-    CGRect clippedFrame = [_drawingView clipRectInView:[postit frame]];
-    [postit setFrame:clippedFrame];
-    
-    _postItView = postit;
-    [_postItView setContentScaleFactor:[self contentScaleFactor]];
-    [[self superview] addSubview:postit];
-    
+- (void) infoButtonHitted
+{
+    if (!self.infoView) {
+        CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMinX(self.frame),CGRectGetMaxY(self.frame),kInfoWidth, kInfoHeight)];
+        
+        self.infoView = [[ADLInfoView alloc] initWithFrame:clippedFrame];
+        [self.infoView setAnnotationModel: [self annotationModel]];
+        [self.infoView setContentScaleFactor:[self contentScaleFactor]];
+        [[self superview] addSubview:self.infoView];
+    }
+}
+
+- (void) postItButtonHitted
+{
+    if (!self.postItView) {
+        CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
+        
+        self.postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
+        [self.postItView setAnnotationModel: [self annotationModel]];
+        [self.postItView setContentScaleFactor:[self contentScaleFactor]];
+        [[self superview] addSubview:self.postItView];
+    }
 }
 
 // Override setContetScaleFactor to apply it to the close button;
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
     [super setContentScaleFactor:contentScaleFactor];
-    [_close setContentScaleFactor:contentScaleFactor];
-    [_postit setContentScaleFactor:contentScaleFactor];
+    [self.closeButton setContentScaleFactor:contentScaleFactor];
+    [self.postItButton setContentScaleFactor:contentScaleFactor];
 }
 
 
 -(void)drawHandle {
     CGContextRef context = UIGraphicsGetCurrentContext();
     UIGraphicsPushContext(context);
-    {
-    }
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -259,20 +265,37 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
    
     
-    if (_selected) {
+    //if (self.selected) {
         CGContextSaveGState(context);
         UIGraphicsPushContext(context);
         {
-            [[UIColor blueColor] setStroke];
-            [[UIColor blueColor] setFill];
+            [[UIColor purpleColor] setStroke];
+            [[UIColor purpleColor] setFill];
             CGContextSetLineWidth(context, 1.0f);
             
-            CGContextAddEllipseInRect(context, CGRectMake(CGRectGetMaxX(self.bounds)-10.0f,  CGRectGetMaxY(self.bounds) - 10.0f, 5.0f, 5.0f) );
+            CGFloat width = CGRectGetMaxX(self.bounds);
+            CGFloat height = CGRectGetMaxY(self.bounds);
+            
+            CGPoint start1 = CGPointMake(width - 20.0f, height - 30.0f);
+            CGPoint end1 = CGPointMake(width - 30.0f, height - 20.0f);
+            
+            CGPoint start2 = CGPointMake(width - 20.0f, height - 40.0f);
+            CGPoint end2 = CGPointMake(width - 40.0f, height - 20.0f);
+            
+            CGContextBeginPath(context);
+            CGContextMoveToPoint(context, start1.x, start1.y);
+            CGContextAddLineToPoint(context, end1.x, end1.y);
+            CGContextStrokePath(context);
+            
+            CGContextBeginPath(context);
+            CGContextMoveToPoint(context, start2.x, start2.y);
+            CGContextAddLineToPoint(context, end2.x, end2.y);
+            CGContextStrokePath(context);
             
         }
         UIGraphicsPopContext();
         CGContextRestoreGState(context);
-    }
+    //}
 
     UIGraphicsPushContext(context);
     {
@@ -285,7 +308,7 @@
 #endif
         
         
-        CGRect annotRect = CGRectInset(rect, 12, 12);;
+        CGRect annotRect = CGRectInset(rect, 12, 12);
         UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:annotRect cornerRadius:10.0f];
 
         path.lineWidth = 4;
@@ -300,10 +323,10 @@
     
 }
 
--(CGFloat)distanceBetween:(CGPoint)p and:(CGPoint)q {
+-(CGFloat)distanceBetween:(CGPoint)p and:(CGPoint)q
+{
     CGFloat dx = q.x - p.x;
     CGFloat dy = q.y - p.y;
-    
     return sqrtf(dx*dx + dy*dy);
 }
 
@@ -313,18 +336,25 @@
     if ([self distanceBetween:touchPoint and:bottomRight] < kFingerSize) {
         return bottomRight;
     }
-    
     return CGPointZero;
 }
 
--(BOOL)isInHandle:(CGPoint)touchPoint {
+// Used to detect resizing
+-(BOOL)isInHandle:(CGPoint)touchPoint
+{
     CGPoint bottomRight = CGPointMake(CGRectGetMaxX(self.frame) , CGRectGetMaxY(self.frame));
-    
     return [self distanceBetween:touchPoint and:bottomRight] < kFingerSize;
 }
 
 -(void)refreshModel {
-    [_annotationModel setRect:[self frame]];
+    [self.annotationModel setRect:[self frame]];
+}
+
+- (void) handleTouchInside {
+    [self.postItView removeFromSuperview];
+    self.postItView = nil;
+    [self.infoView removeFromSuperview];
+    self.infoView = nil;
 }
 
 

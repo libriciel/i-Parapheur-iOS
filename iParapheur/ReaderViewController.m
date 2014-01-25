@@ -390,9 +390,9 @@
 	//[self.view addSubview:theScrollView];
 	
 	// setup the toolbal at top
-	CGRect toolbarRect = viewRect;
+	/*CGRect toolbarRect = viewRect;
 	toolbarRect.size.height = TOOLBAR_HEIGHT;
-	/*
+	
 	self.mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect document:document];
 	mainToolbar.delegate = self;
 	mainToolbar.title = self.title;

@@ -53,7 +53,8 @@
         UIActionSheetDelegate,
         UISearchBarDelegate,
         RGFileCellDelegate,
-        FilterDelegate>
+        FilterDelegate,
+        LGViewHUDDelegate>
 
 @property (nonatomic, strong) NSString* deskRef;
 @property (nonatomic, strong) NSMutableArray* dossiersArray;

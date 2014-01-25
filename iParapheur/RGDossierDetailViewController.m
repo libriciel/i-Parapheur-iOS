@@ -49,6 +49,7 @@
 #import "RGReaderViewController.h"
 #import "RGAppDelegate.h"
 #import "RGDocumentsView.h"
+#import "ADLNotifications.h"
 
 #import "ADLRequester.h"
 #import "ADLCredentialVault.h"
@@ -184,12 +185,7 @@
     
     [requester request:GETDOSSIER_API andArgs:args delegate:self];
     
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
+    SHOW_HUD
 
 }
 /*
@@ -330,12 +326,7 @@
     
     [requester request:@"getCircuit" andArgs:args delegate:self];
     
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
+    SHOW_HUD
 }
 #pragma mark - Wall impl
 
@@ -453,7 +444,10 @@
     [circuitLabel setHidden:val];
 }
 
+#pragma mark - LGViewHUDDelegate
 
-
+-(void)shallDismissHUD:(LGViewHUD*)hud {
+    HIDE_HUD
+}
 
 @end

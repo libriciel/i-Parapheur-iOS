@@ -46,7 +46,12 @@
 
 @class RGDetailViewController;
 
-@interface RGDossierDetailViewController : UIViewController<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate> {
+@interface RGDossierDetailViewController : UIViewController
+                                    <ADLParapheurWallDelegateProtocol,
+                                    ReaderViewControllerDelegate,
+                                    UIPopoverControllerDelegate,
+                                    UITableViewDelegate,
+                                    LGViewHUDDelegate> {
     
     UITextView *textView;
     UILabel *dossierName;

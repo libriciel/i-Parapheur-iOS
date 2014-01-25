@@ -121,6 +121,7 @@
 
 -(void)loadDossiersWithPage:(int)page
 {
+    SHOW_HUD
     NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
     if (currentFilter != nil) {
         //API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
@@ -341,6 +342,7 @@
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
     
     [self.refreshControl endRefreshing];
+    HIDE_HUD
     if (_currentPage > 0) {
         [self.dossiersArray removeLastObject];
     }
@@ -379,7 +381,7 @@
     
     [((UITableView*)[self view]) reloadData];
     
-    [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+    HIDE_HUD
     
 }
 
@@ -551,6 +553,11 @@
         [self.swipedCell hideMenuOptions];
         self.swipedCell = nil;
     }
+}
+
+#pragma mark - LGViewHUDDelegate protocol implementation
+-(void)shallDismissHUD:(LGViewHUD*)hud {
+    HIDE_HUD
 }
 
 @end

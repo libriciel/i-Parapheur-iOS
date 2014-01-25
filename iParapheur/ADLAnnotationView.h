@@ -46,21 +46,35 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "ADLAnnotation.h"
-#import "ADLPostItView.h"
 #import "ADLDrawingView.h"
+#import "ADLInfoView.h"
+#import "ADLAnnotationButton.h"
+#import "ADLCloseButton.h"
 #import "ADLPostItButton.h"
+#import "ADLPostItView.h"
 
-#define kFingerSize 45.0f
+#define kAnnotationMinWidth 100.0f
+#define kAnnotationMinHeight 100.0f
+
+#define kFingerSize 44.0f
+#define kPostItWidth 300.0f
+#define kPostItheight 300.0f
+#define kInfoWidth 200.0f
+#define kInfoHeight 80.0f
+
 @class ADLDrawingView;
 @interface ADLAnnotationView : UIView
 
 
-@property (nonatomic, strong) UIButton *close;
-@property (nonatomic, strong) ADLPostItButton *postit;
+@property (nonatomic, strong) ADLAnnotationButton *closeButton;
+
+@property (nonatomic, strong) ADLAnnotationButton *infoButton;
+@property (nonatomic, strong) ADLInfoView *infoView;
+
+@property (nonatomic, strong) ADLAnnotationButton *postItButton;
+@property (nonatomic, strong) ADLPostItView *postItView;
 
 @property (nonatomic, strong) ADLAnnotation *annotationModel;
-
-@property (nonatomic, strong) ADLPostItView *postItView;
 
 @property (nonatomic, strong) ADLDrawingView *drawingView;
 
@@ -75,7 +89,7 @@
 
 -(void)refreshModel;
 
-
+- (void) handleTouchInside;
 
 
 @end

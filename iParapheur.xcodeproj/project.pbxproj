@@ -42,6 +42,8 @@
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
 		9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9540519B1892BB8100018E80 /* ADLAPIHelper.m */; };
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
+		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
+		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
 		958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
@@ -210,6 +212,10 @@
 		9540519B1892BB8100018E80 /* ADLAPIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAPIHelper.m; sourceTree = "<group>"; };
 		954A7389188D371D00A13D1E /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
 		954A738A188D371D00A13D1E /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
+		95719C7D1893CECA00246F7C /* ADLAnnotationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAnnotationButton.h; sourceTree = "<group>"; };
+		95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotationButton.m; sourceTree = "<group>"; };
+		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
+		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CustomColors.h"; sourceTree = "<group>"; };
 		958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CustomColors.m"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
@@ -437,6 +443,19 @@
 			name = "app-icons";
 			sourceTree = "<group>";
 		};
+		95719C7C1893CE9900246F7C /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				B444316D160A230D00C8C475 /* ADLCloseButton.h */,
+				B444316E160A230D00C8C475 /* ADLCloseButton.m */,
+				142CDD8B1640260B009F4F84 /* ADLPostItButton.h */,
+				142CDD8C1640260B009F4F84 /* ADLPostItButton.m */,
+				95719C7D1893CECA00246F7C /* ADLAnnotationButton.h */,
+				95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */,
+			);
+			name = Buttons;
+			sourceTree = "<group>";
+		};
 		B41B9475156227B3004D57A1 /* HUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,14 +521,13 @@
 				B444316A160A230D00C8C475 /* ADLDrawingView.m */,
 				B444316B160A230D00C8C475 /* ADLAnnotationView.h */,
 				B444316C160A230D00C8C475 /* ADLAnnotationView.m */,
-				B444316D160A230D00C8C475 /* ADLCloseButton.h */,
-				B444316E160A230D00C8C475 /* ADLCloseButton.m */,
+				95719C7C1893CE9900246F7C /* Buttons */,
 				B47944D61622BCDE0061E09B /* ADLPostItView.h */,
 				B47944D71622BCDE0061E09B /* ADLPostItView.m */,
 				B44649E716241657002622DF /* ADLAnnotation.h */,
 				B44649E816241657002622DF /* ADLAnnotation.m */,
-				142CDD8B1640260B009F4F84 /* ADLPostItButton.h */,
-				142CDD8C1640260B009F4F84 /* ADLPostItButton.m */,
+				95719C801893D50600246F7C /* ADLInfoView.h */,
+				95719C811893D50600246F7C /* ADLInfoView.m */,
 			);
 			name = Annotations;
 			sourceTree = "<group>";
@@ -934,6 +952,7 @@
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
+				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,
 				B4FF340415473B43006F7BF3 /* ReaderMainToolbar.m in Sources */,
@@ -970,6 +989,7 @@
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
 				1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */,
 				1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */,
+				95719C821893D50600246F7C /* ADLInfoView.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,

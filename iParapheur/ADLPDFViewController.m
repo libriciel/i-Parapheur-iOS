@@ -173,13 +173,7 @@
         [subview removeFromSuperview];
     }
     
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud setDelegate:self];
-    [hud showInView:self.view];
+    SHOW_HUD
     
     API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
     API_GETANNOTATIONS(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
@@ -248,13 +242,7 @@
 -(void) displayDocumentAt: (NSInteger) index {
     NSDictionary *document = [[_dossier objectForKey:@"documents" ] objectAtIndex:index];
     
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    
-    [hud showInView:self.view];
+    SHOW_HUD
     
     _isDocumentPrincipal = index == 0;
     
@@ -272,7 +260,7 @@
 
 -(void)didEndWithRequestAnswer:(NSDictionary*)answer {
     NSString *s = [answer objectForKey:@"_req"];
-    [[LGViewHUD defaultHUD] setHidden:YES];
+    HIDE_HUD
 
     if ([s isEqual:GETDOSSIER_API]) {
         _dossier = [answer copy];
@@ -296,13 +284,7 @@
             }
         }
 
-        LGViewHUD *hud = [LGViewHUD defaultHUD];
-        hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-        hud.topText=@"";
-        hud.bottomText=@"Chargement ...";
-        hud.activityIndicatorOn=YES;
-
-        [hud showInView:self.view];
+        SHOW_HUD
     
     }
     else if ([s isEqualToString:@"getSignInfo"]) {
@@ -381,8 +363,8 @@
     }
 
     [[self view] addSubview:[_readerViewController view]];
-     
-    [[LGViewHUD defaultHUD] setHidden:YES];
+    
+    HIDE_HUD
     
     ADLRequester *requester = [ADLRequester sharedRequester];
     
@@ -393,13 +375,7 @@
     
     [requester request:GETANNOTATIONS_API andArgs:args delegate:self];
 
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    
-    [hud showInView:self.view];
+    SHOW_HUD
 
 }
 
@@ -546,7 +522,7 @@
 }
 
 -(void)shallDismissHUD:(LGViewHUD*)hud {
-    [hud hideWithAnimation:HUDAnimationHideFadeOut];
+    HIDE_HUD
 }
 
 #pragma mark - Split view
