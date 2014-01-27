@@ -10,6 +10,7 @@
 #import "RGWorkflowDialogViewController.h"
 #import "ADLSingletonState.h"
 #import "ADLActionCell.h"
+#import "ADLAPIHelper.h"
 
 @interface ADLActionViewController ()
 
@@ -42,9 +43,9 @@
     if (_actions == nil) {
         _actions = [[NSMutableArray alloc] init];
     }
-    else {
+    /*else {
         [_actions removeAllObjects];
-    }
+    }*/
     
     if (_labels == nil) {
         _labels = [[NSMutableArray alloc] init];
@@ -53,7 +54,14 @@
         [_labels removeAllObjects];
     }
     
-    if (self.signatureEnabled) {
+    if (!self.signatureEnabled) {
+        [self.actions removeObject:@"SIGNER"];
+    }
+    for (NSString *action in self.actions) {
+        [self.labels addObject:[ADLAPIHelper actionNameForAction:action]];
+    }
+    
+    /*if (self.signatureEnabled) {
         [_actions addObject:@"SIGNER"];
         [_labels addObject:@"Signer"];
     }
@@ -63,7 +71,7 @@
     }
     
     [_actions addObject:@"REJETER"];
-    [_labels addObject:@"Rejeter"];
+    [_labels addObject:@"Rejeter"];*/
     [[self tableView] reloadData];
 }
 
@@ -78,18 +86,8 @@
 {
     NSString *dossierRef = [[ADLSingletonState sharedSingletonState] dossierCourant];
     NSArray *dossiers = [NSArray arrayWithObject:dossierRef];
-    if ([[segue identifier] isEqualToString:@"VISER"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
-    }
-    else if ([[segue identifier] isEqualToString:@"REJETER"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];        
-    }
-    else if ([[segue identifier] isEqualToString:@"SIGNER"]) {
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
-        [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
-    }
+    [((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
+    [((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
 }
 
 
@@ -117,7 +115,13 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:[_actions objectAtIndex:[indexPath row]] sender:self];
+    @try {
+        [self performSegueWithIdentifier:[_actions objectAtIndex:[indexPath row]] sender:self];
+    }
+    @catch (NSException *exception) {
+        [[[UIAlertView alloc] initWithTitle:@"Action impossible" message:@"Vous ne pouvez pas effectuer cette action sur tablette." delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+    }
+    @finally {}
 }
 
 

@@ -143,11 +143,11 @@
             }
             else {
                 [request setHTTPMethod:@"POST"];
+                NSError *error = [NSError new];
+                [request setHTTPBody:[NSJSONSerialization dataWithJSONObject:_args options:0 error:&error]];
             }
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             [request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-            [request setHTTPBody:[_args JSONData]];
-            
         }
         
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
@@ -292,8 +292,15 @@
     }
     else {
         // trigger api request delegate.
-        NSString *str = [[NSString alloc] initWithData:_receivedData encoding:NSUTF8StringEncoding];
-        [self parseResponse:str andReq:_request];
+        //[self parseResponse:_receivedData andReq:_request];
+        NSError *error = [NSError new];
+        NSMutableDictionary* responseObject = [NSJSONSerialization JSONObjectWithData:_receivedData options:NSJSONReadingMutableContainers error:&error];
+        
+        [responseObject setObject:_request forKey:@"_req"];
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(didEndWithRequestAnswer:) ]) {
+            [_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:) withObject:responseObject waitUntilDone:NO];
+        }
        // [str release];
     }
     [self setIsExecuting: NO];
@@ -303,8 +310,8 @@
 }
 
 #pragma mark - parsing utility
--(void) parseResponse:(NSString*) response andReq:(NSString*)req {
-    NSDictionary* responseObject = [response objectFromJSONString];
+/*-(void) parseResponse:(NSData*) response andReq:(NSString*)req {
+    NSDictionary* responseObject = [NSJSONSerialization JSONObjectWithData:response options:0 error:nil];
     NSMutableDictionary* retVal = [NSMutableDictionary dictionaryWithDictionary:responseObject];
     
     [retVal setObject:req forKey:@"_req"];
@@ -313,7 +320,7 @@
         [_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:) withObject:retVal waitUntilDone:NO];
     }
     
-}
+}*/
 
 #pragma mark - automaticaly observer KVO Changes
 + (BOOL) automaticallyNotifiesObserversForKey: (NSString*) key

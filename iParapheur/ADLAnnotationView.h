@@ -57,7 +57,7 @@
 #define kAnnotationMinHeight 100.0f
 
 #define kFingerSize 44.0f
-#define kPostItWidth 300.0f
+#define kPostItWidth 400.0f
 #define kPostItheight 300.0f
 #define kInfoWidth 200.0f
 #define kInfoHeight 80.0f

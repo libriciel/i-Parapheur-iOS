@@ -40,7 +40,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "JSONKit.h"
 #import "RGDeskViewController.h"
 
 @interface RGMasterViewController : UITableViewController <UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource> {

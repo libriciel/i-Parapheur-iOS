@@ -18,6 +18,7 @@
 #define GETBUREAUX_API          @"getBureaux"
 #define GETDOSSIERSHEADERS_API  @"getDossiersHeaders"
 #define GETDOSSIER_API          @"getDossier"
+#define GETCIRCUIT_API          @"getCircuit"
 #define GETANNOTATIONS_API      @"getAnnotations"
 #define GETTYPOLOGIE_API        @"￼￼getTypologie"
 
@@ -96,9 +97,14 @@ ADLRequester *_requester = [ADLRequester sharedRequester]; \
     API_REQUEST(GETDOSSIER_API, _args); \
 }
 
-#define API_GETANNOTATIONS(dossier, bureauCourant) \
+#define API_GETANNOTATIONS(dossier) \
 { \
-    NSDictionary *_args = [NSDictionary dictionaryWithObjectsAndKeys:dossier, @"dossier", \
-                            bureauCourant, @"bureauCourant", nil]; \
+    NSDictionary *_args = [NSDictionary dictionaryWithObjectsAndKeys:dossier, @"dossier", nil]; \
     API_REQUEST(GETANNOTATIONS_API, _args); \
+}
+
+#define API_GETCIRCUIT(dossier) \
+{ \
+NSDictionary *_args = [NSDictionary dictionaryWithObjectsAndKeys:dossierRef, @"dossier", nil]; \
+API_REQUEST(GETCIRCUIT_API, _args); \
 }

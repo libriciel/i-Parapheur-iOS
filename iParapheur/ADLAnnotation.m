@@ -9,11 +9,6 @@
 #import "ADLAnnotation.h"
 
 @implementation ADLAnnotation
-@synthesize author = _author;
-@synthesize uuid = _uuid;
-@synthesize editable = _editable;
-@synthesize text = _text;
-@synthesize rect = _rect;
 
 -(id) init {
     if ((self = [super init])) {
@@ -21,6 +16,7 @@
         _uuid = @"";
         _rect = CGRectZero;
         _text = @"";
+        _editable = YES;
     }
     return self;
 }
@@ -30,7 +26,8 @@
         _author = [annotation objectForKey:@"author"];
         _uuid = [annotation objectForKey:@"uuid"];
         _rect = [self rectWithDict:[annotation objectForKey:@"rect"]];
-//        _editable = [annotation objectForKey:@"editable"];
+        
+        _editable = [(NSString *) [annotation objectForKey:@"editable"] boolValue];
         _text = [annotation objectForKey:@"text"];
         
     }

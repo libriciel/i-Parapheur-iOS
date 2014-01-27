@@ -61,12 +61,11 @@
         self.autoresizingMask = UIViewAutoresizingNone;
         self.backgroundColor = [UIColor clearColor];
         
-        
+        self.annotationModel = [[ADLAnnotation alloc] init];
         self.selected = NO;
         
         [self addButtons];
         
-        self.annotationModel = [[ADLAnnotation alloc] init];
 
         
 //disable the shadowlayer for now it's to consuming
@@ -118,10 +117,8 @@
         self.autoresizingMask = UIViewAutoresizingNone;
         self.backgroundColor = [UIColor clearColor];
         
-        
         self.selected = NO;
         
-        [self addButtons];
         
         //disable the shadowlayer for now it's to consuming
 #if 0
@@ -143,7 +140,7 @@
         if ([self.annotationModel text] != nil && ![[self.annotationModel text] isEqualToString:@""]) {
             //[self.postItButton setHasText:YES];
         }
-        
+        [self addButtons];
         
     }
     return self;
@@ -157,13 +154,14 @@
     buttonFrame.origin.y = 0;
     buttonFrame.size.width = kFingerSize;
     buttonFrame.size.height = kFingerSize;
-    // CLOSE BUTTON
-    self.closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
-    [self.closeButton setTitle:@"X" forState:UIControlStateNormal];
-    [self.closeButton addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchUpInside];
-    [self.closeButton setHidden:YES];
-    [self.closeButton setNeedsDisplay];
-    
+    if (self.annotationModel.editable) {
+        // CLOSE BUTTON
+        self.closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
+        [self.closeButton setTitle:@"X" forState:UIControlStateNormal];
+        [self.closeButton addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+        [self.closeButton setHidden:YES];
+        [self.closeButton setNeedsDisplay];
+    }
     // INFO BUTTON
     buttonFrame.origin.y = CGRectGetHeight(self.frame) - buttonFrame.size.height;
     self.infoButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
@@ -198,7 +196,9 @@
     if ((self.postItView) && !_selected) {
         [self.postItView setHidden:YES];
         [self.postItView removeFromSuperview];
-        [((ADLDrawingView*)[self superview]) updateAnnotation:self.annotationModel];
+        if (self.annotationModel.editable) {
+            [((ADLDrawingView*)[self superview]) updateAnnotation:self.annotationModel];
+        }
         self.postItView = nil;
     }
     if ((self.infoView) && !_selected) {
@@ -239,6 +239,7 @@
         CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
         
         self.postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
+        self.postItView.userInteractionEnabled = self.annotationModel.editable;
         [self.postItView setAnnotationModel: [self annotationModel]];
         [self.postItView setContentScaleFactor:[self contentScaleFactor]];
         [[self superview] addSubview:self.postItView];
@@ -265,7 +266,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
    
     
-    //if (self.selected) {
+    if (self.annotationModel.editable) {
         CGContextSaveGState(context);
         UIGraphicsPushContext(context);
         {
@@ -295,7 +296,7 @@
         }
         UIGraphicsPopContext();
         CGContextRestoreGState(context);
-    //}
+    }
 
     UIGraphicsPushContext(context);
     {

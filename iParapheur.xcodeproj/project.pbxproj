@@ -41,26 +41,26 @@
 		9514BFF6187AA76100118B9C /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFF4187AA76100118B9C /* Icon-76@2x.png */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
 		9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9540519B1892BB8100018E80 /* ADLAPIHelper.m */; };
+		954838C4189556AD0034F8B0 /* iw-visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838C3189556AD0034F8B0 /* iw-visa.png */; };
+		954838C6189558340034F8B0 /* iw-tdt.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838C5189558340034F8B0 /* iw-tdt.png */; };
+		954838C818955A120034F8B0 /* iw-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838C718955A120034F8B0 /* iw-signature.png */; };
+		954838CA18955B300034F8B0 /* iw-mailsec.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838C918955B300034F8B0 /* iw-mailsec.png */; };
+		954838CC18955C5E0034F8B0 /* iw-archivage.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838CB18955C5E0034F8B0 /* iw-archivage.png */; };
+		954838CE18955E450034F8B0 /* ir-visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838CD18955E450034F8B0 /* ir-visa.png */; };
+		954838D0189561970034F8B0 /* ir-tdt.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838CF189561970034F8B0 /* ir-tdt.png */; };
+		954838D2189562C70034F8B0 /* ip-visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 954838D1189562C70034F8B0 /* ip-visa.png */; };
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
 		958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */; };
+		95DFC49D18957A0E0015AF31 /* ip-mailsec.png in Resources */ = {isa = PBXBuildFile; fileRef = 95DFC49718957A0E0015AF31 /* ip-mailsec.png */; };
+		95DFC49E18957A0E0015AF31 /* ip-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = 95DFC49818957A0E0015AF31 /* ip-signature.png */; };
+		95DFC49F18957A0E0015AF31 /* ip-tdt.png in Resources */ = {isa = PBXBuildFile; fileRef = 95DFC49918957A0E0015AF31 /* ip-tdt.png */; };
+		95DFC4A018957A0E0015AF31 /* ir-archivage.png in Resources */ = {isa = PBXBuildFile; fileRef = 95DFC49A18957A0E0015AF31 /* ir-archivage.png */; };
+		95DFC4A118957A0E0015AF31 /* ir-mailsec.png in Resources */ = {isa = PBXBuildFile; fileRef = 95DFC49B18957A0E0015AF31 /* ir-mailsec.png */; };
+		95DFC4A218957A0E0015AF31 /* ir-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = 95DFC49C18957A0E0015AF31 /* ir-signature.png */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
-		B41B60AD15F09D5300655827 /* ip-mailsec.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B609F15F09D5200655827 /* ip-mailsec.jpg */; };
-		B41B60AE15F09D5300655827 /* ip-signature.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A015F09D5200655827 /* ip-signature.jpg */; };
-		B41B60AF15F09D5300655827 /* ip-tdt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A115F09D5200655827 /* ip-tdt.jpg */; };
-		B41B60B015F09D5300655827 /* ip-visa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A215F09D5300655827 /* ip-visa.jpg */; };
-		B41B60B115F09D5300655827 /* ir-archivage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A315F09D5300655827 /* ir-archivage.jpg */; };
-		B41B60B215F09D5300655827 /* ir-mailsec.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A415F09D5300655827 /* ir-mailsec.jpg */; };
-		B41B60B315F09D5300655827 /* ir-signature.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A515F09D5300655827 /* ir-signature.jpg */; };
-		B41B60B415F09D5300655827 /* ir-tdt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A615F09D5300655827 /* ir-tdt.jpg */; };
-		B41B60B515F09D5300655827 /* ir-visa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A715F09D5300655827 /* ir-visa.jpg */; };
-		B41B60B615F09D5300655827 /* iw-archivage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A815F09D5300655827 /* iw-archivage.jpg */; };
-		B41B60B715F09D5300655827 /* iw-mailsec.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60A915F09D5300655827 /* iw-mailsec.jpg */; };
-		B41B60B815F09D5300655827 /* iw-signature.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60AA15F09D5300655827 /* iw-signature.jpg */; };
-		B41B60B915F09D5300655827 /* iw-tdt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60AB15F09D5300655827 /* iw-tdt.jpg */; };
-		B41B60BA15F09D5300655827 /* iw-visa.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B41B60AC15F09D5300655827 /* iw-visa.jpg */; };
 		B41B9470156227A6004D57A1 /* rounded-checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = B41B946C156227A6004D57A1 /* rounded-checkmark.png */; };
 		B41B9471156227A6004D57A1 /* rounded-checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B41B946D156227A6004D57A1 /* rounded-checkmark@2x.png */; };
 		B41B9472156227A6004D57A1 /* rounded-fail.png in Resources */ = {isa = PBXBuildFile; fileRef = B41B946E156227A6004D57A1 /* rounded-fail.png */; };
@@ -210,6 +210,14 @@
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
 		9540519A1892BB8100018E80 /* ADLAPIHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAPIHelper.h; sourceTree = "<group>"; };
 		9540519B1892BB8100018E80 /* ADLAPIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAPIHelper.m; sourceTree = "<group>"; };
+		954838C3189556AD0034F8B0 /* iw-visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-visa.png"; sourceTree = "<group>"; };
+		954838C5189558340034F8B0 /* iw-tdt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-tdt.png"; sourceTree = "<group>"; };
+		954838C718955A120034F8B0 /* iw-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-signature.png"; sourceTree = "<group>"; };
+		954838C918955B300034F8B0 /* iw-mailsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-mailsec.png"; sourceTree = "<group>"; };
+		954838CB18955C5E0034F8B0 /* iw-archivage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-archivage.png"; sourceTree = "<group>"; };
+		954838CD18955E450034F8B0 /* ir-visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-visa.png"; sourceTree = "<group>"; };
+		954838CF189561970034F8B0 /* ir-tdt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-tdt.png"; sourceTree = "<group>"; };
+		954838D1189562C70034F8B0 /* ip-visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-visa.png"; sourceTree = "<group>"; };
 		954A7389188D371D00A13D1E /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
 		954A738A188D371D00A13D1E /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
 		95719C7D1893CECA00246F7C /* ADLAnnotationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAnnotationButton.h; sourceTree = "<group>"; };
@@ -218,23 +226,15 @@
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CustomColors.h"; sourceTree = "<group>"; };
 		958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CustomColors.m"; sourceTree = "<group>"; };
+		95DFC49718957A0E0015AF31 /* ip-mailsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-mailsec.png"; sourceTree = "<group>"; };
+		95DFC49818957A0E0015AF31 /* ip-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-signature.png"; sourceTree = "<group>"; };
+		95DFC49918957A0E0015AF31 /* ip-tdt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-tdt.png"; sourceTree = "<group>"; };
+		95DFC49A18957A0E0015AF31 /* ir-archivage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-archivage.png"; sourceTree = "<group>"; };
+		95DFC49B18957A0E0015AF31 /* ir-mailsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-mailsec.png"; sourceTree = "<group>"; };
+		95DFC49C18957A0E0015AF31 /* ir-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-signature.png"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B609C15F0962100655827 /* ADLCircuitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCircuitCell.h; sourceTree = "<group>"; };
 		B41B609D15F0962100655827 /* ADLCircuitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCircuitCell.m; sourceTree = "<group>"; };
-		B41B609F15F09D5200655827 /* ip-mailsec.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ip-mailsec.jpg"; sourceTree = "<group>"; };
-		B41B60A015F09D5200655827 /* ip-signature.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ip-signature.jpg"; sourceTree = "<group>"; };
-		B41B60A115F09D5200655827 /* ip-tdt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ip-tdt.jpg"; sourceTree = "<group>"; };
-		B41B60A215F09D5300655827 /* ip-visa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ip-visa.jpg"; sourceTree = "<group>"; };
-		B41B60A315F09D5300655827 /* ir-archivage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ir-archivage.jpg"; sourceTree = "<group>"; };
-		B41B60A415F09D5300655827 /* ir-mailsec.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ir-mailsec.jpg"; sourceTree = "<group>"; };
-		B41B60A515F09D5300655827 /* ir-signature.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ir-signature.jpg"; sourceTree = "<group>"; };
-		B41B60A615F09D5300655827 /* ir-tdt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ir-tdt.jpg"; sourceTree = "<group>"; };
-		B41B60A715F09D5300655827 /* ir-visa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ir-visa.jpg"; sourceTree = "<group>"; };
-		B41B60A815F09D5300655827 /* iw-archivage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iw-archivage.jpg"; sourceTree = "<group>"; };
-		B41B60A915F09D5300655827 /* iw-mailsec.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iw-mailsec.jpg"; sourceTree = "<group>"; };
-		B41B60AA15F09D5300655827 /* iw-signature.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iw-signature.jpg"; sourceTree = "<group>"; };
-		B41B60AB15F09D5300655827 /* iw-tdt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iw-tdt.jpg"; sourceTree = "<group>"; };
-		B41B60AC15F09D5300655827 /* iw-visa.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "iw-visa.jpg"; sourceTree = "<group>"; };
 		B41B946C156227A6004D57A1 /* rounded-checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-checkmark.png"; sourceTree = "<group>"; };
 		B41B946D156227A6004D57A1 /* rounded-checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-checkmark@2x.png"; sourceTree = "<group>"; };
 		B41B946E156227A6004D57A1 /* rounded-fail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-fail.png"; sourceTree = "<group>"; };
@@ -610,20 +610,20 @@
 				142B020716D61AF200EF3B8F /* acmobile.der */,
 				1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */,
 				B4082A7E162D48CB000B0E26 /* logo-new5.png */,
-				B41B609F15F09D5200655827 /* ip-mailsec.jpg */,
-				B41B60A015F09D5200655827 /* ip-signature.jpg */,
-				B41B60A115F09D5200655827 /* ip-tdt.jpg */,
-				B41B60A215F09D5300655827 /* ip-visa.jpg */,
-				B41B60A315F09D5300655827 /* ir-archivage.jpg */,
-				B41B60A415F09D5300655827 /* ir-mailsec.jpg */,
-				B41B60A515F09D5300655827 /* ir-signature.jpg */,
-				B41B60A615F09D5300655827 /* ir-tdt.jpg */,
-				B41B60A715F09D5300655827 /* ir-visa.jpg */,
-				B41B60A815F09D5300655827 /* iw-archivage.jpg */,
-				B41B60A915F09D5300655827 /* iw-mailsec.jpg */,
-				B41B60AA15F09D5300655827 /* iw-signature.jpg */,
-				B41B60AB15F09D5300655827 /* iw-tdt.jpg */,
-				B41B60AC15F09D5300655827 /* iw-visa.jpg */,
+				95DFC49718957A0E0015AF31 /* ip-mailsec.png */,
+				95DFC49818957A0E0015AF31 /* ip-signature.png */,
+				95DFC49918957A0E0015AF31 /* ip-tdt.png */,
+				954838D1189562C70034F8B0 /* ip-visa.png */,
+				95DFC49A18957A0E0015AF31 /* ir-archivage.png */,
+				95DFC49B18957A0E0015AF31 /* ir-mailsec.png */,
+				95DFC49C18957A0E0015AF31 /* ir-signature.png */,
+				954838CF189561970034F8B0 /* ir-tdt.png */,
+				954838CD18955E450034F8B0 /* ir-visa.png */,
+				954838CB18955C5E0034F8B0 /* iw-archivage.png */,
+				954838C918955B300034F8B0 /* iw-mailsec.png */,
+				954838C718955A120034F8B0 /* iw-signature.png */,
+				954838C5189558340034F8B0 /* iw-tdt.png */,
+				954838C3189556AD0034F8B0 /* iw-visa.png */,
 				B4D79258153FEC5700CEE89C /* TableViewPaperBackground.png */,
 				B4E5ECAA153AF65F00BD514D /* iParapheur-Info.plist */,
 				B4E5ECAB153AF65F00BD514D /* InfoPlist.strings */,
@@ -851,33 +851,30 @@
 				9514BFE4187AA73800118B9C /* Icon-Small-50@2x.png in Resources */,
 				B41B9470156227A6004D57A1 /* rounded-checkmark.png in Resources */,
 				B41B9471156227A6004D57A1 /* rounded-checkmark@2x.png in Resources */,
+				95DFC4A018957A0E0015AF31 /* ir-archivage.png in Resources */,
+				95DFC49E18957A0E0015AF31 /* ip-signature.png in Resources */,
+				954838CC18955C5E0034F8B0 /* iw-archivage.png in Resources */,
 				B41B9472156227A6004D57A1 /* rounded-fail.png in Resources */,
 				9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */,
 				B41B9473156227A6004D57A1 /* rounded-fail@2x.png in Resources */,
 				B429A96415B5BF7A003B8BF9 /* Settings.bundle in Resources */,
 				9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */,
 				9514BFE7187AA73800118B9C /* Icon.png in Resources */,
-				B41B60AD15F09D5300655827 /* ip-mailsec.jpg in Resources */,
-				B41B60AE15F09D5300655827 /* ip-signature.jpg in Resources */,
-				B41B60AF15F09D5300655827 /* ip-tdt.jpg in Resources */,
-				B41B60B015F09D5300655827 /* ip-visa.jpg in Resources */,
 				9514BFE3187AA73800118B9C /* Icon-Small-50.png in Resources */,
-				B41B60B115F09D5300655827 /* ir-archivage.jpg in Resources */,
-				B41B60B215F09D5300655827 /* ir-mailsec.jpg in Resources */,
-				B41B60B315F09D5300655827 /* ir-signature.jpg in Resources */,
-				B41B60B415F09D5300655827 /* ir-tdt.jpg in Resources */,
-				B41B60B515F09D5300655827 /* ir-visa.jpg in Resources */,
+				954838CE18955E450034F8B0 /* ir-visa.png in Resources */,
+				954838D2189562C70034F8B0 /* ip-visa.png in Resources */,
+				95DFC4A218957A0E0015AF31 /* ir-signature.png in Resources */,
+				95DFC4A118957A0E0015AF31 /* ir-mailsec.png in Resources */,
+				95DFC49D18957A0E0015AF31 /* ip-mailsec.png in Resources */,
+				954838CA18955B300034F8B0 /* iw-mailsec.png in Resources */,
+				954838C6189558340034F8B0 /* iw-tdt.png in Resources */,
 				9514BFF0187AA74B00118B9C /* Icon-40@2x.png in Resources */,
-				B41B60B615F09D5300655827 /* iw-archivage.jpg in Resources */,
-				B41B60B715F09D5300655827 /* iw-mailsec.jpg in Resources */,
-				B41B60B815F09D5300655827 /* iw-signature.jpg in Resources */,
 				9514BFF1187AA74B00118B9C /* Icon-60.png in Resources */,
 				9514BFF5187AA76100118B9C /* Icon-76.png in Resources */,
-				B41B60B915F09D5300655827 /* iw-tdt.jpg in Resources */,
-				B41B60BA15F09D5300655827 /* iw-visa.jpg in Resources */,
 				9514BFF6187AA76100118B9C /* Icon-76@2x.png in Resources */,
 				B4A5F0D9161DCA73007BA5D1 /* Localizable.strings in Resources */,
 				B4A221B2162AA6CF00474A18 /* viser@2x.png in Resources */,
+				954838D0189561970034F8B0 /* ir-tdt.png in Resources */,
 				B4A221B3162AA6CF00474A18 /* viser.png in Resources */,
 				B4A221BA162AA86900474A18 /* rejeter.png in Resources */,
 				B4A221BB162AA86900474A18 /* rejeter@2x.png in Resources */,
@@ -888,9 +885,12 @@
 				9514BFEA187AA73800118B9C /* iTunesArtwork@2x.png in Resources */,
 				142B020816D61AF200EF3B8F /* acmobile.der in Resources */,
 				9514BFEF187AA74B00118B9C /* Icon-40.png in Resources */,
+				954838C818955A120034F8B0 /* iw-signature.png in Resources */,
 				9514BFF2187AA74B00118B9C /* Icon-60@2x.png in Resources */,
+				95DFC49F18957A0E0015AF31 /* ip-tdt.png in Resources */,
 				14EF518C16DF72A7003C2FB3 /* Settings.storyboard in Resources */,
 				9514BFE9187AA73800118B9C /* iTunesArtwork.png in Resources */,
+				954838C4189556AD0034F8B0 /* iw-visa.png in Resources */,
 				9514BFD9187AA3B700118B9C /* Icon-72@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1077,6 +1077,7 @@
 			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1102,7 +1103,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1116,6 +1117,7 @@
 			baseConfigurationReference = F0906C693E1847B8B13FC2E8 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1134,7 +1136,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

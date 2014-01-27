@@ -207,10 +207,6 @@
         
         [self addSubview:_currentAnnotView];
     }
-    else {
-        
-    }
-    
 }
 
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
@@ -223,11 +219,10 @@
 - (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
     CGPoint touchPoint = [gestureRecognizer locationInView:self];
     
-    if (_hittedView && _enabled) {
+    if (_hittedView && _enabled && _hittedView.annotationModel.editable) {
         [self animateviewOnLongPressGesture:touchPoint];
+        _hasBeenLongPressed = YES;
     }
-    
-    _hasBeenLongPressed = YES;
     
 }
 
@@ -328,36 +323,33 @@
         
         if ([_hittedView isKindOfClass:[ADLAnnotationView class]] || [_hittedView isKindOfClass:[ADLDrawingView class]]) {
             CGPoint point = [self clipPointToView:[touch locationInView:self]];
-            
-            if ([_hittedView isInHandle:[touch locationInView:self]]) {
-                
-                CGRect frame = [_hittedView frame];
-                
-                frame.size.width = point.x - frame.origin.x;
-                frame.size.height = point.y - frame.origin.y;
-                _parentScrollView.scrollEnabled = NO;
-                _superScrollView.scrollEnabled = NO;
-                _shallUpdateCurrent = YES;
-                
-                [_hittedView setFrame:frame];
-                [_hittedView setNeedsDisplay];
-            }
-            else if (_hittedView && _hasBeenLongPressed) {
-                CGRect frame = [_hittedView frame];
-                
-                frame.origin.x = point.x - _dx;
-                frame.origin.y = point.y - _dy;
-                
-                frame = [self clipRectInView:frame];
-                
-                _parentScrollView.scrollEnabled = NO;
-                _superScrollView.scrollEnabled = NO;
-                _shallUpdateCurrent = YES;
-                [_hittedView setFrame:frame];
-            }
-            else {
-                
-                
+            if (_hittedView.annotationModel.editable) {
+                if ([_hittedView isInHandle:[touch locationInView:self]]) {
+                    
+                    CGRect frame = [_hittedView frame];
+                    
+                    frame.size.width = point.x - frame.origin.x;
+                    frame.size.height = point.y - frame.origin.y;
+                    _parentScrollView.scrollEnabled = NO;
+                    _superScrollView.scrollEnabled = NO;
+                    _shallUpdateCurrent = YES;
+                    
+                    [_hittedView setFrame:frame];
+                    [_hittedView setNeedsDisplay];
+                }
+                else if (_hittedView && _hasBeenLongPressed) {
+                    CGRect frame = [_hittedView frame];
+                    
+                    frame.origin.x = point.x - _dx;
+                    frame.origin.y = point.y - _dy;
+                    
+                    frame = [self clipRectInView:frame];
+                    
+                    _parentScrollView.scrollEnabled = NO;
+                    _superScrollView.scrollEnabled = NO;
+                    _shallUpdateCurrent = YES;
+                    [_hittedView setFrame:frame];
+                }
             }
             [self touchesCancelled:touches withEvent:event];
         }
@@ -381,7 +373,7 @@
             ADLAnnotation *annotation = [_hittedView annotationModel];
             
             
-            if ([[_hittedView annotationModel] uuid] != nil) {
+            if (self.hittedView.annotationModel.uuid && self.hittedView.annotationModel.editable) {
                 [self updateAnnotation:annotation];
             }
         }
@@ -493,8 +485,7 @@
             ADLAnnotation *annotModel = [[ADLAnnotation alloc] initWithAnnotationDict:annotation];
             
           //  CGRect annotRect = [annotModel rect];
-            
-            
+             
             ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotModel];
             [a setDrawingView:self];
             [self addSubview:a];

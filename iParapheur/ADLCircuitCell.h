@@ -44,6 +44,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *parapheurName;
 @property (strong, nonatomic) IBOutlet UILabel *validationDate;
 @property (strong, nonatomic) IBOutlet UILabel *validateurName;
+@property (strong, nonatomic) IBOutlet UILabel *annotation;
 @property (strong, nonatomic) IBOutlet UIImageView *etapeTypeIcon;
 
 @end

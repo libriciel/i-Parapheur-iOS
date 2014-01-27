@@ -43,6 +43,7 @@
 #import "ReaderViewController.h"
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
+#import "ADLAPIHelper.h"
 
 @interface ADLPDFViewController : UIViewController
     <ADLParapheurWallDelegateProtocol,
@@ -69,6 +70,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 
 @property (strong, nonatomic) NSArray* annotations;
+@property (strong, nonatomic) NSArray* circuit;
 
 @property (strong, nonatomic) NSString* signatureFormat;
 @property (assign, nonatomic) BOOL visaEnabled;

@@ -176,13 +176,7 @@
     SHOW_HUD
     
     API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
-    API_GETANNOTATIONS(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
-    
-    
-    NSArray *buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, _documentsButton, nil];
-    
-    //self.navigationItem.leftBarButtonItem = _documentsButton;
-    self.navigationItem.rightBarButtonItems = buttons;
+    API_GETCIRCUIT(dossierRef)
     
     [[self navigationController] popToRootViewControllerAnimated:YES];
 
@@ -268,6 +262,17 @@
         
         self.navigationController.navigationBar.topItem.title = [_dossier objectForKey:@"titre"];
         
+        NSArray *buttons;
+        if ([[_dossier objectForKey:@"documents"] count] > 1) {
+            buttons = [[NSArray alloc] initWithObjects:_actionButton, _documentsButton, _detailsButton, nil];
+        }
+        else {
+            buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
+        }
+        
+        //self.navigationItem.leftBarButtonItem = _documentsButton;
+        self.navigationItem.rightBarButtonItems = buttons;
+        
         NSString *documentPrincipal = [[[_dossier objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
         [[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
         NSLog(@"%@", [_dossier objectForKey:@"actions"]);
@@ -300,19 +305,15 @@
         }
 
     }
-
     else if ([s isEqualToString:@"addAnnotation"]) {
-        ADLRequester *requester = [ADLRequester sharedRequester];
         
-        NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:
-                              _dossierRef,
-                              @"dossier",
-                              nil];
-        
-        [requester request:GETANNOTATIONS_API andArgs:args delegate:self];
+        API_GETANNOTATIONS(_dossierRef);
                 
     }
-    
+    else if ([s isEqual:GETCIRCUIT_API]) {
+        self.circuit = [answer objectForKey:@"circuit"];
+        API_GETANNOTATIONS(_dossierRef);
+    }
 }
 
 - (void)didEndWithUnReachableNetwork {
@@ -434,7 +435,7 @@
         }
         
         _actionPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
-        
+        ((ADLActionViewController*)[_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:[ADLAPIHelper actionsForDossier:self.dossier]];
         // do something usefull there
         if ([_signatureFormat isEqualToString:@"CMS"]) {
             [((ADLActionViewController*)[_actionPopover contentViewController]) setSignatureEnabled:YES];
@@ -469,12 +470,27 @@
 
 -(NSArray*) annotationsForPage:(NSInteger)page {
     NSMutableArray *annotsAtPage = [[NSMutableArray alloc] init];
+    int i = 0;
     for (NSDictionary *etape in _annotations) {
         NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
-        
-        if (annotationsAtPageForEtape != nil && [annotationsAtPageForEtape count] > 0) {
-            [annotsAtPage addObjectsFromArray:annotationsAtPageForEtape];
+        // A changer avec nouvelle API..
+        if (self.circuit) {
+            for (NSDictionary *annot in annotationsAtPageForEtape) {
+                NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
+                if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
+                    
+                    [modifiedAnnot setObject:[NSNumber numberWithBool:NO] forKey:@"editable"];
+                }
+                else {
+                    [modifiedAnnot setObject:[NSNumber numberWithBool:YES] forKey:@"editable"];
+                }
+                [annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
+            }
         }
+        /*if (annotationsAtPageForEtape != nil && [annotationsAtPageForEtape count] > 0) {
+            [annotsAtPage addObjectsFromArray:annotationsAtPageForEtape];
+        }*/
+        i ++;
     }
     
     return annotsAtPage;

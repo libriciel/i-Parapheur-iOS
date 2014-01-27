@@ -303,7 +303,7 @@
         //actionName = API_ACTION_NAME_FOR_ACTION([dossier objectForKey:@"actionDemandee"]);
 
         NSString *actionName = [ADLAPIHelper actionNameForAction:[dossier objectForKey:@"actionDemandee"]];
-        
+        cell.validateButton.hidden = NO;
         [cell.validateButton setTitle:actionName forState:UIControlStateNormal];
     }
     else {

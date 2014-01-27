@@ -121,6 +121,10 @@
         [self showHud];
         [requester request:@"visa" andArgs:args delegate:self];
     }
+    else if ([self.action isEqualToString:@"SECRETARIAT"]) {
+        [self showHud];
+        [requester request:@"secretariat" andArgs:args delegate:self];
+    }
     else if ([self.action isEqualToString:@"REJETER"]) {
         if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
             [self showHud];
@@ -177,25 +181,7 @@
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
     NSLog(@"MIKAF %@", answer);
     
-    if ([[answer objectForKey:@"_req"] isEqualToString:@"visa"]) {
-        
-        [self hideHud];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
-    }
-    else if ([[answer objectForKey:@"_req"] isEqualToString:@"reject"]) {
-
-        [self hideHud];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
-    }
-    else if ([[answer objectForKey:@"_req"] isEqualToString:@"signature"]) {
-        
-        [self hideHud];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
-    }
-    else if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
+    if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
         // get selected dossiers for some sign info action :)
 
         NSMutableArray *hashes = [[NSMutableArray alloc] init];
@@ -262,6 +248,11 @@
             [requester request:@"signature" andArgs:args delegate:self];
 
         }
+    }
+    else  {
+        [self hideHud];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
     }
 
 }

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "ADLParapheurWallDelegateProtocol.h"
 #import "ADLCollectivityDef.h"
-#import "JSONKit.h"
 
 
 @interface ADLAPIOperation : NSOperation <NSURLConnectionDelegate, NSURLConnectionDataDelegate> {

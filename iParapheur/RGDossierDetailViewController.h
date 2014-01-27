@@ -53,7 +53,7 @@
                                     UITableViewDelegate,
                                     LGViewHUDDelegate> {
     
-    UITextView *textView;
+    //UITextView *textView;
     UILabel *dossierName;
     UILabel *typeLabel;
     UILabel *sousTypeLabel;

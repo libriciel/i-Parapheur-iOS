@@ -50,7 +50,6 @@
 #import "RGAppDelegate.h"
 #import "RGDocumentsView.h"
 #import "ADLNotifications.h"
-
 #import "ADLRequester.h"
 #import "ADLCredentialVault.h"
 #import "ADLCollectivityDef.h"
@@ -97,7 +96,7 @@
     self.detailViewController = (RGDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     */
     self.navigationItem.rightBarButtonItem=nil;
-    [textView setText:dossierRef];
+    //[textView setText:dossierRef];
     _objects = [[NSMutableArray alloc] init];
     
     //[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
@@ -225,10 +224,12 @@
     
     [[cell parapheurName] setText:[object objectForKey:@"parapheurName"]];
     if ([[object objectForKey:@"approved"] intValue] == 1) {
-    [[cell validateurName] setText:[object objectForKey:@"signataire"]];
+        [[cell validateurName] setText:[object objectForKey:@"signataire"]];
+        cell.annotation.text = [object objectForKey:@"annotPub"];
     }
     else {
-        [[cell validateurName] setText:nil];
+        cell.validateurName.text= @"";
+        cell.annotation.text = @"";
     }
     
     ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
@@ -252,13 +253,17 @@
     
     
     NSString *imagePrefix = @"iw";
-    if ([[object objectForKey:@"approved"] intValue] == 1) {
+    if ([[object objectForKey:@"rejected"] intValue] == 1) {
+        imagePrefix = @"ir";
+    }
+    else if ([[object objectForKey:@"approved"] intValue] == 1) {
         imagePrefix = @"ip";
     }
     
+    
     NSString *action = [[object objectForKey:@"actionDemandee"] lowercaseString];
     
-    [[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.jpg", imagePrefix, action ]]];
+    [[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png", imagePrefix, action ]]];
     
     return cell;
 }
@@ -337,7 +342,7 @@
         @synchronized(self)
         {
                         
-            [textView setText:[answer JSONString]];
+            //[textView setText:[answer JSONString]];
             
             //[self refreshViewWithDossier:[answer objectForKey:@"data"]];
         }
