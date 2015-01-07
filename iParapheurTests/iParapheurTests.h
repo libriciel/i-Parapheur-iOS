@@ -44,8 +44,7 @@
 //
 //
 
-#import <SenTestingKit/SenTestingKit.h>
 
-@interface iParapheurTests : SenTestCase
+@interface iParapheurTests
 
 @end
