@@ -208,7 +208,7 @@
     
     [[cell todoBadge] setBadgeText:[a_traiter stringValue]];
     [[cell todoBadge] autoBadgeSizeWithString: [a_traiter stringValue]];
-    [cell.todoBadge setBadgeInsetColor:[UIColor blueColor]];
+    [cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor blueColor]];
     
     NSNumber *en_retard = [bureau objectForKey:@"en_retard"];
     
