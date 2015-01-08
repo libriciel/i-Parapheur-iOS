@@ -15,6 +15,7 @@
 #define LOGOUT_API              @"logout"
 
 /* Data fetching */
+#define GETLEVEL_API            @"getApiLevel"
 #define GETBUREAUX_API          @"getBureaux"
 #define GETDOSSIERSHEADERS_API  @"getDossiersHeaders"
 #define GETDOSSIER_API          @"getDossier"
@@ -44,6 +45,11 @@ ADLRequester *_requester = [ADLRequester sharedRequester]; \
 
 #pragma mark - login
 
+#define API_GETLEVEL() \
+{ \
+    API_GET_REQUEST(GETLEVEL_API); \
+}
+
 #define API_LOGIN(username, password) \
 { \
     NSDictionary *_args = [NSDictionary dictionaryWithObjectsAndKeys:username, @"username", password, @"password", nil]; \
@@ -59,6 +65,9 @@ ADLRequester *_requester = [ADLRequester sharedRequester]; \
 { \
     API_GET_REQUEST(GETBUREAUX_API); \
 }
+
+#define API_GETLEVEL_GET_LEVEL(answer) \
+    [answer objectForKey:@"level"]
 
 #define API_GETBUREAUX_GET_BUREAUX(answer) \
     [answer objectForKey:@"bureaux"]

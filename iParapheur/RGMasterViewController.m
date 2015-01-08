@@ -52,6 +52,10 @@
 #import "ADLRequester.h"
 #import "ADLCollectivityDef.h"
 #import "LGViewHUD.h"
+#import "AFHTTPClient.h"
+#import <RestKit.h>
+#import "ADLResponseGetLevel.h"
+
 
 @interface RGMasterViewController ()
 
@@ -60,20 +64,20 @@
 @implementation RGMasterViewController
 
 
-/*
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        
-    }
-    return self;
-}*/
+- (void)getLevel {
+    NSLog(@"Adrien macro sent");
+    API_GETLEVEL();
+}
 
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // RestKit init
+    
+    [self configureRestKit];
+    [self getApiLevel];
+    
 	// Do any additional setup after loading the view, typically from a nib
     _deskArray = [[NSMutableArray alloc] init];
     
@@ -84,6 +88,7 @@
     [self.refreshControl addTarget:self action:@selector(loadBureaux) forControlEvents:UIControlEventValueChanged];
     
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
@@ -102,8 +107,8 @@
 
 }
 
-- (void)loadBureaux
-{
+
+- (void)loadBureaux {
     [self.refreshControl beginRefreshing];
     //ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 
@@ -121,15 +126,15 @@
     
 }
 
-- (void)viewDidUnload
-{
+
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
   
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
@@ -138,7 +143,53 @@
 }
 
 
+#pragma mark - RestKit
+
+- (void)configureRestKit {
+
+    // initialize AFNetworking HTTPClient
+    NSURL *baseURL = [NSURL URLWithString:@"https://m.parapheur.test.adullact.org/"];
+    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:baseURL];
+    client.allowsInvalidSSLCertificate = YES;
+    
+    // initialize RestKit
+    RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
+    
+    // setup object mappings
+    RKObjectMapping *levelMapping = [RKObjectMapping mappingForClass:[ADLResponseGetLevel class]];
+    [levelMapping addAttributeMappingsFromDictionary:@{@"level": @"level"}];
+    
+    // register mappings with the provider using a response descriptor
+    RKResponseDescriptor *responseDescriptor =
+    [RKResponseDescriptor responseDescriptorWithMapping:levelMapping
+                                                 method:RKRequestMethodGET
+                                            pathPattern:nil
+                                                keyPath:nil
+                                            statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    
+    [objectManager addResponseDescriptor:responseDescriptor];
+}
+
+
+- (void)getApiLevel
+{
+    NSLog(@"Adrien rest sent");
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/api/getApiLevel"
+                                           parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  ADLResponseGetLevel *levelResponse = (ADLResponseGetLevel *) mappingResult.array[0];
+                                                  NSLog(@"Adrien rest success : %@", levelResponse.level);
+                                              }
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Adrien rest failed : %@", operation);
+                                                  NSLog(@"        with error : %@", error);
+                                              }];
+}
+
+
 #pragma mark - Wall impl
+
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer{
     NSString *s = [answer objectForKey:@"_req"];
@@ -150,9 +201,11 @@
         ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
         
         [vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
-        
+       
+        NSLog(@"Adrien macro sent");
+        [self getLevel];
         [self loadBureaux];
-
+        
     }
     else if ([s isEqual:GETBUREAUX_API]) {
         NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
@@ -165,21 +218,29 @@
         [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
         
     }
+    else if ([s isEqual:GETLEVEL_API]) {
+        NSString *levelString = API_GETLEVEL_GET_LEVEL(answer);
+        NSLog(@"Adrien macro get : %@", levelString);
+    }
     
     //storing ticket ? lacks the host and login information
     //we should add it into the request process ?
        
 }
 
+
 - (void)didEndWithUnReachableNetwork{
     [self.refreshControl endRefreshing];
 }
+
 
 - (void)didEndWithUnAuthorizedAccess {
     [self.refreshControl endRefreshing];
 }
 
+
 #pragma UITableDataSource delegate
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (_deskArray == nil) {
@@ -218,6 +279,7 @@
     
 }
 
+
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *bureau = [[self deskArray] objectAtIndex:[indexPath row]];
     NSLog(@"Selected Desk = %@", [bureau objectForKey:@"nodeRef"]);
@@ -233,5 +295,6 @@
     [[ADLSingletonState sharedSingletonState] setBureauCourant:[bureau objectForKey:@"nodeRef"]];
 
 }
+
 
 @end

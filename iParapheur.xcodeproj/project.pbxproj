@@ -151,6 +151,7 @@
 		C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C57E67E11A5DF6F800BC4A3A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
+		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
@@ -365,6 +366,8 @@
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
 		BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
+		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5C803551A5D90AF00D54F7D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C5C803571A5D90BA00D54F7D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C5C803591A5D90C200D54F7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -679,21 +682,8 @@
 		B4E5ED02153AF74900BD514D /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				B4E5ECF5153AF72200BD514D /* ADLCredentialVault.h */,
-				B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */,
-				B4E5ECF7153AF72200BD514D /* ADLCollectivityDef.h */,
-				B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */,
-				B4E5ECF9153AF72200BD514D /* ADLParapheurWallDelegateProtocol.h */,
-				B4E5ECFA153AF72200BD514D /* ADLMacroes.h */,
-				B46BCC45156956E300A96560 /* ADLDocument.h */,
-				B46BCC46156956E300A96560 /* ADLDocument.m */,
-				1469DFEF1675D2C20064E8E7 /* ADLRequester.h */,
-				1469DFF01675D2C20064E8E7 /* ADLRequester.m */,
-				1469DFF31675D8960064E8E7 /* ADLAPIOperation.h */,
-				1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */,
-				14F0C8551694B65800C0D720 /* ADLAPIRequests.h */,
-				9540519A1892BB8100018E80 /* ADLAPIHelper.h */,
-				9540519B1892BB8100018E80 /* ADLAPIHelper.m */,
+				C5BC17941A5EEDB4003D8E98 /* RestClientApi3 */,
+				C5BC17931A5EED9B003D8E98 /* RestClientApi2 */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -788,6 +778,45 @@
 				B4A5F0E8161DCC10007BA5D1 /* Reader-Thumbs@2x.png */,
 			);
 			name = Graphics;
+			sourceTree = "<group>";
+		};
+		C5BC17931A5EED9B003D8E98 /* RestClientApi2 */ = {
+			isa = PBXGroup;
+			children = (
+				B4E5ECF5153AF72200BD514D /* ADLCredentialVault.h */,
+				B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */,
+				B4E5ECF7153AF72200BD514D /* ADLCollectivityDef.h */,
+				B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */,
+				B4E5ECF9153AF72200BD514D /* ADLParapheurWallDelegateProtocol.h */,
+				B4E5ECFA153AF72200BD514D /* ADLMacroes.h */,
+				B46BCC45156956E300A96560 /* ADLDocument.h */,
+				B46BCC46156956E300A96560 /* ADLDocument.m */,
+				1469DFEF1675D2C20064E8E7 /* ADLRequester.h */,
+				1469DFF01675D2C20064E8E7 /* ADLRequester.m */,
+				1469DFF31675D8960064E8E7 /* ADLAPIOperation.h */,
+				1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */,
+				14F0C8551694B65800C0D720 /* ADLAPIRequests.h */,
+				9540519A1892BB8100018E80 /* ADLAPIHelper.h */,
+				9540519B1892BB8100018E80 /* ADLAPIHelper.m */,
+			);
+			name = RestClientApi2;
+			sourceTree = "<group>";
+		};
+		C5BC17941A5EEDB4003D8E98 /* RestClientApi3 */ = {
+			isa = PBXGroup;
+			children = (
+				C5BC17951A5EEDC0003D8E98 /* ResponseModel */,
+			);
+			name = RestClientApi3;
+			sourceTree = "<group>";
+		};
+		C5BC17951A5EEDC0003D8E98 /* ResponseModel */ = {
+			isa = PBXGroup;
+			children = (
+				C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */,
+				C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */,
+			);
+			name = ResponseModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -993,6 +1022,7 @@
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
+				C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,

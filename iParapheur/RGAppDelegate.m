@@ -49,6 +49,7 @@
 #import "ADLKeyStore.h"
 #import "PrivateKey.h"
 #import "ADLPasswordAlertView.h"
+#import <RestKit/RestKit.h>
 #import <AJNotificationView/AJNotificationView.h>
 #import <NSData+Base64/NSData+Base64.h>
 #import "ADLAPIRequests.h"
