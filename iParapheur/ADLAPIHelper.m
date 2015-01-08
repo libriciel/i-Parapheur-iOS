@@ -10,6 +10,7 @@
 
 @implementation ADLAPIHelper
 
+
 + (NSString*) actionNameForAction:(NSString*) action {
     if ([action isEqualToString:@"VISER"] || [action isEqualToString:@"VISA"]) {
         return @"Viser";
@@ -43,11 +44,14 @@
 
 
 + (NSArray*) actionsForDossier:(NSDictionary*) dossier {
+    
     NSMutableArray *actions = [NSMutableArray new];
     NSDictionary *returnedActions = [dossier objectForKey:@"actions"];
     NSString *actionDemandee = [dossier objectForKey:@"actionDemandee"];
+    
     for (NSString *action in [returnedActions allKeys]) {
         BOOL isActionEnabled = [[returnedActions objectForKey:action] boolValue];
+        
         if (isActionEnabled) {
             if ([action isEqualToString:@"archive"]) {
                 if ([actionDemandee isEqualToString:@"ARCHIVAGE"]) {
@@ -84,5 +88,6 @@
     }
     return [NSArray arrayWithArray:actions];
 }
+
 
 @end

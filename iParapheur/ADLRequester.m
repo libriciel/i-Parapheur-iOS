@@ -16,14 +16,17 @@
 
 static ADLRequester *sharedRequester = nil;
 
+
 + (ADLRequester *)sharedRequester {
-    if (sharedRequester == nil) {
+    
+    if (sharedRequester == nil)
         sharedRequester = [[super allocWithZone:NULL] init];
-    }
     return sharedRequester;
 }
 
+
 -(id)init {
+    
     if (self = [super init]) {
         downloadQueue = [[NSOperationQueue alloc] init];
         downloadQueue.name = @"Download Queue";
@@ -32,11 +35,14 @@ static ADLRequester *sharedRequester = nil;
         apiQueue = [[NSOperationQueue alloc] init];
         apiQueue.maxConcurrentOperationCount = 5;
         apiQueue.name = @"API Queue";
+        
         _lockApi = [[NSRecursiveLock alloc] init];
         _lockDoc = [[NSRecursiveLock alloc] init];
     }
+    
     return self;
 }
+
 
 -(void) downloadDocumentAt:(NSString*)path delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
     [_lockDoc lock];
@@ -53,6 +59,7 @@ static ADLRequester *sharedRequester = nil;
     [_lockDoc unlock];
 }
 
+
 -(NSData *) downloadDocumentNow: (NSString*)path{
     [downloadQueue cancelAllOperations];
 
@@ -67,6 +74,7 @@ static ADLRequester *sharedRequester = nil;
     return documentData;
 }
 
+
 -(void) request:(NSString*)request andArgs:(NSDictionary*)args delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
     [_lockApi lock];
     
@@ -78,9 +86,9 @@ static ADLRequester *sharedRequester = nil;
 
     [apiQueue addOperation:apiRequestOperation];
 
-    
     [_lockApi unlock];
 }
+
 
 -(void) request:(NSString*)request delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
     [_lockApi lock];
@@ -95,5 +103,6 @@ static ADLRequester *sharedRequester = nil;
     
     [_lockApi unlock];
 }
+
 
 @end

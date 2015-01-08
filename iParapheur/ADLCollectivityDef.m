@@ -9,6 +9,8 @@
 @implementation ADLCollectivityDef
 @synthesize host;
 @synthesize username;
+
+
 +(ADLCollectivityDef*) copyDefaultCollectity {
     ADLCollectivityDef* defaultDef = [[ADLCollectivityDef alloc] init];
     
@@ -22,5 +24,3 @@
 }
 
 @end
-
-
