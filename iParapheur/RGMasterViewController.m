@@ -53,6 +53,7 @@
 #import "ADLCollectivityDef.h"
 #import "LGViewHUD.h"
 #import "ADLRestClient.h"
+#import "ADLResponseBureau.h"
 
 @interface RGMasterViewController ()
 
@@ -62,91 +63,57 @@
 
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    // RestKit init
-    
-    [self getApiLevel];
-    
+	[super viewDidLoad];
+	
+	// RestKit init
+	
+	_restClient = [[ADLRestClient alloc] init];
+	
+	[_restClient getApiLevel:^(NSNumber *versionNumber) { [self loadBureaux]; }
+					 failure:^(NSError *error) { NSLog(@"Adrien lambda failed : %@", error); }];
+	
 	// Do any additional setup after loading the view, typically from a nib
-    _deskArray = [[NSMutableArray alloc] init];
-    
-    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
-    
-    self.refreshControl = [[UIRefreshControl alloc]init];
-    self.refreshControl.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
-    [self.refreshControl addTarget:self action:@selector(loadBureaux) forControlEvents:UIControlEventValueChanged];
-    
+	_bureauxArray = [[NSMutableArray alloc] init];
+	
+	self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+	
+	self.refreshControl = [[UIRefreshControl alloc]init];
+	self.refreshControl.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+	[self.refreshControl addTarget:self action:@selector(loadBureaux) forControlEvents:UIControlEventValueChanged];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:YES];
-    
-    if ([_deskArray count] == 0) {
-        API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
-                  /*
-        ADLRequester *requester = [ADLRequester sharedRequester];
-        [requester setDelegate:self];
-             
-        NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], @"username", [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"], @"password", nil];
-                
-        [requester request:LOGIN_API andArgs:args];*/
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared object:nil];
-
-}
-
-
-- (void)loadBureaux {
-    [self.refreshControl beginRefreshing];
-    //ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-
-    API_GETBUREAUX();
-    
-   
-    /*if (displayHUD == NO) {
-        LGViewHUD *hud = [LGViewHUD defaultHUD];
-        hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-        hud.topText=@"";
-        hud.bottomText=@"Chargement ...";
-        hud.activityIndicatorOn=YES;
-        [hud showInView:self.view];
-    }*/
-    
+	[super viewWillAppear:YES];
+	
+	if ([_bureauxArray count] == 0) {
+		API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
+		/*
+		 ADLRequester *requester = [ADLRequester sharedRequester];
+		 [requester setDelegate:self];
+		 
+		 NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], @"username", [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"], @"password", nil];
+		 
+		 [requester request:LOGIN_API andArgs:args];*/
+	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared object:nil];
+	
 }
 
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-  
+	[super viewDidUnload];
+	// Release any retained subviews of the main view.
+	
 }
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
-        return YES;
-    }
-}
-
-
-#pragma mark - RestKit
-
-- (void)getApiLevel
-{
-    ADLRestClient *webservice = [[ADLRestClient alloc] init];
-    
-    [webservice getApiLevel:^(NSNumber *versionNumber) { NSLog(@"Adrien  lambda works %@", versionNumber); }
-                    failure:^(NSError *error) { NSLog(@"Adrien lambda failed : %@", error); }];
-    
-    NSLog(@"Adrien request bureaux sent...");
-    
-    [webservice getBureaux:^(NSArray *versionNumber) { NSLog(@"Adrien getBureaux works"); }
-                   failure:^(NSError *error) { NSLog(@"Adrien getBureaux failed : %@", error); }];
-
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+	} else {
+		return YES;
+	}
 }
 
 
@@ -154,106 +121,167 @@
 
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer{
-    NSString *s = [answer objectForKey:@"_req"];
-    _loading = NO;
-    [self.refreshControl endRefreshing];
-    if ([s isEqual:LOGIN_API]) {
-        
-        ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-        ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-        
-        [vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
-       
-        [self loadBureaux];
-        
-    }
-    else if ([s isEqual:GETBUREAUX_API]) {
-        NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
-
-        [self setDeskArray:array];
-          
-        // add a cast to get rid of the warning since the view is indeed a table view it respons to reloadData
-        [(UITableView*)([self view]) reloadData];
-        
-        [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-        
-    }
-    else if ([s isEqual:GETLEVEL_API]) {
-        NSString *levelString = API_GETLEVEL_GET_LEVEL(answer);
-        NSLog(@"Adrien macro get : %@", levelString);
-    }
-    
-    //storing ticket ? lacks the host and login information
-    //we should add it into the request process ?
-       
+	NSString *s = [answer objectForKey:@"_req"];
+	_loading = NO;
+	[self.refreshControl endRefreshing];
+	if ([s isEqual:LOGIN_API]) {
+		
+		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
+		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
+		
+		[vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
+		
+		[self loadBureaux];
+		
+	}
+	else if ([s isEqual:GETBUREAUX_API]) {
+		NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
+		
+		[self setBureauxArray:array];
+		
+		// add a cast to get rid of the warning since the view is indeed a table view it respons to reloadData
+		[(UITableView*)([self view]) reloadData];
+		
+		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+		
+	}
+	else if ([s isEqual:GETLEVEL_API]) {
+		NSString *levelString = API_GETLEVEL_GET_LEVEL(answer);
+		NSLog(@"Adrien macro get : %@", levelString);
+	}
+	
+	//storing ticket ? lacks the host and login information
+	//we should add it into the request process ?
+	
 }
 
 
 - (void)didEndWithUnReachableNetwork{
-    [self.refreshControl endRefreshing];
+	[self.refreshControl endRefreshing];
 }
 
 
 - (void)didEndWithUnAuthorizedAccess {
-    [self.refreshControl endRefreshing];
+	[self.refreshControl endRefreshing];
 }
 
 
-#pragma UITableDataSource delegate
+#pragma mark - Local methods
+
+
+- (void)loadBureaux {
+	
+	[self.refreshControl beginRefreshing];
+	//ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
+	
+	//API_GETBUREAUX();
+	
+	/*if (displayHUD == NO) {
+	 LGViewHUD *hud = [LGViewHUD defaultHUD];
+	 hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
+	 hud.topText=@"";
+	 hud.bottomText=@"Chargement ...";
+	 hud.activityIndicatorOn=YES;
+	 [hud showInView:self.view];
+	 }
+	 */
+	
+	[_restClient getBureaux:^(NSArray *bureaux) {
+		[self setBureauxArray:bureaux];
+		_loading = NO;
+		[self.refreshControl endRefreshing];
+		[(UITableView*)([self view]) reloadData];
+		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+		
+	} failure:^(NSError *error) {
+		NSLog(@"Adrien bureaux error");
+	}];
+}
+
+
+#pragma mark - UITableDataSource delegate
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (_deskArray == nil) {
-        return 0;
-    }
-    else {
-        return [_deskArray count];
-    }
+	if (_bureauxArray == nil) {
+		return 0;
+	}
+	else {
+		return [_bureauxArray count];
+	}
 }
+
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"DeskCell";
-    
-    RGDeskCustomTableViewCell *cell = (RGDeskCustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    
-    NSDictionary *bureau = [ [self deskArray] objectAtIndex:[indexPath row]];
-    NSLog(@"%@", [bureau objectForKey:@"name"]);
-    [[cell bureauNameLabel] setText:[bureau objectForKey:@"name"]];
-   
-    NSNumber *a_traiter = [bureau objectForKey:@"a_traiter"];
-    
-    [[cell todoBadge] setBadgeText:[a_traiter stringValue]];
-    [[cell todoBadge] autoBadgeSizeWithString: [a_traiter stringValue]];
-    [cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor blueColor]];
-    
-    NSNumber *en_retard = [bureau objectForKey:@"en_retard"];
-    
-    [[cell lateBadge] setBadgeText:[en_retard stringValue]];
-    [[cell lateBadge] autoBadgeSizeWithString: [en_retard stringValue]];
-    return cell;
-    
+	
+	static NSString *CellIdentifier = @"DeskCell";
+	RGDeskCustomTableViewCell *cell = (RGDeskCustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+	[cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor blueColor]];
+	
+	bool isLoaded = (sizeof _bureauxArray) > 0;
+	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
+	
+	NSString *bureauName;
+	NSString *bureauEnRetard;
+	NSString *bureauATraiter;
+	
+	if (isLoaded && isVersion2) {
+		NSLog(@"Adrien version 2 !!");
+		NSDictionary *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
+		bureauName = [bureau objectForKey:@"name"];
+		bureauEnRetard = [bureau objectForKey:@"en_retard"];
+		bureauATraiter = [bureau objectForKey:@"a_traiter"];
+	}
+	else {
+		NSLog(@"Adrien version 3 !!");
+		ADLResponseBureau *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
+		bureauName = bureau.name;
+		bureauEnRetard = [bureau.enRetard stringValue];
+		bureauATraiter = [bureau.aTraiter stringValue];
+	}
+	
+	[[cell bureauNameLabel] setText:bureauName];
+	
+	[[cell todoBadge] setBadgeText:bureauATraiter];
+	[[cell todoBadge] autoBadgeSizeWithString:bureauATraiter];
+	
+	[[cell lateBadge] setBadgeText:bureauEnRetard];
+	[[cell lateBadge] autoBadgeSizeWithString:bureauEnRetard];
+	
+	return cell;
 }
 
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *bureau = [[self deskArray] objectAtIndex:[indexPath row]];
-    NSLog(@"Selected Desk = %@", [bureau objectForKey:@"nodeRef"]);
-    
-    RGDeskViewController *controller = [[self storyboard] instantiateViewControllerWithIdentifier:@"DeskViewController"];
-    [controller setDeskRef:[bureau objectForKey:@"nodeRef"]];
-    [[self navigationController] pushViewController:controller animated:YES];
-    
-    [[controller navigationItem] setTitle:[bureau objectForKey:@"name"]];
-    
-    //[[self navigationController] setTitle:[bureau objectForKey:@"name"]];
-    
-    [[ADLSingletonState sharedSingletonState] setBureauCourant:[bureau objectForKey:@"nodeRef"]];
-
+	
+	bool isLoaded = (sizeof _bureauxArray) > 0;
+	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
+	
+	NSString *bureauName;
+	NSString *bureauNodeRef;
+	
+	if (isLoaded && isVersion2) {
+		NSDictionary *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
+		bureauName = [bureau objectForKey:@"name"];
+		bureauNodeRef = [bureau objectForKey:@"nodeRef"];
+	}
+	else {
+		ADLResponseBureau *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
+		bureauName = bureau.name;
+		bureauNodeRef = bureau.nodeRef;
+	}
+	
+	NSLog(@"Selected Desk = %@", bureauNodeRef);
+	
+	RGDeskViewController *controller = [[self storyboard] instantiateViewControllerWithIdentifier:@"DeskViewController"];
+	[controller setDeskRef:bureauNodeRef];
+	[[self navigationController] pushViewController:controller animated:YES];
+	[[controller navigationItem] setTitle:bureauName];
+	
+	[[ADLSingletonState sharedSingletonState] setBureauCourant:bureauNodeRef];
 }
 
 

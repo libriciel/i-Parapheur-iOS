@@ -41,11 +41,13 @@
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
 #import "RGDeskViewController.h"
+#import "ADLRestClient.h"
 
 @interface RGMasterViewController : UITableViewController <UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource> {
 }
 
-@property (nonatomic, strong) NSArray *deskArray;
+@property (nonatomic, strong) ADLRestClient *restClient;
+@property (nonatomic, strong) NSArray *bureauxArray;
 @property (nonatomic) BOOL loading;
 
 - (void)loadBureaux;

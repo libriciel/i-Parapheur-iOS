@@ -32,7 +32,7 @@
 - (void)getBureaux:(void (^)(NSArray *))success
            failure:(void (^)(NSError *))failure {
     
-    [_restClientApi3 getBureaux:^(NSArray *bureaux) { NSLog(@"Adrien get bureaux success"); }
+    [_restClientApi3 getBureaux:^(NSArray *bureaux) { success(bureaux); }
                         failure:^(NSError *error) { failure(error); }];
 }
 

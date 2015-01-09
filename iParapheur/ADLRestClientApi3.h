@@ -13,18 +13,10 @@
 - (id)init;
 
 
-/**
- @param success A block object to be executed when the object request operation finishes successfully.
- @param failure A block object to be executed as an error callback.
- */
 - (void)getApiLevel:(void (^)(NSNumber *versionNumber))success
             failure:(void (^)(NSError *error))failure;
 
 
-/**
- @param success A block object to be executed when the object request operation finishes successfully.
- @param failure A block object to be executed as an error callback.
- */
 - (void)getBureaux:(void (^)(NSArray *bureaux))success
            failure:(void (^)(NSError *error))failure;
 
