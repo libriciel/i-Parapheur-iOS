@@ -29,4 +29,12 @@
 }
 
 
+- (void)getBureaux:(void (^)(NSArray *))success
+           failure:(void (^)(NSError *))failure {
+    
+    [_restClientApi3 getBureaux:^(NSArray *bureaux) { NSLog(@"Adrien get bureaux success"); }
+                        failure:^(NSError *error) { failure(error); }];
+}
+
+
 @end

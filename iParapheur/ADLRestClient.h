@@ -18,5 +18,6 @@
 
 -(void)getApiLevel:(void (^)(NSNumber *))success failure:(void (^)(NSError *))failure;
 
+-(void)getBureaux:(void (^)(NSArray *))success failure:(void (^)(NSError *))failure;
 
 @end

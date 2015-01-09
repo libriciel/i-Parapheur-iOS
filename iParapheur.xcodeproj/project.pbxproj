@@ -154,6 +154,7 @@
 		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
+		C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
@@ -374,6 +375,8 @@
 		C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClientApi3.m; sourceTree = "<group>"; };
 		C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClient.h; sourceTree = "<group>"; };
 		C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClient.m; sourceTree = "<group>"; };
+		C5BC17A51A5FE8C3003D8E98 /* ADLResponseBureau.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseBureau.h; sourceTree = "<group>"; };
+		C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseBureau.m; sourceTree = "<group>"; };
 		C5C803551A5D90AF00D54F7D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C5C803571A5D90BA00D54F7D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C5C803591A5D90C200D54F7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -825,6 +828,8 @@
 			children = (
 				C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */,
 				C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */,
+				C5BC17A51A5FE8C3003D8E98 /* ADLResponseBureau.h */,
+				C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */,
 			);
 			name = ResponseModel;
 			sourceTree = "<group>";
@@ -1075,6 +1080,7 @@
 				95719C821893D50600246F7C /* ADLInfoView.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
+				C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLPasswordAlertView.m in Sources */,
 				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,

@@ -48,8 +48,6 @@
 @property (nonatomic, strong) NSArray *deskArray;
 @property (nonatomic) BOOL loading;
 
-- (void)getLevel;
-
 - (void)loadBureaux;
 
 @end

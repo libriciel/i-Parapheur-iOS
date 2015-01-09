@@ -61,12 +61,6 @@
 @implementation RGMasterViewController
 
 
-- (void)getLevel {
-    NSLog(@"Adrien macro sent");
-    API_GETLEVEL();
-}
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -147,6 +141,12 @@
     
     [webservice getApiLevel:^(NSNumber *versionNumber) { NSLog(@"Adrien  lambda works %@", versionNumber); }
                     failure:^(NSError *error) { NSLog(@"Adrien lambda failed : %@", error); }];
+    
+    NSLog(@"Adrien request bureaux sent...");
+    
+    [webservice getBureaux:^(NSArray *versionNumber) { NSLog(@"Adrien getBureaux works"); }
+                   failure:^(NSError *error) { NSLog(@"Adrien getBureaux failed : %@", error); }];
+
 }
 
 
@@ -164,8 +164,6 @@
         
         [vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
        
-        NSLog(@"Adrien macro sent");
-        [self getLevel];
         [self loadBureaux];
         
     }
