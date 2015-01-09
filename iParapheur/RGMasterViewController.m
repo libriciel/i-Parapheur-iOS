@@ -52,10 +52,7 @@
 #import "ADLRequester.h"
 #import "ADLCollectivityDef.h"
 #import "LGViewHUD.h"
-#import "AFHTTPClient.h"
-#import <RestKit.h>
-#import "ADLResponseGetLevel.h"
-
+#import "ADLRestClient.h"
 
 @interface RGMasterViewController ()
 
@@ -75,7 +72,6 @@
     
     // RestKit init
     
-    [self configureRestKit];
     [self getApiLevel];
     
 	// Do any additional setup after loading the view, typically from a nib
@@ -145,46 +141,12 @@
 
 #pragma mark - RestKit
 
-- (void)configureRestKit {
-
-    // initialize AFNetworking HTTPClient
-    NSURL *baseURL = [NSURL URLWithString:@"https://m.parapheur.test.adullact.org/"];
-    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:baseURL];
-    client.allowsInvalidSSLCertificate = YES;
-    
-    // initialize RestKit
-    RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
-    
-    // setup object mappings
-    RKObjectMapping *levelMapping = [RKObjectMapping mappingForClass:[ADLResponseGetLevel class]];
-    [levelMapping addAttributeMappingsFromDictionary:@{@"level": @"level"}];
-    
-    // register mappings with the provider using a response descriptor
-    RKResponseDescriptor *responseDescriptor =
-    [RKResponseDescriptor responseDescriptorWithMapping:levelMapping
-                                                 method:RKRequestMethodGET
-                                            pathPattern:nil
-                                                keyPath:nil
-                                            statusCodes:[NSIndexSet indexSetWithIndex:200]];
-    
-    [objectManager addResponseDescriptor:responseDescriptor];
-}
-
-
 - (void)getApiLevel
 {
-    NSLog(@"Adrien rest sent");
+    ADLRestClient *webservice = [[ADLRestClient alloc] init];
     
-    [[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/api/getApiLevel"
-                                           parameters:nil
-                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                                  ADLResponseGetLevel *levelResponse = (ADLResponseGetLevel *) mappingResult.array[0];
-                                                  NSLog(@"Adrien rest success : %@", levelResponse.level);
-                                              }
-                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                                  NSLog(@"Adrien rest failed : %@", operation);
-                                                  NSLog(@"        with error : %@", error);
-                                              }];
+    [webservice getApiLevel:^(NSNumber *versionNumber) { NSLog(@"Adrien  lambda works %@", versionNumber); }
+                    failure:^(NSError *error) { NSLog(@"Adrien lambda failed : %@", error); }];
 }
 
 
