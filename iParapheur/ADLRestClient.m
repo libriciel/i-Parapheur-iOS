@@ -43,7 +43,7 @@
 	[_restClientApi3 getDossiers:bureau
 							page:page
 							size:size
-						 success:^(NSArray *bureaux) { success(bureaux); }
+						 success:^(NSArray *dossiers) { success(dossiers); }
 						 failure:^(NSError *error) { failure(error); }];
 }
 

@@ -30,7 +30,7 @@
 	
 	[self addApiLevelMappingRules:objectManager];
 	[self addApiBureauxMappingRules:objectManager];
-	//[self addApiDossiersMappingRules:objectManager];
+	[self addApiDossiersMappingRules:objectManager];
 	
 	return self;
 }
@@ -46,7 +46,7 @@
 	
 	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
 																							method:RKRequestMethodGET
-																					   pathPattern:nil
+																					   pathPattern:@"/parapheur/api/getApiLevel"
 																						   keyPath:nil
 																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
 	
@@ -88,7 +88,7 @@
 												  @"habilitation":@"habilitation",
 												  @"a-archiver":@"aArchiver",
 												  @"a-traiter":@"aTraiter",
-												  @"id":@"id",
+												  @"id":@"identifier",
 												  @"isSecretaire":@"isSecretaire",
 												  @"name":@"name",
 												  @"retournes":@"retournes",
@@ -96,7 +96,7 @@
 	
 	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
 																							method:RKRequestMethodGET
-																					   pathPattern:nil
+																					   pathPattern:@"/parapheur/bureaux"
 																						   keyPath:nil
 																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
 	
@@ -137,6 +137,7 @@
 												  @"title":@"title",
 												  @"pendingFile":@"pendingFile",
 												  @"banetteName":@"banetteName",
+												  @"dateLimite":@"dateLimite",
 												  @"skipped":@"skipped",
 												  @"sousType":@"sousType",
 												  @"isSignPapier":@"isSignPapier",
@@ -152,7 +153,7 @@
 	
 	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
 																							method:RKRequestMethodGET
-																					   pathPattern:nil
+																					   pathPattern:@"/parapheur/dossiers"
 																						   keyPath:nil
 																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
 	
@@ -167,7 +168,7 @@
 		   failure:(void (^)(NSError *))failure {
 	
 	NSDictionary *queryParams = @{@"asc" : @true,
-								  @"bureau=" : bureau,
+								  @"bureau" : bureau,
 								  //@"corbeilleName" : @"",
 								  //@"filter" : @"",
 								  //@"metas" : @"",
@@ -180,12 +181,9 @@
 	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/dossiers"
 										   parameters:queryParams
 											  success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-												  //ADLResponseBureau *testBureau = (ADLResponseBureau *) mappingResult.array[0];
-												  NSLog(@"getDossiers size of %lu", (sizeof mappingResult.array));
 												  success(mappingResult.array);
 											  }
 											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
-												  NSLog(@"Adrien getDossiers fail %@", error.localizedDescription);
 												  failure(error);
 											  }];
 }

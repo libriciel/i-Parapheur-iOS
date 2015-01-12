@@ -70,7 +70,7 @@
 	_restClient = [[ADLRestClient alloc] init];
 	
 	[_restClient getApiLevel:^(NSNumber *versionNumber) { [self loadBureaux]; }
-					 failure:^(NSError *error) { NSLog(@"Adrien lambda failed : %@", error); }];
+					 failure:^(NSError *error) { NSLog(@"Adrien getApi failed : %@", error); }];
 	
 	// Do any additional setup after loading the view, typically from a nib
 	_bureauxArray = [[NSMutableArray alloc] init];
@@ -195,7 +195,7 @@
 		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 		
 	} failure:^(NSError *error) {
-		NSLog(@"Adrien bureaux error");
+		NSLog(@"Adrien getBureaux error");
 	}];
 }
 
@@ -230,14 +230,12 @@
 	NSString *bureauATraiter;
 	
 	if (isLoaded && isVersion2) {
-		NSLog(@"Adrien version 2 !!");
 		NSDictionary *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
 		bureauName = [bureau objectForKey:@"name"];
 		bureauEnRetard = [bureau objectForKey:@"en_retard"];
 		bureauATraiter = [bureau objectForKey:@"a_traiter"];
 	}
 	else {
-		NSLog(@"Adrien version 3 !!");
 		ADLResponseBureau *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
 		bureauName = bureau.name;
 		bureauEnRetard = [bureau.enRetard stringValue];

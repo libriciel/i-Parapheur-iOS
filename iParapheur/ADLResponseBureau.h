@@ -16,7 +16,7 @@
 @property (nonatomic, strong) NSDictionary *habilitation;
 @property (nonatomic, strong) NSNumber *aArchiver; //a-archiver
 @property (nonatomic, strong) NSNumber *aTraiter; //a-traiter
-@property (nonatomic, strong) NSString *id;
+@property (nonatomic, strong) NSString *identifier;
 @property (nonatomic) bool isSecretaire;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSNumber *retournes;

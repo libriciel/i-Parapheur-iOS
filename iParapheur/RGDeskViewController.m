@@ -131,7 +131,6 @@
 	SHOW_HUD
 	NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
 	if (currentFilter != nil) {
-		NSLog(@"Adrien HEEEEERRE oh no");
 		//API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
 		
 		// TYPES
@@ -283,7 +282,7 @@
 
 -(NSArray*) actionsForSelectedDossiers {
 	NSMutableArray* actions;
-	for (NSDictionary* dossier in self.selectedDossiersArray) {
+/*Adrien	for (NSDictionary* dossier in self.selectedDossiersArray) {
 		NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
 		if (!actions) { // the first dossier only
 			actions = [NSMutableArray arrayWithArray:dossierActions];
@@ -291,7 +290,7 @@
 		else {
 			[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
 		}
-	}
+	} */
 	return actions;
 }
 
@@ -314,22 +313,53 @@
 	RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	cell.delegate = self;
 	
-	NSDictionary *dossier;
-	//if (tableView == self.searchDisplayController.searchResultsTableView) {
-	dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
-	//} else {
-	//    dossier = [self.dossiersArray objectAtIndex:[indexPath row]];
-	//}
+	// Switch v2/v3
 	
-	// NSLog(@"%@", [dossier objectForKey:@"titre"]);
+	bool isLoaded = (sizeof self.filteredDossiersArray) > 0;
+	bool isVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
 	
-	cell.dossierTitleLabel.text = [dossier objectForKey:@"titre"];
-	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", [dossier objectForKey:@"type"], [dossier objectForKey:@"sousType"]];
+	NSString *dossierTitre;
+	NSString *dossierType;
+	NSString *dossierSousType;
+	NSString *dossierActionDemandee;
+	NSDate *dossierDate = nil;
+	bool dossierPossibleSignature;
+	bool dossierPossibleArchive;
 	
-	if ([[[dossier objectForKey:@"actions"] objectForKey:@"sign"] boolValue] || [[[dossier objectForKey:@"actions"] objectForKey:@"archive"] boolValue]) {
-		//actionName = API_ACTION_NAME_FOR_ACTION([dossier objectForKey:@"actionDemandee"]);
+	if (isLoaded && isVersion2) {
+		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		dossierTitre = [dossier objectForKey:@"titre"];
+		dossierType = [dossier objectForKey:@"type"];
+		dossierSousType = [dossier objectForKey:@"sousType"];
+		dossierActionDemandee = [dossier objectForKey:@"actionDemandee"];
+		dossierPossibleSignature = [[[dossier objectForKey:@"actions"] objectForKey:@"sign"] boolValue];
+		dossierPossibleArchive = [[[dossier objectForKey:@"actions"] objectForKey:@"archive"] boolValue];
 		
-		NSString *actionName = [ADLAPIHelper actionNameForAction:[dossier objectForKey:@"actionDemandee"]];
+		NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
+		if (dateLimite != nil) {
+			ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
+			//[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
+			dossierDate = [formatter dateFromString:dateLimite];
+		}
+	}
+	else {
+		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		dossierTitre = dossier.title;
+		dossierType = dossier.type;
+		dossierSousType = dossier.sousType;
+		dossierActionDemandee = dossier.actionDemandee;
+		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
+		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.dateEmission.longLongValue];
+	}
+	
+	// Adapter
+
+	cell.dossierTitleLabel.text = dossierTitre;
+	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", dossierType, dossierSousType];
+	
+	if (dossierPossibleSignature || dossierPossibleArchive) {
+		NSString *actionName = [ADLAPIHelper actionNameForAction:dossierActionDemandee];
 		cell.validateButton.hidden = NO;
 		[cell.validateButton setTitle:actionName forState:UIControlStateNormal];
 	}
@@ -338,27 +368,30 @@
 	}
 	
 	
-	NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
-	if (dateLimite != nil) {
-		ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
-		//[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
-		NSDate *dueDate = [formatter dateFromString:dateLimite];
+	if (dossierDate != nil) {
 		
 		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
 		[outputFormatter setDateStyle:NSDateFormatterShortStyle];
 		[outputFormatter setTimeStyle:NSDateFormatterNoStyle];
 		//[outputFormatter setDateFormat:@"dd MMM"];
 		
-		NSString *fdate = [outputFormatter stringFromDate:dueDate];
+		NSString *fdate = [outputFormatter stringFromDate:dossierDate];
 		cell.retardBadge.badgeText = fdate;
 		[cell.retardBadge autoBadgeSizeWithString: fdate];
 		[cell.retardBadge setHidden:NO];
-		
 	}
 	else {
 		[cell.retardBadge setHidden:YES];
 	}
-	cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
+	
+	if (isLoaded && isVersion2) {
+		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
+	}
+	else {
+		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
+	}
 	
 	return cell;
 }
@@ -425,7 +458,7 @@
 		}
 		else {
 			for (ADLResponseDossier *dossier in dossiers)
-				if (dossier.locked)
+				if (dossier && dossier.locked)
 					[lockedDossiers addObject:dossier];
 		}
 		
@@ -446,7 +479,7 @@
 	self.selectedDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
 	
 	[((UITableView*)[self view]) reloadData];
-	
+
 	HIDE_HUD
 }
 
@@ -476,7 +509,7 @@
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
 	}
 	else {
-		((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = [self.selectedDossiersArray valueForKey:@"dossierRef"];
+		((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = nil; // Adrien[self.selectedDossiersArray valueForKey:@"dossierRef"];
 		((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;
 	}
 }
@@ -509,31 +542,38 @@
 
 
 -(void) cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath {
-	[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:NO];
+
+	// v2/v3 compatibility
 	
-	[cell.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	
-	//if (!self.isInBatchMode) {
-	
+	bool isLoaded = ((sizeof self.filteredDossiersArray) > 0) || ((sizeof self.dossiersArray) > 0);
+	bool isFilteredVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
+	bool isDossierVersion2 = isLoaded && [self.dossiersArray[0] isKindOfClass:[NSDictionary class]];
+	bool isVersion2 = isLoaded && (isFilteredVersion2 && isDossierVersion2);
+
 	NSString *dossierRef;
 	
-	if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
-		//        NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
-		dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
-		//[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionTop];
+	if (isLoaded && isVersion2) {
+		if(cell.tableView == self.searchDisplayController.searchResultsTableView)
+			dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+		else
+			dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
 	}
 	else {
-		//        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-		dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+		if(cell.tableView == self.searchDisplayController.searchResultsTableView)
+			dossierRef = ((ADLResponseDossier *)[self.filteredDossiersArray objectAtIndex:indexPath.row]).identifier;
+		else
+			dossierRef = ((ADLResponseDossier *) [self.dossiersArray objectAtIndex:indexPath.row]).identifier;
 	}
+	
+	//
+	
+	[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:NO];
+	[cell.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	[cell setSelected:YES animated:NO];
 	
 	[[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
-	//}
-	
-	
 }
 
 
