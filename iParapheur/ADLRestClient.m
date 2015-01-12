@@ -1,10 +1,3 @@
-//
-//  ADLRestClient.m
-//  iParapheur
-//
-//  Created by Adrien Bricchi on 09/01/2015.
-//
-//
 
 #import "ADLRestClient.h"
 
@@ -34,6 +27,24 @@
     
     [_restClientApi3 getBureaux:^(NSArray *bureaux) { success(bureaux); }
                         failure:^(NSError *error) { failure(error); }];
+}
+
+
+-(void)getDossiers:(NSString*)bureau
+			  page:(int)page
+			  size:(int)size
+		   success:(void (^)(NSArray *))success
+		   failure:(void (^)(NSError *))failure {
+	
+	NSString *prefixToRemove = @"workspace://SpacesStore/";
+	if ([bureau hasPrefix:prefixToRemove])
+		bureau = [bureau substringFromIndex:prefixToRemove.length];
+	
+	[_restClientApi3 getDossiers:bureau
+							page:page
+							size:size
+						 success:^(NSArray *bureaux) { success(bureaux); }
+						 failure:^(NSError *error) { failure(error); }];
 }
 
 

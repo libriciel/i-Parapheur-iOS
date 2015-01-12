@@ -1,10 +1,3 @@
-//
-//  ADLResponseGetBureaux.h
-//  iParapheur
-//
-//  Created by Adrien Bricchi on 09/01/2015.
-//
-//
 
 #import <Foundation/Foundation.h>
 

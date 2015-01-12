@@ -1,10 +1,3 @@
-//
-//  ADLRestClientApi3.h
-//  iParapheur
-//
-//  Created by Adrien Bricchi on 09/01/2015.
-//
-//
 
 #import <Foundation/Foundation.h>
 
@@ -20,5 +13,11 @@
 - (void)getBureaux:(void (^)(NSArray *bureaux))success
            failure:(void (^)(NSError *error))failure;
 
+
+-(void)getDossiers:(NSString*)bureau
+			  page:(int)page
+			  size:(int)size
+		   success:(void (^)(NSArray *))success
+		   failure:(void (^)(NSError *))failure;
 
 @end

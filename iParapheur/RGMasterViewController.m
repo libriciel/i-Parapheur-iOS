@@ -174,6 +174,7 @@
 	[self.refreshControl beginRefreshing];
 	//ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 	
+	// TODO : Adrien, link to switch v2/v3
 	//API_GETBUREAUX();
 	
 	/*if (displayHUD == NO) {
