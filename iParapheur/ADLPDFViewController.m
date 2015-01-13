@@ -182,8 +182,8 @@
 	SHOW_HUD
 	
 	// Adrien TODO : add switch v1/v2
-	// API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
 	
+	// API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
 	[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 					dossier:dossierRef
 					success:^(NSArray *result) {
@@ -193,10 +193,18 @@
 						NSLog(@"getBureau fail : %@", error.localizedDescription);
 					}];
 	
-	API_GETCIRCUIT(dossierRef)
+	//API_GETCIRCUIT(dossierRef)
+	[_restClient getCircuit:dossierRef
+					success:^(NSArray *result) {
+						NSLog(@"Adrien getCircuit ok : %@", result);
+						//self.circuit = [answer objectForKey:@"circuit"];
+						API_GETANNOTATIONS(_dossierRef);
+					}
+					failure:^(NSError *error) {
+						NSLog(@"Adrien getCircuit fail : %@", error.localizedDescription);
+					}];
 	
 	[[self navigationController] popToRootViewControllerAnimated:YES];
-	
 }
 
 
@@ -221,7 +229,6 @@
 	
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	
 	/* Si le document n'a pas de visuelPdf on suppose que le document est en PDF */
 	if ([document objectForKey:@"visuelPdfUrl"] != nil) {
 		[requester downloadDocumentAt:[document objectForKey:@"visuelPdfUrl"] delegate:self];
@@ -231,7 +238,9 @@
 	}
 }
 
-
+/**
+ GetDossier response on API v3.
+ */
 -(void)getDossierDidEndWithRequestAnswer:(ADLResponseDossier *)dossier {
 
 	[self displayDocumentAt: 0];
@@ -266,7 +275,9 @@
 	SHOW_HUD
 }
 
-
+/**
+ Responses for API v2 requests.
+ */
 -(void)didEndWithRequestAnswer:(NSDictionary*)answer {
 	NSString *s = [answer objectForKey:@"_req"];
 	HIDE_HUD
@@ -305,7 +316,6 @@
 		}
 		
 		SHOW_HUD
-		
 	}
 	else if ([s isEqualToString:@"getSignInfo"]) {
 		_signatureFormat = [[[answer objectForKey:_dossierRef] objectForKey:@"format"] copy];
@@ -321,9 +331,7 @@
 		
 	}
 	else if ([s isEqualToString:@"addAnnotation"]) {
-		
 		API_GETANNOTATIONS(_dossierRef);
-		
 	}
 	else if ([s isEqual:GETCIRCUIT_API]) {
 		self.circuit = [answer objectForKey:@"circuit"];
@@ -356,18 +364,12 @@
 	file = [NSFileHandle fileHandleForWritingAtPath: filePath];
 	[file writeData:[document documentData]];
 	
-	
 	ReaderDocument *readerDocument = [[ReaderDocument alloc] initWithFilePath:filePath password:nil];
-	
-	
 	
 	_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:readerDocument];
 	
 	[_readerViewController setDataSource:self];
-	
-	
 	[_readerViewController setAnnotationsEnabled:_isDocumentPrincipal];
-	
 	
 	_readerViewController.delegate = self;
 	_readerViewController.view.frame = [[self view] frame];
@@ -391,10 +393,10 @@
 						  @"dossier",
 						  nil];
 	
+	// TODO Adrien
 	[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
 	
 	SHOW_HUD
-	
 }
 
 
@@ -497,12 +499,12 @@
 	int i = 0;
 	for (NSDictionary *etape in _annotations) {
 		NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
-		// A changer avec nouvelle API..
+
+		// TODO Adrien : A changer avec nouvelle API..
 		if (self.circuit) {
 			for (NSDictionary *annot in annotationsAtPageForEtape) {
 				NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
 				if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
-					
 					[modifiedAnnot setObject:[NSNumber numberWithBool:NO] forKey:@"editable"];
 				}
 				else {
@@ -511,9 +513,7 @@
 				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
 			}
 		}
-		/*if (annotationsAtPageForEtape != nil && [annotationsAtPageForEtape count] > 0) {
-		 [annotsAtPage addObjectsFromArray:annotationsAtPageForEtape];
-		 }*/
+
 		i ++;
 	}
 	

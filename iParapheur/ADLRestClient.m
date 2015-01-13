@@ -64,4 +64,14 @@
 }
 
 
+-(void)getCircuit:(NSString*)dossier
+		  success:(void (^)(NSArray *))success
+		  failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 getCircuit:dossier
+						success:^(NSArray *dossiers) { success(dossiers); }
+						failure:^(NSError *error) { failure(error); }];
+}
+
+
 @end

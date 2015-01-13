@@ -44,7 +44,9 @@ static ADLRequester *sharedRequester = nil;
 }
 
 
--(void) downloadDocumentAt:(NSString*)path delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+-(void) downloadDocumentAt:(NSString*)path
+				  delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+	
     [_lockDoc lock];
     
     // clear download queue.
@@ -53,7 +55,9 @@ static ADLRequester *sharedRequester = nil;
     [downloadQueue waitUntilAllOperationsAreFinished];
 
     ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-    ADLAPIOperation *downloadOperation = [[ADLAPIOperation alloc] initWithDocumentPath:path andCollectivityDef:def delegate:delegate];
+    ADLAPIOperation *downloadOperation = [[ADLAPIOperation alloc] initWithDocumentPath:path
+																	andCollectivityDef:def
+																			  delegate:delegate];
     [downloadQueue addOperation:downloadOperation];
     //[def release];
     [_lockDoc unlock];
@@ -64,7 +68,9 @@ static ADLRequester *sharedRequester = nil;
     [downloadQueue cancelAllOperations];
 
     ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-    ADLAPIOperation *downloadOperation = [[ADLAPIOperation alloc] initWithDocumentPath:path andCollectivityDef:def delegate:nil];
+    ADLAPIOperation *downloadOperation = [[ADLAPIOperation alloc] initWithDocumentPath:path
+																	andCollectivityDef:def
+																			  delegate:nil];
     [downloadQueue addOperation:downloadOperation];
     
     [downloadQueue waitUntilAllOperationsAreFinished];
@@ -75,14 +81,20 @@ static ADLRequester *sharedRequester = nil;
 }
 
 
--(void) request:(NSString*)request andArgs:(NSDictionary*)args delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+-(void) request:(NSString*)request
+		andArgs:(NSDictionary*)args
+	   delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+	
     [_lockApi lock];
     
     NSLog(@"%@", request);
     NSLog(@"%@", args);
     
     ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-    ADLAPIOperation *apiRequestOperation = [[ADLAPIOperation alloc] initWithRequest:request withArgs:args andCollectivityDef:def delegate:delegate];
+    ADLAPIOperation *apiRequestOperation = [[ADLAPIOperation alloc] initWithRequest:request
+																		   withArgs:args
+																 andCollectivityDef:def
+																		   delegate:delegate];
 
     [apiQueue addOperation:apiRequestOperation];
 
@@ -90,17 +102,20 @@ static ADLRequester *sharedRequester = nil;
 }
 
 
--(void) request:(NSString*)request delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+-(void) request:(NSString*)request
+	   delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
+	
     [_lockApi lock];
     
     NSLog(@"%@", request);
     
     ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-    ADLAPIOperation *apiRequestOperation = [[ADLAPIOperation alloc] initWithRequest:request collectivityDef:def delegate:delegate];
+    ADLAPIOperation *apiRequestOperation = [[ADLAPIOperation alloc] initWithRequest:request
+																	collectivityDef:def
+																		   delegate:delegate];
     
     [apiQueue addOperation:apiRequestOperation];
-    
-    
+	
     [_lockApi unlock];
 }
 

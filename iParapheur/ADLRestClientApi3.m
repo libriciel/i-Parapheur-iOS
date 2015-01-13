@@ -6,6 +6,7 @@
 #import "ADLResponseBureau.h"
 #import "ADLResponseDossiers.h"
 #import "ADLResponseDossier.h"
+#import "ADLResponseCircuit.h"
 
 @implementation ADLRestClientApi3
 
@@ -32,12 +33,13 @@
 	[self addApiBureauxMappingRules:objectManager];
 	[self addApiDossiersMappingRules:objectManager];
 	[self addApiDossierMappingRules:objectManager];
+	[self addApiCircuitMappingRules:objectManager];
 	
 	return self;
 }
 
 
-#pragma mark Level
+#pragma mark getApiLevel
 
 
 -(void)addApiLevelMappingRules:(RKObjectManager *)objectManager {
@@ -70,7 +72,7 @@
 }
 
 
-#pragma mark Bureaux
+#pragma mark getBureaux
 
 
 -(void)addApiBureauxMappingRules:(RKObjectManager *)objectManager {
@@ -121,7 +123,7 @@
 }
 
 
-#pragma mark Dossiers
+#pragma mark getDossiers
 
 
 -(void)addApiDossiersMappingRules:(RKObjectManager *)objectManager {
@@ -190,7 +192,7 @@
 }
 
 
-#pragma mark Dossier
+#pragma mark getDossier
 
 
 -(void)addApiDossierMappingRules:(RKObjectManager *)objectManager {
@@ -237,10 +239,12 @@
 		  dossier:(NSString*)dossier
 		  success:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure {
-
-	[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_route"
-																		 pathPattern:@"/parapheur/dossiers/:identifier"
-																			  method:RKRequestMethodGET]];
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"dossier_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier"
+																				  method:RKRequestMethodGET]];
+	}
 	
 	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
 	responseDossier.identifier = dossier;
@@ -258,5 +262,52 @@
 														   }];
 }
 
+
+#pragma mark getCircuit
+
+
+-(void)addApiCircuitMappingRules:(RKObjectManager *) objectManager {
+	
+	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseCircuit class]];
+	[mapping addAttributeMappingsFromDictionary:@{@"etapes":@"etapes",
+												  @"annotPriv":@"annotPriv",
+												  @"isDigitalSignatureMandatory":@"isDigitalSignatureMandatory",
+												  @"hasSelectionScript":@"hasSelectionScript",
+												  @"sigFormat":@"sigFormat"}];
+	
+	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
+																							method:RKRequestMethodGET
+																					   pathPattern:@"/parapheur/dossiers/:identifier/circuit"
+																						   keyPath:@"circuit"
+																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
+	
+	[objectManager addResponseDescriptor:responseDescriptor];
+}
+
+
+-(void)getCircuit:(NSString*)dossier
+		  success:(void (^)(NSArray *))success
+		  failure:(void (^)(NSError *))failure {
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"circuit_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"circuit_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/circuit"
+																				  method:RKRequestMethodGET]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossier;
+	
+	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"circuit_route"
+															object:responseDossier
+														parameters:nil
+														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+															   //success(mappingResult.array);
+															   NSLog(@"Adrien circuit ok");
+														   }
+														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
+															   failure(error);
+														   }];
+}
 
 @end
