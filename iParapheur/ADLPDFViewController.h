@@ -45,6 +45,7 @@
 #import "ADLDrawingView.h"
 #import "ADLAPIHelper.h"
 #import "ADLRestClient.h"
+#import "ADLResponseDossier.h"
 
 
 @interface ADLPDFViewController : UIViewController
@@ -59,7 +60,7 @@
 @property (nonatomic, strong) ADLRestClient *restClient;
 
 @property (strong, nonatomic) id detailItem;
-@property (strong, nonatomic) NSDictionary *dossier;
+@property (strong, nonatomic) NSDictionary *document;
 @property (strong, nonatomic) NSString *dossierRef;
 
 @property (strong, nonatomic) ReaderViewController* readerViewController;

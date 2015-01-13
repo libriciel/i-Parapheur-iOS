@@ -10,6 +10,9 @@
 - (id)init;
 
 
+-(NSString *)getDownloadUrl:(NSString *)dossierId;
+	
+
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure;
 

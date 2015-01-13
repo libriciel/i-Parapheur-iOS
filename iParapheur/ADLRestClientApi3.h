@@ -3,14 +3,18 @@
 
 @interface ADLRestClientApi3 : NSObject
 
-- (id)init;
+
+-(id)init;
 
 
-- (void)getApiLevel:(void (^)(NSNumber *versionNumber))success
+-(NSString *)getDownloadUrl:(NSString *)dossierId;
+
+
+-(void)getApiLevel:(void (^)(NSNumber *versionNumber))success
             failure:(void (^)(NSError *error))failure;
 
 
-- (void)getBureaux:(void (^)(NSArray *bureaux))success
+-(void)getBureaux:(void (^)(NSArray *bureaux))success
            failure:(void (^)(NSError *error))failure;
 
 

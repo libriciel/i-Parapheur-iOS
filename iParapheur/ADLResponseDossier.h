@@ -20,7 +20,7 @@
 @property (nonatomic) bool isRead;
 @property (nonatomic, strong) NSString *actionDemandee;
 @property (nonatomic, strong) NSString *status;
-@property (nonatomic, strong) NSDictionary *documents;
+@property (nonatomic, strong) NSArray *documents;
 @property (nonatomic, strong) NSString *identifier;
 @property (nonatomic) bool isSignPapier;
 @property (nonatomic, strong) NSNumber *dateLimite;

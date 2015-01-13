@@ -11,7 +11,7 @@
 @implementation ADLRestClientApi3
 
 
--(id) init {
+-(id)init {
 	
 	// Retrieve infos from settings
 	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
@@ -36,6 +36,16 @@
 	[self addApiCircuitMappingRules:objectManager];
 	
 	return self;
+}
+
+
+-(NSString *)getDownloadUrl:(NSString *)dossierId {
+	
+	// Retrieve infos from settings
+	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
+	NSString *url = [NSString stringWithFormat:@"https://m.%@", urlSettings];
+	
+	return [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content;ph:visuel-pdf", dossierId];
 }
 
 

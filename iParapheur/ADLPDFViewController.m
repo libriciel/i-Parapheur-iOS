@@ -187,6 +187,7 @@
 	[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 					dossier:dossierRef
 					success:^(NSArray *result) {
+						HIDE_HUD
 						[self getDossierDidEndWithRequestAnswer:result[0]];
 					}
 					failure:^(NSError *error) {
@@ -196,6 +197,7 @@
 	//API_GETCIRCUIT(dossierRef)
 	[_restClient getCircuit:dossierRef
 					success:^(NSArray *result) {
+						HIDE_HUD
 						NSLog(@"Adrien getCircuit ok : %@", result);
 						//self.circuit = [answer objectForKey:@"circuit"];
 						API_GETANNOTATIONS(_dossierRef);
@@ -221,20 +223,31 @@
 
 
 -(void) displayDocumentAt: (NSInteger) index {
-	NSDictionary *document = [[_dossier objectForKey:@"documents" ] objectAtIndex:index];
 	
 	SHOW_HUD
 	
-	_isDocumentPrincipal = index == 0;
-	
+	_isDocumentPrincipal = (index == 0);
 	ADLRequester *requester = [ADLRequester sharedRequester];
+		
+	bool isVersion2 = [_document objectForKey:@"visuelPdfUrl"] != nil;
 	
-	/* Si le document n'a pas de visuelPdf on suppose que le document est en PDF */
-	if ([document objectForKey:@"visuelPdfUrl"] != nil) {
-		[requester downloadDocumentAt:[document objectForKey:@"visuelPdfUrl"] delegate:self];
+	if (_document && isVersion2) {
+		NSDictionary *document = [[_document objectForKey:@"documents" ] objectAtIndex:index];
+
+		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
+		if ([document objectForKey:@"visuelPdfUrl"] != nil) {
+			[requester downloadDocumentAt:[document objectForKey:@"visuelPdfUrl"]
+								 delegate:self];
+		}
+		else if ([document objectForKey:@"downloadUrl"] != nil) {
+			[requester downloadDocumentAt:[document objectForKey:@"downloadUrl"]
+								 delegate:self];
+		}
 	}
-	else if ([document objectForKey:@"downloadUrl"] != nil) {
-		[requester downloadDocumentAt:[document objectForKey:@"downloadUrl"] delegate:self];
+	else if (_document) {
+		NSString *documentId = [_document objectForKey:@"id"];
+		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId]
+							 delegate:self];
 	}
 }
 
@@ -242,14 +255,25 @@
  GetDossier response on API v3.
  */
 -(void)getDossierDidEndWithRequestAnswer:(ADLResponseDossier *)dossier {
-
+	
+	// Determine the first pdf file to display
+	
+	for (NSDictionary *dossierDictionnary in dossier.documents) {
+		if ([dossierDictionnary valueForKey:@"visuelPdf"]) {
+			_document = dossierDictionnary;
+			break;
+		}
+	}
+	
+	//
+	
 	[self displayDocumentAt: 0];
 	self.navigationController.navigationBar.topItem.title = dossier.title;
-
+	
 	// Refresh buttons
 	
 	NSArray *buttons;
-
+	
 	if (dossier.documents.count > 1)
 		buttons = [[NSArray alloc] initWithObjects:_actionButton, _documentsButton, _detailsButton, nil];
 	else
@@ -262,9 +286,9 @@
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			//Adrien TODO : request
-//			NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
-//			ADLRequester *requester = [ADLRequester sharedRequester];
-//			[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+			//			NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
+			//			ADLRequester *requester = [ADLRequester sharedRequester];
+			//			[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
 		}
 		else {
 			_visaEnabled = YES;
@@ -283,13 +307,13 @@
 	HIDE_HUD
 	
 	if ([s isEqual:GETDOSSIER_API]) {
-		_dossier = [answer copy];
+		_document = [answer copy];
 		[self displayDocumentAt: 0];
 		
-		self.navigationController.navigationBar.topItem.title = [_dossier objectForKey:@"titre"];
+		self.navigationController.navigationBar.topItem.title = [_document objectForKey:@"titre"];
 		
 		NSArray *buttons;
-		if ([[_dossier objectForKey:@"documents"] count] > 1) {
+		if ([[_document objectForKey:@"documents"] count] > 1) {
 			buttons = [[NSArray alloc] initWithObjects:_actionButton, _documentsButton, _detailsButton, nil];
 		}
 		else {
@@ -299,12 +323,12 @@
 		//self.navigationItem.leftBarButtonItem = _documentsButton;
 		self.navigationItem.rightBarButtonItems = buttons;
 		
-		NSString *documentPrincipal = [[[_dossier objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
+		NSString *documentPrincipal = [[[_document objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
 		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
-		NSLog(@"%@", [_dossier objectForKey:@"actions"]);
+		NSLog(@"%@", [_document objectForKey:@"actions"]);
 		
-		if ([[[_dossier objectForKey:@"actions"] objectForKey:@"sign"] isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-			if ([[_dossier objectForKey:@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
+		if ([[[_document objectForKey:@"actions"] objectForKey:@"sign"] isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+			if ([[_document objectForKey:@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
 				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
 				ADLRequester *requester = [ADLRequester sharedRequester];
 				[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
@@ -394,9 +418,9 @@
 						  nil];
 	
 	// TODO Adrien
+	// SHOW_HUD
 	[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
 	
-	SHOW_HUD
 }
 
 
@@ -436,11 +460,11 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
-		[((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_dossier];
+		[((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_document];
 	}
 	
 	if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
-		[((RGDocumentsView*)[segue destinationViewController]) setDocuments:[_dossier objectForKey:@"documents"]];
+		[((RGDocumentsView*)[segue destinationViewController]) setDocuments:[_document objectForKey:@"documents"]];
 		if (_documentsPopover != nil) {
 			[_documentsPopover dismissPopoverAnimated:NO];
 		}
@@ -456,7 +480,7 @@
 		}
 		
 		_actionPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
-		((ADLActionViewController*)[_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:[ADLAPIHelper actionsForDossier:self.dossier]];
+		((ADLActionViewController*)[_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:[ADLAPIHelper actionsForDossier:self.document]];
 		// do something usefull there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
 			[((ADLActionViewController*)[_actionPopover contentViewController]) setSignatureEnabled:YES];
@@ -499,7 +523,7 @@
 	int i = 0;
 	for (NSDictionary *etape in _annotations) {
 		NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
-
+		
 		// TODO Adrien : A changer avec nouvelle API..
 		if (self.circuit) {
 			for (NSDictionary *annot in annotationsAtPageForEtape) {
@@ -513,7 +537,7 @@
 				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
 			}
 		}
-
+		
 		i ++;
 	}
 	

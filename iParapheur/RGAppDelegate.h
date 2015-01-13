@@ -46,11 +46,9 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) IBOutlet UISplitViewController *splitViewController;
-
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
 @property (readonly, strong, nonatomic) ADLKeyStore *keyStore;
 
 - (NSMutableArray*) importableP12Stores;
