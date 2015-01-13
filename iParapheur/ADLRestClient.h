@@ -39,4 +39,8 @@
 		  failure:(void (^)(NSError *))failure;
 
 
+-(void)getAnnotations:(NSString*)dossier
+			  success:(void (^)(NSArray *))success
+			  failure:(void (^)(NSError *))failure;
+
 @end

@@ -7,6 +7,7 @@
 #import "ADLResponseDossiers.h"
 #import "ADLResponseDossier.h"
 #import "ADLResponseCircuit.h"
+#import "ADLResponseAnnotations.h"
 
 @implementation ADLRestClientApi3
 
@@ -34,6 +35,7 @@
 	[self addApiDossiersMappingRules:objectManager];
 	[self addApiDossierMappingRules:objectManager];
 	[self addApiCircuitMappingRules:objectManager];
+	[self addApiAnnotationsMappingRules:objectManager];
 	
 	return self;
 }
@@ -319,5 +321,54 @@
 															   failure(error);
 														   }];
 }
+
+
+#pragma mark getAnnotations
+
+
+-(void)addApiAnnotationsMappingRules:(RKObjectManager *) objectManager {
+	
+	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseAnnotations class]];
+	[mapping addAttributeMappingsFromDictionary:@{@"etapes":@"etapes",
+												  @"annotPriv":@"annotPriv",
+												  @"isDigitalSignatureMandatory":@"isDigitalSignatureMandatory",
+												  @"hasSelectionScript":@"hasSelectionScript",
+												  @"sigFormat":@"sigFormat"}];
+	
+	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
+																							method:RKRequestMethodGET
+																					   pathPattern:@"/parapheur/dossiers/:identifier/annotations"
+																						   keyPath:@"circuit"
+																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
+	
+	[objectManager addResponseDescriptor:responseDescriptor];
+}
+
+
+-(void)getAnnotations:(NSString*)dossier
+			  success:(void (^)(NSArray *))success
+			  failure:(void (^)(NSError *))failure {
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"annotations_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"annotations_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/annotations"
+																				  method:RKRequestMethodGET]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossier;
+	
+	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"annotations_route"
+															object:responseDossier
+														parameters:nil
+														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+															   //success(mappingResult.array);
+															   NSLog(@"Adrien circuit ok");
+														   }
+														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
+															   failure(error);
+														   }];
+}
+
 
 @end

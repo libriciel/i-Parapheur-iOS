@@ -383,9 +383,11 @@
 	
 	NSString *docPath = [documentsPaths objectAtIndex:0];
 	NSString *filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"myfile.bin"];
-	[fileManager createFileAtPath:filePath contents:nil attributes:nil];
+	[fileManager createFileAtPath:filePath
+						 contents:nil
+					   attributes:nil];
 	
-	file = [NSFileHandle fileHandleForWritingAtPath: filePath];
+	file = [NSFileHandle fileHandleForWritingAtPath:filePath];
 	[file writeData:[document documentData]];
 	
 	ReaderDocument *readerDocument = [[ReaderDocument alloc] initWithFilePath:filePath password:nil];
@@ -419,8 +421,16 @@
 	
 	// TODO Adrien
 	// SHOW_HUD
-	[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
+	//[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
 	
+	NSLog(@"Adrien ^^^ %@", _dossierRef);
+	
+	[_restClient getAnnotations:_dossierRef
+						success:^(NSArray *annotations) {
+							NSLog(@"Adrien annotations success");
+						} failure:^(NSError *error) {
+							NSLog(@"Adrien annotations error");
+						}];
 }
 
 
@@ -529,10 +539,12 @@
 			for (NSDictionary *annot in annotationsAtPageForEtape) {
 				NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
 				if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
-					[modifiedAnnot setObject:[NSNumber numberWithBool:NO] forKey:@"editable"];
+					[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
+									  forKey:@"editable"];
 				}
 				else {
-					[modifiedAnnot setObject:[NSNumber numberWithBool:YES] forKey:@"editable"];
+					[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
+									  forKey:@"editable"];
 				}
 				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
 			}
@@ -606,8 +618,13 @@
 	   forPopoverController:(UIPopoverController *)popoverController {
 	
 	barButtonItem.title = NSLocalizedString(@"Dossiers", @"Dossiers");
-	barButtonItem.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
-	[self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+	barButtonItem.tintColor = [UIColor colorWithRed:0.0f
+											  green:0.375f
+											   blue:0.75f
+											  alpha:1.0f];
+	
+	[self.navigationItem setLeftBarButtonItem:barButtonItem
+									 animated:YES];
 	self.masterPopoverController = popoverController;
 }
 
@@ -617,7 +634,9 @@
   invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
 	
 	// Called when the view is shown again in the split view, invalidating the button and popover controller.
-	[self.navigationItem setLeftBarButtonItem:nil animated:YES];
+	[self.navigationItem setLeftBarButtonItem:nil
+									 animated:YES];
+	
 	self.masterPopoverController = nil;
 }
 

@@ -79,4 +79,12 @@
 }
 
 
+-(void)getAnnotations:(NSString*)dossier
+			  success:(void (^)(NSArray *))success
+			  failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 getAnnotations:dossier
+							success:^(NSArray *annotations) { success(annotations); }
+							failure:^(NSError *error) { failure(error); }];
+}
 @end

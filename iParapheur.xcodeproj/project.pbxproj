@@ -139,6 +139,7 @@
 		B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33EF1547333D006F7BF3 /* ReaderThumbView.m */; };
 		B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */; };
 		B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E11547333D006F7BF3 /* CGPDFDocument.m */; };
+		C51394121A65834000F46633 /* ADLResponseAnnotations.m in Sources */ = {isa = PBXBuildFile; fileRef = C51394111A65834000F46633 /* ADLResponseAnnotations.m */; };
 		C5628EF81A63C37700CB884C /* ADLResponseDossiers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */; };
 		C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */; };
 		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
@@ -371,6 +372,8 @@
 		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
 		BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		C51394101A65834000F46633 /* ADLResponseAnnotations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseAnnotations.h; sourceTree = "<group>"; };
+		C51394111A65834000F46633 /* ADLResponseAnnotations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseAnnotations.m; sourceTree = "<group>"; };
 		C5628EF61A63C37700CB884C /* ADLResponseDossiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseDossiers.h; sourceTree = "<group>"; };
 		C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseDossiers.m; sourceTree = "<group>"; };
 		C5628EF91A643E8600CB884C /* ADLResponseDossier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseDossier.h; sourceTree = "<group>"; };
@@ -845,6 +848,8 @@
 				C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */,
 				C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */,
 				C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */,
+				C51394101A65834000F46633 /* ADLResponseAnnotations.h */,
+				C51394111A65834000F46633 /* ADLResponseAnnotations.m */,
 			);
 			name = ResponseModel;
 			sourceTree = "<group>";
@@ -1048,6 +1053,7 @@
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
 				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,
 				B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */,
+				C51394121A65834000F46633 /* ADLResponseAnnotations.m in Sources */,
 				B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */,
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,
