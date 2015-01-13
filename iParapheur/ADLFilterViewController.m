@@ -78,7 +78,6 @@
     [self.banetteButton setTitle:[self.banettesNames objectForKey:self.selectedBanette] forState:UIControlStateNormal];
     
     self.selectedTypes = [NSMutableArray arrayWithArray:[currentFilter objectForKey:@"types"]];
-    
     self.selectedSousTypes = [NSMutableArray arrayWithArray:[currentFilter objectForKey:@"sousTypes"]];
 
     //NSString *bureauRef = [[ADLSingletonState sharedSingletonState] bureauCourant];

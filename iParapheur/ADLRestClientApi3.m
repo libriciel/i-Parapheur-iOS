@@ -1,10 +1,10 @@
-
 #import "ADLRestClientApi3.h"
 
 #import "AFHTTPClient.h"
 #import <RestKit.h>
 #import "ADLResponseGetLevel.h"
 #import "ADLResponseBureau.h"
+#import "ADLResponseDossiers.h"
 #import "ADLResponseDossier.h"
 
 @implementation ADLRestClientApi3
@@ -31,6 +31,7 @@
 	[self addApiLevelMappingRules:objectManager];
 	[self addApiBureauxMappingRules:objectManager];
 	[self addApiDossiersMappingRules:objectManager];
+	[self addApiDossierMappingRules:objectManager];
 	
 	return self;
 }
@@ -120,12 +121,12 @@
 }
 
 
-#pragma mark Bureaux
+#pragma mark Dossiers
 
 
 -(void)addApiDossiersMappingRules:(RKObjectManager *)objectManager {
 	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseDossier class]];
+	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseDossiers class]];
 	[mapping addAttributeMappingsFromDictionary:@{@"total":@"total",
 												  @"protocol":@"protocol",
 												  @"actionDemandee":@"actionDemandee",
@@ -187,5 +188,75 @@
 												  failure(error);
 											  }];
 }
+
+
+#pragma mark Dossier
+
+
+-(void)addApiDossierMappingRules:(RKObjectManager *)objectManager {
+	
+	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseDossier class]];
+	[mapping addAttributeMappingsFromDictionary:@{@"title":@"title",
+												  @"nomTdT":@"nomTdT",
+												  @"includeAnnexes":@"includeAnnexes",
+												  @"locked":@"locked",
+												  @"readingMandatory":@"readingMandatory",
+												  @"dateEmission":@"dateEmission",
+												  @"visibility":@"visibility",
+												  @"isRead":@"isRead",
+												  @"actionDemandee":@"actionDemandee",
+												  @"status":@"status",
+												  @"documents":@"documents",
+												  @"identifier":@"id",
+												  @"isSignPapier":@"isSignPapier",
+												  @"dateLimite":@"dateLimite",
+												  @"hasRead":@"hasRead",
+												  @"isXemEnabled":@"isXemEnabled",
+												  @"actions":@"actions",
+												  @"banetteName":@"banetteName",
+												  @"type":@"type",
+												  @"canAdd":@"canAdd",
+												  @"protocole":@"protocole",
+												  @"metadatas":@"metadatas",
+												  @"xPathSignature":@"xPathSignature",
+												  @"sousType":@"sousType",
+												  @"bureauName":@"bureauName",
+												  @"isSent":@"isSent"}];
+	
+	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
+																							method:RKRequestMethodGET
+																					   pathPattern:@"/parapheur/dossiers/:identifier"
+																						   keyPath:nil
+																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
+	
+	[objectManager addResponseDescriptor:responseDescriptor];
+}
+
+
+-(void)getDossier:(NSString*)bureau
+		  dossier:(NSString*)dossier
+		  success:(void (^)(NSArray *))success
+		  failure:(void (^)(NSError *))failure {
+
+	[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_route"
+																		 pathPattern:@"/parapheur/dossiers/:identifier"
+																			  method:RKRequestMethodGET]];
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossier;
+	
+	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
+	
+	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"dossier_route"
+															object:responseDossier
+														parameters:queryParams
+														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+															   success(mappingResult.array);
+														   }
+														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
+															   failure(error);
+														   }];
+}
+
 
 @end

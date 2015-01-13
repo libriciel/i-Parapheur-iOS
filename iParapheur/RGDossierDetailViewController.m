@@ -109,8 +109,6 @@
 	
 	[self getCircuit];
 	[self showsEveryThing];
-	
-	
 }
 
 
@@ -172,7 +170,6 @@
 
 - (void) dossierSelected:(NSNotification*)notification {
 	NSString *selectedDossierRef  = [notification object];
-	
 	[self setDossierRef:selectedDossierRef];
 }
 
@@ -181,14 +178,12 @@
 	dossierRef = _dossierRef;
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef,
-						  @"dossierRef", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossierRef", nil];
 	
 	//TODO : Adrien, link to switch v2/v3
 	[requester request:GETDOSSIER_API andArgs:args delegate:self];
 
 	SHOW_HUD
-	
 }
 
 /*

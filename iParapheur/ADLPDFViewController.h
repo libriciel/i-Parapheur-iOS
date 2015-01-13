@@ -44,6 +44,8 @@
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
 #import "ADLAPIHelper.h"
+#import "ADLRestClient.h"
+
 
 @interface ADLPDFViewController : UIViewController
     <ADLParapheurWallDelegateProtocol,
@@ -54,6 +56,7 @@
     /*UICollectionViewDataSource,
     UICollectionViewDelegateFlowLayout*/>
 
+@property (nonatomic, strong) ADLRestClient *restClient;
 
 @property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) NSDictionary *dossier;

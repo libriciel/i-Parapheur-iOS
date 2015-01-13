@@ -58,7 +58,7 @@
 #import "UIColor+CustomColors.h"
 #import "ADLAPIHelper.h"
 #import "ADLRestClient.h"
-#import "ADLResponseDossier.h"
+#import "ADLResponseDossiers.h"
 
 
 @interface RGDeskViewController()
@@ -94,7 +94,10 @@
 	[self.refreshControl setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
 	[self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:kDossierActionComplete object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(refresh)
+												 name:kDossierActionComplete
+											   object:nil];
 	
 	self.searchDisplayController.searchResultsTableView.rowHeight = self.tableView.rowHeight;
 	[self.searchDisplayController.searchResultsTableView registerClass:[RGFileCell class]forCellReuseIdentifier:@"dossierCell"];
@@ -343,7 +346,7 @@
 		}
 	}
 	else {
-		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		dossierTitre = dossier.title;
 		dossierType = dossier.type;
 		dossierSousType = dossier.sousType;
@@ -389,7 +392,7 @@
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	else {
-		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	
@@ -457,7 +460,7 @@
 			}
 		}
 		else {
-			for (ADLResponseDossier *dossier in dossiers)
+			for (ADLResponseDossiers *dossier in dossiers)
 				if (dossier && dossier.locked)
 					[lockedDossiers addObject:dossier];
 		}
@@ -531,7 +534,12 @@
 			[self performSegueWithIdentifier:action sender:self];
 		}
 		@catch (NSException *exception) {
-			[[[UIAlertView alloc] initWithTitle:@"Action impossible" message:@"Vous ne pouvez pas effectuer cette action sur tablette." delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+									   delegate:nil
+							  cancelButtonTitle:@"Fermer"
+							  otherButtonTitles:nil]
+			 show];
 		}
 		@finally {}
 	}
@@ -560,9 +568,9 @@
 	}
 	else {
 		if(cell.tableView == self.searchDisplayController.searchResultsTableView)
-			dossierRef = ((ADLResponseDossier *)[self.filteredDossiersArray objectAtIndex:indexPath.row]).identifier;
+			dossierRef = ((ADLResponseDossiers *)[self.filteredDossiersArray objectAtIndex:indexPath.row]).identifier;
 		else
-			dossierRef = ((ADLResponseDossier *) [self.dossiersArray objectAtIndex:indexPath.row]).identifier;
+			dossierRef = ((ADLResponseDossiers *) [self.dossiersArray objectAtIndex:indexPath.row]).identifier;
 	}
 	
 	//

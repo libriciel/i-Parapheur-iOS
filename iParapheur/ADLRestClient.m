@@ -48,4 +48,20 @@
 }
 
 
+-(void)getDossier:(NSString*)bureau
+		  dossier:(NSString*)dossier
+		  success:(void (^)(NSArray *))success
+		  failure:(void (^)(NSError *))failure {
+	
+	NSString *prefixToRemove = @"workspace://SpacesStore/";
+	if ([bureau hasPrefix:prefixToRemove])
+		bureau = [bureau substringFromIndex:prefixToRemove.length];
+	
+	[_restClientApi3 getDossier:bureau
+						dossier:dossier
+						success:^(NSArray *dossiers) { success(dossiers); }
+						failure:^(NSError *error) { failure(error); }];
+}
+
+
 @end

@@ -25,4 +25,10 @@
 		   failure:(void (^)(NSError *))failure;
 
 
+-(void)getDossier:(NSString*)bureau
+		  dossier:(NSString*)dossier
+		  success:(void (^)(NSArray *))success
+		  failure:(void (^)(NSError *))failure;
+
+
 @end
