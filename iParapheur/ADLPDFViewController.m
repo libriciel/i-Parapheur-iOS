@@ -56,7 +56,10 @@
 #import "ADLActionViewController.h"
 #import "UIColor+CustomColors.h"
 #import "UIColor+CustomColors.h"
+#import "ADLResponseCircuit.h"
 #import "ADLResponseDossier.h"
+#import "ADLResponseAnnotation.h"
+
 
 #define kActionButtonsWidth 300.0f
 #define kActionButtonsHeight 100.0f
@@ -73,7 +76,7 @@
 #pragma mark - Managing the detail item
 
 
-- (void)setDetailItem:(id)newDetailItem {
+-(void)setDetailItem:(id)newDetailItem {
 	if (_detailItem != newDetailItem) {
 		_detailItem = newDetailItem;
 		
@@ -87,13 +90,13 @@
 }
 
 
-- (void)configureView {
+-(void)configureView {
 	// Update the user interface for the detail item.hide
 	
 }
 
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
 	[super viewDidLoad];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
@@ -132,7 +135,7 @@
 }
 
 
-- (void)didReceiveMemoryWarning {
+-(void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
 }
@@ -141,7 +144,7 @@
 #pragma mark - Reset view state
 
 
-- (void) resetViewState {
+-(void)resetViewState {
 	for(UIView *subview in [self.view subviews]) {
 		[subview removeFromSuperview];
 	}
@@ -165,12 +168,12 @@
 #pragma mark - selector for observer
 
 
-- (void) clearDetail: (NSNotification*) notification {
+-(void)clearDetail: (NSNotification*) notification {
 	[self resetViewState];
 }
 
 
-- (void) dossierSelected: (NSNotification*) notification {
+-(void)dossierSelected: (NSNotification*) notification {
 	NSString *dossierRef = [notification object];
 	_dossierRef = dossierRef;
 	
@@ -196,11 +199,11 @@
 	
 	//API_GETCIRCUIT(dossierRef)
 	[_restClient getCircuit:dossierRef
-					success:^(NSArray *result) {
+					success:^(NSArray *circuits) {
 						HIDE_HUD
-						NSLog(@"Adrien getCircuit ok : %@", result);
-						//self.circuit = [answer objectForKey:@"circuit"];
-						API_GETANNOTATIONS(_dossierRef);
+						NSLog(@"Adrien getCircuit ok : %@", circuits);
+						_circuit = circuits;
+						[self refreshAnnotations:dossierRef];
 					}
 					failure:^(NSError *error) {
 						NSLog(@"Adrien getCircuit fail : %@", error.localizedDescription);
@@ -210,7 +213,7 @@
 }
 
 
--(void) showDocumentWithIndex:(NSNotification*) notification {
+-(void)showDocumentWithIndex:(NSNotification*) notification {
 	NSNumber* docIndex = [notification object];
 	[self displayDocumentAt:[docIndex integerValue]];
 	[_documentsPopover dismissPopoverAnimated:YES];
@@ -219,40 +222,27 @@
 }
 
 
-#pragma mark - Wall delegate Implementation
+#pragma mark - Rest calls for API3
 
 
--(void) displayDocumentAt: (NSInteger) index {
+-(void)refreshAnnotations:(NSString*)dossier {
 	
-	SHOW_HUD
-	
-	_isDocumentPrincipal = (index == 0);
-	ADLRequester *requester = [ADLRequester sharedRequester];
-		
-	bool isVersion2 = [_document objectForKey:@"visuelPdfUrl"] != nil;
-	
-	if (_document && isVersion2) {
-		NSDictionary *document = [[_document objectForKey:@"documents" ] objectAtIndex:index];
-
-		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
-		if ([document objectForKey:@"visuelPdfUrl"] != nil) {
-			[requester downloadDocumentAt:[document objectForKey:@"visuelPdfUrl"]
-								 delegate:self];
-		}
-		else if ([document objectForKey:@"downloadUrl"] != nil) {
-			[requester downloadDocumentAt:[document objectForKey:@"downloadUrl"]
-								 delegate:self];
-		}
-	}
-	else if (_document) {
-		NSString *documentId = [_document objectForKey:@"id"];
-		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId]
-							 delegate:self];
-	}
+	[_restClient getAnnotations:_dossierRef
+						success:^(NSArray *annotations) {
+							NSLog(@"Adrien annotations success : %d", annotations.count);
+							_annotations = annotations;
+							
+							for (NSNumber *contentViewIdx in [_readerViewController contentViews])
+								[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
+							
+						} failure:^(NSError *error) {
+							NSLog(@"Adrien annotations error");
+						}];
 }
 
+
 /**
- GetDossier response on API v3.
+ * GetDossier response on API v3.
  */
 -(void)getDossierDidEndWithRequestAnswer:(ADLResponseDossier *)dossier {
 	
@@ -299,8 +289,40 @@
 	SHOW_HUD
 }
 
+#pragma mark - Wall delegate Implementation
+
+
+-(void)displayDocumentAt: (NSInteger) index {
+	
+	SHOW_HUD
+	
+	_isDocumentPrincipal = (index == 0);
+	ADLRequester *requester = [ADLRequester sharedRequester];
+	
+	bool isVersion2 = [_document objectForKey:@"visuelPdfUrl"] != nil;
+	
+	if (_document && isVersion2) {
+		NSDictionary *document = [[_document objectForKey:@"documents" ] objectAtIndex:index];
+		
+		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
+		if ([document objectForKey:@"visuelPdfUrl"] != nil) {
+			[requester downloadDocumentAt:[document objectForKey:@"visuelPdfUrl"]
+								 delegate:self];
+		}
+		else if ([document objectForKey:@"downloadUrl"] != nil) {
+			[requester downloadDocumentAt:[document objectForKey:@"downloadUrl"]
+								 delegate:self];
+		}
+	}
+	else if (_document) {
+		NSString *documentId = [_document objectForKey:@"id"];
+		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId]
+							 delegate:self];
+	}
+}
+
 /**
- Responses for API v2 requests.
+ * Responses for API v2 requests.
  */
 -(void)didEndWithRequestAnswer:(NSDictionary*)answer {
 	NSString *s = [answer objectForKey:@"_req"];
@@ -313,12 +335,11 @@
 		self.navigationController.navigationBar.topItem.title = [_document objectForKey:@"titre"];
 		
 		NSArray *buttons;
-		if ([[_document objectForKey:@"documents"] count] > 1) {
+		
+		if ([[_document objectForKey:@"documents"] count] > 1)
 			buttons = [[NSArray alloc] initWithObjects:_actionButton, _documentsButton, _detailsButton, nil];
-		}
-		else {
+		else
 			buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
-		}
 		
 		//self.navigationItem.leftBarButtonItem = _documentsButton;
 		self.navigationItem.rightBarButtonItems = buttons;
@@ -349,10 +370,8 @@
 		
 		_annotations = annotations;
 		
-		for (NSNumber *contentViewIdx in [_readerViewController contentViews]) {
+		for (NSNumber *contentViewIdx in [_readerViewController contentViews])
 			[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
-		}
-		
 	}
 	else if ([s isEqualToString:@"addAnnotation"]) {
 		API_GETANNOTATIONS(_dossierRef);
@@ -364,17 +383,17 @@
 }
 
 
-- (void)didEndWithUnReachableNetwork {
+-(void)didEndWithUnReachableNetwork {
 	
 }
 
 
-- (void)didEndWithUnAuthorizedAccess {
+-(void)didEndWithUnAuthorizedAccess {
 	
 }
 
 
-- (void)didEndWithDocument:(ADLDocument*)document {
+-(void)didEndWithDocument:(ADLDocument*)document {
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSFileHandle *file;
@@ -419,22 +438,14 @@
 						  @"dossier",
 						  nil];
 	
-	// TODO Adrien
+	// TODO Adrien switch
 	// SHOW_HUD
 	//[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
-	
-	NSLog(@"Adrien ^^^ %@", _dossierRef);
-	
-	[_restClient getAnnotations:_dossierRef
-						success:^(NSArray *annotations) {
-							NSLog(@"Adrien annotations success");
-						} failure:^(NSError *error) {
-							NSLog(@"Adrien annotations error");
-						}];
+	[self refreshAnnotations:_dossierRef];
 }
 
 
-- (void)dismissReaderViewController:(ReaderViewController *)viewController {
+-(void)dismissReaderViewController:(ReaderViewController *)viewController {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
@@ -463,12 +474,14 @@
 }
 
 
--(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
 	[_readerViewController updateScrollViewContentViews];
 }
 
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue
+				sender:(id)sender {
+	
 	if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
 		[((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_document];
 	}
@@ -505,7 +518,7 @@
 }
 
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
+-(void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController{
 	if (_documentsPopover != nil && _documentsPopover == popoverController) {
 		_documentsPopover = nil;
 	}
@@ -515,12 +528,12 @@
 }
 
 
-- (void)dealloc {
+-(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
-- (void)viewDidUnload {
+-(void)viewDidUnload {
 	[super viewDidUnload];
 }
 
@@ -528,17 +541,46 @@
 #pragma mark - Annotations Drawing view data Source
 
 
--(NSArray*) annotationsForPage:(NSInteger)page {
+-(NSArray*)annotationsForPage:(NSInteger)page {
+	
 	NSMutableArray *annotsAtPage = [[NSMutableArray alloc] init];
-	int i = 0;
-	for (NSDictionary *etape in _annotations) {
-		NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
-		
-		// TODO Adrien : A changer avec nouvelle API..
-		if (self.circuit) {
+	
+	int i = 0; // etapeNumber
+	
+	// TODO Adrien : switch V2/V3
+
+//	for (NSDictionary *etape in _annotations) {
+//		NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
+//		
+//		if (self.circuit) {
+//			for (NSDictionary *annot in annotationsAtPageForEtape) {
+//				
+//				NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
+//				if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
+//					[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
+//									  forKey:@"editable"];
+//				}
+//				else {
+//					[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
+//									  forKey:@"editable"];
+//				}
+//				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
+//			}
+//		}
+//		
+//		i ++;
+//	}
+	
+	for (ADLResponseAnnotation *etape in _annotations) {
+		NSArray *annotationsAtPageForEtape = [etape.data objectForKey:[NSString stringWithFormat:@"%d", page]];
+
+		if (_circuit && (_circuit.count > 0)) {
+			ADLResponseCircuit *circuit = [_circuit objectAtIndex:0];
+			
 			for (NSDictionary *annot in annotationsAtPageForEtape) {
 				NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
-				if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
+				
+				if ([[((NSDictionary*)[circuit.etapes objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
 					[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
 									  forKey:@"editable"];
 				}
@@ -546,6 +588,7 @@
 					[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
 									  forKey:@"editable"];
 				}
+				
 				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
 			}
 		}
@@ -557,8 +600,8 @@
 }
 
 
--(void) updateAnnotation:(ADLAnnotation*)annotation
-				 forPage:(NSUInteger)page {
+-(void)updateAnnotation:(ADLAnnotation*)annotation
+				forPage:(NSUInteger)page {
 	
 	NSDictionary *dict = [annotation dict];
 	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -572,7 +615,7 @@
 }
 
 
--(void) removeAnnotation:(ADLAnnotation*)annotation {
+-(void)removeAnnotation:(ADLAnnotation*)annotation {
 	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
 						 [annotation uuid], @"uuid",
 						 [NSNumber numberWithUnsignedInt:10], @"page",
@@ -586,8 +629,8 @@
 }
 
 
--(void) addAnnotation:(ADLAnnotation*)annotation
-			  forPage:(NSUInteger)page {
+-(void)addAnnotation:(ADLAnnotation*)annotation
+			 forPage:(NSUInteger)page {
 	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[annotation dict]];
 	[dict setValue: [NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
@@ -612,10 +655,10 @@
 #pragma mark - Split view
 
 
-- (void)splitViewController:(UISplitViewController *)splitController
-	 willHideViewController:(UIViewController *)viewController
-		  withBarButtonItem:(UIBarButtonItem *)barButtonItem
-	   forPopoverController:(UIPopoverController *)popoverController {
+-(void)splitViewController:(UISplitViewController *)splitController
+	willHideViewController:(UIViewController *)viewController
+		 withBarButtonItem:(UIBarButtonItem *)barButtonItem
+	  forPopoverController:(UIPopoverController *)popoverController {
 	
 	barButtonItem.title = NSLocalizedString(@"Dossiers", @"Dossiers");
 	barButtonItem.tintColor = [UIColor colorWithRed:0.0f
@@ -629,9 +672,9 @@
 }
 
 
-- (void)splitViewController:(UISplitViewController *)splitController
-	 willShowViewController:(UIViewController *)viewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
+-(void)splitViewController:(UISplitViewController *)splitController
+	willShowViewController:(UIViewController *)viewController
+ invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
 	
 	// Called when the view is shown again in the split view, invalidating the button and popover controller.
 	[self.navigationItem setLeftBarButtonItem:nil

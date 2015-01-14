@@ -7,7 +7,7 @@
 #import "ADLResponseDossiers.h"
 #import "ADLResponseDossier.h"
 #import "ADLResponseCircuit.h"
-#import "ADLResponseAnnotations.h"
+#import "ADLResponseAnnotation.h"
 
 @implementation ADLRestClientApi3
 
@@ -314,8 +314,7 @@
 															object:responseDossier
 														parameters:nil
 														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-															   //success(mappingResult.array);
-															   NSLog(@"Adrien circuit ok");
+															   success(mappingResult.array);
 														   }
 														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
 															   failure(error);
@@ -328,17 +327,15 @@
 
 -(void)addApiAnnotationsMappingRules:(RKObjectManager *) objectManager {
 	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseAnnotations class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"etapes":@"etapes",
-												  @"annotPriv":@"annotPriv",
-												  @"isDigitalSignatureMandatory":@"isDigitalSignatureMandatory",
-												  @"hasSelectionScript":@"hasSelectionScript",
-												  @"sigFormat":@"sigFormat"}];
+	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseAnnotation class]];
+	mapping.assignsNilForMissingRelationships = YES;
+	[mapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath:nil
+																	  toKeyPath:@"data"]];
 	
 	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
 																							method:RKRequestMethodGET
 																					   pathPattern:@"/parapheur/dossiers/:identifier/annotations"
-																						   keyPath:@"circuit"
+																						   keyPath:nil
 																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
 	
 	[objectManager addResponseDescriptor:responseDescriptor];
@@ -362,8 +359,7 @@
 															object:responseDossier
 														parameters:nil
 														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-															   //success(mappingResult.array);
-															   NSLog(@"Adrien circuit ok");
+															   success(mappingResult.array);
 														   }
 														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
 															   failure(error);

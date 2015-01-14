@@ -12,7 +12,6 @@
 
 
 -(NSString *)getDownloadUrl:(NSString *)dossierId {
-	NSLog(@"Adrien download : %@", [_restClientApi3 getDownloadUrl:dossierId]);
 	return [_restClientApi3 getDownloadUrl:dossierId];
 }
 
