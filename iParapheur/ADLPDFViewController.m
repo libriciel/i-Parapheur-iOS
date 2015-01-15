@@ -201,12 +201,11 @@
 	[_restClient getCircuit:dossierRef
 					success:^(NSArray *circuits) {
 						HIDE_HUD
-						NSLog(@"Adrien getCircuit ok : %@", circuits);
 						_circuit = circuits;
 						[self refreshAnnotations:dossierRef];
 					}
 					failure:^(NSError *error) {
-						NSLog(@"Adrien getCircuit fail : %@", error.localizedDescription);
+						NSLog(@"getCircuit fail : %@", error.localizedDescription);
 					}];
 	
 	[[self navigationController] popToRootViewControllerAnimated:YES];
@@ -229,14 +228,13 @@
 	
 	[_restClient getAnnotations:_dossierRef
 						success:^(NSArray *annotations) {
-							NSLog(@"Adrien annotations success : %d", annotations.count);
 							_annotations = annotations;
 							
 							for (NSNumber *contentViewIdx in [_readerViewController contentViews])
 								[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
 							
 						} failure:^(NSError *error) {
-							NSLog(@"Adrien annotations error");
+							NSLog(@"getAnnotations error : %@", error.localizedDescription);
 						}];
 }
 
@@ -433,10 +431,7 @@
 	
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:
-						  _dossierRef,
-						  @"dossier",
-						  nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossier", nil];
 	
 	// TODO Adrien switch
 	// SHOW_HUD
@@ -603,15 +598,18 @@
 -(void)updateAnnotation:(ADLAnnotation*)annotation
 				forPage:(NSUInteger)page {
 	
-	NSDictionary *dict = [annotation dict];
-	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
-						 [NSNumber numberWithUnsignedInteger:page], @"page",
-						 dict, @"annotation",
-						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
-						 , nil];
+	// Adrien switch v2/v3
 	
-	ADLRequester *requester = [ADLRequester sharedRequester];
-	[requester request:@"updateAnnotation" andArgs:req delegate:self];
+//	NSDictionary *dict = [annotation dict];
+//	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
+//						 [NSNumber numberWithUnsignedInteger:page], @"page",
+//						 dict, @"annotation",
+//						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
+//						 , nil];
+//	
+//	ADLRequester *requester = [ADLRequester sharedRequester];
+//	[requester request:@"updateAnnotation" andArgs:req delegate:self];
+
 }
 
 
@@ -632,18 +630,28 @@
 -(void)addAnnotation:(ADLAnnotation*)annotation
 			 forPage:(NSUInteger)page {
 	
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[annotation dict]];
-	[dict setValue: [NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
-	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
-						 
-						 [NSArray arrayWithObjects:dict, nil], @"annotations",
-						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
-						 , nil];
+//	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[annotation dict]];
+//	[dict setValue: [NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
+//	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
+//						 
+//						 [NSArray arrayWithObjects:dict, nil], @"annotations",
+//						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
+//						 , nil];
+//	
+//	ADLRequester *requester = [ADLRequester sharedRequester];
+//	[requester request:@"addAnnotation" andArgs:req delegate:self];
 	
-	ADLRequester *requester = [ADLRequester sharedRequester];
-	[requester request:@"addAnnotation" andArgs:req delegate:self];
 	
+	NSDictionary *dict = [annotation dict];
 	
+	[_restClient addAnnotations:dict
+					 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+						success:^(NSArray *result) {
+							NSLog(@"Adrien");
+						}
+						failure:^(NSError *error) {
+							NSLog(@"Adrien %@", error.localizedDescription);
+						}];
 }
 
 

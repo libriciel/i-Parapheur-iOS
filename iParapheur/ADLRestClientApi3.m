@@ -42,16 +42,26 @@
 
 
 -(NSString *)getDownloadUrl:(NSString *)dossierId {
-	
-	// Retrieve infos from settings
-	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
-	NSString *url = [NSString stringWithFormat:@"https://m.%@", urlSettings];
-	
 	return [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content;ph:visuel-pdf", dossierId];
 }
 
 
-#pragma mark getApiLevel
+-(void)sendRequestWithSharedManager:(NSMutableURLRequest *)request
+							success:(void (^)(NSArray *))success
+							failure:(void (^)(NSError *))failure {
+	
+	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
+																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+																										 success(operation.responseDescriptors);
+																									 } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+																										 failure(error);
+																									 }];
+	
+	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+}
+
+
+#pragma mark - getApiLevel
 
 
 -(void)addApiLevelMappingRules:(RKObjectManager *)objectManager {
@@ -84,7 +94,7 @@
 }
 
 
-#pragma mark getBureaux
+#pragma mark - getBureaux
 
 
 -(void)addApiBureauxMappingRules:(RKObjectManager *)objectManager {
@@ -135,7 +145,7 @@
 }
 
 
-#pragma mark getDossiers
+#pragma mark - getDossiers
 
 
 -(void)addApiDossiersMappingRules:(RKObjectManager *)objectManager {
@@ -204,7 +214,7 @@
 }
 
 
-#pragma mark getDossier
+#pragma mark - getDossier
 
 
 -(void)addApiDossierMappingRules:(RKObjectManager *)objectManager {
@@ -275,7 +285,7 @@
 }
 
 
-#pragma mark getCircuit
+#pragma mark - getCircuit
 
 
 -(void)addApiCircuitMappingRules:(RKObjectManager *) objectManager {
@@ -322,7 +332,7 @@
 }
 
 
-#pragma mark getAnnotations
+#pragma mark - getAnnotations
 
 
 -(void)addApiAnnotationsMappingRules:(RKObjectManager *) objectManager {
@@ -366,5 +376,65 @@
 														   }];
 }
 
+#pragma mark - actionAddAnnotation
+
+
+-(void)addAnnotations:(NSDictionary*)annotation
+		   forDossier:(NSString *)dossier
+			  success:(void (^)(NSArray *))success
+			  failure:(void (^)(NSError *))failure {
+	
+	// @"/parapheur/dossiers/%s/annotations"
+	
+	/*
+	 {
+	 "id": "1bd3b879-f2db-4376-8f4e-dfa6065a8df8",
+	 "secretaire": "false",
+	 "type": "rect",
+	 "date": "2015-01-13T18:13:16.200+01:00",
+	 "author": "Bernard MAGNIEN",
+	 "penColor": "undefined",
+	 "text": "coucou !",
+	 "fillColor": "undefined",
+	 "rect": {
+		"topLeft": {
+			"x": 446.96629213483146,
+			"y": 154.82189400521287
+		},
+		"bottomRight": {
+			"x": 723.4550561797752,
+			"y": 331.146828844483
+		}
+	 }
+	 }
+	 */
+	
+	NSLog(@"Adrien %@", annotation);
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"add_annotations_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"add_annotations_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/annotations"
+																				  method:RKRequestMethodPOST]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossier;
+	
+	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:@"add_annotations_route"
+																						  object:responseDossier
+																					  parameters:annotation];
+
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	
+	[self sendRequestWithSharedManager:request
+							   success:^(NSArray *response) {
+								   success(response);
+							   }
+							   failure:^(NSError *error) {
+								   NSLog(@"Adrien error on add plop : %@", error.localizedDescription);
+								   failure(error);
+							   }];
+}
 
 @end

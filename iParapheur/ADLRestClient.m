@@ -86,4 +86,18 @@
 							success:^(NSArray *annotations) { success(annotations); }
 							failure:^(NSError *error) { failure(error); }];
 }
+
+
+-(void)addAnnotations:(NSDictionary*)annotation
+		   forDossier:(NSString *)dossier
+			  success:(void (^)(NSArray *))success
+			  failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 addAnnotations:annotation
+						 forDossier:dossier
+							success:^(NSArray *annotations) { success(annotations); }
+							failure:^(NSError *error) { failure(error); }];
+}
+
+
 @end

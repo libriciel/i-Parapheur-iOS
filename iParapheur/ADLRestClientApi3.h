@@ -40,4 +40,11 @@
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure;
 
+
+-(void)addAnnotations:(NSDictionary*)annotation
+		   forDossier:(NSString *)dossier
+			  success:(void (^)(NSArray *))success
+			  failure:(void (^)(NSError *))failure;
+
+
 @end
