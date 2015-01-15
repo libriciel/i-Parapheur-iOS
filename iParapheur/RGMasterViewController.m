@@ -174,29 +174,31 @@
 	[self.refreshControl beginRefreshing];
 	//ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 	
-	// TODO : Adrien, link to switch v2/v3
-	//API_GETBUREAUX();
-	
-	/*if (displayHUD == NO) {
-	 LGViewHUD *hud = [LGViewHUD defaultHUD];
-	 hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-	 hud.topText=@"";
-	 hud.bottomText=@"Chargement ...";
-	 hud.activityIndicatorOn=YES;
-	 [hud showInView:self.view];
-	 }
-	 */
-	
-	[_restClient getBureaux:^(NSArray *bureaux) {
-		[self setBureauxArray:bureaux];
-		_loading = NO;
-		[self.refreshControl endRefreshing];
-		[(UITableView*)([self view]) reloadData];
-		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		[_restClient getBureaux:^(NSArray *bureaux) {
+			[self setBureauxArray:bureaux];
+			_loading = NO;
+			[self.refreshControl endRefreshing];
+			[(UITableView*)([self view]) reloadData];
+			[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+			
+		} failure:^(NSError *error) {
+			NSLog(@"getBureaux error");
+		}];
+	}
+	else if ([[ADLRestClient getRestApiVersion] intValue] == 2) {
+		API_GETBUREAUX();
 		
-	} failure:^(NSError *error) {
-		NSLog(@"Adrien getBureaux error");
-	}];
+		/*if (displayHUD == NO) {
+		 LGViewHUD *hud = [LGViewHUD defaultHUD];
+		 hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
+		 hud.topText=@"";
+		 hud.bottomText=@"Chargement ...";
+		 hud.activityIndicatorOn=YES;
+		 [hud showInView:self.view];
+		 }
+		 */
+	}
 }
 
 
