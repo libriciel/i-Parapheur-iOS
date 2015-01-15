@@ -377,12 +377,13 @@
 }
 
 
-#pragma mark - actionAddAnnotation
+#pragma mark - Actions on Annotation
 
 /**
  * TODO : Find why the given NSDictionary can't be serialized, and remove that
  */
--(NSMutableDictionary *)fixAnnotationDictionary:(NSDictionary *)annotation {
+-(NSMutableDictionary *)fixAddAnnotationDictionary:(NSDictionary *)annotation {
+	
 	NSMutableDictionary *result= [NSMutableDictionary new];
 	
 	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
@@ -433,7 +434,7 @@
 
 	// serialize dictionary
 	
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self fixAnnotationDictionary:annotation]
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self fixAddAnnotationDictionary:annotation]
 													   options:NSJSONWritingPrettyPrinted
 														 error:nil];
 	
@@ -446,13 +447,82 @@
 	// Send request
 	
 	[self sendRequestWithSharedManager:request
-							   success:^(NSArray *response) {
-								   success(response);
-							   }
-							   failure:^(NSError *error) {
-								   NSLog(@"Adrien error on add plop : %@", error.localizedDescription);
-								   failure(error);
-							   }];
+							   success:^(NSArray *response) { success(response); }
+							   failure:^(NSError *error) { failure(error); }];
+}
+
+
+/**
+ * TODO : Find why the given NSDictionary can't be serialized, and remove that
+ */
+-(NSMutableDictionary *)fixUpdateAnnotationDictionary:(NSDictionary *)annotation {
+	NSMutableDictionary *result= [NSMutableDictionary new];
+	
+	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
+	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
+	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
+	[result setObject:[annotation valueForKey:@"page"] forKey:@"page"];
+	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"uuid"];
+	
+	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
+	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
+	NSDictionary *annotationRectTopLeft = [annotationRect valueForKey:@"topLeft"];
+	
+	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
+	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"x"] forKey:@"x"];
+	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"y"] forKey:@"y"];
+	
+	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
+	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"x"] forKey:@"x"];
+	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"y"] forKey:@"y"];
+	
+	NSMutableDictionary *rect = [NSMutableDictionary new];
+	[rect setObject:resultBottomRight forKey:@"bottomRight"];
+	[rect setObject:resultTopLeft forKey:@"topLeft"];
+	
+	[result setObject:rect forKey:@"rect"];
+	
+	return result;
+}
+
+
+-(void)updateAnnotation:(NSDictionary*)annotation
+			 forDossier:(NSString *)dossier
+				success:(void (^)(NSArray *))success
+				failure:(void (^)(NSError *))failure {
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"add_annotations_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"add_annotations_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/annotations"
+																				  method:RKRequestMethodPOST]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossier;
+	
+	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:@"add_annotations_route"
+																						  object:responseDossier
+																					  parameters:annotation];
+	
+	// serialize dictionary
+	
+	NSLog(@"Adrien %@", annotation);
+	
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self fixUpdateAnnotationDictionary:annotation]
+													   options:NSJSONWritingPrettyPrinted
+														 error:nil];
+	
+	// Add params to custom request
+	
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[request setHTTPBody:jsonData];
+	
+	// Send request
+	
+	[self sendRequestWithSharedManager:request
+							   success:^(NSArray *response) { success(response); }
+							   failure:^(NSError *error) { failure(error); }];
 }
 
 @end

@@ -604,7 +604,16 @@
 				forPage:(NSUInteger)page {
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		//Adrien TODO
+		NSDictionary *annotationDictionary = [annotation dict];
+		
+		[_restClient updateAnnotation:annotationDictionary
+						   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+							  success:^(NSArray *result) {
+								  //Adrien TODO
+							  }
+							  failure:^(NSError *error) {
+								  NSLog(@"updateAnnotation error : %@", error.localizedDescription);
+							  }];
 	}
 	else {
 		NSDictionary *dict = [annotation dict];
@@ -621,6 +630,8 @@
 
 
 -(void)removeAnnotation:(ADLAnnotation*)annotation {
+	NSDictionary *annotationDictionary = [annotation dict];
+	
 	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
 						 [annotation uuid], @"uuid",
 						 [NSNumber numberWithUnsignedInt:10], @"page",
@@ -653,7 +664,7 @@
 								//Adrien TODO
 							}
 							failure:^(NSError *error) {
-								NSLog(@"Adrien %@", error.localizedDescription);
+								NSLog(@"AddAnnotation error : %@", error.localizedDescription);
 							}];
 	}
 	else {

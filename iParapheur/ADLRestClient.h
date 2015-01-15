@@ -51,4 +51,10 @@
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure;
 
+
+-(void)updateAnnotation:(NSDictionary*)annotation
+			 forDossier:(NSString *)dossier
+				success:(void (^)(NSArray *))success
+				failure:(void (^)(NSError *))failure;
+
 @end

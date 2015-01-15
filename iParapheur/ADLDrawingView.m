@@ -496,12 +496,6 @@
     
 }
 
-/*-(void) addAnnotation:(NSDictionary*)annotation {
-    if ([_dataSource respondsToSelector:@selector(addAnnotation:)]) {
-        
-    }
-}*/
-
 -(void) updateAnnotation:(ADLAnnotation*)annotation {
     [_dataSource updateAnnotation:annotation forPage:_pageNumber];
 }
