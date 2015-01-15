@@ -9,6 +9,8 @@
 
 - (id)init;
 
++(NSNumber *)getRestApiVersion;
+
 
 -(NSString *)getDownloadUrl:(NSString *)dossierId;
 	

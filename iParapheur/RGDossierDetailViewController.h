@@ -67,6 +67,8 @@
     ReaderViewController *readerViewController;
 }
 
+
+@property (nonatomic, strong) ADLRestClient *restClient;
 @property (strong, nonatomic) ADLPDFViewController *detailViewController;
 @property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, strong) IBOutlet UILabel *typeLabel;

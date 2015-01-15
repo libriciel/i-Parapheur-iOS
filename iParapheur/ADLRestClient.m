@@ -5,6 +5,14 @@
 @implementation ADLRestClient
 
 
+static NSNumber *PARAPHEUR_API_VERSION;
+
+
++(NSNumber *)getRestApiVersion {
+	return PARAPHEUR_API_VERSION;
+}
+
+
 - (id)init {   
     _restClientApi3 = [[ADLRestClientApi3 alloc] init];
     return self;
@@ -21,7 +29,10 @@
 - (void)getApiLevel:(void (^)(NSNumber *versionNumber))success
             failure:(void (^)(NSError *error))failure {
     
-    [_restClientApi3 getApiLevel:^(NSNumber *versionNumber) { success(versionNumber); }
+    [_restClientApi3 getApiLevel:^(NSNumber *versionNumber) {
+		PARAPHEUR_API_VERSION = versionNumber;
+		success(versionNumber);
+	}
                          failure:^(NSError *error) { failure(error); }];
 }
 

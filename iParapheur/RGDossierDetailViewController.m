@@ -86,19 +86,11 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-	/*
-	 self.navigationItem.leftBarButtonItem = self.editButtonItem;
-	 
-	 UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)] autorelease];
-	 self.navigationItem.rightBarButtonItem = addButton;
-	 self.detailViewController = (RGDetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-	 */
-	self.navigationItem.rightBarButtonItem=nil;
-	//[textView setText:dossierRef];
-	_objects = [[NSMutableArray alloc] init];
 	
-	//[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
+	_restClient = [[ADLRestClient alloc] init];
+	
+	self.navigationItem.rightBarButtonItem=nil;
+	_objects = [[NSMutableArray alloc] init];
 	
 	[self hidesEveryThing];
 	self.navigationBar.topItem.title = [_dossier objectForKey:@"titre"];
@@ -299,7 +291,7 @@
  return YES;
  }
  */
-- (IBAction)showDocumentsViewController:(id)sender {
+-(IBAction)showDocumentsViewController:(id)sender {
 	if (documentsPopover)
 		[documentsPopover dismissPopoverAnimated:YES];
 	else
@@ -307,7 +299,7 @@
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		NSDate *object = [_objects objectAtIndex:indexPath.row];
 		self.detailViewController.detailItem = object;
@@ -326,7 +318,7 @@
  }*/
 
 
-- (void) getCircuit {
+-(void)getCircuit {
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:dossierRef,
@@ -341,7 +333,7 @@
 #pragma mark - Wall impl
 
 
-- (void)didEndWithRequestAnswer:(NSDictionary*)answer{
+-(void)didEndWithRequestAnswer:(NSDictionary*)answer{
 	NSString *s = [answer objectForKey:@"_req"];
 	
 	if ([s isEqual:GETDOSSIER_API]) {
@@ -356,26 +348,17 @@
 		[self showsEveryThing];
 	}
 	else if ([s isEqualToString:@"getCircuit"]) {
-		@synchronized(self)
-		{
-			[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-			/*if (_objects == nil) {
-			 _objects = [[[NSMutableArray alloc] init] retain];
-			 }*/
-			[_objects removeAllObjects];
-			[_objects addObjectsFromArray:[answer objectForKey:@"circuit"]];
-			[circuitTable reloadData];
-		}
+		[self refreshCircuits:[answer objectForKey:@"circuit"]];
 	}
 }
 
 
-- (void)didEndWithUnReachableNetwork{
+-(void)didEndWithUnReachableNetwork{
 	
 }
 
 
-- (void)didEndWithUnAuthorizedAccess {
+-(void)didEndWithUnAuthorizedAccess {
 	
 }
 
@@ -383,15 +366,22 @@
 #pragma mark - View Refresh with data
 
 
-- (void) refreshCircuit:(NSDictionary*)circuit {
-	
+-(void)refreshCircuits:(NSArray *)circuitArray {
+	@synchronized(self)
+	{
+		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+
+		[_objects removeAllObjects];
+		[_objects addObjectsFromArray:circuitArray];
+		[circuitTable reloadData];
+	}
 }
 
 
 #pragma mark - IBActions
 
 
-- (IBAction)showVisuelPDF:(id)sender {
+-(IBAction)showVisuelPDF:(id)sender {
 	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
 	
 	NSString *filePath = [pdfs lastObject];
@@ -409,13 +399,13 @@
 }
 
 
-- (void) dismissReaderViewController:(ReaderViewController *)viewController {
+-(void)dismissReaderViewController:(ReaderViewController *)viewController {
 	// do nothing for now
 	[[self splitViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	/*
 	 if ([[segue identifier] isEqualToString:@"showDocumentsView"]) {
 	 
@@ -438,12 +428,12 @@
 }
 
 
--(void) presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated {
+-(void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated {
 	[super presentModalViewController:modalViewController animated:animated];
 }
 
 
--(void) hidesEveryThing {
+-(void)hidesEveryThing {
 	[self setHiddenForEveryone:YES];
 	
 }
