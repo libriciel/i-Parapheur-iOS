@@ -119,7 +119,12 @@
 
     if ([self.action isEqualToString:@"VISER"]) {
         [self showHud];
-        [requester request:@"visa" andArgs:args delegate:self];
+		
+		//Adrien TODO switch
+		//[requester request:@"visa" andArgs:args delegate:self];
+		
+		for (int i=0; i<10; i++)
+			NSLog(@"Adrien viseeeeer");
     }
     else if ([self.action isEqualToString:@"SECRETARIAT"]) {
         [self showHud];

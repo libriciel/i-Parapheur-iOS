@@ -184,18 +184,20 @@
 	
 	SHOW_HUD
 	
-	// Adrien TODO : add switch v1/v2
-	
-	// API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
-	[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
-					dossier:dossierRef
-					success:^(NSArray *result) {
-						HIDE_HUD
-						[self getDossierDidEndWithRequestAnswer:result[0]];
-					}
-					failure:^(NSError *error) {
-						NSLog(@"getBureau fail : %@", error.localizedDescription);
-					}];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
+						dossier:dossierRef
+						success:^(NSArray *result) {
+							HIDE_HUD
+							[self getDossierDidEndWithRequestAnswer:result[0]];
+						}
+						failure:^(NSError *error) {
+							NSLog(@"getBureau fail : %@", error.localizedDescription);
+						}];
+	}
+	else {
+		API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
+	}
 	
 	//API_GETCIRCUIT(dossierRef)
 	[_restClient getCircuit:dossierRef
@@ -433,10 +435,12 @@
 	
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossier", nil];
 	
-	// TODO Adrien switch
-	// SHOW_HUD
-	//[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
-	[self refreshAnnotations:_dossierRef];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		[self refreshAnnotations:_dossierRef];
+	}
+	else {
+		[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
+	}
 }
 
 
@@ -542,53 +546,54 @@
 	
 	int i = 0; // etapeNumber
 	
-	// TODO Adrien : switch V2/V3
-
-//	for (NSDictionary *etape in _annotations) {
-//		NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
-//		
-//		if (self.circuit) {
-//			for (NSDictionary *annot in annotationsAtPageForEtape) {
-//				
-//				NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
-//				if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
-//					[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
-//									  forKey:@"editable"];
-//				}
-//				else {
-//					[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
-//									  forKey:@"editable"];
-//				}
-//				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
-//			}
-//		}
-//		
-//		i ++;
-//	}
-	
-	for (ADLResponseAnnotation *etape in _annotations) {
-		NSArray *annotationsAtPageForEtape = [etape.data objectForKey:[NSString stringWithFormat:@"%d", page]];
-
-		if (_circuit && (_circuit.count > 0)) {
-			ADLResponseCircuit *circuit = [_circuit objectAtIndex:0];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		for (ADLResponseAnnotation *etape in _annotations) {
+			NSArray *annotationsAtPageForEtape = [etape.data objectForKey:[NSString stringWithFormat:@"%d", page]];
 			
-			for (NSDictionary *annot in annotationsAtPageForEtape) {
-				NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
+			if (_circuit && (_circuit.count > 0)) {
+				ADLResponseCircuit *circuit = [_circuit objectAtIndex:0];
 				
-				if ([[((NSDictionary*)[circuit.etapes objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
-					[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
-									  forKey:@"editable"];
+				for (NSDictionary *annot in annotationsAtPageForEtape) {
+					NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
+					
+					if ([[((NSDictionary*)[circuit.etapes objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
+						[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
+										  forKey:@"editable"];
+					}
+					else {
+						[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
+										  forKey:@"editable"];
+					}
+					
+					[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
 				}
-				else {
-					[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
-									  forKey:@"editable"];
-				}
-				
-				[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
 			}
+			
+			i ++;
 		}
-		
-		i ++;
+	}
+	else {
+		for (NSDictionary *etape in _annotations) {
+			NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
+			
+			if (self.circuit) {
+				for (NSDictionary *annot in annotationsAtPageForEtape) {
+					
+					NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
+					if ([[((NSDictionary*)[self.circuit objectAtIndex:i]) objectForKey:@"approved"] boolValue]) {
+						[modifiedAnnot setObject:[NSNumber numberWithBool:NO]
+										  forKey:@"editable"];
+					}
+					else {
+						[modifiedAnnot setObject:[NSNumber numberWithBool:YES]
+										  forKey:@"editable"];
+					}
+					[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
+				}
+			}
+			
+			i ++;
+		}
 	}
 	
 	return annotsAtPage;
@@ -598,18 +603,20 @@
 -(void)updateAnnotation:(ADLAnnotation*)annotation
 				forPage:(NSUInteger)page {
 	
-	// Adrien switch v2/v3
-	
-//	NSDictionary *dict = [annotation dict];
-//	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
-//						 [NSNumber numberWithUnsignedInteger:page], @"page",
-//						 dict, @"annotation",
-//						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
-//						 , nil];
-//	
-//	ADLRequester *requester = [ADLRequester sharedRequester];
-//	[requester request:@"updateAnnotation" andArgs:req delegate:self];
-
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		//Adrien TODO
+	}
+	else {
+		NSDictionary *dict = [annotation dict];
+		NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
+							 [NSNumber numberWithUnsignedInteger:page], @"page",
+							 dict, @"annotation",
+							 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
+							 , nil];
+		
+		ADLRequester *requester = [ADLRequester sharedRequester];
+		[requester request:@"updateAnnotation" andArgs:req delegate:self];
+	}
 }
 
 
@@ -630,28 +637,36 @@
 -(void)addAnnotation:(ADLAnnotation*)annotation
 			 forPage:(NSUInteger)page {
 	
-//	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[annotation dict]];
-//	[dict setValue: [NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
-//	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
-//						 
-//						 [NSArray arrayWithObjects:dict, nil], @"annotations",
-//						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
-//						 , nil];
-//	
-//	ADLRequester *requester = [ADLRequester sharedRequester];
-//	[requester request:@"addAnnotation" andArgs:req delegate:self];
-	
-	
-	NSDictionary *dict = [annotation dict];
-	
-	[_restClient addAnnotations:dict
-					 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
-						success:^(NSArray *result) {
-							NSLog(@"Adrien");
-						}
-						failure:^(NSError *error) {
-							NSLog(@"Adrien %@", error.localizedDescription);
-						}];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		NSString *login=[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
+		
+		NSDictionary *args = [annotation dict];
+		[args setValue:[NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
+		[args setValue:[NSDate date] forKey:@"date"];
+		[args setValue:@"rect" forKey:@"type"];
+		[args setValue:login forKey:@"author"];
+		
+		[_restClient addAnnotations:args
+						 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+							success:^(NSArray *result) {
+								NSLog(@"Adrien");
+								//Adrien TODO
+							}
+							failure:^(NSError *error) {
+								NSLog(@"Adrien %@", error.localizedDescription);
+							}];
+	}
+	else {
+		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[annotation dict]];
+		[dict setValue: [NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
+		NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:
+							  [NSArray arrayWithObjects:dict, nil], @"annotations",
+							  [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
+							  , nil];
+		
+		ADLRequester *requester = [ADLRequester sharedRequester];
+		[requester request:@"addAnnotation" andArgs:args delegate:self];
+	}
 }
 
 

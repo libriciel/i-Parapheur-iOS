@@ -376,41 +376,48 @@
 														   }];
 }
 
+
 #pragma mark - actionAddAnnotation
+
+/**
+ * TODO : Find why the given NSDictionary can't be serialized, and remove that
+ */
+-(NSMutableDictionary *)fixAnnotationDictionary:(NSDictionary *)annotation {
+	NSMutableDictionary *result= [NSMutableDictionary new];
+	
+	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
+	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
+	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
+	[result setObject:[annotation valueForKey:@"page"] forKey:@"page"];
+	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"uuid"];
+	
+	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
+	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
+	NSDictionary *annotationRectTopLeft = [annotationRect valueForKey:@"topLeft"];
+	
+	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
+	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"x"] forKey:@"x"];
+	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"y"] forKey:@"y"];
+	
+	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
+	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"x"] forKey:@"x"];
+	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"y"] forKey:@"y"];
+	
+	NSMutableDictionary *rect = [NSMutableDictionary new];
+	[rect setObject:resultBottomRight forKey:@"bottomRight"];
+	[rect setObject:resultTopLeft forKey:@"topLeft"];
+	
+	[result setObject:rect forKey:@"rect"];
+	
+	return result;
+}
 
 
 -(void)addAnnotations:(NSDictionary*)annotation
 		   forDossier:(NSString *)dossier
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
-	
-	// @"/parapheur/dossiers/%s/annotations"
-	
-	/*
-	 {
-	 "id": "1bd3b879-f2db-4376-8f4e-dfa6065a8df8",
-	 "secretaire": "false",
-	 "type": "rect",
-	 "date": "2015-01-13T18:13:16.200+01:00",
-	 "author": "Bernard MAGNIEN",
-	 "penColor": "undefined",
-	 "text": "coucou !",
-	 "fillColor": "undefined",
-	 "rect": {
-		"topLeft": {
-			"x": 446.96629213483146,
-			"y": 154.82189400521287
-		},
-		"bottomRight": {
-			"x": 723.4550561797752,
-			"y": 331.146828844483
-		}
-	 }
-	 }
-	 */
-	
-	NSLog(@"Adrien %@", annotation);
-	
+		
 	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"add_annotations_route"]) {
 		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"add_annotations_route"
 																			 pathPattern:@"/parapheur/dossiers/:identifier/annotations"
@@ -424,8 +431,19 @@
 																						  object:responseDossier
 																					  parameters:annotation];
 
+	// serialize dictionary
+	
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self fixAnnotationDictionary:annotation]
+													   options:NSJSONWritingPrettyPrinted
+														 error:nil];
+	
+	// Add params to custom request
+	
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[request setHTTPBody:jsonData];
+	
+	// Send request
 	
 	[self sendRequestWithSharedManager:request
 							   success:^(NSArray *response) {

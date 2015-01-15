@@ -96,10 +96,26 @@
 	self.navigationBar.topItem.title = [_dossier objectForKey:@"titre"];
 	[[self typeLabel] setText:[_dossier objectForKey:@"type"]];
 	[[self sousTypeLabel] setText:[_dossier objectForKey:@"sousType"]];
-	dossierRef = [_dossier objectForKey:@"dossierRef"];
 	documents = [_dossier objectForKey:@"documents"];
 	
-	[self getCircuit];
+	// V2/V3 swtich
+	
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		dossierRef = [_dossier objectForKey:@"id"];
+		
+		[_restClient getCircuit:dossierRef
+						success:^(NSArray *circuitArray) {
+							[self refreshCircuits:circuitArray];
+						}
+						failure:^(NSError *error) {
+							NSLog(@"getCircuit error : %@", error);
+						}];
+	}
+	else {
+		dossierRef = [_dossier objectForKey:@"dossierRef"];
+		[self getCircuit];
+	}
+	
 	[self showsEveryThing];
 }
 

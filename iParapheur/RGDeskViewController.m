@@ -107,7 +107,7 @@
 }
 
 
--(void) refresh {
+-(void)refresh {
 	[self.refreshControl beginRefreshing];
 	[self loadDossiersWithPage:0];
 }
@@ -124,7 +124,7 @@
 }
 
 
--(void) setInBatchMode:(BOOL) value {
+-(void)setInBatchMode:(BOOL)value {
 	_inBatchMode = value;
 	
 }
@@ -165,19 +165,22 @@
 		API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", [currentFilter objectForKey:@"banette"], filtersDictionnary);
 	}
 	else {
-		//TODO : Adrien link to v2/v3 switch
-		//API_GETDOSSIERHEADERS(self.deskRef, [NSNumber numberWithInteger:page], @"15");
 		
-		[_restClient getDossiers:self.deskRef
-							page:page
-							size:15
-						 success:^(NSArray *dossiers) {
-							 NSLog(@"Adrien getDossiers success : %lu", sizeof(dossiers));
-							 [self getDossierDidEndWithSuccess:dossiers];
-						 }
-						 failure:^(NSError *error) {
-							 NSLog(@"Adrien getDossiers fail");
-						 }];
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			[_restClient getDossiers:self.deskRef
+								page:page
+								size:15
+							 success:^(NSArray *dossiers) {
+								 NSLog(@"Adrien getDossiers success : %lu", sizeof(dossiers));
+								 [self getDossierDidEndWithSuccess:dossiers];
+							 }
+							 failure:^(NSError *error) {
+								 NSLog(@"Adrien getDossiers fail");
+							 }];
+		}
+		else {
+			API_GETDOSSIERHEADERS(self.deskRef, [NSNumber numberWithInteger:page], @"15");
+		}
 	}
 }
 
@@ -185,7 +188,7 @@
 #pragma mark Actions
 
 
--(void) updateToolBar {
+-(void)updateToolBar {
 	if (self.isInBatchMode) {
 		if (self.navigationController.toolbarHidden) {
 			[self.navigationController setToolbarHidden:NO animated:YES];
@@ -232,7 +235,7 @@
 }
 
 
--(void) mainActionPressed {
+-(void)mainActionPressed {
 	if (self.mainAction) {
 		@try {
 			[self performSegueWithIdentifier:self.mainAction sender:self];
@@ -245,7 +248,7 @@
 }
 
 
--(void) showMoreActions:(id) sender {
+-(void)showMoreActions:(id) sender {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc]
 								  initWithTitle:@"Traitement par lot"
 								  delegate:self
@@ -283,17 +286,17 @@
 }
 
 
--(NSArray*) actionsForSelectedDossiers {
+-(NSArray*)actionsForSelectedDossiers {
 	NSMutableArray* actions;
-/*Adrien	for (NSDictionary* dossier in self.selectedDossiersArray) {
+	/*Adrien	for (NSDictionary* dossier in self.selectedDossiersArray) {
 		NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
 		if (!actions) { // the first dossier only
-			actions = [NSMutableArray arrayWithArray:dossierActions];
+	 actions = [NSMutableArray arrayWithArray:dossierActions];
 		}
 		else {
-			[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+	 [actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
 		}
-	} */
+	 } */
 	return actions;
 }
 
@@ -310,7 +313,7 @@
 }
 
 
--(UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *CellIdentifier = @"dossierCell";
 	
 	RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -357,7 +360,7 @@
 	}
 	
 	// Adapter
-
+	
 	cell.dossierTitleLabel.text = dossierTitre;
 	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", dossierType, dossierSousType];
 	
@@ -403,23 +406,23 @@
 #pragma mark - Wall delegate
 
 
--(void) didEndWithRequestAnswer:(NSDictionary *)answer {
+-(void)didEndWithRequestAnswer:(NSDictionary *)answer {
 	NSArray *dossiers = API_GETDOSSIERHEADERS_GET_DOSSIERS(answer);
 	[self getDossierDidEndWithSuccess:dossiers];
 }
 
 
--(void) didEndWithUnAuthorizedAccess {
+-(void)didEndWithUnAuthorizedAccess {
 	
 }
 
 
--(void) didEndWithUnReachableNetwork {
+-(void)didEndWithUnReachableNetwork {
 	
 }
 
 
--(void) filterDossiersForSearchText:(NSString*) searchText {
+-(void)filterDossiersForSearchText:(NSString*) searchText {
 	
 	if (searchText && (searchText.length > 0)) {
 		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS[cd] %@)", @"titre", searchText];
@@ -432,7 +435,7 @@
 }
 
 
--(void) getDossierDidEndWithSuccess:(NSArray*)dossiers {
+-(void)getDossierDidEndWithSuccess:(NSArray*)dossiers {
 	[self.refreshControl endRefreshing];
 	HIDE_HUD
 	
@@ -452,7 +455,7 @@
 		
 		if (isVersion2) {
 			for (NSDictionary *dossier in dossiers) {
-
+				
 				NSNumber *locked = [dossier objectForKey:@"locked"];
 				
 				if (locked && [locked isEqualToNumber:[NSNumber numberWithBool:YES]])
@@ -482,7 +485,7 @@
 	self.selectedDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
 	
 	[((UITableView*)[self view]) reloadData];
-
+	
 	HIDE_HUD
 }
 
@@ -490,7 +493,7 @@
 #pragma mark - UISearchBarDelegate protocol implementation
 
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+-(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	[self filterDossiersForSearchText:searchText];
 	[self.tableView reloadData];
 }
@@ -499,14 +502,14 @@
 #pragma mark - FilterDelegate protocol implementation
 
 
-- (void)shouldReload:(NSDictionary *)filter {
+-(void)shouldReload:(NSDictionary *)filter {
 	[ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary: filter];
 	[[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged object:nil];
 	[self refresh];
 }
 
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	
 	if ([segue.identifier isEqualToString:@"filterSegue"]) {
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
@@ -518,7 +521,7 @@
 }
 
 
-- (void)viewDidUnload {
+-(void)viewDidUnload {
 	[self setLoadMoreButton:nil];
 	[super viewDidUnload];
 }
@@ -527,7 +530,7 @@
 #pragma mark UIActionSheetDelegate protocol implementation
 
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (buttonIndex < self.secondaryActions.count) {
 		NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
 		@try {
@@ -549,15 +552,15 @@
 #pragma mark RGFileCellDelegate protocol implementation
 
 
--(void) cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath {
-
+-(void)cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath {
+	
 	// v2/v3 compatibility
 	
 	bool isLoaded = ((sizeof self.filteredDossiersArray) > 0) || ((sizeof self.dossiersArray) > 0);
 	bool isFilteredVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
 	bool isDossierVersion2 = isLoaded && [self.dossiersArray[0] isKindOfClass:[NSDictionary class]];
 	bool isVersion2 = isLoaded && (isFilteredVersion2 && isDossierVersion2);
-
+	
 	NSString *dossierRef;
 	
 	if (isLoaded && isVersion2) {
@@ -585,7 +588,7 @@
 }
 
 
--(void) cell:(RGFileCell *)cell didCheckAtIndexPath:(NSIndexPath *)indexPath {
+-(void)cell:(RGFileCell *)cell didCheckAtIndexPath:(NSIndexPath *)indexPath {
 	[self.swipedCell hideMenuOptions];
 	//[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:YES];
 	NSDictionary * dossier;
@@ -615,7 +618,7 @@
 }
 
 
--(void) cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
+-(void)cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
 	NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
 	self.secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
 	self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
@@ -623,7 +626,7 @@
 }
 
 
--(void) cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
+-(void)cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
 	NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
 	NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
 	if (mainActions.count > 0) {
@@ -635,17 +638,17 @@
 }
 
 
--(BOOL) canSelectCell:(RGFileCell *)cell {
+-(BOOL)canSelectCell:(RGFileCell *)cell {
 	return YES;
 }
 
 
--(BOOL) canSwipeCell:(RGFileCell *)cell {
+-(BOOL)canSwipeCell:(RGFileCell *)cell {
 	return (!self.isInBatchMode && (self.swipedCell == cell));
 }
 
 
--(void) willSwipeCell:(RGFileCell *)cell {
+-(void)willSwipeCell:(RGFileCell *)cell {
 	if (cell != self.swipedCell) {
 		[self.swipedCell hideMenuOptions];
 	}
@@ -653,7 +656,7 @@
 }
 
 
--(void) willSelectCell:(RGFileCell *)cell {
+-(void)willSelectCell:(RGFileCell *)cell {
 	if (self.swipedCell) {
 		[self.swipedCell hideMenuOptions];
 		self.swipedCell = nil;
