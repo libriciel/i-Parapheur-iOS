@@ -471,7 +471,6 @@
 
 -(void)hidesEveryThing {
 	[self setHiddenForEveryone:YES];
-	
 }
 
 

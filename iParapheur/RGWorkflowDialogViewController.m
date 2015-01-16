@@ -123,16 +123,21 @@
 		[self showHud];
 		
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-			[_restClient actionViserForDossier:_dossiersRef
-									 forBureau:_bureauCourant
-						  withPublicAnnotation:[self.annotationPublique text]
-						 withPrivateAnnotation:[self.annotationPrivee text]
-									   success:^(NSArray *result) {
-										   // Adrien todo
-									   }
-									   failure:^(NSError *error) {
-										   NSLog(@"actionViser error : %@", error.localizedDescription);
-									   }];
+			for (NSString* dossierRef in _dossiersRef) {
+				[_restClient actionViserForDossier:dossierRef
+										 forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+							  withPublicAnnotation:[self.annotationPublique text]
+							 withPrivateAnnotation:[self.annotationPrivee text]
+										   success:^(NSArray *result) {
+											   NSLog(@"Adrien actionViser success : %@", result);
+											   [self dismissDialogView];
+										   }
+										   failure:^(NSError *error) {
+											   NSLog(@"actionViser error : %@", error.localizedDescription);
+											   //Adrien TODO check error or 200
+											   [self dismissDialogView];
+										   }];
+			}
 		}
 		else {
 			[requester request:@"visa" andArgs:args delegate:self];
@@ -199,6 +204,13 @@
 }
 
 
+-(void)dismissDialogView {
+	[self hideHud];
+	[self dismissViewControllerAnimated:YES completion:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+}
+
+
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
 	NSLog(@"MIKAF %@", answer);
 	
@@ -218,7 +230,6 @@
 			}
 			
 		}
-		
 		
 		ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
 		

@@ -537,7 +537,20 @@
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
 	}
 	else {
-		((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = nil; // Adrien[self.selectedDossiersArray valueForKey:@"dossierRef"];
+		NSMutableArray *selectedArray = [[NSMutableArray alloc] init];
+		
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			for (ADLResponseDossiers* responseDossiers in _selectedDossiersArray)
+				[selectedArray addObject:responseDossiers.identifier];
+		}
+		else {
+			// Adrien TODO : test
+			selectedArray = [_selectedDossiersArray valueForKey:@"dossierRef"];
+		}
+		
+		NSLog(@"Adrien ùùùùùù %@", selectedArray);
+		
+		((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = selectedArray; // Adrien [_selectedDossiersArray valueForKey:@"dossierRef"];
 		((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;
 	}
 }

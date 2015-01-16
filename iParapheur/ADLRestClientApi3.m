@@ -521,4 +521,53 @@
 							   failure:^(NSError *error) { failure(error); }];
 }
 
+
+#pragma mark - Action Visa
+
+
+-(void)actionViserForDossier:(NSString *)dossierId
+				   forBureau:(NSString *)bureauId
+		withPublicAnnotation:(NSString *)publicAnnotation
+	   withPrivateAnnotation:(NSString *)privateAnnotation
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure {
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"dossier_visa_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_visa_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/visa"
+																				  method:RKRequestMethodPOST]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossierId;
+	
+	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:@"dossier_visa_route"
+																						  object:responseDossier
+																					  parameters:nil];
+	
+	// Add params to custom request
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:argumentDictionary
+													   options:NSJSONWritingPrettyPrinted
+														 error:nil];
+	
+	NSLog(@"Adrien data sent : %@", argumentDictionary);
+	
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[request setHTTPBody:jsonData];
+	
+	// Send request
+	
+	[self sendRequestWithSharedManager:request
+							   success:^(NSArray *response) { success(response); }
+							   failure:^(NSError *error) { failure(error); }];
+}
+
+
 @end
