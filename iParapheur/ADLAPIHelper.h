@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ADLResponseDossier.h"
 
 @interface ADLAPIHelper : NSObject
 
 + (NSString*) actionNameForAction:(NSString*) action;
+
++ (NSArray*) actionsForADLResponseDossier:(ADLResponseDossier*) dossier;
 
 + (NSArray*) actionsForDossier:(NSDictionary*) dossier;
 

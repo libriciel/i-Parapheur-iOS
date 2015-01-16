@@ -61,6 +61,7 @@
 
 @property (strong, nonatomic) id detailItem;
 @property (strong, nonatomic) NSDictionary *document;
+@property (strong, nonatomic) ADLResponseDossier *dossier;
 @property (strong, nonatomic) NSString *dossierRef;
 
 @property (strong, nonatomic) ReaderViewController* readerViewController;

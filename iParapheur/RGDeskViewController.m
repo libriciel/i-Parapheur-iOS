@@ -290,15 +290,32 @@
 
 -(NSArray*)actionsForSelectedDossiers {
 	NSMutableArray* actions;
-		NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
-		if (!actions) { // the first dossier only
-	 actions = [NSMutableArray arrayWithArray:dossierActions];
+	
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		for (ADLResponseDossier* dossier in _selectedDossiersArray) {
+			NSArray* dossierActions = [ADLAPIHelper actionsForADLResponseDossier:dossier];
+			
+			if (!actions) { // the first dossier only
+				actions = [NSMutableArray arrayWithArray:dossierActions];
+			}
+			else {
+				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+			}
 		}
-		else {
-	 [actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
-	// TODO Adrien	for (NSDictionary* dossier in self.selectedDossiersArray) { */
+	}
+	else {
+		for (NSDictionary* dossier in self.selectedDossiersArray) {
+			NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
+			
+			if (!actions) { // the first dossier only
+				actions = [NSMutableArray arrayWithArray:dossierActions];
+			}
+			else {
+				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+			}
 		}
-	 } */
+	}
+	
 	return actions;
 }
 
@@ -397,7 +414,7 @@
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	else {
-		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	
@@ -621,21 +638,40 @@
 
 
 -(void)cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
-	NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-	self.secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
-	self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
-	[self showMoreActions:cell];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		ADLResponseDossier *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+		self.secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
+		self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+		[self showMoreActions:cell];
+	}
+	else {
+		NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+		self.secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
+		self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+		[self showMoreActions:cell];
+	}
 }
 
 
 -(void)cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
-	NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-	NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
-	if (mainActions.count > 0) {
-		self.mainAction = [mainActions objectAtIndex:0];
-		self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
-		[self mainActionPressed];
-		
+	
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		ADLResponseDossier *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
+		if (mainActions.count > 0) {
+			_mainAction = [mainActions objectAtIndex:0];
+			_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+			[self mainActionPressed];
+		}
+	}
+	else {
+		NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
+		if (mainActions.count > 0) {
+			_mainAction = [mainActions objectAtIndex:0];
+			_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+			[self mainActionPressed];
+		}
 	}
 }
 

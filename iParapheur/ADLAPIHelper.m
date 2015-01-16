@@ -45,84 +45,87 @@
 }
 
 
++ (NSArray*) actionsForADLResponseDossier:(ADLResponseDossier*) dossier {
+	
+	NSMutableArray *actions = [NSMutableArray new];
+	
+	NSArray *returnedActions = dossier.actions;
+	NSString *actionDemandee = dossier.actionDemandee;
+	
+	if ([returnedActions containsObject:actionDemandee])
+	{
+		if ([actionDemandee isEqualToString:@"ARCHIVAGE"])
+			[actions addObject:@"ARCHIVER"];
+		
+		else if ([actionDemandee isEqualToString:@"SIGNATURE"])
+			[actions addObject:@"SIGNER"];
+		
+		else if ([actionDemandee isEqualToString:@"SUPPRESSION"])
+			[actions addObject:@"SUPPRIMER"];
+		
+		else if ([actionDemandee isEqualToString:@"REJET"])
+			[actions addObject:@"REJETER"];
+		
+		else if ([actionDemandee isEqualToString:@"REMORD"])
+			[actions addObject:@"REMORD"];
+		
+		else if ([actionDemandee isEqualToString:@"SECRETARIAT"])
+			[actions addObject:@"SECRETARIAT"];
+		
+		else if ([actionDemandee isEqualToString:@"VISA"])
+			[actions addObject:@"VISER"];
+		
+		else if ([actionDemandee isEqualToString:@"TDT"])
+			[actions addObject:@"TDT"];
+		
+		else if ([actionDemandee isEqualToString:@"MAILSEC"])
+			[actions addObject:@"MAILSEC"];
+	}
+	
+	return [NSArray arrayWithArray:actions];
+}
+
+
 + (NSArray*) actionsForDossier:(NSDictionary*) dossier {
 	
 	NSMutableArray *actions = [NSMutableArray new];
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	NSDictionary *returnedActions = [dossier objectForKey:@"actions"];
+	NSString *actionDemandee = [dossier objectForKey:@"actionDemandee"];
+	
+	for (NSString *action in [returnedActions allKeys]) {
+		BOOL isActionEnabled = [[returnedActions objectForKey:action] boolValue];
 		
-		NSArray *returnedActions = ((ADLResponseDossier *)dossier).actions;
-		NSString *actionDemandee = ((ADLResponseDossier *)dossier).actionDemandee;
-		
-		if ([returnedActions containsObject:actionDemandee])
-		{
-			if ([actionDemandee isEqualToString:@"ARCHIVAGE"])
+		if (isActionEnabled) {
+			if ([action isEqualToString:@"archive"]) {
+				if ([actionDemandee isEqualToString:@"ARCHIVAGE"]) {
 					[actions addObject:@"ARCHIVER"];
-
-			else if ([actionDemandee isEqualToString:@"SIGNATURE"])
-				[actions addObject:@"SIGNER"];
-			
-			else if ([actionDemandee isEqualToString:@"SUPPRESSION"])
+				}
+			}
+			else if ([action isEqualToString:@"delete"]) {
 				[actions addObject:@"SUPPRIMER"];
-
-			else if ([actionDemandee isEqualToString:@"REJET"])
+			}
+			else if ([action isEqualToString:@"reject"]) {
 				[actions addObject:@"REJETER"];
-			
-			else if ([actionDemandee isEqualToString:@"REMORD"])
+			}
+			else if ([action isEqualToString:@"remorse"]) {
 				[actions addObject:@"REMORD"];
-			
-			else if ([actionDemandee isEqualToString:@"SECRETARIAT"])
+			}
+			else if ([action isEqualToString:@"secretary"]) {
 				[actions addObject:@"SECRETARIAT"];
-			
-			else if ([actionDemandee isEqualToString:@"VISA"])
-				[actions addObject:@"VISER"];
-			
-			else if ([actionDemandee isEqualToString:@"TDT"])
+			}
+			else if ([action isEqualToString:@"sign"]) {
+				if ([actionDemandee isEqualToString:@"SIGNATURE"]) {
+					[actions addObject:@"SIGNER"];
+				}
+				else if ([actionDemandee isEqualToString:@"VISA"]) {
+					[actions addObject:@"VISER"];
+				}
+				else if ([actionDemandee isEqualToString:@"TDT"]) {
 					[actions addObject:@"TDT"];
-		
-			else if ([actionDemandee isEqualToString:@"MAILSEC"])
+				}
+				else if ([actionDemandee isEqualToString:@"MAILSEC"]) {
 					[actions addObject:@"MAILSEC"];
-		}
-	}
-	else {
-		
-		NSDictionary *returnedActions = [dossier objectForKey:@"actions"];
-		NSString *actionDemandee = [dossier objectForKey:@"actionDemandee"];
-		
-		for (NSString *action in [returnedActions allKeys]) {
-			BOOL isActionEnabled = [[returnedActions objectForKey:action] boolValue];
-			
-			if (isActionEnabled) {
-				if ([action isEqualToString:@"archive"]) {
-					if ([actionDemandee isEqualToString:@"ARCHIVAGE"]) {
-						[actions addObject:@"ARCHIVER"];
-					}
-				}
-				else if ([action isEqualToString:@"delete"]) {
-					[actions addObject:@"SUPPRIMER"];
-				}
-				else if ([action isEqualToString:@"reject"]) {
-					[actions addObject:@"REJETER"];
-				}
-				else if ([action isEqualToString:@"remorse"]) {
-					[actions addObject:@"REMORD"];
-				}
-				else if ([action isEqualToString:@"secretary"]) {
-					[actions addObject:@"SECRETARIAT"];
-				}
-				else if ([action isEqualToString:@"sign"]) {
-					if ([actionDemandee isEqualToString:@"SIGNATURE"]) {
-						[actions addObject:@"SIGNER"];
-					}
-					else if ([actionDemandee isEqualToString:@"VISA"]) {
-						[actions addObject:@"VISER"];
-					}
-					else if ([actionDemandee isEqualToString:@"TDT"]) {
-						[actions addObject:@"TDT"];
-					}
-					else if ([actionDemandee isEqualToString:@"MAILSEC"]) {
-						[actions addObject:@"MAILSEC"];
-					}
 				}
 			}
 		}

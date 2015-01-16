@@ -245,6 +245,7 @@
  * GetDossier response on API v3.
  */
 -(void)getDossierDidEndWithRequestAnswer:(ADLResponseDossier *)dossier {
+	_dossier = dossier ;
 	
 	// Determine the first pdf file to display
 	
@@ -276,9 +277,17 @@
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			//Adrien TODO : request
-			//			NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
-			//			ADLRequester *requester = [ADLRequester sharedRequester];
-			//			[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+
+			if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
+				ADLRequester *requester = [ADLRequester sharedRequester];
+				[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+			}
+			else {
+				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
+				ADLRequester *requester = [ADLRequester sharedRequester];
+				[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+			}
 		}
 		else {
 			_visaEnabled = YES;
@@ -501,8 +510,16 @@
 			[_actionPopover dismissPopoverAnimated:NO];
 		}
 		
+		NSArray* actions;
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			actions = [ADLAPIHelper actionsForADLResponseDossier:_dossier];
+		}
+		else {
+			actions = [ADLAPIHelper actionsForDossier:self.document];
+		}
+		
 		_actionPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
-		((ADLActionViewController*)[_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:[ADLAPIHelper actionsForDossier:self.document]];
+		((ADLActionViewController*)[_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:actions];
 		// do something usefull there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
 			[((ADLActionViewController*)[_actionPopover contentViewController]) setSignatureEnabled:YES];
