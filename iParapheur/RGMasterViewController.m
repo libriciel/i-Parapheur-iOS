@@ -225,7 +225,7 @@
 	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 	[cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor blueColor]];
 	
-	bool isLoaded = (sizeof _bureauxArray) > 0;
+	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
 	
 	NSString *bureauName;
@@ -259,7 +259,7 @@
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	bool isLoaded = (sizeof _bureauxArray) > 0;
+	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
 	
 	NSString *bureauName;

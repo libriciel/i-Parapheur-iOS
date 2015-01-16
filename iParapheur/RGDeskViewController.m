@@ -79,7 +79,9 @@
 
 @implementation RGDeskViewController
 
+
 @synthesize inBatchMode = _inBatchMode;
+
 
 #pragma mark - UIViewController delegate
 
@@ -288,13 +290,13 @@
 
 -(NSArray*)actionsForSelectedDossiers {
 	NSMutableArray* actions;
-	/*Adrien	for (NSDictionary* dossier in self.selectedDossiersArray) {
 		NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
 		if (!actions) { // the first dossier only
 	 actions = [NSMutableArray arrayWithArray:dossierActions];
 		}
 		else {
 	 [actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+	// TODO Adrien	for (NSDictionary* dossier in self.selectedDossiersArray) { */
 		}
 	 } */
 	return actions;
@@ -321,7 +323,7 @@
 	
 	// Switch v2/v3
 	
-	bool isLoaded = (sizeof self.filteredDossiersArray) > 0;
+	bool isLoaded = (self.filteredDossiersArray.count) > 0;
 	bool isVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
 	
 	NSString *dossierTitre;
@@ -446,7 +448,7 @@
 	
 	// Switch v2/v3
 	
-	bool isLoaded = (sizeof dossiers) > 0;
+	bool isLoaded = (dossiers.count) > 0;
 	bool isVersion2 = isLoaded && [dossiers[0] isKindOfClass:[NSDictionary class]];
 	
 	/* manualy filters the locked files out */
@@ -556,7 +558,7 @@
 	
 	// v2/v3 compatibility
 	
-	bool isLoaded = ((sizeof self.filteredDossiersArray) > 0) || ((sizeof self.dossiersArray) > 0);
+	bool isLoaded = (self.filteredDossiersArray.count > 0) || (self.dossiersArray.count > 0);
 	bool isFilteredVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
 	bool isDossierVersion2 = isLoaded && [self.dossiersArray[0] isKindOfClass:[NSDictionary class]];
 	bool isVersion2 = isLoaded && (isFilteredVersion2 && isDossierVersion2);

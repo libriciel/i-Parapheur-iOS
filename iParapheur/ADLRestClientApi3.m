@@ -136,7 +136,7 @@
 										   parameters:nil
 											  success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
 												  //ADLResponseBureau *testBureau = (ADLResponseBureau *) mappingResult.array[0];
-												  NSLog(@"getBureaux size of %lu", (sizeof mappingResult.array));
+												  NSLog(@"getBureaux size of %d", (mappingResult.array.count));
 												  success(mappingResult.array);
 											  }
 											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
