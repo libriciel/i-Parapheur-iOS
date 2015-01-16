@@ -414,10 +414,10 @@
 }
 
 
--(void)addAnnotations:(NSDictionary*)annotation
-		   forDossier:(NSString *)dossier
-			  success:(void (^)(NSArray *))success
-			  failure:(void (^)(NSError *))failure {
+-(void)addAnnotation:(NSDictionary*)annotation
+		  forDossier:(NSString *)dossier
+			 success:(void (^)(NSArray *))success
+			 failure:(void (^)(NSError *))failure {
 		
 	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"add_annotations_route"]) {
 		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"add_annotations_route"

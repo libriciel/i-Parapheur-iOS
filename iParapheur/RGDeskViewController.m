@@ -171,11 +171,11 @@
 								page:page
 								size:15
 							 success:^(NSArray *dossiers) {
-								 NSLog(@"Adrien getDossiers success : %lu", sizeof(dossiers));
+								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 NSLog(@"Adrien getDossiers fail");
+								 NSLog(@"getDossiers error : %@", error);
 							 }];
 		}
 		else {

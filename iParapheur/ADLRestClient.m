@@ -104,10 +104,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
-	[_restClientApi3 addAnnotations:annotation
-						 forDossier:dossier
-							success:^(NSArray *annotations) { success(annotations); }
-							failure:^(NSError *error) { failure(error); }];
+	[_restClientApi3 addAnnotation:annotation
+						forDossier:dossier
+						   success:^(NSArray *annotations) { success(annotations); }
+						   failure:^(NSError *error) { failure(error); }];
 }
 
 
@@ -116,10 +116,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure {
 	
-	[_restClientApi3 addAnnotations:annotation
-						 forDossier:dossier
-							success:^(NSArray *annotations) { success(annotations); }
-							failure:^(NSError *error) { failure(error); }];
+	[_restClientApi3 updateAnnotation:annotation
+						   forDossier:dossier
+							  success:^(NSArray *annotations) { success(annotations); }
+							  failure:^(NSError *error) { failure(error); }];
 }
 
 
