@@ -88,6 +88,7 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
+	NSLog(@"View Loaded : RGDeskViewController");
 	//[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
 	
 	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
@@ -338,11 +339,6 @@
 	RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	cell.delegate = self;
 	
-	// Switch v2/v3
-	
-	bool isLoaded = (self.filteredDossiersArray.count) > 0;
-	bool isVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
-	
 	NSString *dossierTitre;
 	NSString *dossierType;
 	NSString *dossierSousType;
@@ -351,7 +347,18 @@
 	bool dossierPossibleSignature;
 	bool dossierPossibleArchive;
 	
-	if (isLoaded && isVersion2) {
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		dossierTitre = dossier.title;
+		dossierType = dossier.type;
+		dossierSousType = dossier.sousType;
+		dossierActionDemandee = dossier.actionDemandee;
+		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
+		dossierPossibleArchive = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.dateEmission.longLongValue];
+
+	}
+	else {
 		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		dossierTitre = [dossier objectForKey:@"titre"];
 		dossierType = [dossier objectForKey:@"type"];
@@ -366,16 +373,6 @@
 			//[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
 			dossierDate = [formatter dateFromString:dateLimite];
 		}
-	}
-	else {
-		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
-		dossierTitre = dossier.title;
-		dossierType = dossier.type;
-		dossierSousType = dossier.sousType;
-		dossierActionDemandee = dossier.actionDemandee;
-		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
-		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
-		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.dateEmission.longLongValue];
 	}
 	
 	// Adapter
@@ -409,12 +406,12 @@
 		[cell.retardBadge setHidden:YES];
 	}
 	
-	if (isLoaded && isVersion2) {
-		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	else {
-		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	

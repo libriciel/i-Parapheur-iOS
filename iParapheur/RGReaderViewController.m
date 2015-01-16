@@ -64,6 +64,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	NSLog(@"View Loaded : RGReaderViewController");
 	// Do any additional setup after loading the view.
 }
 

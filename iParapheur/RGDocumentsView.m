@@ -66,9 +66,10 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
+	NSLog(@"View Loaded : RGDocumentsView");
+
 	// Do any additional setup after loading the view.
 }
 

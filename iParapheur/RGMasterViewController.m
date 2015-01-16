@@ -64,6 +64,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	NSLog(@"View Loaded : RGDossierDetailViewController");
 	
 	// RestKit init
 	

@@ -54,6 +54,7 @@
 
 
 - (void)viewDidLoad {
+	NSLog(@"View Loaded : RGSplitViewController");
 }
 
 

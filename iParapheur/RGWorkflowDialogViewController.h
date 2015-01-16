@@ -41,8 +41,12 @@
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
 #import "PrivateKey.h"
+#import "ADLRestClient.h"
+
 
 @interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) ADLRestClient *restClient;
 
 @property (strong, nonatomic) NSArray *dossiersRef;
 @property (strong, nonatomic) NSString *action;

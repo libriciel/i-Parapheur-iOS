@@ -86,6 +86,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	NSLog(@"View Loaded : RGDossierDetailViewController");
 	
 	_restClient = [[ADLRestClient alloc] init];
 	

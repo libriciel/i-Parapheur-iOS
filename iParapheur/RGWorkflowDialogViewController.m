@@ -59,208 +59,220 @@
 
 @interface RGWorkflowDialogViewController ()
 
+
 @end
+
 
 @implementation RGWorkflowDialogViewController
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	if (self) {
+		// Custom initialization
+	}
+	return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
 
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	NSLog(@"View Loaded : RGWorkflowDialogViewController");
+
+	_restClient = [[ADLRestClient alloc] init];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:self.action];
-    if ([self.action isEqualToString:@"SIGNER"]) {
-        [self.navigationBar.topItem.rightBarButtonItem setEnabled:NO];
-    }
-    else {
-        [self.certificateLabel setHidden:YES];
-        [self.certificatesTableView setHidden:YES];
-        if ([self.action isEqualToString:@"REJETER"]) {
-            self.annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
-        }
-    }
-    ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-    
-    self.pkeys = [keystore listPrivateKeys];
-    
+	[super viewWillAppear:animated];
+	self.navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:self.action];
+	if ([self.action isEqualToString:@"SIGNER"]) {
+		[self.navigationBar.topItem.rightBarButtonItem setEnabled:NO];
+	}
+	else {
+		[self.certificateLabel setHidden:YES];
+		[self.certificatesTableView setHidden:YES];
+		if ([self.action isEqualToString:@"REJETER"]) {
+			self.annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
+		}
+	}
+	ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
+	
+	self.pkeys = [keystore listPrivateKeys];
+	
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return YES;
 }
+
 
 - (IBAction)finish:(id)sender {
-    ADLRequester *requester = [ADLRequester sharedRequester];
+	ADLRequester *requester = [ADLRequester sharedRequester];
+	
+	NSMutableDictionary *args = [[NSMutableDictionary alloc]
+								 initWithObjectsAndKeys:
+								 self.dossiersRef, @"dossiers",
+								 [self.annotationPublique text], @"annotPub",
+								 [self.annotationPrivee text], @"annotPriv",
+								 [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
+								 nil];
 
-    NSMutableDictionary *args = [[NSMutableDictionary alloc]
-                          initWithObjectsAndKeys:
-                          self.dossiersRef, @"dossiers",
-                          [self.annotationPublique text], @"annotPub",
-                          [self.annotationPrivee text], @"annotPriv",
-                          [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
-                          nil];
-    
-    
-
-    if ([self.action isEqualToString:@"VISER"]) {
-        [self showHud];
+	if ([self.action isEqualToString:@"VISER"]) {
+		[self showHud];
 		
-		//Adrien TODO switch
-		//[requester request:@"visa" andArgs:args delegate:self];
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			
+		}
+		else {
+			[requester request:@"visa" andArgs:args delegate:self];
+		}
 		
 		for (int i=0; i<10; i++)
 			NSLog(@"Adrien viseeeeer");
-    }
-    else if ([self.action isEqualToString:@"SECRETARIAT"]) {
-        [self showHud];
-        [requester request:@"secretariat" andArgs:args delegate:self];
-    }
-    else if ([self.action isEqualToString:@"REJETER"]) {
-        if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
-            [self showHud];
-            [requester request:@"reject" andArgs:args delegate:self];
-        }
-        else {
-            [[[UIAlertView alloc] initWithTitle:@"Attention" message:@"Veuillez saisir le motif de votre rejet" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles:nil] show];
-        }
-        
-    }
-    else if ([self.action isEqualToString:@"SIGNER"]) {
-        // create signatures array
-        PrivateKey *pkey = _currentPKey;
-        
-        /* Ask for pkey password */
-        
-        ADLPasswordAlertView *alertView =
-        [[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-                                            message:[NSString
-                                                     stringWithFormat:@"Entez le mot de passe pour %@",
-                                                     [[pkey p12Filename] lastPathComponent]]
-                                           delegate:self cancelButtonTitle:@"Annuler"
-                                  otherButtonTitles:@"Confirmer", nil];
-        
-        alertView.p12Path = [pkey p12Filename];
-        
-        [alertView show];
-
-
-    }
-    
-   // [args release];
-    
+	}
+	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
+		[self showHud];
+		[requester request:@"secretariat" andArgs:args delegate:self];
+	}
+	else if ([self.action isEqualToString:@"REJETER"]) {
+		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
+			[self showHud];
+			[requester request:@"reject" andArgs:args delegate:self];
+		}
+		else {
+			[[[UIAlertView alloc] initWithTitle:@"Attention" message:@"Veuillez saisir le motif de votre rejet" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles:nil] show];
+		}
+		
+	}
+	else if ([self.action isEqualToString:@"SIGNER"]) {
+		// create signatures array
+		PrivateKey *pkey = _currentPKey;
+		
+		/* Ask for pkey password */
+		
+		ADLPasswordAlertView *alertView =
+		[[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
+											message:[NSString
+													 stringWithFormat:@"Entez le mot de passe pour %@",
+													 [[pkey p12Filename] lastPathComponent]]
+										   delegate:self cancelButtonTitle:@"Annuler"
+								  otherButtonTitles:@"Confirmer", nil];
+		
+		alertView.p12Path = [pkey p12Filename];
+		
+		[alertView show];
+		
+		
+	}
+	
+	// [args release];
+	
 }
+
 
 - (IBAction)cancel:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 - (void) showHud {
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-    hud.topText=@"";
-    hud.bottomText=@"Chargement ...";
-    hud.activityIndicatorOn=YES;
-    [hud showInView:self.view];
+	LGViewHUD *hud = [LGViewHUD defaultHUD];
+	hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
+	hud.topText=@"";
+	hud.bottomText=@"Chargement ...";
+	hud.activityIndicatorOn=YES;
+	[hud showInView:self.view];
 }
+
 
 - (void) hideHud {
-    LGViewHUD *hud = [LGViewHUD defaultHUD];
-    [hud hideWithAnimation:HUDAnimationHideFadeOut];
+	LGViewHUD *hud = [LGViewHUD defaultHUD];
+	[hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
+
 
 -(void) didEndWithRequestAnswer:(NSDictionary *)answer {
-    NSLog(@"MIKAF %@", answer);
-    
-    if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
-        // get selected dossiers for some sign info action :)
-
-        NSMutableArray *hashes = [[NSMutableArray alloc] init];
-        NSMutableArray *dossiers = [[NSMutableArray alloc] init];
-        NSMutableArray *signatures = [[NSMutableArray alloc] init];
-
-        for (NSString *dossier in self.dossiersRef) {
-            NSDictionary *signInfo = [answer objectForKey:dossier];
-
-            if ([[signInfo objectForKey:@"format"] isEqualToString:@"CMS"]) {
-                [dossiers addObject:dossier];
-                [hashes addObject:[signInfo objectForKey:@"hash"]];
-            }
-
-        }
-
-
-        ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-
-        PrivateKey *pkey = _currentPKey;
-
-        NSError *error = nil;
-
-
-        for (NSString *hash in hashes) {
-            NSData *hash_data = [keystore bytesFromHexString:hash];
-            error = nil;
-            NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
-                                       withPassword:[self p12password]
-                                            andData:hash_data
-                                              error:&error];
-
-            if (signature == nil && error != nil) {
-                [AJNotificationView showNoticeInView:self.view
-                                                type:AJNotificationTypeRed
-                                               title:[NSString stringWithFormat:@"Une erreur s'est produite lors de la signature"]
-                                     linedBackground:AJLinedBackgroundTypeStatic
-                                           hideAfter:2.5f];
-                NSLog(@"%@", error);
-                break;
-            }
-            else {
-                NSString *b64EncodedSignature = [signature base64EncodedString];
-                [signatures addObject:b64EncodedSignature];
-            }
-
-        }
-
-        if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
-            NSMutableDictionary *args = [[NSMutableDictionary alloc]
-                    initWithObjectsAndKeys:
-                            dossiers, @"dossiers",
-                            [self.annotationPublique text], @"annotPub",
-                            [self.annotationPrivee text], @"annotPriv",
-                            [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
-                            signatures, @"signatures",
-                            nil];
-
-            NSLog(@"%@", args);
-            ADLRequester *requester = [ADLRequester sharedRequester];
-
-            [self showHud];
-
-            [requester request:@"signature" andArgs:args delegate:self];
-
-        }
-    }
-    else  {
-        [self hideHud];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
-    }
-
+	NSLog(@"MIKAF %@", answer);
+	
+	if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
+		// get selected dossiers for some sign info action :)
+		
+		NSMutableArray *hashes = [[NSMutableArray alloc] init];
+		NSMutableArray *dossiers = [[NSMutableArray alloc] init];
+		NSMutableArray *signatures = [[NSMutableArray alloc] init];
+		
+		for (NSString *dossier in self.dossiersRef) {
+			NSDictionary *signInfo = [answer objectForKey:dossier];
+			
+			if ([[signInfo objectForKey:@"format"] isEqualToString:@"CMS"]) {
+				[dossiers addObject:dossier];
+				[hashes addObject:[signInfo objectForKey:@"hash"]];
+			}
+			
+		}
+		
+		
+		ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
+		
+		PrivateKey *pkey = _currentPKey;
+		
+		NSError *error = nil;
+		
+		
+		for (NSString *hash in hashes) {
+			NSData *hash_data = [keystore bytesFromHexString:hash];
+			error = nil;
+			NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
+									   withPassword:[self p12password]
+											andData:hash_data
+											  error:&error];
+			
+			if (signature == nil && error != nil) {
+				[AJNotificationView showNoticeInView:self.view
+												type:AJNotificationTypeRed
+											   title:[NSString stringWithFormat:@"Une erreur s'est produite lors de la signature"]
+									 linedBackground:AJLinedBackgroundTypeStatic
+										   hideAfter:2.5f];
+				NSLog(@"%@", error);
+				break;
+			}
+			else {
+				NSString *b64EncodedSignature = [signature base64EncodedString];
+				[signatures addObject:b64EncodedSignature];
+			}
+			
+		}
+		
+		if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
+			NSMutableDictionary *args = [[NSMutableDictionary alloc]
+										 initWithObjectsAndKeys:
+										 dossiers, @"dossiers",
+										 [self.annotationPublique text], @"annotPub",
+										 [self.annotationPrivee text], @"annotPriv",
+										 [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
+										 signatures, @"signatures",
+										 nil];
+			
+			NSLog(@"%@", args);
+			ADLRequester *requester = [ADLRequester sharedRequester];
+			
+			[self showHud];
+			
+			NSLog(@"Adrien SIGNATURE = %@", args);
+			
+			// TODO Adrien : rebranch [requester request:@"signature" andArgs:args delegate:self];
+		}
+	}
+	else  {
+		[self hideHud];
+		[self dismissViewControllerAnimated:YES completion:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+	}
+	
 }
+
 
 //-(void) didEndWithUnAuthorizedAccess {
 //
@@ -268,60 +280,66 @@
 //
 
 -(void) didEndWithUnReachableNetwork {
-    [[[UIAlertView alloc] initWithTitle:@"Erreur" message:@"Une erreur est survenue lors de l'envoi de la requête" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+	[[[UIAlertView alloc] initWithTitle:@"Erreur" message:@"Une erreur est survenue lors de l'envoi de la requête" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
 }
+
 
 #pragma mark - UITableView Datasource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return _pkeys.count;
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return _pkeys.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
-    
-    if(cell == nil) {
-        cell = [[UITableViewCell alloc] init];
-    }
-    
-    PrivateKey *pkey = [_pkeys objectAtIndex:[indexPath row]];
-    
-    [[cell textLabel] setText:[pkey commonName]];
-    
-    
-    return cell;
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
+	
+	if(cell == nil) {
+		cell = [[UITableViewCell alloc] init];
+	}
+	
+	PrivateKey *pkey = [_pkeys objectAtIndex:[indexPath row]];
+	
+	[[cell textLabel] setText:[pkey commonName]];
+	
+	
+	return cell;
 }
+
 
 #pragma mark - UITableView delegate
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // we selected a private key now fetching it
-    
-    _currentPKey = [_pkeys objectAtIndex:(NSUInteger)[indexPath row]];
-    
-    // now we have a pkey we can activate Sign Button
-    [self.navigationBar.topItem.rightBarButtonItem setEnabled:YES];
+	// we selected a private key now fetching it
+	
+	_currentPKey = [_pkeys objectAtIndex:(NSUInteger)[indexPath row]];
+	
+	// now we have a pkey we can activate Sign Button
+	[self.navigationBar.topItem.rightBarButtonItem setEnabled:YES];
 }
+
 
 #pragma mark - UIAlertView delegate
 
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        UITextField *passwordTextField = [alertView textFieldAtIndex:0];
-        [self setP12password:[passwordTextField text]];
-
-        ADLRequester *requester = [ADLRequester sharedRequester];
-        NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[self dossiersRef], @"dossiers", nil];
-        [requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
-
-
-    }
+	if (buttonIndex == 1) {
+		UITextField *passwordTextField = [alertView textFieldAtIndex:0];
+		[self setP12password:[passwordTextField text]];
+		
+		ADLRequester *requester = [ADLRequester sharedRequester];
+		NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[self dossiersRef], @"dossiers", nil];
+		[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+		
+		
+	}
 }
 
 @end
