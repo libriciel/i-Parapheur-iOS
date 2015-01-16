@@ -1362,7 +1362,7 @@
 				B4E5ECD6153AF65F00BD514D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		B4E5ECD7153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheur" */ = {
 			isa = XCConfigurationList;
@@ -1371,7 +1371,7 @@
 				B4E5ECD9153AF65F00BD514D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		B4E5ECDA153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheurTests" */ = {
 			isa = XCConfigurationList;
@@ -1380,7 +1380,7 @@
 				B4E5ECDC153AF65F00BD514D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 

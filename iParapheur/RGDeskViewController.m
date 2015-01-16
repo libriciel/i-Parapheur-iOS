@@ -346,6 +346,7 @@
 	NSDate *dossierDate = nil;
 	bool dossierPossibleSignature;
 	bool dossierPossibleArchive;
+	bool dossierPossibleViser;
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
@@ -355,8 +356,8 @@
 		dossierActionDemandee = dossier.actionDemandee;
 		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
 		dossierPossibleArchive = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
+		dossierPossibleViser = dossier.actions && [dossier.actions containsObject:@"VISA"];
 		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.dateEmission.longLongValue];
-
 	}
 	else {
 		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
@@ -366,6 +367,11 @@
 		dossierActionDemandee = [dossier objectForKey:@"actionDemandee"];
 		dossierPossibleSignature = [[[dossier objectForKey:@"actions"] objectForKey:@"sign"] boolValue];
 		dossierPossibleArchive = [[[dossier objectForKey:@"actions"] objectForKey:@"archive"] boolValue];
+		dossierPossibleViser = [[[dossier objectForKey:@"actions"] objectForKey:@"visa"] boolValue];
+		
+		//Adrien TODO : check v2
+		if(dossierPossibleViser)
+			NSLog(@"Adrien visa V2 :%@", dossier);
 		
 		NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
 		if (dateLimite != nil) {
@@ -380,7 +386,7 @@
 	cell.dossierTitleLabel.text = dossierTitre;
 	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", dossierType, dossierSousType];
 	
-	if (dossierPossibleSignature || dossierPossibleArchive) {
+	if (dossierPossibleSignature || dossierPossibleArchive || dossierPossibleViser) {
 		NSString *actionName = [ADLAPIHelper actionNameForAction:dossierActionDemandee];
 		cell.validateButton.hidden = NO;
 		[cell.validateButton setTitle:actionName forState:UIControlStateNormal];

@@ -626,7 +626,7 @@
 		[_restClient updateAnnotation:annotationDictionary
 						   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							  success:^(NSArray *result) {
-								  //Adrien TODO
+								  NSLog(@"updateAnnotation success");
 							  }
 							  failure:^(NSError *error) {
 								  NSLog(@"updateAnnotation error : %@", error.localizedDescription);
@@ -677,8 +677,7 @@
 		[_restClient addAnnotations:args
 						 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							success:^(NSArray *result) {
-								NSLog(@"Adrien");
-								//Adrien TODO
+								[self refreshAnnotations:_dossierRef];
 							}
 							failure:^(NSError *error) {
 								NSLog(@"AddAnnotation error : %@", error.localizedDescription);

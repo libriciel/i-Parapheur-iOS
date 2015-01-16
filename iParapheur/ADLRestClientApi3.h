@@ -53,4 +53,12 @@
 				failure:(void (^)(NSError *))failure;
 
 
+-(void)actionViserForDossier:(NSString *)dossierId
+				   forBureau:(NSString *)bureauId
+		withPublicAnnotation:(NSString *)publicAnnotation
+	   withPrivateAnnotation:(NSString *)privateAnnotation
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure;
+
+
 @end

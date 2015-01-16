@@ -67,7 +67,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     [self.moreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.moreButton addTarget:self action:@selector(userPressedMoreButton) forControlEvents:UIControlEventTouchUpInside];
     [self.buttonsView addSubview:self.moreButton];
-    
+	
     // VALIDATE
     self.validateButton = [UIButton buttonWithType:UIButtonTypeCustom];
     //actionButton.backgroundColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f];

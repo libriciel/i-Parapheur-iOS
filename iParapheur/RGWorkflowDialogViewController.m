@@ -123,14 +123,20 @@
 		[self showHud];
 		
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-			
+			[_restClient actionViserForDossier:_dossiersRef
+									 forBureau:_bureauCourant
+						  withPublicAnnotation:[self.annotationPublique text]
+						 withPrivateAnnotation:[self.annotationPrivee text]
+									   success:^(NSArray *result) {
+										   // Adrien todo
+									   }
+									   failure:^(NSError *error) {
+										   NSLog(@"actionViser error : %@", error.localizedDescription);
+									   }];
 		}
 		else {
 			[requester request:@"visa" andArgs:args delegate:self];
 		}
-		
-		for (int i=0; i<10; i++)
-			NSLog(@"Adrien viseeeeer");
 	}
 	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
 		[self showHud];

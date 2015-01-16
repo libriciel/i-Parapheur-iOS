@@ -504,16 +504,12 @@
 																						  object:responseDossier
 																					  parameters:annotation];
 	
-	// serialize dictionary
-	
-	NSLog(@"Adrien %@", annotation);
+	// Add params to custom request
 	
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self fixUpdateAnnotationDictionary:annotation]
 													   options:NSJSONWritingPrettyPrinted
 														 error:nil];
-	
-	// Add params to custom request
-	
+
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 	[request setHTTPBody:jsonData];

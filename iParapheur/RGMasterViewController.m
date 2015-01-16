@@ -71,7 +71,7 @@
 	_restClient = [[ADLRestClient alloc] init];
 	
 	[_restClient getApiLevel:^(NSNumber *versionNumber) { [self loadBureaux]; }
-					 failure:^(NSError *error) { NSLog(@"Adrien getApi failed : %@", error); }];
+					 failure:^(NSError *error) { NSLog(@"getApi failed : %@", error); }];
 	
 	// Do any additional setup after loading the view, typically from a nib
 	_bureauxArray = [[NSMutableArray alloc] init];

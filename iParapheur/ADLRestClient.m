@@ -84,7 +84,7 @@ static NSNumber *PARAPHEUR_API_VERSION;
 		  failure:(void (^)(NSError *))failure {
 	
 	[_restClientApi3 getCircuit:dossier
-						success:^(NSArray *dossiers) { success(dossiers); }
+						success:^(NSArray *circuits) { success(circuits); }
 						failure:^(NSError *error) { failure(error); }];
 }
 
@@ -120,6 +120,26 @@ static NSNumber *PARAPHEUR_API_VERSION;
 						   forDossier:dossier
 							  success:^(NSArray *annotations) { success(annotations); }
 							  failure:^(NSError *error) { failure(error); }];
+}
+
+
+-(void)actionViserForDossier:(NSString *)dossierId
+				   forBureau:(NSString *)bureauId
+		withPublicAnnotation:(NSString *)publicAnnotation
+	   withPrivateAnnotation:(NSString *)privateAnnotation
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 actionViserForDossier:dossierId
+								 forBureau:(NSString *)bureauId
+					  withPublicAnnotation:publicAnnotation
+					 withPrivateAnnotation:privateAnnotation
+								   success:^(NSArray *result) {
+									   success(result);
+								   }
+								   failure:^(NSError *error) {
+									   failure(error);
+								   }];
 }
 
 

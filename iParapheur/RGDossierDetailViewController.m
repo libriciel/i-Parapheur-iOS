@@ -185,12 +185,23 @@
 
 - (void) setDossierRef:(NSString *)_dossierRef {
 	dossierRef = _dossierRef;
-	ADLRequester *requester = [ADLRequester sharedRequester];
-	
+
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossierRef", nil];
 	
-	//TODO : Adrien, link to switch v2/v3
-	[requester request:GETDOSSIER_API andArgs:args delegate:self];
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		[_restClient getDossier:dossierRef // TODO
+						dossier:dossierRef
+						success:^(NSArray *dossier) {
+							[self getDossierDidEndWithREquestAnswer];
+						}
+						failure:^(NSError *error) {
+							NSLog(@"getDossier error %@ : ", error.localizedDescription);
+						}];
+	}
+	else {
+		ADLRequester *requester = [ADLRequester sharedRequester];
+		[requester request:GETDOSSIER_API andArgs:args delegate:self];
+	}
 
 	SHOW_HUD
 }
@@ -347,6 +358,22 @@
 }
 
 
+#pragma mark - Request Callback
+
+
+-(void)getDossierDidEndWithREquestAnswer {
+	//[deskArray removeAllObjects];
+	@synchronized(self)
+	{
+		//[textView setText:[answer JSONString]];
+		//[self refreshViewWithDossier:[answer objectForKey:@"data"]];
+	}
+	[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+	[self getCircuit];
+	[self showsEveryThing];
+}
+
+
 #pragma mark - Wall impl
 
 
@@ -354,15 +381,7 @@
 	NSString *s = [answer objectForKey:@"_req"];
 	
 	if ([s isEqual:GETDOSSIER_API]) {
-		//[deskArray removeAllObjects];
-		@synchronized(self)
-		{
-			//[textView setText:[answer JSONString]];
-			//[self refreshViewWithDossier:[answer objectForKey:@"data"]];
-		}
-		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-		[self getCircuit];
-		[self showsEveryThing];
+		[self getDossierDidEndWithREquestAnswer];
 	}
 	else if ([s isEqualToString:@"getCircuit"]) {
 		[self refreshCircuits:[answer objectForKey:@"circuit"]];
