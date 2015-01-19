@@ -46,21 +46,6 @@
 }
 
 
--(void)sendRequestWithSharedManager:(NSMutableURLRequest *)request
-							success:(void (^)(NSArray *))success
-							failure:(void (^)(NSError *))failure {
-	
-	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
-																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-																										 success(operation.responseDescriptors);
-																									 } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-																										 failure(error);
-																									 }];
-	
-	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
-}
-
-
 #pragma mark - getApiLevel
 
 
@@ -446,9 +431,12 @@
 	
 	// Send request
 	
-	[self sendRequestWithSharedManager:request
-							   success:^(NSArray *response) { success(response); }
-							   failure:^(NSError *error) { failure(error); }];
+	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
+																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) { success(operation.responseDescriptors); }
+																									 failure:^(RKObjectRequestOperation *operation, NSError *error) { failure(error); }];
+	
+	
+	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
 }
 
 
@@ -516,9 +504,10 @@
 	
 	// Send request
 	
-	[self sendRequestWithSharedManager:request
-							   success:^(NSArray *response) { success(response); }
-							   failure:^(NSError *error) { failure(error); }];
+	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
+																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) { success(operation.responseDescriptors); }
+																									 failure:^(RKObjectRequestOperation *operation, NSError *error) { failure(error); }];
+	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
 }
 
 
@@ -564,9 +553,18 @@
 	
 	// Send request
 	
-	[self sendRequestWithSharedManager:request
-							   success:^(NSArray *response) { success(response); }
-							   failure:^(NSError *error) { failure(error); }];
+	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
+																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+																										 success(operation.responseDescriptors);
+																									 }
+																									 failure:^(RKObjectRequestOperation *operation, NSError *error) {
+																										 if (operation.HTTPRequestOperation.response.statusCode == 200)
+																											 success(operation.responseDescriptors);
+																										 else
+																											 failure(error);
+																									 }];
+	
+	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
 }
 
 

@@ -99,7 +99,6 @@
 	ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
 	
 	self.pkeys = [keystore listPrivateKeys];
-	
 }
 
 
@@ -129,13 +128,16 @@
 							  withPublicAnnotation:[self.annotationPublique text]
 							 withPrivateAnnotation:[self.annotationPrivee text]
 										   success:^(NSArray *result) {
-											   NSLog(@"Adrien actionViser success : %@", result);
 											   [self dismissDialogView];
 										   }
 										   failure:^(NSError *error) {
 											   NSLog(@"actionViser error : %@", error.localizedDescription);
-											   //Adrien TODO check error or 200
-											   [self dismissDialogView];
+											   
+											   [[[UIAlertView alloc] initWithTitle:@"Erreur"
+																		   message:@"Une erreur est survenue lors de l'envoi de la requête"
+																		  delegate:nil
+																 cancelButtonTitle:@"Fermer"
+																 otherButtonTitles: nil] show];
 										   }];
 			}
 		}
@@ -145,6 +147,8 @@
 	}
 	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
 		[self showHud];
+		
+		// TODO Adrien : switch
 		[requester request:@"secretariat" andArgs:args delegate:self];
 	}
 	else if ([self.action isEqualToString:@"REJETER"]) {
@@ -153,7 +157,11 @@
 			[requester request:@"reject" andArgs:args delegate:self];
 		}
 		else {
-			[[[UIAlertView alloc] initWithTitle:@"Attention" message:@"Veuillez saisir le motif de votre rejet" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles:nil] show];
+			[[[UIAlertView alloc] initWithTitle:@"Attention"
+										message:@"Veuillez saisir le motif de votre rejet"
+									   delegate:nil
+							  cancelButtonTitle:@"Fermer"
+							  otherButtonTitles:nil] show];
 		}
 		
 	}
@@ -184,7 +192,8 @@
 
 
 - (IBAction)cancel:(id)sender {
-	[self dismissViewControllerAnimated:YES completion:nil];
+	[self dismissViewControllerAnimated:YES
+							 completion:nil];
 }
 
 
@@ -207,7 +216,8 @@
 -(void)dismissDialogView {
 	[self hideHud];
 	[self dismissViewControllerAnimated:YES completion:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete
+														object:nil];
 }
 
 
@@ -297,7 +307,11 @@
 //
 
 -(void) didEndWithUnReachableNetwork {
-	[[[UIAlertView alloc] initWithTitle:@"Erreur" message:@"Une erreur est survenue lors de l'envoi de la requête" delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+	[[[UIAlertView alloc] initWithTitle:@"Erreur"
+								message:@"Une erreur est survenue lors de l'envoi de la requête"
+							   delegate:nil
+					  cancelButtonTitle:@"Fermer"
+					  otherButtonTitles: nil] show];
 }
 
 
@@ -353,9 +367,10 @@
 		
 		ADLRequester *requester = [ADLRequester sharedRequester];
 		NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[self dossiersRef], @"dossiers", nil];
-		[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
 		
-		
+		[requester request:@"getSignInfo"
+				   andArgs:signInfoArgs
+				  delegate:self];
 	}
 }
 
