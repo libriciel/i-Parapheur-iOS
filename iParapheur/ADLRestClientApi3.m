@@ -545,6 +545,60 @@
 													   options:NSJSONWritingPrettyPrinted
 														 error:nil];
 	
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[request setHTTPBody:jsonData];
+	
+	// Send request
+	
+	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
+																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+																										 success(operation.responseDescriptors);
+																									 }
+																									 failure:^(RKObjectRequestOperation *operation, NSError *error) {
+																										 if (operation.HTTPRequestOperation.response.statusCode == 200)
+																											 success(operation.responseDescriptors);
+																										 else
+																											 failure(error);
+																									 }];
+	
+	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+}
+
+
+-(void)actionSignerForDossier:(NSString *)dossierId
+					forBureau:(NSString *)bureauId
+		 withPublicAnnotation:(NSString *)publicAnnotation
+		withPrivateAnnotation:(NSString *)privateAnnotation
+				withSignature:(NSString *)signature
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure {
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"dossier_signature_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_signature_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/signature"
+																				  method:RKRequestMethodPOST]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossierId;
+	
+	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:@"dossier_signature_route"
+																						  object:responseDossier
+																					  parameters:nil];
+	
+	// Add params to custom request
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"signature"];
+	
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:argumentDictionary
+													   options:NSJSONWritingPrettyPrinted
+														 error:nil];
+	
 	NSLog(@"Adrien data sent : %@", argumentDictionary);
 	
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];

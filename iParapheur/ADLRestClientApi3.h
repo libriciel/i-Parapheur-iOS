@@ -61,4 +61,13 @@
 					 failure:(void (^)(NSError *))failure;
 
 
+-(void)actionSignerForDossier:(NSString *)dossierId
+					forBureau:(NSString *)bureauId
+		 withPublicAnnotation:(NSString *)publicAnnotation
+		withPrivateAnnotation:(NSString *)privateAnnotation
+				withSignature:(NSString *)signature
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure;
+
+	
 @end

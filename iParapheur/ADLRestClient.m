@@ -147,4 +147,26 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
+-(void)actionSignerForDossier:(NSString *)dossierId
+					forBureau:(NSString *)bureauId
+		 withPublicAnnotation:(NSString *)publicAnnotation
+		withPrivateAnnotation:(NSString *)privateAnnotation
+				withSignature:(NSString *)signature
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 actionSignerForDossier:dossierId
+								  forBureau:bureauId
+					   withPublicAnnotation:publicAnnotation
+					  withPrivateAnnotation:privateAnnotation
+							  withSignature:(NSString *)signature
+									success:^(NSArray *result) {
+										success(result);
+									}
+									failure:^(NSError *error) {
+										failure(error);
+									}];
+}
+
+
 @end
