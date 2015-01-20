@@ -8,6 +8,7 @@
 #import "ADLResponseDossier.h"
 #import "ADLResponseCircuit.h"
 #import "ADLResponseAnnotation.h"
+#import "ADLResponseSignInfo.h"
 
 @implementation ADLRestClientApi3
 
@@ -36,6 +37,7 @@
 	[self addApiDossierMappingRules:objectManager];
 	[self addApiCircuitMappingRules:objectManager];
 	[self addApiAnnotationsMappingRules:objectManager];
+	[self addSignInfoMappingRules:objectManager];
 	
 	return self;
 }
@@ -259,6 +261,53 @@
 	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
 	
 	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"dossier_route"
+															object:responseDossier
+														parameters:queryParams
+														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+															   success(mappingResult.array);
+														   }
+														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
+															   failure(error);
+														   }];
+}
+
+
+#pragma mark - GetSignInfo
+
+
+-(void)addSignInfoMappingRules:(RKObjectManager *) objectManager {
+	
+	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseSignInfo class]];
+	[mapping addAttributeMappingsFromDictionary:@{@"pesid": @"pesid",
+												  @"peshash": @"hash"}];
+	
+	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
+																							method:RKRequestMethodGET
+																					   pathPattern:@"/parapheur/dossiers/:identifier/getSignInfo"
+																						   keyPath:nil
+																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
+	
+	[objectManager addResponseDescriptor:responseDescriptor];
+}
+
+
+-(void)getSignInfoForDossier:(NSString *)dossierId
+				   andBureau:(NSString *)bureauId
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure {
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"circuit_get_sign_info_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"circuit_get_sign_info_route"
+																			 pathPattern:@"/parapheur/dossiers/:identifier/getSignInfo"
+																				  method:RKRequestMethodGET]];
+	}
+	
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossierId;
+	
+	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
+	
+	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"circuit_get_sign_info_route"
 															object:responseDossier
 														parameters:queryParams
 														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {

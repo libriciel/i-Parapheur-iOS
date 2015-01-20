@@ -155,6 +155,7 @@
 		C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C57E67E11A5DF6F800BC4A3A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
+		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
 		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
@@ -381,6 +382,8 @@
 		C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseCircuit.h; sourceTree = "<group>"; };
 		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseSignInfo.h; sourceTree = "<group>"; };
+		C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseSignInfo.m; sourceTree = "<group>"; };
 		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
 		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
@@ -850,6 +853,8 @@
 				C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */,
 				C51394101A65834000F46633 /* ADLResponseAnnotation.h */,
 				C51394111A65834000F46633 /* ADLResponseAnnotation.m */,
+				C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */,
+				C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */,
 			);
 			name = ResponseModel;
 			sourceTree = "<group>";
@@ -1044,6 +1049,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,

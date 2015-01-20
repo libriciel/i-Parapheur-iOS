@@ -58,6 +58,12 @@
 				failure:(void (^)(NSError *))failure;
 
 
+-(void)getSignInfoForDossier:(NSString *)dossierId
+				   andBureau:(NSString *)bureauId
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure;
+
+
 -(void)actionViserForDossier:(NSString *)dossierId
 				   forBureau:(NSString *)bureauId
 		withPublicAnnotation:(NSString *)publicAnnotation

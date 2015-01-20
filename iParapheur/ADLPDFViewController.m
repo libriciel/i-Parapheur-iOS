@@ -274,14 +274,19 @@
 	
 	//
 	
+	NSLog(@"Adrien signatures : %@, %@", [[ADLSingletonState sharedSingletonState] bureauCourant], _dossierRef);
+	
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
-			//Adrien TODO : request
-
 			if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
-				ADLRequester *requester = [ADLRequester sharedRequester];
-				[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+				[_restClient getSignInfoForDossier:_dossierRef
+										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+										   success:^(NSArray *signInfos) {
+											   NSLog(@"Adrien getSignInfo %@", signInfos);
+										   }
+										   failure:^(NSError *error) {
+											   NSLog(@"Adrien getSignInfo %@", error.localizedDescription);
+										   }];
 			}
 			else {
 				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];

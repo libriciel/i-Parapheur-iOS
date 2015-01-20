@@ -13,9 +13,9 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
-- (id)init {   
-    _restClientApi3 = [[ADLRestClientApi3 alloc] init];
-    return self;
+- (id)init {
+	_restClientApi3 = [[ADLRestClientApi3 alloc] init];
+	return self;
 }
 
 
@@ -27,21 +27,21 @@ static NSNumber *PARAPHEUR_API_VERSION;
 
 
 - (void)getApiLevel:(void (^)(NSNumber *versionNumber))success
-            failure:(void (^)(NSError *error))failure {
-    
-    [_restClientApi3 getApiLevel:^(NSNumber *versionNumber) {
+			failure:(void (^)(NSError *error))failure {
+	
+	[_restClientApi3 getApiLevel:^(NSNumber *versionNumber) {
 		PARAPHEUR_API_VERSION = versionNumber;
 		success(versionNumber);
 	}
-                         failure:^(NSError *error) { failure(error); }];
+						 failure:^(NSError *error) { failure(error); }];
 }
 
 
 - (void)getBureaux:(void (^)(NSArray *))success
-           failure:(void (^)(NSError *))failure {
-    
-    [_restClientApi3 getBureaux:^(NSArray *bureaux) { success(bureaux); }
-                        failure:^(NSError *error) { failure(error); }];
+		   failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 getBureaux:^(NSArray *bureaux) { success(bureaux); }
+						failure:^(NSError *error) { failure(error); }];
 }
 
 
@@ -112,7 +112,7 @@ static NSNumber *PARAPHEUR_API_VERSION;
 
 
 -(void)updateAnnotation:(NSDictionary*)annotation
-			forDossier:(NSString *)dossier
+			 forDossier:(NSString *)dossier
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure {
 	
@@ -120,6 +120,22 @@ static NSNumber *PARAPHEUR_API_VERSION;
 						   forDossier:dossier
 							  success:^(NSArray *annotations) { success(annotations); }
 							  failure:^(NSError *error) { failure(error); }];
+}
+
+
+-(void)getSignInfoForDossier:(NSString *)dossierId
+				   andBureau:(NSString *)bureauId
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure {
+	
+	NSString *prefixToRemove = @"workspace://SpacesStore/";
+	if ([bureauId hasPrefix:prefixToRemove])
+		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
+	
+	[_restClientApi3 getSignInfoForDossier:dossierId
+								 andBureau:bureauId
+								   success:^(NSArray *annotations) { success(annotations); }
+								   failure:^(NSError *error) { failure(error); }];
 }
 
 
