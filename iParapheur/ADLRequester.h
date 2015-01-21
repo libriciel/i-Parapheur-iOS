@@ -20,11 +20,15 @@
 
 +(ADLRequester *) sharedRequester;
 
--(void) downloadDocumentAt:(NSString*)path delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
+-(void) downloadDocumentAt:(NSString*)path
+				  delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 
--(void) request:(NSString*)request andArgs:(NSDictionary*)args delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
+-(void) request:(NSString*)request
+		andArgs:(NSDictionary*)args
+	   delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 
--(void) request:(NSString*)request delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
+-(void) request:(NSString*)request
+	   delegate:(id<ADLParapheurWallDelegateProtocol>)delegate;
 
 -(NSData *) downloadDocumentNow: (NSString*)path;
 

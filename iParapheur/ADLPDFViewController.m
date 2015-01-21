@@ -313,9 +313,12 @@
 	_isDocumentPrincipal = (index == 0);
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	bool isVersion2 = [_document objectForKey:@"visuelPdfUrl"] != nil;
-	
-	if (_document && isVersion2) {
+	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _document) {
+		NSString *documentId = [_document objectForKey:@"id"];
+		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId]
+							 delegate:self];
+	}
+	else if (_document) {
 		NSDictionary *document = [[_document objectForKey:@"documents" ] objectAtIndex:index];
 		
 		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
@@ -327,11 +330,6 @@
 			[requester downloadDocumentAt:[document objectForKey:@"downloadUrl"]
 								 delegate:self];
 		}
-	}
-	else if (_document) {
-		NSString *documentId = [_document objectForKey:@"id"];
-		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId]
-							 delegate:self];
 	}
 }
 

@@ -272,10 +272,10 @@
 }
 
 
-#pragma mark - GetSignInfo
+#pragma mark - getSignInfo
 
 
--(void)addSignInfoMappingRules:(RKObjectManager *) objectManager {
+-(void)addSignInfoMappingRules:(RKObjectManager *)objectManager {
 	
 	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseSignInfo class]];
 	[mapping addAttributeMappingsFromDictionary:@{@"pesid": @"pesid",

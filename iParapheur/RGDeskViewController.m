@@ -548,8 +548,6 @@
 			selectedArray = [_selectedDossiersArray valueForKey:@"dossierRef"];
 		}
 		
-		NSLog(@"Adrien ùùùùùù %@", selectedArray);
-		
 		((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = selectedArray; // Adrien [_selectedDossiersArray valueForKey:@"dossierRef"];
 		((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;
 	}

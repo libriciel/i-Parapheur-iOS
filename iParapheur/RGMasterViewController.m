@@ -70,8 +70,12 @@
 	
 	_restClient = [[ADLRestClient alloc] init];
 	
-	[_restClient getApiLevel:^(NSNumber *versionNumber) { [self loadBureaux]; }
-					 failure:^(NSError *error) { NSLog(@"getApi failed : %@", error); }];
+	[_restClient getApiLevel:^(NSNumber *versionNumber) {
+						 [self loadBureaux];
+					 }
+					 failure:^(NSError *error) {
+						 [self loadBureaux];
+					 }];
 	
 	// Do any additional setup after loading the view, typically from a nib
 	_bureauxArray = [[NSMutableArray alloc] init];
@@ -146,10 +150,6 @@
 		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 		
 	}
-	else if ([s isEqual:GETLEVEL_API]) {
-		NSString *levelString = API_GETLEVEL_GET_LEVEL(answer);
-		NSLog(@"Adrien macro get : %@", levelString);
-	}
 	
 	//storing ticket ? lacks the host and login information
 	//we should add it into the request process ?
@@ -187,7 +187,7 @@
 			NSLog(@"getBureaux error");
 		}];
 	}
-	else if ([[ADLRestClient getRestApiVersion] intValue] == 2) {
+	else {
 		API_GETBUREAUX();
 		
 		/*if (displayHUD == NO) {
@@ -236,8 +236,8 @@
 	if (isLoaded && isVersion2) {
 		NSDictionary *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
 		bureauName = [bureau objectForKey:@"name"];
-		bureauEnRetard = [bureau objectForKey:@"en_retard"];
-		bureauATraiter = [bureau objectForKey:@"a_traiter"];
+		bureauEnRetard =  [NSString stringWithFormat:@"%@", [bureau objectForKey:@"en_retard"]];
+		bureauATraiter =  [NSString stringWithFormat:@"%@", [bureau objectForKey:@"a_traiter"]];
 	}
 	else {
 		ADLResponseBureau *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
@@ -247,7 +247,7 @@
 	}
 	
 	[[cell bureauNameLabel] setText:bureauName];
-	
+		
 	[[cell todoBadge] setBadgeText:bureauATraiter];
 	[[cell todoBadge] autoBadgeSizeWithString:bureauATraiter];
 	

@@ -87,8 +87,8 @@ static ADLRequester *sharedRequester = nil;
 	
     [_lockApi lock];
     
-    NSLog(@"%@", request);
-    NSLog(@"%@", args);
+    NSLog(@"request : %@", request);
+    NSLog(@"args : %@", args);
     
     ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
     ADLAPIOperation *apiRequestOperation = [[ADLAPIOperation alloc] initWithRequest:request
