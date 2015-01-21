@@ -25,6 +25,15 @@ static NSNumber *PARAPHEUR_API_VERSION;
 									forPdf:isPdf];//
 }
 
+-(NSString *)fixBureauId:(NSString *)dossierId {
+	NSString *prefixToRemove = @"workspace://SpacesStore/";
+
+	if ([dossierId hasPrefix:prefixToRemove])
+		return [dossierId substringFromIndex:prefixToRemove.length];
+	else
+		return dossierId;
+}
+
 #pragma mark API calls
 
 
@@ -65,17 +74,14 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
--(void)getDossier:(NSString*)bureau
-		  dossier:(NSString*)dossier
+-(void)getDossier:(NSString*)bureauId
+		  dossier:(NSString*)dossierId
 		  success:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
-	if ([bureau hasPrefix:prefixToRemove])
-		bureau = [bureau substringFromIndex:prefixToRemove.length];
 	
-	[_restClientApi3 getDossier:bureau
-						dossier:dossier
+	[_restClientApi3 getDossier:[self fixBureauId:bureauId]
+						dossier:dossierId
 						success:^(NSArray *dossiers) { success(dossiers); }
 						failure:^(NSError *error) { failure(error); }];
 }
@@ -106,8 +112,8 @@ static NSNumber *PARAPHEUR_API_VERSION;
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
-	[_restClientApi3 addAnnotation:annotation
-						forDossier:dossier
+	[_restClientApi3 actionAddAnnotation:annotation
+							  forDossier:dossier
 						   success:^(NSArray *annotations) { success(annotations); }
 						   failure:^(NSError *error) { failure(error); }];
 }
@@ -118,10 +124,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure {
 	
-	[_restClientApi3 updateAnnotation:annotation
-						   forDossier:dossier
-							  success:^(NSArray *annotations) { success(annotations); }
-							  failure:^(NSError *error) { failure(error); }];
+	[_restClientApi3 actionUpdateAnnotation:annotation
+								 forDossier:dossier
+									success:^(NSArray *annotations) { success(annotations); }
+									failure:^(NSError *error) { failure(error); }];
 }
 
 
@@ -130,12 +136,8 @@ static NSNumber *PARAPHEUR_API_VERSION;
 					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure {
 	
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
-	if ([bureauId hasPrefix:prefixToRemove])
-		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
-	
 	[_restClientApi3 getSignInfoForDossier:dossierId
-								 andBureau:bureauId
+								 andBureau:[self fixBureauId:bureauId]
 								   success:^(NSArray *annotations) { success(annotations); }
 								   failure:^(NSError *error) { failure(error); }];
 }
@@ -148,12 +150,8 @@ static NSNumber *PARAPHEUR_API_VERSION;
 					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure {
 	
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
-	if ([bureauId hasPrefix:prefixToRemove])
-		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
-	
 	[_restClientApi3 actionViserForDossier:dossierId
-								 forBureau:bureauId
+								 forBureau:[self fixBureauId:bureauId]
 					  withPublicAnnotation:publicAnnotation
 					 withPrivateAnnotation:privateAnnotation
 								   success:^(NSArray *result) {
@@ -173,12 +171,8 @@ static NSNumber *PARAPHEUR_API_VERSION;
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
-	if ([bureauId hasPrefix:prefixToRemove])
-		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
-	
 	[_restClientApi3 actionSignerForDossier:dossierId
-								  forBureau:bureauId
+								  forBureau:[self fixBureauId:bureauId]
 					   withPublicAnnotation:publicAnnotation
 					  withPrivateAnnotation:privateAnnotation
 							  withSignature:(NSString *)signature
@@ -198,12 +192,8 @@ static NSNumber *PARAPHEUR_API_VERSION;
 					   success:(void (^)(NSArray *))success
 					   failure:(void (^)(NSError *))failure {
 	
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
-	if ([bureauId hasPrefix:prefixToRemove])
-		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
-	
 	[_restClientApi3 actionRejeterForDossier:dossierId
-								   forBureau:bureauId
+								   forBureau:[self fixBureauId:bureauId]
 						withPublicAnnotation:publicAnnotation
 					   withPrivateAnnotation:privateAnnotation
 									 success:^(NSArray *result) {

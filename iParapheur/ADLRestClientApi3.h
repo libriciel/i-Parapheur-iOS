@@ -42,18 +42,6 @@
 			  failure:(void (^)(NSError *))failure;
 
 
--(void)addAnnotation:(NSDictionary*)annotation
-		  forDossier:(NSString *)dossier
-			 success:(void (^)(NSArray *))success
-			 failure:(void (^)(NSError *))failure;
-
-
--(void)updateAnnotation:(NSDictionary*)annotation
-			 forDossier:(NSString *)dossier
-				success:(void (^)(NSArray *))success
-				failure:(void (^)(NSError *))failure;
-
-
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
 					 success:(void (^)(NSArray *))success
@@ -84,5 +72,16 @@
 					   success:(void (^)(NSArray *))success
 					   failure:(void (^)(NSError *))failure;
 
+
+-(void)actionAddAnnotation:(NSDictionary*)annotation
+				forDossier:(NSString *)dossier
+				   success:(void (^)(NSArray *))success
+				   failure:(void (^)(NSError *))failure;
+
+
+-(void)actionUpdateAnnotation:(NSDictionary*)annotation
+				   forDossier:(NSString *)dossier
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure;
 
 @end

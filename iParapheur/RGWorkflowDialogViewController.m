@@ -67,8 +67,12 @@
 @implementation RGWorkflowDialogViewController
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+-(id)initWithNibName:(NSString *)nibNameOrNil
+			  bundle:(NSBundle *)nibBundleOrNil {
+	
+	self = [super initWithNibName:nibNameOrNil
+						   bundle:nibBundleOrNil];
+	
 	if (self) {
 		// Custom initialization
 	}
@@ -76,7 +80,7 @@
 }
 
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
@@ -84,7 +88,7 @@
 }
 
 
-- (void)viewWillAppear:(BOOL)animated {
+-(void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	self.navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:self.action];
 	if ([self.action isEqualToString:@"SIGNER"]) {
@@ -103,12 +107,12 @@
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return YES;
 }
 
 
-- (IBAction)finish:(id)sender {
+-(IBAction)finish:(id)sender {
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	NSMutableDictionary *args = [[NSMutableDictionary alloc]
@@ -187,30 +191,26 @@
 		
 		ADLPasswordAlertView *alertView =
 		[[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-											message:[NSString
-													 stringWithFormat:@"Entez le mot de passe pour %@",
-													 [[pkey p12Filename] lastPathComponent]]
+											message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", [[pkey p12Filename] lastPathComponent]]
 										   delegate:self cancelButtonTitle:@"Annuler"
 								  otherButtonTitles:@"Confirmer", nil];
 		
 		alertView.p12Path = [pkey p12Filename];
 		
 		[alertView show];
-		
-		
 	}
 	
 	// [args release];
 }
 
 
-- (IBAction)cancel:(id)sender {
+-(IBAction)cancel:(id)sender {
 	[self dismissViewControllerAnimated:YES
 							 completion:nil];
 }
 
 
-- (void) showHud {
+-(void)showHud {
 	LGViewHUD *hud = [LGViewHUD defaultHUD];
 	hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
 	hud.topText=@"";
@@ -220,7 +220,7 @@
 }
 
 
-- (void) hideHud {
+-(void)hideHud {
 	LGViewHUD *hud = [LGViewHUD defaultHUD];
 	[hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
@@ -234,7 +234,7 @@
 }
 
 
--(void) didEndWithRequestAnswer:(NSDictionary *)answer {
+-(void)didEndWithRequestAnswer:(NSDictionary *)answer {
 	NSLog(@"MIKAF %@", answer);
 	
 	if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
@@ -312,7 +312,7 @@
 }
 
 
--(void) didEndWithUnReachableNetwork {
+-(void)didEndWithUnReachableNetwork {
 	[[[UIAlertView alloc] initWithTitle:@"Erreur"
 								message:@"Une erreur est survenue lors de l'envoi de la requête"
 							   delegate:nil
@@ -340,11 +340,9 @@
 	}
 	
 	ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-	
 	PrivateKey *pkey = _currentPKey;
 	
 	NSError *error = nil;
-	
 	
 	for (NSString *hash in hashes) {
 		NSData *hash_data = [keystore bytesFromHexString:hash];
@@ -367,7 +365,6 @@
 			NSString *b64EncodedSignature = [signature base64EncodedString];
 			[signatures addObject:b64EncodedSignature];
 		}
-		
 	}
 	
 	if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
@@ -400,12 +397,15 @@
 }
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section {
 	return _pkeys.count;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+		 cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
 	UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
 	
 	if(cell == nil) {
