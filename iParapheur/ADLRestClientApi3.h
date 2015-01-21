@@ -76,5 +76,13 @@
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure;
 
-	
+
+-(void)actionRejeterForDossier:(NSString *)dossierId
+					 forBureau:(NSString *)bureauId
+		  withPublicAnnotation:(NSString *)publicAnnotation
+		 withPrivateAnnotation:(NSString *)privateAnnotation
+					   success:(void (^)(NSArray *))success
+					   failure:(void (^)(NSError *))failure;
+
+
 @end

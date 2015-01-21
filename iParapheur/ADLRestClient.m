@@ -191,4 +191,28 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
+-(void)actionRejeterForDossier:(NSString *)dossierId
+					 forBureau:(NSString *)bureauId
+		  withPublicAnnotation:(NSString *)publicAnnotation
+		 withPrivateAnnotation:(NSString *)privateAnnotation
+					   success:(void (^)(NSArray *))success
+					   failure:(void (^)(NSError *))failure {
+	
+	NSString *prefixToRemove = @"workspace://SpacesStore/";
+	if ([bureauId hasPrefix:prefixToRemove])
+		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
+	
+	[_restClientApi3 actionRejeterForDossier:dossierId
+								   forBureau:bureauId
+						withPublicAnnotation:publicAnnotation
+					   withPrivateAnnotation:privateAnnotation
+									 success:^(NSArray *result) {
+										 success(result);
+									 }
+									 failure:^(NSError *error) {
+										 failure(error);
+									 }];
+}
+
+
 @end
