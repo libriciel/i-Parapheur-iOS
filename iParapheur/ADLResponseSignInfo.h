@@ -3,8 +3,6 @@
 
 @interface ADLResponseSignInfo : NSObject
 
-
 @property (nonatomic, strong) NSDictionary *signatureInformations;
-
 
 @end

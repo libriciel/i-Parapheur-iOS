@@ -574,7 +574,7 @@
 	   withPrivateAnnotation:(NSString *)privateAnnotation
 					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure {
-	
+
 	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"dossier_visa_route"]) {
 		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_visa_route"
 																			 pathPattern:@"/parapheur/dossiers/:identifier/visa"

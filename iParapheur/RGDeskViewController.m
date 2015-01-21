@@ -120,7 +120,7 @@
 	[super viewWillAppear:YES];
 	
 	_currentPage = 0;
-	self.dossiersArray = [NSMutableArray new];
+	_dossiersArray = [NSMutableArray new];
 	_possibleMainActions = [NSArray arrayWithObjects:@"VISER", @"SIGNER", @"TDT", @"MAILSEC", @"ARCHIVER", nil];
 	_actionsWithoutAnnotation = [NSArray arrayWithObjects:@"RECUPERER", @"SUPPRIMER", @"SECRETARIAT", nil];
 	[self loadDossiersWithPage:_currentPage];
@@ -652,16 +652,18 @@
 
 
 -(void)cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
+	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		ADLResponseDossier *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-		self.secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
+		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
+		
 		self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
 		[self showMoreActions:cell];
 	}
 	else {
 		NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-		self.secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
-		self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
+		_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
 		[self showMoreActions:cell];
 	}
 }
@@ -670,8 +672,8 @@
 -(void)cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		ADLResponseDossier *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
+		ADLResponseDossier *dossier = [_dossiersArray objectAtIndex:indexPath.row];
+		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", _possibleMainActions]];
 		if (mainActions.count > 0) {
 			_mainAction = [mainActions objectAtIndex:0];
 			_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
@@ -679,7 +681,7 @@
 		}
 	}
 	else {
-		NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
+		NSDictionary *dossier = [_dossiersArray objectAtIndex:indexPath.row];
 		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
 		if (mainActions.count > 0) {
 			_mainAction = [mainActions objectAtIndex:0];
@@ -696,7 +698,7 @@
 
 
 -(BOOL)canSwipeCell:(RGFileCell *)cell {
-	return (!self.isInBatchMode && (self.swipedCell == cell));
+	return (!self.isInBatchMode && (_swipedCell == cell));
 }
 
 

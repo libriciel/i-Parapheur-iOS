@@ -59,19 +59,22 @@
 #import "ADLResponseCircuit.h"
 #import "ADLResponseDossier.h"
 #import "ADLResponseAnnotation.h"
+#import "ADLResponseSignInfo.h"
 
 
 #define kActionButtonsWidth 300.0f
 #define kActionButtonsHeight 100.0f
 
 @interface ADLPDFViewController ()
+
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
+
 - (void)configureView;
+
 @end
 
 
 @implementation ADLPDFViewController
-
 
 #pragma mark - Managing the detail item
 
@@ -269,12 +272,16 @@
 		buttons = [[NSArray alloc] initWithObjects:_actionButton, _documentsButton, _detailsButton, nil];
 	else
 		buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
-	
+
 	self.navigationItem.rightBarButtonItems = buttons;
-	
-	//
-	
-	NSLog(@"Adrien signatures : %@, %@", [[ADLSingletonState sharedSingletonState] bureauCourant], _dossierRef);
+
+	[self refreshSignInfoForDossier:dossier];
+}
+
+
+-(void)refreshSignInfoForDossier:(ADLResponseDossier*)dossier {
+
+	SHOW_HUD
 	
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
@@ -282,10 +289,13 @@
 				[_restClient getSignInfoForDossier:_dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 										   success:^(NSArray *signInfos) {
-											   NSLog(@"Adrien getSignInfo %@", signInfos);
+											   if (signInfos.count > 0)
+												   _signatureFormat = [((ADLResponseSignInfo*) signInfos[0]).signatureInformations objectForKey:@"format"];
+											   else
+												   _signatureFormat = nil;
 										   }
 										   failure:^(NSError *error) {
-											   NSLog(@"Adrien getSignInfo %@", error.localizedDescription);
+											   NSLog(@"getSignInfo %@", error.localizedDescription);
 										   }];
 			}
 			else {
@@ -299,9 +309,8 @@
 			_signatureFormat = nil;
 		}
 	}
-	
-	SHOW_HUD
 }
+
 
 #pragma mark - Wall delegate Implementation
 
@@ -355,7 +364,6 @@
 		else
 			buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
 		
-		//self.navigationItem.leftBarButtonItem = _documentsButton;
 		self.navigationItem.rightBarButtonItems = buttons;
 		
 		NSString *documentPrincipal = [[[_document objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
@@ -525,6 +533,7 @@
 		
 		_actionPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
 		((ADLActionViewController*)[_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:actions];
+		
 		// do something usefull there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
 			[((ADLActionViewController*)[_actionPopover contentViewController]) setSignatureEnabled:YES];
