@@ -43,8 +43,15 @@
 }
 
 
--(NSString *)getDownloadUrl:(NSString *)dossierId {
-	return [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content;ph:visuel-pdf", dossierId];
+-(NSString *)getDownloadUrl:(NSString *)dossierId
+					 forPdf:(bool)isPdf {
+	
+	NSString* result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content", dossierId];
+	
+	if (isPdf)
+		result = [NSString stringWithFormat:@"%@;ph:visuel-pdf", result];
+	
+	return result;
 }
 
 

@@ -12,7 +12,8 @@
 +(NSNumber *)getRestApiVersion;
 
 
--(NSString *)getDownloadUrl:(NSString *)dossierId;
+-(NSString *)getDownloadUrl:(NSString *)dossierId
+					 forPdf:(bool)isPdf;
 	
 
 -(void)getApiLevel:(void (^)(NSNumber *))success

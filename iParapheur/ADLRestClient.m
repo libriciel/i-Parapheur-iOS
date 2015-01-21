@@ -19,8 +19,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
--(NSString *)getDownloadUrl:(NSString *)dossierId {
-	return [_restClientApi3 getDownloadUrl:dossierId];
+-(NSString *)getDownloadUrl:(NSString *)dossierId
+					 forPdf:(bool)isPdf{
+	return [_restClientApi3 getDownloadUrl:dossierId
+									forPdf:isPdf];//
 }
 
 #pragma mark API calls

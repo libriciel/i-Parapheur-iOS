@@ -314,8 +314,10 @@
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _document) {
+		bool isPdf = [[_document objectForKey:@"visuelPdf"] boolValue];
 		NSString *documentId = [_document objectForKey:@"id"];
-		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId]
+		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId
+														   forPdf:isPdf]
 							 delegate:self];
 	}
 	else if (_document) {
