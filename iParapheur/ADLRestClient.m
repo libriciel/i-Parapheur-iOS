@@ -171,6 +171,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
+	NSString *prefixToRemove = @"workspace://SpacesStore/";
+	if ([bureauId hasPrefix:prefixToRemove])
+		bureauId = [bureauId substringFromIndex:prefixToRemove.length];
+	
 	[_restClientApi3 actionSignerForDossier:dossierId
 								  forBureau:bureauId
 					   withPublicAnnotation:publicAnnotation

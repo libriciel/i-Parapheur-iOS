@@ -257,7 +257,6 @@
 	
 	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
 	responseDossier.identifier = dossier;
-	
 	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
 	
 	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"dossier_route"
@@ -278,8 +277,8 @@
 -(void)addSignInfoMappingRules:(RKObjectManager *)objectManager {
 	
 	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseSignInfo class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"pesid": @"pesid",
-												  @"peshash": @"hash"}];
+	[mapping addAttributeMappingsFromDictionary:@{@"signatureInformations":@"signatureInformations"}];
+	
 	
 	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
 																							method:RKRequestMethodGET
@@ -296,18 +295,17 @@
 					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure {
 	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"circuit_get_sign_info_route"]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"circuit_get_sign_info_route"
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"get_sign_info_route"]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"get_sign_info_route"
 																			 pathPattern:@"/parapheur/dossiers/:identifier/getSignInfo"
 																				  method:RKRequestMethodGET]];
 	}
-	
+
 	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
 	responseDossier.identifier = dossierId;
-	
 	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
 	
-	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"circuit_get_sign_info_route"
+	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"get_sign_info_route"
 															object:responseDossier
 														parameters:queryParams
 														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
