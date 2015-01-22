@@ -635,7 +635,7 @@
 				forPage:(NSUInteger)page {
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		NSDictionary *annotationDictionary = [annotation dict];
+		NSDictionary *annotationDictionary = annotation.dict;
 		
 		[_restClient updateAnnotation:annotationDictionary
 						   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]

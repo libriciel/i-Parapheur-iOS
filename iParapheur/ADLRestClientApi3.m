@@ -459,7 +459,9 @@
 -(NSMutableDictionary *)fixUpdateAnnotationDictionary:(NSDictionary *)annotation {
 	NSMutableDictionary *result= [NSMutableDictionary new];
 	
-	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
+	// Fixme : send every other data form annotation
+
+	/**	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
 	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
 	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
 	[result setObject:[annotation valueForKey:@"page"] forKey:@"page"];
@@ -481,7 +483,7 @@
 	[rect setObject:resultBottomRight forKey:@"bottomRight"];
 	[rect setObject:resultTopLeft forKey:@"topLeft"];
 	
-	[result setObject:rect forKey:@"rect"];
+	[result setObject:rect forKey:@"rect"]; */
 	
 	return result;
 }
@@ -581,7 +583,7 @@
 
 
 #pragma mark - Simple actions
-// TODO : TdtActes, TdtHelios, MailSecretaire
+// TODO : MailSecretaire
 
 
 -(void)actionViserForDossier:(NSString *)dossierId
