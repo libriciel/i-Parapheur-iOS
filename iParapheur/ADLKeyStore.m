@@ -18,6 +18,7 @@
 #import <CoreData/CoreData.h>
 
 @implementation ADLKeyStore
+
 @synthesize managedObjectContext;
 
 
@@ -203,6 +204,26 @@ err:
 }
 
 
+-(void)checkUpdates {
+	
+	// Previously, full p12 file path was keeped in the DB.
+	// But the app data folder path changes on every update.
+	// Here we have to check previous data stored, and patch it.
+
+	NSArray* keys = [self listPrivateKeys];
+
+	for (PrivateKey* oldKey in keys) {
+		if ([oldKey.p12Filename pathComponents].count != 2) {
+			
+			NSString* relativePath = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] bundleIdentifier], [oldKey.p12Filename lastPathComponent]];
+			oldKey.p12Filename = relativePath;
+
+			[self.managedObjectContext save:nil];
+		}
+	}
+}
+
+
 NSData* X509_to_NSData(X509 *cert) {
 	unsigned char *cert_data = NULL;
 	BIO * mem = BIO_new(BIO_s_mem());
@@ -214,10 +235,11 @@ NSData* X509_to_NSData(X509 *cert) {
 }
 
 
-- (NSString *)findOrCreateDirectory:(NSSearchPathDirectory)searchPathDirectory
+-(NSString *)findOrCreateDirectory:(NSSearchPathDirectory)searchPathDirectory
 						   inDomain:(NSSearchPathDomainMask)domainMask
 				appendPathComponent:(NSString *)appendComponent
 							  error:(NSError **)errorOut {
+	
 	// Search for the path
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(searchPathDirectory,
 														 domainMask,
@@ -389,7 +411,10 @@ NSData* X509_to_NSData(X509 *cert) {
 	
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		NSString* localizedDescritpion = [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]];
-		[self emitFileIOError:error localizedDescritpion:localizedDescritpion];
+		perror("Opening p12 file error : ");
+		
+		[self emitFileIOError:error
+		 localizedDescritpion:localizedDescritpion];
 	}
 	else {
 		p12 = d2i_PKCS12_fp(fp, NULL);

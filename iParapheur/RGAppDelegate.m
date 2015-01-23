@@ -336,9 +336,11 @@
 
 
 -(ADLKeyStore*)keyStore {
+	
 	if (_keyStore == nil) {
 		_keyStore = [[ADLKeyStore alloc] init];
 		_keyStore.managedObjectContext = self.managedObjectContext;
+		[_keyStore checkUpdates];
 	}
 	
 	return _keyStore;

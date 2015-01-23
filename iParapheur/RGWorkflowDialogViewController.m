@@ -255,16 +255,22 @@
 		}
 		
 		ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-		
 		PrivateKey *pkey = _currentPKey;
-		
 		NSError *error = nil;
-		
 		
 		for (NSString *hash in hashes) {
 			NSData *hash_data = [keystore bytesFromHexString:hash];
-			error = nil;
-			NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
+			
+			NSFileManager *fileManager = [NSFileManager new];
+			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
+												 inDomain:NSUserDomainMask
+										appropriateForURL:nil
+												   create:YES
+													error:NULL];
+			
+			NSString* p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+			
+			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
 									   withPassword:[self p12password]
 											andData:hash_data
 											  error:&error];
@@ -300,9 +306,7 @@
 			
 			[self showHud];
 			
-			NSLog(@"Adrien SIGNATURE = %@", args);
-			
-			// TODO Adrien : rebranch [requester request:@"signature" andArgs:args delegate:self];
+			[requester request:@"signature" andArgs:args delegate:self];
 		}
 	}
 	else  {
@@ -346,8 +350,18 @@
 	
 	for (NSString *hash in hashes) {
 		NSData *hash_data = [keystore bytesFromHexString:hash];
+		
+		NSFileManager *fileManager = [NSFileManager new];
+		NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
+											 inDomain:NSUserDomainMask
+									appropriateForURL:nil
+											   create:YES
+												error:NULL];
+		
+		NSString* p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+		
 		error = nil;
-		NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
+		NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
 								   withPassword:[self p12password]
 										andData:hash_data
 										  error:&error];
@@ -368,23 +382,26 @@
 	}
 	
 	if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
-		NSMutableDictionary *args = [[NSMutableDictionary alloc]
-									 initWithObjectsAndKeys:
-									 dossiers, @"dossiers",
-									 [self.annotationPublique text], @"annotPub",
-									 [self.annotationPrivee text], @"annotPriv",
-									 [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
-									 signatures, @"signatures",
-									 nil];
 		
-		NSLog(@"%@", args);
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		
-		[self showHud];
-		
-		NSLog(@"Adrien SIGNATURE = %@", args);
-		
-		// TODO Adrien : rebranch [requester request:@"signature" andArgs:args delegate:self];
+		for (int i = 0; i<signatures.count; i++) {
+			
+			NSLog(@"Send signature dossier=%@, signSize=%lu", [dossiers objectAtIndex:i], sizeof([signatures objectAtIndex:i]));
+			[self showHud];
+			
+			[_restClient actionSignerForDossier:[dossiers objectAtIndex:i]
+									  forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+						   withPublicAnnotation:[self.annotationPublique text]
+						  withPrivateAnnotation:[self.annotationPrivee text]
+								  withSignature:[signatures objectAtIndex:i]
+										success:^(NSArray *array) {
+											NSLog(@"Adrien signature success");
+											[self dismissDialogView];
+										}
+										failure:^(NSError *error) {
+											NSLog(@"Adrien signature fail");
+											[self didEndWithUnReachableNetwork];
+										}];
+		}
 	}
 }
 
@@ -445,7 +462,7 @@
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 			for (NSString* dossierRef in _dossiersRef) {
 				[_restClient getSignInfoForDossier:dossierRef
-										 andBureau:_bureauCourant
+										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 										   success:^(NSArray *signInfosArray) {
 											   for (ADLResponseSignInfo* signInfos in signInfosArray)
 												   [self getSignInfoDidEndWithSuccess:signInfos];
