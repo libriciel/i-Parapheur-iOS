@@ -29,24 +29,22 @@
 
 @interface ReaderDocument ()
 
-
 @property (nonatomic, readwrite, copy) NSString *guid;
 @property (nonatomic, readwrite, strong) NSDate *fileDate;
 @property (nonatomic, readwrite, copy) NSString *fileName;
 @property (nonatomic, readwrite, strong) NSURL *fileURL;
+
 @property (nonatomic, readwrite, strong) NSNumber *fileSize;
+
 @property (nonatomic, readwrite, strong) NSMutableIndexSet *bookmarks;
 @property (nonatomic, readwrite, copy) NSString *password;
-
 
 @end
 
 
 @implementation ReaderDocument
 
-
 #pragma mark Properties
-
 
 @synthesize guid = _guid;
 @synthesize fileDate = _fileDate;
@@ -58,12 +56,10 @@
 @synthesize fileURL = _fileURL;
 @synthesize fileName = _fileName;
 
-
 #pragma mark - ReaderDocument class methods
 
-
-+(NSString *)GUID {
-	
++ (NSString *)GUID
+{
 	CFUUIDRef theUUID;
 	CFStringRef theString;
 	theUUID = CFUUIDCreate(NULL);
@@ -77,45 +73,34 @@
 	return unique;
 }
 
-
-+(NSString *)documentsPath {
-	
++ (NSString *)documentsPath
+{
 	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-
-	if ([documentsPaths count] > 0)
+	if ([documentsPaths count] > 0) {
 		return [documentsPaths objectAtIndex:0]; // Path to the application's "~/Documents" directory
-	
+	}
 	return nil;
 }
 
-
-+(NSString *)applicationPath {
-	
++ (NSString *)applicationPath
+{
 	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-
-	if ([documentsPaths count] > 0)
+	if ([documentsPaths count] > 0) {
 		return [[documentsPaths objectAtIndex:0] stringByDeletingLastPathComponent]; // Strip "Documents" component
-	
+	}
 	return nil;
 }
 
-
-+(NSString *)applicationSupportPath {
-	
++ (NSString *)applicationSupportPath
+{
 	NSFileManager *fileManager = [NSFileManager new]; // File manager instance
 
-	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-										 inDomain:NSUserDomainMask
-								appropriateForURL:nil
-										   create:YES
-											error:NULL];
-	
+	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:NULL];
 	return [pathURL path]; // Path to the application's "~/Library/Application Support" directory
 }
 
-
-+(NSString *)relativeFilePath:(NSString *)fullFilePath {
-	
++ (NSString *)relativeFilePath:(NSString *)fullFilePath
+{
 	DXLog(@"");
 	assert(fullFilePath != nil); // Ensure that the full file path is not nil
 	NSString *applicationPath = [ReaderDocument applicationPath]; // Get the application path
@@ -124,7 +109,6 @@
 	
 	return [fullFilePath stringByReplacingCharactersInRange:range withString:@""]; // Strip it out
 }
-
 
 + (NSString *)archiveFilePath:(NSString *)filename
 {

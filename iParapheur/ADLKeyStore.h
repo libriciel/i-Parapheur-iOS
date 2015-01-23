@@ -55,27 +55,17 @@ enum {
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
-
 #pragma mark - Key Management methods
 
-
--(void)checkUpdates;
-
-	
 -(void)resetKeyStore;
 
-
 -(NSArray*)listPrivateKeys;
-
 
 -(BOOL) addKey:(NSString *)p12Path
   withPassword:(NSString *)password
 		 error:(NSError**)error;
 
-
 #pragma mark - Crypto methods
-
-
 -(NSData*)PKCS7Sign:(NSString*)p12Path
 	   withPassword:(NSString*)password
 			andData:(NSData*)data
@@ -83,10 +73,7 @@ enum {
 
 
 #pragma mark - Utilities
-
-
 -(NSData*) bytesFromHexString:(NSString *)aString;
-
 
 @end
 

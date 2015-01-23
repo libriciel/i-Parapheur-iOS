@@ -25,7 +25,6 @@ static NSNumber *PARAPHEUR_API_VERSION;
 									forPdf:isPdf];//
 }
 
-
 -(NSString *)fixBureauId:(NSString *)dossierId {
 	NSString *prefixToRemove = @"workspace://SpacesStore/";
 
@@ -34,7 +33,6 @@ static NSNumber *PARAPHEUR_API_VERSION;
 	else
 		return dossierId;
 }
-
 
 #pragma mark API calls
 
