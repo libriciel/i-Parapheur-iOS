@@ -73,9 +73,9 @@
 		ADLPasswordAlertView *pwdAlertView = (ADLPasswordAlertView*)alertView;
 		NSError *error = nil;
 
-		BOOL success = [self.keyStore addKey:pwdAlertView.p12Path
-								withPassword:passwordTextField.text
-									   error:&error];
+		BOOL success = [_keyStore addKey:pwdAlertView.p12Path
+							withPassword:passwordTextField.text
+								   error:&error];
 		
 		if (!success && error != nil) {
 			if ([error code] == P12OpenErrorCode) {
@@ -129,7 +129,7 @@
 	}
 	
 	
-	NSArray *keys = [self.keyStore listPrivateKeys];
+	NSArray *keys = [_keyStore listPrivateKeys];
 	for (PrivateKey *pkey in keys) {
 		NSLog(@"commonName %@", pkey.commonName);
 		NSLog(@"caName %@", pkey.caName);
@@ -336,9 +336,11 @@
 
 
 -(ADLKeyStore*)keyStore {
+	
 	if (_keyStore == nil) {
 		_keyStore = [[ADLKeyStore alloc] init];
 		_keyStore.managedObjectContext = self.managedObjectContext;
+		[_keyStore checkUpdates];
 	}
 	
 	return _keyStore;

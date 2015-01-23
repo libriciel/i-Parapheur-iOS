@@ -103,7 +103,7 @@
 	}
 	ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
 	
-	self.pkeys = [keystore listPrivateKeys];
+	_pkeys = [keystore listPrivateKeys];
 }
 
 
@@ -184,19 +184,18 @@
 		
 	}
 	else if ([self.action isEqualToString:@"SIGNER"]) {
+		
 		// create signatures array
 		PrivateKey *pkey = _currentPKey;
 		
-		/* Ask for pkey password */
+		// Ask for pkey password
+		ADLPasswordAlertView *alertView = [[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
+																			  message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", [pkey.p12Filename lastPathComponent]]
+																			 delegate:self
+																	cancelButtonTitle:@"Annuler"
+																	otherButtonTitles:@"Confirmer", nil];
 		
-		ADLPasswordAlertView *alertView =
-		[[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-											message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", [[pkey p12Filename] lastPathComponent]]
-										   delegate:self cancelButtonTitle:@"Annuler"
-								  otherButtonTitles:@"Confirmer", nil];
-		
-		alertView.p12Path = [pkey p12Filename];
-		
+		alertView.p12Path = pkey.p12Filename;
 		[alertView show];
 	}
 	
@@ -255,16 +254,22 @@
 		}
 		
 		ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-		
 		PrivateKey *pkey = _currentPKey;
-		
 		NSError *error = nil;
-		
 		
 		for (NSString *hash in hashes) {
 			NSData *hash_data = [keystore bytesFromHexString:hash];
-			error = nil;
-			NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
+			
+			NSFileManager *fileManager = [NSFileManager new];
+			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
+												 inDomain:NSUserDomainMask
+										appropriateForURL:nil
+												   create:YES
+													error:NULL];
+			
+			NSString* p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+			
+			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
 									   withPassword:[self p12password]
 											andData:hash_data
 											  error:&error];
@@ -282,7 +287,6 @@
 				NSString *b64EncodedSignature = [signature base64EncodedString];
 				[signatures addObject:b64EncodedSignature];
 			}
-			
 		}
 		
 		if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
@@ -346,8 +350,18 @@
 	
 	for (NSString *hash in hashes) {
 		NSData *hash_data = [keystore bytesFromHexString:hash];
+		
+		NSFileManager *fileManager = [NSFileManager new];
+		NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
+											 inDomain:NSUserDomainMask
+									appropriateForURL:nil
+											   create:YES
+												error:NULL];
+		
+		NSString* p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+		
 		error = nil;
-		NSData *signature = [keystore PKCS7Sign:[pkey p12Filename]
+		NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
 								   withPassword:[self p12password]
 										andData:hash_data
 										  error:&error];
@@ -424,9 +438,9 @@
 #pragma mark - UITableView delegate
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	// we selected a private key now fetching it
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
+	// we selected a private key now fetching it
 	_currentPKey = [_pkeys objectAtIndex:(NSUInteger)[indexPath row]];
 	
 	// now we have a pkey we can activate Sign Button
@@ -437,7 +451,8 @@
 #pragma mark - UIAlertView delegate
 
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
 	if (buttonIndex == 1) {
 		UITextField *passwordTextField = [alertView textFieldAtIndex:0];
 		[self setP12password:[passwordTextField text]];
@@ -445,7 +460,7 @@
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 			for (NSString* dossierRef in _dossiersRef) {
 				[_restClient getSignInfoForDossier:dossierRef
-										 andBureau:_bureauCourant
+										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 										   success:^(NSArray *signInfosArray) {
 											   for (ADLResponseSignInfo* signInfos in signInfosArray)
 												   [self getSignInfoDidEndWithSuccess:signInfos];

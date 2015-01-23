@@ -18,6 +18,7 @@
 #import <CoreData/CoreData.h>
 
 @implementation ADLKeyStore
+
 @synthesize managedObjectContext;
 
 
@@ -203,6 +204,26 @@ err:
 }
 
 
+-(void)checkUpdates {
+	
+	// Previously, full p12 file path was keeped in the DB.
+	// But the app data folder path changes on every update.
+	// Here we have to check previous data stored, and patch it.
+
+	NSArray* keys = [self listPrivateKeys];
+
+	for (PrivateKey* oldKey in keys) {
+		if ([oldKey.p12Filename pathComponents].count != 2) {
+			
+			NSString* relativePath = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] bundleIdentifier], [oldKey.p12Filename lastPathComponent]];
+			oldKey.p12Filename = relativePath;
+
+			[self.managedObjectContext save:nil];
+		}
+	}
+}
+
+
 NSData* X509_to_NSData(X509 *cert) {
 	unsigned char *cert_data = NULL;
 	BIO * mem = BIO_new(BIO_s_mem());
@@ -214,10 +235,11 @@ NSData* X509_to_NSData(X509 *cert) {
 }
 
 
-- (NSString *)findOrCreateDirectory:(NSSearchPathDirectory)searchPathDirectory
+-(NSString *)findOrCreateDirectory:(NSSearchPathDirectory)searchPathDirectory
 						   inDomain:(NSSearchPathDomainMask)domainMask
 				appendPathComponent:(NSString *)appendComponent
 							  error:(NSError **)errorOut {
+	
 	// Search for the path
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(searchPathDirectory,
 														 domainMask,
@@ -232,10 +254,7 @@ NSData* X509_to_NSData(X509 *cert) {
 	NSString *resolvedPath = [paths objectAtIndex:0];
 	
 	if (appendComponent)
-	{
-		resolvedPath = [resolvedPath
-						stringByAppendingPathComponent:appendComponent];
-	}
+		resolvedPath = [resolvedPath stringByAppendingPathComponent:appendComponent];
 	
 	// Create the path if it doesn't exist
 	NSError *error;
@@ -261,20 +280,20 @@ NSData* X509_to_NSData(X509 *cert) {
 	return resolvedPath;
 }
 
-- (NSURL *)applicationDataDirectory {
-	NSString *appBundleId = [[NSBundle mainBundle] bundleIdentifier];
+
+-(NSURL *)applicationDataDirectory {
 	
+	NSString *appBundleId = [[NSBundle mainBundle] bundleIdentifier];
 	NSError *error;
-	NSString *result =
-	[self
-	 findOrCreateDirectory:NSApplicationSupportDirectory
-	 inDomain:NSUserDomainMask
-	 appendPathComponent:appBundleId
-	 error:&error];
+	
+	NSString *result = [self findOrCreateDirectory:NSApplicationSupportDirectory
+										  inDomain:NSUserDomainMask
+							   appendPathComponent:appBundleId
+											 error:&error];
+	
 	if (error)
-	{
 		NSLog(@"Unable to find or create application support directory:\n%@", error);
-	}
+
 	return [NSURL fileURLWithPath:result];
 }
 
@@ -298,7 +317,7 @@ NSData* X509_to_NSData(X509 *cert) {
 }
 
 
--(NSString*) UUID {
+-(NSString*)UUID {
 	CFUUIDRef uuidObj = CFUUIDCreate(nil);
 	NSString *uuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(nil, uuidObj));
 	CFRelease(uuidObj);
@@ -309,33 +328,43 @@ NSData* X509_to_NSData(X509 *cert) {
 #pragma mark - Public API
 
 
--(void) resetKeyStore {
+-(void)resetKeyStore {
+	
 	NSArray *pkeys = [self listPrivateKeys];
+	
 	for (PrivateKey *key in pkeys) {
 		NSError *error = nil;
 		if ([[NSFileManager defaultManager] removeItemAtPath:[key p12Filename] error:&error] != YES)
 			NSLog(@"Unable to delete file: %@", [error localizedDescription]);
 		[self.managedObjectContext deleteObject:key];
 	}
+	
 	NSError *error;
+	
 	if (![self.managedObjectContext save:&error]) {
 		// Something's gone seriously wrong
 		NSLog(@"Error clearing KeyStore: %@", [error localizedDescription]);
-		
 	}
 }
 
 
 -(NSArray*)listPrivateKeys {
-	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PrivateKey" inManagedObjectContext:self.managedObjectContext];
+	
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PrivateKey"
+											  inManagedObjectContext:self.managedObjectContext];
+	
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:entity];
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName" ascending:YES];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName"
+																   ascending:YES];
+	
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[request setSortDescriptors:sortDescriptors];
+	
 	// Fetch the records and handle an error
 	NSError *error;
-	NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request error:&error];
+	NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request
+															  error:&error];
 	return pkeys;
 }
 
@@ -389,7 +418,10 @@ NSData* X509_to_NSData(X509 *cert) {
 	
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		NSString* localizedDescritpion = [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]];
-		[self emitFileIOError:error localizedDescritpion:localizedDescritpion];
+		perror("Opening p12 file error : ");
+		
+		[self emitFileIOError:error
+		 localizedDescritpion:localizedDescritpion];
 	}
 	else {
 		p12 = d2i_PKCS12_fp(fp, NULL);
@@ -423,7 +455,8 @@ NSData* X509_to_NSData(X509 *cert) {
 
 -(void)emitError:(NSError **)error
 localizedDescription:(NSString *)localizedDescription
-		  domain:(NSString *)domain code:(int)code {
+		  domain:(NSString *)domain
+			code:(int)code {
 	
 #ifdef DEBUG_KEYSTORE
 	ERR_print_errors_fp(stderr);
@@ -435,7 +468,9 @@ localizedDescription:(NSString *)localizedDescription
 }
 
 
--(NSData *)signData:(NSData *)data pkey:(EVP_PKEY *)pkey cert:(X509 *)cert {
+-(NSData *)signData:(NSData *)data
+			   pkey:(EVP_PKEY *)pkey
+			   cert:(X509 *)cert {
 	
 	BIO * bio_data = BIO_new(BIO_s_mem());
 	
@@ -503,11 +538,9 @@ localizedDescription:(NSString *)localizedDescription
 }
 
 
--(BOOL) addKey:(NSString *)p12Path
-  withPassword:(NSString *)password
-		 error:(NSError**)error {
-	
-	NSLog(@"Adrien %@ - %@", p12Path, password);
+-(BOOL)addKey:(NSString *)p12Path
+ withPassword:(NSString *)password
+		error:(NSError**)error {
 	
 	/* Read PKCS12 */
 	FILE *fp;
@@ -528,7 +561,9 @@ localizedDescription:(NSString *)localizedDescription
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		fprintf(stderr, "Error opening file %s\n", p12_file_path);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
+												code:ENOENT
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
 			
 		}
 		return NO;
@@ -539,7 +574,9 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error reading PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
+												code:ENOENT
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
 			PKCS12_free(p12);
 		}
 		return NO;
@@ -548,7 +585,8 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error parsing PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:P12ErrorDomain code:P12OpenErrorCode userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			*error = [[NSError alloc] initWithDomain:P12ErrorDomain code:P12OpenErrorCode
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
 			
 		}
 		PKCS12_free(p12);
@@ -611,10 +649,12 @@ localizedDescription:(NSString *)localizedDescription
 							  commonName_to_find,
 							  [NSString stringWithCString:(const char*)issuer_name_str encoding:NSUTF8StringEncoding],
 							  [NSString stringWithCString:(const char*)big_number_serial_str encoding:NSUTF8StringEncoding]];
+	
 	[request setPredicate:predicate];
 	
 	if (error)
 		*error = nil;
+	
 	NSArray *array = [self.managedObjectContext executeFetchRequest:request error:error];
 	
 	if (*error) {
@@ -657,5 +697,6 @@ localizedDescription:(NSString *)localizedDescription
 	
 	
 }
+
 
 @end
