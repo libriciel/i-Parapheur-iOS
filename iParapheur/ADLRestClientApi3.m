@@ -540,7 +540,7 @@
 	
 	NSString* routeName = [NSString stringWithFormat:@"%@_route", actionName];
 	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"routeName"]) {
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:routeName]) {
 		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:routeName
 																			 pathPattern:pathPattern
 																				  method:RKRequestMethodPOST]];

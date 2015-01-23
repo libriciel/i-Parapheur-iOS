@@ -553,7 +553,9 @@ localizedDescription:(NSString *)localizedDescription
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		fprintf(stderr, "Error opening file %s\n", p12_file_path);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
+												code:ENOENT
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
 			
 		}
 		return NO;
@@ -564,7 +566,9 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error reading PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
+												code:ENOENT
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
 			PKCS12_free(p12);
 		}
 		return NO;
@@ -573,7 +577,9 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error parsing PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:P12ErrorDomain code:P12OpenErrorCode userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			*error = [[NSError alloc] initWithDomain:P12ErrorDomain
+												code:P12OpenErrorCode
+											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
 			
 		}
 		PKCS12_free(p12);
@@ -636,6 +642,7 @@ localizedDescription:(NSString *)localizedDescription
 							  commonName_to_find,
 							  [NSString stringWithCString:(const char*)issuer_name_str encoding:NSUTF8StringEncoding],
 							  [NSString stringWithCString:(const char*)big_number_serial_str encoding:NSUTF8StringEncoding]];
+	
 	[request setPredicate:predicate];
 	
 	if (error)
