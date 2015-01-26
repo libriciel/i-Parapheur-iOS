@@ -531,9 +531,7 @@ localizedDescription:(NSString *)localizedDescription
 -(BOOL) addKey:(NSString *)p12Path
   withPassword:(NSString *)password
 		 error:(NSError**)error {
-	
-	NSLog(@"Adrien %@ - %@", p12Path, password);
-	
+		
 	/* Read PKCS12 */
 	FILE *fp;
 	EVP_PKEY *pkey;

@@ -60,6 +60,12 @@
 				failure:(void (^)(NSError *))failure;
 
 
+-(void)removeAnnotation:(NSDictionary*)annotation
+			 forDossier:(NSString *)dossier
+				success:(void (^)(NSArray *))success
+				failure:(void (^)(NSError *))failure;
+
+
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
 					 success:(void (^)(NSArray *))success

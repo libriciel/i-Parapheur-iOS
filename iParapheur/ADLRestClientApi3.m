@@ -416,11 +416,178 @@
 }
 
 
-#pragma mark - Private methods
+#pragma mark - Simple action template
 
-/**
- * TODO : Find why the given NSDictionary can't be serialized, and remove that
- */
+
+-(void)requestSimpleAction:(NSString *)actionName
+				forRequest:(RKRequestMethod)requestMethod
+			forRouteObject:(NSObject *)routeObject
+				forPattern:(NSString *)pathPattern
+				  withArgs:(NSDictionary *)args
+				   success:(void (^)(NSArray *))success
+				   failure:(void (^)(NSError *))failure {
+
+	// Define Restkit URL Route, if not exists
+	
+	NSString* routeName = [NSString stringWithFormat:@"%@_route", actionName];
+	
+	if (![[RKObjectManager sharedManager].router.routeSet routeForName:routeName]) {
+		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:routeName
+																			 pathPattern:pathPattern
+																				  method:requestMethod]];
+	}
+	
+	// Create request
+	
+	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:routeName
+																						  object:routeObject
+																					  parameters:nil];
+	
+	// Add params to custom request
+	
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:args
+													   options:NSJSONWritingPrettyPrinted
+														 error:nil];
+	
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[request setHTTPBody:jsonData];
+	
+	// Send request
+	
+	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
+																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+																										 success(operation.responseDescriptors);
+																									 }
+																									 failure:^(RKObjectRequestOperation *operation, NSError *error) {
+																										 if (operation.HTTPRequestOperation.response.statusCode == 200)
+																											 success(operation.responseDescriptors);
+																										 else
+																											 failure(error);
+																									 }];
+	
+	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+}
+
+
+#pragma mark - Private Methods
+
+
+-(ADLResponseDossier *)getRouteDossierFromId:(NSString *)dossierId {
+	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
+	responseDossier.identifier = dossierId;
+	
+	return responseDossier;
+}
+
+
+-(ADLResponseAnnotation *)getRouteAnnotationFromDossierId:(NSString *)dossierId
+										  andAnnotationId:(NSString *)annotationId {
+	
+	ADLResponseAnnotation *responseAnnotation = [ADLResponseAnnotation alloc];
+	responseAnnotation.idDossier = dossierId;
+	responseAnnotation.idAnnotation = annotationId;
+	
+	return responseAnnotation;
+}
+
+
+#pragma mark - Simple actions
+// TODO : MailSecretaire
+
+
+-(void)actionViserForDossier:(NSString *)dossierId
+				   forBureau:(NSString *)bureauId
+		withPublicAnnotation:(NSString *)publicAnnotation
+	   withPrivateAnnotation:(NSString *)privateAnnotation
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+
+	// Send request
+	
+	[self requestSimpleAction:@"visa"
+				   forRequest:RKRequestMethodPOST
+			   forRouteObject:[self getRouteDossierFromId:dossierId]
+				   forPattern:@"/parapheur/dossiers/:identifier/visa"
+					 withArgs:argumentDictionary
+					  success:^(NSArray *result) {
+						  success(result);
+					  }
+					  failure:^(NSError *error) {
+						  failure(error);
+					  }];
+}
+
+
+-(void)actionSignerForDossier:(NSString *)dossierId
+					forBureau:(NSString *)bureauId
+		 withPublicAnnotation:(NSString *)publicAnnotation
+		withPrivateAnnotation:(NSString *)privateAnnotation
+				withSignature:(NSString *)signature
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	[argumentDictionary setObject:signature forKey:@"signature"];
+	
+	// Send request
+	
+	[self requestSimpleAction:@"signature"
+				   forRequest:RKRequestMethodPOST
+			   forRouteObject:[self getRouteDossierFromId:dossierId]
+				   forPattern:@"/parapheur/dossiers/:identifier/signature"
+					 withArgs:argumentDictionary
+					  success:^(NSArray *result) {
+						  success(result);
+					  }
+					  failure:^(NSError *error) {
+						  failure(error);
+					  }];
+};
+
+
+-(void)actionRejeterForDossier:(NSString *)dossierId
+					 forBureau:(NSString *)bureauId
+		  withPublicAnnotation:(NSString *)publicAnnotation
+		 withPrivateAnnotation:(NSString *)privateAnnotation
+					   success:(void (^)(NSArray *))success
+					   failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	
+	// Send request
+	
+	[self requestSimpleAction:@"rejet"
+				   forRequest:RKRequestMethodPOST
+			   forRouteObject:[self getRouteDossierFromId:dossierId]
+				   forPattern:@"/parapheur/dossiers/:identifier/rejet"
+					 withArgs:argumentDictionary
+					  success:^(NSArray *result) {
+						  success(result);
+					  }
+					  failure:^(NSError *error) {
+						  failure(error);
+					  }];
+};
+
+
 -(NSMutableDictionary *)fixAddAnnotationDictionary:(NSDictionary *)annotation {
 	
 	NSMutableDictionary *result= [NSMutableDictionary new];
@@ -453,20 +620,43 @@
 }
 
 
-/**
- * TODO : Find why the given NSDictionary can't be serialized, and remove that
- */
+-(void)actionAddAnnotation:(NSDictionary*)annotation
+				forDossier:(NSString *)dossierId
+				   success:(void (^)(NSArray *))success
+				   failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
+	
+	// Send request
+	
+	[self requestSimpleAction:@"annotation"
+				   forRequest:RKRequestMethodPOST
+			   forRouteObject:[self getRouteDossierFromId:dossierId]
+				   forPattern:@"/parapheur/dossiers/:identifier/annotations"
+					 withArgs:argumentDictionary
+					  success:^(NSArray *result) {
+						  success(result);
+					  }
+					  failure:^(NSError *error) {
+						  failure(error);
+					  }];
+}
+
+
 -(NSMutableDictionary *)fixUpdateAnnotationDictionary:(NSDictionary *)annotation
 											  forPage:(NSNumber *)page {
 	
 	NSMutableDictionary *result= [NSMutableDictionary new];
 	
 	// Fixme : send every other data form annotation
-
+	
 	[result setObject:page forKey:@"page"];
 	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
 	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
 	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"uuid"];
+	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"id"];
 	
 	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
 	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
@@ -490,179 +680,6 @@
 }
 
 
-#pragma mark - Simple action template
-
-
--(void)requestSimpleAction:(NSString *)actionName
-				forDossier:(NSString *)dossierId
-				forPattern:(NSString *)pathPattern
-				  withArgs:(NSDictionary *)args
-				   success:(void (^)(NSArray *))success
-				   failure:(void (^)(NSError *))failure {
-
-	// Define Restkit URL Route, if not exists
-	
-	NSString* routeName = [NSString stringWithFormat:@"%@_route", actionName];
-	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:routeName]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:routeName
-																			 pathPattern:pathPattern
-																				  method:RKRequestMethodPOST]];
-	}
-	
-	// Create request
-	
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossierId;
-	
-	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:routeName
-																						  object:responseDossier
-																					  parameters:nil];
-	
-	// Add params to custom request
-	
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:args
-													   options:NSJSONWritingPrettyPrinted
-														 error:nil];
-	
-	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[request setHTTPBody:jsonData];
-	
-	// Send request
-	
-	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
-																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-																										 success(operation.responseDescriptors);
-																									 }
-																									 failure:^(RKObjectRequestOperation *operation, NSError *error) {
-																										 if (operation.HTTPRequestOperation.response.statusCode == 200)
-																											 success(operation.responseDescriptors);
-																										 else
-																											 failure(error);
-																									 }];
-	
-	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
-}
-
-
-#pragma mark - Simple actions
-// TODO : MailSecretaire
-
-
--(void)actionViserForDossier:(NSString *)dossierId
-				   forBureau:(NSString *)bureauId
-		withPublicAnnotation:(NSString *)publicAnnotation
-	   withPrivateAnnotation:(NSString *)privateAnnotation
-					 success:(void (^)(NSArray *))success
-					 failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-
-	// Send request
-	
-	[self requestSimpleAction:@"visa"
-				   forDossier:dossierId
-				   forPattern:@"/parapheur/dossiers/:identifier/visa"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-}
-
-
--(void)actionSignerForDossier:(NSString *)dossierId
-					forBureau:(NSString *)bureauId
-		 withPublicAnnotation:(NSString *)publicAnnotation
-		withPrivateAnnotation:(NSString *)privateAnnotation
-				withSignature:(NSString *)signature
-					  success:(void (^)(NSArray *))success
-					  failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-	[argumentDictionary setObject:signature forKey:@"signature"];
-	
-	// Send request
-	
-	[self requestSimpleAction:@"signature"
-				   forDossier:dossierId
-				   forPattern:@"/parapheur/dossiers/:identifier/signature"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-};
-
-
--(void)actionRejeterForDossier:(NSString *)dossierId
-					 forBureau:(NSString *)bureauId
-		  withPublicAnnotation:(NSString *)publicAnnotation
-		 withPrivateAnnotation:(NSString *)privateAnnotation
-					   success:(void (^)(NSArray *))success
-					   failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-	
-	// Send request
-	
-	[self requestSimpleAction:@"rejet"
-				   forDossier:dossierId
-				   forPattern:@"/parapheur/dossiers/:identifier/rejet"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-};
-
-
--(void)actionAddAnnotation:(NSDictionary*)annotation
-				forDossier:(NSString *)dossierId
-				   success:(void (^)(NSArray *))success
-				   failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
-	
-	// Send request
-	
-	[self requestSimpleAction:@"annotation"
-				   forDossier:dossierId
-				   forPattern:@"/parapheur/dossiers/:identifier/annotations"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-}
-
-
 -(void)actionUpdateAnnotation:(NSDictionary*)annotation
 					  forPage:(int)page
 				   forDossier:(NSString *)dossierId
@@ -676,9 +693,10 @@
 	
 	// Send request
 	
-	[self requestSimpleAction:@"annotation"
-				   forDossier:dossierId
-				   forPattern:@"/parapheur/dossiers/:identifier/annotations"
+	[self requestSimpleAction:@"annotation_action_update"
+				   forRequest:RKRequestMethodPUT
+			   forRouteObject:[self getRouteAnnotationFromDossierId:dossierId andAnnotationId:[annotation objectForKey:@"uuid"]]
+				   forPattern:@"/parapheur/dossiers/:idDossier/annotations/:idAnnotation"
 					 withArgs:argumentDictionary
 					  success:^(NSArray *result) {
 						  success(result);
@@ -687,5 +705,32 @@
 						  failure(error);
 					  }];
 }
+
+
+-(void)actionRemoveAnnotation:(NSDictionary*)annotation
+				   forDossier:(NSString *)dossierId
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
+																		  forPage:[NSNumber numberWithInt:0]];
+
+	// Send request
+	
+	[self requestSimpleAction:@"annotation_action_delete"
+				   forRequest:RKRequestMethodDELETE
+			   forRouteObject:[self getRouteAnnotationFromDossierId:dossierId andAnnotationId:[annotation objectForKey:@"uuid"]]
+				   forPattern:@"/parapheur/dossiers/:idDossier/annotations/:idAnnotation"
+					 withArgs:argumentDictionary
+					  success:^(NSArray *result) {
+						  success(result);
+					  }
+					  failure:^(NSError *error) {
+						  failure(error);
+					  }];
+}
+
 
 @end

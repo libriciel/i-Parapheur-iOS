@@ -135,6 +135,17 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
+-(void)removeAnnotation:(NSDictionary*)annotation
+			 forDossier:(NSString *)dossier
+				success:(void (^)(NSArray *))success
+				failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 actionRemoveAnnotation:annotation
+								 forDossier:dossier
+									success:^(NSArray *annotations) { success(annotations); }
+									failure:^(NSError *error) { failure(error); }];
+}
+
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
 					 success:(void (^)(NSArray *))success

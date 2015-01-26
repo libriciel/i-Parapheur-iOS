@@ -483,8 +483,6 @@
         
         for (NSDictionary *annotation in annotations) {
 			
-			NSLog(@"Adrien sent %@", annotation);
-			
             ADLAnnotation *annotModel = [[ADLAnnotation alloc] initWithAnnotationDict:annotation];
             
           //  CGRect annotRect = [annotModel rect];

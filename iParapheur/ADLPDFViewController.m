@@ -662,18 +662,30 @@
 
 
 -(void)removeAnnotation:(ADLAnnotation*)annotation {
-	NSDictionary *annotationDictionary = [annotation dict];
 	
-	NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
-						 [annotation uuid], @"uuid",
-						 [NSNumber numberWithUnsignedInt:10], @"page",
-						 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
-						 , nil];
-	
-	ADLRequester *requester = [ADLRequester sharedRequester];
-	
-	[requester request:@"removeAnnotation" andArgs:req delegate:self];
-	
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		NSDictionary *annotationDictionary = annotation.dict;
+		
+		[_restClient removeAnnotation:annotationDictionary
+						   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+							  success:^(NSArray *result) {
+								  NSLog(@"deleteAnnotation success");
+							  }
+							  failure:^(NSError *error) {
+								  NSLog(@"deleteAnnotation error : %@", error.localizedDescription);
+							  }];
+	}
+	else {
+		NSDictionary *req = [NSDictionary dictionaryWithObjectsAndKeys:
+							 [annotation uuid], @"uuid",
+							 [NSNumber numberWithUnsignedInt:10], @"page",
+							 [[ADLSingletonState sharedSingletonState] dossierCourant], @"dossier"
+							 , nil];
+		
+		ADLRequester *requester = [ADLRequester sharedRequester];
+		
+		[requester request:@"removeAnnotation" andArgs:req delegate:self];
+	}
 }
 
 

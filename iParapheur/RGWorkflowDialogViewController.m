@@ -394,11 +394,11 @@
 						  withPrivateAnnotation:[self.annotationPrivee text]
 								  withSignature:[signatures objectAtIndex:i]
 										success:^(NSArray *array) {
-											NSLog(@"Adrien signature success");
+											NSLog(@"Signature success");
 											[self dismissDialogView];
 										}
 										failure:^(NSError *error) {
-											NSLog(@"Adrien signature fail");
+											NSLog(@"Signature fail");
 											[self didEndWithUnReachableNetwork];
 										}];
 		}
