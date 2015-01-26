@@ -57,19 +57,18 @@
 		[_labels removeAllObjects];
 	}
 	
-	if (!self.signatureEnabled) {
-		[self.actions removeObject:@"SIGNER"];
+	if (!_signatureEnabled) {
+		[_actions removeObject:@"SIGNER"];
 	}
-	for (NSString *action in self.actions) {
-		[self.labels addObject:[ADLAPIHelper actionNameForAction:action]];
+	for (NSString *action in _actions) {
+		[_labels addObject:[ADLAPIHelper actionNameForAction:action]];
 	}
 	
-	if (self.signatureEnabled) {
-		
-	 [_actions addObject:@"SIGNER"];
-	 [_labels addObject:@"Signer"];
+	if (_signatureEnabled && ![_actions containsObject:@"SIGNER"]) {
+		[_actions addObject:@"SIGNER"];
+		[_labels addObject:@"Signer"];
 	}
-	else if (self.visaEnabled) {
+	else if (_visaEnabled) {
 	 [_actions addObject:@"VISER"];
 	 [_labels addObject:@"Viser"];
 	}
