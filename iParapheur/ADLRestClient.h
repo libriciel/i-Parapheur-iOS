@@ -54,6 +54,7 @@
 
 
 -(void)updateAnnotation:(NSDictionary*)annotation
+				forPage:(int)page
 			 forDossier:(NSString *)dossier
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure;

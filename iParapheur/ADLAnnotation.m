@@ -7,6 +7,7 @@
 //
 
 #import "ADLAnnotation.h"
+#import "ADLRestClient.h"
 
 @implementation ADLAnnotation
 
@@ -22,15 +23,20 @@
 }
 
 -(id) initWithAnnotationDict:(NSDictionary *)annotation {
+	
     if (self = [super init]) {
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3)
+			_uuid = [annotation objectForKey:@"id"];
+		else
+			_uuid = [annotation objectForKey:@"uuid"];
+
         _author = [annotation objectForKey:@"author"];
-        _uuid = [annotation objectForKey:@"uuid"];
         _rect = [self rectWithDict:[annotation objectForKey:@"rect"]];
         
         _editable = [(NSString *) [annotation objectForKey:@"editable"] boolValue];
         _text = [annotation objectForKey:@"text"];
-        
     }
+	
     return self;
 }
 

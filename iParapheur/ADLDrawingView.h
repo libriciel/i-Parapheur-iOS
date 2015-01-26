@@ -54,11 +54,13 @@
 
 -(NSArray*) annotationsForPage:(NSInteger)page;
 
--(void) updateAnnotation:(ADLAnnotation*)annotation forPage:(NSUInteger)page;
+-(void) updateAnnotation:(ADLAnnotation*)annotation
+				 forPage:(NSUInteger)page;
 
 -(void) removeAnnotation:(ADLAnnotation*)annotation;
 
--(void) addAnnotation:(ADLAnnotation*)annotation forPage:(NSUInteger)page;
+-(void) addAnnotation:(ADLAnnotation*)annotation
+			  forPage:(NSUInteger)page;
 
 @optional
 
@@ -104,8 +106,11 @@
 -(CGRect)clipRectInView:(CGRect)rect;
 
 -(void) updateAnnotation:(ADLAnnotation*)annotation;
+
 -(void) addAnnotation:(ADLAnnotation*)annotation;
+
 -(void) removeAnnotation:(ADLAnnotation*) annotation;
+
 -(NSArray*) annotationsForPage:(NSUInteger)page;
 
 

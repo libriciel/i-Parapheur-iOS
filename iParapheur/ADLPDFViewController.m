@@ -638,6 +638,7 @@
 		NSDictionary *annotationDictionary = annotation.dict;
 		
 		[_restClient updateAnnotation:annotationDictionary
+							  forPage:page
 						   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							  success:^(NSArray *result) {
 								  NSLog(@"updateAnnotation success");

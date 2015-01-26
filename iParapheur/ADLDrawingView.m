@@ -471,6 +471,7 @@
 
 #pragma mark - dataSource
 
+
 -(void) refreshAnnotations {
     
     for (UIView *a in [self subviews]) {
@@ -481,7 +482,9 @@
         NSArray *annotations = [self annotationsForPage:_pageNumber];
         
         for (NSDictionary *annotation in annotations) {
-            
+			
+			NSLog(@"Adrien sent %@", annotation);
+			
             ADLAnnotation *annotModel = [[ADLAnnotation alloc] initWithAnnotationDict:annotation];
             
           //  CGRect annotRect = [annotModel rect];
@@ -497,16 +500,23 @@
 }
 
 -(void) updateAnnotation:(ADLAnnotation*)annotation {
-    [_dataSource updateAnnotation:annotation forPage:_pageNumber];
+	
+    [_dataSource updateAnnotation:annotation
+						  forPage:_pageNumber];
 }
 
+
 -(void) addAnnotation:(ADLAnnotation*)annotation {
-    [_dataSource addAnnotation:annotation forPage:_pageNumber];
+	
+    [_dataSource addAnnotation:annotation
+					   forPage:_pageNumber];
 }
+
 
 -(void) removeAnnotation:(ADLAnnotation*) annotation {
     [_dataSource removeAnnotation:annotation];
 }
+
 
 -(NSArray*) annotationsForPage:(NSUInteger)page {
     if (_enabled) {
@@ -519,6 +529,7 @@
 
 
 #pragma mark - Abstract Method
+
 
 -(CGSize)getPageSize {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException

@@ -456,15 +456,16 @@
 /**
  * TODO : Find why the given NSDictionary can't be serialized, and remove that
  */
--(NSMutableDictionary *)fixUpdateAnnotationDictionary:(NSDictionary *)annotation {
+-(NSMutableDictionary *)fixUpdateAnnotationDictionary:(NSDictionary *)annotation
+											  forPage:(NSNumber *)page {
+	
 	NSMutableDictionary *result= [NSMutableDictionary new];
 	
 	// Fixme : send every other data form annotation
 
-	/**	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
+	[result setObject:page forKey:@"page"];
 	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
 	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
-	[result setObject:[annotation valueForKey:@"page"] forKey:@"page"];
 	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"uuid"];
 	
 	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
@@ -483,46 +484,9 @@
 	[rect setObject:resultBottomRight forKey:@"bottomRight"];
 	[rect setObject:resultTopLeft forKey:@"topLeft"];
 	
-	[result setObject:rect forKey:@"rect"]; */
+	[result setObject:rect forKey:@"rect"];
 	
 	return result;
-}
-
-
--(void)updateAnnotation:(NSDictionary*)annotation
-			 forDossier:(NSString *)dossier
-				success:(void (^)(NSArray *))success
-				failure:(void (^)(NSError *))failure {
-	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"update_annotations_route"]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"update_annotations_route"
-																			 pathPattern:@"/parapheur/dossiers/:identifier/annotations"
-																				  method:RKRequestMethodPOST]];
-	}
-	
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossier;
-	
-	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:@"update_annotations_route"
-																						  object:responseDossier
-																					  parameters:annotation];
-	
-	// Add params to custom request
-	
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self fixUpdateAnnotationDictionary:annotation]
-													   options:NSJSONWritingPrettyPrinted
-														 error:nil];
-
-	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[request setHTTPBody:jsonData];
-	
-	// Send request
-	
-	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
-																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) { success(operation.responseDescriptors); }
-																									 failure:^(RKObjectRequestOperation *operation, NSError *error) { failure(error); }];
-	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
 }
 
 
@@ -700,13 +664,15 @@
 
 
 -(void)actionUpdateAnnotation:(NSDictionary*)annotation
+					  forPage:(int)page
 				   forDossier:(NSString *)dossierId
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
 	// Create arguments dictionnary
 	
-	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation];
+	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
+																		  forPage:[NSNumber numberWithInt:page]];
 	
 	// Send request
 	

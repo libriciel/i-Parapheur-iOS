@@ -61,8 +61,8 @@
         self.autoresizingMask = UIViewAutoresizingNone;
         self.backgroundColor = [UIColor clearColor];
         
-        self.annotationModel = [[ADLAnnotation alloc] init];
-        self.selected = NO;
+        _annotationModel = [[ADLAnnotation alloc] init];
+        _selected = NO;
         
         [self addButtons];
         
@@ -82,13 +82,12 @@
 		if ([self.layer respondsToSelector:@selector(setShadowOpacity:)])
 			self.layer.shadowOpacity = 0.75;
 #endif
-        
-        
     }
     return self;
 }
 
 -(void) setFrame:(CGRect)frame {
+	
     if (frame.size.height < kAnnotationMinHeight) {
         frame.size.height = kAnnotationMinHeight;
     }
@@ -106,8 +105,11 @@
     [self.infoButton setFrame:infoFrame];
 }
 
--(id)initWithAnnotation:(ADLAnnotation*)a {
-    CGRect frame = [a rect];
+
+-(id)initWithAnnotation:(ADLAnnotation*)annotation {
+	
+	
+    CGRect frame = [annotation rect];
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -135,7 +137,7 @@
 			self.layer.shadowOpacity = 0.75;
 #endif
         
-        self.annotationModel = a;
+        self.annotationModel = annotation;
         
         if ([self.annotationModel text] != nil && ![[self.annotationModel text] isEqualToString:@""]) {
             //[self.postItButton setHasText:YES];
@@ -197,7 +199,7 @@
         [self.postItView setHidden:YES];
         [self.postItView removeFromSuperview];
         if (self.annotationModel.editable) {
-            [((ADLDrawingView*)[self superview]) updateAnnotation:self.annotationModel];
+            [((ADLDrawingView*)[self superview]) updateAnnotation:_annotationModel];
         }
         self.postItView = nil;
     }
@@ -216,25 +218,27 @@
 
 - (void) closeButtonHitted {
     if ([self.annotationModel uuid] != nil) {
-        [self.drawingView removeAnnotation:self.annotationModel];
+        [self.drawingView removeAnnotation:_annotationModel];
     }
     [self removeFromSuperview];
 }
 
-- (void) infoButtonHitted
-{
-    if (!self.infoView) {
+
+- (void) infoButtonHitted {
+
+	if (!self.infoView) {
         CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMinX(self.frame),CGRectGetMaxY(self.frame),kInfoWidth, kInfoHeight)];
         
-        self.infoView = [[ADLInfoView alloc] initWithFrame:clippedFrame];
-        [self.infoView setAnnotationModel: [self annotationModel]];
+        _infoView = [[ADLInfoView alloc] initWithFrame:clippedFrame];
+        [_infoView setAnnotationModel:_annotationModel];
         [self.infoView setContentScaleFactor:[self contentScaleFactor]];
         [[self superview] addSubview:self.infoView];
     }
 }
 
-- (void) postItButtonHitted
-{
+
+- (void) postItButtonHitted {
+	
     if (!self.postItView) {
         CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
         
@@ -307,8 +311,7 @@
         
         CGContextStrokeRect(context, rect);
 #endif
-        
-        
+		
         CGRect annotRect = CGRectInset(rect, 12, 12);
         UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:annotRect cornerRadius:10.0f];
 
@@ -324,38 +327,41 @@
     
 }
 
--(CGFloat)distanceBetween:(CGPoint)p and:(CGPoint)q
-{
+
+-(CGFloat)distanceBetween:(CGPoint)p and:(CGPoint)q {
     CGFloat dx = q.x - p.x;
     CGFloat dy = q.y - p.y;
     return sqrtf(dx*dx + dy*dy);
 }
 
+
 -(CGPoint)anchorForTouchLocation:(CGPoint) touchPoint {
     CGPoint bottomRight = CGPointMake(CGRectGetMaxX(self.frame) , CGRectGetMaxY(self.frame));
 
-    if ([self distanceBetween:touchPoint and:bottomRight] < kFingerSize) {
+    if ([self distanceBetween:touchPoint and:bottomRight] < kFingerSize)
         return bottomRight;
-    }
+
     return CGPointZero;
 }
 
+
 // Used to detect resizing
--(BOOL)isInHandle:(CGPoint)touchPoint
-{
+-(BOOL)isInHandle:(CGPoint)touchPoint {
     CGPoint bottomRight = CGPointMake(CGRectGetMaxX(self.frame) , CGRectGetMaxY(self.frame));
     return [self distanceBetween:touchPoint and:bottomRight] < kFingerSize;
 }
 
+
 -(void)refreshModel {
-    [self.annotationModel setRect:[self frame]];
+    [_annotationModel setRect:self.frame];
 }
 
+
 - (void) handleTouchInside {
-    [self.postItView removeFromSuperview];
-    self.postItView = nil;
-    [self.infoView removeFromSuperview];
-    self.infoView = nil;
+	[_postItView removeFromSuperview];
+    _postItView = nil;
+    [_infoView removeFromSuperview];
+    _infoView = nil;
 }
 
 
