@@ -179,8 +179,7 @@
 -(void)dossierSelected: (NSNotification*) notification {
 	NSString *dossierRef = [notification object];
 	_dossierRef = dossierRef;
-	
-	
+		
 	for(UIView *subview in [self.view subviews]) {
 		[subview removeFromSuperview];
 	}
@@ -189,7 +188,7 @@
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
-						dossier:dossierRef
+						dossier:_dossierRef
 						success:^(NSArray *result) {
 							HIDE_HUD
 							[self getDossierDidEndWithRequestAnswer:result[0]];
@@ -197,21 +196,21 @@
 						failure:^(NSError *error) {
 							NSLog(@"getBureau fail : %@", error.localizedDescription);
 						}];
+		
+		[_restClient getCircuit:_dossierRef
+						success:^(NSArray *circuits) {
+							HIDE_HUD
+							_circuit = circuits;
+							[self refreshAnnotations:dossierRef];
+						}
+						failure:^(NSError *error) {
+							NSLog(@"getCircuit fail : %@", error.localizedDescription);
+						}];
 	}
 	else {
-		API_GETDOSSIER(dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
+		API_GETDOSSIER(_dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
+		API_GETCIRCUIT(_dossierRef);
 	}
-	
-	//API_GETCIRCUIT(dossierRef)
-	[_restClient getCircuit:dossierRef
-					success:^(NSArray *circuits) {
-						HIDE_HUD
-						_circuit = circuits;
-						[self refreshAnnotations:dossierRef];
-					}
-					failure:^(NSError *error) {
-						NSLog(@"getCircuit fail : %@", error.localizedDescription);
-					}];
 	
 	[[self navigationController] popToRootViewControllerAnimated:YES];
 }
@@ -504,7 +503,11 @@
 				sender:(id)sender {
 	
 	if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
-		[((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_document];
+		
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3)
+			[((RGDossierDetailViewController*) [segue destinationViewController]) setDossierRef:_dossierRef];
+		else
+			[((RGDossierDetailViewController*) [segue destinationViewController]) setDossier:_document];
 	}
 	
 	if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
@@ -515,7 +518,6 @@
 		
 		_documentsPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
 		[_documentsPopover setDelegate:self];
-		
 	}
 	
 	if ([[segue identifier] isEqualToString:@"showActionPopover"]) {

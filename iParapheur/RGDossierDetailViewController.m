@@ -55,6 +55,7 @@
 #import "ADLCollectivityDef.h"
 #import "ADLCircuitCell.h"
 #import <ISO8601DateFormatter/ISO8601DateFormatter.h>
+#import "ADLResponseCircuit.h"
 
 #import "LGViewHUD.h"
 
@@ -74,7 +75,7 @@
 @synthesize circuitTable;
 
 
-- (void)awakeFromNib {
+-(void)awakeFromNib {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		/* self.clearsSelectionOnViewWillAppear = NO;*/
 		self.preferredContentSize = CGSizeMake(320.0, 600.0);
@@ -84,7 +85,7 @@
 }
 
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
 	
@@ -99,14 +100,15 @@
 	[[self sousTypeLabel] setText:[_dossier objectForKey:@"sousType"]];
 	documents = [_dossier objectForKey:@"documents"];
 	
-	// V2/V3 swtich
-	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		dossierRef = [_dossier objectForKey:@"id"];
-		
 		[_restClient getCircuit:dossierRef
 						success:^(NSArray *circuitArray) {
-							[self refreshCircuits:circuitArray];
+							
+							NSMutableArray* responseArray = [[NSMutableArray alloc] init];
+							if (circuitArray.count > 0)
+								[responseArray addObjectsFromArray:((ADLResponseCircuit *) circuitArray[0]).etapes];
+							
+							[self refreshCircuits:responseArray];
 						}
 						failure:^(NSError *error) {
 							NSLog(@"getCircuit error : %@", error);
@@ -121,7 +123,7 @@
 }
 
 
-- (void)viewDidAppear:(BOOL)animated {
+-(void)viewDidAppear:(BOOL)animated {
 	if(![self.view.window.gestureRecognizers containsObject:self.tapRecognizer])
 	{
 		self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
@@ -133,7 +135,7 @@
 }
 
 
-- (void)viewDidUnload {
+-(void)viewDidUnload {
 	[self setCircuitTable:nil];
 	
 	//unregister observer
@@ -144,7 +146,7 @@
 
 
 // Hide the modal if tap behind it
-- (void) handleTapBehind:(UITapGestureRecognizer*) sender {
+-(void)handleTapBehind:(UITapGestureRecognizer*)sender {
 	if (sender.state == UIGestureRecognizerStateEnded)
 	{
 		CGPoint location = [sender locationInView:nil];
@@ -157,18 +159,18 @@
 }
 
 
-- (IBAction)handleClose:(id)sender {
+-(IBAction)handleClose:(id)sender {
 	[self dismissModal];
 }
 
 
-- (void) dismissModal {
+-(void)dismissModal {
 	[self.view.window removeGestureRecognizer:self.tapRecognizer];
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	} else {
@@ -177,19 +179,17 @@
 }
 
 
-- (void) dossierSelected:(NSNotification*)notification {
+-(void)dossierSelected:(NSNotification*)notification {
 	NSString *selectedDossierRef  = [notification object];
 	[self setDossierRef:selectedDossierRef];
 }
 
 
-- (void) setDossierRef:(NSString *)_dossierRef {
+-(void)setDossierRef:(NSString *)_dossierRef {
 	dossierRef = _dossierRef;
-
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossierRef", nil];
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		[_restClient getDossier:dossierRef // TODO
+		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 						dossier:dossierRef
 						success:^(NSArray *dossier) {
 							[self getDossierDidEndWithREquestAnswer];
@@ -199,6 +199,8 @@
 						}];
 	}
 	else {
+		NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossierRef", nil];
+		
 		ADLRequester *requester = [ADLRequester sharedRequester];
 		[requester request:GETDOSSIER_API andArgs:args delegate:self];
 	}
@@ -206,34 +208,28 @@
 	SHOW_HUD
 }
 
-/*
- - (void)insertNewObject:(id)sender
- {
- if (!_objects) {
- _objects = [[NSMutableArray alloc] init];
- }
- [_objects insertObject:[NSDate date] atIndex:0];
- NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
- [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
- }*/
-
 
 #pragma mark - Table View
 
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+-(NSInteger)tableView:(UITableView *)tableView
+numberOfRowsInSection:(NSInteger)section {
 	return _objects.count;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(UITableViewCell *)tableView:(UITableView *)tableView
+		cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
 	static NSString *CellIdentifier = @"CircuitCell";
 	ADLCircuitCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	
+	// TODO Adrien : check
 	
 	if (cell == nil) {
 		cell = [[ADLCircuitCell alloc] init];
@@ -254,9 +250,22 @@
 	
 	ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
 	
-	NSString *validationDateIso = [object objectForKey:@"dateValidation"];
-	if (validationDateIso != nil && ![validationDateIso isEqualToString:@""]) {
-		NSDate * validationDate = [formatter dateFromString:validationDateIso];
+	if ([object objectForKey:@"dateValidation"]) {
+		
+		NSDate * validationDate;
+		
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			if ([[object objectForKey:@"dateValidation"] isKindOfClass:[NSNumber class]])
+			{
+				NSNumber* dateMs = [object objectForKey:@"dateValidation"];
+				validationDate = [NSDate dateWithTimeIntervalSince1970:[dateMs doubleValue] / 1000];
+			}
+		}
+		else {
+			NSString *validationDateIso = [object objectForKey:@"dateValidation"];
+			if (validationDateIso != nil && ![validationDateIso isEqualToString:@""])
+				validationDate = [formatter dateFromString:validationDateIso];
+		}
 		
 		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
 		[outputFormatter setDateFormat:@"'le' dd/MM/yyyy 'à' HH:mm"];
@@ -264,8 +273,6 @@
 		NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
 		
 		[[cell validationDate] setText:validationDateStr];
-		
-		
 	}
 	else {
 		[[cell validationDate] setText:nil];
@@ -280,7 +287,6 @@
 		imagePrefix = @"ip";
 	}
 	
-	
 	NSString *action = [[object objectForKey:@"actionDemandee"] lowercaseString];
 	
 	[[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png", imagePrefix, action ]]];
@@ -289,13 +295,17 @@
 }
 
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+-(BOOL)tableView:(UITableView *)tableView
+canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 	// Return NO if you do not want the specified item to be editable.
 	return YES;
 }
 
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+-(void)tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath {
+	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		[_objects removeObjectAtIndex:indexPath.row];
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -304,22 +314,9 @@
 	}
 }
 
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
 
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 -(IBAction)showDocumentsViewController:(id)sender {
+	
 	if (documentsPopover)
 		[documentsPopover dismissPopoverAnimated:YES];
 	else
@@ -327,23 +324,14 @@
 }
 
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+-(void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		NSDate *object = [_objects objectAtIndex:indexPath.row];
 		self.detailViewController.detailItem = object;
 	}
 }
-
-
-/*
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- if ([[segue identifier] isEqualToString:@"showDetail"]) {
- NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
- NSDate *object = [_objects objectAtIndex:indexPath.row];
- [[segue destinationViewController] setDetailItem:object];
- }
- }*/
 
 
 -(void)getCircuit {
@@ -394,7 +382,7 @@
 }
 
 
--(void)didEndWithUnAuthorizedAccess {
+-(void)didEndWithUnAuthorizedAccess{
 	
 }
 
@@ -406,7 +394,7 @@
 	@synchronized(self)
 	{
 		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-
+		
 		[_objects removeAllObjects];
 		[_objects addObjectsFromArray:circuitArray];
 		[circuitTable reloadData];
@@ -422,7 +410,8 @@
 	
 	NSString *filePath = [pdfs lastObject];
 	
-	ReaderDocument *document = [[ReaderDocument alloc] initWithFilePath:filePath password:nil];
+	ReaderDocument *document = [[ReaderDocument alloc] initWithFilePath:filePath
+															   password:nil];
 	
 	readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
 	[readerViewController setDelegate:self];
@@ -430,18 +419,22 @@
 	readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 	
-	[[self splitViewController] presentViewController:readerViewController animated:YES completion:nil];
-	
+	[[self splitViewController] presentViewController:readerViewController
+											 animated:YES
+										   completion:nil];
 }
 
 
 -(void)dismissReaderViewController:(ReaderViewController *)viewController {
 	// do nothing for now
-	[[self splitViewController] dismissViewControllerAnimated:YES completion:nil];
+	[[self splitViewController] dismissViewControllerAnimated:YES
+												   completion:nil];
 }
 
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue
+				sender:(id)sender {
+	
 	/*
 	 if ([[segue identifier] isEqualToString:@"showDocumentsView"]) {
 	 
@@ -464,8 +457,11 @@
 }
 
 
--(void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated {
-	[super presentModalViewController:modalViewController animated:animated];
+-(void)presentModalViewController:(UIViewController *)modalViewController
+						 animated:(BOOL)animated {
+	
+	[super presentModalViewController:modalViewController
+							 animated:animated];
 }
 
 
