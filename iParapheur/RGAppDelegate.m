@@ -113,8 +113,8 @@
 		NSLog(@"delegate : %@", [(id)navigationController.topViewController description]);
 	}
 	
-	
-	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert];
+	// Unused Push... Why registering ?
+	//[[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert];
 	
 	NSArray *p12Docs = [self importableP12Stores];
 	
@@ -142,7 +142,7 @@
 }
 
 
--(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+/*-(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 	NSString *base64DeviceToken = [deviceToken base64EncodedString];
 	NSLog(@"%@", base64DeviceToken);
 	// self.registered = YES;
@@ -154,7 +154,7 @@
 
 -(void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
 	NSLog(@"Error in registration. Error: %@", err);
-}
+}*/
 
 
 -(void)applicationWillResignActive:(UIApplication *)application {
