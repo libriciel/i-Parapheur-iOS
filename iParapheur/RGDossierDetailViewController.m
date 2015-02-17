@@ -102,11 +102,10 @@
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getCircuit:dossierRef
-						success:^(NSArray *circuitArray) {
+						success:^(ADLResponseCircuit *responseCircuit) {
 							
 							NSMutableArray* responseArray = [[NSMutableArray alloc] init];
-							if (circuitArray.count > 0)
-								[responseArray addObjectsFromArray:((ADLResponseCircuit *) circuitArray[0]).etapes];
+							[responseArray addObjectsFromArray:responseCircuit.etapes];
 							
 							[self refreshCircuits:responseArray];
 						}
@@ -191,7 +190,7 @@
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 						dossier:dossierRef
-						success:^(NSArray *dossier) {
+						success:^(ADLResponseDossier *responseDossier) {
 							[self getDossierDidEndWithREquestAnswer];
 						}
 						failure:^(NSError *error) {

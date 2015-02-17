@@ -1,7 +1,8 @@
 
 #import <Foundation/Foundation.h>
+#import "Mantle/Mantle.h"
 
-@interface ADLResponseDossiers : NSObject
+@interface ADLResponseDossiers : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSNumber *total;
 @property (nonatomic, strong) NSString *protocol;
@@ -10,7 +11,7 @@
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *bureauName;
 @property (nonatomic, strong) NSString *creator;
-@property (nonatomic, strong) NSString *identifier; // id
+@property (nonatomic, strong) NSString *identifier;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSNumber *pendingFile;
 @property (nonatomic, strong) NSString *banetteName;

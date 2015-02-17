@@ -463,9 +463,8 @@
 			for (NSString* dossierRef in _dossiersRef) {
 				[_restClient getSignInfoForDossier:dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-										   success:^(NSArray *signInfosArray) {
-											   for (ADLResponseSignInfo* signInfos in signInfosArray)
-												   [self getSignInfoDidEndWithSuccess:signInfos];
+										   success:^(ADLResponseSignInfo *signInfo) {
+												[self getSignInfoDidEndWithSuccess:signInfo];
 										   }
 										   failure:^(NSError * error) {
 											   NSLog(@"Error on getSignInfo %@", error.localizedDescription);

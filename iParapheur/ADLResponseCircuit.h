@@ -5,8 +5,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Mantle.h>
 
-@interface ADLResponseCircuit : NSObject
+@interface ADLResponseCircuit : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSArray *etapes;
 @property (nonatomic, strong) NSString *annotPriv;

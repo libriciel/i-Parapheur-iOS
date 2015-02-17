@@ -156,6 +156,7 @@
 		C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C57E67E11A5DF6F800BC4A3A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
+		C592228C1A92C59300F6C8A3 /* ADLStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C592228B1A92C59300F6C8A3 /* ADLStringUtils.m */; };
 		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
@@ -167,6 +168,7 @@
 		C5C803601A5D90DA00D54F7D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035F1A5D90DA00D54F7D /* SystemConfiguration.framework */; };
 		C5C803621A5D90E600D54F7D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803611A5D90E600D54F7D /* UIKit.framework */; };
 		C5C803641A5D90F200D54F7D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803631A5D90F200D54F7D /* Foundation.framework */; };
+		C5CD16ED1A9228C70014385B /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C5CD16EC1A9228C70014385B /* adulllact_g3_mobile_public.cer */; };
 		EA7029BB7E3A6A3A903A1932 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -384,6 +386,8 @@
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseSignInfo.h; sourceTree = "<group>"; };
 		C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseSignInfo.m; sourceTree = "<group>"; };
+		C592228A1A92C59300F6C8A3 /* ADLStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLStringUtils.h; sourceTree = "<group>"; };
+		C592228B1A92C59300F6C8A3 /* ADLStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLStringUtils.m; sourceTree = "<group>"; };
 		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
 		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
@@ -401,6 +405,7 @@
 		C5C803611A5D90E600D54F7D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C5C803631A5D90F200D54F7D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C5CD16EC1A9228C70014385B /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -635,6 +640,7 @@
 		B4E5ECA8153AF65F00BD514D /* iParapheur */ = {
 			isa = PBXGroup;
 			children = (
+				C592228D1A92C5B400F6C8A3 /* Utils */,
 				1434F65D168DFB03000C115D /* Crypto */,
 				B4B364391611A4CE0051420F /* Singleton */,
 				B4FF33BF154732FF006F7BF3 /* Reader */,
@@ -659,6 +665,7 @@
 			isa = PBXGroup;
 			children = (
 				142B020716D61AF200EF3B8F /* acmobile.der */,
+				C5CD16EC1A9228C70014385B /* adulllact_g3_mobile_public.cer */,
 				1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */,
 				B4082A7E162D48CB000B0E26 /* logo-new5.png */,
 				95DFC49718957A0E0015AF31 /* ip-mailsec.png */,
@@ -806,6 +813,15 @@
 			name = Graphics;
 			sourceTree = "<group>";
 		};
+		C592228D1A92C5B400F6C8A3 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C592228A1A92C59300F6C8A3 /* ADLStringUtils.h */,
+				C592228B1A92C59300F6C8A3 /* ADLStringUtils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		C5BC17931A5EED9B003D8E98 /* RestClientApi2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -949,6 +965,7 @@
 				95DFC49E18957A0E0015AF31 /* ip-signature.png in Resources */,
 				954838CC18955C5E0034F8B0 /* iw-archivage.png in Resources */,
 				B41B9472156227A6004D57A1 /* rounded-fail.png in Resources */,
+				C5CD16ED1A9228C70014385B /* adulllact_g3_mobile_public.cer in Resources */,
 				9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */,
 				B41B9473156227A6004D57A1 /* rounded-fail@2x.png in Resources */,
 				B429A96415B5BF7A003B8BF9 /* Settings.bundle in Resources */,
@@ -1097,6 +1114,7 @@
 				C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */,
 				B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */,
 				B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */,
+				C592228C1A92C59300F6C8A3 /* ADLStringUtils.m in Sources */,
 				B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */,
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
@@ -1326,6 +1344,7 @@
 		};
 		B4E5ECDB153AF65F00BD514D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1344,6 +1363,7 @@
 		};
 		B4E5ECDC153AF65F00BD514D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
 				CLANG_ENABLE_OBJC_ARC = YES;
