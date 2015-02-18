@@ -26,22 +26,43 @@
 	// Initialize AFNetworking HTTPClient
 	
 	NSURL *baseURL = [NSURL URLWithString:url];
-	_sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+	_getManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+	_postManager = 	[[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
 	
-	// Basic authentication
-	// Login/password are taken from app preferences.
+	// GetManager init
 	
-	[_sessionManager.requestSerializer setAuthorizationHeaderFieldWithUsername:loginSettings
+	[_getManager.requestSerializer setAuthorizationHeaderFieldWithUsername:loginSettings
 																	  password:passwordSettings];
+	
+	// PostManager init
+	//		Here are the reasons why we have two managers : GET needs a HTTPRequestSerializer/JSONResponseSerializer
+	//		and PUT/POST/DELETE needs the opposite : JSONRequestSerializer/HTTPResponseSerializer.
+	//		(We can't change them on runtime without messing with the requests in the waiting list)
+	
+	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
+	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[requestSerializer setAuthorizationHeaderFieldWithUsername:loginSettings
+													  password:passwordSettings];
+	
+	_postManager.requestSerializer = requestSerializer;
+	
+	AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+	[_postManager setResponseSerializer:responseSerializer];
 	
 	// Security policy, for SSL checks.
 	// The .cer files (mobile server public keys) are automatically loaded from the app bundle,
 	// We just have to put them in the supporting files folder
 	
-	_sessionManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-	_sessionManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
-	_sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
-	_sessionManager.securityPolicy.validatesDomainName = YES;
+	_getManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+	_getManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
+	_getManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
+	_getManager.securityPolicy.validatesDomainName = YES;
+
+	_postManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+	_postManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
+	_postManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
+	_postManager.securityPolicy.validatesDomainName = YES;
 
 	return self;
 }
@@ -65,7 +86,7 @@
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
 	
-	[_sessionManager GET:@"/parapheur/api/getApiLevel"
+	[_getManager GET:@"/parapheur/api/getApiLevel"
 			  parameters:nil
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -90,7 +111,7 @@
 -(void)getBureaux:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	[_sessionManager GET:@"/parapheur/bureaux"
+	[_getManager GET:@"/parapheur/bureaux"
 			  parameters:nil
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 
@@ -129,7 +150,7 @@
 								  @"skipped" : [NSNumber numberWithInt:0],
 								  @"sort" : @"cm:create"};
 	
-	[_sessionManager GET:@"/parapheur/dossiers"
+	[_getManager GET:@"/parapheur/dossiers"
 			  parameters:queryParams
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -158,7 +179,7 @@
 	
 	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
 	
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
 			  parameters:queryParams
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -187,7 +208,7 @@
 	
 	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
 	
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
 			  parameters:queryParams
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -213,7 +234,7 @@
 		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
 			  parameters:nil
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -239,7 +260,7 @@
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
 			  parameters:nil
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -276,41 +297,29 @@ typedef enum {
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure {
 	
-	NSString *loginSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
-	NSString *passwordSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"password_preference"];
-	
-	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
-	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[requestSerializer setAuthorizationHeaderFieldWithUsername:loginSettings password:passwordSettings];
-	_sessionManager.requestSerializer = requestSerializer;
-	
-	AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
-	[_sessionManager setResponseSerializer:responseSerializer];
-	
 	if (type == ADLRequestTypePOST) {
-	[_sessionManager POST:url
-			   parameters:args
-				  success:^(NSURLSessionDataTask *operation, id responseObject) {
-					  success(nil);
-				  }
-				  failure:^(NSURLSessionDataTask *operation, NSError *error) {
-					  failure(error);
-				  }];
+		[_postManager POST:url
+				parameters:args
+				   success:^(NSURLSessionDataTask *operation, id responseObject) {
+					   success(nil);
+				   }
+				   failure:^(NSURLSessionDataTask *operation, NSError *error) {
+					   failure(error);
+				   }];
 	}
 	else if (type == ADLRequestTypePUT) {
-		[_sessionManager PUT:url
+		[_postManager PUT:url
 				  parameters:args
 					 success:^(NSURLSessionDataTask *operation, id responseObject) {
-						success(nil);
+						 success(nil);
 					 }
 					 failure:^(NSURLSessionDataTask *operation, NSError *error) {
 						 failure(error);
 					 }];
 	}
 	else if (type == ADLRequestTypeDELETE) {
-		[_sessionManager DELETE:url
-					parameters:args
+		[_postManager DELETE:url
+				  parameters:args
 						success:^(NSURLSessionDataTask *operation, id responseObject) {
 							success(nil);
 						}
