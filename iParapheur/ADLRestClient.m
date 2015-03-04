@@ -46,7 +46,9 @@ static NSNumber *PARAPHEUR_API_VERSION;
 							PARAPHEUR_API_VERSION = versionNumber;
 							success(versionNumber);
 						 }
-						 failure:^(NSError *error) { failure(error); }];
+						 failure:^(NSError *error) {
+							 failure(error);
+						 }];
 }
 
 

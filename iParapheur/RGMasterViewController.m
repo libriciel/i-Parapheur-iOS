@@ -89,10 +89,18 @@
 	
 	_bureauxArray = [[NSMutableArray alloc] init];
 	
-	self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
+	self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f
+																		green:0.375f
+																		 blue:0.75f
+																		alpha:1.0f];
 	self.refreshControl = [[UIRefreshControl alloc]init];
-	self.refreshControl.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
-	[self.refreshControl addTarget:self action:@selector(loadBureaux) forControlEvents:UIControlEventValueChanged];
+	self.refreshControl.tintColor = [UIColor colorWithRed:0.0f
+													green:0.375f
+													 blue:0.75f
+													alpha:1.0f];
+	[self.refreshControl addTarget:self
+							action:@selector(loadBureaux)
+				  forControlEvents:UIControlEventValueChanged];
 }
 
 

@@ -9,6 +9,7 @@
 #import "ADLResponseCircuit.h"
 #import "ADLResponseAnnotation.h"
 #import "ADLResponseSignInfo.h"
+#import "Reachability.h"
 
 @implementation ADLRestClientApi3
 
@@ -76,6 +77,8 @@
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
 	
+	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
+	
 	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/api/getApiLevel"
 										   parameters:nil
 											  success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
@@ -83,7 +86,31 @@
 												  success(levelResponse.level);
 											  }
 											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
-												  failure(error);
+
+												  Reachability *reach = [Reachability reachabilityWithHostname:urlSettings];
+												  
+												  if ([reach isReachable]) {
+													  // Legacy compatibility
+													  success([NSNumber numberWithInt:2]);
+												  }
+												  else {
+													  
+													  [reach setReachableBlock:^(Reachability *reachblock) {
+														  // keep in mind this is called on a background thread
+														  // and if you are updating the UI it needs to happen
+														  // on the main thread, like this:
+														  dispatch_async(dispatch_get_main_queue(), ^{ success([NSNumber numberWithInt:2]); });
+													  }];
+													  
+													  [reach setUnreachableBlock:^(Reachability*reach) {
+														  // keep in mind this is called on a background thread
+														  // and if you are updating the UI it needs to happen
+														  // on the main thread, like this:
+														  dispatch_async(dispatch_get_main_queue(), ^{ failure(error); });
+													  }];
+												  }
+												  
+												  [reach startNotifier];
 											  }];
 }
 

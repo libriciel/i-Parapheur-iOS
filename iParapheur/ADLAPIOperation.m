@@ -17,7 +17,6 @@
 @property(assign) BOOL isFinished;
 @end
 
-
 @implementation ADLAPIOperation
 
 @synthesize lock = _lock;
@@ -25,7 +24,9 @@
 @synthesize isExecuting = _isExecuting;
 @synthesize isFinished = _isFinished;
 
+
 #pragma mark - Network Thread
+
 
 + (void)networkRequestThreadEntryPoint:(id)object {
 	do {
@@ -50,6 +51,7 @@
 	return _networkRequestThread;
 }
 
+
 -(id)initWithDocumentPath:(NSString *)documentPath
 	   andCollectivityDef:(ADLCollectivityDef*)def
 				 delegate:(id<ADLParapheurWallDelegateProtocol>)delegate {
@@ -66,6 +68,7 @@
 	
 	return self;
 }
+
 
 -(id)initWithRequest:(NSString *)request
 			withArgs:(NSDictionary *)args
@@ -84,6 +87,7 @@
 	}
 	return self;
 }
+
 
 -(id)initWithRequest:(NSString *)request
 	 collectivityDef:(ADLCollectivityDef*)def
@@ -108,6 +112,7 @@
 			   withObject:nil
 			waitUntilDone:NO];
 }
+
 
 -(void)startFetching {
 	
@@ -180,7 +185,6 @@
 }
 
 
-
 #pragma mark - Connection Delegate for server trust evaluation.
 
 - (void)connection:(NSURLConnection *)connection
@@ -210,12 +214,12 @@
 }
 
 
-
 - (SecCertificateRef)certificateFromFile:(NSString*)file {
 	CFDataRef adullact_g3_ca_data = (__bridge CFDataRef)[[NSFileManager defaultManager] contentsAtPath:file];
 	
 	return SecCertificateCreateWithData (kCFAllocatorDefault, adullact_g3_ca_data);
 }
+
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge; {
 #ifndef DEBUG_NO_SERVER_TRUST
@@ -270,6 +274,7 @@
 
 #pragma mark - Connection delegate for data downloading.
 
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	
 	if (_mimeType == nil) {
@@ -277,7 +282,10 @@
 	}
 	
 	if ([(NSHTTPURLResponse*)response statusCode] != 200) {
-		[_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork) withObject:nil waitUntilDone:YES];
+		
+		[_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork)
+									withObject:nil
+								 waitUntilDone:YES];
 		
 		[_receivedData setLength:0];
 		[self setIsExecuting: NO];
@@ -291,6 +299,7 @@
 	//}
 }
 
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	if (![self isCancelled]) {
 		[_receivedData appendData:data];
@@ -302,6 +311,7 @@
 		_receivedData = nil;
 	}
 }
+
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	if (downloadingDocument) {
@@ -330,31 +340,21 @@
 	//[_receivedData release];
 }
 
+
 #pragma mark - parsing utility
-/*-(void) parseResponse:(NSData*) response andReq:(NSString*)req {
- NSDictionary* responseObject = [NSJSONSerialization JSONObjectWithData:response options:0 error:nil];
- NSMutableDictionary* retVal = [NSMutableDictionary dictionaryWithDictionary:responseObject];
- 
- [retVal setObject:req forKey:@"_req"];
- 
- if (_delegate != nil && [_delegate respondsToSelector:@selector(didEndWithRequestAnswer:) ]) {
- [_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:) withObject:retVal waitUntilDone:NO];
- }
- 
- }*/
+
 
 #pragma mark - automaticaly observer KVO Changes
-+ (BOOL) automaticallyNotifiesObserversForKey: (NSString*) key
-{
+
+
++ (BOOL) automaticallyNotifiesObserversForKey: (NSString*) key {
 	return YES;
 }
 
-- (BOOL) isConcurrent
-{
+
+- (BOOL) isConcurrent {
 	return NO;
 }
-
-#pragma mark - H
 
 
 @end
