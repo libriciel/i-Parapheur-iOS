@@ -23,6 +23,11 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-"Done"			= "Fermer";
+"Language"		= "Français";
 
+// Error logs
+
+//
+
+"Done"			= "Fermer";
 "%d of %d"		= "%1$d de %2$d";
