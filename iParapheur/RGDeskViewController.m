@@ -244,7 +244,11 @@
 			[self performSegueWithIdentifier:self.mainAction sender:self];
 		}
 		@catch (NSException *exception) {
-			[[[UIAlertView alloc] initWithTitle:@"Action impossible" message:@"Vous ne pouvez pas effectuer cette action sur tablette." delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+									   delegate:nil
+							  cancelButtonTitle:NSLocalizedString(@"Done", nil)
+							  otherButtonTitles: nil] show];
 		}
 		@finally {}
 	}
@@ -573,7 +577,7 @@
 			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
 										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
 									   delegate:nil
-							  cancelButtonTitle:@"Fermer"
+							  cancelButtonTitle:NSLocalizedString(@"Done", nil)
 							  otherButtonTitles:nil]
 			 show];
 		}

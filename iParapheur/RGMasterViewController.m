@@ -66,6 +66,14 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
 	
+	// Settings check
+	
+	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
+	NSString *loginSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
+	NSString *passwordSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"password_preference"];
+	
+	bool areSettingsSet = urlSettings && loginSettings && passwordSettings;
+	
 	// RestKit init
 	
 	_restClient = [[ADLRestClient alloc] init];
@@ -78,10 +86,10 @@
 					 }];
 	
 	// Do any additional setup after loading the view, typically from a nib
+	
 	_bureauxArray = [[NSMutableArray alloc] init];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
-	
 	self.refreshControl = [[UIRefreshControl alloc]init];
 	self.refreshControl.tintColor = [UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f];
 	[self.refreshControl addTarget:self action:@selector(loadBureaux) forControlEvents:UIControlEventValueChanged];
@@ -169,28 +177,19 @@
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getBureaux:^(NSArray *bureaux) {
-			[self setBureauxArray:bureaux];
-			_loading = NO;
-			[self.refreshControl endRefreshing];
-			[(UITableView*)([self view]) reloadData];
-			[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+							[self setBureauxArray:bureaux];
+							_loading = NO;
+							[self.refreshControl endRefreshing];
+							[(UITableView*)([self view]) reloadData];
+							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 			
-		} failure:^(NSError *error) {
-			NSLog(@"getBureaux error");
-		}];
+						}
+						failure:^(NSError *error) {
+							NSLog(@"getBureaux error");
+						}];
 	}
 	else {
 		API_GETBUREAUX();
-		
-		/*if (displayHUD == NO) {
-		 LGViewHUD *hud = [LGViewHUD defaultHUD];
-		 hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-		 hud.topText=@"";
-		 hud.bottomText=@"Chargement ...";
-		 hud.activityIndicatorOn=YES;
-		 [hud showInView:self.view];
-		 }
-		 */
 	}
 }
 
@@ -208,8 +207,9 @@
 }
 
 
-/** Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
- Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
+/** Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier
+	and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+	Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
  */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	

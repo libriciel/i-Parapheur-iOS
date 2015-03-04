@@ -178,7 +178,7 @@
 			[[[UIAlertView alloc] initWithTitle:@"Attention"
 										message:@"Veuillez saisir le motif de votre rejet"
 									   delegate:nil
-							  cancelButtonTitle:@"Fermer"
+							  cancelButtonTitle:NSLocalizedString(@"Done", nil)
 							  otherButtonTitles:nil] show];
 		}
 		
@@ -320,7 +320,7 @@
 	[[[UIAlertView alloc] initWithTitle:@"Erreur"
 								message:@"Une erreur est survenue lors de l'envoi de la requête"
 							   delegate:nil
-					  cancelButtonTitle:@"Fermer"
+					  cancelButtonTitle:NSLocalizedString(@"Done", nil)
 					  otherButtonTitles: nil] show];
 }
 

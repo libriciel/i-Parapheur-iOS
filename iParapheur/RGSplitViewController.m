@@ -58,8 +58,8 @@
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
@@ -68,34 +68,30 @@
 }
 
 
-#pragma mark Wall Controller
+#pragma mark - Requests response
 
 
-#pragma mark -
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary*)answer{
-    
-    NSString *s = [answer objectForKey:@"_req"];
-    if ([s isEqual:LOGIN_API]) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Alert title when network error happens")
-															message:[NSString stringWithFormat:@"%@", [[answer objectForKey:@"data"]
-																									   objectForKey:@"ticket"]]
+- (void)didEndWithRequestAnswer:(NSDictionary*)answer {
+	
+	NSString *s = [answer objectForKey:@"_req"];
+	
+	if ([s isEqual:LOGIN_API]) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Alert title when network error happens")
+															message:[NSString stringWithFormat:@"%@", [[answer objectForKey:@"data"] objectForKey:@"ticket"]]
 														   delegate:nil
 												  cancelButtonTitle:NSLocalizedString(@"Dismiss", @"Alert view dismiss button")
 												  otherButtonTitles:nil];
-        
-        [alertView show];
-        //storing ticket ? lacks the host and login information
+		
+		[alertView show];
+		//storing ticket ? lacks the host and login information
         //we should add it into the request process ?
         
         ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
         ADLCollectivityDef *collectivityDef = [ADLCollectivityDef copyDefaultCollectity];
         
-        [vault addCredentialForHost:[collectivityDef host] andLogin:[collectivityDef username] withTicket:[[answer objectForKey:@"data"] objectForKey:@"ticket"]];
-    }
-    else if ([s isEqual:GETBUREAUX_API]) {
-    //    [bureauView loadBureaux];
+        [vault addCredentialForHost:[collectivityDef host]
+						   andLogin:[collectivityDef username]
+						 withTicket:[[answer objectForKey:@"data"] objectForKey:@"ticket"]];
     }
 }
 

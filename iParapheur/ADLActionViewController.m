@@ -106,7 +106,8 @@
 	ADLActionCell* cell = (ADLActionCell*)[tableView dequeueReusableCellWithIdentifier:@"ActionCell"];
 	
 	if (cell == nil) {
-		cell = [[ADLActionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ActionCell"];
+		cell = [[ADLActionCell alloc] initWithStyle:UITableViewCellStyleDefault
+									reuseIdentifier:@"ActionCell"];
 	}
 	
 	[[cell actionLabel] setText:[_labels objectAtIndex:[indexPath row]]];
@@ -126,7 +127,11 @@
 		[self performSegueWithIdentifier:[_actions objectAtIndex:[indexPath row]] sender:self];
 	}
 	@catch (NSException *exception) {
-		[[[UIAlertView alloc] initWithTitle:@"Action impossible" message:@"Vous ne pouvez pas effectuer cette action sur tablette." delegate:nil cancelButtonTitle:@"Fermer" otherButtonTitles: nil] show];
+		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+									message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+								   delegate:nil
+						  cancelButtonTitle:NSLocalizedString(@"Done", nil)
+						  otherButtonTitles: nil] show];
 	}
 	@finally {}
 }
