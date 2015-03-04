@@ -1,7 +1,6 @@
 
 #import <Foundation/Foundation.h>
 #import "ADLRestClientApi3.h"
-#import "ADLResponseDossier.h"
 
 @interface ADLRestClient : NSObject
 
@@ -34,12 +33,12 @@
 
 -(void)getDossier:(NSString*)bureau
 		  dossier:(NSString*)dossier
-		  success:(void (^)(ADLResponseDossier *))dossier
+		  success:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure;
 
 
 -(void)getCircuit:(NSString*)dossier
-		  success:(void (^)(ADLResponseCircuit *))success
+		  success:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure;
 
 
@@ -69,7 +68,7 @@
 
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
-					 success:(void (^)(ADLResponseSignInfo *))success
+					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure;
 
 

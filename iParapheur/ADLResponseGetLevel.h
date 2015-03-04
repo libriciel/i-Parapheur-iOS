@@ -1,9 +1,8 @@
 
 #import <Foundation/Foundation.h>
-#import <Mantle.h>
 
 
-@interface ADLResponseGetLevel : MTLModel<MTLJSONSerializing>
+@interface ADLResponseGetLevel : NSObject
 
 @property (nonatomic, strong) NSNumber *level;
 

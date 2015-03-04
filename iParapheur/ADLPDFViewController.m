@@ -189,18 +189,18 @@
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 						dossier:_dossierRef
-						success:^(ADLResponseDossier *result) {
+						success:^(NSArray *result) {
 							HIDE_HUD
-							[self getDossierDidEndWithRequestAnswer:result];
+							[self getDossierDidEndWithRequestAnswer:result[0]];
 						}
 						failure:^(NSError *error) {
 							NSLog(@"getBureau fail : %@", error.localizedDescription);
 						}];
 		
 		[_restClient getCircuit:_dossierRef
-						success:^(ADLResponseCircuit *circuit) {
+						success:^(NSArray *circuits) {
 							HIDE_HUD
-							_circuit = [NSMutableArray arrayWithObject:circuit];
+							_circuit = circuits;
 							[self refreshAnnotations:dossierRef];
 						}
 						failure:^(NSError *error) {
@@ -287,8 +287,11 @@
 			if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 				[_restClient getSignInfoForDossier:_dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-										   success:^(ADLResponseSignInfo *signInfo) {
-											   _signatureFormat = [signInfo.signatureInformations objectForKey:@"format"];
+										   success:^(NSArray *signInfos) {
+											   if (signInfos.count > 0)
+												   _signatureFormat = [((ADLResponseSignInfo*) signInfos[0]).signatureInformations objectForKey:@"format"];
+											   else
+												   _signatureFormat = nil;
 										   }
 										   failure:^(NSError *error) {
 											   NSLog(@"getSignInfo %@", error.localizedDescription);

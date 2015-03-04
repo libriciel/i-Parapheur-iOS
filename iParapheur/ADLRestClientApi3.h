@@ -1,15 +1,7 @@
 
 #import <Foundation/Foundation.h>
-#import <AFHTTPSessionManager.h>
-#import "ADLResponseDossier.h"
-#import "ADLResponseSignInfo.h"
-#import "ADLResponseCircuit.h"
-
 
 @interface ADLRestClientApi3 : NSObject
-
-
-@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 
 
 -(id)init;
@@ -20,11 +12,11 @@
 
 
 -(void)getApiLevel:(void (^)(NSNumber *versionNumber))success
-		   failure:(void (^)(NSError *error))failure;
+            failure:(void (^)(NSError *error))failure;
 
 
 -(void)getBureaux:(void (^)(NSArray *bureaux))success
-		  failure:(void (^)(NSError *error))failure;
+           failure:(void (^)(NSError *error))failure;
 
 
 -(void)getDossiers:(NSString*)bureau
@@ -36,12 +28,12 @@
 
 -(void)getDossier:(NSString*)bureau
 		  dossier:(NSString*)dossier
-		  success:(void (^)(ADLResponseDossier *))success
+		  success:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure;
 
 
 -(void)getCircuit:(NSString*)dossier
-		  success:(void (^)(ADLResponseCircuit *))success
+		  success:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure;
 
 
@@ -52,7 +44,7 @@
 
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
-					 success:(void (^)(ADLResponseSignInfo *))success
+					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure;
 
 	

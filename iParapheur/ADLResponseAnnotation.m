@@ -8,8 +8,4 @@
 
 @implementation ADLResponseAnnotation
 
-+ (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{};
-}
-
 @end

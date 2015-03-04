@@ -3,8 +3,4 @@
 
 @implementation ADLResponseSignInfo
 
-+ (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{@"signatureInformations":@"signatureInformations"};
-}
-
 @end
