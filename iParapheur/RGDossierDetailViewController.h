@@ -46,27 +46,16 @@
 
 @class RGDetailViewController;
 
-@interface RGDossierDetailViewController : UIViewController
-                                    <ADLParapheurWallDelegateProtocol,
-                                    ReaderViewControllerDelegate,
-                                    UIPopoverControllerDelegate,
-                                    UITableViewDelegate,
-                                    LGViewHUDDelegate> {
-    
-    //UITextView *textView;
-    UILabel *dossierName;
-    UILabel *typeLabel;
-    UILabel *sousTypeLabel;
-    UILabel *circuitLabel;
-    NSString *dossierRef;
-    NSArray *documents;
-    
-    NSArray *circuit;
-    
-
-    ReaderViewController *readerViewController;
+@interface RGDossierDetailViewController : UIViewController <ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, LGViewHUDDelegate> {
+	UILabel *dossierName;
+	UILabel *typeLabel;
+	UILabel *sousTypeLabel;
+	UILabel *circuitLabel;
+	NSString *dossierRef;
+	NSArray *documents;
+	NSArray *circuit;
+	ReaderViewController *readerViewController;
 }
-
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 @property (strong, nonatomic) ADLPDFViewController *detailViewController;
@@ -76,12 +65,7 @@
 @property (strong, nonatomic) IBOutlet UITableView *circuitTable;
 @property (strong, nonatomic) IBOutlet UILabel *circuitLabel;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-
-
 @property (strong, nonatomic) NSDictionary *dossier;
-
-
 @property (nonatomic, strong) NSString *dossierRef;
-//- (void)refreshViewWithDossier:(NSDictionary*)dossier;
 
 @end

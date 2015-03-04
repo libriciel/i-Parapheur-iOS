@@ -22,13 +22,13 @@ static NSNumber *PARAPHEUR_API_VERSION;
 -(NSString *)getDownloadUrl:(NSString *)dossierId
 					 forPdf:(bool)isPdf{
 	return [_restClientApi3 getDownloadUrl:dossierId
-									forPdf:isPdf];//
+									forPdf:isPdf];
 }
 
 
 -(NSString *)fixBureauId:(NSString *)dossierId {
 	NSString *prefixToRemove = @"workspace://SpacesStore/";
-
+	
 	if ([dossierId hasPrefix:prefixToRemove])
 		return [dossierId substringFromIndex:prefixToRemove.length];
 	else
@@ -43,9 +43,9 @@ static NSNumber *PARAPHEUR_API_VERSION;
 			failure:(void (^)(NSError *error))failure {
 	
 	[_restClientApi3 getApiLevel:^(NSNumber *versionNumber) {
-		PARAPHEUR_API_VERSION = versionNumber;
-		success(versionNumber);
-	}
+							PARAPHEUR_API_VERSION = versionNumber;
+							success(versionNumber);
+						 }
 						 failure:^(NSError *error) { failure(error); }];
 }
 
@@ -64,11 +64,7 @@ static NSNumber *PARAPHEUR_API_VERSION;
 		   success:(void (^)(NSArray *))success
 		   failure:(void (^)(NSError *))failure {
 	
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
-	if ([bureau hasPrefix:prefixToRemove])
-		bureau = [bureau substringFromIndex:prefixToRemove.length];
-	
-	[_restClientApi3 getDossiers:bureau
+	[_restClientApi3 getDossiers:[self fixBureauId:bureau]
 							page:page
 							size:size
 						 success:^(NSArray *dossiers) { success(dossiers); }

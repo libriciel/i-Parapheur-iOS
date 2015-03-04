@@ -91,16 +91,9 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:YES];
 	
-	if ([_bureauxArray count] == 0) {
+	if ([_bureauxArray count] == 0)
 		API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
-		/*
-		 ADLRequester *requester = [ADLRequester sharedRequester];
-		 [requester setDelegate:self];
-		 
-		 NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], @"username", [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"], @"password", nil];
-		 
-		 [requester request:LOGIN_API andArgs:args];*/
-	}
+	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared object:nil];
 	
 }
@@ -114,11 +107,11 @@
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-	} else {
+	else
 		return YES;
-	}
 }
 
 
@@ -129,15 +122,14 @@
 	NSString *s = [answer objectForKey:@"_req"];
 	_loading = NO;
 	[self.refreshControl endRefreshing];
+	
 	if ([s isEqual:LOGIN_API]) {
 		
 		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
 		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-		
 		[vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
-		
+
 		[self loadBureaux];
-		
 	}
 	else if ([s isEqual:GETBUREAUX_API]) {
 		NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
