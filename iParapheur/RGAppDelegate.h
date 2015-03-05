@@ -42,7 +42,10 @@
 #import <UIKit/UIKit.h>
 #import "ADLKeyStore.h"
 #import "ADLParapheurWallDelegateProtocol.h"
+
+
 @interface RGAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate, ADLParapheurWallDelegateProtocol>
+
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) IBOutlet UISplitViewController *splitViewController;
@@ -51,10 +54,14 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (readonly, strong, nonatomic) ADLKeyStore *keyStore;
 
+
 - (NSMutableArray*) importableP12Stores;
+
 - (void)saveContext;
+
 - (NSURL *)applicationDocumentsDirectory;
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer;
+
 
 @end

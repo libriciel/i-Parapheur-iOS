@@ -53,7 +53,10 @@
 #import "ADLCollectivityDef.h"
 #import "LGViewHUD.h"
 #import "ADLRestClient.h"
+#import "Reachability.h"
 #import "ADLResponseBureau.h"
+#import "AJNotificationView.h"
+
 
 @interface RGMasterViewController ()
 
@@ -65,28 +68,7 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
-	
-	// Settings check
-	
-	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
-	NSString *loginSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
-	NSString *passwordSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"password_preference"];
-	
-	bool areSettingsSet = urlSettings && loginSettings && passwordSettings;
-	
-	// RestKit init
-	
-	_restClient = [[ADLRestClient alloc] init];
-	
-	[_restClient getApiLevel:^(NSNumber *versionNumber) {
-						 [self loadBureaux];
-					 }
-					 failure:^(NSError *error) {
-						 [self loadBureaux];
-					 }];
-	
-	// Do any additional setup after loading the view, typically from a nib
-	
+		
 	_bureauxArray = [[NSMutableArray alloc] init];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f
@@ -110,8 +92,31 @@
 	if ([_bureauxArray count] == 0)
 		API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared
+														object:nil];
 	
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+	
+	// Settings check
+	
+	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
+	NSString *loginSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
+	NSString *passwordSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"password_preference"];
+	bool areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
+	
+	if (areSettingsSet) {
+		[self initRestKit];
+	}
+	else {
+		UIViewController * splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
+		[splashscreenViewController setModalTransitionStyle:UIModalPresentationPopover];
+		[self presentViewController:splashscreenViewController
+						   animated:YES
+						 completion:nil];
+	}
 }
 
 
@@ -128,6 +133,27 @@
 		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	else
 		return YES;
+}
+
+
+#pragma mark - Private methods
+
+
+- (void)initRestKit {
+	
+	_restClient = [[ADLRestClient alloc] init];
+	
+	[_restClient getApiLevel:^(NSNumber *versionNumber) {
+						[self loadBureaux];
+					 }
+					 failure:^(NSError *error) {
+						 UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+						 [AJNotificationView showNoticeInView:[rootController view]
+														 type:AJNotificationTypeRed
+														title:[error localizedDescription]
+											  linedBackground:AJLinedBackgroundTypeStatic
+													hideAfter:2.5f];
+					 }];
 }
 
 
@@ -206,12 +232,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if (_bureauxArray == nil) {
-		return 0;
-	}
-	else {
-		return [_bureauxArray count];
-	}
+	return _bureauxArray.count;
 }
 
 

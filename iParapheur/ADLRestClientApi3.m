@@ -17,10 +17,14 @@
 -(id)init {
 	
 	// Retrieve infos from settings
-	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	
+	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
 	NSString *url = [NSString stringWithFormat:@"https://m.%@", urlSettings];
-	NSString *loginSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
-	NSString *passwordSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"password_preference"];
+	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
+	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
+	
+	NSLog(@"Adrien WAT : %@ - %@ - %@", loginSettings, passwordSettings, url);
 	
 	// Initialize AFNetworking HTTPClient
 	NSURL *baseURL = [NSURL URLWithString:url];

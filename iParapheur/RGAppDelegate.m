@@ -105,16 +105,14 @@
 
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	// Override point for customization after application launch.
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-		UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-		splitViewController.delegate = (id)navigationController.topViewController;
-		NSLog(@"delegate : %@", [(id)navigationController.topViewController description]);
-	}
 	
-	// Unused Push... Why registering ?
-	//[[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert];
+	// Override point for customization after application launch.
+//	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//		UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+//		UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+//		splitViewController.delegate = (id)navigationController.topViewController;
+//		NSLog(@"delegate : %@", [(id)navigationController.topViewController description]);
+//	}
 	
 	NSArray *p12Docs = [self importableP12Stores];
 	
@@ -345,5 +343,6 @@
 	
 	return _keyStore;
 }
+
 
 @end
