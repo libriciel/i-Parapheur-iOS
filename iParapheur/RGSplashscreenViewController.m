@@ -20,6 +20,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	
 	NSLog(@"View Loaded : SplashScreenViewController");
 	
 	_doneButton.target = self;
@@ -27,6 +28,8 @@
 	
 	_backButton.target = self;
 	_backButton.action = @selector(onBackButtonClicked);
+	
+	// TODO Adrien : load registered values
 }
 
 
@@ -46,7 +49,41 @@
 	
 	// TODO Adrien : add special character restrictions tests, and url validation field test
 	
+	[self setBorderOnTextField:_loginTextField
+					 withAlert:!loginTextFieldValid];
+
+	[self setBorderOnTextField:_passwordTextField
+					 withAlert:!passwordTextFieldValid];
+	
+	[self setBorderOnTextField:_serverUrlTextField
+					 withAlert:!serverTextFieldValid];
+
+	
 	return (loginTextFieldValid && passwordTextFieldValid && serverTextFieldValid);
+}
+
+- (void)setBorderOnTextField:(UITextField *)textField
+				   withAlert:(BOOL)alert {
+	
+	if (alert) {
+		
+		textField.layer.cornerRadius=6.0f;
+		textField.layer.masksToBounds=YES;
+		textField.layer.borderWidth= 1.0f;
+		textField.layer.borderColor=[[UIColor colorWithRed:255.0/255.0
+													 green:150.0/255.0
+													  blue:0.0/255.0
+													 alpha:1] CGColor];
+		
+		textField.backgroundColor=[UIColor colorWithRed:255.0/255.0
+												  green:150.0/255.0
+												   blue:0.0/255.0
+												  alpha:0.1];
+	}
+	else {
+		textField.layer.borderColor = [[UIColor clearColor]CGColor];
+		textField.backgroundColor = [UIColor clearColor];
+	}
 }
 
 
@@ -61,12 +98,14 @@
 					}
 					failure:^(NSError *error) {
 						[_activityIndicatorView stopAnimating];
-						UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
-						[AJNotificationView showNoticeInView:[rootController view]
-														type:AJNotificationTypeRed
-													   title:[error localizedDescription]
-											 linedBackground:AJLinedBackgroundTypeStatic
-												   hideAfter:2.5f];
+//						UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+//						[AJNotificationView showNoticeInView:[rootController view]
+//														type:AJNotificationTypeRed
+//													   title:[error localizedDescription]
+//											 linedBackground:AJLinedBackgroundTypeStatic
+//												   hideAfter:2.5f];
+						
+						
 					 }];
 }
 

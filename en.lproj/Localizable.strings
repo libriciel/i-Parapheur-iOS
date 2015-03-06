@@ -34,3 +34,6 @@
 
 "Done"			= "Done";
 "%d of %d"		= "%1$d of %2$d";
+"Required"		= "Required";
+"Cancel"		= "Cancel";
+"Connection"	= "Connection";

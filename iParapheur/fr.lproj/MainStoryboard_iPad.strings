@@ -1,0 +1,75 @@
+
+/* Class = "IBUIBarButtonItem"; title = "Filtrer"; ObjectID = "0nh-nM-mak"; */
+"0nh-nM-mak.title" = "Filtrer";
+
+/* Class = "IBUIButton"; normalTitle = "Réinitialiser"; ObjectID = "4fr-cW-M93"; */
+"4fr-cW-M93.normalTitle" = "Réinitialiser";
+
+/* Class = "IBUILabel"; text = "Sous TypeText"; ObjectID = "8GX-Qi-hUK"; */
+"8GX-Qi-hUK.text" = "Sous TypeText";
+
+/* Class = "IBUILabel"; text = "Annotation publique déposée lors du passage de l'étape. Reste vide si l'étape n'est pas passée. Deux lignes affichées au maximum."; ObjectID = "B4S-bT-Peq"; */
+"B4S-bT-Peq.text" = "Annotation publique déposée lors du passage de l'étape. Reste vide si l'étape n'est pas passée. Deux lignes affichées au maximum.";
+
+/* Class = "IBUIBarButtonItem"; title = "Fermer"; ObjectID = "FQO-J0-NZj"; */
+"FQO-J0-NZj.title" = "Fermer";
+
+/* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "JFF-i2-gfb"; */
+"JFF-i2-gfb.title" = "Title";
+
+/* Class = "IBUILabel"; text = "Le 25 septembre 2012 à 20h34"; ObjectID = "KRX-vy-cIR"; */
+"KRX-vy-cIR.text" = "Le 25 septembre 2012 à 20h34";
+
+/* Class = "IBUINavigationItem"; title = "Dossiers"; ObjectID = "KZD-cg-m0R"; */
+"KZD-cg-m0R.title" = "Dossiers";
+
+/* Class = "IBUILabel"; text = "Title"; ObjectID = "Km1-cv-zHt"; */
+"Km1-cv-zHt.text" = "Title";
+
+/* Class = "IBUINavigationItem"; title = "Bureaux"; ObjectID = "PxO-wH-GeW"; */
+"PxO-wH-GeW.title" = "Bureaux";
+
+/* Class = "IBUILabel"; text = "Circuit de validation"; ObjectID = "TCZ-HD-KZI"; */
+"TCZ-HD-KZI.text" = "Circuit de validation";
+
+/* Class = "IBUIBarButtonItem"; title = "Details"; ObjectID = "UJR-Wz-2Gr"; */
+"UJR-Wz-2Gr.title" = "Details";
+
+/* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "Y2i-Kb-HxI"; */
+"Y2i-Kb-HxI.title" = "Title";
+
+/* Class = "IBUILabel"; text = "Par Emmanuel Peralta"; ObjectID = "YfU-bZ-49B"; */
+"YfU-bZ-49B.text" = "Par Emmanuel Peralta";
+
+/* Class = "IBUILabel"; text = "Directeur Général des Services"; ObjectID = "a9G-Bs-Qvk"; */
+"a9G-Bs-Qvk.text" = "Directeur Général des Services";
+
+/* Class = "IBUILabel"; text = "TypeText"; ObjectID = "baF-qW-STg"; */
+"baF-qW-STg.text" = "TypeText";
+
+/* Class = "IBUITextField"; placeholder = "Texte contenu dans le titre du dossier"; ObjectID = "bed-Bn-tio"; */
+"bed-Bn-tio.placeholder" = "Texte contenu dans le titre du dossier";
+
+/* Class = "IBUILabel"; text = "Le nom de bureau le plus long et le plus relou de la terre"; ObjectID = "egb-5n-Bhb"; */
+"egb-5n-Bhb.text" = "Le nom de bureau le plus long et le plus relou de la terre";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "m9r-ST-cpc"; */
+"m9r-ST-cpc.text" = "Label";
+
+/* Class = "IBUILabel"; text = "Annotation Privée"; ObjectID = "okg-Nz-e0W"; */
+"okg-Nz-e0W.text" = "Annotation Privée";
+
+/* Class = "IBUINavigationItem"; title = "Title"; ObjectID = "pAD-vI-msa"; */
+"pAD-vI-msa.title" = "Title";
+
+/* Class = "IBUILabel"; text = "Sélection du certificat"; ObjectID = "rVu-0w-Fhk"; */
+"rVu-0w-Fhk.text" = "Sélection du certificat";
+
+/* Class = "IBUIButton"; normalTitle = "Suivant"; ObjectID = "tpX-u5-kGi"; */
+"tpX-u5-kGi.normalTitle" = "Suivant";
+
+/* Class = "IBUIButton"; normalTitle = "État du dossier dans le parapheur"; ObjectID = "xJJ-Pc-usF"; */
+"xJJ-Pc-usF.normalTitle" = "État du dossier dans le parapheur";
+
+/* Class = "IBUILabel"; text = "Annotation Publique"; ObjectID = "yl3-xf-Iit"; */
+"yl3-xf-Iit.text" = "Annotation Publique";

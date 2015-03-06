@@ -399,6 +399,8 @@
 		C5901F0A1AA9EBF700E4F264 /* icon_login_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login_add.png; sourceTree = "<group>"; };
 		C5901F0C1AA9ECCB00E4F264 /* icon_login@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login@3x.png"; sourceTree = "<group>"; };
 		C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login_add@3x.png"; sourceTree = "<group>"; };
+		C5901F101AAA0CEF00E4F264 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPad.strings; sourceTree = "<group>"; };
+		C5901F121AAA0CF300E4F264 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainStoryboard_iPad.strings; sourceTree = "<group>"; };
 		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
 		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
@@ -1215,6 +1217,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				C589715A1AA752030077FC84 /* Base */,
+				C5901F101AAA0CEF00E4F264 /* en */,
+				C5901F121AAA0CF300E4F264 /* fr */,
 			);
 			name = MainStoryboard_iPad.storyboard;
 			sourceTree = "<group>";

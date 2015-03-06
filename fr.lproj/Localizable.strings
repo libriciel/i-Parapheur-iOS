@@ -34,3 +34,6 @@
 
 "Done"			= "Fermer";
 "%d of %d"		= "%1$d de %2$d";
+"Required"		= "Requis";
+"Cancel"		= "Annuler";
+"Connection"	= "Connexion";
