@@ -17,6 +17,7 @@
 
 @implementation RGSplashscreenViewController
 
+
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	NSLog(@"View Loaded : SplashScreenViewController");
@@ -25,7 +26,7 @@
 	_doneButton.action = @selector(onValidateButtonClicked);
 	
 	_backButton.target = self;
-	_backButton.action = @selector(dismiss);
+	_backButton.action = @selector(onBackButtonClicked);
 }
 
 
@@ -48,18 +49,17 @@
 	return (loginTextFieldValid && passwordTextFieldValid && serverTextFieldValid);
 }
 
+
 - (void)testConnection {
 
 	ADLRestClient *restClient = [[ADLRestClient alloc] init];
 	[_activityIndicatorView startAnimating];
 	
 	[restClient getApiLevel:^(NSNumber *versionNumber) {
-						NSLog(@"Adrien success ==");
 						[_activityIndicatorView stopAnimating];
-						[self dismiss];
+						[self dismissWithSuccess:TRUE];
 					}
 					failure:^(NSError *error) {
-						NSLog(@"Adrien error ==");
 						[_activityIndicatorView stopAnimating];
 						UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
 						[AJNotificationView showNoticeInView:[rootController view]
@@ -68,18 +68,32 @@
 											 linedBackground:AJLinedBackgroundTypeStatic
 												   hideAfter:2.5f];
 					 }];
-	
 }
 
 
--(void)dismiss {
+- (void)dismissWithSuccess:(BOOL)success {
+	
 	[self.presentingViewController dismissViewControllerAnimated:YES
 													  completion:nil];
+	
+	NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:success]
+														 forKey:@"success"];
+	
+ 	[[NSNotificationCenter defaultCenter] postNotificationName:@"loginPopupDismiss"
+														object:nil
+													  userInfo:userInfo];
 }
 
 
--(void)onValidateButtonClicked {
-	NSLog(@"Adrien CLICK ! %@ - %@ - %@", _loginTextField.text, _passwordTextField.text, _serverUrlTextField.text);
+#pragma mark - UI callback
+
+
+- (void)onBackButtonClicked {
+	[self dismissWithSuccess:FALSE];
+}
+
+
+- (void)onValidateButtonClicked {
 	
 	// Saving preferences
 	

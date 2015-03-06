@@ -157,6 +157,11 @@
 		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
 		C58971531AA751500077FC84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C58971551AA751500077FC84 /* Localizable.strings */; };
 		C58971601AA88D420077FC84 /* RGSplashscreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C589715F1AA88D420077FC84 /* RGSplashscreenViewController.m */; };
+		C5901F071AA9EBD000E4F264 /* icon_login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5901F061AA9EBD000E4F264 /* icon_login@2x.png */; };
+		C5901F091AA9EBEE00E4F264 /* icon_login_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5901F081AA9EBEE00E4F264 /* icon_login_add@2x.png */; };
+		C5901F0B1AA9EBF700E4F264 /* icon_login_add.png in Resources */ = {isa = PBXBuildFile; fileRef = C5901F0A1AA9EBF700E4F264 /* icon_login_add.png */; };
+		C5901F0D1AA9ECCB00E4F264 /* icon_login@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5901F0C1AA9ECCB00E4F264 /* icon_login@3x.png */; };
+		C5901F0F1AA9ECF100E4F264 /* icon_login_add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */; };
 		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
@@ -168,6 +173,7 @@
 		C5C803601A5D90DA00D54F7D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035F1A5D90DA00D54F7D /* SystemConfiguration.framework */; };
 		C5C803621A5D90E600D54F7D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803611A5D90E600D54F7D /* UIKit.framework */; };
 		C5C803641A5D90F200D54F7D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803631A5D90F200D54F7D /* Foundation.framework */; };
+		C5D7E7011AA9C05A00A736B4 /* icon_login.png in Resources */ = {isa = PBXBuildFile; fileRef = C5D7E7001AA9C05A00A736B4 /* icon_login.png */; };
 		EA7029BB7E3A6A3A903A1932 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -388,6 +394,11 @@
 		C589715B1AA753A20077FC84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C589715E1AA88D420077FC84 /* RGSplashscreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGSplashscreenViewController.h; sourceTree = "<group>"; };
 		C589715F1AA88D420077FC84 /* RGSplashscreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGSplashscreenViewController.m; sourceTree = "<group>"; };
+		C5901F061AA9EBD000E4F264 /* icon_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login@2x.png"; sourceTree = "<group>"; };
+		C5901F081AA9EBEE00E4F264 /* icon_login_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login_add@2x.png"; sourceTree = "<group>"; };
+		C5901F0A1AA9EBF700E4F264 /* icon_login_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login_add.png; sourceTree = "<group>"; };
+		C5901F0C1AA9ECCB00E4F264 /* icon_login@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login@3x.png"; sourceTree = "<group>"; };
+		C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login_add@3x.png"; sourceTree = "<group>"; };
 		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
 		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
@@ -405,6 +416,7 @@
 		C5C803611A5D90E600D54F7D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C5C803631A5D90F200D54F7D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C5D7E7001AA9C05A00A736B4 /* icon_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -794,6 +806,12 @@
 		B4FF341A15473E60006F7BF3 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				C5D7E7001AA9C05A00A736B4 /* icon_login.png */,
+				C5901F061AA9EBD000E4F264 /* icon_login@2x.png */,
+				C5901F0C1AA9ECCB00E4F264 /* icon_login@3x.png */,
+				C5901F0A1AA9EBF700E4F264 /* icon_login_add.png */,
+				C5901F081AA9EBEE00E4F264 /* icon_login_add@2x.png */,
+				C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */,
 				B4A5F0DB161DCC10007BA5D1 /* Reader-Button-H.png */,
 				B4A5F0DC161DCC10007BA5D1 /* Reader-Button-H@2x.png */,
 				B4A5F0DD161DCC10007BA5D1 /* Reader-Button-N.png */,
@@ -945,10 +963,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5901F0D1AA9ECCB00E4F264 /* icon_login@3x.png in Resources */,
 				882C40AD16FCBE0A00D824E9 /* (null) in Resources */,
 				9514BFE8187AA73800118B9C /* Icon@2x.png in Resources */,
 				B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */,
+				C5901F0F1AA9ECF100E4F264 /* icon_login_add@3x.png in Resources */,
 				9514BFE4187AA73800118B9C /* Icon-Small-50@2x.png in Resources */,
+				C5D7E7011AA9C05A00A736B4 /* icon_login.png in Resources */,
 				B41B9470156227A6004D57A1 /* rounded-checkmark.png in Resources */,
 				B41B9471156227A6004D57A1 /* rounded-checkmark@2x.png in Resources */,
 				95DFC4A018957A0E0015AF31 /* ir-archivage.png in Resources */,
@@ -965,12 +986,15 @@
 				954838D2189562C70034F8B0 /* ip-visa.png in Resources */,
 				95DFC4A218957A0E0015AF31 /* ir-signature.png in Resources */,
 				95DFC4A118957A0E0015AF31 /* ir-mailsec.png in Resources */,
+				C5901F071AA9EBD000E4F264 /* icon_login@2x.png in Resources */,
 				95DFC49D18957A0E0015AF31 /* ip-mailsec.png in Resources */,
 				954838CA18955B300034F8B0 /* iw-mailsec.png in Resources */,
 				954838C6189558340034F8B0 /* iw-tdt.png in Resources */,
+				C5901F0B1AA9EBF700E4F264 /* icon_login_add.png in Resources */,
 				9514BFF0187AA74B00118B9C /* Icon-40@2x.png in Resources */,
 				9514BFF1187AA74B00118B9C /* Icon-60.png in Resources */,
 				9514BFF5187AA76100118B9C /* Icon-76.png in Resources */,
+				C5901F091AA9EBEE00E4F264 /* icon_login_add@2x.png in Resources */,
 				9514BFF6187AA76100118B9C /* Icon-76@2x.png in Resources */,
 				C58971531AA751500077FC84 /* Localizable.strings in Resources */,
 				B4A221B2162AA6CF00474A18 /* viser@2x.png in Resources */,

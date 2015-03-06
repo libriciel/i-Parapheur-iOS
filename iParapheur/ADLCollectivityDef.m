@@ -14,8 +14,8 @@
 +(ADLCollectivityDef*) copyDefaultCollectity {
     ADLCollectivityDef* defaultDef = [[ADLCollectivityDef alloc] init];
     
-    NSString *url_preference = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
-    NSString *login_preference = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
+    NSString *url_preference = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings_server_url"];
+    NSString *login_preference = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings_login"];
     
     [defaultDef setHost:url_preference];
     [defaultDef setUsername:login_preference];

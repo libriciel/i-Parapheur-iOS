@@ -54,12 +54,18 @@
 
 
 - (void)viewDidLoad {
+	[super viewDidLoad];
 	NSLog(@"View Loaded : RGSplitViewController");
 }
 
 
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	NSLog(@"Adrien  - ViewDidAppear");
+}
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	
 	NSLog(@"Adrien - should autorotate : %d", interfaceOrientation);
 	
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -98,7 +104,7 @@
 }
 
 
-- (void)didEndWithUnReachableNetwork{
+- (void)didEndWithUnReachableNetwork {
     
 }
 

@@ -237,8 +237,8 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Bureaux" id="PxO-wH-GeW">
-                        <barButtonItem key="rightBarButtonItem" title="Login" id="XVu-qm-8t4">
-                            <color key="tintColor" red="0.98431372549019602" green="0.13333333333333333" blue="0.050980392156862744" alpha="1" colorSpace="calibratedRGB"/>
+                        <barButtonItem key="rightBarButtonItem" image="icon_login.png" id="XVu-qm-8t4">
+                            <color key="tintColor" red="0.0" green="0.34509803921568627" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="0Rw-5c-KLL" kind="presentation" id="391-AD-jqw"/>
                             </connections>
@@ -246,6 +246,7 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="settingsButton" destination="XVu-qm-8t4" id="Eeh-Wg-muZ"/>
                         <segue destination="yeg-xR-bYl" kind="show" identifier="showBureau" id="vpv-XF-h7P"/>
                     </connections>
                 </tableViewController>
@@ -502,7 +503,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2443" y="219"/>
+            <point key="canvasLocation" x="2391" y="607"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="1GW-4K-Vsd">
@@ -521,7 +522,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mcg-OM-EJ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1752" y="-93"/>
+            <point key="canvasLocation" x="1800" y="-149"/>
         </scene>
         <!--Action View Controller-->
         <scene sceneID="tzg-xH-QxY">
@@ -604,8 +605,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uf3-Nf-mJC">
+                            <navigationBar contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uf3-Nf-mJC">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <offsetWrapper key="textShadowOffset" horizontal="0.0" vertical="0.0"/>
+                                </textAttributes>
                                 <items>
                                     <navigationItem id="KQG-uS-9PL">
                                         <barButtonItem key="leftBarButtonItem" title="Retour" id="Kg3-C6-MaR"/>
@@ -614,7 +618,7 @@
                                 </items>
                             </navigationBar>
                             <view contentMode="center" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HAw-07-Exb">
-                                <rect key="frame" x="108" y="218" width="384" height="164"/>
+                                <rect key="frame" x="108" y="109" width="384" height="164"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v03-Sh-9aj">
                                         <rect key="frame" x="8" y="50" width="43" height="21"/>
@@ -680,7 +684,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-o7-ybk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140" y="931"/>
+            <point key="canvasLocation" x="21" y="941"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="18">
@@ -719,6 +723,9 @@
             <point key="canvasLocation" x="-445" y="103"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icon_login.png" width="30" height="30"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Les-T2-Xz2"/>
         <segue reference="frU-Qg-PoU"/>

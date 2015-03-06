@@ -124,6 +124,8 @@
 
 
 -(void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
 	if(![self.view.window.gestureRecognizers containsObject:self.tapRecognizer])
 	{
 		self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];

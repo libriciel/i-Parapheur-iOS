@@ -81,7 +81,7 @@
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
 	
-	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"url_preference"];
+	NSString *urlSettings = [[NSUserDefaults standardUserDefaults] objectForKey:@"settings_server_url"];
 	
 	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/api/getApiLevel"
 										   parameters:nil
