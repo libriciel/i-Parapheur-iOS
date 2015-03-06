@@ -19,12 +19,13 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	[_validButton addTarget:self
-					 action:@selector(validateButtonClicked)
-		   forControlEvents:UIControlEventTouchUpInside];
-	
 	NSLog(@"View Loaded : SplashScreenViewController");
+	
+	_doneButton.target = self;
+	_doneButton.action = @selector(onValidateButtonClicked);
+	
+	_backButton.target = self;
+	_backButton.action = @selector(dismiss);
 }
 
 
@@ -55,7 +56,7 @@
 	[restClient getApiLevel:^(NSNumber *versionNumber) {
 						NSLog(@"Adrien success ==");
 						[_activityIndicatorView stopAnimating];
-						[self shouldQuit];
+						[self dismiss];
 					}
 					failure:^(NSError *error) {
 						NSLog(@"Adrien error ==");
@@ -71,15 +72,13 @@
 }
 
 
-- (void)shouldQuit {
-	NSLog(@"Adrien - shouldQuit");
+-(void)dismiss {
+	[self.presentingViewController dismissViewControllerAnimated:YES
+													  completion:nil];
 }
 
 
-#pragma mark - UI Callback
-
-
--(void)validateButtonClicked {
+-(void)onValidateButtonClicked {
 	NSLog(@"Adrien CLICK ! %@ - %@ - %@", _loginTextField.text, _passwordTextField.text, _serverUrlTextField.text);
 	
 	// Saving preferences
@@ -100,17 +99,6 @@
 	if ([self validateFields])
 		[self testConnection];
 }
-
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 
 @end

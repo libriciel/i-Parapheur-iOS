@@ -112,7 +112,7 @@
 	}
 	else {
 		UIViewController * splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
-		[splashscreenViewController setModalTransitionStyle:UIModalPresentationPopover];
+		[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
 		[self presentViewController:splashscreenViewController
 						   animated:YES
 						 completion:nil];
