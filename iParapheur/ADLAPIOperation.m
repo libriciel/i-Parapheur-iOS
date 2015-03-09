@@ -135,20 +135,21 @@
 	else {
 		
 		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-		NSString *alf_ticket = [vault getTicketForHost:[_collectivityDef host] andUsername:[_collectivityDef username]];
+		NSString *alf_ticket = [vault getTicketForHost:_collectivityDef.host
+										   andUsername:_collectivityDef.username];
 		NSURL *requestURL = nil;
 		
 		if (alf_ticket != nil) {
 			if (downloadingDocument) {
-				requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN, [_collectivityDef host], _documentPath, alf_ticket]];
+				requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN, _collectivityDef.host, _documentPath, alf_ticket]];
 			}
 			else {
-				requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN, [_collectivityDef host], _request, alf_ticket]];
+				requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN, _collectivityDef.host, _request, alf_ticket]];
 			}
 		}
 		else {
 			//login or programming error
-			requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:API_URL_PATTERN, [_collectivityDef host], _request]];
+			requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:API_URL_PATTERN, _collectivityDef.host, _request]];
 		}
 		
 		NSLog(@"%@", requestURL);

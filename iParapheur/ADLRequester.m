@@ -59,7 +59,7 @@ static ADLRequester *sharedRequester = nil;
 																	andCollectivityDef:def
 																			  delegate:delegate];
     [downloadQueue addOperation:downloadOperation];
-    //[def release];
+
     [_lockDoc unlock];
 }
 

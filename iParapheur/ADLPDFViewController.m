@@ -694,7 +694,7 @@
 			 forPage:(NSUInteger)page {
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		NSString *login=[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"login_preference"];
+		NSString *login=[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"settings_login"];
 		
 		NSDictionary *args = [annotation dict];
 		[args setValue:[NSNumber numberWithUnsignedInteger:page] forKey:@"page"];

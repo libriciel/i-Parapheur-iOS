@@ -92,8 +92,15 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:YES];
 	
-	if ([_bureauxArray count] == 0)
-		API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
+	
+	if ([_bureauxArray count] == 0) {
+		
+		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+		NSString *login = [preferences objectForKey:@"settings_login"];
+		NSString *password = [preferences objectForKey:@"settings_password"];
+		
+		API_LOGIN(login, password);
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared
 														object:nil];

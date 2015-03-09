@@ -175,7 +175,7 @@
 
 -(void)applicationDidBecomeActive:(UIApplication *)application {
 	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-	//  API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"login_preference"], [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"]);
+	//  API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"settings_login"], [[NSUserDefaults standardUserDefaults] stringForKey:@"settings_password"]);
 	
 }
 
@@ -324,7 +324,9 @@
 		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
 		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 		
-		[vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
+		[vault addCredentialForHost:[def host]
+						   andLogin:[def username]
+						 withTicket:API_LOGIN_GET_TICKET(answer)];
 	}
 	
 }
