@@ -452,9 +452,9 @@
 -(void)filterDossiersForSearchText:(NSString*) searchText {
 	
 	if (searchText && (searchText.length > 0)) {
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS[cd] %@)", @"titre", searchText];
-		self.filteredDossiersArray = [self.dossiersArray filteredArrayUsingPredicate:predicate];
-	}
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS[cd] %@)", @"title", searchText]; // TODO Adrien : test V2
+		NSArray *array = [self.dossiersArray filteredArrayUsingPredicate:predicate];
+		self.filteredDossiersArray = array;	}
 	else {
 		self.filteredDossiersArray = [NSArray arrayWithArray:self.dossiersArray];
 	}
