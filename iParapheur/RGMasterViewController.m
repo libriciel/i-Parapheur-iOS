@@ -92,7 +92,6 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:YES];
 	
-	
 	if ([_bureauxArray count] == 0) {
 		
 		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
@@ -347,7 +346,10 @@
 	
 	RGDeskViewController *controller = [[self storyboard] instantiateViewControllerWithIdentifier:@"DeskViewController"];
 	[controller setDeskRef:bureauNodeRef];
-	[[self navigationController] pushViewController:controller animated:YES];
+	
+	[[self navigationController] pushViewController:controller
+										   animated:YES];
+	
 	[[controller navigationItem] setTitle:bureauName];
 	
 	[[ADLSingletonState sharedSingletonState] setBureauCourant:bureauNodeRef];

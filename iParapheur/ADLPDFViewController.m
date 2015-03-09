@@ -101,6 +101,17 @@
 -(void)viewDidLoad {
 	[super viewDidLoad];
 	
+	// Displays master view on startup
+	
+	@try {
+		[self.splitViewController performSelector:@selector(toggleMasterVisible:)];
+	}
+	@catch (NSException *exception) {
+		NSLog(@"Caught exception %@", exception);
+	}
+	
+	// UI build
+	
 	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
