@@ -91,10 +91,11 @@
 	NSLog(@"View Loaded : RGDeskViewController");
 	//[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
 	
-	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
+	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor darkBlueColor]];
 	
 	self.refreshControl = [[UIRefreshControl alloc] init];
-	[self.refreshControl setTintColor:[UIColor colorWithRed:0.0f green:0.375f blue:0.75f alpha:1.0f]];
+	[self.refreshControl setTintColor:[UIColor darkBlueColor]];
+	
 	[self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self

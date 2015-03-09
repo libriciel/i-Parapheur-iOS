@@ -60,7 +60,6 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     // Create and add thes actions buttons
     // MORE
     self.moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    //moreButton.backgroundColor = [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0f];
     self.moreButton.backgroundColor = [UIColor grayColor];
     self.moreButton.frame = CGRectMake(0, 0, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
     [self.moreButton setTitle:@"Plus" forState:UIControlStateNormal];
@@ -70,7 +69,6 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 	
     // VALIDATE
     self.validateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    //actionButton.backgroundColor = [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f];
     self.validateButton.backgroundColor = [UIColor darkGreenColor];
     self.validateButton.frame = CGRectMake(kCatchWidth / 2.0f, 0, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
     [self.validateButton setTitle:@"Valider" forState:UIControlStateNormal];

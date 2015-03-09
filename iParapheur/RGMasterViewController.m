@@ -48,6 +48,7 @@
 #import "ADLCredentialVault.h"
 #import "RGDeskCustomTableViewCell.h"
 #import "ADLNotifications.h"
+#import "UIColor+CustomColors.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
 #import "ADLCollectivityDef.h"
@@ -69,22 +70,19 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
 
+	_firstLaunch = TRUE;
+	_bureauxArray = [[NSMutableArray alloc] init];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(onLoginPopupDismissed:)
 												 name:@"loginPopupDismiss"
 											   object:nil];
 	
-	_bureauxArray = [[NSMutableArray alloc] init];
+	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
 	
-	self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.0f
-																		green:0.375f
-																		 blue:0.75f
-																		alpha:1.0f];
 	self.refreshControl = [[UIRefreshControl alloc]init];
-	self.refreshControl.tintColor = [UIColor colorWithRed:0.0f
-													green:0.375f
-													 blue:0.75f
-													alpha:1.0f];
+	self.refreshControl.tintColor = [UIColor darkBlueColor];
+	
 	[self.refreshControl addTarget:self
 							action:@selector(loadBureaux)
 				  forControlEvents:UIControlEventValueChanged];
@@ -114,16 +112,23 @@
 	BOOL areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
 	[self settingsButtonWithWarning:!areSettingsSet];
 	
-	if (areSettingsSet) {
-		[self initRestKit];
+	// First launch behavior.
+	// We can't do it on viewDidLoad, we can display a modal view only here.
+	
+	if (_firstLaunch) {
+		if (areSettingsSet) {
+			[self initRestKit];
+		}
+		else {
+			UIViewController * splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
+			[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+			[self presentViewController:splashscreenViewController
+							   animated:YES
+							 completion:nil];
+		}
 	}
-	else {
-		UIViewController * splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
-		[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-		[self presentViewController:splashscreenViewController
-						   animated:YES
-						 completion:nil];
-	}
+	
+	_firstLaunch = FALSE;
 }
 
 
@@ -167,16 +172,10 @@
 
 	if (warning) {
 		_settingsButton.image = [UIImage imageNamed:@"icon_login_add.png"];
-		_settingsButton.tintColor = [UIColor colorWithRed:255.0/255.0
-													green:56.0/255.0
-													 blue:36.0/255.0
-													alpha:1]; // #FF3824
+		_settingsButton.tintColor = [UIColor darkRedColor];
 	} else {
 		_settingsButton.image = [UIImage imageNamed:@"icon_login.png"];
-		_settingsButton.tintColor = [UIColor colorWithRed:0.0/255.0
-													green:118.0/255.0
-													 blue:255.0/255.0
-													alpha:1]; // #0076FF
+		_settingsButton.tintColor = [UIColor darkBlueColor];
 	}
 }
 
@@ -193,7 +192,10 @@
 		
 		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
 		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-		[vault addCredentialForHost:[def host] andLogin:[def username] withTicket:API_LOGIN_GET_TICKET(answer)];
+		
+		[vault addCredentialForHost:[def host]
+						   andLogin:[def username]
+						 withTicket:API_LOGIN_GET_TICKET(answer)];
 
 		[self loadBureaux];
 	}
@@ -244,7 +246,6 @@
 - (void)loadBureaux {
 	
 	[self.refreshControl beginRefreshing];
-	//ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getBureaux:^(NSArray *bureaux) {

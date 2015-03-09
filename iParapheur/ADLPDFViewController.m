@@ -55,7 +55,6 @@
 #import "ADLAPIOperation.h"
 #import "ADLActionViewController.h"
 #import "UIColor+CustomColors.h"
-#import "UIColor+CustomColors.h"
 #import "ADLResponseCircuit.h"
 #import "ADLResponseDossier.h"
 #import "ADLResponseAnnotation.h"
@@ -740,10 +739,7 @@
 	  forPopoverController:(UIPopoverController *)popoverController {
 	
 	barButtonItem.title = NSLocalizedString(@"Dossiers", @"Dossiers");
-	barButtonItem.tintColor = [UIColor colorWithRed:0.0f
-											  green:0.375f
-											   blue:0.75f
-											  alpha:1.0f];
+	barButtonItem.tintColor = [UIColor darkBlueColor];
 	
 	[self.navigationItem setLeftBarButtonItem:barButtonItem
 									 animated:YES];

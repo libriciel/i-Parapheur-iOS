@@ -48,61 +48,42 @@
 
 
 @implementation RGDeskCustomTableViewCell
+
+
 @synthesize lateBadge = _lateBadge;
 @synthesize todoBadge = _todoBadge;
 @synthesize todoPlaceHolder;
 @synthesize bureauNameLabel;
 
-- (id)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-        
-        
-    }
-    return self;
+
+- (id)initWithCoder:(NSCoder *)coder {
+    return [super initWithCoder:coder];
 }
 
-
-/*
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        
-        if (_lateBadge == nil) {
-            _lateBadge = [CustomBadge customBadgeWithString:@"0"];
-        }
-        
-        if (_todoBadge == nil) {
-            _todoBadge = [CustomBadge customBadgeWithString:@"0"];
-        }
-        
-        [self addSubview:_todoBadge];
-        [self addSubview:_lateBadge];
-        
-    }
-    return self;
-}*/
 
 - (void) awakeFromNib {
     
-    if (_lateBadge == nil) {
-        _lateBadge = [CustomBadge customBadgeWithString:@"0"];
-    }
-    
-    if (_todoBadge == nil) {
+    if (_lateBadge == nil)
+		_lateBadge = [CustomBadge customBadgeWithString:@"0"];
+		
+    if (_todoBadge == nil)
         _todoBadge = [CustomBadge customBadgeWithString:@"0"];
-    }
+
     [[self todoPlaceHolder] addSubview:_todoBadge];
     [[self latePlaceHolder] addSubview:_lateBadge];
+	
     [[self textLabel] setFont:[UIFont systemFontOfSize:20.0]];
 }
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
+
+
+- (void)setSelected:(BOOL)selected
+		   animated:(BOOL)animated {
+	
+    [super setSelected:selected
+			  animated:animated];
 
     // Configure the view for the selected state
 }
+
 
 @end

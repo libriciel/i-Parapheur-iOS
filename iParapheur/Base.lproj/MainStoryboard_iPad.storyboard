@@ -299,7 +299,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Dossiers" id="KZD-cg-m0R">
                         <barButtonItem key="rightBarButtonItem" title="Filtrer" id="0nh-nM-mak">
-                            <color key="tintColor" red="0.035294119268655777" green="0.49411767721176147" blue="0.81176477670669556" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="tintColor" red="0.0" green="0.34509803921568627" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="RAS-1K-jVQ" kind="presentation" identifier="filterSegue" modalPresentationStyle="formSheet" id="YcK-eQ-fnd"/>
                             </connections>
@@ -726,6 +726,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Les-T2-Xz2"/>
-        <segue reference="frU-Qg-PoU"/>
+        <segue reference="lZY-A3-bSY"/>
     </inferredMetricsTieBreakers>
 </document>
