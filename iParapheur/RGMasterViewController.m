@@ -91,19 +91,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:YES];
-	
-	if ([_bureauxArray count] == 0) {
-		
-		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-		NSString *login = [preferences objectForKey:@"settings_login"];
-		NSString *password = [preferences objectForKey:@"settings_password"];
-		
-		API_LOGIN(login, password);
-	}
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared
-														object:nil];
-	
 }
 
 
@@ -124,6 +111,7 @@
 	if (_firstLaunch) {
 		if (areSettingsSet) {
 			[self initRestKit];
+			[self initAlfrescoToken];
 		}
 		else {
 			UIViewController * splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
@@ -171,6 +159,21 @@
 											  linedBackground:AJLinedBackgroundTypeStatic
 													hideAfter:2.5f];
 					 }];
+}
+
+
+- (void)initAlfrescoToken {
+	if ([_bureauxArray count] == 0) {
+		
+		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+		NSString *login = [preferences objectForKey:@"settings_login"];
+		NSString *password = [preferences objectForKey:@"settings_password"];
+		
+		API_LOGIN(login, password);
+	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared
+														object:nil];
 }
 
 

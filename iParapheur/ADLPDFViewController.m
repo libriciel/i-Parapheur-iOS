@@ -101,13 +101,15 @@
 -(void)viewDidLoad {
 	[super viewDidLoad];
 	
-	// Displays master view on startup
+	// Displays master view on portrait-startup
 	
-	@try {
-		[self.splitViewController performSelector:@selector(toggleMasterVisible:)];
-	}
-	@catch (NSException *exception) {
-		NSLog(@"Caught exception %@", exception);
+	if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+		@try {
+			[self.splitViewController performSelector:@selector(toggleMasterVisible:)];
+		}
+		@catch (NSException *exception) {
+			NSLog(@"Caught exception %@", exception);
+		}
 	}
 	
 	// UI build

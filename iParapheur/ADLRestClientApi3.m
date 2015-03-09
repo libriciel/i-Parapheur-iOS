@@ -32,6 +32,7 @@
 									  password:passwordSettings];
 	
 	// Initialize RestKit
+
 	RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
 	
 	[self addApiLevelMappingRules:objectManager];
@@ -41,6 +42,10 @@
 	[self addApiCircuitMappingRules:objectManager];
 	[self addApiAnnotationsMappingRules:objectManager];
 	[self addSignInfoMappingRules:objectManager];
+
+	// Update singleton
+	
+	[RKObjectManager setSharedManager:objectManager];
 	
 	return self;
 }
