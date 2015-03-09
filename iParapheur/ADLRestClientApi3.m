@@ -24,8 +24,6 @@
 	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
 	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
 	
-	NSLog(@"Adrien WAT : %@ - %@ - %@", loginSettings, passwordSettings, url);
-	
 	// Initialize AFNetworking HTTPClient
 	NSURL *baseURL = [NSURL URLWithString:url];
 	AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:baseURL];

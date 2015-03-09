@@ -2,8 +2,6 @@
 //  RGSplashscreenViewController.h
 //  iParapheur
 //
-//  Created by Adrien Bricchi on 05/03/2015.
-//
 //
 
 #import <UIKit/UIKit.h>
