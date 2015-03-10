@@ -290,7 +290,7 @@ numberOfRowsInSection:(NSInteger)section {
 	
 	NSString *action = [[object objectForKey:@"actionDemandee"] lowercaseString];
 	
-	[[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png", imagePrefix, action ]]];
+	[[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png", imagePrefix, action]]];
 	
 	return cell;
 }
