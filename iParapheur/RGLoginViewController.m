@@ -4,17 +4,17 @@
 //
 //
 
-#import "RGSplashscreenViewController.h"
+#import "RGLoginViewController.h"
 #import "AJNotificationView.h"
 #import "ADLRestClient.h"
 #import "UIColor+CustomColors.h"
 
 
-@interface RGSplashscreenViewController ()
+@interface RGLoginViewController ()
 
 @end
 
-@implementation RGSplashscreenViewController
+@implementation RGLoginViewController
 
 
 - (void)viewDidLoad {
@@ -108,27 +108,64 @@
 - (void)testConnection {
 
 	ADLRestClient *restClient = [[ADLRestClient alloc] init];
-	[_activityIndicatorView startAnimating];
+	[self enableInterface:FALSE];
 	
 	[restClient getApiLevel:^(NSNumber *versionNumber) {
-						[_activityIndicatorView stopAnimating];
+						[self enableInterface:TRUE];
+		
+						// Saving
+		
+						NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+		
+						[preferences setObject:_loginTextField.text
+										forKey:@"settings_valid_login"];
+		
+						[preferences setObject:_passwordTextField.text
+										forKey:@"settings_valid_password"];
+		
+						[preferences setObject:_serverUrlTextField.text
+										forKey:@"settings_valid_server_url"];
+		
+						// Exit
+		
 						[self dismissWithSuccess:TRUE];
 					}
 					failure:^(NSError *error) {
-						[_activityIndicatorView stopAnimating];
-//						UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
-//						[AJNotificationView showNoticeInView:[rootController view]
-//														type:AJNotificationTypeRed
-//													   title:[error localizedDescription]
-//											 linedBackground:AJLinedBackgroundTypeStatic
-//												   hideAfter:2.5f];
-						
-						
+						[self enableInterface:TRUE];
+
+						if (error.code == kCFURLErrorUserAuthenticationRequired) {
+							[self setBorderOnTextField:_loginTextField withAlert:TRUE];
+							[self setBorderOnTextField:_passwordTextField withAlert:TRUE];
+							_errorText.text = NSLocalizedString(@"Authentication failed", nil);
+						}
+						else if (error.code == kCFURLErrorCannotFindHost) {
+							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
+							_errorText.text = error.localizedDescription;
+						}
 					 }];
 }
 
 
 - (void)dismissWithSuccess:(BOOL)success {
+	
+	// Restoring proper data
+	
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	
+	NSString *validLogin = [preferences objectForKey:@"settings_valid_login"];
+	NSString *validPassword = [preferences objectForKey:@"settings_valid_password"];
+	NSString *validServer = [preferences objectForKey:@"settings_valid_server_url"];
+	
+	[preferences setObject:validLogin
+					forKey:@"settings_login"];
+	
+	[preferences setObject:validPassword
+					forKey:@"settings_password"];
+	
+	[preferences setObject:validServer
+					forKey:@"settings_server_url"];
+	
+	//
 	
 	[self.presentingViewController dismissViewControllerAnimated:YES
 													  completion:nil];
@@ -142,10 +179,24 @@
 }
 
 
+- (void)enableInterface:(BOOL)enabled {
+	
+	_loginTextField.enabled = enabled;
+	_passwordTextField.enabled = enabled;
+	_serverUrlTextField.enabled = enabled;
+	
+	if (enabled)
+		[_activityIndicatorView stopAnimating];
+	else
+		[_activityIndicatorView startAnimating];
+}
+
+
 #pragma mark - UI callback
 
 
 - (void)onTextFieldValueChanged {
+	_errorText.text = @"";
 	[self validateFieldsForConnnectionEvent:FALSE];
 }
 

@@ -593,10 +593,10 @@
             </objects>
             <point key="canvasLocation" x="1666.5599999999999" y="-2558.2933333333335"/>
         </scene>
-        <!--Splashscreen View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="Th1-vu-pWi">
             <objects>
-                <viewController storyboardIdentifier="RGSplashscreenViewControllerId" modalPresentationStyle="formSheet" id="0Rw-5c-KLL" customClass="RGSplashscreenViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RGSplashscreenViewControllerId" modalPresentationStyle="formSheet" id="0Rw-5c-KLL" customClass="RGLoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="08m-j8-yWr"/>
                         <viewControllerLayoutGuide type="bottom" id="JWe-3a-pbI"/>
@@ -662,6 +662,13 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="upf-8A-Yue">
                                 <rect key="frame" x="265" y="270" width="20" height="20"/>
                             </activityIndicatorView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1h0-ph-GtY">
+                                <rect key="frame" x="16" y="239" width="518" height="81"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -675,6 +682,7 @@
                         <outlet property="activityIndicatorView" destination="upf-8A-Yue" id="vtN-21-OLf"/>
                         <outlet property="backButton" destination="Kg3-C6-MaR" id="PJW-2q-Wxo"/>
                         <outlet property="doneButton" destination="ob5-DY-khh" id="nYc-F4-KYt"/>
+                        <outlet property="errorText" destination="1h0-ph-GtY" id="5pz-e8-bYa"/>
                         <outlet property="loginTextField" destination="BAq-vl-btT" id="UBk-GX-AHj"/>
                         <outlet property="passwordTextField" destination="ecX-wQ-ryZ" id="hmy-PO-7ii"/>
                         <outlet property="serverUrlTextField" destination="2jv-mE-rIZ" id="Gzm-c1-Wr2"/>
@@ -682,7 +690,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-o7-ybk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="26.879999999999999" y="1605.9733333333334"/>
+            <point key="canvasLocation" x="26" y="1605"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="18">

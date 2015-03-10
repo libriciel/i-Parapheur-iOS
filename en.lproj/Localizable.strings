@@ -29,6 +29,7 @@
 
 "Missing server URL in application settings"				= "Missing server URL in application settings";
 "Missing authentication parameters in application settings" = "Missing authentication parameters in application settings";
+"Authentication failed"										= "Authentication failed";
 
 //
 

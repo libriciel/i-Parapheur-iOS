@@ -103,31 +103,38 @@
 												  success(levelResponse.level);
 											  }
 											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
-
-												  Reachability *reach = [Reachability reachabilityWithHostname:urlSettings];
-												  
-												  if ([reach isReachable]) {
-													  // Legacy compatibility
-													  success([NSNumber numberWithInt:2]);
+												  												  
+												  if (operation.HTTPRequestOperation.response.statusCode == 401) {
+													  failure([NSError errorWithDomain:urlSettings
+																				  code:kCFURLErrorUserAuthenticationRequired
+																			  userInfo:nil]);
 												  }
 												  else {
+													  Reachability *reach = [Reachability reachabilityWithHostname:urlSettings];
 													  
-													  [reach setReachableBlock:^(Reachability *reachblock) {
-														  // keep in mind this is called on a background thread
-														  // and if you are updating the UI it needs to happen
-														  // on the main thread, like this:
-														  dispatch_async(dispatch_get_main_queue(), ^{ success([NSNumber numberWithInt:2]); });
-													  }];
+													  if ([reach isReachable]) {
+														  // Legacy compatibility
+														  success([NSNumber numberWithInt:2]);
+													  }
+													  else {
+														  
+														  [reach setReachableBlock:^(Reachability *reachblock) {
+															  // keep in mind this is called on a background thread
+															  // and if you are updating the UI it needs to happen
+															  // on the main thread, like this:
+															  dispatch_async(dispatch_get_main_queue(), ^{ success([NSNumber numberWithInt:2]); });
+														  }];
+														  
+														  [reach setUnreachableBlock:^(Reachability*reach) {
+															  // keep in mind this is called on a background thread
+															  // and if you are updating the UI it needs to happen
+															  // on the main thread, like this:
+															  dispatch_async(dispatch_get_main_queue(), ^{ failure(error); });
+														  }];
+													  }
 													  
-													  [reach setUnreachableBlock:^(Reachability*reach) {
-														  // keep in mind this is called on a background thread
-														  // and if you are updating the UI it needs to happen
-														  // on the main thread, like this:
-														  dispatch_async(dispatch_get_main_queue(), ^{ failure(error); });
-													  }];
+													  [reach startNotifier];
 												  }
-												  
-												  [reach startNotifier];
 											  }];
 }
 
