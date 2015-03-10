@@ -20,11 +20,20 @@
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
 	
 	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
-	NSString *url = [NSString stringWithFormat:@"https://m.%@", urlSettings];
 	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
 	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
 	
+	// Demo values
+	
+	if (urlSettings.length == 0) {
+		urlSettings = @"parapheur.demonstrations.adullact.org";
+		loginSettings = @"bma";
+		passwordSettings = @"secret";
+	}
+	
 	// Initialize AFNetworking HTTPClient
+	
+	NSString *url = [NSString stringWithFormat:@"https://m.%@", urlSettings];
 	NSURL *baseURL = [NSURL URLWithString:url];
 	AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:baseURL];
 	client.allowsInvalidSSLCertificate = YES;

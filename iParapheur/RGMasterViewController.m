@@ -99,9 +99,12 @@
 	
 	// Settings check
 	
-	NSString *urlSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"settings_server_url"];
-	NSString *loginSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"settings_login"];
-	NSString *passwordSettings = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"settings_password"];
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+
+	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
+	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
+	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
+
 	BOOL areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
 	[self settingsButtonWithWarning:!areSettingsSet];
 	
@@ -168,6 +171,11 @@
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
 	NSString *login = [preferences objectForKey:@"settings_login"];
 	NSString *password = [preferences objectForKey:@"settings_password"];
+	
+	if (login.length == 0) {
+		login = @"bma";
+		password = @"secret";
+	}
 	
 	API_LOGIN(login, password);
 	
@@ -239,11 +247,25 @@
 
 
 - (void)onLoginPopupDismissed:(NSNotification *)notification {
+	
+	// Popup response
+	
 	NSDictionary *userInfo = notification.userInfo;
 	BOOL success = [(NSNumber *)[userInfo objectForKey:@"success"] boolValue];
-	[self settingsButtonWithWarning:!success];
 	
-	if (success)
+	// Settings values
+	
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
+	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
+	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
+	BOOL areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
+	
+	// Check
+	
+	[self settingsButtonWithWarning:(!areSettingsSet && !success)];
+	
+	if (success || !areSettingsSet)
 		[self initRestKit];
 }
 
