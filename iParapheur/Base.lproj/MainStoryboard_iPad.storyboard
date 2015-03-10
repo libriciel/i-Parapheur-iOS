@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -20,7 +20,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-84.375" y="-825.5859375"/>
+            <point key="canvasLocation" x="-108" y="-1409"/>
         </scene>
         <!--Dossier Detail View Controller-->
         <scene sceneID="jqO-qY-jn6">
@@ -31,7 +31,7 @@
                         <viewControllerLayoutGuide type="bottom" id="6ev-gn-WP9"/>
                     </layoutGuides>
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="1Hh-V2-0rl">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" fixedFrame="YES" text="TypeText" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="baF-qW-STg">
                                 <rect key="frame" x="20" y="77" width="500" height="21"/>
@@ -54,7 +54,7 @@
                             </label>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" dataMode="prototypes" style="plain" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="75" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6Fv-Th-3JN">
                                 <rect key="frame" x="21" y="186" width="500" height="376"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="CircuitCell" id="rvf-tA-IYo" customClass="ADLCircuitCell">
                                         <rect key="frame" x="0.0" y="22" width="500" height="75"/>
@@ -94,7 +94,7 @@
                                             </subviews>
                                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <outlet property="annotation" destination="B4S-bT-Peq" id="9QK-cv-C4Z"/>
                                             <outlet property="etapeTypeIcon" destination="lTZ-ID-QgL" id="CcY-bL-OEJ"/>
@@ -144,7 +144,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3T3-F7-bWj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1860" y="-1023"/>
+            <point key="canvasLocation" x="2380.8000000000002" y="-1745.9200000000001"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="GAo-lH-CdD">
@@ -155,26 +155,26 @@
                         <viewControllerLayoutGuide type="bottom" id="xfI-Nv-3sK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="1Bs-6d-UcB">
-                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
                     <toolbarItems>
                         <barButtonItem systemItem="bookmarks" id="e2H-L5-DmJ">
                             <connections>
-                                <segue destination="XYH-uf-RCC" kind="popoverPresentation" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
+                                <segue destination="XYH-uf-RCC" kind="popover" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
                         </barButtonItem>
                         <barButtonItem title="Details" id="UJR-Wz-2Gr">
                             <connections>
-                                <segue destination="b1B-Q6-eI1" kind="presentation" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
+                                <segue destination="b1B-Q6-eI1" kind="modal" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem systemItem="action" id="fQA-eM-WHG">
                             <connections>
-                                <segue destination="KoI-Hd-Qp2" kind="popoverPresentation" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
+                                <segue destination="KoI-Hd-Qp2" kind="popover" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
@@ -189,14 +189,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qKv-cp-dPo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="726" y="-826"/>
+            <point key="canvasLocation" x="929.27999999999997" y="-1409.7066666666667"/>
         </scene>
         <!--Bureaux-->
         <scene sceneID="fiw-Dl-fUJ">
             <objects>
                 <tableViewController id="TGh-sj-pLc" customClass="RGMasterViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="84" sectionHeaderHeight="22" sectionFooterHeight="22" id="l9D-4g-Gh7">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -240,30 +240,30 @@
                         <barButtonItem key="rightBarButtonItem" image="icon_login.png" id="XVu-qm-8t4">
                             <color key="tintColor" red="0.0" green="0.34509803921568627" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="0Rw-5c-KLL" kind="presentation" modalPresentationStyle="formSheet" id="391-AD-jqw"/>
+                                <segue destination="0Rw-5c-KLL" kind="modal" modalPresentationStyle="formSheet" id="391-AD-jqw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="settingsButton" destination="XVu-qm-8t4" id="Eeh-Wg-muZ"/>
-                        <segue destination="yeg-xR-bYl" kind="show" identifier="showBureau" id="vpv-XF-h7P"/>
+                        <segue destination="yeg-xR-bYl" kind="push" identifier="showBureau" id="vpv-XF-h7P"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jCe-hd-WDm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="244.53125" y="103.125"/>
+            <point key="canvasLocation" x="313" y="176"/>
         </scene>
         <!--Dossiers-->
         <scene sceneID="tAQ-UO-3Yw">
             <objects>
                 <tableViewController storyboardIdentifier="DeskViewController" id="yeg-xR-bYl" customClass="RGDeskViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="81" sectionHeaderHeight="22" sectionFooterHeight="22" id="xgr-kP-uQq">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" id="Z1O-cw-X8C">
-                            <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                            <rect key="frame" x="0.0" y="64" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                             <connections>
@@ -271,7 +271,7 @@
                             </connections>
                         </searchBar>
                         <button key="tableFooterView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="tpX-u5-kGi">
-                            <rect key="frame" x="0.0" y="664" width="600" height="44"/>
+                            <rect key="frame" x="0.0" y="832" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Suivant">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -301,24 +301,24 @@
                         <barButtonItem key="rightBarButtonItem" title="Filtrer" id="0nh-nM-mak">
                             <color key="tintColor" red="0.0" green="0.34509803921568627" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="RAS-1K-jVQ" kind="presentation" identifier="filterSegue" modalPresentationStyle="formSheet" id="YcK-eQ-fnd"/>
+                                <segue destination="RAS-1K-jVQ" kind="modal" identifier="filterSegue" modalPresentationStyle="formSheet" id="YcK-eQ-fnd"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="y8S-1e-sKB"/>
                         <outlet property="searchBar" destination="Z1O-cw-X8C" id="wCO-7j-eDV"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="VISER" modalPresentationStyle="formSheet" id="lZY-A3-bSY"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="SIGNER" modalPresentationStyle="formSheet" id="hYJ-he-8AH"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="REJETER" modalPresentationStyle="formSheet" id="Fd0-lJ-x2N"/>
-                        <segue destination="2Dr-6H-2Si" kind="presentation" identifier="AVIS-TODO" modalPresentationStyle="formSheet" id="Les-T2-Xz2"/>
-                        <segue destination="2Dr-6H-2Si" kind="presentation" identifier="TRANSFERT-TODO" modalPresentationStyle="formSheet" id="3XH-4w-NAP"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="SECRETARIAT" modalPresentationStyle="formSheet" id="SLb-2U-c77"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="VISER" modalPresentationStyle="formSheet" id="lZY-A3-bSY"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SIGNER" modalPresentationStyle="formSheet" id="hYJ-he-8AH"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="REJETER" modalPresentationStyle="formSheet" id="Fd0-lJ-x2N"/>
+                        <segue destination="2Dr-6H-2Si" kind="modal" identifier="AVIS-TODO" modalPresentationStyle="formSheet" id="Les-T2-Xz2"/>
+                        <segue destination="2Dr-6H-2Si" kind="modal" identifier="TRANSFERT-TODO" modalPresentationStyle="formSheet" id="3XH-4w-NAP"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SECRETARIAT" modalPresentationStyle="formSheet" id="SLb-2U-c77"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKB-EC-IFP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="902" y="103"/>
+            <point key="canvasLocation" x="1154.5599999999999" y="175.78666666666669"/>
         </scene>
         <!--Filter View Controller-->
         <scene sceneID="5pr-8w-7p8">
@@ -329,7 +329,7 @@
                         <viewControllerLayoutGuide type="bottom" id="xt5-62-hBD"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="5Sd-BH-e1X">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A2R-1g-Vro">
@@ -409,7 +409,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dgq-fJ-O7G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1157" y="1008"/>
+            <point key="canvasLocation" x="1480.96" y="1720.3200000000002"/>
         </scene>
         <!--Workflow Dialog View Controller-->
         <scene sceneID="db0-GM-CCd">
@@ -420,18 +420,18 @@
                         <viewControllerLayoutGuide type="bottom" id="ZsO-T6-OgW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QR5-du-X1i">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gh8-sQ-Ge1">
                                 <rect key="frame" x="20" y="86" width="500" height="87"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34E-II-hCb">
                                 <rect key="frame" x="20" y="210" width="500" height="87"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -503,7 +503,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2391" y="607"/>
+            <point key="canvasLocation" x="3060.48" y="1035.9466666666667"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="1GW-4K-Vsd">
@@ -514,7 +514,7 @@
                         <viewControllerLayoutGuide type="bottom" id="VNs-D6-uXT"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qhw-Dd-7tv">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
@@ -522,7 +522,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mcg-OM-EJ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1800" y="-149"/>
+            <point key="canvasLocation" x="2304" y="-254.29333333333335"/>
         </scene>
         <!--Action View Controller-->
         <scene sceneID="tzg-xH-QxY">
@@ -565,15 +565,15 @@
                     </tableView>
                     <connections>
                         <outlet property="tableView" destination="5VH-q2-sNA" id="T7k-HO-69g"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="VISER" modalPresentationStyle="formSheet" id="f7O-db-eHh"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="SIGNER" modalPresentationStyle="formSheet" id="frU-Qg-PoU"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="REJETER" modalPresentationStyle="formSheet" id="5jE-mb-c2S"/>
-                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="SECRETARIAT" modalPresentationStyle="formSheet" id="Az1-11-imz"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="VISER" modalPresentationStyle="formSheet" id="f7O-db-eHh"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SIGNER" modalPresentationStyle="formSheet" id="frU-Qg-PoU"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="REJETER" modalPresentationStyle="formSheet" id="5jE-mb-c2S"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SECRETARIAT" modalPresentationStyle="formSheet" id="Az1-11-imz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="suM-iA-DAb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2434" y="-455"/>
+            <point key="canvasLocation" x="3115.52" y="-776.53333333333342"/>
         </scene>
         <!--Documents View-->
         <scene sceneID="bnQ-Tj-mel">
@@ -591,7 +591,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xof-oC-o2c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1302" y="-1499"/>
+            <point key="canvasLocation" x="1666.5599999999999" y="-2558.2933333333335"/>
         </scene>
         <!--Splashscreen View Controller-->
         <scene sceneID="Th1-vu-pWi">
@@ -682,7 +682,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-o7-ybk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="21" y="941"/>
+            <point key="canvasLocation" x="26.879999999999999" y="1605.9733333333334"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="18">
@@ -698,7 +698,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1399.21875" y="-445.3125"/>
+            <point key="canvasLocation" x="-1791" y="-760"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="50">
@@ -706,7 +706,7 @@
                 <navigationController id="42" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="43">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4cr-16-Nb2">
                         <rect key="frame" x="0.0" y="960" width="768" height="44"/>
@@ -718,12 +718,17 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="49" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-445" y="103"/>
+            <point key="canvasLocation" x="-569.60000000000002" y="175.78666666666669"/>
         </scene>
     </scenes>
     <resources>
         <image name="icon_login.png" width="30" height="30"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="Les-T2-Xz2"/>
         <segue reference="lZY-A3-bSY"/>
