@@ -76,9 +76,6 @@
 
 
 -(void)awakeFromNib {
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		self.preferredContentSize = CGSizeMake(320.0, 600.0);
-	}
 	documents = [[NSArray alloc] init];
 	[super awakeFromNib];
 }
@@ -127,7 +124,8 @@
 	
 	if(![self.view.window.gestureRecognizers containsObject:self.tapRecognizer])
 	{
-		self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
+		self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+																	 action:@selector(handleTapBehind:)];
 		[self.tapRecognizer setNumberOfTapsRequired:1];
 		self.tapRecognizer.cancelsTouchesInView = NO; //So the user can still interact with controls in the modal view
 		[self.view.window addGestureRecognizer:self.tapRecognizer];
@@ -152,7 +150,9 @@
 	{
 		CGPoint location = [sender locationInView:nil];
 		
-		if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil])
+		if (![self.view pointInside:[self.view convertPoint:location
+												   fromView:self.view.window]
+						  withEvent:nil])
 		{
 			[self dismissModal];
 		}
@@ -309,7 +309,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		[_objects removeObjectAtIndex:indexPath.row];
-		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
+						 withRowAnimation:UITableViewRowAnimationFade];
 	} else if (editingStyle == UITableViewCellEditingStyleInsert) {
 		// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
 	}
@@ -321,7 +322,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (documentsPopover)
 		[documentsPopover dismissPopoverAnimated:YES];
 	else
-		[self performSegueWithIdentifier:@"showDocumentsView" sender:sender];
+		[self performSegueWithIdentifier:@"showDocumentsView"
+								  sender:sender];
 }
 
 
@@ -407,7 +409,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(IBAction)showVisuelPDF:(id)sender {
-	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
+	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf"
+													   inDirectory:nil];
 	
 	NSString *filePath = [pdfs lastObject];
 	

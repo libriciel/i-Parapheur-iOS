@@ -25,7 +25,7 @@
         <!--Dossier Detail View Controller-->
         <scene sceneID="jqO-qY-jn6">
             <objects>
-                <viewController storyboardIdentifier="FileViewController" id="b1B-Q6-eI1" customClass="RGDossierDetailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FileViewController" modalPresentationStyle="formSheet" id="b1B-Q6-eI1" customClass="RGDossierDetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oX5-HN-vAX"/>
                         <viewControllerLayoutGuide type="bottom" id="6ev-gn-WP9"/>
@@ -43,17 +43,8 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" fixedFrame="YES" text="Sous TypeText" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="8GX-Qi-hUK">
-                                <rect key="frame" x="19" y="106" width="500" height="21"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
-                                </accessibility>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" dataMode="prototypes" style="plain" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="75" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="6Fv-Th-3JN">
-                                <rect key="frame" x="21" y="186" width="500" height="376"/>
+                                <rect key="frame" x="19" y="206" width="500" height="394"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="CircuitCell" id="rvf-tA-IYo" customClass="ADLCircuitCell">
@@ -111,7 +102,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Circuit de validation" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TCZ-HD-KZI">
-                                <rect key="frame" x="20" y="157" width="500" height="21"/>
+                                <rect key="frame" x="20" y="151" width="500" height="21"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
                                 </accessibility>
@@ -131,9 +122,19 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" fixedFrame="YES" text="Sous TypeText" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="8GX-Qi-hUK">
+                                <rect key="frame" x="19" y="106" width="500" height="21"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="circuitLabel" destination="TCZ-HD-KZI" id="8T6-FZ-fRa"/>
                         <outlet property="circuitTable" destination="6Fv-Th-3JN" id="je1-gV-NAy"/>
@@ -144,7 +145,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3T3-F7-bWj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2380.8000000000002" y="-1745.9200000000001"/>
+            <point key="canvasLocation" x="2380" y="-1746"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="GAo-lH-CdD">

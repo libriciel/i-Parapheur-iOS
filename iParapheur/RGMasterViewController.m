@@ -68,7 +68,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	NSLog(@"View Loaded : RGDossierDetailViewController");
+	NSLog(@"View Loaded : RGDossieMasterViewController");
 
 	_firstLaunch = TRUE;
 	_bureauxArray = [[NSMutableArray alloc] init];
