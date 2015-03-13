@@ -8,6 +8,7 @@
 
 #import "ADLFilterViewController.h"
 #import "ADLAPIRequests.h"
+#import "UIColor+CustomColors.h"
 
 @interface ADLFilterViewController ()
 

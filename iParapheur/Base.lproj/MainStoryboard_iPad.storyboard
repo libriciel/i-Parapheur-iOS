@@ -239,7 +239,6 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Bureaux" id="PxO-wH-GeW">
                         <barButtonItem key="rightBarButtonItem" image="icon_login.png" id="XVu-qm-8t4">
-                            <color key="tintColor" red="0.0" green="0.34509803921568627" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="0Rw-5c-KLL" kind="modal" modalPresentationStyle="formSheet" id="391-AD-jqw"/>
                             </connections>
@@ -300,7 +299,6 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Dossiers" id="KZD-cg-m0R">
                         <barButtonItem key="rightBarButtonItem" title="Filtrer" id="0nh-nM-mak">
-                            <color key="tintColor" red="0.0" green="0.34509803921568627" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="RAS-1K-jVQ" kind="modal" identifier="filterSegue" modalPresentationStyle="formSheet" id="YcK-eQ-fnd"/>
                             </connections>
@@ -613,8 +611,8 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem id="KQG-uS-9PL">
-                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Kg3-C6-MaR"/>
-                                        <barButtonItem key="rightBarButtonItem" title="Connection" id="ob5-DY-khh"/>
+                                        <barButtonItem key="leftBarButtonItem" title="Annuler" id="Kg3-C6-MaR"/>
+                                        <barButtonItem key="rightBarButtonItem" title="Connexion" id="ob5-DY-khh"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -627,29 +625,23 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3e8-gi-yQO">
-                                        <rect key="frame" x="8" y="88" width="76" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mot de passe" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3e8-gi-yQO">
+                                        <rect key="frame" x="8" y="88" width="105" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BAq-vl-btT">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BAq-vl-btT">
                                         <rect key="frame" x="135" y="46" width="284" height="30"/>
                                         <accessibility key="accessibilityConfiguration" hint="Required" label="Login"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2jv-mE-rIZ">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2jv-mE-rIZ">
                                         <rect key="frame" x="135" y="8" width="284" height="30"/>
                                         <accessibility key="accessibilityConfiguration" hint="Required" label="URL"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Required" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ecX-wQ-ryZ">
-                                        <rect key="frame" x="135" y="84" width="284" height="30"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Required" label="Password"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v03-Sh-9aj">
                                         <rect key="frame" x="8" y="50" width="43" height="21"/>
@@ -657,6 +649,12 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ecX-wQ-ryZ">
+                                        <rect key="frame" x="135" y="84" width="284" height="30"/>
+                                        <accessibility key="accessibilityConfiguration" hint="Required" label="Password"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>

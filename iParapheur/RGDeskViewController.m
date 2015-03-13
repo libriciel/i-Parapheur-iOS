@@ -168,8 +168,7 @@
 		
 		API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", [currentFilter objectForKey:@"banette"], filtersDictionnary);
 	}
-	else {
-		
+	else {		
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 			[_restClient getDossiers:self.deskRef
 								page:page
@@ -195,7 +194,8 @@
 -(void)updateToolBar {
 	if (self.isInBatchMode) {
 		if (self.navigationController.toolbarHidden) {
-			[self.navigationController setToolbarHidden:NO animated:YES];
+			[self.navigationController setToolbarHidden:NO
+											   animated:YES];
 		}
 		NSArray *actions = [self actionsForSelectedDossiers];
 		// Normalement il n'y a toujours qu'une seule action principale.
@@ -204,15 +204,25 @@
 		
 		NSMutableArray *toolbarItems = [[NSMutableArray alloc] initWithCapacity:3];
 		
-		[toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil]];
+		[toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+																			  target:self
+																			  action:nil]];
 		
 		if (self.secondaryActions.count > 0) {
 			UIButton *moreActions = [UIButton buttonWithType:UIButtonTypeCustom];
 			moreActions.backgroundColor = [UIColor darkGrayColor];
 			moreActions.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
-			[moreActions setTitle:@"Plus" forState:UIControlStateNormal];
-			[moreActions setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-			[moreActions addTarget:self action:@selector(showMoreActions:) forControlEvents:UIControlEventTouchUpInside];
+			
+			[moreActions setTitle:@"Plus"
+						 forState:UIControlStateNormal];
+			
+			[moreActions setTitleColor:[UIColor whiteColor]
+							  forState:UIControlStateNormal];
+			
+			[moreActions addTarget:self
+							action:@selector(showMoreActions:)
+				  forControlEvents:UIControlEventTouchUpInside];
+			
 			moreBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:moreActions];
 			[toolbarItems addObject:moreBarButtonItem];
 		}
@@ -248,7 +258,7 @@
 			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
 										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
 									   delegate:nil
-							  cancelButtonTitle:NSLocalizedString(@"Done", nil)
+							  cancelButtonTitle:@"Fermer"
 							  otherButtonTitles: nil] show];
 		}
 		@finally {}
@@ -578,7 +588,7 @@
 			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
 										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
 									   delegate:nil
-							  cancelButtonTitle:NSLocalizedString(@"Done", nil)
+							  cancelButtonTitle:@"Fermer"
 							  otherButtonTitles:nil]
 			 show];
 		}

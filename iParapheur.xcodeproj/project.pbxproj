@@ -378,7 +378,6 @@
 		C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseSignInfo.m; sourceTree = "<group>"; };
 		C58971561AA751530077FC84 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C589715A1AA752030077FC84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		C589715B1AA753A20077FC84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C589715E1AA88D420077FC84 /* RGLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGLoginViewController.h; sourceTree = "<group>"; };
 		C589715F1AA88D420077FC84 /* RGLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGLoginViewController.m; sourceTree = "<group>"; };
 		C5901F061AA9EBD000E4F264 /* icon_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login@2x.png"; sourceTree = "<group>"; };
@@ -386,7 +385,6 @@
 		C5901F0A1AA9EBF700E4F264 /* icon_login_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login_add.png; sourceTree = "<group>"; };
 		C5901F0C1AA9ECCB00E4F264 /* icon_login@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login@3x.png"; sourceTree = "<group>"; };
 		C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_login_add@3x.png"; sourceTree = "<group>"; };
-		C5901F101AAA0CEF00E4F264 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainStoryboard_iPad.strings; sourceTree = "<group>"; };
 		C5901F121AAA0CF300E4F264 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainStoryboard_iPad.strings; sourceTree = "<group>"; };
 		C59445F51AAE41B900DD4473 /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
 		C59445F61AAE41B900DD4473 /* Default-Landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x.png"; sourceTree = "<group>"; };
@@ -946,7 +944,6 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				fr,
 				Base,
 			);
@@ -1215,7 +1212,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				C589715A1AA752030077FC84 /* Base */,
-				C5901F101AAA0CEF00E4F264 /* en */,
 				C5901F121AAA0CF300E4F264 /* fr */,
 			);
 			name = MainStoryboard_iPad.storyboard;
@@ -1225,7 +1221,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				C58971561AA751530077FC84 /* fr */,
-				C589715B1AA753A20077FC84 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

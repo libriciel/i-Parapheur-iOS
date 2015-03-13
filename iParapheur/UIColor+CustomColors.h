@@ -14,6 +14,8 @@
 +(UIColor*) darkRedColor;
 +(UIColor*) darkBlueColor;
 +(UIColor*) darkOrangeColor;
++(UIColor*) darkYellowColor;
++(UIColor*) darkPurpleColor;
 +(UIColor*) defaultTintColor;
 +(UIColor*) colorForAction:(NSString*) action;
 

@@ -44,6 +44,7 @@
 //
 
 #import "ADLAnnotationView.h"
+#import "UIColor+CustomColors.h"
 
 #define SHOW_RULES 0
 
@@ -274,8 +275,8 @@
         CGContextSaveGState(context);
         UIGraphicsPushContext(context);
         {
-            [[UIColor purpleColor] setStroke];
-            [[UIColor purpleColor] setFill];
+            [[UIColor darkPurpleColor] setStroke];
+            [[UIColor darkPurpleColor] setFill];
             CGContextSetLineWidth(context, 1.0f);
             
             CGFloat width = CGRectGetMaxX(self.bounds);
@@ -307,7 +308,7 @@
         CGRect rect = self.bounds;
         
 #if SHOW_RULES
-        [[UIColor redColor] setStroke];
+        [[UIColor darkRedColor] setStroke];
         
         CGContextStrokeRect(context, rect);
 #endif
@@ -317,9 +318,9 @@
 
         path.lineWidth = 4;
         
-        [[UIColor yellowColor] setFill];
+        [[UIColor darkYellowColor] setFill];
 
-        [[UIColor purpleColor] setStroke];
+        [[UIColor darkPurpleColor] setStroke];
         [path stroke];
         
     }

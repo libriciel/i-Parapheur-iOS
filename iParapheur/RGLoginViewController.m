@@ -136,7 +136,7 @@
 						if (error.code == kCFURLErrorUserAuthenticationRequired) {
 							[self setBorderOnTextField:_loginTextField withAlert:TRUE];
 							[self setBorderOnTextField:_passwordTextField withAlert:TRUE];
-							_errorText.text = NSLocalizedString(@"Authentication failed", nil);
+							_errorText.text = @"Echec d'authentification";
 						}
 						else if (error.code == kCFURLErrorCannotFindHost) {
 							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];

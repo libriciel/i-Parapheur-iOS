@@ -130,7 +130,7 @@
 		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
 									message:@"Vous ne pouvez pas effectuer cette action sur tablette."
 								   delegate:nil
-						  cancelButtonTitle:NSLocalizedString(@"Done", nil)
+						  cancelButtonTitle:@"Fermer"
 						  otherButtonTitles: nil] show];
 	}
 	@finally {}

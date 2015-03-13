@@ -11,10 +11,10 @@
 @implementation UIColor (CustomColors)
 
 +(UIColor*) darkGreenColor {
-    return [UIColor colorWithRed:0.2f
-						   green:0.7f
-							blue:0.2f
-						   alpha:1.0f];
+	return [UIColor colorWithRed:11.0/255.0
+						   green:211.0/255.0
+							blue:24.0/255.0
+						   alpha:1.0f]; // #0BD318
 }
 
 +(UIColor*) darkRedColor {
@@ -31,6 +31,20 @@
 						   alpha:1]; // #FF9600
 }
 
++(UIColor*) darkYellowColor {
+	return [UIColor colorWithRed:255.0/255.0
+						   green:205.0/255.0
+							blue:0.0/255.0
+						   alpha:1]; // #FFCD00
+}
+
++(UIColor*) darkPurpleColor {
+	return [UIColor colorWithRed:198.0/255.0
+						   green:68.0/255.0
+							blue:252.0/255.0
+						   alpha:1]; // #C644FC
+}
+
 +(UIColor*) darkBlueColor {
 	return [UIColor colorWithRed:0.0/255.0
 						   green:118.0/255.0
@@ -39,10 +53,7 @@
 }
 
 +(UIColor*) defaultTintColor {
-    return [UIColor colorWithRed:0.0f
-						   green:0.375f
-							blue:0.75f
-						   alpha:1.0f];
+    return [self darkBlueColor];
 }
 
 +(UIColor*) colorForAction:(NSString*) action {

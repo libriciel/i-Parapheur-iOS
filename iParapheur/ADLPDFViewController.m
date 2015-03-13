@@ -114,7 +114,7 @@
 	
 	// UI build
 	
-	self.navigationController.navigationBar.tintColor = [UIColor defaultTintColor];
+	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(dossierSelected:)
@@ -708,6 +708,8 @@
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		NSString *login=[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"settings_login"];
+		if (login == nil)
+			login =	@"bma";
 		
 		NSDictionary *args = [annotation dict];
 		[args setValue:[NSNumber numberWithUnsignedInteger:page] forKey:@"page"];
@@ -751,7 +753,7 @@
 		 withBarButtonItem:(UIBarButtonItem *)barButtonItem
 	  forPopoverController:(UIPopoverController *)popoverController {
 	
-	barButtonItem.title = NSLocalizedString(@"Dossiers", @"Dossiers");
+	barButtonItem.title = @"Dossiers";
 	barButtonItem.tintColor = [UIColor darkBlueColor];
 	
 	[self.navigationItem setLeftBarButtonItem:barButtonItem

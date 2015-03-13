@@ -313,7 +313,8 @@
 	static NSString *CellIdentifier = @"DeskCell";
 	RGDeskCustomTableViewCell *cell = (RGDeskCustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-	[cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor blueColor]];
+	[cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor darkBlueColor]];
+	[cell.lateBadge.badgeStyle setBadgeInsetColor:[UIColor darkRedColor]];
 	
 	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];

@@ -747,7 +747,8 @@
 	
 	[self requestSimpleAction:@"annotation_action_update"
 				   forRequest:RKRequestMethodPUT
-			   forRouteObject:[self getRouteAnnotationFromDossierId:dossierId andAnnotationId:[annotation objectForKey:@"uuid"]]
+			   forRouteObject:[self getRouteAnnotationFromDossierId:dossierId
+													andAnnotationId:[annotation objectForKey:@"uuid"]]
 				   forPattern:@"/parapheur/dossiers/:idDossier/annotations/:idAnnotation"
 					 withArgs:argumentDictionary
 					  success:^(NSArray *result) {

@@ -23,18 +23,4 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-"Language"		= "Français";
 
-// Error logs
-
-"Missing server URL in application settings"				= "Adresse du serveur manquante dans les réglages de l'application";
-"Missing authentication parameters in application settings" = "Login/password manquants dans les réglages de l'application";
-"Authentication failed"										= "Erreur d'authentification";
-
-//
-
-"Done"			= "Fermer";
-"%d of %d"		= "%1$d de %2$d";
-"Required"		= "Requis";
-"Cancel"		= "Annuler";
-"Connection"	= "Connexion";
