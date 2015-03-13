@@ -338,12 +338,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)getCircuit {
+	
 	ADLRequester *requester = [ADLRequester sharedRequester];
-	
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:dossierRef,
-						  @"dossier", nil];
-	
-	[requester request:@"getCircuit" andArgs:args delegate:self];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:dossierRef, @"dossier", nil];
+	[requester request:@"getCircuit"
+			   andArgs:args
+			  delegate:self];
 	
 	SHOW_HUD
 }
@@ -360,6 +360,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		//[self refreshViewWithDossier:[answer objectForKey:@"data"]];
 	}
 	[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+	
 	[self getCircuit];
 	[self showsEveryThing];
 }

@@ -170,6 +170,7 @@
 		C5C803621A5D90E600D54F7D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803611A5D90E600D54F7D /* UIKit.framework */; };
 		C5C803641A5D90F200D54F7D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803631A5D90F200D54F7D /* Foundation.framework */; };
 		C5D7E7011AA9C05A00A736B4 /* icon_login.png in Resources */ = {isa = PBXBuildFile; fileRef = C5D7E7001AA9C05A00A736B4 /* icon_login.png */; };
+		C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */; };
 		EA7029BB7E3A6A3A903A1932 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -411,6 +412,8 @@
 		C5C803631A5D90F200D54F7D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C5D7E7001AA9C05A00A736B4 /* icon_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login.png; sourceTree = "<group>"; };
+		C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
+		C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -641,6 +644,7 @@
 		B4E5ECA8153AF65F00BD514D /* iParapheur */ = {
 			isa = PBXGroup;
 			children = (
+				C5ECDDBF1AB2F5D4003F13ED /* Utils */,
 				1434F65D168DFB03000C115D /* Crypto */,
 				B4B364391611A4CE0051420F /* Singleton */,
 				B4FF33BF154732FF006F7BF3 /* Reader */,
@@ -871,6 +875,15 @@
 				C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */,
 			);
 			name = ResponseModel;
+			sourceTree = "<group>";
+		};
+		C5ECDDBF1AB2F5D4003F13ED /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */,
+				C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1124,6 +1137,7 @@
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
 				1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */,
 				1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */,
+				C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */,
 				95719C821893D50600246F7C /* ADLInfoView.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,

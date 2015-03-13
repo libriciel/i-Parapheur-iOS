@@ -8,6 +8,7 @@
 #import "ADLResponseDossier.h"
 #import "ADLResponseCircuit.h"
 #import "ADLResponseAnnotation.h"
+#import "StringUtils.h"
 #import "ADLResponseSignInfo.h"
 #import "Reachability.h"
 
