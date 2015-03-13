@@ -137,42 +137,71 @@
 -(void)loadDossiersWithPage:(int)page {
 	SHOW_HUD
 	NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
+
 	if (currentFilter != nil) {
-		//API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", currentFilter);
 		
-		// TYPES
 		NSMutableArray *types = [NSMutableArray new];
-		for (NSString *type in [currentFilter objectForKey:@"types"]) {
+		for (NSString *type in [currentFilter objectForKey:@"types"])
 			[types addObject:[NSDictionary dictionaryWithObject:type forKey:@"ph:typeMetier"]];
-		}
-		// SOUS TYPES
-		NSMutableArray *sousTypes = [NSMutableArray new];
-		for (NSString *sousType in [currentFilter objectForKey:@"sousTypes"]) {
-			[sousTypes addObject:[NSDictionary dictionaryWithObject:sousType forKey:@"ph:soustypeMetier"]];
-		}
 		
-		// TITRE
+		NSMutableArray *sousTypes = [NSMutableArray new];
+		for (NSString *sousType in [currentFilter objectForKey:@"sousTypes"])
+			[sousTypes addObject:[NSDictionary dictionaryWithObject:sousType forKey:@"ph:soustypeMetier"]];
+
 		NSDictionary *titre = [NSDictionary dictionaryWithObject:
 							   [NSArray arrayWithObject:
 								[NSDictionary dictionaryWithObject:
 								 [NSString stringWithFormat:@"*%@*", [currentFilter objectForKey:@"titre"]]
-															forKey:@"cm:title"]]
+														forKey:@"cm:title"]]
 														  forKey:@"or"];
 		
-		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:
-											[NSArray arrayWithObjects:
-											 [NSDictionary dictionaryWithObject:types forKey:@"or"],
-											 [NSDictionary dictionaryWithObject:sousTypes forKey:@"or"],
-											 titre,
-											 nil] forKey:@"and"];
+		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:types
+																																	forKey:@"or"],
+																										[NSDictionary dictionaryWithObject:sousTypes
+																																	forKey:@"or"],
+																										titre,
+																										nil]
+																	   forKey:@"and"];
 		
-		API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", [currentFilter objectForKey:@"banette"], filtersDictionnary);
+		// Send request
+		
+		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			
+			// Stringify JSON filter
+			
+			NSError *error;
+			NSData *jsonData = [NSJSONSerialization dataWithJSONObject:filtersDictionnary
+															   options:0
+																 error:&error];
+			
+			NSString *jsonString = nil;
+			if (jsonData)
+				jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+		
+			// API3 request
+			
+			[_restClient getDossiers:self.deskRef
+								page:page
+								size:15
+							  filter:jsonString
+							 success:^(NSArray *dossiers) {
+								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
+								 [self getDossierDidEndWithSuccess:dossiers];
+							 }
+							 failure:^(NSError *error) {
+								 NSLog(@"getDossiers error : %@", error);
+							 }];
+		}
+		else {
+			API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", [currentFilter objectForKey:@"banette"], filtersDictionnary);
+		}
 	}
-	else {		
+	else {
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 			[_restClient getDossiers:self.deskRef
 								page:page
 								size:15
+			 				  filter:nil
 							 success:^(NSArray *dossiers) {
 								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
 								 [self getDossierDidEndWithSuccess:dossiers];

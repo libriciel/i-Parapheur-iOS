@@ -235,19 +235,24 @@
 -(void)getDossiers:(NSString*)bureau
 			  page:(int)page
 			  size:(int)size
+			filter:(NSString*)filterJson
 		   success:(void (^)(NSArray *))success
 		   failure:(void (^)(NSError *))failure {
 	
-	NSDictionary *queryParams = @{@"asc" : @true,
-								  @"bureau" : bureau,
-								  //@"corbeilleName" : @"",
-								  //@"filter" : @"",
-								  //@"metas" : @"",
-								  @"page" : [NSNumber numberWithInt:page],
-								  @"pageSize" : [NSNumber numberWithInt:size],
-								  @"pendingFile" : [NSNumber numberWithInt:0],
-								  @"skipped" : [NSNumber numberWithInt:0],
-								  @"sort" : @"cm:create"};
+	NSMutableDictionary *queryParams = [[NSMutableDictionary alloc] init];
+	[queryParams setValue:@true forKey:@"asc"];
+	[queryParams setValue:bureau forKey:@"bureau"];
+	[queryParams setValue:[NSNumber numberWithInt:page] forKey:@"page"];
+	[queryParams setValue:[NSNumber numberWithInt:size] forKey:@"pageSize"];
+	[queryParams setValue:[NSNumber numberWithInt:0] forKey:@"pendingFile"];
+	[queryParams setValue:[NSNumber numberWithInt:0] forKey:@"skipped"];
+	[queryParams setValue:@"cm:create" forKey:@"sort"];
+	
+	if (filterJson != nil)
+		[queryParams setValue:filterJson forKey:@"filter"];
+
+	//@"corbeilleName" : @"",
+	//@"metas" : @"",
 	
 	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/dossiers"
 										   parameters:queryParams

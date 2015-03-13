@@ -22,6 +22,7 @@
 -(void)getDossiers:(NSString*)bureau
 			  page:(int)page
 			  size:(int)size
+			filter:(NSString*)filterJson
 		   success:(void (^)(NSArray *))success
 		   failure:(void (^)(NSError *))failure;
 

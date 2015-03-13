@@ -63,12 +63,14 @@ static NSNumber *PARAPHEUR_API_VERSION;
 -(void)getDossiers:(NSString*)bureau
 			  page:(int)page
 			  size:(int)size
+			filter:(NSString*)filterJson
 		   success:(void (^)(NSArray *))success
 		   failure:(void (^)(NSError *))failure {
 	
 	[_restClientApi3 getDossiers:[self fixBureauId:bureau]
 							page:page
 							size:size
+	 					  filter:(NSString*)filterJson
 						 success:^(NSArray *dossiers) { success(dossiers); }
 						 failure:^(NSError *error) { failure(error); }];
 }
