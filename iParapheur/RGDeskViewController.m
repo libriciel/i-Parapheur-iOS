@@ -94,7 +94,7 @@
 	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor darkBlueColor]];
 	
 	self.refreshControl = [[UIRefreshControl alloc] init];
-	[self.refreshControl setTintColor:[UIColor darkBlueColor]];
+	[self.refreshControl setTintColor:[UIColor darkGrayColor]];
 	
 	[self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
 	
@@ -104,7 +104,8 @@
 											   object:nil];
 	
 	self.searchDisplayController.searchResultsTableView.rowHeight = self.tableView.rowHeight;
-	[self.searchDisplayController.searchResultsTableView registerClass:[RGFileCell class]forCellReuseIdentifier:@"dossierCell"];
+	[self.searchDisplayController.searchResultsTableView registerClass:[RGFileCell class]
+												forCellReuseIdentifier:@"dossierCell"];
 	self.inBatchMode = NO;
 	
 	_restClient = [[ADLRestClient alloc] init];
@@ -401,7 +402,7 @@
 		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
 		dossierPossibleArchive = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
 		dossierPossibleViser = dossier.actions && [dossier.actions containsObject:@"VISA"];
-		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.dateEmission.longLongValue];
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.dateEmission.longLongValue/1000)];
 	}
 	else {
 		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];

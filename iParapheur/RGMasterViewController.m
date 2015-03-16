@@ -81,7 +81,7 @@
 	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
 	
 	self.refreshControl = [[UIRefreshControl alloc]init];
-	self.refreshControl.tintColor = [UIColor darkBlueColor];
+	self.refreshControl.tintColor = [UIColor darkGrayColor];
 	
 	[self.refreshControl addTarget:self
 							action:@selector(loadBureaux)
