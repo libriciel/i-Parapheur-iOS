@@ -6,6 +6,7 @@
 #import "ADLResponseDossier.h"
 #import "ADLResponseCircuit.h"
 #import "ADLResponseAnnotation.h"
+#import "NSString+Contains.h"
 #import "StringUtils.h"
 #import "ADLResponseSignInfo.h"
 #import "Reachability.h"
@@ -30,6 +31,11 @@
 		loginSettings = @"bma";
 		passwordSettings = @"secret";
 	}
+	
+	// Fix values
+	
+	if (![urlSettings hasPrefix:@"https://m."])
+		urlSettings = [NSString stringWithFormat:@"https://m.%@", urlSettings];
 	
 	// Initialize AFNetworking HTTPClient
 	
