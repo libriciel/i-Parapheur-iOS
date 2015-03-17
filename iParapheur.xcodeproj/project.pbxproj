@@ -40,14 +40,10 @@
 		B41B9471156227A6004D57A1 /* rounded-checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B41B946D156227A6004D57A1 /* rounded-checkmark@2x.png */; };
 		B41B9472156227A6004D57A1 /* rounded-fail.png in Resources */ = {isa = PBXBuildFile; fileRef = B41B946E156227A6004D57A1 /* rounded-fail.png */; };
 		B41B9473156227A6004D57A1 /* rounded-fail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B41B946F156227A6004D57A1 /* rounded-fail@2x.png */; };
-		B41B9478156227BE004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
 		B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41DBD37153D942D004F1AEF /* RGDeskViewController.m */; };
 		B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B42D54E8153B10970033E95B /* RGSplitViewController.m */; };
 		B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B43C7ACD1541632800BA43A8 /* RGDeskCustomTableViewCell.m */; };
-		B444316F160A230D00C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
-		B4443170160A230D00C8C475 /* ADLAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316C160A230D00C8C475 /* ADLAnnotationView.m */; };
-		B4443171160A230D00C8C475 /* ADLCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316E160A230D00C8C475 /* ADLCloseButton.m */; };
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
 		B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316C160A230D00C8C475 /* ADLAnnotationView.m */; };
 		B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316E160A230D00C8C475 /* ADLCloseButton.m */; };
@@ -58,7 +54,6 @@
 		B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */ = {isa = PBXBuildFile; fileRef = B47944D71622BCDE0061E09B /* ADLPostItView.m */; };
 		B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B488310E15ECBF6500EC5BB3 /* RGFileCell.m */; };
 		B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */; };
-		B488312815EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */; };
 		B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A221AA16299E9B00474A18 /* ADLActionViewController.m */; };
 		B4A221B2162AA6CF00474A18 /* viser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A221B0162AA6CF00474A18 /* viser@2x.png */; };
 		B4A221B3162AA6CF00474A18 /* viser.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A221B1162AA6CF00474A18 /* viser.png */; };
@@ -72,29 +67,8 @@
 		B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */; };
 		B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */; };
 		B4E5ECD4153AF65F00BD514D /* iParapheurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECD3153AF65F00BD514D /* iParapheurTests.m */; };
-		B4E5ECFE153AF72200BD514D /* ADLCredentialVault.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */; };
-		B4E5ECFF153AF72200BD514D /* ADLCollectivityDef.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */; };
 		B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */; };
 		B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */; };
-		B4FF33D515473325006F7BF3 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C215473325006F7BF3 /* ReaderConstants.m */; };
-		B4FF33D615473325006F7BF3 /* ReaderDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C415473325006F7BF3 /* ReaderDocument.m */; };
-		B4FF33D715473325006F7BF3 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C615473325006F7BF3 /* ReaderViewController.m */; };
-		B4FF33D815473325006F7BF3 /* ReaderMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C815473325006F7BF3 /* ReaderMainToolbar.m */; };
-		B4FF33D915473325006F7BF3 /* ReaderMainPagebar.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33CA15473325006F7BF3 /* ReaderMainPagebar.m */; };
-		B4FF33DA15473325006F7BF3 /* ReaderContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33CC15473325006F7BF3 /* ReaderContentView.m */; };
-		B4FF33DB15473325006F7BF3 /* ReaderContentPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33CE15473325006F7BF3 /* ReaderContentPage.m */; };
-		B4FF33DC15473325006F7BF3 /* ReaderContentTile.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33D015473325006F7BF3 /* ReaderContentTile.m */; };
-		B4FF33DD15473325006F7BF3 /* ThumbsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33D215473325006F7BF3 /* ThumbsViewController.m */; };
-		B4FF33DE15473325006F7BF3 /* ThumbsMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33D415473325006F7BF3 /* ThumbsMainToolbar.m */; };
-		B4FF33F21547333D006F7BF3 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E11547333D006F7BF3 /* CGPDFDocument.m */; };
-		B4FF33F31547333D006F7BF3 /* ReaderThumbCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E31547333D006F7BF3 /* ReaderThumbCache.m */; };
-		B4FF33F41547333D006F7BF3 /* ReaderThumbRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E51547333D006F7BF3 /* ReaderThumbRequest.m */; };
-		B4FF33F51547333D006F7BF3 /* ReaderThumbQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E71547333D006F7BF3 /* ReaderThumbQueue.m */; };
-		B4FF33F61547333D006F7BF3 /* ReaderThumbFetch.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E91547333D006F7BF3 /* ReaderThumbFetch.m */; };
-		B4FF33F71547333D006F7BF3 /* ReaderThumbRender.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33EB1547333D006F7BF3 /* ReaderThumbRender.m */; };
-		B4FF33F81547333D006F7BF3 /* ReaderThumbsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33ED1547333D006F7BF3 /* ReaderThumbsView.m */; };
-		B4FF33F91547333D006F7BF3 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33EF1547333D006F7BF3 /* ReaderThumbView.m */; };
-		B4FF33FA1547333D006F7BF3 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */; };
 		B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C215473325006F7BF3 /* ReaderConstants.m */; };
 		B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C415473325006F7BF3 /* ReaderDocument.m */; };
 		B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C615473325006F7BF3 /* ReaderViewController.m */; };
@@ -1300,32 +1274,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4E5ECD4153AF65F00BD514D /* iParapheurTests.m in Sources */,
-				B4E5ECFE153AF72200BD514D /* ADLCredentialVault.m in Sources */,
-				B4E5ECFF153AF72200BD514D /* ADLCollectivityDef.m in Sources */,
-				B4FF33D515473325006F7BF3 /* ReaderConstants.m in Sources */,
-				B4FF33D615473325006F7BF3 /* ReaderDocument.m in Sources */,
-				B4FF33D715473325006F7BF3 /* ReaderViewController.m in Sources */,
-				B4FF33D815473325006F7BF3 /* ReaderMainToolbar.m in Sources */,
-				B4FF33D915473325006F7BF3 /* ReaderMainPagebar.m in Sources */,
-				B4FF33DA15473325006F7BF3 /* ReaderContentView.m in Sources */,
-				B4FF33DB15473325006F7BF3 /* ReaderContentPage.m in Sources */,
-				B4FF33DC15473325006F7BF3 /* ReaderContentTile.m in Sources */,
-				B4FF33DD15473325006F7BF3 /* ThumbsViewController.m in Sources */,
-				B4FF33DE15473325006F7BF3 /* ThumbsMainToolbar.m in Sources */,
-				B4FF33F21547333D006F7BF3 /* CGPDFDocument.m in Sources */,
-				B4FF33F31547333D006F7BF3 /* ReaderThumbCache.m in Sources */,
-				B4FF33F41547333D006F7BF3 /* ReaderThumbRequest.m in Sources */,
-				B4FF33F51547333D006F7BF3 /* ReaderThumbQueue.m in Sources */,
-				B4FF33F61547333D006F7BF3 /* ReaderThumbFetch.m in Sources */,
-				B4FF33F71547333D006F7BF3 /* ReaderThumbRender.m in Sources */,
-				B4FF33F81547333D006F7BF3 /* ReaderThumbsView.m in Sources */,
-				B4FF33F91547333D006F7BF3 /* ReaderThumbView.m in Sources */,
-				B4FF33FA1547333D006F7BF3 /* UIXToolbarView.m in Sources */,
-				B41B9478156227BE004D57A1 /* LGViewHUD.m in Sources */,
-				B488312815EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
-				B444316F160A230D00C8C475 /* ADLDrawingView.m in Sources */,
-				B4443170160A230D00C8C475 /* ADLAnnotationView.m in Sources */,
-				B4443171160A230D00C8C475 /* ADLCloseButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
