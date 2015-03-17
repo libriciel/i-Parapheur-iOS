@@ -1,7 +1,8 @@
 
 #import <Foundation/Foundation.h>
+#import "Mantle/Mantle.h"
 
-@interface ADLResponseDossiers : NSObject
+@interface ADLResponseDossiers : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSNumber *total;
 @property (nonatomic, strong) NSString *protocol;

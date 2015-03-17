@@ -1,7 +1,8 @@
 
 #import <Foundation/Foundation.h>
+#import "Mantle/Mantle.h"
 
-@interface ADLResponseBureau : NSObject
+@interface ADLResponseBureau : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSNumber *level;
 @property (nonatomic) bool hasSecretaire;
@@ -20,6 +21,7 @@
 @property (nonatomic) bool isSecretaire;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSNumber *retournes;
-@property (nonatomic, strong) NSNumber *dossierDelegues; //dossiers-delegues": 16
+@property (nonatomic, strong) NSNumber *dossiersDelegues; //dossiers-delegues": 16
+
 
 @end

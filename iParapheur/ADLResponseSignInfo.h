@@ -1,7 +1,8 @@
 
 #import <Foundation/Foundation.h>
+#import <Mantle.h>
 
-@interface ADLResponseSignInfo : NSObject
+@interface ADLResponseSignInfo : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSDictionary *signatureInformations;
 
