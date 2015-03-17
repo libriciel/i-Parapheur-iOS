@@ -1,7 +1,19 @@
 
 #import <Foundation/Foundation.h>
+#import <AFHTTPSessionManager.h>
+#import "ADLResponseDossier.h"
+#import "ADLResponseSignInfo.h"
+#import "ADLResponseCircuit.h"
+
 
 @interface ADLRestClientApi3 : NSObject
+
+
+@property (nonatomic, strong) AFHTTPSessionManager *getManager;
+
+// For PUT/DELETE/POST, we need other settings that can be set on initialization only,
+// Taht's why we need a second HTTPSessionManaget, at least with AFNetworking. (See init for details)
+@property (nonatomic, strong) AFHTTPSessionManager *postManager;
 
 
 -(id)init;
@@ -29,12 +41,12 @@
 
 -(void)getDossier:(NSString*)bureau
 		  dossier:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseDossier *))success
 		  failure:(void (^)(NSError *))failure;
 
 
 -(void)getCircuit:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure;
 
 
@@ -45,7 +57,7 @@
 
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
-					 success:(void (^)(NSArray *))success
+					 success:(void (^)(ADLResponseSignInfo *))success
 					 failure:(void (^)(NSError *))failure;
 
 	

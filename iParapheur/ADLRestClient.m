@@ -78,23 +78,22 @@ static NSNumber *PARAPHEUR_API_VERSION;
 
 -(void)getDossier:(NSString*)bureauId
 		  dossier:(NSString*)dossierId
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseDossier *))success
 		  failure:(void (^)(NSError *))failure {
-	
 	
 	[_restClientApi3 getDossier:[self fixBureauId:bureauId]
 						dossier:dossierId
-						success:^(NSArray *dossiers) { success(dossiers); }
+						success:^(ADLResponseDossier *dossier) { success(dossier); }
 						failure:^(NSError *error) { failure(error); }];
 }
 
 
 -(void)getCircuit:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure {
 	
 	[_restClientApi3 getCircuit:dossier
-						success:^(NSArray *circuits) { success(circuits); }
+						success:^(ADLResponseCircuit *circuits) { success(circuits); }
 						failure:^(NSError *error) { failure(error); }];
 }
 
@@ -148,12 +147,12 @@ static NSNumber *PARAPHEUR_API_VERSION;
 
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
-					 success:(void (^)(NSArray *))success
+					 success:(void (^)(ADLResponseSignInfo *))success
 					 failure:(void (^)(NSError *))failure {
 	
 	[_restClientApi3 getSignInfoForDossier:dossierId
 								 andBureau:[self fixBureauId:bureauId]
-								   success:^(NSArray *annotations) { success(annotations); }
+								   success:^(ADLResponseSignInfo *signInfo) { success(signInfo); }
 								   failure:^(NSError *error) { failure(error); }];
 }
 
