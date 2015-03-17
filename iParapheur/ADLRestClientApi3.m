@@ -100,53 +100,43 @@
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
 	
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
 	
 	[_getManager GET:@"/parapheur/api/getApiLevel"
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
-				 // Parse check and callback
+				 // Parse check
 				 
 				 NSError *error;
 				 ADLResponseGetLevel* responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
 																   fromJSONDictionary:responseObject
 																				error:&error];
 				 
-				 // TODO Adrien : Manage error
+				 // Callback
+				 // TODO Adrien : test API2.
 				 
 				 if (error)
-					 failure(error);
+					 success([NSNumber numberWithInt:2]);
 				 else
 					 success(responseGetLevel.level);
 			 }
 			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+
+				 NSLog(@"Adrien getApiLevel fail : %@", error.localizedDescription);
+
+				 // AFNetworking seems to throw back only BadRequest errors,
+				 // There we fix them, to have proper errors (Authentication, SSL, etc)
 				 
-				 Reachability *reach = [Reachability reachabilityWithHostname:urlSettings];
+				 NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse*)task.response;
 				 
-				 if ([reach isReachable]) {
-					 // Legacy compatibility
-					 success([NSNumber numberWithInt:2]);
+				 if (urlResponse.statusCode == 401){
+					 failure([NSError errorWithDomain:error.domain
+												 code:kCFURLErrorUserAuthenticationRequired
+											 userInfo:nil]);
 				 }
 				 else {
-					 
-					 [reach setReachableBlock:^(Reachability *reachblock) {
-						 // keep in mind this is called on a background thread
-						 // and if you are updating the UI it needs to happen
-						 // on the main thread, like this:
-						 dispatch_async(dispatch_get_main_queue(), ^{ success([NSNumber numberWithInt:2]); });
-					 }];
-					 
-					 [reach setUnreachableBlock:^(Reachability*reach) {
-						 // keep in mind this is called on a background thread
-						 // and if you are updating the UI it needs to happen
-						 // on the main thread, like this:
-						 dispatch_async(dispatch_get_main_queue(), ^{ failure(error); });
-					 }];
+					 failure(error);
 				 }
-				 
-				 [reach startNotifier];
 			 }];
 }
 

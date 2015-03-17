@@ -132,17 +132,26 @@
 					}
 					failure:^(NSError *error) {
 						[self enableInterface:TRUE];
+						
+						NSLog(@"Adrien error : %d", error.code);
 
 						if (error.code == kCFURLErrorUserAuthenticationRequired) {
 							[self setBorderOnTextField:_loginTextField withAlert:TRUE];
 							[self setBorderOnTextField:_passwordTextField withAlert:TRUE];
-							_errorText.text = @"Echec d'authentification";
+							_errorTextField.text = @"Échec d'authentification";
 						}
-						else if (error.code == kCFURLErrorCannotFindHost) {
+						else if ((error.code == kCFURLErrorCannotFindHost) || (error.code == kCFURLErrorBadServerResponse)) {
 							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorText.text = error.localizedDescription;
+							_errorTextField.text = [NSString stringWithFormat:@"Le serveur est inaccessible (code %d)", error.code];
 						}
-					 }];
+						else if (error.code == kCFURLErrorTimedOut) {
+							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
+							_errorTextField.text = [NSString stringWithFormat:@"Le serveur distant ne répond pas (code %d)", error.code];
+						}
+						else {
+							_errorTextField.text = [NSString stringWithFormat:@"Erreur à l'envoi de la requête (code %d)", error.code];
+						}
+					}];
 }
 
 
@@ -184,6 +193,8 @@
 	_loginTextField.enabled = enabled;
 	_passwordTextField.enabled = enabled;
 	_serverUrlTextField.enabled = enabled;
+
+	_errorTextField.hidden = !enabled;
 	
 	if (enabled)
 		[_activityIndicatorView stopAnimating];
@@ -196,7 +207,7 @@
 
 
 - (void)onTextFieldValueChanged {
-	_errorText.text = @"";
+	_errorTextField.text = @"";
 	[self validateFieldsForConnnectionEvent:FALSE];
 }
 

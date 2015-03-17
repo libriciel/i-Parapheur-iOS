@@ -14,7 +14,7 @@
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *backButton;
-@property (strong, nonatomic) IBOutlet UITextView *errorText;
+@property (strong, nonatomic) IBOutlet UITextView *errorTextField;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicatorView;
 
 @end
