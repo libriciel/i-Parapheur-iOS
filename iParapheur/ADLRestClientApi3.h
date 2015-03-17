@@ -12,11 +12,11 @@
 
 
 -(void)getApiLevel:(void (^)(NSNumber *versionNumber))success
-            failure:(void (^)(NSError *error))failure;
+		   failure:(void (^)(NSError *error))failure;
 
 
 -(void)getBureaux:(void (^)(NSArray *bureaux))success
-           failure:(void (^)(NSError *error))failure;
+		  failure:(void (^)(NSError *error))failure;
 
 
 -(void)getDossiers:(NSString*)bureau
