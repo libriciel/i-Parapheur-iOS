@@ -140,21 +140,6 @@
 }
 
 
-/*-(void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-	NSString *base64DeviceToken = [deviceToken base64EncodedString];
-	NSLog(@"%@", base64DeviceToken);
-	// self.registered = YES;
-	
-	//  [[ADLIParapheurWall sharedWall] request:<#(NSString *)#> withArgs:<#(NSDictionary *)#> andCollectivity:<#(ADLCollectivityDef *)#>]
-	// [self sendProviderDeviceToken:devTokenBytes]; // custom method
-}
-
-
--(void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-	NSLog(@"Error in registration. Error: %@", err);
-}*/
-
-
 -(void)applicationWillResignActive:(UIApplication *)application {
 	// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 	// Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
