@@ -53,9 +53,7 @@
     ReaderViewControllerDelegate,
     UIPopoverControllerDelegate,
     ADLDrawingViewDataSource,
-    LGViewHUDDelegate
-    /*UICollectionViewDataSource,
-    UICollectionViewDelegateFlowLayout*/>
+    LGViewHUDDelegate>
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 

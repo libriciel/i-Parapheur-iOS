@@ -6,6 +6,7 @@
 
 #import "RGLoginViewController.h"
 #import "AJNotificationView.h"
+#import "ADLRestClientApi3.h"
 #import "ADLRestClient.h"
 #import "UIColor+CustomColors.h"
 
@@ -103,7 +104,7 @@
 
 - (void)testConnection {
 
-	ADLRestClient *restClient = [[ADLRestClient alloc] init];
+	ADLRestClientApi3 *restClient = [[ADLRestClientApi3 alloc] init];
 	[self enableInterface:FALSE];
 	
 	[restClient getApiLevel:^(NSNumber *versionNumber) {
@@ -173,6 +174,10 @@
 	
 	[preferences setObject:validServer
 					forKey:@"settings_server_url"];
+	
+	// Reset singleton values
+	
+	[[ADLRestClient sharedManager] reset];
 	
 	//
 	

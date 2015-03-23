@@ -15,7 +15,7 @@
 
 
 -(id)init {
-	
+		
 	// Retrieve infos from settings
 	
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
@@ -40,8 +40,9 @@
 	// Initialize AFNetworking HTTPClient
 	
 	NSURL *baseURL = [NSURL URLWithString:urlSettings];
+	
 	_getManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-	_postManager = 	[[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+	_postManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
 	
 	// GetManager init
 	

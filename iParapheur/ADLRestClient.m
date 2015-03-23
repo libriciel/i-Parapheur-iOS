@@ -8,14 +8,29 @@
 static NSNumber *PARAPHEUR_API_VERSION;
 
 
++ (id)sharedManager {
+	static ADLRestClient *sharedMyManager = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedMyManager = [[self alloc] init];
+	});
+	return sharedMyManager;
+}
+
+
 +(NSNumber *)getRestApiVersion {
 	return PARAPHEUR_API_VERSION;
 }
 
 
 - (id)init {
-	_restClientApi3 = [[ADLRestClientApi3 alloc] init];
+	[self reset];
 	return self;
+}
+
+
+- (void)reset{
+	_restClientApi3 = [[ADLRestClientApi3 alloc] init];
 }
 
 

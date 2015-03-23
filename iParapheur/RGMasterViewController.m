@@ -148,7 +148,7 @@
 
 - (void)initRestClient {
 	
-	_restClient = [[ADLRestClient alloc] init];
+	_restClient = [ADLRestClient sharedManager];
 	
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						[self loadBureaux];

@@ -146,7 +146,7 @@
 	//self.actions = [NSMutableArray new];
 	[self configureView];
 	
-	_restClient = [[ADLRestClient alloc] init];
+	_restClient = [ADLRestClient sharedManager];
 }
 
 

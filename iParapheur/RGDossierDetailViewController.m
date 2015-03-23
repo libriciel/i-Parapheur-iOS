@@ -85,7 +85,7 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
 	
-	_restClient = [[ADLRestClient alloc] init];
+	_restClient = [ADLRestClient sharedManager];
 	
 	self.navigationItem.rightBarButtonItem=nil;
 	_objects = [[NSMutableArray alloc] init];

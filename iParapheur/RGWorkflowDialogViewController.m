@@ -84,7 +84,7 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
-	_restClient = [[ADLRestClient alloc] init];
+	_restClient = [ADLRestClient sharedManager];
 }
 
 

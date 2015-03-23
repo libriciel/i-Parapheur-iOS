@@ -108,7 +108,7 @@
 												forCellReuseIdentifier:@"dossierCell"];
 	self.inBatchMode = NO;
 	
-	_restClient = [[ADLRestClient alloc] init];
+	_restClient = [ADLRestClient sharedManager];
 }
 
 

@@ -7,7 +7,13 @@
 @property (nonatomic, strong) ADLRestClientApi3* restClientApi3;
 
 
++ (id)sharedManager;
+
+
 - (id)init;
+
+
+- (void)reset;
 
 
 +(NSNumber *)getRestApiVersion;
