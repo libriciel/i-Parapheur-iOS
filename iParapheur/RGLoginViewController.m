@@ -91,12 +91,8 @@
 		textField.layer.cornerRadius=6.0f;
 		textField.layer.masksToBounds=YES;
 		textField.layer.borderWidth= 1.0f;
-		textField.layer.borderColor=[[UIColor orangeColor] CGColor];
-		
-		textField.backgroundColor=[UIColor colorWithRed:255.0/255.0
-												  green:150.0/255.0
-												   blue:0.0/255.0
-												  alpha:0.1];
+		textField.layer.borderColor=[[UIColor darkOrangeColor] CGColor];
+		textField.backgroundColor=[[UIColor darkOrangeColor] colorWithAlphaComponent:0.1];
 	}
 	else {
 		textField.layer.borderColor = [[UIColor clearColor]CGColor];
@@ -134,8 +130,12 @@
 						[self enableInterface:TRUE];
 						
 						NSLog(@"Adrien error : %d", error.code);
-
-						if (error.code == kCFURLErrorUserAuthenticationRequired) {
+						
+						if ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) {
+							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
+							_errorTextField.text =[NSString stringWithFormat:@"Erreur de certificat SSL (code %d)", error.code];
+						}
+						else if (error.code == kCFURLErrorUserAuthenticationRequired) {
 							[self setBorderOnTextField:_loginTextField withAlert:TRUE];
 							[self setBorderOnTextField:_passwordTextField withAlert:TRUE];
 							_errorTextField.text = @"Échec d'authentification";

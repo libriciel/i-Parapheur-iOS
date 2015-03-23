@@ -26,6 +26,7 @@
 #import "ReaderContentPage.h"
 #import "ReaderContentTile.h"
 #import "CGPDFDocument.h"
+#import "UIColor+CustomColors.h"
 
 
 @interface ReaderContentPage ()
@@ -55,11 +56,7 @@
 	
 	if (_links.count > 0) // Add highlight views over all links
 	{
-		UIColor *hilite = [UIColor colorWithRed:0.0/255.0
-										  green:118.0/255.0
-										   blue:255.0/255.0
-										  alpha:0.15f];
-		
+		UIColor *hilite = [[UIColor darkBlueColor] colorWithAlphaComponent:0.15f];
 		for (ReaderDocumentLink *link in _links) // Enumerate the links array
 		{
 			UIView *highlight = [[UIView alloc] initWithFrame:link.rect];

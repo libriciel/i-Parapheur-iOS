@@ -112,18 +112,17 @@
 																   fromJSONDictionary:responseObject
 																				error:&error];
 				 
-				 // Callback
-				 // TODO Adrien : test API2.
-				 
-				 if (error)
-					 success([NSNumber numberWithInt:2]);
-				 else
+				 if (error) {
+					 failure([NSError errorWithDomain:error.domain
+												 code:kCFURLErrorBadServerResponse
+											 userInfo:nil]);
+				 }
+				 else {
 					 success(responseGetLevel.level);
+				 }
 			 }
 			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-
-				 NSLog(@"Adrien getApiLevel fail : %@", error.localizedDescription);
-
+				 
 				 // AFNetworking seems to throw back only BadRequest errors,
 				 // There we fix them, to have proper errors (Authentication, SSL, etc)
 				 
