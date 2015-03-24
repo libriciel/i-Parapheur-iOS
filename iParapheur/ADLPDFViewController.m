@@ -439,7 +439,8 @@
 	file = [NSFileHandle fileHandleForWritingAtPath:filePath];
 	[file writeData:[document documentData]];
 	
-	ReaderDocument *readerDocument = [[ReaderDocument alloc] initWithFilePath:filePath password:nil];
+	ReaderDocument *readerDocument = [[ReaderDocument alloc] initWithFilePath:filePath
+																	 password:nil];
 	
 	_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:readerDocument];
 	
@@ -447,21 +448,18 @@
 	[_readerViewController setAnnotationsEnabled:_isDocumentPrincipal];
 	
 	_readerViewController.delegate = self;
-	_readerViewController.view.frame = [[self view] frame];
-	
+	_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
+
 	[_readerViewController.view setAutoresizingMask:( UIViewAutoresizingFlexibleWidth |
 													 UIViewAutoresizingFlexibleHeight )];
 	[[self view] setAutoresizesSubviews:YES];
 	
-	for(UIView *subview in [self.view subviews]) {
+	for(UIView *subview in [self.view subviews])
 		[subview removeFromSuperview];
-	}
 	
-	[[self view] addSubview:[_readerViewController view]];
+	[[self view] addSubview:_readerViewController.view];
 	
 	HIDE_HUD
-	
-	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossier", nil];
 	
@@ -469,6 +467,7 @@
 		[self refreshAnnotations:_dossierRef];
 	}
 	else {
+		ADLRequester *requester = [ADLRequester sharedRequester];
 		[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
 	}
 }
