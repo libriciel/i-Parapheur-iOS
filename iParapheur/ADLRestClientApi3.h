@@ -19,6 +19,14 @@
 -(id)init;
 
 
+-(id)initWithLogin:(NSString*)login
+		  password:(NSString*)password
+			   url:(NSString*)url;
+
+
+-(void)cancelAllOperations;
+
+
 -(NSString *)getDownloadUrl:(NSString *)dossierId
 					 forPdf:(bool)isPdf;
 

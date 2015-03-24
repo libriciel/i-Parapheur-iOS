@@ -32,22 +32,48 @@
 		passwordSettings = @"secret";
 	}
 	
+	// Init
+	
+	[self initRestClientWithLogin:loginSettings
+						 password:passwordSettings
+							  url:urlSettings];
+	
+	return self;
+}
+
+
+-(id)initWithLogin:(NSString*)login
+		  password:(NSString*)password
+			   url:(NSString*)url {
+	
+	[self initRestClientWithLogin:login
+						 password:password
+							  url:url];
+	
+	return self;
+}
+
+
+-(void)initRestClientWithLogin:(NSString*)login
+					  password:(NSString*)password
+						   url:(NSString*)url {
+
 	// Fix values
 	
-	if (![urlSettings hasPrefix:@"https://m."])
-		urlSettings = [NSString stringWithFormat:@"https://m.%@", urlSettings];
+	if (![url hasPrefix:@"https://m."])
+		url = [NSString stringWithFormat:@"https://m.%@", url];
 	
 	// Initialize AFNetworking HTTPClient
 	
-	NSURL *baseURL = [NSURL URLWithString:urlSettings];
+	NSURL *baseURL = [NSURL URLWithString:url];
 	
 	_getManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
 	_postManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
 	
 	// GetManager init
 	
-	[_getManager.requestSerializer setAuthorizationHeaderFieldWithUsername:loginSettings
-																  password:passwordSettings];
+	[_getManager.requestSerializer setAuthorizationHeaderFieldWithUsername:login
+																  password:password];
 	
 	// PostManager init
 	// Here are the reasons why we have two managers : GET needs a HTTPRequestSerializer/JSONResponseSerializer
@@ -57,8 +83,8 @@
 	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
 	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[requestSerializer setAuthorizationHeaderFieldWithUsername:loginSettings
-													  password:passwordSettings];
+	[requestSerializer setAuthorizationHeaderFieldWithUsername:login
+													  password:password];
 	
 	_postManager.requestSerializer = requestSerializer;
 	
@@ -78,8 +104,12 @@
 	_postManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
 	_postManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
 	_postManager.securityPolicy.validatesDomainName = YES;
-	
-	return self;
+}
+
+
+-(void)cancelAllOperations {
+	[_getManager.operationQueue cancelAllOperations];
+	[_postManager.operationQueue cancelAllOperations];
 }
 
 
@@ -100,8 +130,7 @@
 
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
-	
-	
+		
 	[_getManager GET:@"/parapheur/api/getApiLevel"
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {

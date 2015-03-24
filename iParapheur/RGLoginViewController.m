@@ -66,7 +66,7 @@
 	BOOL passwordTextFieldValid = (_passwordTextField.text.length != 0);
 	BOOL serverTextFieldValid = (_serverUrlTextField.text.length != 0);
 	
-	// TODO Adrien : add special character restrictions tests, and url format validation field test
+	// TODO Adrien : add special character restrictions tests, and url format validation field test ?
 	
 	// Set orange background on text fields.
 	// only on connection event, not on change value events
@@ -87,8 +87,7 @@
 - (void)setBorderOnTextField:(UITextField *)textField
 				   withAlert:(BOOL)alert {
 	
-	if (alert) {
-		
+	if (alert) {		
 		textField.layer.cornerRadius=6.0f;
 		textField.layer.masksToBounds=YES;
 		textField.layer.borderWidth= 1.0f;
@@ -104,37 +103,27 @@
 
 - (void)testConnection {
 
-	ADLRestClientApi3 *restClient = [[ADLRestClientApi3 alloc] init];
-	[self enableInterface:FALSE];
+	if (_restClient)
+		[_restClient cancelAllOperations];
 	
-	[restClient getApiLevel:^(NSNumber *versionNumber) {
+	_restClient = [[ADLRestClientApi3 alloc] initWithLogin:_loginTextField.text
+												  password:_passwordTextField.text
+													   url:[self cleanupServerName:_serverUrlTextField.text]];
+	
+	[self enableInterface:FALSE];
+
+	[_restClient getApiLevel:^(NSNumber *versionNumber) {
+		
 						[self enableInterface:TRUE];
-		
-						// Saving
-		
-						NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-		
-						[preferences setObject:_loginTextField.text
-										forKey:@"settings_valid_login"];
-		
-						[preferences setObject:_passwordTextField.text
-										forKey:@"settings_valid_password"];
-		
-						[preferences setObject:_serverUrlTextField.text
-										forKey:@"settings_valid_server_url"];
-		
-						// Exit
-		
 						[self dismissWithSuccess:TRUE];
-					}
-					failure:^(NSError *error) {
+					 }
+					 failure:^(NSError *error) {
+						 
 						[self enableInterface:TRUE];
 						
-						NSLog(@"Adrien error : %d", error.code);
-						
-						if ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) {
+						if ( ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) || (error.code == kCFURLErrorCancelled) ) {
 							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text =[NSString stringWithFormat:@"Erreur de certificat SSL (code %d)", error.code];
+							_errorTextField.text = @"Le serveur n'est pas valide";
 						}
 						else if (error.code == kCFURLErrorUserAuthenticationRequired) {
 							[self setBorderOnTextField:_loginTextField withAlert:TRUE];
@@ -143,37 +132,38 @@
 						}
 						else if ((error.code == kCFURLErrorCannotFindHost) || (error.code == kCFURLErrorBadServerResponse)) {
 							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text = [NSString stringWithFormat:@"Le serveur est inaccessible (code %d)", error.code];
+							_errorTextField.text = @"Le serveur est introuvable";
 						}
 						else if (error.code == kCFURLErrorTimedOut) {
 							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text = [NSString stringWithFormat:@"Le serveur distant ne répond pas (code %d)", error.code];
+							_errorTextField.text = @"Le serveur ne répond pas dans le délai imparti";
 						}
 						else {
-							_errorTextField.text = [NSString stringWithFormat:@"Erreur à l'envoi de la requête (code %d)", error.code];
+							_errorTextField.text = [NSString stringWithFormat:@"Erreur à la tentative de connexion (code %ld)", (long)error.code];
 						}
-					}];
+					 }];
 }
 
 
 - (void)dismissWithSuccess:(BOOL)success {
 	
-	// Restoring proper data
+	if (_restClient)
+	[_restClient cancelAllOperations];
 	
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	// Saving proper data
 	
-	NSString *validLogin = [preferences objectForKey:@"settings_valid_login"];
-	NSString *validPassword = [preferences objectForKey:@"settings_valid_password"];
-	NSString *validServer = [preferences objectForKey:@"settings_valid_server_url"];
-	
-	[preferences setObject:validLogin
-					forKey:@"settings_login"];
-	
-	[preferences setObject:validPassword
-					forKey:@"settings_password"];
-	
-	[preferences setObject:validServer
-					forKey:@"settings_server_url"];
+	if (success) {
+		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+		
+		[preferences setObject:_loginTextField.text
+						forKey:@"settings_login"];
+		
+		[preferences setObject:_passwordTextField.text
+						forKey:@"settings_password"];
+		
+		[preferences setObject:[self cleanupServerName:_serverUrlTextField.text]
+						forKey:@"settings_server_url"];
+	}
 	
 	// Reset singleton values
 	
@@ -190,6 +180,27 @@
  	[[NSNotificationCenter defaultCenter] postNotificationName:@"loginPopupDismiss"
 														object:nil
 													  userInfo:userInfo];
+}
+
+
+- (NSString *)cleanupServerName:(NSString *)url {
+	
+	if ([url hasPrefix:@"https://m."])
+		url = [url substringFromIndex:10];
+
+	if ([url hasPrefix:@"http://m."])
+		url = [url substringFromIndex:9];
+	
+	if ([url hasPrefix:@"https://"])
+		url = [url substringFromIndex:8];
+	
+	if ([url hasPrefix:@"http://"])
+		url = [url substringFromIndex:7];
+	
+	if ([url hasPrefix:@"m."])
+		url = [url substringFromIndex:2];
+	
+	return url;
 }
 
 
@@ -223,19 +234,6 @@
 
 
 - (void)onValidateButtonClicked {
-	
-	// Saving preferences
-	
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-
-	[preferences setObject:_loginTextField.text
-					forKey:@"settings_login"];
-	
-	[preferences setObject:_passwordTextField.text
-					forKey:@"settings_password"];
-	
-	[preferences setObject:_serverUrlTextField.text
-					forKey:@"settings_server_url"];
 	
 	// Test connection
 	
