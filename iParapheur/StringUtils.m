@@ -1,5 +1,7 @@
 
 #import "StringUtils.h"
+#import "AJNotificationView.h"
+
 
 @implementation StringUtils
 
@@ -21,6 +23,36 @@
 	}
 	
 	return mutableDictionary;
+}
+
+
++ (NSString *)getErrorMessage:(NSError *)error {
+	
+	NSString *message = error.localizedDescription;
+	
+	if (error.code == kCFURLErrorNotConnectedToInternet)
+		message = @"La connexion Internet a été perdue.";
+	else if ( ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) || (error.code == kCFURLErrorCancelled) )
+		message = @"Le serveur n'est pas valide";
+	else if (error.code == kCFURLErrorUserAuthenticationRequired)
+		message = @"Échec d'authentification";
+	else if ((error.code == kCFURLErrorCannotFindHost) || (error.code == kCFURLErrorBadServerResponse))
+		message = @"Le serveur est introuvable";
+	else if (error.code == kCFURLErrorTimedOut)
+		message = @"Le serveur ne répond pas dans le délai imparti";
+	
+	return message;
+}
+
+
++ (void)logErrorMessage:(NSError *)error {
+	
+	UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
+	[AJNotificationView showNoticeInView:[rootController view]
+									type:AJNotificationTypeRed
+								   title:[self getErrorMessage:error]
+						 linedBackground:AJLinedBackgroundTypeStatic
+							   hideAfter:2.5f];
 }
 
 
@@ -72,5 +104,6 @@
 			return inObj;
 	}];
 }
+
 
 @end

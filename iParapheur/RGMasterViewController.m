@@ -56,7 +56,7 @@
 #import "ADLRestClient.h"
 #import "Reachability.h"
 #import "ADLResponseBureau.h"
-#import "AJNotificationView.h"
+#import "StringUtils.h"
 
 
 @interface RGMasterViewController ()
@@ -154,12 +154,7 @@
 						[self loadBureaux];
 					 }
 					 failure:^(NSError *error) {
-						 UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
-						 [AJNotificationView showNoticeInView:[rootController view]
-														 type:AJNotificationTypeRed
-														title:[error localizedDescription]
-											  linedBackground:AJLinedBackgroundTypeStatic
-													hideAfter:2.5f];
+						 [StringUtils logErrorMessage:error];
 					 }];
 	
 	[self initAlfrescoToken];
@@ -287,7 +282,10 @@
 			
 						}
 						failure:^(NSError *error) {
-							NSLog(@"getBureaux error");
+							[StringUtils logErrorMessage:error];
+							_loading = NO;
+							[self.refreshControl endRefreshing];
+							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 						}];
 	}
 	else {

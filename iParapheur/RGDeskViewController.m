@@ -59,6 +59,7 @@
 #import "ADLAPIHelper.h"
 #import "ADLRestClient.h"
 #import "ADLResponseDossiers.h"
+#import "StringUtils.h"
 
 
 @interface RGDeskViewController()
@@ -187,10 +188,14 @@
 							  filter:jsonString
 							 success:^(NSArray *dossiers) {
 								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
+								 [self.refreshControl endRefreshing];
+								 HIDE_HUD
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 NSLog(@"getDossiers error : %@", error);
+								 [StringUtils logErrorMessage:error];
+								 [self.refreshControl endRefreshing];
+								 HIDE_HUD
 							 }];
 		}
 		else {
@@ -205,10 +210,14 @@
 			 				  filter:nil
 							 success:^(NSArray *dossiers) {
 								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
+								 [self.refreshControl endRefreshing];
+								 HIDE_HUD
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 NSLog(@"getDossiers error : %@", error);
+								 [StringUtils logErrorMessage:error];
+								 [self.refreshControl endRefreshing];
+								 HIDE_HUD
 							 }];
 		}
 		else {
@@ -475,17 +484,21 @@
 
 -(void)didEndWithRequestAnswer:(NSDictionary *)answer {
 	NSArray *dossiers = API_GETDOSSIERHEADERS_GET_DOSSIERS(answer);
+	[self.refreshControl endRefreshing];
+	HIDE_HUD
 	[self getDossierDidEndWithSuccess:dossiers];
 }
 
 
 -(void)didEndWithUnAuthorizedAccess {
-	
+	[self.refreshControl endRefreshing];
+	HIDE_HUD
 }
 
 
 -(void)didEndWithUnReachableNetwork {
-	
+	[self.refreshControl endRefreshing];
+	HIDE_HUD
 }
 
 
@@ -503,8 +516,6 @@
 
 
 -(void)getDossierDidEndWithSuccess:(NSArray*)dossiers {
-	[self.refreshControl endRefreshing];
-	HIDE_HUD
 	
 	if (_currentPage > 0)
 		[self.dossiersArray removeLastObject];
@@ -542,12 +553,7 @@
 	}
 	
 	[self.dossiersArray addObjectsFromArray:dossiers];
-	
-	if ([dossiers count] > 15)
-		[[self loadMoreButton ] setHidden:NO];
-	else
-		[[self loadMoreButton ] setHidden:YES];
-	
+	_loadMoreButton.hidden = ([dossiers count] <= 15);
 	self.filteredDossiersArray = [NSArray arrayWithArray:self.dossiersArray];
 	self.selectedDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
 	

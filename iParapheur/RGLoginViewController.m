@@ -9,6 +9,7 @@
 #import "ADLRestClientApi3.h"
 #import "ADLRestClient.h"
 #import "UIColor+CustomColors.h"
+#import "StringUtils.h"
 
 
 @interface RGLoginViewController ()
@@ -68,8 +69,6 @@
 	BOOL passwordTextFieldValid = (_passwordTextField.text.length != 0);
 	BOOL serverTextFieldValid = (properServerTextFieldValue.length != 0);
 	
-	// TODO Adrien : add special character restrictions tests, and url format validation field test ?
-	
 	// Set orange background on text fields.
 	// only on connection event, not on change value events
 	
@@ -122,29 +121,22 @@
 					 }
 					 failure:^(NSError *error) {
 						 
-						[self enableInterface:TRUE];
-						
-						if ( ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) || (error.code == kCFURLErrorCancelled) ) {
-							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text = @"Le serveur n'est pas valide";
-						}
-						else if (error.code == kCFURLErrorUserAuthenticationRequired) {
-							[self setBorderOnTextField:_loginTextField withAlert:TRUE];
-							[self setBorderOnTextField:_passwordTextField withAlert:TRUE];
-							_errorTextField.text = @"Échec d'authentification";
-						}
-						else if ((error.code == kCFURLErrorCannotFindHost) || (error.code == kCFURLErrorBadServerResponse)) {
-							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text = @"Le serveur est introuvable";
-						}
-						else if (error.code == kCFURLErrorTimedOut) {
-							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text = @"Le serveur ne répond pas dans le délai imparti";
-						}
-						else {
-							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-							_errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
-						}
+						 [self enableInterface:TRUE];
+						 
+						 if (error.code == kCFURLErrorUserAuthenticationRequired) {
+							 [self setBorderOnTextField:_loginTextField withAlert:TRUE];
+							 [self setBorderOnTextField:_passwordTextField withAlert:TRUE];
+						 }
+						 else {
+							 [self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
+						 }
+					 
+ 						 NSString *localizedDescription = [StringUtils getErrorMessage:error];
+
+						 if (error.localizedDescription != localizedDescription)
+							 _errorTextField.text = localizedDescription;
+						 else
+							 _errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
 					 }];
 }
 
@@ -190,7 +182,13 @@
 
 - (NSString *)cleanupServerName:(NSString *)url {
 	
-	NSLog(@"Adrien before = %@", url);
+	// Removing space
+	// TODO Adrien : add special character restrictions tests ?
+	
+	url = [url stringByReplacingOccurrencesOfString:@" "
+										 withString:@""];
+	
+	// Gettigns the server name
 	
 	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
 	//			- then ignore following "m." (if exists)						(?:m\.)*
@@ -206,8 +204,6 @@
 	
 	if (match)
 		url = [url substringWithRange:[match rangeAtIndex:1]];
-
-	NSLog(@"Adrien after = %@", url);
 	
 	return url;
 }
