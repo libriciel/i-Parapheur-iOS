@@ -62,9 +62,11 @@
 
 - (BOOL)validateFieldsForConnnectionEvent:(BOOL)connectionEvent {
 	
+	NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
+	
 	BOOL loginTextFieldValid = (_loginTextField.text.length != 0);
 	BOOL passwordTextFieldValid = (_passwordTextField.text.length != 0);
-	BOOL serverTextFieldValid = (_serverUrlTextField.text.length != 0);
+	BOOL serverTextFieldValid = (properServerTextFieldValue.length != 0);
 	
 	// TODO Adrien : add special character restrictions tests, and url format validation field test ?
 	
@@ -106,9 +108,10 @@
 	if (_restClient)
 		[_restClient cancelAllOperations];
 	
+	NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
 	_restClient = [[ADLRestClientApi3 alloc] initWithLogin:_loginTextField.text
 												  password:_passwordTextField.text
-													   url:[self cleanupServerName:_serverUrlTextField.text]];
+													   url:properServerTextFieldValue];
 	
 	[self enableInterface:FALSE];
 
@@ -139,6 +142,7 @@
 							_errorTextField.text = @"Le serveur ne répond pas dans le délai imparti";
 						}
 						else {
+							[self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
 							_errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
 						}
 					 }];
@@ -154,6 +158,7 @@
 	
 	if (success) {
 		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+		NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
 		
 		[preferences setObject:_loginTextField.text
 						forKey:@"settings_login"];
@@ -161,7 +166,7 @@
 		[preferences setObject:_passwordTextField.text
 						forKey:@"settings_password"];
 		
-		[preferences setObject:[self cleanupServerName:_serverUrlTextField.text]
+		[preferences setObject:properServerTextFieldValue
 						forKey:@"settings_server_url"];
 	}
 	
@@ -185,20 +190,24 @@
 
 - (NSString *)cleanupServerName:(NSString *)url {
 	
-	if ([url hasPrefix:@"https://m."])
-		url = [url substringFromIndex:10];
+	NSLog(@"Adrien before = %@", url);
+	
+	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
+	//			- then ignore following "m." (if exists)						(?:m\.)*
+	//			- then catch every char but "/"									([^\/]*)
+	//			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$"
+																		   options:NSRegularExpressionCaseInsensitive
+																			 error:nil];
+	
+	NSTextCheckingResult *match = [regex firstMatchInString:url
+													options:0
+													  range:NSMakeRange(0, [url length])];
+	
+	if (match)
+		url = [url substringWithRange:[match rangeAtIndex:1]];
 
-	if ([url hasPrefix:@"http://m."])
-		url = [url substringFromIndex:9];
-	
-	if ([url hasPrefix:@"https://"])
-		url = [url substringFromIndex:8];
-	
-	if ([url hasPrefix:@"http://"])
-		url = [url substringFromIndex:7];
-	
-	if ([url hasPrefix:@"m."])
-		url = [url substringFromIndex:2];
+	NSLog(@"Adrien after = %@", url);
 	
 	return url;
 }
