@@ -3,4 +3,10 @@
 
 @implementation ADLResponseGetLevel
 
+
++ (NSDictionary*)JSONKeyPathsByPropertyKey {
+	return @{};
+}
+
+
 @end

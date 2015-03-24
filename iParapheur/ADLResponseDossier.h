@@ -5,8 +5,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Mantle/Mantle.h"
 
-@interface ADLResponseDossier : NSObject
+@interface ADLResponseDossier : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *nomTdT;

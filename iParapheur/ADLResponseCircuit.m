@@ -20,4 +20,15 @@
 	_etapes = etapesMutableArray;
 }
 
++ (NSDictionary*)JSONKeyPathsByPropertyKey {
+	return @{};
+}
+
+
++ (NSValueTransformer *)isDigitalSignatureMandatoryJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
++ (NSValueTransformer *)hasSelectionScriptJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
+
++ (NSValueTransformer *)etapesJSONTransformer { return [StringUtils getNullToEmptyArrayValueTransformer]; }
+
+
 @end

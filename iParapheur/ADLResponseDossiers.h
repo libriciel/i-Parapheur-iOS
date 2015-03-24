@@ -1,7 +1,8 @@
 
 #import <Foundation/Foundation.h>
+#import "Mantle/Mantle.h"
 
-@interface ADLResponseDossiers : NSObject
+@interface ADLResponseDossiers : MTLModel<MTLJSONSerializing>
 
 @property (nonatomic, strong) NSNumber *total;
 @property (nonatomic, strong) NSString *protocol;
@@ -22,7 +23,7 @@
 @property (nonatomic) bool readingMandatory;
 @property (nonatomic, strong) NSDictionary *documentPrincipal;
 @property (nonatomic) bool locked;
-@property (nonatomic, strong) NSMutableArray *actions;
+@property (nonatomic, strong) NSArray *actions;
 @property (nonatomic) bool isRead;
 @property (nonatomic, strong) NSNumber *dateEmission;
 @property (nonatomic, strong) NSNumber *dateLimite;

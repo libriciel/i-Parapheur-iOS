@@ -619,8 +619,8 @@
                             <view contentMode="center" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HAw-07-Exb">
                                 <rect key="frame" x="62" y="109" width="427" height="122"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="URL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSr-s1-O6E">
-                                        <rect key="frame" x="8" y="12" width="34" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Nom du serveur" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSr-s1-O6E">
+                                        <rect key="frame" x="8" y="12" width="123" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
@@ -632,13 +632,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BAq-vl-btT">
-                                        <rect key="frame" x="135" y="46" width="284" height="30"/>
+                                        <rect key="frame" x="139" y="46" width="280" height="30"/>
                                         <accessibility key="accessibilityConfiguration" hint="Required" label="Login"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2jv-mE-rIZ">
-                                        <rect key="frame" x="135" y="8" width="284" height="30"/>
+                                        <rect key="frame" x="139" y="8" width="280" height="30"/>
                                         <accessibility key="accessibilityConfiguration" hint="Required" label="URL"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
@@ -650,7 +650,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ecX-wQ-ryZ">
-                                        <rect key="frame" x="135" y="84" width="284" height="30"/>
+                                        <rect key="frame" x="139" y="84" width="280" height="30"/>
                                         <accessibility key="accessibilityConfiguration" hint="Required" label="Password"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
@@ -681,7 +681,7 @@
                         <outlet property="activityIndicatorView" destination="upf-8A-Yue" id="vtN-21-OLf"/>
                         <outlet property="backButton" destination="Kg3-C6-MaR" id="PJW-2q-Wxo"/>
                         <outlet property="doneButton" destination="ob5-DY-khh" id="nYc-F4-KYt"/>
-                        <outlet property="errorText" destination="1h0-ph-GtY" id="5pz-e8-bYa"/>
+                        <outlet property="errorTextField" destination="1h0-ph-GtY" id="1hk-ac-8nf"/>
                         <outlet property="loginTextField" destination="BAq-vl-btT" id="UBk-GX-AHj"/>
                         <outlet property="passwordTextField" destination="ecX-wQ-ryZ" id="hmy-PO-7ii"/>
                         <outlet property="serverUrlTextField" destination="2jv-mE-rIZ" id="Gzm-c1-Wr2"/>

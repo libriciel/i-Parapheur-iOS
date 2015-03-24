@@ -7,7 +7,13 @@
 @property (nonatomic, strong) ADLRestClientApi3* restClientApi3;
 
 
++ (id)sharedManager;
+
+
 - (id)init;
+
+
+- (void)reset;
 
 
 +(NSNumber *)getRestApiVersion;
@@ -35,12 +41,12 @@
 
 -(void)getDossier:(NSString*)bureau
 		  dossier:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseDossier *))success
 		  failure:(void (^)(NSError *))failure;
 
 
 -(void)getCircuit:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure;
 
 
@@ -70,7 +76,7 @@
 
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
-					 success:(void (^)(NSArray *))success
+					 success:(void (^)(ADLResponseSignInfo *))success
 					 failure:(void (^)(NSError *))failure;
 
 

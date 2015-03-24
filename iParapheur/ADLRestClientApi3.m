@@ -1,13 +1,12 @@
 #import "ADLRestClientApi3.h"
 
-#import "AFHTTPClient.h"
-#import <RestKit.h>
 #import "ADLResponseGetLevel.h"
 #import "ADLResponseBureau.h"
 #import "ADLResponseDossiers.h"
 #import "ADLResponseDossier.h"
 #import "ADLResponseCircuit.h"
 #import "ADLResponseAnnotation.h"
+#import "NSString+Contains.h"
 #import "StringUtils.h"
 #import "ADLResponseSignInfo.h"
 #import "Reachability.h"
@@ -16,8 +15,9 @@
 
 
 -(id)init {
-	
+		
 	// Retrieve infos from settings
+	
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
 	
 	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
@@ -32,32 +32,84 @@
 		passwordSettings = @"secret";
 	}
 	
-	// Initialize AFNetworking HTTPClient
+	// Init
 	
-	NSString *url = [NSString stringWithFormat:@"https://m.%@", urlSettings];
-	NSURL *baseURL = [NSURL URLWithString:url];
-	AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:baseURL];
-	client.allowsInvalidSSLCertificate = YES;
-	[client setAuthorizationHeaderWithUsername:loginSettings
-									  password:passwordSettings];
-	
-	// Initialize RestKit
-
-	RKObjectManager *objectManager = [[RKObjectManager alloc] initWithHTTPClient:client];
-	
-	[self addApiLevelMappingRules:objectManager];
-	[self addApiBureauxMappingRules:objectManager];
-	[self addApiDossiersMappingRules:objectManager];
-	[self addApiDossierMappingRules:objectManager];
-	[self addApiCircuitMappingRules:objectManager];
-	[self addApiAnnotationsMappingRules:objectManager];
-	[self addSignInfoMappingRules:objectManager];
-
-	// Update singleton
-	
-	[RKObjectManager setSharedManager:objectManager];
+	[self initRestClientWithLogin:loginSettings
+						 password:passwordSettings
+							  url:urlSettings];
 	
 	return self;
+}
+
+
+-(id)initWithLogin:(NSString*)login
+		  password:(NSString*)password
+			   url:(NSString*)url {
+	
+	[self initRestClientWithLogin:login
+						 password:password
+							  url:url];
+	
+	return self;
+}
+
+
+-(void)initRestClientWithLogin:(NSString*)login
+					  password:(NSString*)password
+						   url:(NSString*)url {
+
+	// Fix values
+	
+	if (![url hasPrefix:@"https://m."])
+		url = [NSString stringWithFormat:@"https://m.%@", url];
+	
+	// Initialize AFNetworking HTTPClient
+	
+	NSURL *baseURL = [NSURL URLWithString:url];
+	
+	_getManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+	_postManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+	
+	// GetManager init
+	
+	[_getManager.requestSerializer setAuthorizationHeaderFieldWithUsername:login
+																  password:password];
+	
+	// PostManager init
+	// Here are the reasons why we have two managers : GET needs a HTTPRequestSerializer/JSONResponseSerializer
+	// and PUT/POST/DELETE needs the opposite : JSONRequestSerializer/HTTPResponseSerializer.
+	// (We can't change them on runtime without messing with the requests in the waiting list)
+	
+	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
+	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+	[requestSerializer setAuthorizationHeaderFieldWithUsername:login
+													  password:password];
+	
+	_postManager.requestSerializer = requestSerializer;
+	
+	AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+	[_postManager setResponseSerializer:responseSerializer];
+	
+	// Security policy, for SSL checks.
+	// The .cer files (mobile server public keys) are automatically loaded from the app bundle,
+	// We just have to put them in the supporting files folder
+	
+	_getManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+	_getManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
+	_getManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
+	_getManager.securityPolicy.validatesDomainName = YES;
+	
+	_postManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+	_postManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
+	_postManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
+	_postManager.securityPolicy.validatesDomainName = YES;
+}
+
+
+-(void)cancelAllOperations {
+	[_getManager.operationQueue cancelAllOperations];
+	[_postManager.operationQueue cancelAllOperations];
 }
 
 
@@ -73,162 +125,75 @@
 }
 
 
-#pragma mark - getApiLevel
-
-
--(void)addApiLevelMappingRules:(RKObjectManager *)objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseGetLevel class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"level": @"level"}];
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/api/getApiLevel"
-																						   keyPath:nil
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
-}
+#pragma mark - Requests
 
 
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
-	
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
-	
-	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/api/getApiLevel"
-										   parameters:nil
-											  success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-												  ADLResponseGetLevel *levelResponse = (ADLResponseGetLevel *) mappingResult.array[0];
-												  success(levelResponse.level);
-											  }
-											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
-												  												  
-												  if (operation.HTTPRequestOperation.response.statusCode == 401) {
-													  failure([NSError errorWithDomain:urlSettings
-																				  code:kCFURLErrorUserAuthenticationRequired
-																			  userInfo:nil]);
-												  }
-												  else {
-													  Reachability *reach = [Reachability reachabilityWithHostname:urlSettings];
-													  
-													  if ([reach isReachable]) {
-														  // Legacy compatibility
-														  success([NSNumber numberWithInt:2]);
-													  }
-													  else {
-														  
-														  [reach setReachableBlock:^(Reachability *reachblock) {
-															  // keep in mind this is called on a background thread
-															  // and if you are updating the UI it needs to happen
-															  // on the main thread, like this:
-															  dispatch_async(dispatch_get_main_queue(), ^{ success([NSNumber numberWithInt:2]); });
-														  }];
-														  
-														  [reach setUnreachableBlock:^(Reachability*reach) {
-															  // keep in mind this is called on a background thread
-															  // and if you are updating the UI it needs to happen
-															  // on the main thread, like this:
-															  dispatch_async(dispatch_get_main_queue(), ^{ failure(error); });
-														  }];
-													  }
-													  
-													  [reach startNotifier];
-												  }
-											  }];
-}
-
-
-#pragma mark - getBureaux
-
-
--(void)addApiBureauxMappingRules:(RKObjectManager *)objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseBureau class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"level":@"level",
-												  @"hasSecretaire":@"hasSecretaire",
-												  @"collectivite":@"collectivite",
-												  @"description":@"desc",
-												  @"en-preparation":@"enPreparation",
-												  @"nodeRef":@"nodeRef",
-												  @"shortName":@"shortName",
-												  @"en-retard":@"enRetard",
-												  @"image":@"image",
-												  @"show_a_venir":@"showAVenir",
-												  @"habilitation":@"habilitation",
-												  @"a-archiver":@"aArchiver",
-												  @"a-traiter":@"aTraiter",
-												  @"id":@"identifier",
-												  @"isSecretaire":@"isSecretaire",
-												  @"name":@"name",
-												  @"retournes":@"retournes",
-												  @"dossiers-delegues":@"dossierDelegues"}];
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/bureaux"
-																						   keyPath:nil
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
+		
+	[_getManager GET:@"/parapheur/api/getApiLevel"
+		  parameters:nil
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 // Parse check
+				 
+				 NSError *error;
+				 ADLResponseGetLevel* responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
+																   fromJSONDictionary:responseObject
+																				error:&error];
+				 
+				 if (error) {
+					 failure([NSError errorWithDomain:error.domain
+												 code:kCFURLErrorBadServerResponse
+											 userInfo:nil]);
+				 }
+				 else {
+					 success(responseGetLevel.level);
+				 }
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 
+				 // AFNetworking seems to throw back only BadRequest errors,
+				 // There we fix them, to have proper errors (Authentication, SSL, etc)
+				 
+				 NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse*)task.response;
+				 
+				 if (urlResponse.statusCode == 401) {
+					 failure([NSError errorWithDomain:error.domain
+												 code:kCFURLErrorUserAuthenticationRequired
+											 userInfo:nil]);
+				 }
+				 else {
+					 failure(error);
+				 }
+			 }];
 }
 
 
 -(void)getBureaux:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/bureaux"
-										   parameters:nil
-											  success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-												  //ADLResponseBureau *testBureau = (ADLResponseBureau *) mappingResult.array[0];
-												  NSLog(@"getBureaux size of %d", (mappingResult.array.count));
-												  success(mappingResult.array);
-											  }
-											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
-												  failure(error);
-											  }];
-}
-
-
-#pragma mark - getDossiers
-
-
--(void)addApiDossiersMappingRules:(RKObjectManager *)objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseDossiers class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"total":@"total",
-												  @"protocol":@"protocol",
-												  @"actionDemandee":@"actionDemandee",
-												  @"isSent":@"isSent",
-												  @"type":@"type",
-												  @"bureauName":@"bureauName",
-												  @"creator":@"creator",
-												  @"id":@"identifier",
-												  @"title":@"title",
-												  @"pendingFile":@"pendingFile",
-												  @"banetteName":@"banetteName",
-												  @"dateLimite":@"dateLimite",
-												  @"skipped":@"skipped",
-												  @"sousType":@"sousType",
-												  @"isSignPapier":@"isSignPapier",
-												  @"isXemEnabled":@"isXemEnabled",
-												  @"hasRead":@"hasRead",
-												  @"readingMandatory":@"readingMandatory",
-												  @"documentPrincipal":@"documentPrincipal",
-												  @"locked":@"locked",
-												  @"actions":@"actions",
-												  @"isRead":@"isRead",
-												  @"dateEmission":@"dateEmission",
-												  @"includeAnnexes":@"includeAnnexes"}];
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/dossiers"
-																						   keyPath:nil
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
+	[_getManager GET:@"/parapheur/bureaux"
+		  parameters:nil
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 // Parse result
+				 
+				 NSError *error;
+				 NSArray* responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
+															fromJSONArray:responseObject
+																	error:&error];
+				 
+				 // Callback
+				 
+				 if (error)
+					 failure(error);
+				 else
+					 success(responseBureaux);
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 failure(error);
+			 }];
 }
 
 
@@ -250,201 +215,113 @@
 	
 	if (filterJson != nil)
 		[queryParams setValue:filterJson forKey:@"filter"];
-
+	
 	//@"corbeilleName" : @"",
 	//@"metas" : @"",
 	
-	[[RKObjectManager sharedManager] getObjectsAtPath:@"/parapheur/dossiers"
-										   parameters:queryParams
-											  success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-												  success(mappingResult.array);
-											  }
-											  failure:^(RKObjectRequestOperation *operation, NSError *error) {
-												  failure(error);
-											  }];
-}
-
-
-#pragma mark - getDossier
-
-
--(void)addApiDossierMappingRules:(RKObjectManager *)objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseDossier class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"title":@"title",
-												  @"nomTdT":@"nomTdT",
-												  @"includeAnnexes":@"includeAnnexes",
-												  @"locked":@"locked",
-												  @"readingMandatory":@"readingMandatory",
-												  @"dateEmission":@"dateEmission",
-												  @"visibility":@"visibility",
-												  @"isRead":@"isRead",
-												  @"actionDemandee":@"actionDemandee",
-												  @"status":@"status",
-												  @"documents":@"documents",
-												  @"identifier":@"id",
-												  @"isSignPapier":@"isSignPapier",
-												  @"dateLimite":@"dateLimite",
-												  @"hasRead":@"hasRead",
-												  @"isXemEnabled":@"isXemEnabled",
-												  @"actions":@"actions",
-												  @"banetteName":@"banetteName",
-												  @"type":@"type",
-												  @"canAdd":@"canAdd",
-												  @"protocole":@"protocole",
-												  @"metadatas":@"metadatas",
-												  @"xPathSignature":@"xPathSignature",
-												  @"sousType":@"sousType",
-												  @"bureauName":@"bureauName",
-												  @"isSent":@"isSent"}];
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/dossiers/:identifier"
-																						   keyPath:nil
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
+	[_getManager GET:@"/parapheur/dossiers"
+		  parameters:queryParams
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 NSError *error;
+				 NSArray* responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
+															 fromJSONArray:responseObject
+																	 error:&error];
+				 
+				 // Parse check and callback
+				 
+				 if (error)
+					 failure(error);
+				 else
+					 success(responseDossiers);
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 failure(error);
+			 }];
 }
 
 
 -(void)getDossier:(NSString*)bureau
 		  dossier:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseDossier *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"dossier_route"]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"dossier_route"
-																			 pathPattern:@"/parapheur/dossiers/:identifier"
-																				  method:RKRequestMethodGET]];
-	}
-	
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossier;
 	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
 	
-	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"dossier_route"
-															object:responseDossier
-														parameters:queryParams
-														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-															   success(mappingResult.array);
-														   }
-														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
-															   failure(error);
-														   }];
-}
-
-
-#pragma mark - getSignInfo
-
-
--(void)addSignInfoMappingRules:(RKObjectManager *)objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseSignInfo class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"signatureInformations":@"signatureInformations"}];
-	
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/dossiers/:identifier/getSignInfo"
-																						   keyPath:nil
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
+		  parameters:queryParams
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 NSError *error;
+				 ADLResponseDossier* responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
+																 fromJSONDictionary:responseObject
+																			  error:&error];
+				 
+				 // Parse check and callback
+				 
+				 if (error)
+					 failure(error);
+				 else
+					 success(responseDossier);
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 failure(error);
+			 }];
 }
 
 
 -(void)getSignInfoForDossier:(NSString *)dossierId
 				   andBureau:(NSString *)bureauId
-					 success:(void (^)(NSArray *))success
+					 success:(void (^)(ADLResponseSignInfo *))success
 					 failure:(void (^)(NSError *))failure {
 	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"get_sign_info_route"]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"get_sign_info_route"
-																			 pathPattern:@"/parapheur/dossiers/:identifier/getSignInfo"
-																				  method:RKRequestMethodGET]];
-	}
-
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossierId;
 	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
 	
-	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"get_sign_info_route"
-															object:responseDossier
-														parameters:queryParams
-														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-															   success(mappingResult.array);
-														   }
-														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
-															   failure(error);
-														   }];
-}
-
-
-#pragma mark - getCircuit
-
-
--(void)addApiCircuitMappingRules:(RKObjectManager *) objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseCircuit class]];
-	[mapping addAttributeMappingsFromDictionary:@{@"etapes":@"etapes",
-												  @"annotPriv":@"annotPriv",
-												  @"isDigitalSignatureMandatory":@"isDigitalSignatureMandatory",
-												  @"hasSelectionScript":@"hasSelectionScript",
-												  @"sigFormat":@"sigFormat"}];
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/dossiers/:identifier/circuit"
-																						   keyPath:@"circuit"
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
+		  parameters:queryParams
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 NSError *error;
+				 ADLResponseSignInfo* responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
+																   fromJSONDictionary:responseObject
+																				error:&error];
+				 
+				 // Parse check and callback
+				 
+				 if (error)
+					 failure(error);
+				 else
+					 success(responseSignInfo);
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 failure(error);
+			 }];
 }
 
 
 -(void)getCircuit:(NSString*)dossier
-		  success:(void (^)(NSArray *))success
+		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"circuit_route"]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"circuit_route"
-																			 pathPattern:@"/parapheur/dossiers/:identifier/circuit"
-																				  method:RKRequestMethodGET]];
-	}
-	
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossier;
-	
-	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"circuit_route"
-															object:responseDossier
-														parameters:nil
-														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-															   success(mappingResult.array);
-														   }
-														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
-															   failure(error);
-														   }];
-}
-
-
-#pragma mark - getAnnotations
-
-
--(void)addApiAnnotationsMappingRules:(RKObjectManager *) objectManager {
-	
-	RKObjectMapping *mapping = [RKObjectMapping mappingForClass:[ADLResponseAnnotation class]];
-	mapping.assignsNilForMissingRelationships = YES;
-	[mapping addPropertyMapping:[RKAttributeMapping attributeMappingFromKeyPath:nil
-																	  toKeyPath:@"data"]];
-	
-	RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:mapping
-																							method:RKRequestMethodGET
-																					   pathPattern:@"/parapheur/dossiers/:identifier/annotations"
-																						   keyPath:nil
-																					   statusCodes:[NSIndexSet indexSetWithIndex:200]];
-	
-	[objectManager addResponseDescriptor:responseDescriptor];
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
+		  parameters:nil
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 NSError *error;
+				 ADLResponseCircuit* responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
+														   fromJSONDictionary:responseObject[@"circuit"]
+																			  error:&error];
+				 
+				 // Parse check and callback
+				 
+				 if (error)
+					 failure(error);
+				 else
+					 success(responseCircuit);
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 failure(error);
+			 }];
 }
 
 
@@ -452,197 +329,85 @@
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:@"annotations_route"]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:@"annotations_route"
-																			 pathPattern:@"/parapheur/dossiers/:identifier/annotations"
-																				  method:RKRequestMethodGET]];
-	}
-	
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossier;
-	
-	[[RKObjectManager sharedManager] getObjectsAtPathForRouteNamed:@"annotations_route"
-															object:responseDossier
-														parameters:nil
-														   success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-															   success(mappingResult.array);
-														   }
-														   failure:^(RKObjectRequestOperation *operation, NSError *error) {
-															   failure(error);
-														   }];
+	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
+		  parameters:nil
+			 success:^(NSURLSessionDataTask *task, id responseObject) {
+				 
+				 //TODO : Proper (Mantle based) JSON parse
+				 
+				 @try {
+					 NSArray *responseArray = responseObject;
+					 NSMutableArray *result = [[NSMutableArray alloc] init];
+					 
+					 for (id element in responseArray) {
+						 ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+						 response.data = element;
+						 [result addObject:response];
+					 }
+					 
+					 success(result);
+				 }
+				 @catch (NSException * e) {
+					 failure(nil);
+				 }
+				 
+			 }
+			 failure:^(NSURLSessionDataTask *task, NSError *error) {
+				 failure(error);
+			 }];
 }
 
 
 #pragma mark - Simple action template
 
 
--(void)requestSimpleAction:(NSString *)actionName
-				forRequest:(RKRequestMethod)requestMethod
-			forRouteObject:(NSObject *)routeObject
-				forPattern:(NSString *)pathPattern
-				  withArgs:(NSDictionary *)args
-				   success:(void (^)(NSArray *))success
-				   failure:(void (^)(NSError *))failure {
+typedef enum {
+	ADLRequestTypePOST = 1,
+	ADLRequestTypePUT = 2,
+	ADLRequestTypeDELETE = 3
+} ADLRequestType;
 
-	// Define Restkit URL Route, if not exists
+
+-(void)sendSimpleAction:(ADLRequestType)type
+				withUrl:(NSString *)url
+			   withArgs:(NSDictionary *)args
+				success:(void (^)(NSArray *))success
+				failure:(void (^)(NSError *))failure {
 	
-	NSString* routeName = [NSString stringWithFormat:@"%@_route", actionName];
-	
-	if (![[RKObjectManager sharedManager].router.routeSet routeForName:routeName]) {
-		[[RKObjectManager sharedManager].router.routeSet addRoute:[RKRoute routeWithName:routeName
-																			 pathPattern:pathPattern
-																				  method:requestMethod]];
+	if (type == ADLRequestTypePOST) {
+		[_postManager POST:url
+				parameters:args
+				   success:^(NSURLSessionDataTask *operation, id responseObject) {
+					   success(nil);
+				   }
+				   failure:^(NSURLSessionDataTask *operation, NSError *error) {
+					   failure(error);
+				   }];
 	}
-	
-	// Create request
-	
-	NSMutableURLRequest *request = [[RKObjectManager sharedManager] requestWithPathForRouteNamed:routeName
-																						  object:routeObject
-																					  parameters:nil];
-	
-	// Add params to custom request
-	
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:args
-													   options:NSJSONWritingPrettyPrinted
-														 error:nil];
-	
-	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-	[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[request setHTTPBody:jsonData];
-	
-	// Send request
-	
-	RKObjectRequestOperation* operation = [[RKObjectManager sharedManager] objectRequestOperationWithRequest:(NSURLRequest *)request
-																									 success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-																										 success(operation.responseDescriptors);
-																									 }
-																									 failure:^(RKObjectRequestOperation *operation, NSError *error) {
-																										 if (operation.HTTPRequestOperation.response.statusCode == 200)
-																											 success(operation.responseDescriptors);
-																										 else
-																											 failure(error);
-																									 }];
-	
-	[[RKObjectManager sharedManager] enqueueObjectRequestOperation:operation];
+	else if (type == ADLRequestTypePUT) {
+		[_postManager PUT:url
+				  parameters:args
+					 success:^(NSURLSessionDataTask *operation, id responseObject) {
+						 success(nil);
+					 }
+					 failure:^(NSURLSessionDataTask *operation, NSError *error) {
+						 failure(error);
+					 }];
+	}
+	else if (type == ADLRequestTypeDELETE) {
+		[_postManager DELETE:url
+				  parameters:args
+						success:^(NSURLSessionDataTask *operation, id responseObject) {
+							success(nil);
+						}
+						failure:^(NSURLSessionDataTask *operation, NSError *error) {
+							failure(error);
+						}];
+	}
 }
 
 
 #pragma mark - Private Methods
-
-
--(ADLResponseDossier *)getRouteDossierFromId:(NSString *)dossierId {
-	ADLResponseDossier *responseDossier = [ADLResponseDossier alloc];
-	responseDossier.identifier = dossierId;
-	
-	return responseDossier;
-}
-
-
--(ADLResponseAnnotation *)getRouteAnnotationFromDossierId:(NSString *)dossierId
-										  andAnnotationId:(NSString *)annotationId {
-	
-	ADLResponseAnnotation *responseAnnotation = [ADLResponseAnnotation alloc];
-	responseAnnotation.idDossier = dossierId;
-	responseAnnotation.idAnnotation = annotationId;
-	
-	return responseAnnotation;
-}
-
-
-#pragma mark - Simple actions
-// TODO : MailSecretaire
-
-
--(void)actionViserForDossier:(NSString *)dossierId
-				   forBureau:(NSString *)bureauId
-		withPublicAnnotation:(NSString *)publicAnnotation
-	   withPrivateAnnotation:(NSString *)privateAnnotation
-					 success:(void (^)(NSArray *))success
-					 failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-
-	// Send request
-	
-	[self requestSimpleAction:@"visa"
-				   forRequest:RKRequestMethodPOST
-			   forRouteObject:[self getRouteDossierFromId:dossierId]
-				   forPattern:@"/parapheur/dossiers/:identifier/visa"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-}
-
-
--(void)actionSignerForDossier:(NSString *)dossierId
-					forBureau:(NSString *)bureauId
-		 withPublicAnnotation:(NSString *)publicAnnotation
-		withPrivateAnnotation:(NSString *)privateAnnotation
-				withSignature:(NSString *)signature
-					  success:(void (^)(NSArray *))success
-					  failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-	[argumentDictionary setObject:signature forKey:@"signature"];
-	
-	// Send request
-	
-	[self requestSimpleAction:@"signature"
-				   forRequest:RKRequestMethodPOST
-			   forRouteObject:[self getRouteDossierFromId:dossierId]
-				   forPattern:@"/parapheur/dossiers/:identifier/signature"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-};
-
-
--(void)actionRejeterForDossier:(NSString *)dossierId
-					 forBureau:(NSString *)bureauId
-		  withPublicAnnotation:(NSString *)publicAnnotation
-		 withPrivateAnnotation:(NSString *)privateAnnotation
-					   success:(void (^)(NSArray *))success
-					   failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-	
-	// Send request
-	
-	[self requestSimpleAction:@"rejet"
-				   forRequest:RKRequestMethodPOST
-			   forRouteObject:[self getRouteDossierFromId:dossierId]
-				   forPattern:@"/parapheur/dossiers/:identifier/rejet"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
-};
 
 
 -(NSMutableDictionary *)fixAddAnnotationDictionary:(NSDictionary *)annotation {
@@ -674,31 +439,6 @@
 	[result setObject:rect forKey:@"rect"];
 	
 	return result;
-}
-
-
--(void)actionAddAnnotation:(NSDictionary*)annotation
-				forDossier:(NSString *)dossierId
-				   success:(void (^)(NSArray *))success
-				   failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
-	
-	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
-	
-	// Send request
-	
-	[self requestSimpleAction:@"annotation"
-				   forRequest:RKRequestMethodPOST
-			   forRouteObject:[self getRouteDossierFromId:dossierId]
-				   forPattern:@"/parapheur/dossiers/:identifier/annotations"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
 }
 
 
@@ -737,6 +477,120 @@
 }
 
 
+#pragma mark - Simple actions
+// TODO : MailSecretaire
+
+
+-(void)actionViserForDossier:(NSString *)dossierId
+				   forBureau:(NSString *)bureauId
+		withPublicAnnotation:(NSString *)publicAnnotation
+	   withPrivateAnnotation:(NSString *)privateAnnotation
+					 success:(void (^)(NSArray *))success
+					 failure:(void (^)(NSError *))failure {
+	
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	
+	// Send request
+	
+	[self sendSimpleAction:ADLRequestTypePOST
+				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa", dossierId]
+				  withArgs:argumentDictionary
+				   success:^(NSArray *result) {
+					   success(nil);
+				   }
+				   failure:^(NSError *error) {
+					   failure(error);
+				   }];
+}
+
+
+-(void)actionSignerForDossier:(NSString *)dossierId
+					forBureau:(NSString *)bureauId
+		 withPublicAnnotation:(NSString *)publicAnnotation
+		withPrivateAnnotation:(NSString *)privateAnnotation
+				withSignature:(NSString *)signature
+					  success:(void (^)(NSArray *))success
+					  failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	[argumentDictionary setObject:signature forKey:@"signature"];
+	
+	// Send request
+	
+	[self sendSimpleAction:ADLRequestTypePOST
+				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature", dossierId]
+				  withArgs:argumentDictionary
+				   success:^(NSArray *result) {
+					   success(nil);
+				   }
+				   failure:^(NSError *error) {
+					   failure(error);
+				   }];
+};
+
+
+-(void)actionRejeterForDossier:(NSString *)dossierId
+					 forBureau:(NSString *)bureauId
+		  withPublicAnnotation:(NSString *)publicAnnotation
+		 withPrivateAnnotation:(NSString *)privateAnnotation
+					   success:(void (^)(NSArray *))success
+					   failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
+	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
+	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
+	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	
+	// Send request
+	
+	[self sendSimpleAction:ADLRequestTypePOST
+				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet", dossierId]
+				  withArgs:argumentDictionary
+				   success:^(NSArray *result) {
+					   success(nil);
+				   }
+				   failure:^(NSError *error) {
+					   failure(error);
+				   }];
+};
+
+
+-(void)actionAddAnnotation:(NSDictionary*)annotation
+				forDossier:(NSString *)dossierId
+				   success:(void (^)(NSArray *))success
+				   failure:(void (^)(NSError *))failure {
+	
+	// Create arguments dictionnary
+	
+	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
+	
+	// Send request
+	
+	[self sendSimpleAction:ADLRequestTypePOST
+				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossierId]
+				  withArgs:argumentDictionary
+				   success:^(NSArray *result) {
+					   success(nil);
+				   }
+				   failure:^(NSError *error) {
+					   failure(error);
+				   }];
+}
+
+
 -(void)actionUpdateAnnotation:(NSDictionary*)annotation
 					  forPage:(int)page
 				   forDossier:(NSString *)dossierId
@@ -750,18 +604,15 @@
 	
 	// Send request
 	
-	[self requestSimpleAction:@"annotation_action_update"
-				   forRequest:RKRequestMethodPUT
-			   forRouteObject:[self getRouteAnnotationFromDossierId:dossierId
-													andAnnotationId:[annotation objectForKey:@"uuid"]]
-				   forPattern:@"/parapheur/dossiers/:idDossier/annotations/:idAnnotation"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
+	[self sendSimpleAction:ADLRequestTypePUT
+				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossierId, [annotation objectForKey:@"uuid"]]
+				  withArgs:argumentDictionary
+				   success:^(NSArray *result) {
+					   success(nil);
+				   }
+				   failure:^(NSError *error) {
+					   failure(error);
+				   }];
 }
 
 
@@ -774,20 +625,18 @@
 	
 	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
 																		  forPage:[NSNumber numberWithInt:0]];
-
+	
 	// Send request
 	
-	[self requestSimpleAction:@"annotation_action_delete"
-				   forRequest:RKRequestMethodDELETE
-			   forRouteObject:[self getRouteAnnotationFromDossierId:dossierId andAnnotationId:[annotation objectForKey:@"uuid"]]
-				   forPattern:@"/parapheur/dossiers/:idDossier/annotations/:idAnnotation"
-					 withArgs:argumentDictionary
-					  success:^(NSArray *result) {
-						  success(result);
-					  }
-					  failure:^(NSError *error) {
-						  failure(error);
-					  }];
+	[self sendSimpleAction:ADLRequestTypeDELETE
+				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossierId, [annotation objectForKey:@"uuid"]]
+				  withArgs:argumentDictionary
+				   success:^(NSArray *result) {
+					   success(nil);
+				   }
+				   failure:^(NSError *error) {
+					   failure(error);
+				   }];
 }
 
 

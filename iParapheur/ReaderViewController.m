@@ -359,7 +359,7 @@
 
 	assert(self.splitViewController == nil); // Not supported (sorry)
 
-	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+	self.view.backgroundColor = [UIColor whiteColor];
 	
 	// setup the scroll view
 	CGRect viewRect = self.view.bounds;

@@ -113,7 +113,7 @@
 	
 	if (_firstLaunch) {
 		if (areSettingsSet) {
-			[self initRestKit];
+			[self initRestClient];
 		}
 		else {
 			UIViewController * splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
@@ -146,9 +146,9 @@
 #pragma mark - Private methods
 
 
-- (void)initRestKit {
+- (void)initRestClient {
 	
-	_restClient = [[ADLRestClient alloc] init];
+	_restClient = [ADLRestClient sharedManager];
 	
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						[self loadBureaux];
@@ -266,7 +266,7 @@
 	[self settingsButtonWithWarning:(!areSettingsSet && !success)];
 	
 	if (success || !areSettingsSet)
-		[self initRestKit];
+		[self initRestClient];
 }
 
 
