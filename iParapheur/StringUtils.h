@@ -9,4 +9,12 @@
 
 + (MTLValueTransformer *)getNullToFalseValueTransformer;
 
++ (MTLValueTransformer *)getNullToNilValueTransformer;
+
++ (MTLValueTransformer *)getNullToZeroValueTransformer;
+
++ (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer;
+
++ (MTLValueTransformer *)getNullToEmptyArrayValueTransformer;
+
 @end

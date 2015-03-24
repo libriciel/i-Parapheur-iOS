@@ -5,7 +5,7 @@
 
 
 + (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{@"level": @"level"};
+	return @{};
 }
 
 

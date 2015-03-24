@@ -23,7 +23,7 @@
 @property (nonatomic) bool readingMandatory;
 @property (nonatomic, strong) NSDictionary *documentPrincipal;
 @property (nonatomic) bool locked;
-@property (nonatomic, strong) NSMutableArray *actions;
+@property (nonatomic, strong) NSArray *actions;
 @property (nonatomic) bool isRead;
 @property (nonatomic, strong) NSNumber *dateEmission;
 @property (nonatomic, strong) NSNumber *dateLimite;

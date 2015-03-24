@@ -50,9 +50,9 @@
 																  password:passwordSettings];
 	
 	// PostManager init
-	//		Here are the reasons why we have two managers : GET needs a HTTPRequestSerializer/JSONResponseSerializer
-	//		and PUT/POST/DELETE needs the opposite : JSONRequestSerializer/HTTPResponseSerializer.
-	//		(We can't change them on runtime without messing with the requests in the waiting list)
+	// Here are the reasons why we have two managers : GET needs a HTTPRequestSerializer/JSONResponseSerializer
+	// and PUT/POST/DELETE needs the opposite : JSONRequestSerializer/HTTPResponseSerializer.
+	// (We can't change them on runtime without messing with the requests in the waiting list)
 	
 	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
 	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
