@@ -139,7 +139,7 @@
 							_errorTextField.text = @"Le serveur ne répond pas dans le délai imparti";
 						}
 						else {
-							_errorTextField.text = [NSString stringWithFormat:@"Erreur à la tentative de connexion (code %ld)", (long)error.code];
+							_errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
 						}
 					 }];
 }

@@ -46,11 +46,13 @@
     UIFont *font = [_textView font];
     CGSize withinSize = CGSizeMake(100.0f, FLT_MAX);
 	
-    CGSize size = [[annotationModel text] sizeWithFont:font
-									 constrainedToSize:withinSize
-										 lineBreakMode:NSLineBreakByWordWrapping];
-    
-    
+	CGRect textRect = [[annotationModel text] boundingRectWithSize:withinSize
+														   options:NSStringDrawingUsesLineFragmentOrigin
+														attributes:@{NSFontAttributeName:font}
+														   context:nil];
+	
+	CGSize size = textRect.size;
+	
     size.width = 100.0f;
     size.height = size.height > 100.0f ? size.height : 100.0f;
     

@@ -250,7 +250,7 @@
 								[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
 							
 						} failure:^(NSError *error) {
-							NSLog(@"getAnnotations error : %@", error.localizedDescription);
+							NSLog(@"getAnnotations error");
 						}];
 }
 

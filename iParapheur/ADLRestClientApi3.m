@@ -158,7 +158,7 @@
 				 
 				 NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse*)task.response;
 				 
-				 if (urlResponse.statusCode == 401){
+				 if (urlResponse.statusCode == 401) {
 					 failure([NSError errorWithDomain:error.domain
 												 code:kCFURLErrorUserAuthenticationRequired
 											 userInfo:nil]);
@@ -333,17 +333,24 @@
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
-				 NSError *error;
-				 NSArray* responseAnnotations = [MTLJSONAdapter modelsOfClass:[ADLResponseAnnotation class]
-																fromJSONArray:responseObject
-																		error:&error];
+				 //TODO : Proper (Mantle based) JSON parse
 				 
-				 // Parse check and callback
+				 @try {
+					 NSArray *responseArray = responseObject;
+					 NSMutableArray *result = [[NSMutableArray alloc] init];
+					 
+					 for (id element in responseArray) {
+						 ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+						 response.data = element;
+						 [result addObject:response];
+					 }
+					 
+					 success(result);
+				 }
+				 @catch (NSException * e) {
+					 failure(nil);
+				 }
 				 
-				 if (error)
-					 failure(error);
-				 else
-					 success(responseAnnotations);
 			 }
 			 failure:^(NSURLSessionDataTask *task, NSError *error) {
 				 failure(error);

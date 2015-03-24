@@ -13,8 +13,4 @@
 	return @{};
 }
 
-
-+ (NSValueTransformer *)dataJSONTransformer { return [StringUtils getNullToEmptyDictionaryValueTransformer]; }
-
-
 @end
