@@ -43,9 +43,10 @@
 
 #define kCatchWidth 180
 
+
 @protocol RGFileCellDelegate;
 
-
+// TODO : Change that with an UITableViewRowAction, when iOS7 support will be abandoned
 @interface RGFileCell : UITableViewCell <UIScrollViewDelegate>
 
 @property (strong, nonatomic) UILabel *dossierTitleLabel;
@@ -63,9 +64,13 @@
 @property(nonatomic, readonly, weak) NSIndexPath* indexPath;
 @property(nonatomic, readonly, weak) UITableView* tableView;
 
+
 -(void) hideMenuOptions;
 
+-(void) flickerSelection;
+
 @end
+
 
 @protocol RGFileCellDelegate <NSObject>
 

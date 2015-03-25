@@ -50,5 +50,6 @@
 @property (nonatomic, strong) IBOutlet UIView *todoPlaceHolder;
 @property (nonatomic, strong) IBOutlet UIView *latePlaceHolder;
 @property (nonatomic, strong) IBOutlet UILabel *bureauNameLabel;
+
 @end
 

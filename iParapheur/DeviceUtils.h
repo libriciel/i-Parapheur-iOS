@@ -1,10 +1,3 @@
-//
-//  DeviceUtils.h
-//  iParapheur
-//
-//  Created by Adrien Bricchi on 25/03/2015.
-//
-//
 
 #import <Foundation/Foundation.h>
 

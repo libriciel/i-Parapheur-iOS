@@ -10,12 +10,14 @@
 
 @implementation UIColor (CustomColors)
 
+
 +(UIColor*) darkGreenColor {
 	return [UIColor colorWithRed:11.0/255.0
 						   green:211.0/255.0
 							blue:24.0/255.0
 						   alpha:1.0f]; // #0BD318
 }
+
 
 +(UIColor*) darkRedColor {
 	return [UIColor colorWithRed:255.0/255.0
@@ -24,12 +26,14 @@
 						   alpha:1]; // #FF3824
 }
 
+
 +(UIColor*) darkOrangeColor {
 	return [UIColor colorWithRed:255.0/255.0
 						   green:150.0/255.0
 							blue:0.0/255.0
 						   alpha:1]; // #FF9600
 }
+
 
 +(UIColor*) darkYellowColor {
 	return [UIColor colorWithRed:255.0/255.0
@@ -38,12 +42,14 @@
 						   alpha:1]; // #FFCD00
 }
 
+
 +(UIColor*) darkPurpleColor {
 	return [UIColor colorWithRed:198.0/255.0
 						   green:68.0/255.0
 							blue:252.0/255.0
 						   alpha:1]; // #C644FC
 }
+
 
 +(UIColor*) darkBlueColor {
 	return [UIColor colorWithRed:0.0/255.0
@@ -52,9 +58,19 @@
 						   alpha:1.0f]; // #0076FF
 }
 
+
++(UIColor*) selectedCellGreyColor {
+	return [UIColor colorWithRed:217.0/255.0
+						   green:217.0/255.0
+							blue:217.0/255.0
+						   alpha:1.0f]; // #D9D9D9
+}
+
+
 +(UIColor*) defaultTintColor {
     return [self darkBlueColor];
 }
+
 
 +(UIColor*) colorForAction:(NSString*) action {
 
@@ -67,5 +83,6 @@
 	else
 		return [UIColor lightGrayColor];
 }
+
 
 @end

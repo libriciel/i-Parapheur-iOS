@@ -349,7 +349,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	// Intercept event if no internet
+	// Cancel event if no internet
 	
 	if (![DeviceUtils isConnectedToInternet]) {
 		

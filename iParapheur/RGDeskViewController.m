@@ -379,7 +379,9 @@
 #pragma mark - UITableViewDatasource
 
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+-(NSInteger)tableView:(UITableView *)tableView
+numberOfRowsInSection:(NSInteger)section {
+	
 	//if (tableView == self.searchDisplayController.searchResultsTableView) {
 	return [self.filteredDossiersArray count];
 	//} else {
@@ -388,7 +390,9 @@
 }
 
 
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(UITableViewCell*)tableView:(UITableView *)tableView
+	   cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
 	static NSString *CellIdentifier = @"dossierCell";
 	
 	RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -638,6 +642,25 @@
 
 
 -(void)cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath {
+	
+	// Cancel event if reselection of a cell
+	
+	BOOL hasSomeSelected = (cell.tableView.indexPathForSelectedRow != nil);
+	BOOL areSameCell = (cell.tableView.indexPathForSelectedRow.row == indexPath.row);
+	
+	if (hasSomeSelected && areSameCell)
+		return;
+	
+	// Cancel event if no internet
+	
+	if (![DeviceUtils isConnectedToInternet]) {
+
+		[DeviceUtils logErrorMessage:[NSError errorWithDomain:NSCocoaErrorDomain
+														 code:kCFURLErrorNotConnectedToInternet
+													 userInfo:nil]];
+		[cell flickerSelection];
+		return;
+	}
 	
 	// v2/v3 compatibility
 	

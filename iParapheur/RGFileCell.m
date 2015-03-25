@@ -1,12 +1,7 @@
-//
-//  RGFileCell.m
-//  iParapheur
-//
-//  Created by Emmanuel Peralta.
-
 
 #import "RGFileCell.h"
 #import "UIColor+CustomColors.h"
+
 
 NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMenuNotification";
 
@@ -114,39 +109,48 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 }
 
 
--(BOOL)isCheckded {
+-(BOOL)isChecked {
     return [self.checkBox isSelected];
 }
 
 
+-(void)flickerSelection {
+	_contentCellView.backgroundColor = [UIColor selectedCellGreyColor];
+
+	[UIView animateWithDuration:0.4 animations:^{
+		_contentCellView.backgroundColor = [UIColor whiteColor];
+	}];
+}
+
+
 -(void)userDidSelectCell:(UITapGestureRecognizer *)gesture {
-    if ([self.delegate respondsToSelector:@selector(willSelectCell:)]) {
+	
+    if ([self.delegate respondsToSelector:@selector(willSelectCell:)])
         [self.delegate willSelectCell:self];
-    }
-    if ([self.delegate respondsToSelector:@selector(cell:didSelectAtIndexPath:)]) {
+	
+    if ([self.delegate respondsToSelector:@selector(cell:didSelectAtIndexPath:)])
         [self.delegate cell:self didSelectAtIndexPath:self.indexPath];
-    }
 }
 
 
 -(void)userDidCheckCell:(UITapGestureRecognizer *)gesture {
-    if ([self.delegate respondsToSelector:@selector(cell:didCheckAtIndexPath:)]) {
+	
+    if ([self.delegate respondsToSelector:@selector(cell:didCheckAtIndexPath:)])
         [self.delegate cell:self didCheckAtIndexPath:self.indexPath];
-    }
 }
 
 
 -(void)userPressedValidateButton {
-    if ([self.delegate respondsToSelector:@selector(cell:didTouchMainButtonAtIndexPath:)]) {
+	
+    if ([self.delegate respondsToSelector:@selector(cell:didTouchMainButtonAtIndexPath:)])
         [self.delegate cell:self didTouchMainButtonAtIndexPath:self.indexPath];
-    }
 }
 
 
 -(void)userPressedMoreButton {
-    if ([self.delegate respondsToSelector:@selector(cell:didTouchSecondaryButtonAtIndexPath:)]) {
+	
+    if ([self.delegate respondsToSelector:@selector(cell:didTouchSecondaryButtonAtIndexPath:)])
         [self.delegate cell:self didTouchSecondaryButtonAtIndexPath:self.indexPath];
-    }
 }
 
 
@@ -154,9 +158,10 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     if (!_tableView) {
         // get the parent tableView
         id view = [self superview];
-        while ([view isKindOfClass:[UITableView class]] == NO) {
+		
+        while ([view isKindOfClass:[UITableView class]] == NO)
             view = [view superview];
-        }
+		
         _tableView = view;
     }
     return _tableView;
@@ -204,24 +209,23 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if ([self.delegate respondsToSelector:@selector(canSwipeCell:)] && [self.delegate canSwipeCell:self]) {
         _isScrolling = YES;
-        if (scrollView.contentOffset.x < 0) {
+		
+        if (scrollView.contentOffset.x < 0)
             scrollView.contentOffset = CGPointZero;
-        }
         
         self.buttonsView.frame = CGRectMake(scrollView.contentOffset.x + (CGRectGetWidth(self.bounds) - kCatchWidth), 0.0f, kCatchWidth, CGRectGetHeight(self.bounds));
     }
     else {
-        if (!_isScrolling) {
+        if (!_isScrolling)
             scrollView.contentOffset = CGPointZero;
-        }
     }
 }
 
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if ([self.delegate respondsToSelector:@selector(willSwipeCell:)]) {
+	
+    if ([self.delegate respondsToSelector:@selector(willSwipeCell:)])
         [self.delegate willSwipeCell:self];
-    }
 }
 
 
@@ -253,11 +257,11 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 	
     if (selected) {
         if (![self.delegate respondsToSelector:@selector(canSelectCell:)] || [self.delegate canSelectCell:self]) {
-            self.contentCellView.backgroundColor = [UIColor lightGrayColor];
+            _contentCellView.backgroundColor = [UIColor selectedCellGreyColor];
         }
     }
     else {
-        self.contentCellView.backgroundColor = [UIColor whiteColor];
+			_contentCellView.backgroundColor = [UIColor whiteColor];
     }
 }
 
