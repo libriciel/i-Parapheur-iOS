@@ -45,17 +45,6 @@
 }
 
 
-+ (void)logErrorMessage:(NSError *)error {
-	
-	UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
-	[AJNotificationView showNoticeInView:[rootController view]
-									type:AJNotificationTypeRed
-								   title:[self getErrorMessage:error]
-						 linedBackground:AJLinedBackgroundTypeStatic
-							   hideAfter:2.5f];
-}
-
-
 + (MTLValueTransformer *)getNullToFalseValueTransformer {
 	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
 		if (inObj == nil || inObj == [NSNull null])

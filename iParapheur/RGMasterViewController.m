@@ -57,6 +57,7 @@
 #import "Reachability.h"
 #import "ADLResponseBureau.h"
 #import "StringUtils.h"
+#import "DeviceUtils.h"
 
 
 @interface RGMasterViewController ()
@@ -154,7 +155,7 @@
 						[self loadBureaux];
 					 }
 					 failure:^(NSError *error) {
-						 [StringUtils logErrorMessage:error];
+						 [DeviceUtils logErrorMessage:error];
 					 }];
 	
 	[self initAlfrescoToken];
@@ -282,7 +283,7 @@
 			
 						}
 						failure:^(NSError *error) {
-							[StringUtils logErrorMessage:error];
+							[DeviceUtils logErrorMessage:error];
 							_loading = NO;
 							[self.refreshControl endRefreshing];
 							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
@@ -347,6 +348,21 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	// Intercept event if no internet
+	
+	if (![DeviceUtils isConnectedToInternet]) {
+		
+		[tableView deselectRowAtIndexPath:indexPath
+								 animated:YES];
+		
+		[DeviceUtils logErrorMessage:[NSError errorWithDomain:NSCocoaErrorDomain
+														 code:kCFURLErrorNotConnectedToInternet
+													 userInfo:nil]];
+		return;
+	}
+
+	// Call Desk view
 	
 	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];

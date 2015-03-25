@@ -60,6 +60,7 @@
 #import "ADLRestClient.h"
 #import "ADLResponseDossiers.h"
 #import "StringUtils.h"
+#import "DeviceUtils.h"
 
 
 @interface RGDeskViewController()
@@ -193,7 +194,7 @@
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 [StringUtils logErrorMessage:error];
+								 [DeviceUtils logErrorMessage:error];
 								 [self.refreshControl endRefreshing];
 								 HIDE_HUD
 							 }];
@@ -215,7 +216,7 @@
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 [StringUtils logErrorMessage:error];
+								 [DeviceUtils logErrorMessage:error];
 								 [self.refreshControl endRefreshing];
 								 HIDE_HUD
 							 }];

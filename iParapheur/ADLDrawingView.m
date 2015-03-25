@@ -54,13 +54,11 @@
 @synthesize parentScrollView = _parentScrollView;
 @synthesize superScrollView = _superScrollView;
 @synthesize dataSource = _dataSource;
-
 @synthesize enabled = _enabled;
-
 @synthesize pageNumber = _pageNumber;
 
-- (id)initWithFrame:(CGRect)frame
-{
+
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         _hittedView = nil;
@@ -91,12 +89,15 @@
     return self;
 }
 
+
 - (void)awakeFromNib {
     _hittedView = nil;
     _currentAnnotView = nil;
 }
 
--(CGFloat)idealOffsetForView:(UIView *)view withSpace:(CGFloat)space {
+
+-(CGFloat)idealOffsetForView:(UIView *)view
+				   withSpace:(CGFloat)space {
     
     // Convert the rect to get the view's distance from the top of the scrollView.
     CGRect rect = [view convertRect:view.bounds toView:[self superScrollView]];
@@ -125,6 +126,7 @@
     return offset;
 }
 
+
 - (UIView*)findFirstResponderBeneathView:(UIView*)view {
     // Search recursively for first responder
     for ( UIView *childView in view.subviews ) {
@@ -136,7 +138,7 @@
 }
 
 
-- (void)keyboardWillShow:(NSNotification*)notification {
+-(void)keyboardWillShow:(NSNotification*)notification {
     _keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     _keyboardVisible = YES;
     
@@ -166,7 +168,8 @@
     [UIView commitAnimations];
 }
 
-- (void)keyboardWillHide:(NSNotification*)notification {
+
+-(void)keyboardWillHide:(NSNotification*)notification {
     _keyboardRect = CGRectZero;
     _keyboardVisible = NO;
     
@@ -181,20 +184,23 @@
     [UIView commitAnimations];
 }
 
-- (UIEdgeInsets)contentInsetForKeyboard {
+
+-(UIEdgeInsets)contentInsetForKeyboard {
     UIEdgeInsets newInset = _contentInset;
     CGRect keyboardRect = [self keyboardRect];
     newInset.bottom = keyboardRect.size.height - ((keyboardRect.origin.y+keyboardRect.size.height) - (self.bounds.origin.y+self.bounds.size.height));
     return newInset;
 }
 
-- (void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
+
+-(void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
     // CGPoint touchPoint = [gestureRecognizer locationInView:self];
     //    UIView *hitted = [self hitTest:touchPoint withEvent:event];
     
 }
 
-- (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
+
+-(void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
     if (!_hittedView && _enabled) {
         CGPoint touchPoint = [gestureRecognizer locationInView:self];
         CGRect annotFrame = [self clipRectInView:CGRectMake(touchPoint.x, touchPoint.y, kAnnotationMinHeight, kAnnotationMinWidth)];
@@ -209,6 +215,7 @@
     }
 }
 
+
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
     //[super setContentScaleFactor:contentScaleFactor];
     for (UIView *subview in self.subviews) {
@@ -216,7 +223,8 @@
     }
 }
 
-- (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
+
+-(void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
     CGPoint touchPoint = [gestureRecognizer locationInView:self];
     
     if (_hittedView && _enabled && _hittedView.annotationModel.editable) {
@@ -227,9 +235,11 @@
 }
 
 
-
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
+-(void)touchesBegan:(NSSet *)touches
+		  withEvent:(UIEvent *)event {
+	
+	[super touchesBegan:touches
+			  withEvent:event];
     
     if (_enabled) {
         UITouch *touch = [[event allTouches] anyObject];
@@ -283,6 +293,7 @@
     }
 }
 
+
 -(void)displayAnnotations:(NSArray*)annotations {
     ADLAnnotationView *annotView = nil;
     for (NSDictionary* dict in annotations) {
@@ -292,13 +303,16 @@
     }
 }
 
+
 -(CGRect)convertFromPixelRect:(CGRect)pixelRect {
     return CGRectZero;
 }
 
+
 -(CGRect)convertToPixelRect:(CGRect)uiViewRect {
     return CGRectZero;
 }
+
 
 /*
  -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -316,6 +330,7 @@
  
  }
  */
+
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     if (_enabled) {
@@ -351,16 +366,20 @@
                     [_hittedView setFrame:frame];
                 }
             }
-            [self touchesCancelled:touches withEvent:event];
+			
+            [self touchesCancelled:touches
+						 withEvent:event];
         }
     }
     
 }
 
-- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (_enabled) {
-        
-        
+
+-(void)touchesEnded:(NSSet *)touches
+		  withEvent:(UIEvent *)event {
+	
+	if (_enabled) {
+		
         UITouch *touch = [touches anyObject];
         
         if (_hasBeenLongPressed) {
@@ -371,7 +390,6 @@
         if (_hittedView != nil && [_hittedView isKindOfClass:[ADLAnnotationView class]] && _shallUpdateCurrent) {
             [_hittedView refreshModel];
             ADLAnnotation *annotation = [_hittedView annotationModel];
-            
             
             if (self.hittedView.annotationModel.uuid && self.hittedView.annotationModel.editable) {
                 [self updateAnnotation:annotation];
@@ -388,7 +406,8 @@
     
 }
 
-- (CGPoint) clipPointToView:(CGPoint)touch {
+
+-(CGPoint)clipPointToView:(CGPoint)touch {
     
     CGPoint ret = touch;
     
@@ -412,6 +431,7 @@
     
     
 }
+
 
 -(CGRect)clipRectInView:(CGRect)rect {
     CGRect frame = [self frame];
@@ -437,7 +457,8 @@
     return clippedRect;
 }
 
--(void) animateviewOnLongPressGesture:(CGPoint)touchPoint {
+
+-(void)animateviewOnLongPressGesture:(CGPoint)touchPoint {
 #define GROW_ANIMATION_DURATION_SECONDS 0.15
 	
 	NSValue *touchPointValue = [NSValue valueWithCGPoint:touchPoint];
@@ -451,7 +472,6 @@
     
 }
 
-//- (void)growAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
 
 -(void)unanimateView:(CGPoint) touchPoint {
 #define MOVE_ANIMATION_DURATION_SECONDS 0.15
@@ -472,7 +492,7 @@
 #pragma mark - dataSource
 
 
--(void) refreshAnnotations {
+-(void)refreshAnnotations {
     
     for (UIView *a in [self subviews]) {
         [a removeFromSuperview];
@@ -497,26 +517,27 @@
     
 }
 
--(void) updateAnnotation:(ADLAnnotation*)annotation {
+
+-(void)updateAnnotation:(ADLAnnotation*)annotation {
 	
     [_dataSource updateAnnotation:annotation
 						  forPage:_pageNumber];
 }
 
 
--(void) addAnnotation:(ADLAnnotation*)annotation {
+-(void)addAnnotation:(ADLAnnotation*)annotation {
 	
     [_dataSource addAnnotation:annotation
 					   forPage:_pageNumber];
 }
 
 
--(void) removeAnnotation:(ADLAnnotation*) annotation {
+-(void)removeAnnotation:(ADLAnnotation*) annotation {
     [_dataSource removeAnnotation:annotation];
 }
 
 
--(NSArray*) annotationsForPage:(NSUInteger)page {
+-(NSArray*)annotationsForPage:(NSUInteger)page {
     if (_enabled) {
         if ([_dataSource respondsToSelector:@selector(annotationsForPage:)]) {
             return [_dataSource annotationsForPage:page];
@@ -534,8 +555,6 @@
                                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
                                  userInfo:nil];
 }
-
-
 
 
 @end

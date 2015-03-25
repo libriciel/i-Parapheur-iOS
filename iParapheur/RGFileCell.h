@@ -70,15 +70,21 @@
 @protocol RGFileCellDelegate <NSObject>
 
 @optional
--(void) cell:(RGFileCell*)cell didSelectAtIndexPath:(NSIndexPath*) indexPath;
--(void) cell:(RGFileCell*)cell didCheckAtIndexPath:(NSIndexPath*) indexPath;
--(void) cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath;
--(void) cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath;
 
--(BOOL) canSelectCell:(RGFileCell*) cell;
--(BOOL) canSwipeCell:(RGFileCell*) cell;
+-(void)cell:(RGFileCell*)cell didSelectAtIndexPath:(NSIndexPath*)indexPath;
 
--(void) willSwipeCell:(RGFileCell*) cell;
--(void) willSelectCell:(RGFileCell*) cell;
+-(void)cell:(RGFileCell*)cell didCheckAtIndexPath:(NSIndexPath*)indexPath;
+
+-(void)cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*)indexPath;
+
+-(void)cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*)indexPath;
+
+-(BOOL)canSelectCell:(RGFileCell*) cell;
+
+-(BOOL)canSwipeCell:(RGFileCell*) cell;
+
+-(void)willSwipeCell:(RGFileCell*) cell;
+
+-(void)willSelectCell:(RGFileCell*) cell;
 
 @end

@@ -25,21 +25,23 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 @synthesize tableView = _tableView;
 
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+-(id)initWithStyle:(UITableViewCellStyle)style
+	reuseIdentifier:(NSString *)reuseIdentifier {
+	
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
+    if (self)
         [self setup];
-    }
+		
     return self;
-    
 }
 
--(void) awakeFromNib {
+
+-(void)awakeFromNib {
     [self setup];
 }
 
--(void) setup {
+
+-(void)setup {
     
     //[self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
@@ -112,45 +114,43 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 }
 
 
--(BOOL) isCheckded {
+-(BOOL)isCheckded {
     return [self.checkBox isSelected];
 }
 
--(void) userDidSelectCell:(UITapGestureRecognizer *)gesture {
+
+-(void)userDidSelectCell:(UITapGestureRecognizer *)gesture {
     if ([self.delegate respondsToSelector:@selector(willSelectCell:)]) {
         [self.delegate willSelectCell:self];
     }
-    /*if ([self isSelected]) {
-        [self.tableView deselectRowAtIndexPath:self.indexPath animated:NO];
-    }
-    else {
-        [self.tableView selectRowAtIndexPath:self.indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }*/
-    //self.contentCellView.backgroundColor = [UIColor lightGrayColor];
     if ([self.delegate respondsToSelector:@selector(cell:didSelectAtIndexPath:)]) {
         [self.delegate cell:self didSelectAtIndexPath:self.indexPath];
     }
 }
 
--(void) userDidCheckCell:(UITapGestureRecognizer *)gesture {
+
+-(void)userDidCheckCell:(UITapGestureRecognizer *)gesture {
     if ([self.delegate respondsToSelector:@selector(cell:didCheckAtIndexPath:)]) {
         [self.delegate cell:self didCheckAtIndexPath:self.indexPath];
     }
 }
 
-- (void)userPressedValidateButton {
+
+-(void)userPressedValidateButton {
     if ([self.delegate respondsToSelector:@selector(cell:didTouchMainButtonAtIndexPath:)]) {
         [self.delegate cell:self didTouchMainButtonAtIndexPath:self.indexPath];
     }
 }
 
-- (void)userPressedMoreButton {
+
+-(void)userPressedMoreButton {
     if ([self.delegate respondsToSelector:@selector(cell:didTouchSecondaryButtonAtIndexPath:)]) {
         [self.delegate cell:self didTouchSecondaryButtonAtIndexPath:self.indexPath];
     }
 }
 
--(UITableView*) tableView {
+
+-(UITableView*)tableView {
     if (!_tableView) {
         // get the parent tableView
         id view = [self superview];
@@ -162,12 +162,14 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     return _tableView;
 }
 
--(NSIndexPath*) indexPath {
+
+-(NSIndexPath*)indexPath {
     if (!_indexPath) {
         _indexPath = [self.tableView indexPathForCell: self];
     }
     return _indexPath;
 }
+
 
 -(void)layoutSubviews {
     [super layoutSubviews];
@@ -178,21 +180,26 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     self.buttonsView.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds));
 }
 
+
 -(void)prepareForReuse {
     [super prepareForReuse];
     [self.scrollView setContentOffset:CGPointZero animated:NO];
 }
+
 
 -(UILabel *)textLabel {
     // Kind of a cheat to reduce our external dependencies
     return self.dossierTitleLabel;
 }
 
--(void) hideMenuOptions {
+
+-(void)hideMenuOptions {
     [self.scrollView setContentOffset:CGPointZero animated:YES];
 }
 
+
 #pragma mark - UIScrollViewDelegate protocol implementation
+
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if ([self.delegate respondsToSelector:@selector(canSwipeCell:)] && [self.delegate canSwipeCell:self]) {
@@ -210,13 +217,18 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     }
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     if ([self.delegate respondsToSelector:@selector(willSwipeCell:)]) {
         [self.delegate willSwipeCell:self];
     }
 }
 
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView
+					withVelocity:(CGPoint)velocity
+			 targetContentOffset:(inout CGPoint *)targetContentOffset {
+	
     if (scrollView.contentOffset.x > kCatchWidth) {
         targetContentOffset->x = kCatchWidth;
     }
@@ -230,12 +242,15 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     }
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     _isScrolling = NO;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
+
+-(void)setSelected:(BOOL)selected
+		  animated:(BOOL)animated {
+	
     if (selected) {
         if (![self.delegate respondsToSelector:@selector(canSelectCell:)] || [self.delegate canSelectCell:self]) {
             self.contentCellView.backgroundColor = [UIColor lightGrayColor];
@@ -245,6 +260,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
         self.contentCellView.backgroundColor = [UIColor whiteColor];
     }
 }
+
 
 @end
 

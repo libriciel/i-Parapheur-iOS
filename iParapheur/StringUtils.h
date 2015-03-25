@@ -9,8 +9,6 @@
 
 + (NSString *)getErrorMessage:(NSError *)error;
 
-+ (void)logErrorMessage:(NSError *)message;
-
 + (MTLValueTransformer *)getNullToFalseValueTransformer;
 
 + (MTLValueTransformer *)getNullToNilValueTransformer;

@@ -133,10 +133,10 @@
 					 
  						 NSString *localizedDescription = [StringUtils getErrorMessage:error];
 
-						 if (error.localizedDescription != localizedDescription)
-							 _errorTextField.text = localizedDescription;
-						 else
+						 if ([error.localizedDescription isEqualToString:localizedDescription])
 							 _errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
+						 else
+							 _errorTextField.text = localizedDescription;
 					 }];
 }
 
@@ -189,7 +189,6 @@
 										 withString:@""];
 	
 	// Gettigns the server name
-	
 	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
 	//			- then ignore following "m." (if exists)						(?:m\.)*
 	//			- then catch every char but "/"									([^\/]*)
