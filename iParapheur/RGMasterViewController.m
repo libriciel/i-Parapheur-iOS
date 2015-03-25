@@ -152,13 +152,37 @@
 	_restClient = [ADLRestClient sharedManager];
 	
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
+						[ADLRestClient setRestApiVersion:versionNumber];
 						[self loadBureaux];
 					 }
 					 failure:^(NSError *error) {
+						 [ADLRestClient setRestApiVersion:[NSNumber numberWithInt:-1]];
 						 [DeviceUtils logError:error];
+
+						 // New test when network retrieved
+						 
+						 if (error.code == kCFURLErrorNotConnectedToInternet)
+							[self setNewConnectionTryOnNetworkRetrieved];
 					 }];
 	
 	[self initAlfrescoToken];
+}
+
+
+- (void)setNewConnectionTryOnNetworkRetrieved {
+	
+	Reachability *reach = [Reachability reachabilityWithHostname:@"google.com"];
+	[reach setReachableBlock:^(Reachability *reachblock) {
+		
+		// keep in mind this is called on a background thread
+		// and if you are updating the UI it needs to happen
+		// on the main thread, like this:
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self initRestClient];
+		});
+	}];
+
+	[reach startNotifier];
 }
 
 
@@ -289,7 +313,7 @@
 							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 						}];
 	}
-	else {
+	else if ([[ADLRestClient getRestApiVersion] intValue ] == 2) {
 		API_GETBUREAUX();
 	}
 }

@@ -23,6 +23,11 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
++(void)setRestApiVersion:(NSNumber *)apiVersion {
+	PARAPHEUR_API_VERSION = apiVersion;
+}
+
+
 - (id)init {
 	[self reset];
 	return self;
@@ -36,12 +41,14 @@ static NSNumber *PARAPHEUR_API_VERSION;
 
 -(NSString *)getDownloadUrl:(NSString *)dossierId
 					 forPdf:(bool)isPdf{
+	
 	return [_restClientApi3 getDownloadUrl:dossierId
 									forPdf:isPdf];
 }
 
 
 -(NSString *)fixBureauId:(NSString *)dossierId {
+	
 	NSString *prefixToRemove = @"workspace://SpacesStore/";
 	
 	if ([dossierId hasPrefix:prefixToRemove])
@@ -58,11 +65,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 			failure:(void (^)(NSError *error))failure {
 	
 	[_restClientApi3 getApiLevel:^(NSNumber *versionNumber) {
-							PARAPHEUR_API_VERSION = versionNumber;
 							success(versionNumber);
 						 }
 						 failure:^(NSError *error) {
-							 failure(error);
+ 							failure(error);
 						 }];
 }
 

@@ -687,10 +687,6 @@
 				B4E5ECB7153AF65F00BD514D /* MainStoryboard_iPad.storyboard */,
 				B4E5ECA9153AF65F00BD514D /* Supporting Files */,
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
-				954A7389188D371D00A13D1E /* NSString+Contains.h */,
-				954A738A188D371D00A13D1E /* NSString+Contains.m */,
-				958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */,
-				958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -967,6 +963,10 @@
 		C5ECDDBF1AB2F5D4003F13ED /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				954A7389188D371D00A13D1E /* NSString+Contains.h */,
+				954A738A188D371D00A13D1E /* NSString+Contains.m */,
+				958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */,
+				958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */,
 				C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */,
 				C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */,
 				C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */,
