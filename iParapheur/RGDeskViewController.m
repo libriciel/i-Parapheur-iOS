@@ -96,7 +96,7 @@
 	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor darkBlueColor]];
 	
 	self.refreshControl = [[UIRefreshControl alloc] init];
-	[self.refreshControl setTintColor:[UIColor darkGrayColor]];
+	[self.refreshControl setTintColor:[UIColor selectedCellGreyColor]];
 	
 	[self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
 	

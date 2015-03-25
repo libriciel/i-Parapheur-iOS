@@ -85,11 +85,12 @@
 @property (nonatomic) CGPoint anchor;
 
 -(id)initWithAnnotation:(ADLAnnotation*)annotation;
+
 -(BOOL)isInHandle:(CGPoint)touchPoint;
 
 -(void)refreshModel;
 
-- (void) handleTouchInside;
+-(void)handleTouchInside;
 
 
 @end

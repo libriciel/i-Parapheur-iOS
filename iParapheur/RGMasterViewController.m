@@ -82,7 +82,7 @@
 	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
 	
 	self.refreshControl = [[UIRefreshControl alloc]init];
-	self.refreshControl.tintColor = [UIColor darkGrayColor];
+	self.refreshControl.tintColor = [UIColor selectedCellGreyColor];
 	
 	[self.refreshControl addTarget:self
 							action:@selector(loadBureaux)
@@ -150,19 +150,22 @@
 - (void)initRestClient {
 	
 	_restClient = [ADLRestClient sharedManager];
-	
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						[ADLRestClient setRestApiVersion:versionNumber];
 						[self loadBureaux];
 					 }
 					 failure:^(NSError *error) {
 						 [ADLRestClient setRestApiVersion:[NSNumber numberWithInt:-1]];
-						 [DeviceUtils logError:error];
+						 [self.refreshControl endRefreshing];
 
 						 // New test when network retrieved
-						 
-						 if (error.code == kCFURLErrorNotConnectedToInternet)
+						 if (error.code == kCFURLErrorNotConnectedToInternet) {
 							[self setNewConnectionTryOnNetworkRetrieved];
+							 [DeviceUtils logInfoMessage:@"Une connexion Internet est nécessaire au lancement de l'application."];
+						 }
+						 else {
+							 [DeviceUtils logError:error];
+						 }
 					 }];
 	
 	[self initAlfrescoToken];
@@ -178,6 +181,8 @@
 		// and if you are updating the UI it needs to happen
 		// on the main thread, like this:
 		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.refreshControl beginRefreshing];
+			[self.tableView setContentOffset:CGPointMake(0, self.tableView.contentOffset.y-self.refreshControl.frame.size.height) animated:YES];
 			[self initRestClient];
 		});
 	}];
@@ -315,6 +320,9 @@
 	}
 	else if ([[ADLRestClient getRestApiVersion] intValue ] == 2) {
 		API_GETBUREAUX();
+	}
+	else if ([[ADLRestClient getRestApiVersion] intValue ] == -1) {
+		[self.refreshControl endRefreshing];
 	}
 }
 

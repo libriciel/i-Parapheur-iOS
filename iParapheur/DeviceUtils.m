@@ -37,8 +37,8 @@
 	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:view
 														style:ALAlertBannerStyleFailure
 													 position:ALAlertBannerPositionTop
-														title:@"Erreur"
-													 subtitle:message];
+														title:message
+													 subtitle:nil];
 	banner.secondsToShow = 2.0f;
 	
 	// Simple test, to avoid full error screen (this should never happen in a normal case)
@@ -53,14 +53,26 @@
 }
 
 
-+ (void)logInfoMessage:(NSString *)message {
++ (void)logSuccessMessage:(NSString *)message {
 	
 	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
 	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
 														style:ALAlertBannerStyleSuccess
 													 position:ALAlertBannerPositionTop
-														title:@"Terminé"
-													 subtitle:message];
+														title:message
+													 subtitle:nil];
+	[banner show];
+}
+
+
++ (void)logInfoMessage:(NSString *)message {
+	
+	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
+	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
+														style:ALAlertBannerStyleNotify
+													 position:ALAlertBannerPositionTop
+														title:message
+													 subtitle:nil];
 	[banner show];
 }
 

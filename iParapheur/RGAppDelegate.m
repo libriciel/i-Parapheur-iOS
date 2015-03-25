@@ -91,7 +91,7 @@
 			NSLog(@"error %@", [error localizedDescription]);
 		}
 		else {
-			[DeviceUtils logInfoMessage:[NSString stringWithFormat:@"L'importation de '%@' s'est correctement déroulée.", [[pwdAlertView p12Path] lastPathComponent]]];
+			[DeviceUtils logSuccessMessage:[NSString stringWithFormat:@"L'importation de '%@' s'est correctement déroulée.", [[pwdAlertView p12Path] lastPathComponent]]];
 		}
 	}
 }

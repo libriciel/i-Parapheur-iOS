@@ -13,6 +13,8 @@
 + (void)logErrorMessage:(NSString *)message
 				 inView:(UIView *)view;
 
++ (void)logSuccessMessage:(NSString *)message;
+
 + (void)logInfoMessage:(NSString *)message;
 
 @end
