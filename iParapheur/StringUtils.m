@@ -1,6 +1,6 @@
 
 #import "StringUtils.h"
-#import "AJNotificationView.h"
+#import "DeviceUtils.h"
 
 
 @implementation StringUtils

@@ -48,8 +48,8 @@
 #import "ADLCredentialVault.h"
 #import "ADLKeyStore.h"
 #import "PrivateKey.h"
+#import "DeviceUtils.h"
 #import "ADLPasswordAlertView.h"
-#import <AJNotificationView/AJNotificationView.h>
 #import <NSData+Base64/NSData+Base64.h>
 #import "ADLAPIRequests.h"
 
@@ -91,13 +91,7 @@
 			NSLog(@"error %@", [error localizedDescription]);
 		}
 		else {
-			// Throw a notification for MainViewController
-			[AJNotificationView showNoticeInView:[[_window rootViewController] view]
-											type:AJNotificationTypeGreen
-										   title:[NSString stringWithFormat:@"L'importation de '%@' s'est correctement déroulée.", [[pwdAlertView p12Path] lastPathComponent]]
-								 linedBackground:AJLinedBackgroundTypeStatic
-									   hideAfter:2.5f];
-			
+			[DeviceUtils logInfoMessage:[NSString stringWithFormat:@"L'importation de '%@' s'est correctement déroulée.", [[pwdAlertView p12Path] lastPathComponent]]];
 		}
 	}
 }

@@ -6,6 +6,13 @@
 
 + (BOOL)isConnectedToInternet;
 
-+ (void)logErrorMessage:(NSError *)message;
++ (void)logError:(NSError *)error;
+
++ (void)logErrorMessage:(NSString *)message;
+
++ (void)logErrorMessage:(NSString *)message
+				 inView:(UIView *)view;
+
++ (void)logInfoMessage:(NSString *)message;
 
 @end

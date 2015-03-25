@@ -55,7 +55,7 @@
 #import "PrivateKey.h"
 #import "LGViewHUD.h"
 #import <NSData+Base64/NSData+Base64.h>
-#import <AJNotificationView/AJNotificationView.h>
+#import "DeviceUtils.h"
 #import "ADLResponseSignInfo.h"
 
 @interface RGWorkflowDialogViewController ()
@@ -276,11 +276,8 @@
 											  error:&error];
 			
 			if (signature == nil && error != nil) {
-				[AJNotificationView showNoticeInView:self.view
-												type:AJNotificationTypeRed
-											   title:[NSString stringWithFormat:@"Une erreur s'est produite lors de la signature"]
-									 linedBackground:AJLinedBackgroundTypeStatic
-										   hideAfter:2.5f];
+				[DeviceUtils logErrorMessage:@"Une erreur s'est produite lors de la signature"
+									  inView:self.view];
 				NSLog(@"%@", error);
 				break;
 			}
@@ -367,11 +364,8 @@
 										  error:&error];
 		
 		if (signature == nil && error != nil) {
-			[AJNotificationView showNoticeInView:self.view
-											type:AJNotificationTypeRed
-										   title:[NSString stringWithFormat:@"Une erreur s'est produite lors de la signature"]
-								 linedBackground:AJLinedBackgroundTypeStatic
-									   hideAfter:2.5f];
+			[DeviceUtils logErrorMessage:@"Une erreur s'est produite lors de la signature"
+								  inView:self.view];
 			NSLog(@"%@", error);
 			break;
 		}

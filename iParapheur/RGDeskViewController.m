@@ -194,7 +194,7 @@
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 [DeviceUtils logErrorMessage:error];
+								 [DeviceUtils logError:error];
 								 [self.refreshControl endRefreshing];
 								 HIDE_HUD
 							 }];
@@ -216,7 +216,7 @@
 								 [self getDossierDidEndWithSuccess:dossiers];
 							 }
 							 failure:^(NSError *error) {
-								 [DeviceUtils logErrorMessage:error];
+								 [DeviceUtils logError:error];
 								 [self.refreshControl endRefreshing];
 								 HIDE_HUD
 							 }];
@@ -655,7 +655,7 @@ numberOfRowsInSection:(NSInteger)section {
 	
 	if (![DeviceUtils isConnectedToInternet]) {
 
-		[DeviceUtils logErrorMessage:[NSError errorWithDomain:NSCocoaErrorDomain
+		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
 														 code:kCFURLErrorNotConnectedToInternet
 													 userInfo:nil]];
 		[cell flickerSelection];

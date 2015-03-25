@@ -155,7 +155,7 @@
 						[self loadBureaux];
 					 }
 					 failure:^(NSError *error) {
-						 [DeviceUtils logErrorMessage:error];
+						 [DeviceUtils logError:error];
 					 }];
 	
 	[self initAlfrescoToken];
@@ -283,7 +283,7 @@
 			
 						}
 						failure:^(NSError *error) {
-							[DeviceUtils logErrorMessage:error];
+							[DeviceUtils logError:error];
 							_loading = NO;
 							[self.refreshControl endRefreshing];
 							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
@@ -356,7 +356,7 @@
 		[tableView deselectRowAtIndexPath:indexPath
 								 animated:YES];
 		
-		[DeviceUtils logErrorMessage:[NSError errorWithDomain:NSCocoaErrorDomain
+		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
 														 code:kCFURLErrorNotConnectedToInternet
 													 userInfo:nil]];
 		return;

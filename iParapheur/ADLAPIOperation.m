@@ -10,7 +10,7 @@
 #import "ADLDocument.h"
 #import "Reachability.h"
 #import "ADLCredentialVault.h"
-#import <AJNotificationView/AJNotificationView.h>
+#import "DeviceUtils.h"
 
 @interface ADLAPIOperation ()
 @property(assign) BOOL isExecuting;
@@ -198,12 +198,7 @@
 									 waitUntilDone:YES];
 		}
 		else {
-			UIViewController *rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
-			[AJNotificationView showNoticeInView:[rootController view]
-											type:AJNotificationTypeRed
-										   title:[error localizedDescription]
-								 linedBackground:AJLinedBackgroundTypeStatic
-									   hideAfter:2.5f];
+			[DeviceUtils logError:error];
 		}
 	}
 	

@@ -5,7 +5,7 @@
 //
 
 #import "RGLoginViewController.h"
-#import "AJNotificationView.h"
+#import "DeviceUtils.h"
 #import "ADLRestClientApi3.h"
 #import "ADLRestClient.h"
 #import "UIColor+CustomColors.h"
