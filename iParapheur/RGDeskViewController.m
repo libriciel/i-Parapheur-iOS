@@ -138,7 +138,10 @@
 
 
 -(void)loadDossiersWithPage:(int)page {
-	SHOW_HUD
+	if (_filteredDossiersArray && (_filteredDossiersArray.count == 0)) {
+		SHOW_HUD
+	}
+	
 	NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
 
 	if (currentFilter != nil) {
@@ -383,7 +386,7 @@
 numberOfRowsInSection:(NSInteger)section {
 	
 	//if (tableView == self.searchDisplayController.searchResultsTableView) {
-	return [self.filteredDossiersArray count];
+	return [_filteredDossiersArray count];
 	//} else {
 	//    return [self.dossiersArray count];
 	//}
@@ -408,7 +411,7 @@ numberOfRowsInSection:(NSInteger)section {
 	bool dossierPossibleViser;
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		ADLResponseDossiers *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		ADLResponseDossiers *dossier = [_filteredDossiersArray objectAtIndex:[indexPath row]];
 		dossierTitre = dossier.title;
 		dossierType = dossier.type;
 		dossierSousType = dossier.sousType;

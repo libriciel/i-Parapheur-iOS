@@ -325,7 +325,7 @@
 #pragma mark - Wall delegate Implementation
 
 
--(void)displayDocumentAt: (NSInteger) index {
+-(void)displayDocumentAt:(NSInteger)index {
 	
 	SHOW_HUD
 	
@@ -416,12 +416,12 @@
 
 
 -(void)didEndWithUnReachableNetwork {
-	
+	HIDE_HUD
 }
 
 
 -(void)didEndWithUnAuthorizedAccess {
-	
+	HIDE_HUD
 }
 
 
