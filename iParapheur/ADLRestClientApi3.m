@@ -210,7 +210,7 @@
 	[queryParams setValue:[NSNumber numberWithInt:page] forKey:@"page"];
 	[queryParams setValue:[NSNumber numberWithInt:size] forKey:@"pageSize"];
 	[queryParams setValue:[NSNumber numberWithInt:0] forKey:@"pendingFile"];
-	[queryParams setValue:[NSNumber numberWithInt:0] forKey:@"skipped"];
+	[queryParams setValue:[NSNumber numberWithInt:(page * (size-1))] forKey:@"skipped"];
 	[queryParams setValue:@"cm:create" forKey:@"sort"];
 	
 	if (filterJson != nil)
@@ -222,7 +222,7 @@
 	[_getManager GET:@"/parapheur/dossiers"
 		  parameters:queryParams
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
+				 				 
 				 NSError *error;
 				 NSArray* responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
 															 fromJSONArray:responseObject

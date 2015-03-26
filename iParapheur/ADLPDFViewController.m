@@ -231,6 +231,7 @@
 
 
 -(void)showDocumentWithIndex:(NSNotification*) notification {
+	
 	NSNumber* docIndex = [notification object];
 	[self displayDocumentAt:[docIndex integerValue]];
 	[_documentsPopover dismissPopoverAnimated:YES];
@@ -332,7 +333,8 @@
 	_isDocumentPrincipal = (index == 0);
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _document) {
+	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _dossier.documents) {
+		_document = _dossier.documents[index];
 		bool isPdf = [[_document objectForKey:@"visuelPdf"] boolValue];
 		NSString *documentId = [_document objectForKey:@"id"];
 		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId
@@ -521,10 +523,9 @@
 	}
 	
 	if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
-		[((RGDocumentsView*)[segue destinationViewController]) setDocuments:[_document objectForKey:@"documents"]];
-		if (_documentsPopover != nil) {
+		[((RGDocumentsView*)[segue destinationViewController]) setDocuments:_dossier.documents];
+		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
-		}
 		
 		_documentsPopover = [(UIStoryboardPopoverSegue *)segue popoverController];
 		[_documentsPopover setDelegate:self];

@@ -135,7 +135,6 @@
 
 -(void)setInBatchMode:(BOOL)value {
 	_inBatchMode = value;
-	
 }
 
 
@@ -342,7 +341,8 @@
 
 
 -(IBAction)loadNextResultsPage:(id)sender {
-	[self loadDossiersWithPage:++_currentPage];
+	_currentPage += 1;
+	[self loadDossiersWithPage:_currentPage];
 }
 
 
@@ -564,10 +564,10 @@ numberOfRowsInSection:(NSInteger)section {
 		}
 	}
 	
-	[self.dossiersArray addObjectsFromArray:dossiers];
-	_loadMoreButton.hidden = ([dossiers count] <= 15);
-	self.filteredDossiersArray = [NSArray arrayWithArray:self.dossiersArray];
-	self.selectedDossiersArray = [NSMutableArray arrayWithCapacity:self.dossiersArray.count];
+	[_dossiersArray addObjectsFromArray:dossiers];
+	_loadMoreButton.hidden = (dossiers.count < 15);
+	_filteredDossiersArray = [NSArray arrayWithArray:_dossiersArray];
+	_selectedDossiersArray = [NSMutableArray arrayWithCapacity:_dossiersArray.count];
 	
 	[((UITableView*)[self view]) reloadData];
 	
