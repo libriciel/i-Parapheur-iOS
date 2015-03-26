@@ -34,7 +34,7 @@
 				 inView:(UIView *)view {
 	
 	if (view == nil)
-		view = [[[UIApplication sharedApplication].windows lastObject] rootViewController].view;
+		view = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
 	
 	// Create banner
 	
@@ -59,7 +59,7 @@
 
 + (void)logSuccessMessage:(NSString *)message {
 	
-	UIView *mainView = [[[UIApplication sharedApplication].windows lastObject] rootViewController].view;
+	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
 	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
 														style:ALAlertBannerStyleSuccess
 													 position:ALAlertBannerPositionTop
@@ -71,7 +71,7 @@
 
 + (void)logInfoMessage:(NSString *)message {
 	
-	UIView *mainView = [[[UIApplication sharedApplication].windows lastObject] rootViewController].view;
+	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
 	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
 														style:ALAlertBannerStyleNotify
 													 position:ALAlertBannerPositionTop
@@ -84,7 +84,7 @@
 
 + (void)logWarningMessage:(NSString *)message {
 	
-	UIView *mainView = [[[UIApplication sharedApplication].windows lastObject] rootViewController].view;
+	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
 	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
 														style:ALAlertBannerStyleWarning
 													 position:ALAlertBannerPositionTop

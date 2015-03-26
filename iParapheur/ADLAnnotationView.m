@@ -258,12 +258,9 @@
 
 
 -(void)postItButtonHitted {
-
-	NSLog(@"Adrien postItButtonHitted");
 	
     if (!_postItView) {
-		NSLog(@"Adrien postItButtonHitted in");
-        CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
+	    CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
         _postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
         _postItView.userInteractionEnabled = _annotationModel.editable;
         [_postItView setAnnotationModel:_annotationModel];

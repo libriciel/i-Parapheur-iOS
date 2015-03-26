@@ -127,6 +127,8 @@
 	_dossiersArray = [NSMutableArray new];
 	_possibleMainActions = [NSArray arrayWithObjects:@"VISER", @"SIGNER", @"TDT", @"MAILSEC", @"ARCHIVER", nil];
 	_actionsWithoutAnnotation = [NSArray arrayWithObjects:@"RECUPERER", @"SUPPRIMER", @"SECRETARIAT", nil];
+	
+	SHOW_HUD
 	[self loadDossiersWithPage:_currentPage];
 }
 
@@ -138,9 +140,6 @@
 
 
 -(void)loadDossiersWithPage:(int)page {
-	if (_filteredDossiersArray && (_filteredDossiersArray.count == 0)) {
-		SHOW_HUD
-	}
 	
 	NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
 
@@ -191,7 +190,7 @@
 								size:15
 							  filter:jsonString
 							 success:^(NSArray *dossiers) {
-								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
+								 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
 								 [self.refreshControl endRefreshing];
 								 HIDE_HUD
 								 [self getDossierDidEndWithSuccess:dossiers];
@@ -213,7 +212,7 @@
 								size:15
 			 				  filter:nil
 							 success:^(NSArray *dossiers) {
-								 NSLog(@"getDossiers success : %lu", sizeof(dossiers));
+								 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
 								 [self.refreshControl endRefreshing];
 								 HIDE_HUD
 								 [self getDossierDidEndWithSuccess:dossiers];
@@ -419,7 +418,11 @@ numberOfRowsInSection:(NSInteger)section {
 		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
 		dossierPossibleArchive = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
 		dossierPossibleViser = dossier.actions && [dossier.actions containsObject:@"VISA"];
-		dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.dateEmission.longLongValue/1000)];
+		
+		if ([dossier.dateLimite longLongValue] != 0)
+			dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.dateLimite.longLongValue/1000)];
+		else
+			dossierDate = nil;
 	}
 	else {
 		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
@@ -436,6 +439,7 @@ numberOfRowsInSection:(NSInteger)section {
 			NSLog(@"Adrien visa V2 :%@", dossier);
 		
 		NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
+		
 		if (dateLimite != nil) {
 			ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
 			//[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
