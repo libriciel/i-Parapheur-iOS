@@ -56,6 +56,7 @@
 #import "LGViewHUD.h"
 #import <NSData+Base64/NSData+Base64.h>
 #import "DeviceUtils.h"
+#import "StringUtils.h"
 #import "ADLResponseSignInfo.h"
 
 @interface RGWorkflowDialogViewController ()
@@ -276,9 +277,9 @@
 											  error:&error];
 			
 			if (signature == nil && error != nil) {
-				[DeviceUtils logErrorMessage:@"Une erreur s'est produite lors de la signature"
+				[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+								   withTitle:@"Une erreur s'est produite lors de la signature"
 									  inView:self.view];
-				NSLog(@"%@", error);
 				break;
 			}
 			else {
@@ -364,9 +365,9 @@
 										  error:&error];
 		
 		if (signature == nil && error != nil) {
-			[DeviceUtils logErrorMessage:@"Une erreur s'est produite lors de la signature"
+			[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+							   withTitle:@"Une erreur s'est produite lors de la signature"
 								  inView:self.view];
-			NSLog(@"%@", error);
 			break;
 		}
 		else {

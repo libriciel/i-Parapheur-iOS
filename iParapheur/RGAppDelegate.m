@@ -112,7 +112,12 @@
 	for (NSString *p12Path in p12Docs) {
 		NSLog(@"p12Path :%@", p12Docs);
 		
-		ADLPasswordAlertView *alertView = [[ADLPasswordAlertView alloc] initWithTitle:@"Importation du certificat" message:[NSString stringWithFormat:@"Entez le mot de passe pour %@",[p12Path lastPathComponent]] delegate:self cancelButtonTitle:@"Annuler" otherButtonTitles:@"Confirmer", nil];
+		NSString *message = [NSString stringWithFormat:@"Entez le mot de passe pour %@", [p12Path lastPathComponent]];
+		ADLPasswordAlertView *alertView = [[ADLPasswordAlertView alloc] initWithTitle:@"Importation du certificat"
+																			  message:message
+																			 delegate:self
+																	cancelButtonTitle:@"Annuler"
+																	otherButtonTitles:@"Confirmer", nil];
 		
 		alertView.p12Path = p12Path;
 		

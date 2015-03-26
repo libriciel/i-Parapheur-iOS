@@ -23,22 +23,26 @@
 
 + (void)logErrorMessage:(NSString *)message {
 
-	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
-	[self logErrorMessage:message
-				   inView:mainView];
+		[self logErrorMessage:nil
+				withTitle:message
+				   inView:nil];
 }
 
 
 + (void)logErrorMessage:(NSString *)message
+			  withTitle:(NSString *)title
 				 inView:(UIView *)view {
+	
+	if (view == nil)
+		view = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
 	
 	// Create banner
 	
 	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:view
 														style:ALAlertBannerStyleFailure
 													 position:ALAlertBannerPositionTop
-														title:message
-													 subtitle:nil];
+														title:title
+													 subtitle:message];
 	banner.secondsToShow = 2.0f;
 	
 	// Simple test, to avoid full error screen (this should never happen in a normal case)

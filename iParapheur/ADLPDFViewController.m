@@ -59,6 +59,8 @@
 #import "ADLResponseDossier.h"
 #import "ADLResponseAnnotation.h"
 #import "ADLResponseSignInfo.h"
+#import "DeviceUtils.h"
+#import "StringUtils.h"
 
 
 #define kActionButtonsWidth 300.0f
@@ -654,7 +656,9 @@
 								  NSLog(@"updateAnnotation success");
 							  }
 							  failure:^(NSError *error) {
-								  NSLog(@"updateAnnotation error : %@", error.localizedDescription);
+								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+													 withTitle:@"Erreur à la sauvegarde de l'annotation"
+														inView:nil];
 							  }];
 	}
 	else {
@@ -682,7 +686,9 @@
 								  NSLog(@"deleteAnnotation success");
 							  }
 							  failure:^(NSError *error) {
-								  NSLog(@"deleteAnnotation error : %@", error.localizedDescription);
+								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+													 withTitle:@"Erreur à la suppression de l'annotation"
+														inView:nil];
 							  }];
 	}
 	else {
@@ -719,7 +725,9 @@
 								[self refreshAnnotations:_dossierRef];
 							}
 							failure:^(NSError *error) {
-								NSLog(@"AddAnnotation error : %@", error.localizedDescription);
+								[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+												   withTitle:@"Erreur à la sauvegarde de l'annotation"
+													  inView:nil];
 							}];
 	}
 	else {
