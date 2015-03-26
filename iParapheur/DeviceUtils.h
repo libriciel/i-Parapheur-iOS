@@ -18,4 +18,6 @@
 
 + (void)logInfoMessage:(NSString *)message;
 
++ (void)logWarningMessage:(NSString *)message;
+
 @end

@@ -149,6 +149,8 @@
 
 - (void)initRestClient {
 	
+	[self checkDemonstrationServer];
+	
 	_restClient = [ADLRestClient sharedManager];
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						[ADLRestClient setRestApiVersion:versionNumber];
@@ -169,6 +171,37 @@
 					 }];
 	
 	[self initAlfrescoToken];
+}
+
+
+- (void)checkDemonstrationServer {
+	
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *url_preference = [preferences objectForKey:@"settings_server_url"];
+	BOOL isDemoServer = (url_preference == nil) || [url_preference isEqualToString:@""] || [url_preference isEqualToString:@"parapheur.demonstrations.adullact.org"];
+	
+	if (!isDemoServer)
+		return;
+	
+	// Check UTC time, and warns for possible shutdowns
+	
+	NSDate *currentDate = [[NSDate alloc] init];
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Europe/London"];
+	[dateFormatter setDateFormat:@"H"];
+	
+	NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+	numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+	NSNumber *hour = [numberFormatter numberFromString:[dateFormatter stringFromDate:currentDate]];
+	
+	if (([hour integerValue] > 23) || ([hour integerValue] < 7))
+		[DeviceUtils logWarningMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."];
+
+	// Warn user that he is on the demo server
+	// (In this order, to have it on the top)
+	
+	[DeviceUtils logInfoMessage:@"L'application est actuellement liée au parapheur de démonstration."];
 }
 
 
@@ -217,6 +250,35 @@
 	} else {
 		_settingsButton.image = [UIImage imageNamed:@"icon_login.png"];
 		_settingsButton.tintColor = [UIColor darkBlueColor];
+	}
+}
+
+
+- (void)loadBureaux {
+	
+	[self.refreshControl beginRefreshing];
+	
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		[_restClient getBureaux:^(NSArray *bureaux) {
+			[self setBureauxArray:bureaux];
+			_loading = NO;
+			[self.refreshControl endRefreshing];
+			[(UITableView*)([self view]) reloadData];
+			[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+			
+		}
+						failure:^(NSError *error) {
+							[DeviceUtils logError:error];
+							_loading = NO;
+							[self.refreshControl endRefreshing];
+							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+						}];
+	}
+	else if ([[ADLRestClient getRestApiVersion] intValue ] == 2) {
+		API_GETBUREAUX();
+	}
+	else if ([[ADLRestClient getRestApiVersion] intValue ] == -1) {
+		[self.refreshControl endRefreshing];
 	}
 }
 
@@ -292,38 +354,6 @@
 	
 	if (success || !areSettingsSet)
 		[self initRestClient];
-}
-
-
-#pragma mark - Local methods
-
-
-- (void)loadBureaux {
-	
-	[self.refreshControl beginRefreshing];
-	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		[_restClient getBureaux:^(NSArray *bureaux) {
-							[self setBureauxArray:bureaux];
-							_loading = NO;
-							[self.refreshControl endRefreshing];
-							[(UITableView*)([self view]) reloadData];
-							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-			
-						}
-						failure:^(NSError *error) {
-							[DeviceUtils logError:error];
-							_loading = NO;
-							[self.refreshControl endRefreshing];
-							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-						}];
-	}
-	else if ([[ADLRestClient getRestApiVersion] intValue ] == 2) {
-		API_GETBUREAUX();
-	}
-	else if ([[ADLRestClient getRestApiVersion] intValue ] == -1) {
-		[self.refreshControl endRefreshing];
-	}
 }
 
 
