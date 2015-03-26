@@ -11,8 +11,8 @@
 @implementation ADLPostItView
 @synthesize annotationModel = _annotationModel;
 
-- (id)initWithFrame:(CGRect)frame
-{
+
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -35,44 +35,40 @@
     return self;
 }
 
+
 - (void)textViewDidEndEditing:(UITextView *)textView {
     [_annotationModel setText:[textView text]];
 }
+
     
 -(void) setAnnotationModel:(ADLAnnotation *)annotationModel {
-    _annotationModel = annotationModel;
-    [_textView setText:[annotationModel text]];
-    
-    UIFont *font = [_textView font];
-    CGSize withinSize = CGSizeMake(100.0f, FLT_MAX);
+	_annotationModel = annotationModel;
+	[_textView setText:[annotationModel text]];
 	
-	CGRect textRect = [[annotationModel text] boundingRectWithSize:withinSize
-														   options:NSStringDrawingUsesLineFragmentOrigin
-														attributes:@{NSFontAttributeName:font}
-														   context:nil];
+	UIFont *font = [_textView font];
+	CGSize withinSize = CGSizeMake(100.0f, FLT_MAX);
+	CGSize size = [[annotationModel text] sizeWithFont:font constrainedToSize:withinSize lineBreakMode:NSLineBreakByWordWrapping];
 	
-	CGSize size = textRect.size;
 	
-    size.width = 100.0f;
-    size.height = size.height > 100.0f ? size.height : 100.0f;
-    
-    CGRect myFrame = [self frame];
-    
-    myFrame.size.width = size.width;
-    myFrame.size.height = size.height;
-    
-    myFrame = CGRectInset(myFrame, -15, -15);
-    [_textView setFrame: CGRectMake(15.0f, 15.0f, size.width, size.height)];
-    [self setFrame:myFrame];
-
+	size.width = 100.0f;
+	size.height = size.height > 100.0f ? size.height : 100.0f;
+	
+	CGRect myFrame = [self frame];
+	
+	myFrame.size.width = size.width;
+	myFrame.size.height = size.height;
+	
+	myFrame = CGRectInset(myFrame, -15, -15);
+	[_textView setFrame: CGRectMake(15.0f, 15.0f, size.width, size.height)];
+	[self setFrame:myFrame];
+	
 }
 
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 #if 0
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     UIGraphicsPushContext(context);
     {
@@ -109,6 +105,7 @@
 
 }
 #endif
+
 
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
     [super setContentScaleFactor:contentScaleFactor];

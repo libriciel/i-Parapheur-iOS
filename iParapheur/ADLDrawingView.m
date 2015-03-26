@@ -284,7 +284,7 @@
 }
 
 
--(void) unselectAnnotations {
+-(void)unselectAnnotations {
     for (UIView* subview in [self subviews]) {
         if ([subview class] == [ADLAnnotationView class]) {
             ADLAnnotationView *a = (ADLAnnotationView*)subview;
@@ -388,12 +388,12 @@
         }
         
         if (_hittedView != nil && [_hittedView isKindOfClass:[ADLAnnotationView class]] && _shallUpdateCurrent) {
-            [_hittedView refreshModel];
+
+			[_hittedView refreshModel];
             ADLAnnotation *annotation = [_hittedView annotationModel];
             
-            if (self.hittedView.annotationModel.uuid && self.hittedView.annotationModel.editable) {
+            if (self.hittedView.annotationModel.uuid && self.hittedView.annotationModel.editable)
                 [self updateAnnotation:annotation];
-            }
         }
         
         //_hittedView = nil;

@@ -51,8 +51,8 @@
 
 @implementation ADLAnnotationView
 
-- (id)initWithFrame:(CGRect)frame
-{
+
+-(id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -87,7 +87,8 @@
     return self;
 }
 
--(void) setFrame:(CGRect)frame {
+
+-(void)setFrame:(CGRect)frame {
 	
     if (frame.size.height < kAnnotationMinHeight) {
         frame.size.height = kAnnotationMinHeight;
@@ -149,7 +150,8 @@
     return self;
 }
 
-- (void) addButtons {
+
+-(void)addButtons {
     /* Cut here to disable _close button */
     CGRect buttonFrame = self.frame;
     
@@ -157,99 +159,119 @@
     buttonFrame.origin.y = 0;
     buttonFrame.size.width = kFingerSize;
     buttonFrame.size.height = kFingerSize;
-    if (self.annotationModel.editable) {
+    if (_annotationModel.editable) {
         // CLOSE BUTTON
-        self.closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
-        [self.closeButton setTitle:@"X" forState:UIControlStateNormal];
-        [self.closeButton addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchUpInside];
-        [self.closeButton setHidden:YES];
-        [self.closeButton setNeedsDisplay];
+        _closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
+        [_closeButton setTitle:@"X" forState:UIControlStateNormal];
+        [_closeButton addTarget:self action:@selector(closeButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+        [_closeButton setHidden:YES];
+        [_closeButton setNeedsDisplay];
     }
     // INFO BUTTON
     buttonFrame.origin.y = CGRectGetHeight(self.frame) - buttonFrame.size.height;
-    self.infoButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
-    [self.infoButton setTitle:@"i" forState:UIControlStateNormal];
-    [self.infoButton addTarget:self action:@selector(infoButtonHitted) forControlEvents:UIControlEventTouchUpInside];
-    [self.infoButton setHidden:YES];
-    [self.infoButton setNeedsDisplay];
+    _infoButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
+    [_infoButton setTitle:@"i" forState:UIControlStateNormal];
+    [_infoButton addTarget:self action:@selector(infoButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+    [_infoButton setHidden:YES];
+    [_infoButton setNeedsDisplay];
     
     //POST IT BUTTON
     buttonFrame.origin.x = CGRectGetWidth(self.frame) - buttonFrame.size.width;
     buttonFrame.origin.y = 0.0f;
     CGRect postitFrame = buttonFrame;
-    self.postItButton = [[ADLAnnotationButton alloc] initWithFrame:postitFrame];
-    [self.postItButton setTitle:@"Aa" forState:UIControlStateNormal];
-    [self.postItButton addTarget:self action:@selector(postItButtonHitted) forControlEvents:UIControlEventTouchUpInside];
-    [self.postItButton setHidden:YES];
+    _postItButton = [[ADLAnnotationButton alloc] initWithFrame:postitFrame];
+    [_postItButton setTitle:@"Aa" forState:UIControlStateNormal];
+    [_postItButton addTarget:self action:@selector(postItButtonHitted) forControlEvents:UIControlEventTouchUpInside];
+    [_postItButton setHidden:YES];
     
     
-    [self addSubview:self.closeButton];
-    [self addSubview:self.infoButton];
-    [self addSubview:self.postItButton];
+    [self addSubview:_closeButton];
+    [self addSubview:_infoButton];
+    [self addSubview:_postItButton];
 
 }
+
 
 -(void)setSelected:(BOOL)selected {
     _selected = selected;
-    [self.closeButton setHidden:!_selected];
-    [self.postItButton setHidden:!_selected];
-    [self.infoButton setHidden:!_selected];
+    [_closeButton setHidden:!_selected];
+    [_postItButton setHidden:!_selected];
+    [_infoButton setHidden:!_selected];
     [self setNeedsDisplay];
 
-    if ((self.postItView) && !_selected) {
-        [self.postItView setHidden:YES];
-        [self.postItView removeFromSuperview];
-        if (self.annotationModel.editable) {
+    if ((_postItView) && !_selected) {
+        [_postItView setHidden:YES];
+        [_postItView removeFromSuperview];
+        if (_annotationModel.editable) {
             [((ADLDrawingView*)[self superview]) updateAnnotation:_annotationModel];
         }
-        self.postItView = nil;
+        _postItView = nil;
     }
-    if ((self.infoView) && !_selected) {
-        [self.infoView setHidden:YES];
-        [self.infoView removeFromSuperview];
-        self.infoView = nil;
+    if ((_infoView) && !_selected) {
+        [_infoView setHidden:YES];
+        [_infoView removeFromSuperview];
+        _infoView = nil;
     }
 }
+
 
 -(BOOL)isResizing {
     return !CGPointEqualToPoint(self.anchor, CGPointZero);
 }
 
-/* notify when removed */
 
-- (void) closeButtonHitted {
-    if ([self.annotationModel uuid] != nil) {
+#pragma mark - Notifcation events
+
+
+-(void)closeButtonHitted {
+	
+	if (_postItView) {
+		[_postItView setHidden:YES];
+		[_postItView removeFromSuperview];
+		_postItView = nil;
+	}
+	
+	if (_infoView) {
+		[_infoView setHidden:YES];
+		[_infoView removeFromSuperview];
+		_infoView = nil;
+	}
+	
+	if ([self.annotationModel uuid] != nil)
         [self.drawingView removeAnnotation:_annotationModel];
-    }
-    [self removeFromSuperview];
+	
+	[self removeFromSuperview];
 }
 
 
-- (void) infoButtonHitted {
+-(void)infoButtonHitted {
 
-	if (!self.infoView) {
+	if (!_infoView) {
         CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMinX(self.frame),CGRectGetMaxY(self.frame),kInfoWidth, kInfoHeight)];
         
         _infoView = [[ADLInfoView alloc] initWithFrame:clippedFrame];
         [_infoView setAnnotationModel:_annotationModel];
-        [self.infoView setContentScaleFactor:[self contentScaleFactor]];
-        [[self superview] addSubview:self.infoView];
+        [_infoView setContentScaleFactor:[self contentScaleFactor]];
+        [[self superview] addSubview:_infoView];
     }
 }
 
 
-- (void) postItButtonHitted {
+-(void)postItButtonHitted {
+
+	NSLog(@"Adrien postItButtonHitted");
 	
-    if (!self.postItView) {
-        CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
-        
-        self.postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
-        self.postItView.userInteractionEnabled = self.annotationModel.editable;
-        [self.postItView setAnnotationModel: [self annotationModel]];
-        [self.postItView setContentScaleFactor:[self contentScaleFactor]];
-        [[self superview] addSubview:self.postItView];
+    if (!_postItView) {
+		NSLog(@"Adrien postItButtonHitted in");
+        CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
+        _postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
+        _postItView.userInteractionEnabled = _annotationModel.editable;
+        [_postItView setAnnotationModel:_annotationModel];
+        [_postItView setContentScaleFactor:[self contentScaleFactor]];
+        [[self superview] addSubview:_postItView];
     }
 }
+
 
 // Override setContetScaleFactor to apply it to the close button;
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
@@ -264,10 +286,10 @@
     UIGraphicsPushContext(context);
 }
 
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
    
     
@@ -329,14 +351,16 @@
 }
 
 
--(CGFloat)distanceBetween:(CGPoint)p and:(CGPoint)q {
+-(CGFloat)distanceBetween:(CGPoint)p
+					  and:(CGPoint)q {
+	
     CGFloat dx = q.x - p.x;
     CGFloat dy = q.y - p.y;
     return sqrtf(dx*dx + dy*dy);
 }
 
 
--(CGPoint)anchorForTouchLocation:(CGPoint) touchPoint {
+-(CGPoint)anchorForTouchLocation:(CGPoint)touchPoint {
     CGPoint bottomRight = CGPointMake(CGRectGetMaxX(self.frame) , CGRectGetMaxY(self.frame));
 
     if ([self distanceBetween:touchPoint and:bottomRight] < kFingerSize)
@@ -358,7 +382,7 @@
 }
 
 
-- (void) handleTouchInside {
+-(void)handleTouchInside {
 	[_postItView removeFromSuperview];
     _postItView = nil;
     [_infoView removeFromSuperview];
