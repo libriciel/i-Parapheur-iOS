@@ -110,13 +110,13 @@
 									reuseIdentifier:@"ActionCell"];
 	}
 	
-	[[cell actionLabel] setText:[_labels objectAtIndex:[indexPath row]]];
+	[cell.actionLabel setText:[_labels objectAtIndex:[indexPath row]]];
 	if ([[_actions objectAtIndex:[indexPath row]] isEqualToString:@"REJETER"]) {
 		UIImage *rejectImg = [UIImage imageNamed:@"rejeter.png"];
-		[[cell imageView] setImage:rejectImg];
+		[cell.imageView setImage:rejectImg];
 	}
 	else {
-		[[cell imageView] setImage:[UIImage imageNamed:@"viser.png"]];
+		[cell.imageView setImage:[UIImage imageNamed:@"viser.png"]];
 	}
 	return cell;
 }

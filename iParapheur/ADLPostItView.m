@@ -28,9 +28,6 @@
                 
         
         [self addSubview:_textView];
-        
-        
-        
     }
     return self;
 }

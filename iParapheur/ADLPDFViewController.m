@@ -107,7 +107,10 @@
 	
 	if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
 		@try {
+			#pragma clang diagnostic push
+			#pragma clang diagnostic ignored "-Wundeclared-selector"
 			[self.splitViewController performSelector:@selector(toggleMasterVisible:)];
+			#pragma clang diagnostic pop
 		}
 		@catch (NSException *exception) {
 			NSLog(@"Caught exception %@", exception);
@@ -720,10 +723,11 @@
 		[args setValue:@"rect" forKey:@"type"];
 		[args setValue:login forKey:@"author"];
 		
+		__unsafe_unretained typeof(self) weakSelf = self;
 		[_restClient addAnnotations:args
 						 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							success:^(NSArray *result) {
-								[self refreshAnnotations:_dossierRef];
+								[weakSelf refreshAnnotations:weakSelf.dossierRef];
 							}
 							failure:^(NSError *error) {
 								[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
