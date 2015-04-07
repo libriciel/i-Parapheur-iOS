@@ -97,8 +97,10 @@
 #pragma mark - UITableView datasource
 
 
--(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [_actions count];
+-(NSInteger)tableView:(UITableView *)tableView
+numberOfRowsInSection:(NSInteger)section {
+	
+	return _actions.count;
 }
 
 

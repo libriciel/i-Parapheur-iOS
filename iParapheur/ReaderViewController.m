@@ -919,7 +919,7 @@
 		[self presentViewController:mailComposer animated:YES completion:nil];
 	}
 	else if (attachment) {
-		NSLog(@"PDF is too big: %d KB", [attachment length] / 1024);
+		NSLog(@"PDF is too big: %lu KB", (unsigned long)([attachment length] / 1024));
 	}
 	else {
 		NSLog(@"Did not get data!");

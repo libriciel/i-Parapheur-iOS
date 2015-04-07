@@ -595,7 +595,7 @@
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		for (ADLResponseAnnotation *etape in _annotations) {
-			NSArray *annotationsAtPageForEtape = [etape.data objectForKey:[NSString stringWithFormat:@"%d", page]];
+			NSArray *annotationsAtPageForEtape = [etape.data objectForKey:[NSString stringWithFormat:@"%ld", (long)page]];
 			
 			if (_circuit && (_circuit.count > 0)) {
 				ADLResponseCircuit *circuit = [_circuit objectAtIndex:0];
@@ -621,7 +621,7 @@
 	}
 	else {
 		for (NSDictionary *etape in _annotations) {
-			NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%d", page]];
+			NSArray *annotationsAtPageForEtape = [etape objectForKey:[NSString stringWithFormat:@"%ld", (long)page]];
 			
 			if (self.circuit) {
 				for (NSDictionary *annot in annotationsAtPageForEtape) {
@@ -654,7 +654,7 @@
 		NSDictionary *annotationDictionary = annotation.dict;
 		
 		[_restClient updateAnnotation:annotationDictionary
-							  forPage:page
+							  forPage:(int)page
 						   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							  success:^(NSArray *result) {
 								  NSLog(@"updateAnnotation success");

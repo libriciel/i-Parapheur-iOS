@@ -91,10 +91,10 @@
 
 - (void) reloadTypologyTable {
     for (NSString *selectedType in _selectedTypes) {
-        int typeIndex = [[_typologie allKeys] indexOfObject:selectedType];
+        int typeIndex = (int)[[_typologie allKeys] indexOfObject:selectedType];
         NSArray *sousTypes = [_typologie objectForKey:selectedType];
         for (NSString *selectedSousType in _selectedSousTypes) {
-            int sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
+            NSUInteger sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
             if (sousTypeIndex != NSNotFound) {
                 [_typesTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:sousTypeIndex
 																		 inSection:typeIndex]

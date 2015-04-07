@@ -57,14 +57,15 @@
 @implementation RGDocumentsView
 @synthesize documents = _documents;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
     return self;
 }
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -73,23 +74,27 @@
 	// Do any additional setup after loading the view.
 }
 
-- (void)viewDidUnload
-{
+
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
+
 #pragma mark - UITableViewDatasource
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_documents count];
 }
 
--(UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"";
     
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -107,7 +112,8 @@
     return cell;
 }
 
--(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSNumber *docIndex = [NSNumber numberWithInteger:[indexPath row]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kshowDocumentWithIndex object:docIndex];
     

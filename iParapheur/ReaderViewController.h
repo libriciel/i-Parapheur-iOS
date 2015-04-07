@@ -71,7 +71,9 @@
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;
 
-- (void)didAddContentView:(ReaderContentView *)aContentView forPage:(NSInteger)pageNumber;
+- (void)didAddContentView:(ReaderContentView *)aContentView
+				  forPage:(NSInteger)pageNumber;
+
 - (NSData *)documentData;
 
 - (void)updateScrollViewContentViews;

@@ -203,7 +203,10 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 
 /* apply contentScaleFactor to the annotationsViews */
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView
+					   withView:(UIView *)view
+						atScale:(CGFloat)scale {
+	
     scale *= [[[self window] screen] scale];
     
     [contentPage setContentScaleFactor:scale];

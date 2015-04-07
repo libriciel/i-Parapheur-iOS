@@ -15,10 +15,6 @@
 
 
 -(id)init {
-	
-	NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
-	[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
-	
 	// Retrieve infos from settings
 	
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
