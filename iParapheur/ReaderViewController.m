@@ -90,13 +90,17 @@
 	__block CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
 	__block CGPoint contentOffset = CGPointZero; NSInteger page = [document.pageNumber integerValue];
 
+	__weak typeof(self) weakSelf = self;
 	[pageSet enumerateIndexesUsingBlock: // Enumerate page number set
 		^(NSUInteger number, BOOL *stop)
 		{
-			NSNumber *key = [NSNumber numberWithInteger:number]; // # key
-			ReaderContentView *contentView = [contentViews objectForKey:key];
-			contentView.frame = viewRect; if (page == number) contentOffset = viewRect.origin;
-			viewRect.origin.x += viewRect.size.width; // Next view frame position
+			__strong typeof(weakSelf) strongSelf = weakSelf;
+			if (strongSelf) {
+				NSNumber *key = [NSNumber numberWithInteger:number]; // # key
+				ReaderContentView *contentView = [strongSelf.contentViews objectForKey:key];
+				contentView.frame = viewRect; if (page == number) contentOffset = viewRect.origin;
+				viewRect.origin.x += viewRect.size.width; // Next view frame position
+			}
 		}
 	];
 
@@ -182,11 +186,15 @@
 			viewRect.origin.x += viewRect.size.width;
 		}
 
+		__weak typeof(self) weakSelf = self;
 		[unusedViews enumerateKeysAndObjectsUsingBlock: // Remove unused views
 			^(id key, id object, BOOL *stop) {
-				[contentViews removeObjectForKey:key];
-				ReaderContentView *contentView = object;
-				[contentView removeFromSuperview];
+				__strong typeof(weakSelf) strongSelf = weakSelf;
+				if (strongSelf) {
+					[strongSelf.contentViews removeObjectForKey:key];
+					ReaderContentView *contentView = object;
+					[contentView removeFromSuperview];
+				}
 			}
 		];
 		

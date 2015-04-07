@@ -113,30 +113,35 @@
 													   url:properServerTextFieldValue];
 	
 	[self enableInterface:FALSE];
-
+	
+	__weak typeof(self) weakSelf = self;
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
-		
-						[self enableInterface:TRUE];
-						[self dismissWithSuccess:TRUE];
+						__strong typeof(weakSelf) strongSelf = weakSelf;
+						if (strongSelf) {
+							[strongSelf enableInterface:TRUE];
+							[strongSelf dismissWithSuccess:TRUE];
+						}
 					 }
 					 failure:^(NSError *error) {
-						 
-						 [self enableInterface:TRUE];
-						 
-						 if (error.code == kCFURLErrorUserAuthenticationRequired) {
-							 [self setBorderOnTextField:_loginTextField withAlert:TRUE];
-							 [self setBorderOnTextField:_passwordTextField withAlert:TRUE];
-						 }
-						 else {
-							 [self setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
-						 }
-					 
+						 __strong typeof(weakSelf) strongSelf = weakSelf;
+						 if (strongSelf) {
+							 [strongSelf enableInterface:TRUE];
+							 
+							 if (error.code == kCFURLErrorUserAuthenticationRequired) {
+								 [strongSelf setBorderOnTextField:_loginTextField withAlert:TRUE];
+								 [strongSelf setBorderOnTextField:_passwordTextField withAlert:TRUE];
+							 }
+							 else {
+								 [strongSelf setBorderOnTextField:_serverUrlTextField withAlert:TRUE];
+							 }
+							 
  						 NSString *localizedDescription = [StringUtils getErrorMessage:error];
-
-						 if ([error.localizedDescription isEqualToString:localizedDescription])
-							 _errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
-						 else
-							 _errorTextField.text = localizedDescription;
+							 
+							 if ([error.localizedDescription isEqualToString:localizedDescription])
+								 _errorTextField.text = [NSString stringWithFormat:@"La connexion au serveur a échoué (code %ld)", (long)error.code];
+							 else
+								 _errorTextField.text = localizedDescription;
+						 }
 					 }];
 }
 

@@ -152,21 +152,28 @@
 	[self checkDemonstrationServer];
 	
 	_restClient = [ADLRestClient sharedManager];
+	__weak typeof(self) weakSelf = self;
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
-						[ADLRestClient setRestApiVersion:versionNumber];
-						[self loadBureaux];
+						__strong typeof(weakSelf) strongSelf = weakSelf;
+						if (strongSelf) {
+							[ADLRestClient setRestApiVersion:versionNumber];
+							[strongSelf loadBureaux];
+						}
 					 }
 					 failure:^(NSError *error) {
-						 [ADLRestClient setRestApiVersion:[NSNumber numberWithInt:-1]];
-						 [self.refreshControl endRefreshing];
-
-						 // New test when network retrieved
-						 if (error.code == kCFURLErrorNotConnectedToInternet) {
-							[self setNewConnectionTryOnNetworkRetrieved];
-							 [DeviceUtils logInfoMessage:@"Une connexion Internet est nécessaire au lancement de l'application."];
-						 }
-						 else {
-							 [DeviceUtils logError:error];
+						 __strong typeof(weakSelf) strongSelf = weakSelf;
+						 if (strongSelf) {
+							 [ADLRestClient setRestApiVersion:[NSNumber numberWithInt:-1]];
+							 [strongSelf.refreshControl endRefreshing];
+							 
+							 // New test when network retrieved
+							 if (error.code == kCFURLErrorNotConnectedToInternet) {
+								 [strongSelf setNewConnectionTryOnNetworkRetrieved];
+								 [DeviceUtils logInfoMessage:@"Une connexion Internet est nécessaire au lancement de l'application."];
+							 }
+							 else {
+								 [DeviceUtils logError:error];
+							 }
 						 }
 					 }];
 	
@@ -208,15 +215,19 @@
 - (void)setNewConnectionTryOnNetworkRetrieved {
 	
 	Reachability *reach = [Reachability reachabilityWithHostname:@"google.com"];
+	__weak typeof(self) weakSelf = self;
 	[reach setReachableBlock:^(Reachability *reachblock) {
 		
 		// keep in mind this is called on a background thread
 		// and if you are updating the UI it needs to happen
 		// on the main thread, like this:
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[self.refreshControl beginRefreshing];
-			[self.tableView setContentOffset:CGPointMake(0, self.tableView.contentOffset.y-self.refreshControl.frame.size.height) animated:YES];
-			[self initRestClient];
+			__strong typeof(weakSelf) strongSelf = weakSelf;
+			if (strongSelf) {
+				[strongSelf.refreshControl beginRefreshing];
+				[strongSelf.tableView setContentOffset:CGPointMake(0, strongSelf.tableView.contentOffset.y-strongSelf.refreshControl.frame.size.height) animated:YES];
+				[strongSelf initRestClient];
+			}
 		});
 	}];
 
@@ -259,19 +270,25 @@
 	[self.refreshControl beginRefreshing];
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		__weak typeof(self) weakSelf = self;
 		[_restClient getBureaux:^(NSArray *bureaux) {
-			[self setBureauxArray:bureaux];
-			_loading = NO;
-			[self.refreshControl endRefreshing];
-			[(UITableView*)([self view]) reloadData];
-			[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-			
-		}
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								[strongSelf setBureauxArray:bureaux];
+								strongSelf.loading = NO;
+								[strongSelf.refreshControl endRefreshing];
+								[(UITableView*)([strongSelf view]) reloadData];
+								[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+							}
+						}
 						failure:^(NSError *error) {
-							[DeviceUtils logError:error];
-							_loading = NO;
-							[self.refreshControl endRefreshing];
-							[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								[DeviceUtils logError:error];
+								strongSelf.loading = NO;
+								[strongSelf.refreshControl endRefreshing];
+								[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+							}
 						}];
 	}
 	else if ([[ADLRestClient getRestApiVersion] intValue ] == 2) {

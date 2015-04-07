@@ -129,16 +129,23 @@
 		
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 			for (NSString* dossierRef in _dossiersRef) {
+				__weak typeof(self) weakSelf = self;
 				[_restClient actionViserForDossier:dossierRef
 										 forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 							  withPublicAnnotation:[_annotationPublique text]
 							 withPrivateAnnotation:[_annotationPrivee text]
 										   success:^(NSArray *result) {
-											   [self dismissDialogView];
+											   __strong typeof(weakSelf) strongSelf = weakSelf;
+											   if (strongSelf) {
+												   [strongSelf dismissDialogView];
+											   }
 										   }
 										   failure:^(NSError *error) {
-											   NSLog(@"actionViser error : %@", error.localizedDescription);
-											   [self didEndWithUnReachableNetwork];
+											   __strong typeof(weakSelf) strongSelf = weakSelf;
+											   if (strongSelf) {
+												   NSLog(@"actionViser error : %@", error.localizedDescription);
+												   [strongSelf didEndWithUnReachableNetwork];
+											   }
 										   }];
 			}
 		}
@@ -158,16 +165,23 @@
 			
 			if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
 				for (NSString* dossierRef in _dossiersRef) {
+					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossierRef
 											   forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 									withPublicAnnotation:[_annotationPublique text]
 								   withPrivateAnnotation:[_annotationPrivee text]
 												 success:^(NSArray *success) {
-													 [self dismissDialogView];
+													 __strong typeof(weakSelf) strongSelf = weakSelf;
+													 if (strongSelf) {
+														 [strongSelf dismissDialogView];
+													 }
 												 }
 												 failure:^(NSError *error) {
-													 NSLog(@"Action reject error : %@", error.localizedDescription);
-													 [self didEndWithUnReachableNetwork];
+													 __strong typeof(weakSelf) strongSelf = weakSelf;
+													 if (strongSelf) {
+														 NSLog(@"Action reject error : %@", error.localizedDescription);
+														 [strongSelf didEndWithUnReachableNetwork];
+													 }
 												 }];
 				}
 			}
@@ -383,18 +397,25 @@
 			NSLog(@"Send signature dossier=%@, signSize=%lu", [dossiers objectAtIndex:i], sizeof([signatures objectAtIndex:i]));
 			[self showHud];
 			
+			__weak typeof(self) weakSelf = self;
 			[_restClient actionSignerForDossier:[dossiers objectAtIndex:i]
 									  forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 						   withPublicAnnotation:[self.annotationPublique text]
 						  withPrivateAnnotation:[self.annotationPrivee text]
 								  withSignature:[signatures objectAtIndex:i]
 										success:^(NSArray *array) {
-											NSLog(@"Signature success");
-											[self dismissDialogView];
+											__strong typeof(weakSelf) strongSelf = weakSelf;
+											if (strongSelf) {
+												NSLog(@"Signature success");
+												[strongSelf dismissDialogView];
+											}
 										}
 										failure:^(NSError *error) {
-											NSLog(@"Signature fail");
-											[self didEndWithUnReachableNetwork];
+											__strong typeof(weakSelf) strongSelf = weakSelf;
+											if (strongSelf) {
+												NSLog(@"Signature fail");
+												[strongSelf didEndWithUnReachableNetwork];
+											}
 										}];
 		}
 	}
@@ -456,10 +477,14 @@
 		
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 			for (NSString* dossierRef in _dossiersRef) {
+				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 										   success:^(ADLResponseSignInfo *signInfo) {
-											   [self getSignInfoDidEndWithSuccess:signInfo];
+											   __strong typeof(weakSelf) strongSelf = weakSelf;
+											   if (strongSelf) {
+												   [strongSelf getSignInfoDidEndWithSuccess:signInfo];
+											   }
 										   }
 										   failure:^(NSError * error) {
 											   NSLog(@"Error on getSignInfo %@", error.localizedDescription);

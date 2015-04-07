@@ -203,12 +203,16 @@
 	
 	SHOW_HUD
 	
+	__weak typeof(self) weakSelf = self;
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 						dossier:_dossierRef
 						success:^(ADLResponseDossier *result) {
-							HIDE_HUD
-							[self getDossierDidEndWithRequestAnswer:result];
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								HIDE_HUD
+								[strongSelf getDossierDidEndWithRequestAnswer:result];
+							}
 						}
 						failure:^(NSError *error) {
 							NSLog(@"getBureau fail : %@", error.localizedDescription);
@@ -216,9 +220,12 @@
 		
 		[_restClient getCircuit:_dossierRef
 						success:^(ADLResponseCircuit *circuit) {
-							HIDE_HUD
-							_circuit = [NSMutableArray arrayWithObject:circuit];
-							[self refreshAnnotations:dossierRef];
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								HIDE_HUD
+								strongSelf.circuit = [NSMutableArray arrayWithObject:circuit];
+								[strongSelf refreshAnnotations:dossierRef];
+							}
 						}
 						failure:^(NSError *error) {
 							NSLog(@"getCircuit fail : %@", error.localizedDescription);
@@ -248,13 +255,16 @@
 
 -(void)refreshAnnotations:(NSString*)dossier {
 	
+	__weak typeof(self) weakSelf = self;
 	[_restClient getAnnotations:_dossierRef
 						success:^(NSArray *annotations) {
-							_annotations = annotations;
-							
-							for (NSNumber *contentViewIdx in [_readerViewController contentViews])
-								[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
-							
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								strongSelf.annotations = annotations;
+								
+								for (NSNumber *contentViewIdx in [strongSelf.readerViewController contentViews])
+									[[[[strongSelf.readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
+							}
 						} failure:^(NSError *error) {
 							NSLog(@"getAnnotations error");
 						}];
@@ -303,10 +313,15 @@
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+
+				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
 										   success:^(ADLResponseSignInfo *signInfo) {
-											   _signatureFormat = [signInfo.signatureInformations objectForKey:@"format"];
+											   __strong typeof(weakSelf) strongSelf = weakSelf;
+											   if (strongSelf) {
+												   strongSelf.signatureFormat = [signInfo.signatureInformations objectForKey:@"format"];
+											   }
 										   }
 										   failure:^(NSError *error) {
 											   NSLog(@"getSignInfo %@", error.localizedDescription);
@@ -720,11 +735,14 @@
 		[args setValue:@"rect" forKey:@"type"];
 		[args setValue:login forKey:@"author"];
 		
-		__unsafe_unretained typeof(self) weakSelf = self;
+		__weak typeof(self) weakSelf = self;
 		[_restClient addAnnotations:args
 						 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							success:^(NSArray *result) {
-								[weakSelf refreshAnnotations:weakSelf.dossierRef];
+								__strong typeof(weakSelf) strongSelf = weakSelf;
+								if (strongSelf) {
+									[strongSelf refreshAnnotations:strongSelf.dossierRef];
+								}
 							}
 							failure:^(NSError *error) {
 								[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]

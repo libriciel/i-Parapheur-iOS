@@ -184,20 +184,27 @@
 		
 			// API3 request
 			
+			__weak typeof(self) weakSelf = self;
 			[_restClient getDossiers:self.deskRef
 								page:page
 								size:15
 							  filter:jsonString
 							 success:^(NSArray *dossiers) {
-								 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
-								 [self.refreshControl endRefreshing];
-								 HIDE_HUD
-								 [self getDossierDidEndWithSuccess:dossiers];
+								 __strong typeof(weakSelf) strongSelf = weakSelf;
+								 if (strongSelf) {
+									 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
+									 [strongSelf.refreshControl endRefreshing];
+									 HIDE_HUD
+									 [strongSelf getDossierDidEndWithSuccess:dossiers];
+								 }
 							 }
 							 failure:^(NSError *error) {
-								 [DeviceUtils logError:error];
-								 [self.refreshControl endRefreshing];
-								 HIDE_HUD
+								 __strong typeof(weakSelf) strongSelf = weakSelf;
+								 if (strongSelf) {
+									 [DeviceUtils logError:error];
+									 [strongSelf.refreshControl endRefreshing];
+									 HIDE_HUD
+								 }
 							 }];
 		}
 		else {
@@ -206,20 +213,27 @@
 	}
 	else {
 		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+			__weak typeof(self) weakSelf = self;
 			[_restClient getDossiers:self.deskRef
 								page:page
 								size:15
 			 				  filter:nil
 							 success:^(NSArray *dossiers) {
-								 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
-								 [self.refreshControl endRefreshing];
-								 HIDE_HUD
-								 [self getDossierDidEndWithSuccess:dossiers];
+								 __strong typeof(weakSelf) strongSelf = weakSelf;
+								 if (strongSelf) {
+									 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
+									 [strongSelf.refreshControl endRefreshing];
+									 HIDE_HUD
+									 [strongSelf getDossierDidEndWithSuccess:dossiers];
+								 }
 							 }
 							 failure:^(NSError *error) {
-								 [DeviceUtils logError:error];
-								 [self.refreshControl endRefreshing];
-								 HIDE_HUD
+								 __strong typeof(weakSelf) strongSelf = weakSelf;
+								 if (strongSelf) {
+									 [DeviceUtils logError:error];
+									 [strongSelf.refreshControl endRefreshing];
+									 HIDE_HUD
+								 }
 							 }];
 		}
 		else {

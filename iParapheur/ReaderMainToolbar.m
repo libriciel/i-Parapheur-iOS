@@ -246,15 +246,8 @@
 - (void)hideToolbar
 {
 	if (!self.hidden) {
-		[UIView animateWithDuration:0.25 delay:0.0
-							options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
-						 animations:^(void) {
-							 self.alpha = 0.0f;
-						 }
-						 completion:^(BOOL finished) {
-							 self.hidden = YES;
-						 }
-		 ];
+		self.alpha = 0.0f;
+		self.hidden = YES;
 	}
 }
 
@@ -262,15 +255,8 @@
 {
 	if (self.hidden) {
 		[self updateBookmarkImage]; // First
-		
-		[UIView animateWithDuration:0.25 delay:0.0
-							options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
-						 animations:^(void) {
-							 self.hidden = NO;
-							 self.alpha = 1.0f;
-						 }
-						 completion:NULL
-		 ];
+		self.hidden = NO;
+		self.alpha = 1.0f;
 	}
 }
 

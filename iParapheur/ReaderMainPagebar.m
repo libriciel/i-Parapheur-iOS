@@ -315,16 +315,8 @@
 - (void)hidePagebar
 {
 	if (self.hidden == NO) {
-		[UIView animateWithDuration:0.25
-							  delay:0.0
-							options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
-						 animations:^(void) {
-							 self.alpha = 0.0f;
-						 }
-						 completion:^(BOOL finished) {
-							 self.hidden = YES;
-						 }
-		 ];
+		self.alpha = 0.0f;
+		self.hidden = YES;
 	}
 }
 
@@ -332,16 +324,8 @@
 {
 	if (self.hidden == YES) {
 		[self updatePagebarViews]; // Update views first
-		
-		[UIView animateWithDuration:0.25
-							  delay:0.0
-							options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
-						 animations:^(void) {
-							 self.hidden = NO;
-							 self.alpha = 1.0f;
-						 }
-						 completion:NULL
-		 ];
+		self.hidden = NO;
+		self.alpha = 1.0f;
 	}
 }
 

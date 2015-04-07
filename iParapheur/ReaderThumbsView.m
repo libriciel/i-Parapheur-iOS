@@ -260,13 +260,17 @@
 			[self requeueThumbCell:tvCell]; // Requeue the thumb cell
 		}
 
+		__weak typeof(self) weakSelf = self;
 		[visibleIndexSet enumerateIndexesUsingBlock: // Enumerate visible indexes
 			^(NSUInteger index, BOOL *stop)
 			{
-				CGRect thumbRect = [self thumbCellFrameForIndex:index]; // Frame
-				ReaderThumbView *tvCell = [self dequeueThumbCellWithFrame:thumbRect];
-				[delegate thumbsView:self updateThumbCell:tvCell forIndex:index];
-				tvCell.tag = index; tvCell.hidden = NO; // Tag and show it
+				__strong typeof(weakSelf) strongSelf = weakSelf;
+				if (strongSelf) {
+					CGRect thumbRect = [strongSelf thumbCellFrameForIndex:index]; // Frame
+					ReaderThumbView *tvCell = [strongSelf dequeueThumbCellWithFrame:thumbRect];
+					[delegate thumbsView:strongSelf updateThumbCell:tvCell forIndex:index];
+					tvCell.tag = index; tvCell.hidden = NO; // Tag and show it
+				}
 			}
 		];
 	}
@@ -485,15 +489,20 @@
 			}
 
 			NSMutableIndexSet *visibleIndexSet = [self visibleIndexSetForContentOffset];
+
+			__weak typeof(self) weakSelf = self;
 			[visibleIndexSet enumerateIndexesUsingBlock: // Enumerate visible indexes
 				^(NSUInteger index, BOOL *stop)
 				{
 					if ([visibleCellSet containsIndex:index] == NO) // Index not visible
 					{
-						CGRect thumbRect = [self thumbCellFrameForIndex:index]; // Frame
-						ReaderThumbView *tvCell = [self dequeueThumbCellWithFrame:thumbRect];
-						[delegate thumbsView:self updateThumbCell:tvCell forIndex:index];
-						tvCell.tag = index; tvCell.hidden = NO; // Tag and show it
+						__strong typeof(weakSelf) strongSelf = weakSelf;
+						if (strongSelf) {
+							CGRect thumbRect = [self thumbCellFrameForIndex:index]; // Frame
+							ReaderThumbView *tvCell = [self dequeueThumbCellWithFrame:thumbRect];
+							[delegate thumbsView:self updateThumbCell:tvCell forIndex:index];
+							tvCell.tag = index; tvCell.hidden = NO; // Tag and show it
+						}
 					}
 				}
 			];

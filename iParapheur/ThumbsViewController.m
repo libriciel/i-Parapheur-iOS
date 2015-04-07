@@ -234,10 +234,14 @@
 			if (updateBookmarked == YES) // Update bookmarked list
 			{
 				[bookmarked removeAllObjects]; // Empty the list first
+				__weak typeof(self) weakSelf = self;
 				[document.bookmarks enumerateIndexesUsingBlock: // Enumerate
 					^(NSUInteger page, BOOL *stop)
 					{
-						[bookmarked addObject:[NSNumber numberWithInteger:page]];
+						__strong typeof(weakSelf) strongSelf = weakSelf;
+						if (strongSelf) {
+							[bookmarked addObject:[NSNumber numberWithInteger:page]];
+						}
 					}
 				];
 				markedOffset = CGPointZero; updateBookmarked = NO; // Reset

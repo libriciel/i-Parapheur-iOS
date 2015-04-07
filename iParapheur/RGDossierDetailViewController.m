@@ -97,13 +97,16 @@
 	documents = [_dossier objectForKey:@"documents"];
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		__weak typeof(self) weakSelf = self;
 		[_restClient getCircuit:dossierRef
 						success:^(ADLResponseCircuit *responseCircuit) {
-						
-							NSMutableArray* responseArray = [[NSMutableArray alloc] init];
-							[responseArray addObjectsFromArray:responseCircuit.etapes];
-
-							[self refreshCircuits:responseArray];
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								NSMutableArray* responseArray = [[NSMutableArray alloc] init];
+								[responseArray addObjectsFromArray:responseCircuit.etapes];
+								
+								[strongSelf refreshCircuits:responseArray];
+							}
 						}
 						failure:^(NSError *error) {
 							NSLog(@"getCircuit error : %@", error);
@@ -189,11 +192,15 @@
 	dossierRef = _dossierRef;
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 						dossier:dossierRef
 						success:^(ADLResponseDossier *responseDossier) {
-							//TODO Adrien : why the response isn't used ??
-							[self getDossierDidEndWithREquestAnswer];
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								//TODO Adrien : why the response isn't used ??
+								[strongSelf getDossierDidEndWithREquestAnswer];
+							}
 						}
 						failure:^(NSError *error) {
 							NSLog(@"getDossier error %@ : ", error.localizedDescription);
