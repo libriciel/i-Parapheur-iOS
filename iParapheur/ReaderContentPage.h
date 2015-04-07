@@ -41,7 +41,7 @@
 	CGFloat _pageOffsetX;
 	CGFloat _pageOffsetY;
     
-    CGRect _annotRect;
+    // CGRect _annotRect;
 }
 
 

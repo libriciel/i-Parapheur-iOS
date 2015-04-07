@@ -65,7 +65,6 @@
 @property (strong, nonatomic) ReaderViewController* readerViewController;
 @property (nonatomic, strong) UIView* originalView;
 @property (strong, nonatomic) UIPopoverController *documentsPopover;
-
 @property (strong, nonatomic) UIPopoverController *actionPopover;
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *detailsButton;

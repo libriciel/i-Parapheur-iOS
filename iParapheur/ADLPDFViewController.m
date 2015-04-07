@@ -456,7 +456,7 @@
 	
 	_readerViewController.delegate = self;
 	_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
-
+	
 	[_readerViewController.view setAutoresizingMask:( UIViewAutoresizingFlexibleWidth |
 													 UIViewAutoresizingFlexibleHeight )];
 	[[self view] setAutoresizesSubviews:YES];
@@ -475,7 +475,9 @@
 	}
 	else {
 		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:GETANNOTATIONS_API andArgs:args delegate:self];
+		[requester request:GETANNOTATIONS_API
+				   andArgs:args
+				  delegate:self];
 	}
 }
 
@@ -576,11 +578,6 @@
 
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
--(void)viewDidUnload {
-	[super viewDidUnload];
 }
 
 

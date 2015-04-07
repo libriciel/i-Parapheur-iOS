@@ -51,13 +51,6 @@
 
 @implementation ADLDrawingView
 
-@synthesize parentScrollView = _parentScrollView;
-@synthesize superScrollView = _superScrollView;
-@synthesize dataSource = _dataSource;
-@synthesize enabled = _enabled;
-@synthesize pageNumber = _pageNumber;
-
-
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
@@ -297,7 +290,7 @@
 -(void)displayAnnotations:(NSArray*)annotations {
     ADLAnnotationView *annotView = nil;
     for (NSDictionary* dict in annotations) {
-        CGRect annotRect ;
+        CGRect annotRect;
         annotView = [[ADLAnnotationView alloc] initWithFrame:annotRect];
         [self addSubview:annotView];
     }
@@ -497,7 +490,7 @@
     for (UIView *a in [self subviews]) {
         [a removeFromSuperview];
     }
-    
+	    
     if (_dataSource != nil) {
         NSArray *annotations = [self annotationsForPage:_pageNumber];
         

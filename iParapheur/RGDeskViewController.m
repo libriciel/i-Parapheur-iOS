@@ -409,7 +409,7 @@ numberOfRowsInSection:(NSInteger)section {
 	bool dossierPossibleArchive;
 	bool dossierPossibleViser;
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
 		ADLResponseDossiers *dossier = [_filteredDossiersArray objectAtIndex:[indexPath row]];
 		dossierTitre = dossier.title;
 		dossierType = dossier.type;

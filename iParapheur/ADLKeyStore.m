@@ -86,7 +86,7 @@ static int adl_do_pkcs7_signed_attrib(PKCS7_SIGNER_INFO *si, unsigned char *md_d
 
 int ADL_PKCS7_dataFinal(PKCS7 *p7, BIO *bio, unsigned char md_data [], unsigned int md_len) {
 	int ret=0;
-	int i,j;
+	int i;
 	BIO *btmp;
 	PKCS7_SIGNER_INFO *si;
 	STACK_OF(X509_ATTRIBUTE) *sk;
@@ -163,10 +163,8 @@ int ADL_PKCS7_dataFinal(PKCS7 *p7, BIO *bio, unsigned char md_data [], unsigned 
 			if (si->pkey == NULL)
 				continue;
 			
-			j = OBJ_obj2nid(si->digest_alg->algorithm);
-			
-			btmp=bio;
-			
+			// j = OBJ_obj2nid(si->digest_alg->algorithm);
+			// btmp=bio;
 			
 			sk=si->auth_attr;
 			
@@ -647,10 +645,10 @@ localizedDescription:(NSString *)localizedDescription
 		*error = nil;
 	NSArray *array = [self.managedObjectContext executeFetchRequest:request error:error];
 	
-	if (*error) {
-		NSLog(@"Error fetching keys: %@", [*error localizedDescription]);
-		return NO;
-	}
+//	if (*error) {
+//		NSLog(@"Error fetching keys: %@", [*error localizedDescription]);
+//		return NO;
+//	}
 	
 	if ([array count] == 0) {
 		

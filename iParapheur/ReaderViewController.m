@@ -50,7 +50,7 @@
 
 #pragma mark Properties
 
-@synthesize delegate, document;
+@synthesize document;
 @synthesize theScrollView, mainToolbar, mainPagebar, contentViews;
 @synthesize lastHideTime;
 
@@ -815,9 +815,9 @@
 
 	if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
 
-	if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
+	if ([_delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
 	{
-		[delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
+		[_delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
 	}
 	else // We have a "Delegate must respond to -dismissReaderViewController: error"
 	{

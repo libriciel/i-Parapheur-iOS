@@ -21,7 +21,8 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 
 
 -(id)initWithStyle:(UITableViewCellStyle)style
-	reuseIdentifier:(NSString *)reuseIdentifier {
+   reuseIdentifier:(NSString *)reuseIdentifier {
+	
 	
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self)

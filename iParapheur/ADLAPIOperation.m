@@ -19,11 +19,6 @@
 
 @implementation ADLAPIOperation
 
-@synthesize lock = _lock;
-@synthesize delegate = _delegate;
-@synthesize isExecuting = _isExecuting;
-@synthesize isFinished = _isFinished;
-
 
 #pragma mark - Network Thread
 
@@ -63,7 +58,7 @@
 		_collectivityDef = def;
 		_isExecuting = NO;
 		_isFinished = NO;
-		self.delegate = delegate;
+		_delegate = delegate;
 	}
 	
 	return self;
@@ -77,11 +72,11 @@
 	
 	if (self = [super init]) {
 		_request = request;
-		self.args = args;
-		self.collectivityDef = def;
+		_args = args;
+		_collectivityDef = def;
 		downloadingDocument = NO;
 		get = NO;
-		self.delegate = delegate;
+		_delegate = delegate;
 		_isExecuting = NO;
 		_isFinished = NO;
 	}
@@ -95,10 +90,10 @@
 	
 	if (self = [super init]) {
 		_request = request;
-		self.collectivityDef = def;
+		_collectivityDef = def;
 		downloadingDocument = NO;
 		get = YES;
-		self.delegate = delegate;
+		_delegate = delegate;
 		_isExecuting = NO;
 		_isFinished = NO;
 	}
@@ -238,14 +233,11 @@
 	OSStatus sanityChesk = SecTrustEvaluate(trust, &res);
 	
 #ifdef DEBUG_SERVER_HTTPS
-	for(long i = 0; i < SecTrustGetCertificateCount(trust); i++) {
-		SecCertificateRef cr = SecTrustGetCertificateAtIndex(trust, i);
-		
-		
-		CFStringRef summary = SecCertificateCopySubjectSummary(cr);
-		
-		NSLog(@"%@", summary);
-	}
+//	for(long i = 0; i < SecTrustGetCertificateCount(trust); i++) {
+//		SecCertificateRef cr = SecTrustGetCertificateAtIndex(trust, i);
+//		CFStringRef summary = SecCertificateCopySubjectSummary(cr);		
+//		NSLog(@"%@", summary);
+//	}
 #endif
 	
 	if (sanityChesk == noErr &&
