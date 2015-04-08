@@ -156,12 +156,6 @@
 }
 
 
--(void)didReceiveMemoryWarning {
-	[super didReceiveMemoryWarning];
-	// Dispose of any resources that can be recreated.
-}
-
-
 #pragma mark - Reset view state
 
 
@@ -181,8 +175,6 @@
 	_documentsPopover = nil;
 	_actionPopover = nil;
 	_readerViewController = nil;
-	//_actionsCollectionView = nil;
-	
 }
 
 
@@ -454,13 +446,33 @@
 	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	
 	NSString *docPath = [documentsPaths objectAtIndex:0];
-	NSString *filePath = [NSString stringWithFormat:@"%@/%@", docPath, @"myfile.bin"];
+	NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin", docPath, @"myfile"];
 	[fileManager createFileAtPath:filePath
 						 contents:nil
 					   attributes:nil];
 	
 	file = [NSFileHandle fileHandleForWritingAtPath:filePath];
 	[file writeData:[document documentData]];
+	
+	[self didEndWithDocumentAtPath:filePath];
+}
+
+
+-(void)didEndWithDocumentName:(NSString*)fileName {
+	
+	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	
+	NSString *docPath = [documentsPaths objectAtIndex:0];
+	NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin", docPath, fileName];
+	
+	[self didEndWithDocumentAtPath:filePath];
+}
+
+
+/**
+ * Test purposes (and future off-line mode too...)
+ */
+-(void)didEndWithDocumentAtPath:(NSString*)filePath {
 	
 	// Adrien Releasing old ReaderViewController
 	

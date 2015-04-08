@@ -79,10 +79,5 @@
 
 @property (assign, nonatomic) BOOL isDocumentPrincipal;
 
-// Used in batch mode
-
-//@property (strong, nonatomic) UICollectionView* actionsCollectionView;
-//@property (strong, nonatomic) NSMutableArray* actions;
-
 
 @end
