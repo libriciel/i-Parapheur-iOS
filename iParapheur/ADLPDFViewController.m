@@ -231,6 +231,7 @@
 	}
 }
 
+
 -(void)didEndWithDocument:(ADLDocument*)document {
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -280,16 +281,16 @@
 	// new ReaderViewController
 	
 	_readerDocument = [ReaderDocument withDocumentFilePath:filePath password:nil];
-	ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
-	readerViewController.delegate = self;
+	_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
+	_readerViewController.delegate = self;
 	
-	readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
+	_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
 	
-	[readerViewController.view setAutoresizingMask:( UIViewAutoresizingFlexibleWidth |
+	[_readerViewController.view setAutoresizingMask:( UIViewAutoresizingFlexibleWidth |
 													 UIViewAutoresizingFlexibleHeight )];
-	
+		
 	[[self.view subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[[self view] addSubview:readerViewController.view];
+	[[self view] addSubview:_readerViewController.view];
 	
 	HIDE_HUD
 	

@@ -678,6 +678,7 @@
 		B4E5ECA8153AF65F00BD514D /* iParapheur */ = {
 			isa = PBXGroup;
 			children = (
+				B44C814916026FA800068E0B /* Annotations */,
 				C5ECDDBF1AB2F5D4003F13ED /* Utils */,
 				1434F65D168DFB03000C115D /* Crypto */,
 				B4B364391611A4CE0051420F /* Singleton */,
@@ -772,7 +773,6 @@
 		B4FF33BF154732FF006F7BF3 /* Reader */ = {
 			isa = PBXGroup;
 			children = (
-				B44C814916026FA800068E0B /* Annotations */,
 				B4FF33DF1547332D006F7BF3 /* Support */,
 				B4FF33C115473325006F7BF3 /* ReaderConstants.h */,
 				B4FF33C215473325006F7BF3 /* ReaderConstants.m */,
