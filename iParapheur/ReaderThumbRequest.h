@@ -1,9 +1,9 @@
 //
 //	ReaderThumbRequest.h
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -27,28 +27,19 @@
 
 @class ReaderThumbView;
 
+@interface ReaderThumbRequest : NSObject <NSObject>
 
-/**
- *	Handles requests for thumbnail sized images of PDF pages
- */
-@interface ReaderThumbRequest : NSObject
+@property (nonatomic, strong, readonly) NSURL *fileURL;
+@property (nonatomic, strong, readonly) NSString *guid;
+@property (nonatomic, strong, readonly) NSString *password;
+@property (nonatomic, strong, readonly) NSString *cacheKey;
+@property (nonatomic, strong, readonly) NSString *thumbName;
+@property (nonatomic, strong, readwrite) ReaderThumbView *thumbView;
+@property (nonatomic, assign, readonly) NSUInteger targetTag;
+@property (nonatomic, assign, readonly) NSInteger thumbPage;
+@property (nonatomic, assign, readonly) CGSize thumbSize;
+@property (nonatomic, assign, readonly) CGFloat scale;
 
-@property (nonatomic, readonly, strong) NSURL *fileURL;
-@property (nonatomic, readonly, copy) NSString *guid;
-@property (nonatomic, readonly, copy) NSString *password;
-@property (nonatomic, readonly, copy) NSString *cacheKey;
-@property (nonatomic, readonly, copy) NSString *thumbName;
-@property (nonatomic, readonly, strong) ReaderThumbView *thumbView;				///< The view that shows the thumbnail
-@property (nonatomic, readonly) NSUInteger targetTag;
-@property (nonatomic, readonly) NSInteger thumbPage;
-@property (nonatomic, readonly) CGSize thumbSize;
-@property (nonatomic, readonly) CGFloat scale;
-
-+ (id)forView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size;
-- (id)initWithView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size;
-
-- (void)process;
-- (void)processWithoutPriority;
-
++ (instancetype)newForView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size;
 
 @end

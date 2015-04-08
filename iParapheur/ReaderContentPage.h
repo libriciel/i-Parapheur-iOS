@@ -1,9 +1,9 @@
 //
 //	ReaderContentPage.h
-//	Reader v2.5.5
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -24,35 +24,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ADLDrawingView.h"
 
-/**
- *	A class responsible with drawing one page of a PDF document
- */
-@interface ReaderContentPage : ADLDrawingView
-{
-@private
-	CGPDFDocumentRef _PDFDocRef;
-	CGPDFPageRef _PDFPageRef;
-	NSInteger _pageAngle;
-	
-	CGFloat _pageWidth;
-	CGFloat _pageHeight;
-	CGFloat _pageOffsetX;
-	CGFloat _pageOffsetY;
-    
-    // CGRect _annotRect;
-}
+@interface ReaderContentPage : UIView
 
+- (instancetype)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
 
-
-@property (nonatomic, readonly, strong) NSMutableArray *links;
-
-
-
-- (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
-
-- (id)singleTap:(UITapGestureRecognizer *)recognizer;
+- (id)processSingleTap:(UITapGestureRecognizer *)recognizer;
 
 @end
 
@@ -62,17 +39,12 @@
 //	ReaderDocumentLink class interface
 //
 
-@interface ReaderDocumentLink : NSObject
-{
-@private
-	CGPDFDictionaryRef _dictionary;
-	CGRect _rect;
-}
+@interface ReaderDocumentLink : NSObject <NSObject>
 
 @property (nonatomic, assign, readonly) CGRect rect;
+
 @property (nonatomic, assign, readonly) CGPDFDictionaryRef dictionary;
 
-+ (id)newWithRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
-- (id)initWithRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
++ (instancetype)newWithRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
 
 @end

@@ -1,9 +1,9 @@
 //
 //	ReaderConstants.h
-//	Reader v2.5.6
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,17 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__has_feature(objc_arc)
+#error ARC (-fobjc-arc) is required to build this code.
+#endif
+
 #import <Foundation/Foundation.h>
 
-#define READER_BOOKMARKS 0
-#define READER_ENABLE_MAIL 1				///< If 1 adds a mail button to the toolbar
-#define READER_ENABLE_PRINT 1				///< If 1 adds a print button to the toolbar
-#define READER_REDRAW_FOR_EXPORT 0			///< If 1, draws the PDF to a PDF context and uses this new PDF for emailing and printing
-#define READER_ENABLE_THUMBS 0
-#define READER_DISABLE_IDLE 1
-#define READER_SHOW_SHADOWS 1
-#define READER_STANDALONE 0
-
-extern NSString *const kReaderCopyrightNotice;
+#define READER_FLAT_UI TRUE
+#define READER_SHOW_SHADOWS TRUE
+#define READER_ENABLE_THUMBS TRUE
+#define READER_DISABLE_RETINA FALSE
+#define READER_ENABLE_PREVIEW TRUE
+#define READER_DISABLE_IDLE FALSE
+#define READER_STANDALONE FALSE
+#define READER_BOOKMARKS TRUE

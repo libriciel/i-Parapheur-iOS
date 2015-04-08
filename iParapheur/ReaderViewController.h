@@ -1,9 +1,9 @@
 //
 //	ReaderViewController.h
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -24,61 +24,24 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MessageUI/MessageUI.h>
 
 #import "ReaderDocument.h"
-#import "ReaderContentView.h"
-#import "ReaderMainToolbar.h"
-#import "ReaderMainPagebar.h"
-#import "ThumbsViewController.h"
 
 @class ReaderViewController;
-@class ReaderMainToolbar;
 
 @protocol ReaderViewControllerDelegate <NSObject>
 
-@optional
+@optional // Delegate protocols
+
 - (void)dismissReaderViewController:(ReaderViewController *)viewController;
 
 @end
 
+@interface ReaderViewController : UIViewController
 
-@interface ReaderViewController : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,
-													ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
-													ThumbsViewControllerDelegate>
-{
-@private // Instance variables
-	UIPrintInteractionController *printInteraction;
-	
-	NSInteger currentPage;
-	CGSize lastAppearSize;
-	BOOL isVisible;
-}
+@property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
 
-@property (nonatomic, unsafe_unretained, readwrite) id <ReaderViewControllerDelegate> delegate;
-@property (nonatomic, strong, readonly) ReaderDocument *document;
-
-@property (nonatomic, unsafe_unretained, readwrite) id<ADLDrawingViewDataSource> dataSource;
-
-@property (nonatomic, strong) UIScrollView *theScrollView;
-@property (nonatomic, strong) ReaderMainToolbar *mainToolbar;
-@property (nonatomic, strong) ReaderMainPagebar *mainPagebar;
-@property (nonatomic, strong) NSMutableDictionary *contentViews;
-
-@property (nonatomic, readonly, strong) NSDate *lastHideTime;
-
-@property (nonatomic, assign) BOOL annotationsEnabled;
-
-- (id)initWithReaderDocument:(ReaderDocument *)object;
-
-- (void)didAddContentView:(ReaderContentView *)aContentView
-				  forPage:(NSInteger)pageNumber;
-
-- (NSData *)documentData;
-
-- (void)updateScrollViewContentViews;
-
-- (Class)classForViewPages;
-
+- (instancetype)initWithReaderDocument:(ReaderDocument *)object;
 
 @end
+

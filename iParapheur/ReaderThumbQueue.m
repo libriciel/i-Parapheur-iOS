@@ -1,9 +1,9 @@
 //
 //	ReaderThumbQueue.m
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -24,90 +24,91 @@
 //
 
 #import "ReaderThumbQueue.h"
-#import "CGPDFDocument.h"
 
 @implementation ReaderThumbQueue
+{
+	NSOperationQueue *loadQueue;
+	
+	NSOperationQueue *workQueue;
+}
 
-//#pragma mark Properties
-
-//@synthesize ;
-
-#pragma mark ReaderThumbQueue class methods
+#pragma mark - ReaderThumbQueue class methods
 
 + (ReaderThumbQueue *)sharedInstance
 {
 	static dispatch_once_t predicate = 0;
-	static ReaderThumbQueue *object = nil;
+	
+	static ReaderThumbQueue *object = nil; // Object
+	
 	dispatch_once(&predicate, ^{ object = [self new]; });
 	
-	return object;
+	return object; // ReaderThumbQueue singleton
 }
 
-#pragma mark ReaderThumbQueue instance methods
+#pragma mark - ReaderThumbQueue instance methods
 
-- (id)init
+- (instancetype)init
 {
-	if ((self = [super init])) {
+	if ((self = [super init])) // Initialize
+	{
 		loadQueue = [NSOperationQueue new];
+		
 		[loadQueue setName:@"ReaderThumbLoadQueue"];
+		
 		[loadQueue setMaxConcurrentOperationCount:1];
 		
 		workQueue = [NSOperationQueue new];
+		
 		[workQueue setName:@"ReaderThumbWorkQueue"];
+		
 		[workQueue setMaxConcurrentOperationCount:1];
 	}
+	
 	return self;
-}
-
-- (void)dealloc
-{
-	loadQueue = nil;
-	workQueue = nil;
 }
 
 - (void)addLoadOperation:(NSOperation *)operation
 {
-	DXLog(@"");
-	if ([operation isKindOfClass:[ReaderThumbOperation class]]) {
-		[loadQueue addOperation:operation];
+	if ([operation isKindOfClass:[ReaderThumbOperation class]])
+	{
+		[loadQueue addOperation:operation]; // Add to load queue
 	}
 }
 
 - (void)addWorkOperation:(NSOperation *)operation
 {
-	DXLog(@"");
-	if ([operation isKindOfClass:[ReaderThumbOperation class]]) {
-		[workQueue addOperation:operation];
+	if ([operation isKindOfClass:[ReaderThumbOperation class]])
+	{
+		[workQueue addOperation:operation]; // Add to work queue
 	}
 }
 
 - (void)cancelOperationsWithGUID:(NSString *)guid
 {
-	DXLog(@"");
-	[loadQueue setSuspended:YES];
-	[workQueue setSuspended:YES];
+	[loadQueue setSuspended:YES]; [workQueue setSuspended:YES];
 	
-	for (ReaderThumbOperation *operation in loadQueue.operations) {
-		if ([operation isKindOfClass:[ReaderThumbOperation class]]) {
+	for (ReaderThumbOperation *operation in loadQueue.operations)
+	{
+		if ([operation isKindOfClass:[ReaderThumbOperation class]])
+		{
 			if ([operation.guid isEqualToString:guid]) [operation cancel];
 		}
 	}
 	
-	for (ReaderThumbOperation *operation in workQueue.operations) {
-		if ([operation isKindOfClass:[ReaderThumbOperation class]]) {
+	for (ReaderThumbOperation *operation in workQueue.operations)
+	{
+		if ([operation isKindOfClass:[ReaderThumbOperation class]])
+		{
 			if ([operation.guid isEqualToString:guid]) [operation cancel];
 		}
 	}
 	
-	[workQueue setSuspended:NO];
-	[loadQueue setSuspended:NO];
+	[workQueue setSuspended:NO]; [loadQueue setSuspended:NO];
 }
 
 - (void)cancelAllOperations
 {
-	DXLog(@"");
-	[loadQueue cancelAllOperations];
-	[workQueue cancelAllOperations];
+	[loadQueue cancelAllOperations]; [workQueue cancelAllOperations];
 }
 
 @end
@@ -118,26 +119,23 @@
 //	ReaderThumbOperation class implementation
 //
 
-@interface ReaderThumbOperation ()
-
-@property (nonatomic, readwrite, copy) NSString *guid;
-
-@end
-
-
 @implementation ReaderThumbOperation
-
-@synthesize guid;
-
-#pragma mark ReaderThumbOperation instance methods
-
-- (id)initWithGUID:(NSString *)aGuid
 {
-	if ((self = [super init])) {
-		self.guid = aGuid;
-	}
-	return self;
+	NSString *_guid;
 }
 
+@synthesize guid = _guid;
+
+#pragma mark - ReaderThumbOperation instance methods
+
+- (instancetype)initWithGUID:(NSString *)guid
+{
+	if ((self = [super init]))
+	{
+		_guid = guid;
+	}
+	
+	return self;
+}
 
 @end

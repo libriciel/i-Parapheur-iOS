@@ -1,9 +1,9 @@
 //
 //	ReaderThumbView.h
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -25,21 +25,21 @@
 
 #import <UIKit/UIKit.h>
 
-
-/**
- *	A view that shows an image, usually delivered from a ReaderThumbRequest as a PDF thumbnail
- */
-@interface ReaderThumbView : UIControl
+@interface ReaderThumbView : UIView
 {
-@protected
+@protected // Instance variables
+	
 	UIImageView *imageView;
 }
 
-@property (readwrite, strong) NSOperation *operation;
-@property (nonatomic, assign) NSUInteger targetTag;
+@property (atomic, strong, readwrite) NSOperation *operation;
+
+@property (nonatomic, assign, readwrite) NSUInteger targetTag;
 
 - (void)showImage:(UIImage *)image;
+
 - (void)showTouched:(BOOL)touched;
+
 - (void)reuse;
 
 @end

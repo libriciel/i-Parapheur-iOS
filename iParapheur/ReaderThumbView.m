@@ -1,9 +1,9 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.5.5
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,42 @@
 //
 
 #import "ReaderThumbView.h"
-#import "CGPDFDocument.h"
 
 @implementation ReaderThumbView
+{
+	NSOperation *_operation;
+	
+	NSUInteger _targetTag;
+}
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize operation = _operation;
 @synthesize targetTag = _targetTag;
 
-#pragma mark ReaderThumbView instance methods
+#pragma mark - ReaderThumbView instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
-	if ((self = [super initWithFrame:frame])) {
-		//self.autoresizesSubviews = NO;
+	if ((self = [super initWithFrame:frame]))
+	{
+		self.autoresizesSubviews = NO;
 		self.userInteractionEnabled = NO;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingNone;
-		self.backgroundColor = [UIColor whiteColor];
-
+		self.backgroundColor = [UIColor clearColor];
+		
 		imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-
+		
 		imageView.autoresizesSubviews = NO;
 		imageView.userInteractionEnabled = NO;
+		imageView.autoresizingMask = UIViewAutoresizingNone;
 		imageView.contentMode = UIViewContentModeScaleAspectFit;
-		imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		//imageView.backgroundColor = [UIColor clearColor];
 		
 		[self addSubview:imageView];
 	}
-
+	
 	return self;
-}
-
-- (void)dealloc
-{
-	imageView = nil;
 }
 
 - (void)showImage:(UIImage *)image
@@ -70,36 +69,25 @@
 
 - (void)showTouched:(BOOL)touched
 {
-	DXLog(@"");
+	// Implemented by ReaderThumbView subclass
 }
 
 - (void)removeFromSuperview
 {
-	DXLog(@"");
 	_targetTag = 0; // Clear target tag
 	
-	[self.operation cancel];
-	self.operation = nil;
-	[super removeFromSuperview];
+	[self.operation cancel]; // Cancel operation
+	
+	[super removeFromSuperview]; // Remove view
 }
 
 - (void)reuse
 {
-	DXLog(@"");
 	_targetTag = 0; // Clear target tag
 	
-	[self.operation cancel];
-	self.operation = nil;
+	[self.operation cancel]; // Cancel operation
+	
 	imageView.image = nil; // Release image
-}
-
-
-
-#pragma mark - Overrides
-- (void)setFrame2:(CGRect)aFrame
-{
-	[super setFrame:aFrame];
-	[imageView setFrame:self.bounds];
 }
 
 @end
