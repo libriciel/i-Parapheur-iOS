@@ -69,7 +69,6 @@
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object
 {
-	
 	if ((self = [super initWithNibName:nil bundle:nil])) // Initialize superclass
 	{
 		if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]])) // Valid object
