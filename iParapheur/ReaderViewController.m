@@ -360,8 +360,6 @@
 
 - (void)viewDidLoad
 {
-	NSLog(@"Adrien LLLLLLLLLLLOOOOOOOOOOOOAAAAAAAAAADDDDDD");
-	
 	DXLog(@"%@", NSStringFromCGRect(self.view.bounds));
 	[super viewDidLoad];
 
@@ -568,7 +566,6 @@
 
 - (void)dealloc
 {
-	NSLog(@"Adrien HHHHHHHHHHHHHHHHHHHHHHHHOOOOOOOOOOOOOOOOOOOOOOO dealloc !!!!!!!!!");
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

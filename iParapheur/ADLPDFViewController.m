@@ -263,8 +263,8 @@
 							if (strongSelf) {
 								strongSelf.annotations = annotations;
 								
-//								for (NSNumber *contentViewIdx in [strongSelf.readerViewController contentViews])
-//									[[[[strongSelf.readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
+								for (NSNumber *contentViewIdx in [strongSelf.readerViewController contentViews])
+									[[[[strongSelf.readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
 							}
 						} failure:^(NSError *error) {
 							NSLog(@"getAnnotations error");
@@ -423,8 +423,8 @@
 		
 		_annotations = annotations;
 		
-//		for (NSNumber *contentViewIdx in [_readerViewController contentViews])
-//			[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
+		for (NSNumber *contentViewIdx in [_readerViewController contentViews])
+			[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
 	}
 	else if ([s isEqualToString:@"addAnnotation"]) {
 		API_GETANNOTATIONS(_dossierRef);
@@ -462,21 +462,35 @@
 	file = [NSFileHandle fileHandleForWritingAtPath:filePath];
 	[file writeData:[document documentData]];
 	
-	// Adrien tests
+	// Adrien Releasing old ReaderViewController
 	
 	if (_readerViewController) {
 		_readerDocument = nil;
-//		_readerViewController.dataSource = nil;
+		_readerViewController.dataSource = nil;
 		_readerViewController.delegate = nil;
+		NSLog(@"Adrien - Controller retain count : %ld", CFGetRetainCount((__bridge CFTypeRef)_readerViewController));
 		[_readerViewController willMoveToParentViewController:nil];
+		NSLog(@"Adrien - Controller retain count : %ld", CFGetRetainCount((__bridge CFTypeRef)_readerViewController));
 		_readerViewController = nil;
+		
+		for (CALayer* layer in [self.view.layer sublayers])
+		{
+			[layer removeAllAnimations];
+		}
 	}
 	
-	_readerDocument = [ReaderDocument withDocumentFilePath:filePath password:nil];
+	for(UIView *subview in [self.view subviews]) {
+		NSLog(@"Adrien - View retain count : %ld", CFGetRetainCount((__bridge CFTypeRef)subview));
+		[subview removeFromSuperview];
+		NSLog(@"Adrien - View retain count : %ld", CFGetRetainCount((__bridge CFTypeRef)subview));
+	}
 	
+	// new ReaderViewController
+	
+	_readerDocument = [ReaderDocument newWithDocumentFilePath:filePath password:nil];
 	_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
-//	_readerViewController.dataSource = self;
-//	_readerViewController.annotationsEnabled = _isDocumentPrincipal;
+	_readerViewController.dataSource = self;
+	_readerViewController.annotationsEnabled = _isDocumentPrincipal;
 	_readerViewController.delegate = self;
 	
 	_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
@@ -485,16 +499,7 @@
 													 UIViewAutoresizingFlexibleHeight )];
 	[[self view] setAutoresizesSubviews:YES];
 	[[self.view subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	
-	  
-	for(UIView *subview in [self.view subviews]) {
-		NSLog(@"Adrien - Retain count : %ld", CFGetRetainCount((__bridge CFTypeRef)subview));
-		[subview removeFromSuperview];
-	}
-	
-	
 	[[self view] addSubview:_readerViewController.view];
-	[self addChildViewController:_readerViewController];
 	
 	HIDE_HUD
 	
@@ -542,7 +547,7 @@
 
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	//[_readerViewController up];
+	[_readerViewController updateScrollViewContentViews];
 }
 
 

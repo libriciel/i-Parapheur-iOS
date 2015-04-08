@@ -64,7 +64,6 @@
 
 @property (strong, nonatomic) ReaderViewController* readerViewController;
 @property (strong, nonatomic) ReaderDocument *readerDocument;
-@property (nonatomic, strong) UIView* originalView;
 @property (strong, nonatomic) UIPopoverController *documentsPopover;
 @property (strong, nonatomic) UIPopoverController *actionPopover;
 
