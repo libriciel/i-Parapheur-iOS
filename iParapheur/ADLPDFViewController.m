@@ -57,7 +57,7 @@
 	NSLog(@"View loaded : ADLPDFViewController");
 
 	[self deleteEveryBinFile];
-	[DeviceUtils forceDisplaySplitViewMasterOnPortrait:self.splitViewController];
+	//[DeviceUtils forceDisplaySplitViewMasterOnPortrait:self.splitViewController];
 	
 	// Build UI
 	

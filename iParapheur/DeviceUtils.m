@@ -95,22 +95,22 @@
 }
 
 
-+ (void)forceDisplaySplitViewMasterOnPortrait:(UISplitViewController *)splitViewController {
-	
-	// Displays master view on portrait-startup
-	
-	if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
-		@try {
-			#pragma clang diagnostic push
-			#pragma clang diagnostic ignored "-Wundeclared-selector"
-			[splitViewController performSelector:@selector(toggleMasterVisible:)];
-			#pragma clang diagnostic pop
-		}
-		@catch (NSException *exception) {
-			NSLog(@"Caught exception %@", exception);
-		}
-	}
-}
+//+ (void)forceDisplaySplitViewMasterOnPortrait:(UISplitViewController *)splitViewController {
+//	
+//	// Displays master view on portrait-startup
+//	
+//	if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+//		@try {
+//			#pragma clang diagnostic push
+//			#pragma clang diagnostic ignored "-Wundeclared-selector"
+//			[splitViewController performSelector:@selector(toggleMasterVisible:)];
+//			#pragma clang diagnostic pop
+//		}
+//		@catch (NSException *exception) {
+//			NSLog(@"Caught exception %@", exception);
+//		}
+//	}
+//}
 
 
 @end
