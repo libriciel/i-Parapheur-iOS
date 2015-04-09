@@ -419,6 +419,67 @@
 }
 
 
+/**
+ * Responses for API v2 requests.
+ */
+-(void)didEndWithRequestAnswer:(NSDictionary*)answer {
+	NSString *s = [answer objectForKey:@"_req"];
+	HIDE_HUD
+	
+	if ([s isEqual:GETDOSSIER_API]) {
+		_document = [answer copy];
+		[self displayDocumentAt: 0];
+		
+		self.navigationController.navigationBar.topItem.title = [_document objectForKey:@"titre"];
+		
+		NSArray *buttons;
+		
+		if ([[_document objectForKey:@"documents"] count] > 1)
+			buttons = [[NSArray alloc] initWithObjects:_actionButton, _documentsButton, _detailsButton, nil];
+		else
+			buttons = [[NSArray alloc] initWithObjects:_actionButton, _detailsButton, nil];
+		
+		self.navigationItem.rightBarButtonItems = buttons;
+		
+		NSString *documentPrincipal = [[[_document objectForKey:@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
+		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
+		NSLog(@"%@", [_document objectForKey:@"actions"]);
+		
+		if ([[[_document objectForKey:@"actions"] objectForKey:@"sign"] isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+			if ([[_document objectForKey:@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
+				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
+				ADLRequester *requester = [ADLRequester sharedRequester];
+				[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
+			}
+			else {
+				_visaEnabled = YES;
+				_signatureFormat = nil;
+			}
+		}
+		
+		SHOW_HUD
+	}
+	else if ([s isEqualToString:@"getSignInfo"]) {
+		_signatureFormat = [[[answer objectForKey:_dossierRef] objectForKey:@"format"] copy];
+	}
+	else if ([s isEqualToString:GETANNOTATIONS_API]) {
+		NSArray *annotations = [[answer objectForKey:@"annotations"] copy];
+		
+		_annotations = annotations;
+		
+//		for (NSNumber *contentViewIdx in [_readerViewController contentViews])
+//			[[[[_readerViewController contentViews] objectForKey:contentViewIdx] contentPage] refreshAnnotations];
+	}
+	else if ([s isEqualToString:@"addAnnotation"]) {
+		API_GETANNOTATIONS(_dossierRef);
+	}
+	else if ([s isEqual:GETCIRCUIT_API]) {
+		self.circuit = [answer objectForKey:@"circuit"];
+		API_GETANNOTATIONS(_dossierRef);
+	}
+}
+
+
 -(void)didEndWithUnReachableNetwork {
 	HIDE_HUD
 }
