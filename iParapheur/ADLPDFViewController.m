@@ -56,6 +56,7 @@
 	[super viewDidLoad];
 	NSLog(@"View loaded : ADLPDFViewController");
 
+	[self deleteEveryBinFile];
 	[DeviceUtils forceDisplaySplitViewMasterOnPortrait:self.splitViewController];
 	
 	// Build UI
@@ -72,21 +73,21 @@
 												 name:kDossierSelected
 											   object:nil];
 	
-//	[[NSNotificationCenter defaultCenter] addObserver:self
-//											 selector:@selector(clearDetail:)
-//												 name:kSelectBureauAppeared
-//											   object:nil];
-//	
-//	[[NSNotificationCenter defaultCenter] addObserver:self
-//											 selector:@selector(clearDetail:)
-//												 name:kDossierActionComplete
-//											   object:nil];
-//	
-//	[[NSNotificationCenter defaultCenter] addObserver:self
-//											 selector:@selector(clearDetail:)
-//												 name:kFilterChanged
-//											   object:nil];
-//	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(clearDetail:)
+												 name:kSelectBureauAppeared
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(clearDetail:)
+												 name:kDossierActionComplete
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(clearDetail:)
+												 name:kFilterChanged
+											   object:nil];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(showDocumentWithIndex:)
 												 name:kshowDocumentWithIndex
@@ -125,6 +126,11 @@
 		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
 	else
 		return YES;
+}
+
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	// [_readerViewController updateScrollViewContentViews];
 }
 
 
@@ -479,6 +485,11 @@
 }
 
 
+-(void)clearDetail: (NSNotification*) notification {
+	[self dismissReaderViewController:_readerViewController];
+}
+
+
 #pragma mark - Split view
 
 
@@ -511,10 +522,70 @@
 #pragma mark - Private methods
 
 
+-(void)deleteEveryBinFile {
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		//here everything you want to perform in background
+		
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		
+		// The preferred way to get the apps documents directory
+		
+		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		NSString *docDirectory = [documentsPaths objectAtIndex:0];
+		
+		// Grab all the files in the documents dir
+		
+		NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory error:nil];
+		
+		// Filter the array for only bin files
+		
+		NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.bin'"];
+		NSArray *binFiles = [allFiles filteredArrayUsingPredicate:fltr];
+		
+		// Use fast enumeration to iterate the array and delete the files
+		
+		for (NSString *binFile in binFiles) {
+			NSError *error = nil;
+			[fileManager removeItemAtPath:[docDirectory stringByAppendingPathComponent:binFile] error:&error];
+		}
+	});
+}
+
+
+-(BOOL)checkFileExists:(NSString *)fileName {
+	
+	// The preferred way to get the apps documents directory
+	
+	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *docDirectory = [documentsPaths objectAtIndex:0];
+	
+	// Grab all the files in the documents dir
+	
+	NSString* testFile = [docDirectory stringByAppendingPathComponent:fileName];
+	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:testFile];
+	
+	NSLog(@"Adrien exits : %d", fileExists);
+	return fileExists;
+}
+
+
 -(void)requestAnnotations {
 	
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		//[self refreshAnnotations:_dossierRef];
+		__weak typeof(self) weakSelf = self;
+		[_restClient getAnnotations:_dossierRef
+							success:^(NSArray *annotations) {
+								__strong typeof(weakSelf) strongSelf = weakSelf;
+								if (strongSelf) {
+									strongSelf.annotations = annotations;
+									
+									//								for (NSNumber *contentViewIdx in [strongSelf.readerViewController contentViews])
+									//									[[[[strongSelf.readerViewController contentViews] objectForKey:contentViewIdx] contentPage] requestAnnotations];
+								}
+							} failure:^(NSError *error) {
+								NSLog(@"getAnnotations error");
+							}];
 	}
 	else {
 		ADLRequester *requester = [ADLRequester sharedRequester];
@@ -599,7 +670,7 @@
 
 -(void)displayDocumentAt:(NSInteger)index {
 	
-	//SHOW_HUD
+	SHOW_HUD
 	
 	_isDocumentPrincipal = (index == 0);
 	ADLRequester *requester = [ADLRequester sharedRequester];
@@ -630,22 +701,30 @@
 
 -(void)didEndWithDocument:(ADLDocument*)document {
 	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSFileHandle *file;
-	
-	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	
-	NSString *docPath = [documentsPaths objectAtIndex:0];
-	NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin", docPath, @"myfile"];
-	[fileManager createFileAtPath:filePath
-						 contents:nil
-					   attributes:nil];
-	
-	file = [NSFileHandle fileHandleForWritingAtPath:filePath];
-	[file writeData:[document documentData]];
-	
-	[self loadPdfAt:filePath];
-	[self requestAnnotations];
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		//here everything you want to perform in background
+		
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSFileHandle *file;
+		
+		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		
+		NSString *docPath = [documentsPaths objectAtIndex:0];
+		NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin", docPath, _dossierRef];
+		[fileManager createFileAtPath:filePath
+							 contents:nil
+						   attributes:nil];
+		
+		file = [NSFileHandle fileHandleForWritingAtPath:filePath];
+		[file writeData:[document documentData]];
+
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			//call back to main queue to update user interface
+			[self loadPdfAt:filePath];
+			[self requestAnnotations];
+		});
+	});
 }
 
 
