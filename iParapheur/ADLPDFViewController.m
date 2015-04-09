@@ -87,10 +87,10 @@
 //												 name:kFilterChanged
 //											   object:nil];
 //	
-//	[[NSNotificationCenter defaultCenter] addObserver:self
-//											 selector:@selector(showDocumentWithIndex:)
-//												 name:kshowDocumentWithIndex
-//											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(showDocumentWithIndex:)
+												 name:kshowDocumentWithIndex
+											   object:nil];
 }
 
 
@@ -467,6 +467,15 @@
 	}
 	
 	//[[self navigationController] popToRootViewControllerAnimated:YES];
+}
+
+
+-(void)showDocumentWithIndex:(NSNotification*) notification {
+	
+	NSNumber* docIndex = [notification object];
+	[self displayDocumentAt:[docIndex integerValue]];
+	[_documentsPopover dismissPopoverAnimated:YES];
+	_documentsPopover = nil;
 }
 
 
