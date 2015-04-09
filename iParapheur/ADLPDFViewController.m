@@ -38,6 +38,15 @@
 #pragma mark - UIViewController methods
 
 
+
+#pragma mark - Constants
+
+#define DEMO_VIEW_CONTROLLER_PUSH TRUE
+
+#pragma mark - UIViewController methods
+
+
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -52,17 +61,17 @@
 	
 	self.title = [[NSString alloc] initWithFormat:@"%@ v%@", name, version];
 	
+	_restClient = [ADLRestClient sharedManager];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(dossierSelected:)
 												 name:kDossierSelected
 											   object:nil];
-
-	_restClient = [ADLRestClient sharedManager];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+	[self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -102,6 +111,29 @@
 	[super didReceiveMemoryWarning];
 }
 
+#pragma mark - UIGestureRecognizer methods
+
+- (void)loadPdfAt:(NSString *)filePath
+{
+	_readerDocument = [ReaderDocument withDocumentFilePath:filePath password:nil];
+	
+	if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
+	{
+		_readerViewController.delegate = nil;
+		_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
+		NSLog(@"Adrien readerViewController created");
+		
+		_readerViewController.delegate = self; // Set the ReaderViewController delegate to self
+		
+		[self.navigationController popToRootViewControllerAnimated:FALSE];
+		[self.navigationController pushViewController:_readerViewController animated:NO];
+	}
+	else // Log an error so that we know that something went wrong
+	{
+		NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, filePath, nil);
+	}
+}
+
 #pragma mark - ReaderViewControllerDelegate methods
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController
@@ -115,17 +147,15 @@
 	[self dismissViewControllerAnimated:YES completion:NULL];
 	
 #endif // DEMO_VIEW_CONTROLLER_PUSH
-	
 }
 
 
 -(void)dossierSelected: (NSNotification*) notification {
 	NSString *dossierRef = [notification object];
-	_dossierRef = dossierRef;
 	
-	for(UIView *subview in [self.view subviews]) {
-		[subview removeFromSuperview];
-	}
+	NSLog(@"Adrien DossierSelected");
+
+	_dossierRef = dossierRef;
 	
 	//SHOW_HUD
 	
@@ -144,18 +174,18 @@
 							NSLog(@"getBureau fail : %@", error.localizedDescription);
 						}];
 		
-		[_restClient getCircuit:_dossierRef
-						success:^(ADLResponseCircuit *circuit) {
-							__strong typeof(weakSelf) strongSelf = weakSelf;
-							if (strongSelf) {
-								//HIDE_HUD
-								strongSelf.circuit = [NSMutableArray arrayWithObject:circuit];
-								//[strongSelf refreshAnnotations:dossierRef];
-							}
-						}
-						failure:^(NSError *error) {
-							NSLog(@"getCircuit fail : %@", error.localizedDescription);
-						}];
+//		[_restClient getCircuit:_dossierRef
+//						success:^(ADLResponseCircuit *circuit) {
+//							__strong typeof(weakSelf) strongSelf = weakSelf;
+//							if (strongSelf) {
+//								//HIDE_HUD
+//								strongSelf.circuit = [NSMutableArray arrayWithObject:circuit];
+//								//[strongSelf refreshAnnotations:dossierRef];
+//							}
+//						}
+//						failure:^(NSError *error) {
+//							NSLog(@"getCircuit fail : %@", error.localizedDescription);
+//						}];
 	}
 	else {
 		// API_GETDOSSIER(_dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
@@ -248,7 +278,7 @@
 	file = [NSFileHandle fileHandleForWritingAtPath:filePath];
 	[file writeData:[document documentData]];
 	
-	[self didEndWithDocumentAtPath:filePath];
+	[self loadPdfAt:filePath];
 }
 
 

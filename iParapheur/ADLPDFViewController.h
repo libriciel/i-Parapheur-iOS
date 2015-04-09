@@ -48,7 +48,7 @@
 #import "ADLResponseDossier.h"
 
 
-@interface ADLPDFViewController : UIViewController <ADLParapheurWallDelegateProtocol>
+@interface ADLPDFViewController : UIViewController
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 
