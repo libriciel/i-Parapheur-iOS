@@ -104,10 +104,6 @@
 
 - (void)didReceiveMemoryWarning
 {
-#ifdef DEBUG
-	NSLog(@"%s", __FUNCTION__);
-#endif
-	
 	[super didReceiveMemoryWarning];
 }
 
@@ -119,14 +115,31 @@
 	
 	if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
 	{
+		// Deleting previous child controller
+		
 		_readerViewController.delegate = nil;
+		[_readerViewController willMoveToParentViewController:nil];
+		[_readerViewController.view removeFromSuperview];
+		[_readerViewController removeFromParentViewController];
+		_readerViewController = nil;
+		
+		// Creating new child controller
+		
 		_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
+		
 		NSLog(@"Adrien readerViewController created");
 		
 		_readerViewController.delegate = self; // Set the ReaderViewController delegate to self
 		
-		[self.navigationController popToRootViewControllerAnimated:FALSE];
-		[self.navigationController pushViewController:_readerViewController animated:NO];
+		_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
+		
+		[_readerViewController.view setAutoresizingMask:( UIViewAutoresizingFlexibleWidth |
+														 UIViewAutoresizingFlexibleHeight )];
+		[[self view] setAutoresizesSubviews:YES];
+		[[self.view subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+		
+		[self addChildViewController:_readerViewController];
+		[[self view] addSubview:_readerViewController.view];
 	}
 	else // Log an error so that we know that something went wrong
 	{
