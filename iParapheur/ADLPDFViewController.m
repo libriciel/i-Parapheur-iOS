@@ -437,7 +437,7 @@
 	
 	_dossierRef = dossierRef;
 	
-	//SHOW_HUD
+	SHOW_HUD
 	
 	__weak typeof(self) weakSelf = self;
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
@@ -446,7 +446,7 @@
 						success:^(ADLResponseDossier *result) {
 							__strong typeof(weakSelf) strongSelf = weakSelf;
 							if (strongSelf) {
-								//HIDE_HUD
+								HIDE_HUD
 								[strongSelf getDossierDidEndWithRequestAnswer:result];
 							}
 						}
@@ -458,7 +458,7 @@
 								success:^(ADLResponseCircuit *circuit) {
 									__strong typeof(weakSelf) strongSelf = weakSelf;
 									if (strongSelf) {
-										//HIDE_HUD
+										HIDE_HUD
 										strongSelf.circuit = [NSMutableArray arrayWithObject:circuit];
 										//[strongSelf refreshAnnotations:dossierRef];
 									}
@@ -487,6 +487,23 @@
 
 -(void)clearDetail: (NSNotification*) notification {
 	[self dismissReaderViewController:_readerViewController];
+	
+	// Hide title
+	
+	self.navigationController.navigationBar.topItem.title = nil;
+	
+	// Hide Buttons
+	
+	NSArray *buttons = [[NSArray alloc] initWithObjects:nil];
+	self.navigationItem.rightBarButtonItems = buttons;
+	
+	// Hide popovers
+	
+	if (_documentsPopover != nil)
+		[_documentsPopover dismissPopoverAnimated:NO];
+
+	if (_actionPopover != nil)
+		[_actionPopover dismissPopoverAnimated:NO];
 }
 
 
@@ -527,8 +544,6 @@
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		//here everything you want to perform in background
 		
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		
 		// The preferred way to get the apps documents directory
 		
 		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -536,6 +551,7 @@
 		
 		// Grab all the files in the documents dir
 		
+		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory error:nil];
 		
 		// Filter the array for only bin files
@@ -553,7 +569,7 @@
 }
 
 
--(BOOL)checkFileExists:(NSString *)fileName {
+-(NSString *)getFilePathWithDossierRef:(NSString *)dossierRef {
 	
 	// The preferred way to get the apps documents directory
 	
@@ -562,11 +578,10 @@
 	
 	// Grab all the files in the documents dir
 	
-	NSString* testFile = [docDirectory stringByAppendingPathComponent:fileName];
-	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:testFile];
+	NSString *fileName = [NSString stringWithFormat:@"%@.bin", _dossierRef];
+	NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
 	
-	NSLog(@"Adrien exits : %d", fileExists);
-	return fileExists;
+	return filePath;
 }
 
 
@@ -612,9 +627,11 @@
 											   __strong typeof(weakSelf) strongSelf = weakSelf;
 											   if (strongSelf) {
 												   strongSelf.signatureFormat = [signInfo.signatureInformations objectForKey:@"format"];
+												   HIDE_HUD
 											   }
 										   }
 										   failure:^(NSError *error) {
+											   HIDE_HUD
 											   NSLog(@"getSignInfo %@", error.localizedDescription);
 										   }];
 			}
@@ -670,9 +687,27 @@
 
 -(void)displayDocumentAt:(NSInteger)index {
 	
-	SHOW_HUD
-	
 	_isDocumentPrincipal = (index == 0);
+	
+	// File cache
+	
+	NSString *filePath = [self getFilePathWithDossierRef:_dossierRef];
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+		
+		NSLog(@"PDF : Cached data");
+
+		[self loadPdfAt:filePath];
+		[self requestAnnotations];
+		
+		return;
+	}
+	
+	// Downloading files
+	
+	NSLog(@"PDF : Download data");
+	
+	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _dossier.documents) {
@@ -701,6 +736,7 @@
 
 -(void)didEndWithDocument:(ADLDocument*)document {
 	
+	HIDE_HUD
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		//here everything you want to perform in background
 		
