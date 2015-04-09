@@ -675,12 +675,10 @@
 
 -(void)requestSignInfoForDossier:(ADLResponseDossier*)dossier {
 	
-	SHOW_HUD
-	
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-				
+				SHOW_HUD
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
@@ -697,6 +695,7 @@
 										   }];
 			}
 			else {
+				SHOW_HUD
 				NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObject:_dossierRef], @"dossiers", nil];
 				ADLRequester *requester = [ADLRequester sharedRequester];
 				[requester request:@"getSignInfo" andArgs:signInfoArgs delegate:self];
