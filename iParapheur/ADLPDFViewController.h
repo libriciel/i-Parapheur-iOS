@@ -49,6 +49,11 @@
 
 
 @interface ADLPDFViewController : UIViewController
+<ADLParapheurWallDelegateProtocol,
+ReaderViewControllerDelegate,
+UIPopoverControllerDelegate,
+ADLDrawingViewDataSource,
+LGViewHUDDelegate>
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 

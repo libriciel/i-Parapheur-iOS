@@ -318,7 +318,6 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	NSLog(@"Adrien ReaderViewController dealloc");
 }
 
 - (void)viewDidLoad
