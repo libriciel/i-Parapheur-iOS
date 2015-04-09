@@ -20,6 +20,5 @@
 
 + (void)logWarningMessage:(NSString *)message;
 
-//+ (void)forceDisplaySplitViewMasterOnPortrait:(UISplitViewController *)splitViewController;
 
 @end

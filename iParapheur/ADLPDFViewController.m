@@ -57,12 +57,27 @@
 	NSLog(@"View loaded : ADLPDFViewController");
 
 	[self deleteEveryBinFile];
-	//[DeviceUtils forceDisplaySplitViewMasterOnPortrait:self.splitViewController];
 	
 	// Build UI
 	
 	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
 	self.navigationItem.rightBarButtonItem = nil;
+	
+	if ([[[UIDevice currentDevice] systemVersion] floatValue] > 8.0) {
+		UISplitViewController *uiSplitView = (UISplitViewController *)[UIApplication sharedApplication].delegate.window.rootViewController;
+		UIBarButtonItem *backButton = uiSplitView.displayModeButtonItem;
+		
+		self.navigationItem.leftBarButtonItem = backButton;
+		self.navigationItem.leftItemsSupplementBackButton = YES;
+		
+		@try {
+			#pragma clang diagnostic push
+			#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+			[backButton.target performSelector:backButton.action];
+			#pragma clang diagnostic pop
+		}
+		@catch (NSException *e) { }
+	}
 	
 	_restClient = [ADLRestClient sharedManager];
 	
@@ -579,8 +594,8 @@
 	barButtonItem.title = @"Dossiers";
 	barButtonItem.tintColor = [UIColor darkBlueColor];
 	
-	[self.navigationItem setLeftBarButtonItem:barButtonItem
-									 animated:YES];
+//	[self.navigationItem setLeftBarButtonItem:barButtonItem
+//									 animated:YES];
 //	self.masterPopoverController = popoverController;
 }
 
@@ -590,8 +605,8 @@
  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
 	
 	// Called when the view is shown again in the split view, invalidating the button and popover controller.
-	[self.navigationItem setLeftBarButtonItem:nil
-									 animated:YES];
+//	[self.navigationItem setLeftBarButtonItem:nil
+//									 animated:YES];
 	
 //	self.masterPopoverController = nil;
 }
