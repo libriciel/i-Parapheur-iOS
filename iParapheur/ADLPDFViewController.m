@@ -409,7 +409,7 @@
 	
 	self.navigationItem.rightBarButtonItems = buttons;
 	
-	[self refreshSignInfoForDossier:dossier];
+	[self requestSignInfoForDossier:dossier];
 }
 
 
@@ -423,10 +423,101 @@
 }
 
 
+#pragma mark - NotificationCenter selectors
+
+
+-(void)dossierSelected:(NSNotification*) notification {
+	NSString *dossierRef = [notification object];
+	
+	_dossierRef = dossierRef;
+	
+	//SHOW_HUD
+	
+	__weak typeof(self) weakSelf = self;
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
+						dossier:_dossierRef
+						success:^(ADLResponseDossier *result) {
+							__strong typeof(weakSelf) strongSelf = weakSelf;
+							if (strongSelf) {
+								//HIDE_HUD
+								[strongSelf getDossierDidEndWithRequestAnswer:result];
+							}
+						}
+						failure:^(NSError *error) {
+							NSLog(@"getBureau fail : %@", error.localizedDescription);
+						}];
+		
+				[_restClient getCircuit:_dossierRef
+								success:^(ADLResponseCircuit *circuit) {
+									__strong typeof(weakSelf) strongSelf = weakSelf;
+									if (strongSelf) {
+										//HIDE_HUD
+										strongSelf.circuit = [NSMutableArray arrayWithObject:circuit];
+										//[strongSelf refreshAnnotations:dossierRef];
+									}
+								}
+								failure:^(NSError *error) {
+									NSLog(@"getCircuit fail : %@", error.localizedDescription);
+								}];
+	}
+	else {
+		API_GETDOSSIER(_dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
+		API_GETCIRCUIT(_dossierRef);
+	}
+	
+	//[[self navigationController] popToRootViewControllerAnimated:YES];
+}
+
+
+#pragma mark - Split view
+
+
+-(void)splitViewController:(UISplitViewController *)splitController
+	willHideViewController:(UIViewController *)viewController
+		 withBarButtonItem:(UIBarButtonItem *)barButtonItem
+	  forPopoverController:(UIPopoverController *)popoverController {
+	
+	barButtonItem.title = @"Dossiers";
+	barButtonItem.tintColor = [UIColor darkBlueColor];
+	
+	[self.navigationItem setLeftBarButtonItem:barButtonItem
+									 animated:YES];
+//	self.masterPopoverController = popoverController;
+}
+
+
+-(void)splitViewController:(UISplitViewController *)splitController
+	willShowViewController:(UIViewController *)viewController
+ invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
+	
+	// Called when the view is shown again in the split view, invalidating the button and popover controller.
+	[self.navigationItem setLeftBarButtonItem:nil
+									 animated:YES];
+	
+//	self.masterPopoverController = nil;
+}
+
+
 #pragma mark - Private methods
 
 
--(void)refreshSignInfoForDossier:(ADLResponseDossier*)dossier {
+-(void)requestAnnotations {
+	
+	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		//[self refreshAnnotations:_dossierRef];
+	}
+	else {
+		ADLRequester *requester = [ADLRequester sharedRequester];
+		NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossier", nil];
+		[requester request:GETANNOTATIONS_API
+				   andArgs:args
+				  delegate:self];
+	}
+}
+
+
+-(void)requestSignInfoForDossier:(ADLResponseDossier*)dossier {
 	
 	SHOW_HUD
 	
@@ -497,50 +588,6 @@
 }
 
 
--(void)dossierSelected: (NSNotification*) notification {
-	NSString *dossierRef = [notification object];
-
-	_dossierRef = dossierRef;
-	
-	//SHOW_HUD
-	
-	__weak typeof(self) weakSelf = self;
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
-						dossier:_dossierRef
-						success:^(ADLResponseDossier *result) {
-							__strong typeof(weakSelf) strongSelf = weakSelf;
-							if (strongSelf) {
-								//HIDE_HUD
-								[strongSelf getDossierDidEndWithRequestAnswer:result];
-							}
-						}
-						failure:^(NSError *error) {
-							NSLog(@"getBureau fail : %@", error.localizedDescription);
-						}];
-		
-//		[_restClient getCircuit:_dossierRef
-//						success:^(ADLResponseCircuit *circuit) {
-//							__strong typeof(weakSelf) strongSelf = weakSelf;
-//							if (strongSelf) {
-//								//HIDE_HUD
-//								strongSelf.circuit = [NSMutableArray arrayWithObject:circuit];
-//								//[strongSelf refreshAnnotations:dossierRef];
-//							}
-//						}
-//						failure:^(NSError *error) {
-//							NSLog(@"getCircuit fail : %@", error.localizedDescription);
-//						}];
-	}
-	else {
-		API_GETDOSSIER(_dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
-		API_GETCIRCUIT(_dossierRef);
-	}
-	
-	//[[self navigationController] popToRootViewControllerAnimated:YES];
-}
-
-
 -(void)displayDocumentAt:(NSInteger)index {
 	
 	//SHOW_HUD
@@ -589,56 +636,7 @@
 	[file writeData:[document documentData]];
 	
 	[self loadPdfAt:filePath];
-}
-
-
--(void)didEndWithDocumentAtPath:(NSString*)filePath {
-	
-	// Adrien Releasing old ReaderViewController
-	
-	if (_readerViewController) {
-		_readerDocument = nil;
-		_readerViewController.delegate = nil;
-		[_readerViewController willMoveToParentViewController:nil];
-		_readerViewController = nil;
-		
-		for (CALayer* layer in [self.view.layer sublayers])
-		{
-			[layer removeAllAnimations];
-		}
-	}
-	
-	for(UIView *subview in [self.view subviews]) {
-		[subview removeFromSuperview];
-	}
-	
-	// new ReaderViewController
-	
-	_readerDocument = [ReaderDocument withDocumentFilePath:filePath password:nil];
-	_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
-	_readerViewController.delegate = self;
-	
-	_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
-	
-	[_readerViewController.view setAutoresizingMask:( UIViewAutoresizingFlexibleWidth |
-													 UIViewAutoresizingFlexibleHeight )];
-		
-	[[self.view subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[[self view] addSubview:_readerViewController.view];
-	
-	HIDE_HUD
-	
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:_dossierRef, @"dossier", nil];
-	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-		//[self refreshAnnotations:_dossierRef];
-	}
-	else {
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:GETANNOTATIONS_API
-				   andArgs:args
-				  delegate:self];
-	}
+	[self requestAnnotations];
 }
 
 
