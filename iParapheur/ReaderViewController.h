@@ -26,6 +26,8 @@
 #import <UIKit/UIKit.h>
 
 #import "ReaderDocument.h"
+#import "ReaderMainToolbar.h"
+
 
 @class ReaderViewController;
 
@@ -42,6 +44,14 @@
 @property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object;
+
+#pragma mark - Adullact fork
+
+-(ReaderMainToolbar *)getMainToolBar;
+
+-(NSMutableDictionary *)getContentViews;
+
+#pragma mark - Adullact fork end
 
 @end
 

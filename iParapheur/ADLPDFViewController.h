@@ -40,7 +40,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
-#import "ReaderViewController.h"
+#import "ReaderViewControllerWithAnnotationsViewController.h"
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
 #import "ADLAPIHelper.h"
@@ -62,7 +62,7 @@ LGViewHUDDelegate>
 @property (strong, nonatomic) ADLResponseDossier *dossier;
 @property (strong, nonatomic) NSString *dossierRef;
 
-@property (strong, nonatomic) ReaderViewController* readerViewController;
+@property (strong, nonatomic) ReaderViewControllerWithAnnotationsViewController* readerViewController;
 @property (strong, nonatomic) ReaderDocument *readerDocument;
 @property (strong, nonatomic) UIPopoverController *documentsPopover;
 @property (strong, nonatomic) UIPopoverController *actionPopover;
@@ -78,6 +78,9 @@ LGViewHUDDelegate>
 @property (assign, nonatomic) BOOL visaEnabled;
 
 @property (assign, nonatomic) BOOL isDocumentPrincipal;
+
+
+- (void)requestAnnotations;
 
 
 @end

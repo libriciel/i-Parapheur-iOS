@@ -171,6 +171,7 @@
 		C5C803641A5D90F200D54F7D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803631A5D90F200D54F7D /* Foundation.framework */; };
 		C5D7E7011AA9C05A00A736B4 /* icon_login.png in Resources */ = {isa = PBXBuildFile; fileRef = C5D7E7001AA9C05A00A736B4 /* icon_login.png */; };
 		C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */; };
+		C5F1E4381AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1E4371AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.m */; };
 		EA7029BB7E3A6A3A903A1932 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -448,6 +449,8 @@
 		C5D7E7001AA9C05A00A736B4 /* icon_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login.png; sourceTree = "<group>"; };
 		C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
 		C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
+		C5F1E4361AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderViewControllerWithAnnotationsViewController.h; sourceTree = "<group>"; };
+		C5F1E4371AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderViewControllerWithAnnotationsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -622,6 +625,8 @@
 				B44649E816241657002622DF /* ADLAnnotation.m */,
 				95719C801893D50600246F7C /* ADLInfoView.h */,
 				95719C811893D50600246F7C /* ADLInfoView.m */,
+				C5F1E4361AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.h */,
+				C5F1E4371AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.m */,
 			);
 			name = Annotations;
 			sourceTree = "<group>";
@@ -1260,6 +1265,7 @@
 				C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
+				C5F1E4381AD7F80A00A85815 /* ReaderViewControllerWithAnnotationsViewController.m in Sources */,
 				C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLPasswordAlertView.m in Sources */,
