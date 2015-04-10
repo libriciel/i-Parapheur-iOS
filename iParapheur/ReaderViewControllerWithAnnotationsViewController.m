@@ -20,9 +20,12 @@
     [super viewDidLoad];
 	NSLog(@"View loaded : ReaderViewControllerWithAnnotationsViewController");
 
-	[super getMainToolBar].hidden=TRUE;
+	[[super getMainToolBar] removeFromSuperview];
 	
 }
 
+- (void)handleDoubleTap:(UITapGestureRecognizer *)recognizer{
+	NSLog(@"Adrien Double tap");
+}
 
 @end

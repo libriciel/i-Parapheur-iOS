@@ -143,6 +143,12 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 		
 		theContentPage = [[ReaderContentPage alloc] initWithURL:fileURL page:page password:phrase];
 		
+#pragma mark - Adullact fork
+		
+		[theContentPage setDataSource:_dataSource];
+		
+#pragma mark - Adullact fork
+		
 		if (theContentPage != nil) // Must have a valid and initialized content page
 		{
 			theContainerView = [[UIView alloc] initWithFrame:theContentPage.bounds];
