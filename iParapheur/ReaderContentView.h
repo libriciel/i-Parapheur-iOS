@@ -26,7 +26,6 @@
 #import <UIKit/UIKit.h>
 
 #import "ReaderThumbView.h"
-#import "ADLDrawingView.h"
 
 @class ReaderContentView;
 @class ReaderContentPage;
@@ -53,12 +52,6 @@
 - (void)zoomIncrement:(UITapGestureRecognizer *)recognizer;
 - (void)zoomDecrement:(UITapGestureRecognizer *)recognizer;
 - (void)zoomResetAnimated:(BOOL)animated;
-
-#pragma mark - Adullact fork
-
-@property (nonatomic, weak) id<ADLDrawingViewDataSource> dataSource;
-
-#pragma mark - Adullact fork end
 
 @end
 

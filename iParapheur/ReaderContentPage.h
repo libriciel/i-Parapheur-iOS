@@ -24,9 +24,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ADLDrawingView.h"
 
-@interface ReaderContentPage : ADLDrawingView
+@interface ReaderContentPage : UIView
 
 - (instancetype)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
 
