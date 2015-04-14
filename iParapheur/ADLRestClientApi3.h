@@ -9,11 +9,7 @@
 @interface ADLRestClientApi3 : NSObject
 
 
-@property (nonatomic, strong) AFHTTPSessionManager *getManager;
-
-// For PUT/DELETE/POST, we need other settings that can be set on initialization only,
-// Taht's why we need a second HTTPSessionManaget, at least with AFNetworking. (See init for details)
-@property (nonatomic, strong) AFHTTPSessionManager *postManager;
+@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 
 
 -(id)init;
