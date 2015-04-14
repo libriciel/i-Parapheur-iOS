@@ -64,20 +64,11 @@
 	
 	// Initialize AFNetworking HTTPClient
 	
+	if (_sessionManager)
+		[self cancelAllOperations];
+	
 	NSURL *baseURL = [NSURL URLWithString:url];
-	
-	_getManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-	_postManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-	
-	// GetManager init
-	
-	[_getManager.requestSerializer setAuthorizationHeaderFieldWithUsername:login
-																  password:password];
-	
-	// PostManager init
-	// Here are the reasons why we have two managers : GET needs a HTTPRequestSerializer/JSONResponseSerializer
-	// and PUT/POST/DELETE needs the opposite : JSONRequestSerializer/HTTPResponseSerializer.
-	// (We can't change them on runtime without messing with the requests in the waiting list)
+	_sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
 	
 	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
 	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -85,30 +76,29 @@
 	[requestSerializer setAuthorizationHeaderFieldWithUsername:login
 													  password:password];
 	
-	_postManager.requestSerializer = requestSerializer;
+	_sessionManager.requestSerializer = requestSerializer;
 	
-	AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
-	[_postManager setResponseSerializer:responseSerializer];
+	// GET needs a JSONResponseSerializer,
+	// POST/PUT/DELETE needs an HTTPResponseSerializer
+	
+	AFHTTPResponseSerializer *compoundResponseSerializer = [AFCompoundResponseSerializer compoundSerializerWithResponseSerializers:@[[AFJSONResponseSerializer serializer],
+																																	 [AFHTTPResponseSerializer serializer]]];
+	[_sessionManager setResponseSerializer:compoundResponseSerializer];
 	
 	// Security policy, for SSL checks.
 	// The .cer files (mobile server public keys) are automatically loaded from the app bundle,
 	// We just have to put them in the supporting files folder
 	
-	_getManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-	_getManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
-	_getManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
-	_getManager.securityPolicy.validatesDomainName = YES;
+	_sessionManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+	_sessionManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
+	_sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
+	_sessionManager.securityPolicy.validatesDomainName = YES;
 	
-	_postManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-	_postManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
-	_postManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
-	_postManager.securityPolicy.validatesDomainName = YES;
 }
 
 
 -(void)cancelAllOperations {
-	[_getManager.operationQueue cancelAllOperations];
-	[_postManager.operationQueue cancelAllOperations];
+	[_sessionManager.operationQueue cancelAllOperations];
 }
 
 
@@ -130,7 +120,7 @@
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
 		
-	[_getManager GET:@"/parapheur/api/getApiLevel"
+	[_sessionManager GET:@"/parapheur/api/getApiLevel"
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
@@ -172,7 +162,7 @@
 -(void)getBureaux:(void (^)(NSArray *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	[_getManager GET:@"/parapheur/bureaux"
+	[_sessionManager GET:@"/parapheur/bureaux"
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
@@ -218,7 +208,7 @@
 	//@"corbeilleName" : @"",
 	//@"metas" : @"",
 	
-	[_getManager GET:@"/parapheur/dossiers"
+	[_sessionManager GET:@"/parapheur/dossiers"
 		  parameters:queryParams
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 				 
@@ -247,7 +237,7 @@
 	
 	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
 	
-	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
+	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
 		  parameters:queryParams
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
@@ -276,7 +266,7 @@
 	
 	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
 	
-	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
+	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
 		  parameters:queryParams
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
@@ -302,7 +292,7 @@
 		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure {
 	
-	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
+	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
@@ -328,7 +318,7 @@
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
-	[_getManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
+	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
 		  parameters:nil
 			 success:^(NSURLSessionDataTask *task, id responseObject) {
 				 
@@ -374,7 +364,7 @@ typedef enum {
 				failure:(void (^)(NSError *))failure {
 	
 	if (type == ADLRequestTypePOST) {
-		[_postManager POST:url
+		[_sessionManager POST:url
 				parameters:args
 				   success:^(NSURLSessionDataTask *operation, id responseObject) {
 					   success(nil);
@@ -384,7 +374,7 @@ typedef enum {
 				   }];
 	}
 	else if (type == ADLRequestTypePUT) {
-		[_postManager PUT:url
+		[_sessionManager PUT:url
 				  parameters:args
 					 success:^(NSURLSessionDataTask *operation, id responseObject) {
 						 success(nil);
@@ -394,7 +384,7 @@ typedef enum {
 					 }];
 	}
 	else if (type == ADLRequestTypeDELETE) {
-		[_postManager DELETE:url
+		[_sessionManager DELETE:url
 				  parameters:args
 						success:^(NSURLSessionDataTask *operation, id responseObject) {
 							success(nil);
