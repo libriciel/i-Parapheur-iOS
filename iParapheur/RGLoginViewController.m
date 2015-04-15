@@ -149,7 +149,7 @@
 - (void)dismissWithSuccess:(BOOL)success {
 	
 	if (_restClient)
-	[_restClient cancelAllOperations];
+		[_restClient cancelAllOperations];
 	
 	// Saving proper data
 	
@@ -169,7 +169,7 @@
 	
 	// Reset singleton values
 	
-	[[ADLRestClient sharedManager] reset];
+	[[ADLRestClient sharedManager] resetClient];
 	
 	//
 	

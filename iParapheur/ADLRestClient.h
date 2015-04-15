@@ -13,7 +13,7 @@
 - (id)init;
 
 
-- (void)reset;
+- (void)resetClient;
 
 
 +(NSNumber *)getRestApiVersion;
