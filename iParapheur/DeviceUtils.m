@@ -9,11 +9,11 @@
 @implementation DeviceUtils
 
 
-+ (BOOL)isConnectedToInternet {
-	Reachability *reachability = [Reachability reachabilityForInternetConnection];
-	NetworkStatus networkStatus = [reachability currentReachabilityStatus];
-	return networkStatus != NotReachable;
-}
+//+ (BOOL)isConnectedToInternet {
+//	Reachability *reachability = [Reachability reachabilityForInternetConnection];
+//	NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+//	return networkStatus != NotReachable;
+//}
 
 
 + (void)logError:(NSError *)error {

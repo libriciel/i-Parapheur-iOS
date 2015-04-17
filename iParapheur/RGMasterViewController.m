@@ -433,16 +433,16 @@
 	
 	// Cancel event if no internet
 	
-	if (![DeviceUtils isConnectedToInternet]) {
-		
-		[tableView deselectRowAtIndexPath:indexPath
-								 animated:YES];
-		
-		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
-														 code:kCFURLErrorNotConnectedToInternet
-													 userInfo:nil]];
-		return;
-	}
+//	if (![DeviceUtils isConnectedToInternet]) {
+//		
+//		[tableView deselectRowAtIndexPath:indexPath
+//								 animated:YES];
+//		
+//		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
+//														 code:kCFURLErrorNotConnectedToInternet
+//													 userInfo:nil]];
+//		return;
+//	}
 
 	// Call Desk view
 	

@@ -674,14 +674,14 @@ numberOfRowsInSection:(NSInteger)section {
 	
 	// Cancel event if no internet
 	
-	if (![DeviceUtils isConnectedToInternet]) {
-
-		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
-														 code:kCFURLErrorNotConnectedToInternet
-													 userInfo:nil]];
-		[cell flickerSelection];
-		return;
-	}
+//	if (![DeviceUtils isConnectedToInternet]) {
+//
+//		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
+//														 code:kCFURLErrorNotConnectedToInternet
+//													 userInfo:nil]];
+//		[cell flickerSelection];
+//		return;
+//	}
 	
 	// v2/v3 compatibility
 	
