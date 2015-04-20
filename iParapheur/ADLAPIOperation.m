@@ -8,7 +8,7 @@
 
 #import "ADLAPIOperation.h"
 #import "ADLDocument.h"
-#import "Reachability.h"
+#import "SCNetworkReachability.h"
 #import "ADLCredentialVault.h"
 #import "DeviceUtils.h"
 
@@ -35,10 +35,9 @@
 	static dispatch_once_t oncePredicate;
 	
 	dispatch_once(&oncePredicate, ^{
-		_networkRequestThread = [[NSThread alloc]
-								 initWithTarget:self
-								 selector:@selector(networkRequestThreadEntryPoint:)
-								 object:nil];
+		_networkRequestThread = [[NSThread alloc] initWithTarget:self
+														selector:@selector(networkRequestThreadEntryPoint:)
+														  object:nil];
 		_networkRequestThread.name = @"Network Request Thread";
 		[_networkRequestThread start];
 	});
@@ -117,67 +116,81 @@
 		return;
 	}
 	
-	
 	[self setIsExecuting: YES];
 	
-	
-	Reachability *reachability = [Reachability reachabilityForInternetConnection];
-	
-	if ([reachability currentReachabilityStatus] == NotReachable) {
-		if (_delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)])
-			[_delegate didEndWithUnReachableNetwork];
-	}
-	else {
+	__weak typeof(self) weakSelf = self;
+	[SCNetworkReachability host:@"www.apple.com"
+			 reachabilityStatus:^(SCNetworkStatus status) {
 		
-		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-		NSString *alf_ticket = [vault getTicketForHost:_collectivityDef.host
-										   andUsername:_collectivityDef.username];
-		NSURL *requestURL = nil;
-		
-		if (alf_ticket != nil) {
-			if (downloadingDocument) {
-				requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN, _collectivityDef.host, _documentPath, alf_ticket]];
-			}
-			else {
-				requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN, _collectivityDef.host, _request, alf_ticket]];
+		__strong typeof(weakSelf) strongSelf = weakSelf;
+		if (strongSelf) {
+			switch (status) {
+				case SCNetworkStatusReachableViaWiFi:
+				case SCNetworkStatusReachableViaCellular: {
+					
+					ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
+					NSString *alf_ticket = [vault getTicketForHost:_collectivityDef.host
+													   andUsername:_collectivityDef.username];
+					NSURL *requestURL = nil;
+					
+					if (alf_ticket != nil) {
+						if (downloadingDocument) {
+							requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN, _collectivityDef.host, _documentPath, alf_ticket]];
+						}
+						else {
+							requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN, _collectivityDef.host, _request, alf_ticket]];
+						}
+					}
+					else {
+						//login or programming error
+						requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:API_URL_PATTERN, _collectivityDef.host, _request]];
+					}
+					
+					NSLog(@"%@", requestURL);
+					
+					NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestURL];
+					
+					if (downloadingDocument) {
+						[request setHTTPMethod:@"GET"];
+					}
+					else {
+						if (get) {
+							[request setHTTPMethod:@"GET"];
+						}
+						else {
+							[request setHTTPMethod:@"POST"];
+							NSError *error = [NSError new];
+							[request setHTTPBody:[NSJSONSerialization dataWithJSONObject:_args
+																				 options:0
+																				   error:&error]];
+						}
+						
+						[request setValue:@"application/json"
+					   forHTTPHeaderField:@"Content-Type"];
+						
+						[request setValue:@"gzip"
+					   forHTTPHeaderField:@"Accept-Encoding"];
+					}
+					
+					NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
+																				  delegate:self
+																		  startImmediately:NO];
+					
+					[connection scheduleInRunLoop:[NSRunLoop currentRunLoop]
+										  forMode:NSDefaultRunLoopMode];
+					
+					_receivedData= [NSMutableData data];
+					[connection start];
+					break;
+				}
+				case SCNetworkStatusNotReachable: {
+					if (_delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)])
+						[_delegate didEndWithUnReachableNetwork];
+					break;
+				}
 			}
 		}
-		else {
-			//login or programming error
-			requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:API_URL_PATTERN, _collectivityDef.host, _request]];
-		}
-		
-		NSLog(@"%@", requestURL);
-		
-		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestURL];
-		
-		if (downloadingDocument) {
-			[request setHTTPMethod:@"GET"];
-		}
-		else {
-			if (get) {
-				[request setHTTPMethod:@"GET"];
-			}
-			else {
-				[request setHTTPMethod:@"POST"];
-				NSError *error = [NSError new];
-				[request setHTTPBody:[NSJSONSerialization dataWithJSONObject:_args options:0 error:&error]];
-			}
-			[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-			[request setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-		}
-		
-		NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
-																	  delegate:self startImmediately:NO];
-		
-		[connection scheduleInRunLoop:[NSRunLoop currentRunLoop]
-							  forMode:NSDefaultRunLoopMode];
-		
-		_receivedData= [NSMutableData data];
-		
-		[connection start];
-		
-	}
+	}];
 }
 
 
@@ -215,7 +228,8 @@
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge; {
 #ifndef DEBUG_NO_SERVER_TRUST
 	SecTrustRef trust = challenge.protectionSpace.serverTrust;
-	NSString *adullact_mobile_path = [[NSBundle mainBundle] pathForResource:@"acmobile" ofType:@"der"];
+	NSString *adullact_mobile_path = [[NSBundle mainBundle] pathForResource:@"acmobile"
+																	 ofType:@"der"];
 	
 	SecCertificateRef adullact_mobile = [self certificateFromFile:adullact_mobile_path];
 	
@@ -244,7 +258,8 @@
 		(res == kSecTrustResultProceed || res == kSecTrustResultUnspecified) ) {
 		
 		newCredential = [NSURLCredential credentialForTrust:trust];
-		[[challenge sender] useCredential:newCredential forAuthenticationChallenge:challenge];
+		[[challenge sender] useCredential:newCredential
+			   forAuthenticationChallenge:challenge];
 	}
 	else {
 		[[challenge sender] cancelAuthenticationChallenge:challenge];
@@ -306,19 +321,25 @@
 		// trigger downloadedDoc delegate
 		if ([_delegate respondsToSelector:@selector(didEndWithDocument:)]) {
 			ADLDocument *document = [ADLDocument documentWithData:_receivedData AndMimeType:_mimeType];
-			[_delegate performSelectorOnMainThread:@selector(didEndWithDocument:) withObject:document waitUntilDone:YES];
+			[_delegate performSelectorOnMainThread:@selector(didEndWithDocument:)
+										withObject:document
+									 waitUntilDone:YES];
 		}
 	}
 	else {
 		// trigger api request delegate.
 		//[self parseResponse:_receivedData andReq:_request];
 		NSError *error = [NSError new];
-		NSMutableDictionary* responseObject = [NSJSONSerialization JSONObjectWithData:_receivedData options:NSJSONReadingMutableContainers error:&error];
+		NSMutableDictionary* responseObject = [NSJSONSerialization JSONObjectWithData:_receivedData
+																			  options:NSJSONReadingMutableContainers
+																				error:&error];
 		
 		[responseObject setObject:_request forKey:@"_req"];
 		
 		if (_delegate && [_delegate respondsToSelector:@selector(didEndWithRequestAnswer:) ]) {
-			[_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:) withObject:responseObject waitUntilDone:NO];
+			[_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:)
+										withObject:responseObject
+									 waitUntilDone:NO];
 		}
 		// [str release];
 	}

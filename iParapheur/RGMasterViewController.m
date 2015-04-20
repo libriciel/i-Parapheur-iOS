@@ -54,7 +54,7 @@
 #import "ADLCollectivityDef.h"
 #import "LGViewHUD.h"
 #import "ADLRestClient.h"
-#import "Reachability.h"
+#import "SCNetworkReachability.h"
 #import "ADLResponseBureau.h"
 #import "StringUtils.h"
 #import "DeviceUtils.h"
@@ -217,24 +217,26 @@
 
 - (void)setNewConnectionTryOnNetworkRetrieved {
 	
-	Reachability *reach = [Reachability reachabilityWithHostname:@"google.com"];
 	__weak typeof(self) weakSelf = self;
-	[reach setReachableBlock:^(Reachability *reachblock) {
+	[SCNetworkReachability host:@"www.apple.com"
+			 reachabilityStatus:^(SCNetworkStatus status) {
 		
-		// keep in mind this is called on a background thread
-		// and if you are updating the UI it needs to happen
-		// on the main thread, like this:
-		dispatch_async(dispatch_get_main_queue(), ^{
-			__strong typeof(weakSelf) strongSelf = weakSelf;
-			if (strongSelf) {
-				[strongSelf.refreshControl beginRefreshing];
-				[strongSelf.tableView setContentOffset:CGPointMake(0, strongSelf.tableView.contentOffset.y-strongSelf.refreshControl.frame.size.height) animated:YES];
-				[strongSelf initRestClient];
+		__strong typeof(weakSelf) strongSelf = weakSelf;
+		if (strongSelf) {
+			switch (status) {
+				case SCNetworkStatusReachableViaWiFi:
+				case SCNetworkStatusReachableViaCellular:
+					[strongSelf.refreshControl beginRefreshing];
+					[strongSelf.tableView setContentOffset:CGPointMake(0, strongSelf.tableView.contentOffset.y-strongSelf.refreshControl.frame.size.height)
+												  animated:YES];
+					[strongSelf initRestClient];
+					break;
+					
+				case SCNetworkStatusNotReachable:
+					break;
 			}
-		});
+		}
 	}];
-
-	[reach startNotifier];
 }
 
 

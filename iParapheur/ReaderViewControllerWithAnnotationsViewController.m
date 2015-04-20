@@ -2,7 +2,6 @@
 //  ReaderViewControllerWithAnnotationsViewController.m
 //  iParapheur
 //
-//  Created by Adrien Bricchi on 10/04/2015.
 //
 //
 

@@ -1,6 +1,4 @@
 #import "DeviceUtils.h"
-#import "Reachability.h"
-#import "DeviceUtils.h"
 #import "StringUtils.h"
 #import <ALAlertBanner/ALAlertBanner.h>
 #import <SystemConfiguration/SystemConfiguration.h>

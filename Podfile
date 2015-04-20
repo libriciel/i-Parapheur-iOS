@@ -1,6 +1,6 @@
 platform :ios, '7.0'
 
-pod 'Reachability'
+pod 'SCNetworkReachability'
 pod 'CustomBadge'
 pod 'ISO8601DateFormatter'
 pod 'AFNetworking'
