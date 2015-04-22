@@ -366,7 +366,7 @@
 		[_restClient addAnnotations:args
 						 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 							success:^(NSArray *result) {
-								__strong typeof(weakSelf) strongSelf = weakSelf;
+								// __strong typeof(weakSelf) strongSelf = weakSelf;
 								//								if (strongSelf) {
 								//									[strongSelf refreshAnnotations:strongSelf.dossierRef];
 								//								}

@@ -98,7 +98,9 @@
 	self.refreshControl = [[UIRefreshControl alloc] init];
 	[self.refreshControl setTintColor:[UIColor selectedCellGreyColor]];
 	
-	[self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+	[self.refreshControl addTarget:self
+							action:@selector(refresh)
+				  forControlEvents:UIControlEventValueChanged];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(refresh)
@@ -159,10 +161,8 @@
 														forKey:@"cm:title"]]
 														  forKey:@"or"];
 		
-		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:types
-																																	forKey:@"or"],
-																										[NSDictionary dictionaryWithObject:sousTypes
-																																	forKey:@"or"],
+		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:types forKey:@"or"],
+																										[NSDictionary dictionaryWithObject:sousTypes forKey:@"or"],
 																										titre,
 																										nil]
 																	   forKey:@"and"];
@@ -322,12 +322,13 @@
 
 
 -(void)showMoreActions:(id) sender {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc]
-								  initWithTitle:@"Traitement par lot"
-								  delegate:self
-								  cancelButtonTitle:nil
-								  destructiveButtonTitle:nil
-								  otherButtonTitles:nil];
+	
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Traitement par lot"
+															 delegate:self
+													cancelButtonTitle:nil
+											   destructiveButtonTitle:nil
+													otherButtonTitles:nil];
+	
 	for (NSString *action in self.secondaryActions) {
 		NSString *actionName = [ADLAPIHelper actionNameForAction:action];
 		[actionSheet addButtonWithTitle:actionName];
@@ -345,11 +346,14 @@
 		}
 	}
 	if (moreItem) {
-		[actionSheet showFromBarButtonItem:moreItem animated:YES];
+		[actionSheet showFromBarButtonItem:moreItem
+								  animated:YES];
 	}
 	//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
 	else {
-		[actionSheet showFromRect:((UIView*)sender).frame inView:self.view animated:YES];
+		[actionSheet showFromRect:((UIView*)sender).frame
+						   inView:self.view
+						 animated:YES];
 	}
 }
 
@@ -592,7 +596,9 @@ numberOfRowsInSection:(NSInteger)section {
 #pragma mark - UISearchBarDelegate protocol implementation
 
 
--(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+-(void)searchBar:(UISearchBar *)searchBar
+   textDidChange:(NSString *)searchText {
+	
 	[self filterDossiersForSearchText:searchText];
 	[self.tableView reloadData];
 }
@@ -608,7 +614,8 @@ numberOfRowsInSection:(NSInteger)section {
 }
 
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue
+				sender:(id)sender {
 	
 	if ([segue.identifier isEqualToString:@"filterSegue"]) {
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
@@ -640,11 +647,14 @@ numberOfRowsInSection:(NSInteger)section {
 #pragma mark UIActionSheetDelegate protocol implementation
 
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)actionSheet:(UIActionSheet *)actionSheet
+clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
 	if (buttonIndex < self.secondaryActions.count) {
 		NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
 		@try {
-			[self performSegueWithIdentifier:action sender:self];
+			[self performSegueWithIdentifier:action
+									  sender:self];
 		}
 		@catch (NSException *exception) {
 			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
