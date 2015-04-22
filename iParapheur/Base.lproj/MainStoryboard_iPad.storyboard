@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -612,7 +612,7 @@
                                 <items>
                                     <navigationItem id="KQG-uS-9PL">
                                         <barButtonItem key="leftBarButtonItem" title="Annuler" id="Kg3-C6-MaR"/>
-                                        <barButtonItem key="rightBarButtonItem" title="Connexion" id="ob5-DY-khh"/>
+                                        <barButtonItem key="rightBarButtonItem" title="Connexion" style="done" id="ob5-DY-khh"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
