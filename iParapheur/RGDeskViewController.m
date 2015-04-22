@@ -323,58 +323,98 @@
 
 -(void)showMoreActions:(id) sender {
 	
-	// Create Popup Controller
-	
-	UIAlertController *actionController = [UIAlertController alertControllerWithTitle:@"Traitement par lot"
-																			  message:nil
-																	   preferredStyle:UIAlertControllerStyleActionSheet];
-	
-	[actionController setModalPresentationStyle:UIModalPresentationPopover];
-	
-	// Create Popup actions
-	
-	for (NSString *action in _secondaryActions) {
+	if ([UIAlertController class]) { // iOS8
 		
-		NSString *actionName = [ADLAPIHelper actionNameForAction:action];
-		UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
-														 style:UIAlertActionStyleDefault
-													   handler:^(UIAlertAction *action) {
-														   [self clickOnSecondaryAction:action.title];
-													   }];
-		[actionController addAction:action];
-	}
-	
-	UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
-													 style:UIAlertActionStyleDefault
-												   handler:nil];
-	[actionController addAction:actionAnnuler];
-
-	// Find the barButtonItem
-	
-	UIBarButtonItem *moreItem = nil;
-	
-	for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
-		if ([(UIView*)sender isDescendantOfView:item.customView]) {
-			moreItem = item;
-			break;
+		// Create Popup Controller
+		
+		UIAlertController *actionController = [UIAlertController alertControllerWithTitle:@"Traitement par lot"
+																				  message:nil
+																		   preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		[actionController setModalPresentationStyle:UIModalPresentationPopover];
+		
+		// Create Popup actions
+		
+		for (NSString *action in _secondaryActions) {
+			
+			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
+			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
+															 style:UIAlertActionStyleDefault
+														   handler:^(UIAlertAction *action) {
+															   [self clickOnSecondaryAction:action.title];
+														   }];
+			[actionController addAction:action];
+		}
+		
+		UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
+																style:UIAlertActionStyleDefault
+															  handler:nil];
+		[actionController addAction:actionAnnuler];
+		
+		// Find the barButtonItem
+		
+		UIBarButtonItem *moreItem = nil;
+		
+		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
+			if ([(UIView*)sender isDescendantOfView:item.customView]) {
+				moreItem = item;
+				break;
+			}
+		}
+		
+		// Display the popup
+		
+		[self presentViewController:actionController
+						   animated:YES
+						 completion:nil];
+		
+		UIPopoverPresentationController *popPresenter = [actionController popoverPresentationController];
+		
+		if (moreItem) {
+			popPresenter.sourceView = moreItem.customView;
+			popPresenter.sourceRect = moreItem.customView.bounds;
+		}
+		else {
+			popPresenter.sourceView = (UIView *)sender;
+			popPresenter.sourceRect = ((UIView *)sender).bounds;
 		}
 	}
-	
-	// Display the popup
-	
-	[self presentViewController:actionController
-					   animated:YES
-					 completion:nil];
-	
-	UIPopoverPresentationController *popPresenter = [actionController popoverPresentationController];
+	else { // iOS7
+		
+		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Traitement par lot"
+																 delegate:self
+														cancelButtonTitle:nil
+												   destructiveButtonTitle:nil
+														otherButtonTitles:nil];
 
-	if (moreItem) {
-		popPresenter.sourceView = moreItem.customView;
-		popPresenter.sourceRect = moreItem.customView.bounds;
-	}
-	else {
-		popPresenter.sourceView = (UIView *)sender;
-		popPresenter.sourceRect = ((UIView *)sender).bounds;
+		for (NSString *action in self.secondaryActions) {
+			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
+			[actionSheet addButtonWithTitle:actionName];
+		}
+		[actionSheet addButtonWithTitle:@"Annuler"];
+
+		// Find the barButtonItem
+
+		UIBarButtonItem *moreItem = nil;
+		
+		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
+			if ([(UIView*)sender isDescendantOfView:item.customView]) {
+				moreItem = item;
+				break;
+			}
+		}
+
+		if (moreItem) {
+			[actionSheet showFromBarButtonItem:moreItem
+									  animated:YES];
+		}
+
+		//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
+		else {
+			[actionSheet showFromRect:((UIView*)sender).frame
+							   inView:self.view
+							 animated:YES];
+		}
 	}
 }
 
@@ -662,6 +702,21 @@ numberOfRowsInSection:(NSInteger)section {
 -(void)viewDidUnload {
 	[self setLoadMoreButton:nil];
 	[super viewDidUnload];
+}
+
+#pragma mark UIActionSheetDelegate protocol implementation
+
+/**
+ * iOS7 response of ActionSheet events.
+ * The UIActionSheetDelegate isn't used anymore in iOS8.
+ */
+-(void)actionSheet:(UIActionSheet *)actionSheet
+clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
+	if (buttonIndex < self.secondaryActions.count) {
+		NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
+		[self clickOnSecondaryAction:action];
+	}
 }
 
 
