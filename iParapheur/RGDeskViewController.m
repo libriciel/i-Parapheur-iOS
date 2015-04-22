@@ -323,20 +323,34 @@
 
 -(void)showMoreActions:(id) sender {
 	
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Traitement par lot"
-															 delegate:self
-													cancelButtonTitle:nil
-											   destructiveButtonTitle:nil
-													otherButtonTitles:nil];
+	// Create Popup Controller
 	
-	for (NSString *action in self.secondaryActions) {
+	UIAlertController *actionController = [UIAlertController alertControllerWithTitle:@"Traitement par lot"
+																			  message:nil
+																	   preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	[actionController setModalPresentationStyle:UIModalPresentationPopover];
+	
+	// Create Popup actions
+	
+	for (NSString *action in _secondaryActions) {
+		
 		NSString *actionName = [ADLAPIHelper actionNameForAction:action];
-		[actionSheet addButtonWithTitle:actionName];
+		UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
+														 style:UIAlertActionStyleDefault
+													   handler:^(UIAlertAction *action) {
+														   [self clickOnSecondaryAction:action.title];
+													   }];
+		[actionController addAction:action];
 	}
-	[actionSheet addButtonWithTitle:@"Annuler"];
 	
-	
+	UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
+													 style:UIAlertActionStyleDefault
+												   handler:nil];
+	[actionController addAction:actionAnnuler];
+
 	// Find the barButtonItem
+	
 	UIBarButtonItem *moreItem = nil;
 	
 	for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
@@ -345,15 +359,22 @@
 			break;
 		}
 	}
+	
+	// Display the popup
+	
+	[self presentViewController:actionController
+					   animated:YES
+					 completion:nil];
+	
+	UIPopoverPresentationController *popPresenter = [actionController popoverPresentationController];
+
 	if (moreItem) {
-		[actionSheet showFromBarButtonItem:moreItem
-								  animated:YES];
+		popPresenter.sourceView = moreItem.customView;
+		popPresenter.sourceRect = moreItem.customView.bounds;
 	}
-	//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
 	else {
-		[actionSheet showFromRect:((UIView*)sender).frame
-						   inView:self.view
-						 animated:YES];
+		popPresenter.sourceView = (UIView *)sender;
+		popPresenter.sourceRect = ((UIView *)sender).bounds;
 	}
 }
 
@@ -644,27 +665,19 @@ numberOfRowsInSection:(NSInteger)section {
 }
 
 
-#pragma mark UIActionSheetDelegate protocol implementation
-
-
--(void)actionSheet:(UIActionSheet *)actionSheet
-clickedButtonAtIndex:(NSInteger)buttonIndex {
+-(void)clickOnSecondaryAction:(NSString *)actionName {
 	
-	if (buttonIndex < self.secondaryActions.count) {
-		NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
-		@try {
-			[self performSegueWithIdentifier:action
-									  sender:self];
-		}
-		@catch (NSException *exception) {
-			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-									   delegate:nil
-							  cancelButtonTitle:@"Fermer"
-							  otherButtonTitles:nil]
-			 show];
-		}
-		@finally {}
+	@try {
+		[self performSegueWithIdentifier:actionName
+								  sender:self];
+	}
+	@catch (NSException *exception) {
+		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+									message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+								   delegate:nil
+						  cancelButtonTitle:@"Fermer"
+						  otherButtonTitles:nil]
+		 show];
 	}
 }
 

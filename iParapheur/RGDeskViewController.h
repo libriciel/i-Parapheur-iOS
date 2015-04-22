@@ -51,7 +51,6 @@
         ADLParapheurWallDelegateProtocol,
         UITableViewDataSource,
         UITableViewDelegate,
-        UIActionSheetDelegate,
         UISearchBarDelegate,
         RGFileCellDelegate,
         FilterDelegate,
