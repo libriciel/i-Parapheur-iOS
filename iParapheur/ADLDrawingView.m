@@ -56,26 +56,34 @@
     if (self) {
         _hittedView = nil;
         _currentAnnotView = nil;
-        UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-        doubleTapGestureRecognizer.numberOfTapsRequired = 2;
-        [self addGestureRecognizer:doubleTapGestureRecognizer];
-        /*
-         UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-         */
-        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+		
+//        UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+//																									 action:@selector(handleDoubleTap:)];
+//        doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+//        [self addGestureRecognizer:doubleTapGestureRecognizer];
+
+        _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+																					action:@selector(handleLongPress:)];
         
         _longPressGestureRecognizer.cancelsTouchesInView = NO;
         
         [self addGestureRecognizer:_longPressGestureRecognizer];
         
-        [self addGestureRecognizer:doubleTapGestureRecognizer];
-        
+//        [self addGestureRecognizer:doubleTapGestureRecognizer];
+		
         // by default disable annotations
         _enabled = YES;
         _shallUpdateCurrent = NO;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(keyboardWillShow:)
+													 name:UIKeyboardWillShowNotification
+												   object:nil];
+		
+        [[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(keyboardWillHide:)
+													 name:UIKeyboardWillHideNotification
+												   object:nil];
         
         //self.clipsToBounds = YES;
     }
@@ -189,7 +197,6 @@
 -(void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
     // CGPoint touchPoint = [gestureRecognizer locationInView:self];
     //    UIView *hitted = [self hitTest:touchPoint withEvent:event];
-    
 }
 
 
@@ -224,7 +231,7 @@
         [self animateviewOnLongPressGesture:touchPoint];
         _hasBeenLongPressed = YES;
     }
-    
+	
 }
 
 
@@ -305,24 +312,6 @@
 -(CGRect)convertToPixelRect:(CGRect)uiViewRect {
     return CGRectZero;
 }
-
-
-/*
- -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
- 
- UITouch *touch = [touches anyObject];
- 
- if (_selected) {
- _anchor = [self anchorForTouchLocation:[touch locationInView:self]];
- 
- }
- else {
- _selected = YES;
- [self setNeedsDisplay];
- }
- 
- }
- */
 
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {

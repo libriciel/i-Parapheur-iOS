@@ -51,6 +51,8 @@
 
 -(NSMutableDictionary *)getContentViews;
 
+-(NSInteger)getCurrentPage;
+
 #pragma mark - Adullact fork end
 
 @end

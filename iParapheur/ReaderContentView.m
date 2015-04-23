@@ -375,6 +375,14 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 	[super touchesMoved:touches withEvent:event]; // Message superclass
 }
 
+#pragma mark - Adullact fork
+
+-(ReaderContentPage *)getTheContentPage {
+	return theContentPage;
+}
+
+#pragma mark - Adullact fork end
+
 @end
 
 #pragma mark -
@@ -398,5 +406,6 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 	
 	return self;
 }
+
 
 @end

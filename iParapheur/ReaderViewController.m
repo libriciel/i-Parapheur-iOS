@@ -909,6 +909,10 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	return contentViews;
 }
 
+-(NSInteger)getCurrentPage {
+	return currentPage;
+}
+
 #pragma mark - Adullact fork end
 
 @end

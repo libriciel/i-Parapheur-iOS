@@ -49,6 +49,12 @@
 
 - (id)processSingleTap:(UITapGestureRecognizer *)recognizer;
 
+#pragma mark - Adullact fork
+
+-(ReaderContentPage *)getTheContentPage;
+
+#pragma mark - Adullact fork end
+
 - (void)zoomIncrement:(UITapGestureRecognizer *)recognizer;
 - (void)zoomDecrement:(UITapGestureRecognizer *)recognizer;
 - (void)zoomResetAnimated:(BOOL)animated;

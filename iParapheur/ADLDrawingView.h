@@ -113,6 +113,8 @@
 
 -(NSArray*) annotationsForPage:(NSUInteger)page;
 
+-(void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer;
+
 
 @end
 
