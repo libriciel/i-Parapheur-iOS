@@ -31,6 +31,7 @@
 #import "ReaderContentView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
+#import "ADLDrawingView.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -136,9 +137,8 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	ReaderContentView *contentView = [[ReaderContentView alloc] initWithFrame:viewRect fileURL:fileURL page:page password:phrase]; // ReaderContentView
 	
 #pragma mark - Adullact fork
-	contentView.super
+	((ADLDrawingView *) [contentView getContentPage]).superScrollView = theScrollView;
 #pragma mark - Adullact fork end
-	
 	
 	contentView.message = self; [contentViews setObject:contentView forKey:[NSNumber numberWithInteger:page]]; [scrollView addSubview:contentView];
 	

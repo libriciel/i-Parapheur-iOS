@@ -150,6 +150,7 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 			theContainerView.autoresizesSubviews = NO;
 #pragma mark - Adullact fork
 			theContainerView.userInteractionEnabled = YES;
+			theContentPage.parentScrollView = self;
 #pragma mark - Adullact fork end
 			theContainerView.contentMode = UIViewContentModeRedraw;
 			theContainerView.autoresizingMask = UIViewAutoresizingNone;
@@ -377,6 +378,13 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 	[super touchesMoved:touches withEvent:event]; // Message superclass
 }
 
+#pragma mark - Adullact fork
+
+- (ReaderContentPage *)getContentPage {
+	return theContentPage;
+}
+
+#pragma mark - Adullact fork end
 
 @end
 

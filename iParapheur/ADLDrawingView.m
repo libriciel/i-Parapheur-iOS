@@ -53,6 +53,7 @@
 
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
+	
     if (self) {
         _hittedView = nil;
         _currentAnnotView = nil;
@@ -196,12 +197,6 @@
 }
 
 
--(void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
-    // CGPoint touchPoint = [gestureRecognizer locationInView:self];
-    //    UIView *hitted = [self hitTest:touchPoint withEvent:event];
-}
-
-
 -(void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 	
     if (!_hittedView && _enabled) {
@@ -228,6 +223,7 @@
 
 
 -(void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
+	
     CGPoint touchPoint = [gestureRecognizer locationInView:self];
     
     if (_hittedView && _enabled && _hittedView.annotationModel.editable) {
@@ -240,10 +236,8 @@
 -(void)touchesBegan:(NSSet *)touches
 		  withEvent:(UIEvent *)event {
 	
-	[super touchesBegan:touches
-			  withEvent:event];
-    
     if (_enabled) {
+		
         UITouch *touch = [[event allTouches] anyObject];
         
         CGPoint touchPoint = [self clipPointToView:[touch locationInView:self]];
@@ -255,12 +249,11 @@
             [self unselectAnnotations];
             _hittedView = nil;
             
-            
             if (hitted != self) {
-                
+				
                 [(ADLAnnotationView*)hitted handleTouchInside];
-                //if (_hasBeenLongPressed) {
-                _parentScrollView.scrollEnabled = NO;
+				
+				_parentScrollView.scrollEnabled = NO;
                 _superScrollView.scrollEnabled = NO;
                 _hittedView = (ADLAnnotationView*)hitted;
                 _origin = hitted.frame.origin;
@@ -276,10 +269,9 @@
                 [_hittedView setNeedsDisplay];
             }
             else {
-                _parentScrollView.scrollEnabled = YES;
+				_parentScrollView.scrollEnabled = YES;
                 _superScrollView.scrollEnabled = YES;
                 _hasBeenLongPressed = NO;
-                
             }
         }
     }
