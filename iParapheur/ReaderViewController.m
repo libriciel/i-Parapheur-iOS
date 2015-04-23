@@ -135,6 +135,11 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	
 	ReaderContentView *contentView = [[ReaderContentView alloc] initWithFrame:viewRect fileURL:fileURL page:page password:phrase]; // ReaderContentView
 	
+#pragma mark - Adullact fork
+	contentView.super
+#pragma mark - Adullact fork end
+	
+	
 	contentView.message = self; [contentViews setObject:contentView forKey:[NSNumber numberWithInteger:page]]; [scrollView addSubview:contentView];
 	
 	[contentView showPageThumb:fileURL page:page password:phrase guid:guid]; // Request page preview thumb
