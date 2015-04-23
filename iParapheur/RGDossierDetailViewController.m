@@ -45,7 +45,6 @@
 //
 
 #import "RGMasterViewController.h"
-#import "RGMasterViewController.h"
 #import "RGReaderViewController.h"
 #import "RGAppDelegate.h"
 #import "RGDocumentsView.h"

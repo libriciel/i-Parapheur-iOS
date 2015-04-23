@@ -57,21 +57,25 @@
         _hittedView = nil;
         _currentAnnotView = nil;
 		
-//        UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-//																									 action:@selector(handleDoubleTap:)];
-//        doubleTapGestureRecognizer.numberOfTapsRequired = 2;
-//        [self addGestureRecognizer:doubleTapGestureRecognizer];
+		// DoubleTabGestureRecogniser
+		
+        UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+																									 action:@selector(handleDoubleTap:)];
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+		
+        [self addGestureRecognizer:doubleTapGestureRecognizer];
 
+		// LongPressGestureRecogniser
+		
         _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
 																					action:@selector(handleLongPress:)];
         
         _longPressGestureRecognizer.cancelsTouchesInView = NO;
         
         [self addGestureRecognizer:_longPressGestureRecognizer];
-        
-//        [self addGestureRecognizer:doubleTapGestureRecognizer];
 		
         // by default disable annotations
+		
         _enabled = YES;
         _shallUpdateCurrent = NO;
         
@@ -84,8 +88,6 @@
 												 selector:@selector(keyboardWillHide:)
 													 name:UIKeyboardWillHideNotification
 												   object:nil];
-        
-        //self.clipsToBounds = YES;
     }
     return self;
 }
@@ -201,6 +203,7 @@
 
 
 -(void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
+	
     if (!_hittedView && _enabled) {
         CGPoint touchPoint = [gestureRecognizer locationInView:self];
         CGRect annotFrame = [self clipRectInView:CGRectMake(touchPoint.x, touchPoint.y, kAnnotationMinHeight, kAnnotationMinWidth)];
@@ -231,7 +234,6 @@
         [self animateviewOnLongPressGesture:touchPoint];
         _hasBeenLongPressed = YES;
     }
-	
 }
 
 
@@ -249,7 +251,7 @@
         UIView *hitted = [self hitTest:touchPoint withEvent:event];
         
         if ([hitted isKindOfClass:[ADLAnnotationView class]] || [hitted isKindOfClass:[ADLDrawingView class]]) {
-            
+
             [self unselectAnnotations];
             _hittedView = nil;
             

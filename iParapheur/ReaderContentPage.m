@@ -411,7 +411,9 @@
 	if ((self = [super initWithFrame:frame]))
 	{
 		self.autoresizesSubviews = NO;
-		self.userInteractionEnabled = NO;
+#pragma mark - Adullact fork
+		self.userInteractionEnabled = YES;
+#pragma mark - Adullact fork end
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingNone;
 		self.backgroundColor = [UIColor clearColor];

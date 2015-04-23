@@ -148,7 +148,9 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 			theContainerView = [[UIView alloc] initWithFrame:theContentPage.bounds];
 			
 			theContainerView.autoresizesSubviews = NO;
-			theContainerView.userInteractionEnabled = NO;
+#pragma mark - Adullact fork
+			theContainerView.userInteractionEnabled = YES;
+#pragma mark - Adullact fork end
 			theContainerView.contentMode = UIViewContentModeRedraw;
 			theContainerView.autoresizingMask = UIViewAutoresizingNone;
 			theContainerView.backgroundColor = [UIColor whiteColor];
@@ -375,13 +377,6 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 	[super touchesMoved:touches withEvent:event]; // Message superclass
 }
 
-#pragma mark - Adullact fork
-
--(ReaderContentPage *)getTheContentPage {
-	return theContentPage;
-}
-
-#pragma mark - Adullact fork end
 
 @end
 

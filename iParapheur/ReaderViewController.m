@@ -905,14 +905,6 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	return mainToolbar;
 }
 
--(NSMutableDictionary *)getContentViews {
-	return contentViews;
-}
-
--(NSInteger)getCurrentPage {
-	return currentPage;
-}
-
 #pragma mark - Adullact fork end
 
 @end
