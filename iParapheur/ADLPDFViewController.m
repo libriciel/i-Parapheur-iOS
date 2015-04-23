@@ -739,7 +739,7 @@
 		
 		// Creating new child controller
 		
-		_readerViewController = [[ReaderViewControllerWithAnnotationsViewController alloc] initWithReaderDocument:_readerDocument];
+		_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
 		
 		_readerViewController.delegate = self; // Set the ReaderViewController delegate to self
 		

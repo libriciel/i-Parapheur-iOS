@@ -54,11 +54,11 @@
 - (void)zoomDecrement:(UITapGestureRecognizer *)recognizer;
 - (void)zoomResetAnimated:(BOOL)animated;
 
-#pragma mark - Adullact fork
+#pragma Adullact fork
 
 - (ReaderContentPage *)getContentPage;
 
-#pragma mark - Adullact fork end-
+#pragma Adullact fork end-
 
 @end
 

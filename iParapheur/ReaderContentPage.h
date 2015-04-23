@@ -25,13 +25,13 @@
 
 #import <UIKit/UIKit.h>
 
-#pragma mark - Adullact fork
+#pragma Adullact fork
 
 #import "ADLDrawingView.h"
 
 @interface ReaderContentPage : ADLDrawingView
 
-#pragma mark - Adullact fork end
+#pragma Adullact fork end
 
 - (instancetype)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
 

@@ -26,7 +26,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ReaderDocument.h"
-#import "ReaderMainToolbar.h"
+#import "ReaderMainPagebar.h"
 
 
 @class ReaderViewController;
@@ -45,11 +45,11 @@
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object;
 
-#pragma mark - Adullact fork
+#pragma Adullact fork
 
--(ReaderMainToolbar *)getMainToolBar;
+-(ReaderMainPagebar *)getMainPageBar;
 
-#pragma mark - Adullact fork end
+#pragma Adullact fork end
 
 @end
 

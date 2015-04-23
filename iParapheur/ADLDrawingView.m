@@ -64,7 +64,15 @@
 																									 action:@selector(handleDoubleTap:)];
         doubleTapGestureRecognizer.numberOfTapsRequired = 2;
 		
+		UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+																									 action:@selector(handleSingleTap:)];
+		singleTapGestureRecognizer.numberOfTouchesRequired = 1;
+		singleTapGestureRecognizer.numberOfTapsRequired = 1;
+		
+		[self addGestureRecognizer:singleTapGestureRecognizer];
         [self addGestureRecognizer:doubleTapGestureRecognizer];
+
+		[singleTapGestureRecognizer requireGestureRecognizerToFail:doubleTapGestureRecognizer]; // Single tap requires double tap to fail
 
 		// LongPressGestureRecogniser
 		
@@ -197,6 +205,15 @@
 }
 
 
+-(void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
+	
+	if ([_masterViewController getMainPageBar].alpha == 0)
+		 [[_masterViewController getMainPageBar] showPagebar];
+	 else
+		 [[_masterViewController getMainPageBar] hidePagebar];
+}
+
+
 -(void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 	
     if (!_hittedView && _enabled) {
@@ -309,6 +326,7 @@
 
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	
     if (_enabled) {
         UITouch *touch = [touches anyObject];
         

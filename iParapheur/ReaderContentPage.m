@@ -382,7 +382,7 @@
 }
 
 - (id)processSingleTap:(UITapGestureRecognizer *)recognizer
-{
+{	
 	id result = nil; // Tap result object
 	
 	if (recognizer.state == UIGestureRecognizerStateRecognized)
@@ -411,9 +411,9 @@
 	if ((self = [super initWithFrame:frame]))
 	{
 		self.autoresizesSubviews = NO;
-#pragma mark - Adullact fork
+#pragma Adullact fork
 		self.userInteractionEnabled = YES;
-#pragma mark - Adullact fork end
+#pragma Adullact fork end
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingNone;
 		self.backgroundColor = [UIColor clearColor];

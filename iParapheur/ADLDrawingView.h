@@ -47,6 +47,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ADLAnnotationView.h"
+#import "ReaderViewController.h"
+
 #define MIN_WIDTH 50
 #define MIN_HEIGHT 50
 
@@ -80,8 +82,9 @@
 
 @property (nonatomic) BOOL hasBeenLongPressed;
 
-@property (nonatomic, strong) UIScrollView *parentScrollView;
-@property (nonatomic, strong) UIScrollView *superScrollView;
+@property (nonatomic, weak) UIScrollView *parentScrollView;
+@property (nonatomic, weak) UIScrollView *superScrollView;
+@property (nonatomic, weak) ReaderViewController *masterViewController;
 
 @property (nonatomic, strong) id<ADLDrawingViewDataSource> dataSource;
 
@@ -94,7 +97,6 @@
 
 @property (nonatomic) CGRect keyboardRect;
 @property (nonatomic) BOOL keyboardVisible;
-
 
 
 - (id)initWithFrame:(CGRect)frame;

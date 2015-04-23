@@ -136,9 +136,10 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	
 	ReaderContentView *contentView = [[ReaderContentView alloc] initWithFrame:viewRect fileURL:fileURL page:page password:phrase]; // ReaderContentView
 	
-#pragma mark - Adullact fork
+#pragma Adullact fork
 	((ADLDrawingView *) [contentView getContentPage]).superScrollView = theScrollView;
-#pragma mark - Adullact fork end
+	((ADLDrawingView *) [contentView getContentPage]).masterViewController = self;
+#pragma Adullact fork end
 	
 	contentView.message = self; [contentViews setObject:contentView forKey:[NSNumber numberWithInteger:page]]; [scrollView addSubview:contentView];
 	
@@ -362,7 +363,9 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	CGRect toolbarRect = viewRect; toolbarRect.size.height = TOOLBAR_HEIGHT;
 	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect document:document]; // ReaderMainToolbar
 	mainToolbar.delegate = self; // ReaderMainToolbarDelegate
-	[self.view addSubview:mainToolbar];
+#pragma Adullact fork
+	//[self.view addSubview:mainToolbar];
+#pragma Adullact fork end
 	
 	CGRect pagebarRect = self.view.bounds; pagebarRect.size.height = PAGEBAR_HEIGHT;
 	pagebarRect.origin.y = (self.view.bounds.size.height - pagebarRect.size.height);
@@ -693,7 +696,7 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 #pragma mark - ReaderContentViewDelegate methods
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
-{
+{	
 	if ((mainToolbar.alpha > 0.0f) || (mainPagebar.alpha > 0.0f))
 	{
 		if (touches.count == 1) // Single touches only
@@ -904,12 +907,12 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 	if (userInterfaceIdiom == UIUserInterfaceIdiomPad) if (printInteraction != nil) [printInteraction dismissAnimated:NO];
 }
 
-#pragma mark - Adullact fork
+#pragma Adullact fork
 
--(ReaderMainToolbar *)getMainToolBar {
-	return mainToolbar;
+-(ReaderMainPagebar *)getMainPageBar {
+	return mainPagebar;
 }
 
-#pragma mark - Adullact fork end
+#pragma Adullact fork end
 
 @end
