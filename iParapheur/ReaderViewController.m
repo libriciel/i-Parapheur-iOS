@@ -909,6 +909,10 @@ ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
 
 #pragma Adullact fork
 
+-(NSMutableDictionary *)getContentViews {
+	return contentViews;
+}
+
 -(ReaderMainPagebar *)getMainPageBar {
 	return mainPagebar;
 }

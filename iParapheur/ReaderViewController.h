@@ -30,6 +30,8 @@
 
 
 @class ReaderViewController;
+@protocol ADLDrawingViewDataSource;
+
 
 @protocol ReaderViewControllerDelegate <NSObject>
 
@@ -46,6 +48,10 @@
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object;
 
 #pragma Adullact fork
+
+@property (nonatomic, weak, readwrite) id <ADLDrawingViewDataSource> dataSource;
+
+-(NSMutableDictionary *)getContentViews;
 
 -(ReaderMainPagebar *)getMainPageBar;
 
