@@ -110,6 +110,7 @@
 		C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C57E67E11A5DF6F800BC4A3A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
+		C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */; };
 		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
 		C58971531AA751500077FC84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C58971551AA751500077FC84 /* Localizable.strings */; };
 		C58971601AA88D420077FC84 /* RGLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C589715F1AA88D420077FC84 /* RGLoginViewController.m */; };
@@ -368,6 +369,8 @@
 		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		C587BFDE1AD53743009AE6C3 /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocumentOutline.h; sourceTree = "<group>"; };
+		C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocumentOutline.m; sourceTree = "<group>"; };
 		C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseSignInfo.h; sourceTree = "<group>"; };
 		C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseSignInfo.m; sourceTree = "<group>"; };
 		C58971561AA751530077FC84 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -675,6 +678,7 @@
 		B4E5ECA8153AF65F00BD514D /* iParapheur */ = {
 			isa = PBXGroup;
 			children = (
+				B44C814916026FA800068E0B /* Annotations */,
 				C5ECDDBF1AB2F5D4003F13ED /* Utils */,
 				1434F65D168DFB03000C115D /* Crypto */,
 				B4B364391611A4CE0051420F /* Singleton */,
@@ -769,7 +773,6 @@
 		B4FF33BF154732FF006F7BF3 /* Reader */ = {
 			isa = PBXGroup;
 			children = (
-				B44C814916026FA800068E0B /* Annotations */,
 				B4FF33DF1547332D006F7BF3 /* Support */,
 				B4FF33C115473325006F7BF3 /* ReaderConstants.h */,
 				B4FF33C215473325006F7BF3 /* ReaderConstants.m */,
@@ -816,6 +819,8 @@
 				B4FF33EF1547333D006F7BF3 /* ReaderThumbView.m */,
 				B4FF33F01547333D006F7BF3 /* UIXToolbarView.h */,
 				B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */,
+				C587BFDE1AD53743009AE6C3 /* ReaderDocumentOutline.h */,
+				C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -1023,7 +1028,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = RG;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 				TargetAttributes = {
 					B4E5EC9D153AF65F00BD514D = {
 						DevelopmentTeam = WG6RXYLAQX;
@@ -1236,6 +1241,7 @@
 				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
 				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
+				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,
 				C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */,
 				B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */,
 				B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */,
@@ -1336,6 +1342,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1375,6 +1382,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

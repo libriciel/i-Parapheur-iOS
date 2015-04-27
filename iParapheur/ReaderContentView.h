@@ -1,9 +1,9 @@
 //
 //	ReaderContentView.h
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ReaderContentPage.h"
 #import "ReaderThumbView.h"
 
 @class ReaderContentView;
@@ -34,34 +33,32 @@
 
 @protocol ReaderContentViewDelegate <NSObject>
 
-@required
+@required // Delegate protocols
+
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches;
 
 @end
 
-@interface ReaderContentView : UIScrollView <UIScrollViewDelegate>
-{
-@private
-	CGFloat zoomAmount;
-}
+@interface ReaderContentView : UIScrollView
 
-@property (nonatomic, weak) id<ADLDrawingViewDataSource> dataSource;
+@property (nonatomic, weak, readwrite) id <ReaderContentViewDelegate> message;
 
-@property (nonatomic, unsafe_unretained, readwrite) id <ReaderContentViewDelegate> message;
-@property (nonatomic, readonly, strong) ReaderContentPage *contentPage;
-@property (nonatomic, readonly, strong) ReaderContentThumb *thumbView;
-@property (nonatomic, readonly, strong) UIView *containerView;
-@property (weak, nonatomic, readonly) NSMutableArray *pointsAdded;
-
-- (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase;
-- (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page contentPageClass:(Class)aClass password:(NSString *)phrase;
+- (instancetype)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase;
 
 - (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid;
-- (id)singleTap:(UITapGestureRecognizer *)recognizer;
 
-- (void)zoomIncrement;
-- (void)zoomDecrement;
-- (void)zoomReset;
+- (id)processSingleTap:(UITapGestureRecognizer *)recognizer;
+
+
+- (void)zoomIncrement:(UITapGestureRecognizer *)recognizer;
+- (void)zoomDecrement:(UITapGestureRecognizer *)recognizer;
+- (void)zoomResetAnimated:(BOOL)animated;
+
+#pragma Adullact fork
+
+- (ReaderContentPage *)getContentPage;
+
+#pragma Adullact fork end-
 
 @end
 

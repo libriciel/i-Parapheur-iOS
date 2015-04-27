@@ -1,9 +1,9 @@
 //
 //	ReaderContentView.m
-//	Reader v2.5.5
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -26,322 +26,367 @@
 #import "ReaderConstants.h"
 #import "ReaderContentView.h"
 #import "ReaderContentPage.h"
-//#import "ReaderThumbCache.h"
-#import "CGPDFDocument.h"
+#import "ReaderThumbCache.h"
 
 #import <QuartzCore/QuartzCore.h>
 
-
-@interface ReaderContentView ()
-
-@property (nonatomic, readwrite, strong) ReaderContentPage *contentPage;
-@property (nonatomic, readwrite, strong) ReaderContentThumb *thumbView;
-@property (nonatomic, readwrite, strong) UIView *containerView;
+@interface ReaderContentView () <UIScrollViewDelegate>
 
 @end
 
-
 @implementation ReaderContentView
+{
+	UIView *theContainerView;
+	
+	UIUserInterfaceIdiom userInterfaceIdiom;
+	
+	ReaderContentPage *theContentPage;
+	
+	ReaderContentThumb *theThumbView;
+	
+	CGFloat realMaximumZoom;
+	CGFloat tempMaximumZoom;
+	
+	BOOL zoomBounced;
+}
 
-#pragma mark Constants
+#pragma mark - Constants
 
-#define ZOOM_LEVELS 4
-
-#if READER_SHOW_SHADOWS
-#define CONTENT_INSET 4.0f
-#else
-#define CONTENT_INSET 2.0f
-#endif
+#define ZOOM_FACTOR 2.0f
+#define ZOOM_MAXIMUM 16.0f
 
 #define PAGE_THUMB_LARGE 240
 #define PAGE_THUMB_SMALL 144
 
-#pragma mark Properties
+static void *ReaderContentViewContext = &ReaderContentViewContext;
 
-@synthesize message, contentPage, thumbView, containerView;
+static CGFloat g_BugFixWidthInset = 0.0f;
 
-@synthesize dataSource = _dataSource;
+#pragma mark - Properties
+
+@synthesize message;
 
 #pragma mark - ReaderContentView functions
 
-static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
+static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 {
-	CGFloat w_scale = (target.width / source.width);
+	CGFloat w_scale = (target.width / (source.width + g_BugFixWidthInset));
+	
 	CGFloat h_scale = (target.height / source.height);
+	
 	return ((w_scale < h_scale) ? w_scale : h_scale);
 }
 
-#pragma mark ReaderContentView instance methods
+#pragma mark - ReaderContentView class methods
 
-- (void)updateMinimumMaximumZoom
++ (void)initialize
 {
-	CGRect targetRect = CGRectInset(self.bounds, CONTENT_INSET, CONTENT_INSET);
-	CGFloat zoomScale = ZoomScaleThatFits(targetRect.size, contentPage.bounds.size);
-	self.minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
-	
-	self.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Max number of zoom levels
-	
-	zoomAmount = ((self.maximumZoomScale - self.minimumZoomScale) / ZOOM_LEVELS);
-}
-
-- (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
-{
-	return [self initWithFrame:frame fileURL:fileURL page:page contentPageClass:nil password:phrase];
-}
-
-
-/**
- *	The designated initializer
- *	@param frame The frame to be used
- *	@param fileURL The URL to the PDF file
- *	@param page The page of the PDF we want to show
- *	@param aClass The class to use for the contentPage, must be a subclass of "ReaderContentPage", which is automatically chosen if it is nil
- *	@param phrase The password to use for the PDF, if any
- */
-- (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page contentPageClass:(Class)aClass password:(NSString *)phrase
-{
-	if ((self = [super initWithFrame:frame])) {
-        self.userInteractionEnabled = YES;
-        self.bounces = NO;
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.backgroundColor = [UIColor clearColor];
-        //self.userInteractionEnabled = NO;
-        self.autoresizesSubviews = YES;
-        self.delegate = self;
-        self.panGestureRecognizer.enabled = YES;
-        self.panGestureRecognizer.cancelsTouchesInView = NO;
-        //self.canCancelContentTouches = NO;
-        self.pagingEnabled = NO;
-        self.scrollEnabled = NO;
-        
-        self.scrollsToTop = NO;
-        self.contentMode = UIViewContentModeRedraw;
-		self.delaysContentTouches = NO;
-
-        /*
-        self.panGestureRecognizer.enabled = YES;
-        self.panGestureRecognizer.cancelsTouchesInView = NO;
-        self.pinchGestureRecognizer.enabled =YES;
-        self.pinchGestureRecognizer.cancelsTouchesInView = YES;
-         */
-        /*
-		//self.scrollsToTop = NO;
-		self.delaysContentTouches = NO;
-		self.showsVerticalScrollIndicator = NO;
-		self.showsHorizontalScrollIndicator = NO;
-		self.contentMode = UIViewContentModeRedraw;
-		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		self.backgroundColor = [UIColor clearColor];
-        */
-        /*self.panGestureRecognizer.enabled = YES;
-        self.panGestureRecognizer.cancelsTouchesInView = NO;
-        self.pinchGestureRecognizer.enabled =YES;
-        self.pinchGestureRecognizer.cancelsTouchesInView = YES;
-        
-        self.userInteractionEnabled = YES;
-        
-		self.autoresizesSubviews = NO;
-		self.bouncesZoom = YES;
-		self.delegate = self;
-//EPA
-        self.canCancelContentTouches = NO;
-        self.panGestureRecognizer.cancelsTouchesInView = NO;
-        self.panGestureRecognizer.delaysTouchesBegan = NO;
-        self.panGestureRecognizer.delaysTouchesEnded = NO;
-        self.pinchGestureRecognizer.cancelsTouchesInView = NO;
-        self.pinchGestureRecognizer.delaysTouchesBegan = NO;
-        self.pinchGestureRecognizer.delaysTouchesEnded = NO;
-         */
-		
-		// create the content page
-		aClass = [aClass isSubclassOfClass:[ReaderContentPage class]] ? aClass : [ReaderContentPage class];
-		self.contentPage = [[aClass alloc] initWithURL:fileURL page:page password:phrase];
-        
-        [contentPage setPageNumber:page - 1];
-        [contentPage setDataSource:_dataSource];
-        
-		if (contentPage != nil) {																// Must have a valid and initialized content view
-			self.containerView = [[UIView alloc] initWithFrame:contentPage.bounds];
-			containerView.autoresizesSubviews = NO;
-			containerView.userInteractionEnabled = YES;
-			containerView.contentMode = UIViewContentModeRedraw;
-			containerView.autoresizingMask = UIViewAutoresizingNone;
-			containerView.backgroundColor = [UIColor whiteColor];
-
+	if (self == [ReaderContentView self]) // Do once - iOS 8.0 UIScrollView bug workaround
+	{
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) // Not iPads
+		{
+			NSString *iosVersion = [UIDevice currentDevice].systemVersion; // iOS version as a string
 			
-#if READER_SHOW_SHADOWS
-			containerView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-			containerView.layer.shadowRadius = 4.0f;
-			containerView.layer.shadowOpacity = 1.0f;
-			containerView.layer.shadowPath = [UIBezierPath bezierPathWithRect:containerView.bounds].CGPath;
-#endif
-			
-			self.contentSize = contentPage.bounds.size;											// Content size same as view size
-			self.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET));	// Offset
-			self.contentInset = UIEdgeInsetsMake(CONTENT_INSET, CONTENT_INSET, CONTENT_INSET, CONTENT_INSET);
-			
-			// add the thumbnail view
-			//self.thumbView = [[ReaderContentThumb alloc] initWithFrame:contentPage.bounds];
-			
-            contentPage.exclusiveTouch = YES;
-            contentPage.parentScrollView = self;
-			//[containerView addSubview:thumbView];
-			[containerView addSubview:contentPage];
-			[self addSubview:containerView];
-            
-			//[self addSubview:contentPage];
-			[self updateMinimumMaximumZoom];				// Update the minimum and maximum zoom scales
-			self.zoomScale = self.minimumZoomScale;			// Set zoom to fit page content
-		}
-		
-		[self addObserver:self forKeyPath:@"frame" options:0 context:NULL];
-		self.tag = page; // Tag the view with the page number
-	}
-	
-	return self;
-}
-
-
-/* apply contentScaleFactor to the annotationsViews */
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView
-					   withView:(UIView *)view
-						atScale:(CGFloat)scale {
-	
-    scale *= [[[self window] screen] scale];
-    
-    [contentPage setContentScaleFactor:scale];
-    
-    for (UIView *subview in contentPage.subviews) {
-        [subview setContentScaleFactor:scale];
-    }
-}
-
-- (void)dealloc
-{
-	[self removeObserver:self forKeyPath:@"frame"];
-}
-
-- (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
-{
-	//BOOL large = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad); // Page thumb size
-/*
-	CGSize size = (large ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL));
-	ReaderThumbRequest *request = [ReaderThumbRequest forView:thumbView fileURL:fileURL password:phrase guid:guid page:page size:size];
-	[request process];
-*/
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-	if ((object == self) && [keyPath isEqualToString:@"frame"]) {
-		CGFloat oldMinimumZoomScale = self.minimumZoomScale;
-		[self updateMinimumMaximumZoom]; // Update zoom scale limits
-		
-		if (self.zoomScale == oldMinimumZoomScale) {	// Old minimum
-			self.zoomScale = self.minimumZoomScale;
-		}
-		else {											// Check against minimum zoom scale
-			if (self.zoomScale < self.minimumZoomScale) {
-				self.zoomScale = self.minimumZoomScale;
-			}
-			else {										// Check against maximum zoom scale
-				if (self.zoomScale > self.maximumZoomScale) {
-					self.zoomScale = self.maximumZoomScale;
+			if ([@"8.0" compare:iosVersion options:NSNumericSearch] != NSOrderedDescending) // 8.0 and up
+			{
+				if ([@"8.2" compare:iosVersion options:NSNumericSearch] == NSOrderedDescending) // Below 8.2
+				{
+					g_BugFixWidthInset = 2.0f * [[UIScreen mainScreen] scale]; // Reduce width of content view
 				}
 			}
 		}
 	}
 }
 
-- (void)layoutSubviews
+#pragma mark - ReaderContentView instance methods
+
+- (void)updateMinimumMaximumZoom
 {
-	[super layoutSubviews];
+	CGFloat zoomScale = zoomScaleThatFits(self.bounds.size, theContentPage.bounds.size);
 	
-	CGSize boundsSize = self.bounds.size;
-	CGRect viewFrame = containerView.frame;
-	if (viewFrame.size.width < boundsSize.width)
-		viewFrame.origin.x = (((boundsSize.width - viewFrame.size.width) / 2.0f) + self.contentOffset.x);
-	else
-		viewFrame.origin.x = 0.0f;
-	if (viewFrame.size.height < boundsSize.height)
-		viewFrame.origin.y = (((boundsSize.height - viewFrame.size.height) / 2.0f) + self.contentOffset.y);
-	else
-		viewFrame.origin.y = 0.0f;
-	containerView.frame = viewFrame;
+	self.minimumZoomScale = zoomScale; self.maximumZoomScale = (zoomScale * ZOOM_MAXIMUM);
+	
+	realMaximumZoom = self.maximumZoomScale; tempMaximumZoom = (realMaximumZoom * ZOOM_FACTOR);
 }
 
-- (id)singleTap:(UITapGestureRecognizer *)recognizer
+- (void)centerScrollViewContent
 {
-	return [contentPage singleTap:recognizer];
+	CGFloat iw = 0.0f; CGFloat ih = 0.0f; // Content width and height insets
+	
+	CGSize boundsSize = self.bounds.size; CGSize contentSize = self.contentSize; // Sizes
+	
+	if (contentSize.width < boundsSize.width) iw = ((boundsSize.width - contentSize.width) * 0.5f);
+	
+	if (contentSize.height < boundsSize.height) ih = ((boundsSize.height - contentSize.height) * 0.5f);
+	
+	UIEdgeInsets insets = UIEdgeInsetsMake(ih, iw, ih, iw); // Create (possibly updated) content insets
+	
+	if (UIEdgeInsetsEqualToEdgeInsets(self.contentInset, insets) == false) self.contentInset = insets;
 }
 
-- (void)zoomIncrement
+- (instancetype)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
 {
-	CGFloat zoomScale = self.zoomScale;
-	if (zoomScale < self.maximumZoomScale) {
-		zoomScale += zoomAmount; // += value
+	if ((self = [super initWithFrame:frame]))
+	{
+		self.scrollsToTop = NO;
+		self.delaysContentTouches = NO;
+		self.showsVerticalScrollIndicator = NO;
+		self.showsHorizontalScrollIndicator = NO;
+		self.contentMode = UIViewContentModeRedraw;
+		self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+		self.backgroundColor = [UIColor clearColor];
+		self.autoresizesSubviews = NO;
+		self.clipsToBounds = NO;
+		self.delegate = self;
 		
-		if (zoomScale > self.maximumZoomScale) {
-			zoomScale = self.maximumZoomScale;
+		userInterfaceIdiom = [UIDevice currentDevice].userInterfaceIdiom; // User interface idiom
+		
+		theContentPage = [[ReaderContentPage alloc] initWithURL:fileURL page:page password:phrase];
+		
+		if (theContentPage != nil) // Must have a valid and initialized content page
+		{
+			theContainerView = [[UIView alloc] initWithFrame:theContentPage.bounds];
+			
+			theContainerView.autoresizesSubviews = NO;
+#pragma Adullact fork
+			theContainerView.userInteractionEnabled = YES;
+			theContentPage.parentScrollView = self;
+			theContentPage.pageNumber = page - 1;
+#pragma Adullact fork end
+			theContainerView.contentMode = UIViewContentModeRedraw;
+			theContainerView.autoresizingMask = UIViewAutoresizingNone;
+			theContainerView.backgroundColor = [UIColor whiteColor];
+			
+#if (READER_SHOW_SHADOWS == TRUE) // Option
+			
+			theContainerView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+			theContainerView.layer.shadowRadius = 4.0f; theContainerView.layer.shadowOpacity = 1.0f;
+			theContainerView.layer.shadowPath = [UIBezierPath bezierPathWithRect:theContainerView.bounds].CGPath;
+			
+#endif // end of READER_SHOW_SHADOWS Option
+			
+			self.contentSize = theContentPage.bounds.size; [self centerScrollViewContent];
+			
+#if (READER_ENABLE_PREVIEW == TRUE) // Option
+			
+			theThumbView = [[ReaderContentThumb alloc] initWithFrame:theContentPage.bounds]; // Page thumb view
+			
+			[theContainerView addSubview:theThumbView]; // Add the page thumb view to the container view
+			
+#endif // end of READER_ENABLE_PREVIEW Option
+			
+			[theContainerView addSubview:theContentPage]; // Add the content page to the container view
+			
+			[self addSubview:theContainerView]; // Add the container view to the scroll view
+			
+			[self updateMinimumMaximumZoom]; // Update the minimum and maximum zoom scales
+			
+			self.zoomScale = self.minimumZoomScale; // Set the zoom scale to fit page content
+			
+			[self addObserver:self forKeyPath:@"frame" options:0 context:ReaderContentViewContext];
 		}
 		
-		[self setZoomScale:zoomScale animated:YES];
+		self.tag = page; // Tag the view with the page number
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[self removeObserver:self forKeyPath:@"frame" context:ReaderContentViewContext];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if (context == ReaderContentViewContext) // Our context
+	{
+		if ((object == self) && [keyPath isEqualToString:@"frame"])
+		{
+			[self centerScrollViewContent]; // Center content
+			
+			CGFloat oldMinimumZoomScale = self.minimumZoomScale;
+			
+			[self updateMinimumMaximumZoom]; // Update zoom scale limits
+			
+			if (self.zoomScale == oldMinimumZoomScale) // Old minimum
+			{
+				self.zoomScale = self.minimumZoomScale;
+			}
+			else // Check against minimum zoom scale
+			{
+				if (self.zoomScale < self.minimumZoomScale)
+				{
+					self.zoomScale = self.minimumZoomScale;
+				}
+				else // Check against maximum zoom scale
+				{
+					if (self.zoomScale > self.maximumZoomScale)
+					{
+						self.zoomScale = self.maximumZoomScale;
+					}
+				}
+			}
+		}
 	}
 }
 
-- (void)zoomDecrement
+- (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
 {
-	CGFloat zoomScale = self.zoomScale;
-	if (zoomScale > self.minimumZoomScale) {
-		zoomScale -= zoomAmount; // -= value
+#if (READER_ENABLE_PREVIEW == TRUE) // Option
+	
+	CGSize size = ((userInterfaceIdiom == UIUserInterfaceIdiomPad) ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL));
+	
+	ReaderThumbRequest *request = [ReaderThumbRequest newForView:theThumbView fileURL:fileURL password:phrase guid:guid page:page size:size];
+	
+	UIImage *image = [[ReaderThumbCache sharedInstance] thumbRequest:request priority:YES]; // Request the page thumb
+	
+	if ([image isKindOfClass:[UIImage class]]) [theThumbView showImage:image]; // Show image from cache
+	
+#endif // end of READER_ENABLE_PREVIEW Option
+}
+
+- (id)processSingleTap:(UITapGestureRecognizer *)recognizer
+{
+	return [theContentPage processSingleTap:recognizer];
+}
+
+- (CGRect)zoomRectForScale:(CGFloat)scale withCenter:(CGPoint)center
+{
+	CGRect zoomRect; // Centered zoom rect
+	
+	zoomRect.size.width = (self.bounds.size.width / scale);
+	zoomRect.size.height = (self.bounds.size.height / scale);
+	
+	zoomRect.origin.x = (center.x - (zoomRect.size.width * 0.5f));
+	zoomRect.origin.y = (center.y - (zoomRect.size.height * 0.5f));
+	
+	return zoomRect;
+}
+
+- (void)zoomIncrement:(UITapGestureRecognizer *)recognizer
+{
+	CGFloat zoomScale = self.zoomScale; // Current zoom
+	
+	CGPoint point = [recognizer locationInView:theContentPage];
+	
+	if (zoomScale < self.maximumZoomScale) // Zoom in
+	{
+		zoomScale *= ZOOM_FACTOR; // Zoom in by zoom factor amount
 		
-		if (zoomScale < self.minimumZoomScale) {
+		if (zoomScale > self.maximumZoomScale) zoomScale = self.maximumZoomScale;
+		
+		CGRect zoomRect = [self zoomRectForScale:zoomScale withCenter:point];
+		
+		[self zoomToRect:zoomRect animated:YES];
+	}
+	else // Handle fully zoomed in
+	{
+		if (zoomBounced == NO) // Zoom bounce
+		{
+			self.maximumZoomScale = tempMaximumZoom;
+			
+			[self setZoomScale:tempMaximumZoom animated:YES];
+		}
+		else // Zoom all the way out
+		{
 			zoomScale = self.minimumZoomScale;
+			
+			[self setZoomScale:zoomScale animated:YES];
 		}
-		
-		[self setZoomScale:zoomScale animated:YES];
 	}
 }
 
-- (void)zoomReset
+- (void)zoomDecrement:(UITapGestureRecognizer *)recognizer
 {
-	if (self.zoomScale > self.minimumZoomScale) {
-		self.zoomScale = self.minimumZoomScale;
+	CGFloat zoomScale = self.zoomScale; // Current zoom
+	
+	CGPoint point = [recognizer locationInView:theContentPage];
+	
+	if (zoomScale > self.minimumZoomScale) // Zoom out
+	{
+		zoomScale /= ZOOM_FACTOR; // Zoom out by zoom factor amount
+		
+		if (zoomScale < self.minimumZoomScale) zoomScale = self.minimumZoomScale;
+		
+		CGRect zoomRect = [self zoomRectForScale:zoomScale withCenter:point];
+		
+		[self zoomToRect:zoomRect animated:YES];
+	}
+	else // Handle fully zoomed out
+	{
+		zoomScale = self.maximumZoomScale; // Full zoom in
+		
+		CGRect zoomRect = [self zoomRectForScale:zoomScale withCenter:point];
+		
+		[self zoomToRect:zoomRect animated:YES];
 	}
 }
 
+- (void)zoomResetAnimated:(BOOL)animated
+{
+	if (self.zoomScale > self.minimumZoomScale) // Reset zoom
+	{
+		if (animated) [self setZoomScale:self.minimumZoomScale animated:YES]; else self.zoomScale = self.minimumZoomScale; zoomBounced = NO;
+	}
+}
 
 #pragma mark - UIScrollViewDelegate methods
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
-	return containerView;
+	return theContainerView;
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
+{
+	if (self.zoomScale > realMaximumZoom) // Bounce back to real maximum zoom scale
+	{
+		[self setZoomScale:realMaximumZoom animated:YES]; self.maximumZoomScale = realMaximumZoom; zoomBounced = YES;
+	}
+	else // Normal scroll view did end zooming
+	{
+		if (self.zoomScale < realMaximumZoom) zoomBounced = NO;
+	}
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+	[self centerScrollViewContent]; // Center content
 }
 
 #pragma mark - UIResponder instance methods
 
-/*- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	[super touchesBegan:touches withEvent:event];
-    
-    
-  //  [contentPage touchesBegan:touches withEvent:event];
-	//[message contentView:self touchesBegan:touches];
-}*/
-/*
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-
-    [super touchesMoved:touches withEvent:event];
-    
-    [contentPage touchesMoved:touches withEvent:event];
+	[super touchesBegan:touches withEvent:event]; // Message superclass
+	
+	[message contentView:self touchesBegan:touches]; // Message delegate
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-
-    [super touchesEnded:touches withEvent:event];
-    [contentPage touchesEnded:touches withEvent:event];
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesCancelled:touches withEvent:event]; // Message superclass
 }
-*/
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesEnded:touches withEvent:event]; // Message superclass
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesMoved:touches withEvent:event]; // Message superclass
+}
+
+#pragma Adullact fork
+
+- (ReaderContentPage *)getContentPage {
+	return theContentPage;
+}
+
+#pragma Adullact fork end
+
 @end
 
 #pragma mark -
@@ -352,20 +397,19 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 @implementation ReaderContentThumb
 
-//#pragma mark Properties
+#pragma mark - ReaderContentThumb instance methods
 
-//@synthesize ;
-
-#pragma mark ReaderContentThumb instance methods
-
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
-	if ((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) // Superclass init
+	{
 		imageView.contentMode = UIViewContentModeScaleAspectFill;
+		
 		imageView.clipsToBounds = YES; // Needed for aspect fill
 	}
 	
 	return self;
 }
+
 
 @end

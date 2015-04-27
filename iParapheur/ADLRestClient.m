@@ -29,12 +29,12 @@ static NSNumber *PARAPHEUR_API_VERSION;
 
 
 - (id)init {
-	[self reset];
+	[self resetClient];
 	return self;
 }
 
 
-- (void)reset{
+- (void)resetClient{
 	_restClientApi3 = [[ADLRestClientApi3 alloc] init];
 }
 

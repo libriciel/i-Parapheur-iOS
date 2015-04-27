@@ -1,6 +1,4 @@
 #import "DeviceUtils.h"
-#import "Reachability.h"
-#import "DeviceUtils.h"
 #import "StringUtils.h"
 #import <ALAlertBanner/ALAlertBanner.h>
 #import <SystemConfiguration/SystemConfiguration.h>
@@ -9,11 +7,11 @@
 @implementation DeviceUtils
 
 
-+ (BOOL)isConnectedToInternet {
-	Reachability *reachability = [Reachability reachabilityForInternetConnection];
-	NetworkStatus networkStatus = [reachability currentReachabilityStatus];
-	return networkStatus != NotReachable;
-}
+//+ (BOOL)isConnectedToInternet {
+//	Reachability *reachability = [Reachability reachabilityForInternetConnection];
+//	NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+//	return networkStatus != NotReachable;
+//}
 
 
 + (void)logError:(NSError *)error {
@@ -93,7 +91,6 @@
 	banner.secondsToShow = 5.0f;
 	[banner show];
 }
-
 
 
 @end

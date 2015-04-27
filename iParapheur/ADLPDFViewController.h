@@ -49,11 +49,11 @@
 
 
 @interface ADLPDFViewController : UIViewController
-    <ADLParapheurWallDelegateProtocol,
-    ReaderViewControllerDelegate,
-    UIPopoverControllerDelegate,
-    ADLDrawingViewDataSource,
-    LGViewHUDDelegate>
+<ADLParapheurWallDelegateProtocol,
+ReaderViewControllerDelegate,
+UIPopoverControllerDelegate,
+ADLDrawingViewDataSource,
+LGViewHUDDelegate>
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 
@@ -78,6 +78,9 @@
 @property (assign, nonatomic) BOOL visaEnabled;
 
 @property (assign, nonatomic) BOOL isDocumentPrincipal;
+
+
+- (void)requestAnnotations;
 
 
 @end

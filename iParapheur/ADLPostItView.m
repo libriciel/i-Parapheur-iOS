@@ -44,9 +44,10 @@
 	
 	UIFont *font = [_textView font];
 	CGSize withinSize = CGSizeMake(100.0f, FLT_MAX);
-	CGSize size = [[annotationModel text] sizeWithFont:font constrainedToSize:withinSize lineBreakMode:NSLineBreakByWordWrapping];
-	
-	
+	CGSize size = [[annotationModel text] sizeWithFont:font
+									 constrainedToSize:withinSize
+										 lineBreakMode:NSLineBreakByWordWrapping];
+		
 	size.width = 100.0f;
 	size.height = size.height > 100.0f ? size.height : 100.0f;
 	

@@ -1,9 +1,9 @@
 //
 //	ReaderThumbRequest.m
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -25,29 +25,31 @@
 
 #import "ReaderThumbRequest.h"
 #import "ReaderThumbView.h"
-#import "ReaderThumbCache.h"
-#import "CGPDFDocument.h"
-
-
-@interface ReaderThumbRequest ()
-
-@property (nonatomic, readwrite, strong) NSURL *fileURL;
-@property (nonatomic, readwrite, copy) NSString *guid;
-@property (nonatomic, readwrite, copy) NSString *password;
-@property (nonatomic, readwrite, copy) NSString *cacheKey;
-@property (nonatomic, readwrite, copy) NSString *thumbName;
-@property (nonatomic, readwrite, strong) ReaderThumbView *thumbView;
-@property (nonatomic, readwrite) NSUInteger targetTag;
-@property (nonatomic, readwrite) NSInteger thumbPage;
-@property (nonatomic, readwrite) CGSize thumbSize;
-@property (nonatomic, readwrite) CGFloat scale;
-
-@end
-
 
 @implementation ReaderThumbRequest
+{
+	NSURL *_fileURL;
+	
+	NSString *_guid;
+	
+	NSString *_password;
+	
+	NSString *_cacheKey;
+	
+	NSString *_thumbName;
+	
+	ReaderThumbView *_thumbView;
+	
+	NSUInteger _targetTag;
+	
+	NSInteger _thumbPage;
+	
+	CGSize _thumbSize;
+	
+	CGFloat _scale;
+}
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize guid = _guid;
 @synthesize fileURL = _fileURL;
@@ -60,59 +62,35 @@
 @synthesize cacheKey = _cacheKey;
 @synthesize scale = _scale;
 
+#pragma mark - ReaderThumbRequest class methods
 
-+ (id)forView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size
++ (instancetype)newForView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size
 {
-	return [[ReaderThumbRequest alloc] initWithView:view fileURL:url password:phrase guid:guid page:page size:size];
+	return [[ReaderThumbRequest alloc] initForView:view fileURL:url password:phrase guid:guid page:page size:size];
 }
 
+#pragma mark - ReaderThumbRequest instance methods
 
-/**
- *	Instantiates a new object with the given information. If "guid" is nil, creates a string based on the file URL and uses this as identifier.
- */
-- (id)initWithView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size
+- (instancetype)initForView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size
 {
-	if ((self = [super init])) {
-		NSInteger w = size.width;
-		NSInteger h = size.height;
-		_thumbPage = page;
-		_thumbSize = size;
-		self.fileURL = url;
-		self.password = phrase;
-		self.guid = guid ? guid : [[url relativeString] stringByTrimmingCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]];
-		self.thumbName = [NSString stringWithFormat:@"%07d-%04dx%04d", (int)page, (int)w, (int)h];
-		self.cacheKey = [NSString stringWithFormat:@"%@+%@", _thumbName, _guid];
+	if ((self = [super init])) // Initialize object
+	{
+		NSInteger w = size.width; NSInteger h = size.height;
 		
-		self.thumbView = view;
-		_targetTag = [_cacheKey hash];
-		_thumbView.targetTag = _targetTag;
-		_scale = [[UIScreen mainScreen] scale];
+		_thumbView = view; _thumbPage = page; _thumbSize = size;
+		
+		_fileURL = [url copy]; _password = [phrase copy]; _guid = [guid copy];
+		
+		_thumbName = [[NSString alloc] initWithFormat:@"%07i-%04ix%04i", (int)page, (int)w, (int)h];
+		
+		_cacheKey = [[NSString alloc] initWithFormat:@"%@+%@", _thumbName, _guid];
+		
+		_targetTag = [_cacheKey hash]; _thumbView.targetTag = _targetTag;
+		
+		_scale = [[UIScreen mainScreen] scale]; // Thumb screen scale
 	}
 	
 	return self;
 }
-
-
-
-#pragma mark - Actions
-/**
- *	Uses the request to fetch the cached thumbnail, creating it on a background thread if necessary, and shows it in the given view
- */
-- (void)process
-{
-	UIImage *thumb = [[ReaderThumbCache sharedInstance] thumbRequest:self priority:YES];
-	if (_thumbView.superview && thumb) {
-		[_thumbView showImage:thumb];
-	}
-}
-
-- (void)processWithoutPriority
-{
-	UIImage *thumb = [[ReaderThumbCache sharedInstance] thumbRequest:self priority:NO];
-	if (_thumbView.superview && thumb) {
-		[_thumbView showImage:thumb];
-	}
-}
-
 
 @end

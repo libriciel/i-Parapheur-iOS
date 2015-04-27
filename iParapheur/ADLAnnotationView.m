@@ -188,7 +188,6 @@
     [self addSubview:_closeButton];
     [self addSubview:_infoButton];
     [self addSubview:_postItButton];
-
 }
 
 

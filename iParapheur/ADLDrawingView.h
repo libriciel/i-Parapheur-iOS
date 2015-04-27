@@ -47,71 +47,78 @@
 
 #import <UIKit/UIKit.h>
 #import "ADLAnnotationView.h"
+#import "ReaderViewController.h"
+
+
 #define MIN_WIDTH 50
 #define MIN_HEIGHT 50
 
+
 @protocol ADLDrawingViewDataSource <NSObject>
 
--(NSArray*) annotationsForPage:(NSInteger)page;
+- (NSArray *)annotationsForPage:(NSInteger)page;
 
--(void) updateAnnotation:(ADLAnnotation*)annotation
-				 forPage:(NSUInteger)page;
+- (void)updateAnnotation:(ADLAnnotation *)annotation
+                 forPage:(NSUInteger)page;
 
--(void) removeAnnotation:(ADLAnnotation*)annotation;
+- (void)removeAnnotation:(ADLAnnotation *)annotation;
 
--(void) addAnnotation:(ADLAnnotation*)annotation
-			  forPage:(NSUInteger)page;
+- (void)addAnnotation:(ADLAnnotation *)annotation
+              forPage:(NSUInteger)page;
 
 @optional
 
 @end
 
+
 @class ADLAnnotationView;
+
+
 @interface ADLDrawingView : UIView
 
-@property (nonatomic, strong) ADLAnnotationView *hittedView;
-@property (nonatomic, strong) UIView *currentAnnotView;
-@property (nonatomic) CGPoint origin;
-@property (nonatomic) CGFloat dx;
-@property (nonatomic) CGFloat dy;
+@property(nonatomic, strong) ADLAnnotationView *hittedView;
+@property(nonatomic, strong) UIView *currentAnnotView;
+@property(nonatomic) CGPoint origin;
+@property(nonatomic) CGFloat dx;
+@property(nonatomic) CGFloat dy;
 
-@property (nonatomic) BOOL enabled;
-@property (nonatomic) BOOL shallUpdateCurrent;
+@property(nonatomic) BOOL enabled;
+@property(nonatomic) BOOL shallUpdateCurrent;
 
-@property (nonatomic) BOOL hasBeenLongPressed;
+@property(nonatomic) BOOL hasBeenLongPressed;
 
-@property (nonatomic, strong) UIScrollView *parentScrollView;
-@property (nonatomic, strong) UIScrollView *superScrollView;
+@property(nonatomic, weak) UIScrollView *parentScrollView;
+@property(nonatomic, weak) UIScrollView *superScrollView;
+@property(nonatomic, weak) ReaderViewController *masterViewController;
 
-@property (nonatomic, strong) id<ADLDrawingViewDataSource> dataSource;
+@property(nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
-@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
+@property(nonatomic) NSUInteger pageNumber;
 
-@property (nonatomic) NSUInteger pageNumber;
+@property(nonatomic) UIEdgeInsets contentInset;
+@property(nonatomic) CGPoint contentOffset;
 
-@property (nonatomic) UIEdgeInsets contentInset;
-@property (nonatomic) CGPoint contentOffset;
-
-@property (nonatomic) CGRect keyboardRect;
-@property (nonatomic) BOOL keyboardVisible;
-
+@property(nonatomic) CGRect keyboardRect;
+@property(nonatomic) BOOL keyboardVisible;
 
 
 - (id)initWithFrame:(CGRect)frame;
 
 - (void)refreshAnnotations;
 
--(CGSize)getPageSize;
+- (CGSize)getPageSize;
 
--(CGRect)clipRectInView:(CGRect)rect;
+- (CGRect)clipRectInView:(CGRect)rect;
 
--(void) updateAnnotation:(ADLAnnotation*)annotation;
+- (void)updateAnnotation:(ADLAnnotation *)annotation;
 
--(void) addAnnotation:(ADLAnnotation*)annotation;
+- (void)addAnnotation:(ADLAnnotation *)annotation;
 
--(void) removeAnnotation:(ADLAnnotation*) annotation;
+- (void)removeAnnotation:(ADLAnnotation *)annotation;
 
--(NSArray*) annotationsForPage:(NSUInteger)page;
+- (NSArray *)annotationsForPage:(NSUInteger)page;
+
+- (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer;
 
 
 @end

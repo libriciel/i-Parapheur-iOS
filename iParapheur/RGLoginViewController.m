@@ -61,6 +61,12 @@
 #pragma mark - Private methods
 
 
+- (void)viewWillLayoutSubviews{
+	[super viewWillLayoutSubviews];
+	self.view.superview.bounds = CGRectMake(0, 0, 550, 350);
+}
+
+
 - (BOOL)validateFieldsForConnnectionEvent:(BOOL)connectionEvent {
 	
 	NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
@@ -84,6 +90,7 @@
 	
 	return (loginTextFieldValid && passwordTextFieldValid && serverTextFieldValid);
 }
+
 
 - (void)setBorderOnTextField:(UITextField *)textField
 				   withAlert:(BOOL)alert {
@@ -149,7 +156,7 @@
 - (void)dismissWithSuccess:(BOOL)success {
 	
 	if (_restClient)
-	[_restClient cancelAllOperations];
+		[_restClient cancelAllOperations];
 	
 	// Saving proper data
 	
@@ -169,7 +176,7 @@
 	
 	// Reset singleton values
 	
-	[[ADLRestClient sharedManager] reset];
+	[[ADLRestClient sharedManager] resetClient];
 	
 	//
 	

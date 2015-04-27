@@ -98,7 +98,9 @@
 	self.refreshControl = [[UIRefreshControl alloc] init];
 	[self.refreshControl setTintColor:[UIColor selectedCellGreyColor]];
 	
-	[self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+	[self.refreshControl addTarget:self
+							action:@selector(refresh)
+				  forControlEvents:UIControlEventValueChanged];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(refresh)
@@ -159,10 +161,8 @@
 														forKey:@"cm:title"]]
 														  forKey:@"or"];
 		
-		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:types
-																																	forKey:@"or"],
-																										[NSDictionary dictionaryWithObject:sousTypes
-																																	forKey:@"or"],
+		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:types forKey:@"or"],
+																										[NSDictionary dictionaryWithObject:sousTypes forKey:@"or"],
 																										titre,
 																										nil]
 																	   forKey:@"and"];
@@ -322,34 +322,99 @@
 
 
 -(void)showMoreActions:(id) sender {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc]
-								  initWithTitle:@"Traitement par lot"
-								  delegate:self
-								  cancelButtonTitle:nil
-								  destructiveButtonTitle:nil
-								  otherButtonTitles:nil];
-	for (NSString *action in self.secondaryActions) {
-		NSString *actionName = [ADLAPIHelper actionNameForAction:action];
-		[actionSheet addButtonWithTitle:actionName];
-	}
-	[actionSheet addButtonWithTitle:@"Annuler"];
 	
-	
-	// Find the barButtonItem
-	UIBarButtonItem *moreItem = nil;
-	
-	for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
-		if ([(UIView*)sender isDescendantOfView:item.customView]) {
-			moreItem = item;
-			break;
+	if ([UIAlertController class]) { // iOS8
+		
+		// Create Popup Controller
+		
+		UIAlertController *actionController = [UIAlertController alertControllerWithTitle:@"Traitement par lot"
+																				  message:nil
+																		   preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		[actionController setModalPresentationStyle:UIModalPresentationPopover];
+		
+		// Create Popup actions
+		
+		for (NSString *action in _secondaryActions) {
+			
+			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
+			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
+															 style:UIAlertActionStyleDefault
+														   handler:^(UIAlertAction *action) {
+															   [self clickOnSecondaryAction:action.title];
+														   }];
+			[actionController addAction:action];
+		}
+		
+		UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
+																style:UIAlertActionStyleDefault
+															  handler:nil];
+		[actionController addAction:actionAnnuler];
+		
+		// Find the barButtonItem
+		
+		UIBarButtonItem *moreItem = nil;
+		
+		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
+			if ([(UIView*)sender isDescendantOfView:item.customView]) {
+				moreItem = item;
+				break;
+			}
+		}
+		
+		// Display the popup
+		
+		[self presentViewController:actionController
+						   animated:YES
+						 completion:nil];
+		
+		UIPopoverPresentationController *popPresenter = [actionController popoverPresentationController];
+		
+		if (moreItem) {
+			popPresenter.sourceView = moreItem.customView;
+			popPresenter.sourceRect = moreItem.customView.bounds;
+		}
+		else {
+			popPresenter.sourceView = (UIView *)sender;
+			popPresenter.sourceRect = ((UIView *)sender).bounds;
 		}
 	}
-	if (moreItem) {
-		[actionSheet showFromBarButtonItem:moreItem animated:YES];
-	}
-	//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
-	else {
-		[actionSheet showFromRect:((UIView*)sender).frame inView:self.view animated:YES];
+	else { // iOS7
+		
+		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Traitement par lot"
+																 delegate:self
+														cancelButtonTitle:nil
+												   destructiveButtonTitle:nil
+														otherButtonTitles:nil];
+
+		for (NSString *action in self.secondaryActions) {
+			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
+			[actionSheet addButtonWithTitle:actionName];
+		}
+		[actionSheet addButtonWithTitle:@"Annuler"];
+
+		// Find the barButtonItem
+
+		UIBarButtonItem *moreItem = nil;
+		
+		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
+			if ([(UIView*)sender isDescendantOfView:item.customView]) {
+				moreItem = item;
+				break;
+			}
+		}
+
+		if (moreItem) {
+			[actionSheet showFromBarButtonItem:moreItem
+									  animated:YES];
+		}
+
+		//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
+		else {
+			[actionSheet showFromRect:((UIView*)sender).frame
+							   inView:self.view
+							 animated:YES];
+		}
 	}
 }
 
@@ -592,7 +657,9 @@ numberOfRowsInSection:(NSInteger)section {
 #pragma mark - UISearchBarDelegate protocol implementation
 
 
--(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+-(void)searchBar:(UISearchBar *)searchBar
+   textDidChange:(NSString *)searchText {
+	
 	[self filterDossiersForSearchText:searchText];
 	[self.tableView reloadData];
 }
@@ -608,7 +675,8 @@ numberOfRowsInSection:(NSInteger)section {
 }
 
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue
+				sender:(id)sender {
 	
 	if ([segue.identifier isEqualToString:@"filterSegue"]) {
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
@@ -636,25 +704,35 @@ numberOfRowsInSection:(NSInteger)section {
 	[super viewDidUnload];
 }
 
-
 #pragma mark UIActionSheetDelegate protocol implementation
 
-
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+/**
+ * iOS7 response of ActionSheet events.
+ * The UIActionSheetDelegate isn't used anymore in iOS8.
+ */
+-(void)actionSheet:(UIActionSheet *)actionSheet
+clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
 	if (buttonIndex < self.secondaryActions.count) {
 		NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
-		@try {
-			[self performSegueWithIdentifier:action sender:self];
-		}
-		@catch (NSException *exception) {
-			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-									   delegate:nil
-							  cancelButtonTitle:@"Fermer"
-							  otherButtonTitles:nil]
-			 show];
-		}
-		@finally {}
+		[self clickOnSecondaryAction:action];
+	}
+}
+
+
+-(void)clickOnSecondaryAction:(NSString *)actionName {
+	
+	@try {
+		[self performSegueWithIdentifier:actionName
+								  sender:self];
+	}
+	@catch (NSException *exception) {
+		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+									message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+								   delegate:nil
+						  cancelButtonTitle:@"Fermer"
+						  otherButtonTitles:nil]
+		 show];
 	}
 }
 
@@ -674,14 +752,14 @@ numberOfRowsInSection:(NSInteger)section {
 	
 	// Cancel event if no internet
 	
-	if (![DeviceUtils isConnectedToInternet]) {
-
-		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
-														 code:kCFURLErrorNotConnectedToInternet
-													 userInfo:nil]];
-		[cell flickerSelection];
-		return;
-	}
+//	if (![DeviceUtils isConnectedToInternet]) {
+//
+//		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
+//														 code:kCFURLErrorNotConnectedToInternet
+//													 userInfo:nil]];
+//		[cell flickerSelection];
+//		return;
+//	}
 	
 	// v2/v3 compatibility
 	

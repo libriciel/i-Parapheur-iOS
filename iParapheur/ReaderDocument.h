@@ -1,9 +1,9 @@
 //
 //	ReaderDocument.h
-//	Reader v2.5.4
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -23,31 +23,33 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "CGPDFDocument.h"
+#import <Foundation/Foundation.h>
 
-@interface ReaderDocument : NSObject <NSCoding>
+@interface ReaderDocument : NSObject <NSObject, NSCoding>
 
-@property (nonatomic, readonly, copy) NSString *guid;
-@property (nonatomic, readonly, strong) NSDate *fileDate;
-@property (nonatomic, readonly, copy) NSString *fileName;
-@property (nonatomic, readonly, strong) NSURL *fileURL;
+@property (nonatomic, strong, readonly) NSString *guid;
+@property (nonatomic, strong, readonly) NSDate *fileDate;
+@property (nonatomic, strong, readwrite) NSDate *lastOpen;
+@property (nonatomic, strong, readonly) NSNumber *fileSize;
+@property (nonatomic, strong, readonly) NSNumber *pageCount;
+@property (nonatomic, strong, readwrite) NSNumber *pageNumber;
+@property (nonatomic, strong, readonly) NSMutableIndexSet *bookmarks;
+@property (nonatomic, strong, readonly) NSString *password;
+@property (nonatomic, strong, readonly) NSString *fileName;
+@property (nonatomic, strong, readonly) NSURL *fileURL;
 
-@property (nonatomic, strong) NSDate *lastOpen;
-@property (nonatomic, readonly, strong) NSNumber *fileSize;
-@property (nonatomic) NSInteger epPageCount;
-@property (nonatomic, strong) NSNumber *pageNumber;
+@property (nonatomic, readonly) BOOL canEmail;
+@property (nonatomic, readonly) BOOL canExport;
+@property (nonatomic, readonly) BOOL canPrint;
 
-@property (nonatomic, readonly, strong) NSMutableIndexSet *bookmarks;
-@property (nonatomic, readonly, copy) NSString *password;
++ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase;
 
-+ (NSString *)GUID;
++ (ReaderDocument *)unarchiveFromFileName:(NSString *)filePath password:(NSString *)phrase;
 
-+ (ReaderDocument *)newWithDocumentFilePath:(NSString *)filename password:(NSString *)phrase;
-+ (ReaderDocument *)unarchiveFromFileName:(NSString *)filename password:(NSString *)phrase;
+- (instancetype)initWithFilePath:(NSString *)filePath password:(NSString *)phrase;
 
-- (id)initWithFilePath:(NSString *)fullFilePath password:(NSString *)phrase;
+- (BOOL)archiveDocumentProperties;
 
-- (void)saveReaderDocument;
-- (void)updateProperties;
+- (void)updateDocumentProperties;
 
 @end

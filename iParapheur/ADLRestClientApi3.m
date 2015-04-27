@@ -9,7 +9,6 @@
 #import "NSString+Contains.h"
 #import "StringUtils.h"
 #import "ADLResponseSignInfo.h"
-#import "Reachability.h"
 
 @implementation ADLRestClientApi3
 

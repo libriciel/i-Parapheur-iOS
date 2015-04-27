@@ -1,9 +1,9 @@
 //
 //	ReaderThumbFetch.m
-//	Reader v2.5.6
+//	Reader v2.8.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -27,96 +27,102 @@
 #import "ReaderThumbRender.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbView.h"
-#import "CGPDFDocument.h"
 
 #import <ImageIO/ImageIO.h>
 
 @implementation ReaderThumbFetch
-
-//#pragma mark Properties
-
-//@synthesize ;
-
-#pragma mark ReaderThumbFetch instance methods
-
-- (id)initWithRequest:(ReaderThumbRequest *)object
 {
-	if ((self = [super initWithGUID:object.guid])) {
-		request = object;
+	ReaderThumbRequest *request;
+}
+
+#pragma mark - ReaderThumbFetch instance methods
+
+- (instancetype)initWithRequest:(ReaderThumbRequest *)options
+{
+	if ((self = [super initWithGUID:options.guid]))
+	{
+		request = options;
 	}
+	
 	return self;
 }
 
-- (void)dealloc
+- (void)cancel
 {
-	if (request.thumbView.operation == self) {
-		request.thumbView.operation = nil;
-	}
-	request = nil;
+	[super cancel]; // Cancel the operation
+	
+	request.thumbView.operation = nil; // Break retain loop
+	
+	request.thumbView = nil; // Release target thumb view on cancel
+	
+	[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
 }
 
 - (NSURL *)thumbFileURL
 {
-	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid];
-	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName]; // Thumb file name
+	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid]; // Thumb cache path
 	
-	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]];
+	NSString *fileName = [[NSString alloc] initWithFormat:@"%@.png", request.thumbName]; // Thumb file name
+	
+	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]]; // File URL
 }
 
 - (void)main
 {
-	DXLog(@"");
-	if (self.isCancelled) {
-		return;
-	}
+	CGImageRef imageRef = NULL; NSURL *thumbURL = [self thumbFileURL];
 	
-	NSURL *thumbURL = [self thumbFileURL];
-	CGImageRef imageRef = NULL;
 	CGImageSourceRef loadRef = CGImageSourceCreateWithURL((__bridge CFURLRef)thumbURL, NULL);
 	
-	// Load the existing thumb image
-	if (loadRef != NULL) {
-		imageRef = CGImageSourceCreateImageAtIndex(loadRef, 0, NULL);
-		CFRelease(loadRef); // Release CGImageSource reference
+	if (loadRef != NULL) // Load the existing thumb image
+	{
+		imageRef = CGImageSourceCreateImageAtIndex(loadRef, 0, NULL); // Load it
 		
-		if (imageRef != NULL) {
-			UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:0];
-			CGImageRelease(imageRef); // Release the CGImage reference from the above thumb load code
+		CFRelease(loadRef); // Release CGImageSource reference
+	}
+	else // Existing thumb image not found - so create and queue up a thumb render operation on the work queue
+	{
+		ReaderThumbRender *thumbRender = [[ReaderThumbRender alloc] initWithRequest:request]; // Create a thumb render operation
+		
+		[thumbRender setQueuePriority:self.queuePriority]; [thumbRender setThreadPriority:(self.threadPriority - 0.1)]; // Priority
+		
+		if (self.isCancelled == NO) // We're not cancelled - so update things and add the render operation to the work queue
+		{
+			request.thumbView.operation = thumbRender; // Update the thumb view operation property to the new operation
 			
-			// Decode and draw the image on this background thread
-			UIGraphicsBeginImageContextWithOptions(image.size, YES, request.scale);
-			[image drawAtPoint:CGPointZero];
-			UIImage *decoded = UIGraphicsGetImageFromCurrentImageContext();
-			UIGraphicsEndImageContext();
-			
-			[[ReaderThumbCache sharedInstance] setObject:decoded forKey:request.cacheKey]; // Update cache
-			
-			// Show the image in the target thumb view on the main thread
-			if (!self.isCancelled) {
-				ReaderThumbView *thumbView = request.thumbView;
-				NSUInteger targetTag = request.targetTag;
-				
-				// Queue image show on main thread
-				dispatch_async(dispatch_get_main_queue(), ^{
-					if (thumbView.targetTag == targetTag) {
-						[thumbView showImage:decoded];
-					}
-				});
-			}
+			[[ReaderThumbQueue sharedInstance] addWorkOperation:thumbRender]; return; // Queue the operation
 		}
 	}
 	
-	// Existing thumb image not found - so create and queue up a thumb render operation on the work queue
-	else {
-		ReaderThumbRender *thumbRender = [[ReaderThumbRender alloc] initWithRequest:request];
-		[thumbRender setQueuePriority:self.queuePriority];
-		[thumbRender setThreadPriority:(self.threadPriority - 0.1)];
+	if (imageRef != NULL) // Create a UIImage from a CGImage and show it
+	{
+		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:UIImageOrientationUp];
 		
-		if (!self.isCancelled) {
-			request.thumbView.operation = thumbRender; // Update the thumb view operation property to the new operation
-			[[ReaderThumbQueue sharedInstance] addWorkOperation:thumbRender];
+		CGImageRelease(imageRef); // Release the CGImage reference from the above thumb load code
+		
+		UIGraphicsBeginImageContextWithOptions(image.size, YES, request.scale); // Graphics context
+		
+		[image drawAtPoint:CGPointZero]; // Decode and draw the image on this background thread
+		
+		UIImage *decoded = UIGraphicsGetImageFromCurrentImageContext(); // Newly decoded image
+		
+		UIGraphicsEndImageContext(); // Cleanup after the bitmap-based graphics drawing context
+		
+		[[ReaderThumbCache sharedInstance] setObject:decoded forKey:request.cacheKey]; // Cache it
+		
+		if (self.isCancelled == NO) // Show the image in the target thumb view on the main thread
+		{
+			ReaderThumbView *thumbView = request.thumbView; // Target thumb view for image show
+			
+			NSUInteger targetTag = request.targetTag; // Target reference tag for image show
+			
+			dispatch_async(dispatch_get_main_queue(), // Queue image show on main thread
+						   ^{
+							   if (thumbView.targetTag == targetTag) [thumbView showImage:decoded];
+						   });
 		}
 	}
+	
+	request.thumbView.operation = nil; // Break retain loop
 }
 
 @end

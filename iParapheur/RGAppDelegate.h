@@ -38,7 +38,6 @@
  * termes.
  */
 
-
 #import <UIKit/UIKit.h>
 #import "ADLKeyStore.h"
 #import "ADLParapheurWallDelegateProtocol.h"

@@ -1,8 +1,8 @@
 //
-//	ReaderMainPagebar.h
+//	ReaderDocumentOutline.m
 //	Reader v2.8.6
 //
-//	Created by Julius Oklamcak on 2011-09-01.
+//	Created by Julius Oklamcak on 2012-09-01.
 //	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,66 +23,23 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "ReaderThumbView.h"
+@interface ReaderDocumentOutline : NSObject <NSObject>
 
-@class ReaderMainPagebar;
-@class ReaderTrackControl;
-@class ReaderPagebarThumb;
-@class ReaderDocument;
++ (NSArray *)outlineFromFileURL:(NSURL *)fileURL password:(NSString *)phrase;
 
-@protocol ReaderMainPagebarDelegate <NSObject>
-
-@required // Delegate protocols
-
-- (void)pagebar:(ReaderMainPagebar *)pagebar gotoPage:(NSInteger)page;
++ (void)logDocumentOutlineArray:(NSArray *)array;
 
 @end
 
-@interface ReaderMainPagebar : UIView
+@interface DocumentOutlineEntry : NSObject <NSObject>
 
-@property (nonatomic, weak, readwrite) id <ReaderMainPagebarDelegate> delegate;
++ (instancetype)newWithTitle:(NSString *)title target:(id)target level:(NSInteger)level;
 
-- (instancetype)initWithFrame:(CGRect)frame document:(ReaderDocument *)object;
-
-- (void)updatePagebar;
-
-- (void)hidePagebar;
-- (void)showPagebar;
-
-@end
-
-#pragma mark -
-
-//
-//	ReaderTrackControl class interface
-//
-
-@interface ReaderTrackControl : UIControl
-
-@property (nonatomic, assign, readonly) CGFloat value;
-
-@end
-
-#pragma mark -
-
-//
-//	ReaderPagebarThumb class interface
-//
-
-@interface ReaderPagebarThumb : ReaderThumbView
-
-- (instancetype)initWithFrame:(CGRect)frame small:(BOOL)small;
-
-@end
-
-#pragma mark -
-
-//
-//	ReaderPagebarShadow class interface
-//
-
-@interface ReaderPagebarShadow : UIView
+@property (nonatomic, assign, readonly) NSInteger level;
+@property (nonatomic, strong, readwrite) NSMutableArray *children;
+@property (nonatomic, strong, readonly) NSString *title;
+@property (nonatomic, strong, readonly) id target;
 
 @end
