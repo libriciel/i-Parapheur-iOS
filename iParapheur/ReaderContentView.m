@@ -151,6 +151,7 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 #pragma Adullact fork
 			theContainerView.userInteractionEnabled = YES;
 			theContentPage.parentScrollView = self;
+			theContentPage.pageNumber = page - 1;
 #pragma Adullact fork end
 			theContainerView.contentMode = UIViewContentModeRedraw;
 			theContainerView.autoresizingMask = UIViewAutoresizingNone;
