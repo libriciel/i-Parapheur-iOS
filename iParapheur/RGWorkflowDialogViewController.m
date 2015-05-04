@@ -293,7 +293,7 @@
 			if (signature == nil && error != nil) {
 				[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
 								   withTitle:@"Une erreur s'est produite lors de la signature"
-									  inView:self.view];
+							inViewController:self];
 				break;
 			}
 			else {
@@ -381,7 +381,7 @@
 		if (signature == nil && error != nil) {
 			[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
 							   withTitle:@"Une erreur s'est produite lors de la signature"
-								  inView:self.view];
+						inViewController:self];
 			break;
 		}
 		else {

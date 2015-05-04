@@ -203,13 +203,10 @@
 		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
 		NSNumber *hour = [numberFormatter numberFromString:[dateFormatter stringFromDate:currentDate]];
 		
+		[DeviceUtils logInfoMessage:@"L'application est actuellement liée au parapheur de démonstration."];
+		
 		if (([hour integerValue] > 23) || ([hour integerValue] < 7))
 			[DeviceUtils logWarningMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."];
-		
-		// Warn user that he is on the demo server
-		// (In this order, to have it on the top)
-		
-		[DeviceUtils logInfoMessage:@"L'application est actuellement liée au parapheur de démonstration."];
 	}
 	@catch (NSException *e) { }
 }

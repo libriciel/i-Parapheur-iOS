@@ -300,8 +300,7 @@
 							  }
 							  failure:^(NSError *error) {
 								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-													 withTitle:@"Erreur à la sauvegarde de l'annotation"
-														inView:nil];
+													 withTitle:@"Erreur à la sauvegarde de l'annotation"];
 							  }];
 	}
 	else {
@@ -330,8 +329,7 @@
 							  }
 							  failure:^(NSError *error) {
 								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-													 withTitle:@"Erreur à la suppression de l'annotation"
-														inView:nil];
+													 withTitle:@"Erreur à la suppression de l'annotation"];
 							  }];
 	}
 	else {
@@ -373,8 +371,7 @@
 							}
 							failure:^(NSError *error) {
 								[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-												   withTitle:@"Erreur à la sauvegarde de l'annotation"
-													  inView:nil];
+												   withTitle:@"Erreur à la sauvegarde de l'annotation"];
 							}];
 	}
 	else {
