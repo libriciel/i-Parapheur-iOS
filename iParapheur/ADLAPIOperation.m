@@ -173,7 +173,7 @@
 					}
 					
 					NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
-																				  delegate:self
+																				  delegate:strongSelf
 																		  startImmediately:NO];
 					
 					[connection scheduleInRunLoop:[NSRunLoop currentRunLoop]

@@ -294,11 +294,10 @@
 			                  success:^(NSArray *result) {
 			                      NSLog(@"updateAnnotation success");
 			                  }
-			                  failure:^(NSError *error) {
-			                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-			                                         withTitle:@"Erreur à la sauvegarde de l'annotation"
-						                                inView:nil];
-			                  }];
+							  failure:^(NSError *error) {
+								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+													 withTitle:@"Erreur à la sauvegarde de l'annotation"];
+							  }];
 	}
 	else {
 		NSDictionary *dict = [annotation dict];
@@ -328,8 +327,7 @@
 				              }
 				              failure:^(NSError *error) {
 				                  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-				                                     withTitle:@"Erreur à la suppression de l'annotation"
-						                                inView:nil];
+													 withTitle:@"Erreur à la suppression de l'annotation"];
 				              }];
 	}
 	else {
@@ -377,8 +375,7 @@
 				            }
 				            failure:^(NSError *error) {
 				                [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-				                                   withTitle:@"Erreur à la sauvegarde de l'annotation"
-						                              inView:nil];
+												   withTitle:@"Erreur à la sauvegarde de l'annotation"];
 				            }];
 	}
 	else {
@@ -719,7 +716,6 @@
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
-				SHOW_HUD
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 				                         andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
@@ -727,11 +723,9 @@
 						                       __strong typeof(weakSelf) strongSelf = weakSelf;
 						                       if (strongSelf) {
 							                       strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
-							                       HIDE_HUD
 						                       }
 						                   }
 						                   failure:^(NSError *error) {
-						                       HIDE_HUD
 						                       NSLog(@"getSignInfo %@", error.localizedDescription);
 						                   }];
 			}

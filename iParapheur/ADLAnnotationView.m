@@ -66,7 +66,6 @@
         _selected = NO;
         
         [self addButtons];
-        
 
         
 //disable the shadowlayer for now it's to consuming

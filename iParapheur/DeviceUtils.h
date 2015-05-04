@@ -11,8 +11,11 @@
 + (void)logErrorMessage:(NSString *)message;
 
 + (void)logErrorMessage:(NSString *)message
+			  withTitle:(NSString *)title;
+	
++ (void)logErrorMessage:(NSString *)message
 			  withTitle:(NSString *)title
-				 inView:(UIView *)view;
+	   inViewController:(UIViewController *)viewController;
 
 + (void)logSuccessMessage:(NSString *)message;
 

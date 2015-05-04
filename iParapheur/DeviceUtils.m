@@ -1,6 +1,6 @@
 #import "DeviceUtils.h"
 #import "StringUtils.h"
-#import <ALAlertBanner/ALAlertBanner.h>
+#import <TSMessage.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
 
@@ -19,77 +19,51 @@
 }
 
 
-+ (void)logErrorMessage:(NSString *)message {
++ (void)logErrorMessage:(NSString *)message
+			  withTitle:(NSString *)title
+	   inViewController:(UIViewController *)viewController {
 
-		[self logErrorMessage:nil
-				withTitle:message
-				   inView:nil];
+	[TSMessage showNotificationInViewController:viewController
+										  title:message
+									   subtitle:nil
+										   type:TSMessageNotificationTypeError];
+}
+
+
++ (void)logErrorMessage:(NSString *)message {
+	
+	[TSMessage showNotificationWithTitle:message
+									type:TSMessageNotificationTypeError];
 }
 
 
 + (void)logErrorMessage:(NSString *)message
-			  withTitle:(NSString *)title
-				 inView:(UIView *)view {
+			  withTitle:(NSString *)title {
 	
-	if (view == nil)
-		view = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
-	
-	// Create banner
-	
-	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:view
-														style:ALAlertBannerStyleFailure
-													 position:ALAlertBannerPositionTop
-														title:title
-													 subtitle:message];
-	banner.secondsToShow = 2.0f;
-	
-	// Simple test, to avoid full error screen (this should never happen in a normal case)
-	
-	NSArray *existingBanners = [ALAlertBanner alertBannersInView:(UIView *)view];
-	if (existingBanners.count >= 5)
-		return;
-
-	// Show
-
-	[banner show];
+	[TSMessage showNotificationWithTitle:title
+								subtitle:message
+									type:TSMessageNotificationTypeError];
 }
 
 
 + (void)logSuccessMessage:(NSString *)message {
 	
-	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
-	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
-														style:ALAlertBannerStyleSuccess
-													 position:ALAlertBannerPositionTop
-														title:message
-													 subtitle:nil];
-	[banner show];
+	[TSMessage showNotificationWithTitle:message
+									type:TSMessageNotificationTypeSuccess];
 }
 
 
 + (void)logInfoMessage:(NSString *)message {
 	
-	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
-	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
-														style:ALAlertBannerStyleNotify
-													 position:ALAlertBannerPositionTop
-														title:message
-													 subtitle:nil];
-	banner.secondsToShow = 5.0f;
-	[banner show];
+	[TSMessage showNotificationWithTitle:message
+									type:TSMessageNotificationTypeMessage];
 }
 
 
 + (void)logWarningMessage:(NSString *)message {
 	
-	UIView *mainView = [[[UIApplication sharedApplication].windows objectAtIndex:0] rootViewController].view;
-	ALAlertBanner *banner = [ALAlertBanner alertBannerForView:mainView
-														style:ALAlertBannerStyleWarning
-													 position:ALAlertBannerPositionTop
-														title:message
-													 subtitle:nil];
-	banner.secondsToShow = 5.0f;
-	[banner show];
+	[TSMessage showNotificationWithTitle:message
+									type:TSMessageNotificationTypeWarning];
 }
 
 
