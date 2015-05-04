@@ -1,20 +1,15 @@
 #import "ADLRestClientApi3.h"
-
 #import "ADLResponseGetLevel.h"
 #import "ADLResponseBureau.h"
 #import "ADLResponseDossiers.h"
-#import "ADLResponseDossier.h"
-#import "ADLResponseCircuit.h"
 #import "ADLResponseAnnotation.h"
-#import "NSString+Contains.h"
-#import "StringUtils.h"
-#import "ADLResponseSignInfo.h"
 
 @implementation ADLRestClientApi3
 
 
 -(id)init {
-	// Retrieve infos from settings
+
+	// Retrieve info from settings
 	
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
 	
@@ -55,7 +50,7 @@
 -(void)initRestClientWithLogin:(NSString*)login
 					  password:(NSString*)password
 						   url:(NSString*)url {
-
+	
 	// Fix values
 	
 	if (![url hasPrefix:@"https://m."])
@@ -101,6 +96,27 @@
 }
 
 
+-(void)cancelAllHTTPOperationsWithPath:(NSString *)path {
+	
+	[[_sessionManager session] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+		[self cancelTasksInArray:dataTasks withPath:path];
+		[self cancelTasksInArray:uploadTasks withPath:path];
+		[self cancelTasksInArray:downloadTasks withPath:path];
+	}];
+}
+
+
+-(void)cancelTasksInArray:(NSArray *)tasksArray withPath:(NSString *)path {
+	
+	for (NSURLSessionTask *task in tasksArray) {
+		NSRange range = [[[[task currentRequest]URL] absoluteString] rangeOfString:path];
+		if (range.location != NSNotFound) {
+			[task cancel];
+		}
+	}
+}
+
+
 -(NSString *)getDownloadUrl:(NSString *)dossierId
 					 forPdf:(bool)isPdf {
 	
@@ -118,43 +134,45 @@
 
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure {
-		
+	
+	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
+	
 	[_sessionManager GET:@"/parapheur/api/getApiLevel"
-		  parameters:nil
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
-				 // Parse check
-				 
-				 NSError *error;
-				 ADLResponseGetLevel* responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
-																   fromJSONDictionary:responseObject
-																				error:&error];
-				 
-				 if (error) {
-					 failure([NSError errorWithDomain:error.domain
-												 code:kCFURLErrorBadServerResponse
-											 userInfo:nil]);
+			  parameters:nil
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
+					 
+					 // Parse check
+					 
+					 NSError *error;
+					 ADLResponseGetLevel* responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
+																	   fromJSONDictionary:responseObject
+																					error:&error];
+					 
+					 if (error) {
+						 failure([NSError errorWithDomain:error.domain
+													 code:kCFURLErrorBadServerResponse
+												 userInfo:nil]);
+					 }
+					 else {
+						 success(responseGetLevel.level);
+					 }
 				 }
-				 else {
-					 success(responseGetLevel.level);
-				 }
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 
-				 // AFNetworking seems to throw back only BadRequest errors,
-				 // There we fix them, to have proper errors (Authentication, SSL, etc)
-				 
-				 NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse*)task.response;
-				 
-				 if (urlResponse.statusCode == 401) {
-					 failure([NSError errorWithDomain:error.domain
-												 code:kCFURLErrorUserAuthenticationRequired
-											 userInfo:nil]);
-				 }
-				 else {
-					 failure(error);
-				 }
-			 }];
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
+					 
+					 // AFNetworking seems to throw back only BadRequest errors,
+					 // There we fix them, to have proper errors (Authentication, SSL, etc)
+					 
+					 NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse*)task.response;
+					 
+					 if (urlResponse.statusCode == 401) {
+						 failure([NSError errorWithDomain:error.domain
+													 code:kCFURLErrorUserAuthenticationRequired
+												 userInfo:nil]);
+					 }
+					 else {
+						 failure(error);
+					 }
+				 }];
 }
 
 
@@ -162,26 +180,26 @@
 		  failure:(void (^)(NSError *))failure {
 	
 	[_sessionManager GET:@"/parapheur/bureaux"
-		  parameters:nil
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
-				 // Parse result
-				 
-				 NSError *error;
-				 NSArray* responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
-															fromJSONArray:responseObject
-																	error:&error];
-				 
-				 // Callback
-				 
-				 if (error)
+			  parameters:nil
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
+					 
+					 // Parse result
+					 
+					 NSError *error;
+					 NSArray* responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
+																fromJSONArray:responseObject
+																		error:&error];
+					 
+					 // Callback
+					 
+					 if (error)
+						 failure(error);
+					 else
+						 success(responseBureaux);
+				 }
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
 					 failure(error);
-				 else
-					 success(responseBureaux);
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 failure(error);
-			 }];
+				 }];
 }
 
 
@@ -208,24 +226,24 @@
 	//@"metas" : @"",
 	
 	[_sessionManager GET:@"/parapheur/dossiers"
-		  parameters:queryParams
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 				 
-				 NSError *error;
-				 NSArray* responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
-															 fromJSONArray:responseObject
-																	 error:&error];
-				 
-				 // Parse check and callback
-				 
-				 if (error)
+			  parameters:queryParams
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
+					 
+					 NSError *error;
+					 NSArray* responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
+																 fromJSONArray:responseObject
+																		 error:&error];
+					 
+					 // Parse check and callback
+					 
+					 if (error)
+						 failure(error);
+					 else
+						 success(responseDossiers);
+				 }
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
 					 failure(error);
-				 else
-					 success(responseDossiers);
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 failure(error);
-			 }];
+				 }];
 }
 
 
@@ -237,24 +255,24 @@
 	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
 	
 	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
-		  parameters:queryParams
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
-				 NSError *error;
-				 ADLResponseDossier* responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
-																 fromJSONDictionary:responseObject
-																			  error:&error];
-				 
-				 // Parse check and callback
-				 
-				 if (error)
+			  parameters:queryParams
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
+					 
+					 NSError *error;
+					 ADLResponseDossier* responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
+																	 fromJSONDictionary:responseObject
+																				  error:&error];
+					 
+					 // Parse check and callback
+					 
+					 if (error)
+						 failure(error);
+					 else
+						 success(responseDossier);
+				 }
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
 					 failure(error);
-				 else
-					 success(responseDossier);
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 failure(error);
-			 }];
+				 }];
 }
 
 
@@ -263,53 +281,57 @@
 					 success:(void (^)(ADLResponseSignInfo *))success
 					 failure:(void (^)(NSError *))failure {
 	
+	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
+
 	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
 	
 	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
-		  parameters:queryParams
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
-				 NSError *error;
-				 ADLResponseSignInfo* responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
-																   fromJSONDictionary:responseObject
-																				error:&error];
-				 
-				 // Parse check and callback
-				 
-				 if (error)
+			  parameters:queryParams
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
+					 
+					 NSError *error;
+					 ADLResponseSignInfo* responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
+																	   fromJSONDictionary:responseObject
+																					error:&error];
+					 
+					 // Parse check and callback
+					 
+					 if (error)
+						 failure(error);
+					 else
+						 success(responseSignInfo);
+				 }
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
 					 failure(error);
-				 else
-					 success(responseSignInfo);
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 failure(error);
-			 }];
+				 }];
 }
 
 
 -(void)getCircuit:(NSString*)dossier
 		  success:(void (^)(ADLResponseCircuit *))success
 		  failure:(void (^)(NSError *))failure {
+
+	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 	
 	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
-		  parameters:nil
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
-				 NSError *error;
-				 ADLResponseCircuit* responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-														   fromJSONDictionary:responseObject[@"circuit"]
-																			  error:&error];
-				 
-				 // Parse check and callback
-				 
-				 if (error)
+			  parameters:nil
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
+					 
+					 NSError *error;
+					 ADLResponseCircuit* responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
+																	 fromJSONDictionary:responseObject[@"circuit"]
+																				  error:&error];
+					 
+					 // Parse check and callback
+					 
+					 if (error)
+						 failure(error);
+					 else
+						 success(responseCircuit);
+				 }
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
 					 failure(error);
-				 else
-					 success(responseCircuit);
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 failure(error);
-			 }];
+				 }];
 }
 
 
@@ -317,32 +339,79 @@
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
+	[self cancelAllHTTPOperationsWithPath:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]];
+	
 	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
-		  parameters:nil
-			 success:^(NSURLSessionDataTask *task, id responseObject) {
-				 
-				 //TODO : Proper (Mantle based) JSON parse
-				 
-				 @try {
-					 NSArray *responseArray = responseObject;
-					 NSMutableArray *result = [[NSMutableArray alloc] init];
+			  parameters:nil
+				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
-					 for (id element in responseArray) {
-						 ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
-						 response.data = element;
-						 [result addObject:response];
+					 //TODO : Proper (Mantle based) JSON parse
+					 
+					 @try {
+						 NSArray *responseArray = responseObject;
+						 NSMutableArray *result = [[NSMutableArray alloc] init];
+						 
+						 for (id element in responseArray) {
+							 ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+							 response.data = element;
+							 [result addObject:response];
+						 }
+						 
+						 success(result);
+					 }
+					 @catch (NSException * e) {
+						 failure(nil);
 					 }
 					 
-					 success(result);
 				 }
-				 @catch (NSException * e) {
-					 failure(nil);
-				 }
-				 
-			 }
-			 failure:^(NSURLSessionDataTask *task, NSError *error) {
-				 failure(error);
-			 }];
+				 failure:^(NSURLSessionDataTask *task, NSError *error) {
+					 failure(error);
+				 }];
+}
+
+
+#pragma mark - Download
+
+
+-(void)downloadDocument:(NSString*)documentId
+				  isPdf:(bool)isPdf
+				 atPath:(NSURL*)filePathUrl
+				success:(void (^)(NSString *))success
+				failure:(void (^)(NSError *))failure {
+
+	// Cancel previous download
+
+	[[_sessionManager session] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+	    for (NSURLSessionTask *task in downloadTasks)
+		    [task cancel];
+	}];
+
+	// Define download request
+
+	NSString *downloadUrlSuffix = [self getDownloadUrl:documentId
+	                                            forPdf:isPdf];
+
+	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@", _sessionManager.baseURL, downloadUrlSuffix];
+	NSMutableURLRequest *request = [_sessionManager.requestSerializer requestWithMethod:@"GET"
+	                                                                          URLString:downloadUrlString
+			                                                                 parameters:nil
+			                                                                      error:nil];
+
+	// Start download
+
+	NSURLSessionDownloadTask *downloadTask = [_sessionManager downloadTaskWithRequest:request
+	                                                                         progress:nil
+			                                                              destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+			                                                                  return filePathUrl;
+			                                                              }
+																	completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+																	    if (error == nil)
+																			success(filePathUrl.path);
+																	    else if (error.code != kCFURLErrorCancelled)
+																			failure(error);
+																	}];
+
+	[downloadTask resume];
 }
 
 
@@ -364,7 +433,7 @@ typedef enum {
 	
 	if (type == ADLRequestTypePOST) {
 		[_sessionManager POST:url
-				parameters:args
+				   parameters:args
 				   success:^(NSURLSessionDataTask *operation, id responseObject) {
 					   success(nil);
 				   }
@@ -476,7 +545,6 @@ typedef enum {
 					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure {
 	
-	
 	// Create arguments dictionnary
 	
 	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
@@ -505,8 +573,6 @@ typedef enum {
 				withSignature:(NSString *)signature
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
-	
-	// Create arguments dictionnary
 	
 	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
 	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];

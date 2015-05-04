@@ -342,7 +342,7 @@
 
 -(void)addAnnotation:(ADLAnnotation*)annotation
 			 forPage:(NSUInteger)page {
-	
+
 	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
 		NSString *login=[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] objectForKey:@"settings_login"];
 		if (login == nil)
@@ -641,16 +641,30 @@
 	// The preferred way to get the apps documents directory
 	
 	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *docDirectory = [documentsPaths objectAtIndex:0];
+	NSString *docDirectory = documentsPaths[0];
 	
 	// Grab all the files in the documents dir
 	
 	NSString *fileName = [NSString stringWithFormat:@"%@.bin", _dossierRef];
 	NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-	
+
 	return filePath;
 }
 
+
+-(NSURL *)getFileUrlWithDossierRef:(NSString *)dossierRef {
+
+	NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory
+	                                                                      inDomain:NSUserDomainMask
+			                                                     appropriateForURL:nil
+			                                                                create:YES
+			                                                                 error:nil];
+
+	NSString *fileName = [NSString stringWithFormat:@"%@.bin", dossierRef];
+	documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:fileName];
+
+	return documentsDirectoryURL;
+}
 
 -(void)requestAnnotations {
 	
@@ -775,12 +789,22 @@
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _dossier.documents) {
-		_document = _dossier.documents[index];
-		bool isPdf = [[_document objectForKey:@"visuelPdf"] boolValue];
-		NSString *documentId = [_document objectForKey:@"id"];
-		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId
-														   forPdf:isPdf]
-							 delegate:self];
+		_document = _dossier.documents[(NSUInteger) index];
+		bool isPdf = [_document[@"visuelPdf"] boolValue];
+		NSString *documentId = _document[@"id"];
+		[_restClient downloadDocument:documentId
+		                        isPdf:isPdf
+			                   atPath:[self getFileUrlWithDossierRef:_dossierRef]
+			                  success:^(NSString *string) {
+			                      HIDE_HUD
+			                      [self loadPdfAt:filePath];
+			                      [self requestAnnotations];
+			                  }
+			                  failure:^(NSError *error) {
+			                      HIDE_HUD
+				                  [DeviceUtils logError:error];
+			                      NSLog(@"Download Fail %@", error.localizedDescription);
+			                  }];
 	}
 	else if (_document) {
 		NSDictionary *document = [[_document objectForKey:@"documents" ] objectAtIndex:index];
@@ -809,7 +833,7 @@
 		
 		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		
-		NSString *docPath = [documentsPaths objectAtIndex:0];
+		NSString *docPath = documentsPaths[0];
 		NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin", docPath, _dossierRef];
 		[fileManager createFileAtPath:filePath
 							 contents:nil
