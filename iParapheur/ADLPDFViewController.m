@@ -24,20 +24,14 @@
 //
 
 #import "ADLPDFViewController.h"
-#import "ReaderContentView.h"
-#import "LGViewHUD.h"
 #import "RGDossierDetailViewController.h"
 #import "RGDocumentsView.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
-#import "ADLAPIOperation.h"
 #import "ADLActionViewController.h"
 #import "UIColor+CustomColors.h"
-#import "ADLResponseCircuit.h"
-#import "ADLResponseDossier.h"
 #import "ADLResponseAnnotation.h"
-#import "ADLResponseSignInfo.h"
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 
@@ -690,7 +684,7 @@
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
-				SHOW_HUD
+
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
@@ -698,11 +692,9 @@
 											   __strong typeof(weakSelf) strongSelf = weakSelf;
 											   if (strongSelf) {
 												   strongSelf.signatureFormat = [signInfo.signatureInformations objectForKey:@"format"];
-												   HIDE_HUD
 											   }
 										   }
 										   failure:^(NSError *error) {
-											   HIDE_HUD
 											   NSLog(@"getSignInfo %@", error.localizedDescription);
 										   }];
 			}
