@@ -47,6 +47,24 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
+-(void)downloadDocument:(NSString*)documentId
+                  isPdf:(bool)isPdf
+	             atPath:(NSURL*)filePath
+	            success:(void (^)(NSString *))success
+	            failure:(void (^)(NSError *))failure {
+	
+	[_restClientApi3 downloadDocument:documentId
+	                            isPdf:isPdf
+		                       atPath:filePath
+		                      success:^(NSString *string) {
+		                          success(string);
+		                      }
+			                  failure:^(NSError *error) {
+			                      failure(error);
+			                  }];
+}
+
+
 -(NSString *)fixBureauId:(NSString *)dossierId {
 	
 	NSString *prefixToRemove = @"workspace://SpacesStore/";

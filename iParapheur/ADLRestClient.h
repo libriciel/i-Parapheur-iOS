@@ -24,7 +24,14 @@
 
 -(NSString *)getDownloadUrl:(NSString *)dossierId
 					 forPdf:(bool)isPdf;
-	
+
+
+-(void)downloadDocument:(NSString*)documentId
+                  isPdf:(bool)isPdf
+				 atPath:(NSURL*)filePath
+	            success:(void (^)(NSString *))success
+	            failure:(void (^)(NSError *))failure ;
+
 
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure;

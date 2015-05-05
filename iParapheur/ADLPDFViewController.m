@@ -351,6 +351,7 @@
 
 	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
 		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
+
 		if (login == nil)
 			login = @"bma";
 
@@ -681,6 +682,21 @@
 }
 
 
+-(NSURL *)getFileUrlWithDossierRef:(NSString *)dossierRef {
+
+	NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory
+	                                                                      inDomain:NSUserDomainMask
+			                                                     appropriateForURL:nil
+			                                                                create:YES
+			                                                                 error:nil];
+
+	NSString *fileName = [NSString stringWithFormat:@"%@.bin", dossierRef];
+	documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:fileName];
+
+	return documentsDirectoryURL;
+}
+
+
 - (void)requestAnnotations {
 
 	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
@@ -786,11 +802,12 @@
 - (void)displayDocumentAt:(NSInteger)index {
 
 	_isDocumentPrincipal = (index == 0);
-
+	_document = _dossier.documents[(NSUInteger) index];
+	NSString *documentId = _document[@"id"];
+	
 	// File cache
-
-	NSString *filePath = [self getFilePathWithDossierRef:_dossierRef];
-
+	
+	NSString *filePath = [self getFileUrlWithDossierRef:documentId].path;
 	if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
 
 		NSLog(@"PDF : Cached data");
@@ -807,14 +824,22 @@
 
 	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
-
-	if (([[ADLRestClient getRestApiVersion] intValue] == 3) && _dossier.documents) {
-		_document = _dossier.documents[(NSUInteger) index];
+	
+	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _dossier.documents) {
 		bool isPdf = [_document[@"visuelPdf"] boolValue];
-		NSString *documentId = _document[@"id"];
-		[requester downloadDocumentAt:[_restClient getDownloadUrl:documentId
-		                                                   forPdf:isPdf]
-		                     delegate:self];
+
+		[_restClient downloadDocument:documentId
+		                        isPdf:isPdf
+			                   atPath:[self getFileUrlWithDossierRef:documentId]
+			                  success:^(NSString *string) {
+			                      HIDE_HUD
+			                      [self loadPdfAt:string];
+			                      [self requestAnnotations];
+			                  }
+			                  failure:^(NSError *error) {
+			                      HIDE_HUD
+				                  [DeviceUtils logError:error];
+			                  }];
 	}
 	else if (_document) {
 		NSDictionary *document = [_document[@"documents"] objectAtIndex:(NSUInteger) index];
