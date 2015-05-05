@@ -22,48 +22,66 @@
 + (void)logErrorMessage:(NSString *)message
 			  withTitle:(NSString *)title
 	   inViewController:(UIViewController *)viewController {
-
-	[TSMessage showNotificationInViewController:viewController
-										  title:message
-									   subtitle:nil
-										   type:TSMessageNotificationTypeError];
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationInViewController:viewController
+											  title:message
+										   subtitle:nil
+											   type:TSMessageNotificationTypeError];
+	});
 }
 
 
 + (void)logErrorMessage:(NSString *)message {
 	
-	[TSMessage showNotificationWithTitle:message
-									type:TSMessageNotificationTypeError];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:message
+										type:TSMessageNotificationTypeError];
+	});
 }
 
 
 + (void)logErrorMessage:(NSString *)message
 			  withTitle:(NSString *)title {
 	
-	[TSMessage showNotificationWithTitle:title
-								subtitle:message
-									type:TSMessageNotificationTypeError];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:title
+									subtitle:message
+										type:TSMessageNotificationTypeError];
+	});
 }
 
 
 + (void)logSuccessMessage:(NSString *)message {
 	
-	[TSMessage showNotificationWithTitle:message
-									type:TSMessageNotificationTypeSuccess];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:message
+										type:TSMessageNotificationTypeSuccess];
+	});
 }
 
 
 + (void)logInfoMessage:(NSString *)message {
 	
-	[TSMessage showNotificationWithTitle:message
-									type:TSMessageNotificationTypeMessage];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:message
+										type:TSMessageNotificationTypeMessage];
+	});
 }
 
 
 + (void)logWarningMessage:(NSString *)message {
 	
-	[TSMessage showNotificationWithTitle:message
-									type:TSMessageNotificationTypeWarning];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:message
+										type:TSMessageNotificationTypeWarning];
+	});
 }
 
 
