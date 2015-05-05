@@ -56,12 +56,12 @@ static NSNumber *PARAPHEUR_API_VERSION;
 	[_restClientApi3 downloadDocument:documentId
 	                            isPdf:isPdf
 		                       atPath:filePath
-	                            success:^(NSString *string) {
-	                                success(string);
-	                            }
-		                        failure:^(NSError *error) {
-			                        failure(error);
-		                        }];
+		                      success:^(NSString *string) {
+		                          success(string);
+		                      }
+			                  failure:^(NSError *error) {
+			                      failure(error);
+			                  }];
 }
 
 

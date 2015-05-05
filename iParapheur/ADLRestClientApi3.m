@@ -406,7 +406,7 @@
 			                                                              }
 																	completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
 																	    if (error == nil)
-																			success(filePathUrl.path);
+																			success(filePath.path);
 																	    else if (error.code != kCFURLErrorCancelled)
 																			failure(error);
 																	}];

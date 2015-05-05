@@ -766,11 +766,12 @@
 -(void)displayDocumentAt:(NSInteger)index {
 	
 	_isDocumentPrincipal = (index == 0);
+	_document = _dossier.documents[(NSUInteger) index];
+	NSString *documentId = _document[@"id"];
 	
 	// File cache
 	
-	NSString *filePath = [self getFilePathWithDossierRef:_dossierRef];
-	
+	NSString *filePath = [self getFileUrlWithDossierRef:documentId].path;
 	if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
 		
 		NSLog(@"PDF : Cached data");
@@ -789,21 +790,19 @@
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
 	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _dossier.documents) {
-		_document = _dossier.documents[(NSUInteger) index];
 		bool isPdf = [_document[@"visuelPdf"] boolValue];
-		NSString *documentId = _document[@"id"];
+
 		[_restClient downloadDocument:documentId
 		                        isPdf:isPdf
-			                   atPath:[self getFileUrlWithDossierRef:_dossierRef]
+			                   atPath:[self getFileUrlWithDossierRef:documentId]
 			                  success:^(NSString *string) {
 			                      HIDE_HUD
-			                      [self loadPdfAt:filePath];
+			                      [self loadPdfAt:string];
 			                      [self requestAnnotations];
 			                  }
 			                  failure:^(NSError *error) {
 			                      HIDE_HUD
 				                  [DeviceUtils logError:error];
-			                      NSLog(@"Download Fail %@", error.localizedDescription);
 			                  }];
 	}
 	else if (_document) {
