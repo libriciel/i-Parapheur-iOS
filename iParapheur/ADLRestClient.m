@@ -1,11 +1,13 @@
 
 #import "ADLRestClient.h"
+#import "DeviceUtils.h"
 
 
 @implementation ADLRestClient
 
 
 static NSNumber *PARAPHEUR_API_VERSION;
+static int PARAPHEUR_API_MAX_VERSION = 3;
 
 
 + (id)sharedManager {
@@ -84,6 +86,10 @@ static NSNumber *PARAPHEUR_API_VERSION;
 	
 	[_restClientApi3 getApiLevel:^(NSNumber *versionNumber) {
 							success(versionNumber);
+		
+							if ([versionNumber integerValue] > PARAPHEUR_API_MAX_VERSION)
+								[DeviceUtils logWarningMessage:@"Veuillez mettre à jour votre application."
+													 withTitle:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."];
 						 }
 						 failure:^(NSError *error) {
  							failure(error);

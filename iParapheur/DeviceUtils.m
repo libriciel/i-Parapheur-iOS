@@ -75,6 +75,18 @@
 }
 
 
++ (void)logWarningMessage:(NSString *)message
+				withTitle:(NSString *)title {
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:title
+									subtitle:message
+										type:TSMessageNotificationTypeWarning];
+	});
+}
+
+
 + (void)logWarningMessage:(NSString *)message {
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
