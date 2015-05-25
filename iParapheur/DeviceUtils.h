@@ -21,6 +21,9 @@
 
 + (void)logInfoMessage:(NSString *)message;
 
++ (void)logWarningMessage:(NSString *)message
+				withTitle:(NSString *)title;
+
 + (void)logWarningMessage:(NSString *)message;
 
 
