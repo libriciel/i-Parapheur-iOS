@@ -1,10 +1,4 @@
-//
-//  ADLRestClientApi4.m
-//  iParapheur
-//
-//  Created by Adrien Bricchi on 27/05/2015.
-//
-//
+
 
 #import "ADLRestClientApi4.h"
 

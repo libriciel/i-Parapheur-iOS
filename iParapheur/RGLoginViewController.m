@@ -200,7 +200,7 @@
 	url = [url stringByReplacingOccurrencesOfString:@" "
 										 withString:@""];
 	
-	// Gettigns the server name
+	// Getting the server name
 	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
 	//			- then ignore following "m." (if exists)						(?:m\.)*
 	//			- then catch every char but "/"									([^\/]*)

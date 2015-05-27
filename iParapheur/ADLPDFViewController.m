@@ -293,7 +293,7 @@
 		[_restClient updateAnnotation:annotationDictionary
 		                      forPage:(int) page
 			               forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
-						  andDocument:documentId //@"adrien"
+						  andDocument:documentId
 			                  success:^(NSArray *result) {
 			                      NSLog(@"updateAnnotation success");
 			                  }
@@ -327,7 +327,7 @@
 
 		[_restClient removeAnnotation:annotationDictionary
 		                   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
-						  andDocument:documentId //@"Adrien"
+						  andDocument:documentId
 				              success:^(NSArray *result) {
 				                  NSLog(@"deleteAnnotation success");
 				              }
@@ -376,7 +376,7 @@
 		__weak typeof(self) weakSelf = self;
 		[_restClient addAnnotations:args
 		                 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
-						andDocument:documentId //@"Adrien"
+						andDocument:documentId
 				            success:^(NSArray *result) {
 				                __strong typeof(weakSelf) strongSelf = weakSelf;
 				                if (strongSelf) {
@@ -712,7 +712,7 @@
 		
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
-						   document:documentId //@"Adrien"
+						   document:documentId
 		                    success:^(NSArray *annotations) {
 		                        __strong typeof(weakSelf) strongSelf = weakSelf;
 		                        if (strongSelf) {
