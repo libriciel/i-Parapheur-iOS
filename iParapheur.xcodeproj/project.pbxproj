@@ -94,6 +94,7 @@
 		C516EDEB1AB6D99300216E5F /* iw-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDEA1AB6D99300216E5F /* iw-signature.png */; };
 		C516EDEE1AB6DD3B00216E5F /* ir-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDEC1AB6DD3B00216E5F /* ir-signature.png */; };
 		C516EDEF1AB6DD3B00216E5F /* ir-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDED1AB6DD3B00216E5F /* ir-signature@2x.png */; };
+		C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */ = {isa = PBXBuildFile; fileRef = C524A6EF1B15F4DA003DBED9 /* ADLRestClientApi4.m */; };
 		C5628EF81A63C37700CB884C /* ADLResponseDossiers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */; };
 		C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */; };
 		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
@@ -361,6 +362,8 @@
 		C516EDEA1AB6D99300216E5F /* iw-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-signature.png"; sourceTree = "<group>"; };
 		C516EDEC1AB6DD3B00216E5F /* ir-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-signature.png"; sourceTree = "<group>"; };
 		C516EDED1AB6DD3B00216E5F /* ir-signature@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-signature@2x.png"; sourceTree = "<group>"; };
+		C524A6EE1B15F4DA003DBED9 /* ADLRestClientApi4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi4.h; sourceTree = "<group>"; };
+		C524A6EF1B15F4DA003DBED9 /* ADLRestClientApi4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClientApi4.m; sourceTree = "<group>"; };
 		C5628EF61A63C37700CB884C /* ADLResponseDossiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseDossiers.h; sourceTree = "<group>"; };
 		C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseDossiers.m; sourceTree = "<group>"; };
 		C5628EF91A643E8600CB884C /* ADLResponseDossier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseDossier.h; sourceTree = "<group>"; };
@@ -762,6 +765,7 @@
 		B4E5ED02153AF74900BD514D /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				C524A6F11B15F4DF003DBED9 /* RestClientApi4 */,
 				C5BC17941A5EEDB4003D8E98 /* RestClientApi3 */,
 				C5BC17931A5EED9B003D8E98 /* RestClientApi2 */,
 				C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */,
@@ -864,6 +868,15 @@
 				B4A5F0E8161DCC10007BA5D1 /* Reader-Thumbs@2x.png */,
 			);
 			name = Graphics;
+			sourceTree = "<group>";
+		};
+		C524A6F11B15F4DF003DBED9 /* RestClientApi4 */ = {
+			isa = PBXGroup;
+			children = (
+				C524A6EE1B15F4DA003DBED9 /* ADLRestClientApi4.h */,
+				C524A6EF1B15F4DA003DBED9 /* ADLRestClientApi4.m */,
+			);
+			name = RestClientApi4;
 			sourceTree = "<group>";
 		};
 		C58CB2BE1AB72DB400C79A97 /* App icons */ = {
@@ -1229,6 +1242,7 @@
 				B4FF341015473B6F006F7BF3 /* ReaderThumbsView.m in Sources */,
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,
 				B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */,
+				C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */,
 				B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */,
 				C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */,
 				B46BCC4315693F7A00A96560 /* RGDocumentsView.m in Sources */,

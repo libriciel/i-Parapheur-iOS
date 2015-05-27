@@ -95,7 +95,7 @@
 	[[self sousTypeLabel] setText:[_dossier objectForKey:@"sousType"]];
 	documents = [_dossier objectForKey:@"documents"];
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getCircuit:dossierRef
 						success:^(ADLResponseCircuit *responseCircuit) {
@@ -190,7 +190,7 @@
 -(void)setDossierRef:(NSString *)_dossierRef {
 	dossierRef = _dossierRef;
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
 						dossier:dossierRef
@@ -261,7 +261,7 @@ numberOfRowsInSection:(NSInteger)section {
 		
 		NSDate * validationDate;
 		
-		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 			if ([[object objectForKey:@"dateValidation"] isKindOfClass:[NSNumber class]])
 			{
 				NSNumber* dateMs = [object objectForKey:@"dateValidation"];

@@ -127,7 +127,7 @@
 	if ([self.action isEqualToString:@"VISER"]) {
 		[self showHud];
 		
-		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 			for (NSString* dossierRef in _dossiersRef) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient actionViserForDossier:dossierRef
@@ -163,7 +163,7 @@
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
 			
-			if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+			if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 				for (NSString* dossierRef in _dossiersRef) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossierRef
@@ -475,7 +475,7 @@
 		UITextField *passwordTextField = [alertView textFieldAtIndex:0];
 		[self setP12password:[passwordTextField text]];
 		
-		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 			for (NSString* dossierRef in _dossiersRef) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:dossierRef

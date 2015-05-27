@@ -156,14 +156,14 @@
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						__strong typeof(weakSelf) strongSelf = weakSelf;
 						if (strongSelf) {
-							[ADLRestClient setRestApiVersion:versionNumber];
+							[[ADLRestClient sharedManager] setRestApiVersion:versionNumber];
 							[strongSelf loadBureaux];
 						}
 					 }
 					 failure:^(NSError *error) {
 						 __strong typeof(weakSelf) strongSelf = weakSelf;
 						 if (strongSelf) {
-							 [ADLRestClient setRestApiVersion:[NSNumber numberWithInt:-1]];
+							 [[ADLRestClient sharedManager] setRestApiVersion:[NSNumber numberWithInt:-1]];
 							 [strongSelf.refreshControl endRefreshing];
 							 
 							 // New test when network retrieved
@@ -271,7 +271,7 @@
 	
 	[self.refreshControl beginRefreshing];
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getBureaux:^(NSArray *bureaux) {
 							__strong typeof(weakSelf) strongSelf = weakSelf;
@@ -293,10 +293,10 @@
 							}
 						}];
 	}
-	else if ([[ADLRestClient getRestApiVersion] intValue ] == 2) {
+	else if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] == 2) {
 		API_GETBUREAUX();
 	}
-	else if ([[ADLRestClient getRestApiVersion] intValue ] == -1) {
+	else if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] == -1) {
 		[self.refreshControl endRefreshing];
 	}
 }

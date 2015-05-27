@@ -104,6 +104,7 @@
 	return self;
 }
 
+
 -(void)dealloc {
 	// NSLog(@"ADLDrawingView dealloc %p", self);
 }
@@ -521,17 +522,14 @@
 		NSArray *annotations = [self annotationsForPage:_pageNumber];
 
 		for (NSDictionary *annotation in annotations) {
-
+			
 			ADLAnnotation *annotModel = [[ADLAnnotation alloc] initWithAnnotationDict:annotation];
-
-			//  CGRect annotRect = [annotModel rect];
-
 			ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotModel];
+			
 			[a setDrawingView:self];
 			[self addSubview:a];
 		}
 	}
-
 }
 
 

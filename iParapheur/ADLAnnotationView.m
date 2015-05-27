@@ -202,7 +202,7 @@
         [_postItView setHidden:YES];
         [_postItView removeFromSuperview];
         if (_annotationModel.editable) {
-            [((ADLDrawingView*)[self superview]) updateAnnotation:_annotationModel];
+            [_drawingView updateAnnotation:_annotationModel];
         }
         _postItView = nil;
     }
@@ -237,7 +237,7 @@
 	}
 	
 	if ([self.annotationModel uuid] != nil)
-        [self.drawingView removeAnnotation:_annotationModel];
+        [_drawingView removeAnnotation:_annotationModel];
 	
 	[self removeFromSuperview];
 }
@@ -246,7 +246,7 @@
 -(void)infoButtonHitted {
 
 	if (!_infoView) {
-        CGRect clippedFrame = [self.drawingView clipRectInView:CGRectMake(CGRectGetMinX(self.frame),CGRectGetMaxY(self.frame),kInfoWidth, kInfoHeight)];
+        CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMinX(self.frame),CGRectGetMaxY(self.frame),kInfoWidth, kInfoHeight)];
         
         _infoView = [[ADLInfoView alloc] initWithFrame:clippedFrame];
         [_infoView setAnnotationModel:_annotationModel];

@@ -55,6 +55,7 @@
 
 
 -(void)getAnnotations:(NSString*)dossier
+			 document:(NSString*)document
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure;
 
@@ -92,6 +93,7 @@
 
 -(void)actionAddAnnotation:(NSDictionary*)annotation
 				forDossier:(NSString *)dossier
+			   andDocument:(NSString *)document
 				   success:(void (^)(NSArray *))success
 				   failure:(void (^)(NSError *))failure;
 
@@ -99,12 +101,14 @@
 -(void)actionUpdateAnnotation:(NSDictionary*)annotation
 					  forPage:(int)page
 				   forDossier:(NSString *)dossier
+				  andDocument:(NSString *)document
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure;
 
 
 -(void)actionRemoveAnnotation:(NSDictionary*)annotation
 				   forDossier:(NSString *)dossier
+				  andDocument:(NSString *)document
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure;
 

@@ -8,7 +8,7 @@
 
 
 -(id)init {
-
+	
 	// Retrieve info from settings
 	
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
@@ -336,12 +336,15 @@
 
 
 -(void)getAnnotations:(NSString*)dossier
+			 document:(NSString *)document
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure {
 	
-	[self cancelAllHTTPOperationsWithPath:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]];
+	[self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
+																andDocument:document]];
 	
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier]
+	[_sessionManager GET:[self getAnnotationsUrlForDossier:dossier
+											   andDocument:document]
 			  parameters:nil
 				 success:^(NSURLSessionDataTask *task, id responseObject) {
 					 
@@ -534,6 +537,19 @@ typedef enum {
 }
 
 
+-(NSString *)getAnnotationsUrlForDossier:(NSString*)dossier
+							 andDocument:(NSString *)document {
+	
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier];
+}
+
+-(NSString *)getAnnotationUrlForDossier:(NSString*)dossier
+							andDocument:(NSString *)document
+						andAnnotationId:(NSString *)annotationId {
+	
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/%@/annotations/%@", dossier, document, annotationId];
+}
+
 #pragma mark - Simple actions
 // TODO : MailSecretaire
 
@@ -624,6 +640,7 @@ typedef enum {
 
 -(void)actionAddAnnotation:(NSDictionary*)annotation
 				forDossier:(NSString *)dossierId
+			   andDocument:(NSString *)document
 				   success:(void (^)(NSArray *))success
 				   failure:(void (^)(NSError *))failure {
 	
@@ -634,7 +651,8 @@ typedef enum {
 	// Send request
 	
 	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossierId]
+				   withUrl:[self getAnnotationsUrlForDossier:dossierId
+												 andDocument:document]
 				  withArgs:argumentDictionary
 				   success:^(NSArray *result) {
 					   success(nil);
@@ -648,6 +666,7 @@ typedef enum {
 -(void)actionUpdateAnnotation:(NSDictionary*)annotation
 					  forPage:(int)page
 				   forDossier:(NSString *)dossierId
+				  andDocument:(NSString *)document
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
@@ -659,7 +678,9 @@ typedef enum {
 	// Send request
 	
 	[self sendSimpleAction:ADLRequestTypePUT
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossierId, [annotation objectForKey:@"uuid"]]
+				   withUrl:[self getAnnotationUrlForDossier:dossierId
+												andDocument:document
+											andAnnotationId:[annotation objectForKey:@"uuid"]]
 				  withArgs:argumentDictionary
 				   success:^(NSArray *result) {
 					   success(nil);
@@ -672,6 +693,7 @@ typedef enum {
 
 -(void)actionRemoveAnnotation:(NSDictionary*)annotation
 				   forDossier:(NSString *)dossierId
+				  andDocument:(NSString *)document
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
@@ -683,7 +705,9 @@ typedef enum {
 	// Send request
 	
 	[self sendSimpleAction:ADLRequestTypeDELETE
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossierId, [annotation objectForKey:@"uuid"]]
+				   withUrl:[self getAnnotationUrlForDossier:dossierId
+												andDocument:document
+											andAnnotationId:[annotation objectForKey:@"uuid"]]
 				  withArgs:argumentDictionary
 				   success:^(NSArray *result) {
 					   success(nil);

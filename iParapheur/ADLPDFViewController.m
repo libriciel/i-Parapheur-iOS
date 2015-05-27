@@ -159,7 +159,7 @@
 
 	if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
 
-		if ([[ADLRestClient getRestApiVersion] intValue] == 3)
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3)
 			[((RGDossierDetailViewController *) [segue destinationViewController]) setDossierRef:_dossierRef];
 		else
 			[((RGDossierDetailViewController *) [segue destinationViewController]) setDossier:_document];
@@ -180,7 +180,7 @@
 		}
 
 		NSArray *actions;
-		if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 			actions = [ADLAPIHelper actionsForADLResponseDossier:_dossier];
 		}
 		else {
@@ -241,7 +241,7 @@
 
 	int i = 0; // etapeNumber
 
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		for (ADLResponseAnnotation *etape in _annotations) {
 			NSArray *annotationsAtPageForEtape = etape.data[[NSString stringWithFormat:@"%ld",
 			                                                                           (long) page]];
@@ -285,12 +285,15 @@
 - (void)updateAnnotation:(ADLAnnotation *)annotation
                  forPage:(NSUInteger)page {
 
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		
 		NSDictionary *annotationDictionary = annotation.dict;
+		NSString *documentId = _document[@"id"];
 
 		[_restClient updateAnnotation:annotationDictionary
 		                      forPage:(int) page
 			               forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+						  andDocument:documentId //@"adrien"
 			                  success:^(NSArray *result) {
 			                      NSLog(@"updateAnnotation success");
 			                  }
@@ -317,11 +320,14 @@
 
 - (void)removeAnnotation:(ADLAnnotation *)annotation {
 
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		
 		NSDictionary *annotationDictionary = annotation.dict;
+		NSString *documentId = _document[@"id"];
 
 		[_restClient removeAnnotation:annotationDictionary
 		                   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+						  andDocument:documentId //@"Adrien"
 				              success:^(NSArray *result) {
 				                  NSLog(@"deleteAnnotation success");
 				              }
@@ -349,7 +355,9 @@
 - (void)addAnnotation:(ADLAnnotation *)annotation
               forPage:(NSUInteger)page {
 
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		
+		NSString *documentId = _document[@"id"];
 		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
 
 		if (login == nil)
@@ -368,6 +376,7 @@
 		__weak typeof(self) weakSelf = self;
 		[_restClient addAnnotations:args
 		                 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+						andDocument:documentId //@"Adrien"
 				            success:^(NSArray *result) {
 				                __strong typeof(weakSelf) strongSelf = weakSelf;
 				                if (strongSelf) {
@@ -533,7 +542,7 @@
 	SHOW_HUD
 
 	__weak typeof(self) weakSelf = self;
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 		                dossier:_dossierRef
 			            success:^(ADLResponseDossier *result) {
@@ -674,8 +683,7 @@
 
 	// Grab all the files in the documents dir
 
-	NSString *fileName = [NSString stringWithFormat:@"%@.bin",
-	                                                _dossierRef];
+	NSString *fileName = [NSString stringWithFormat:@"%@.bin", _dossierRef];
 	NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
 
 	return filePath;
@@ -699,9 +707,12 @@
 
 - (void)requestAnnotations {
 
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		NSString *documentId = _document[@"id"];
+		
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
+						   document:documentId //@"Adrien"
 		                    success:^(NSArray *annotations) {
 		                        __strong typeof(weakSelf) strongSelf = weakSelf;
 		                        if (strongSelf) {
@@ -731,7 +742,7 @@
 
 	if ([dossier.actions containsObject:@"SIGNATURE"]) {
 		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
-			if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+			if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 				                         andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
@@ -825,7 +836,7 @@
 	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	if (([[ADLRestClient getRestApiVersion] intValue ] == 3) && _dossier.documents) {
+	if (([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) && _dossier.documents) {
 		bool isPdf = [_document[@"visuelPdf"] boolValue];
 
 		[_restClient downloadDocument:documentId

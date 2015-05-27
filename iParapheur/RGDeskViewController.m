@@ -169,7 +169,7 @@
 		
 		// Send request
 		
-		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 			
 			// Stringify JSON filter
 			
@@ -212,7 +212,7 @@
 		}
 	}
 	else {
-		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getDossiers:self.deskRef
 								page:page
@@ -428,7 +428,7 @@
 -(NSArray*)actionsForSelectedDossiers {
 	NSMutableArray* actions;
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		for (ADLResponseDossier* dossier in _selectedDossiersArray) {
 			NSArray* dossierActions = [ADLAPIHelper actionsForADLResponseDossier:dossier];
 			
@@ -488,7 +488,7 @@ numberOfRowsInSection:(NSInteger)section {
 	bool dossierPossibleArchive;
 	bool dossierPossibleViser;
 	
-	if ([[ADLRestClient getRestApiVersion] intValue] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		ADLResponseDossiers *dossier = [_filteredDossiersArray objectAtIndex:[indexPath row]];
 		dossierTitre = dossier.title;
 		dossierType = dossier.type;
@@ -557,7 +557,7 @@ numberOfRowsInSection:(NSInteger)section {
 		[cell.retardBadge setHidden:YES];
 	}
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
@@ -684,7 +684,7 @@ numberOfRowsInSection:(NSInteger)section {
 	else {
 		NSMutableArray *selectedArray = [[NSMutableArray alloc] init];
 		
-		if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 			for (ADLResponseDossiers* responseDossiers in _selectedDossiersArray)
 				[selectedArray addObject:responseDossiers.identifier];
 		}
@@ -827,7 +827,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 -(void)cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		ADLResponseDossier *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
 		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
 		
@@ -845,7 +845,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 -(void)cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
 	
-	if ([[ADLRestClient getRestApiVersion] intValue ] == 3) {
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
 		ADLResponseDossier *dossier = [_dossiersArray objectAtIndex:indexPath.row];
 		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", _possibleMainActions]];
 		if (mainActions.count > 0) {

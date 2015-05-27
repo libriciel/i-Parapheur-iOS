@@ -1,10 +1,10 @@
 
 #import <Foundation/Foundation.h>
-#import "ADLRestClientApi3.h"
+#import "ADLRestClientApi4.h"
 
 @interface ADLRestClient : NSObject
 
-@property (nonatomic, strong) ADLRestClientApi3* restClientApi3;
+@property (nonatomic, strong) ADLRestClientApi3* restClientApi;
 
 
 + (id)sharedManager;
@@ -16,10 +16,10 @@
 - (void)resetClient;
 
 
-+(NSNumber *)getRestApiVersion;
+-(NSNumber *)getRestApiVersion;
 
 
-+(void)setRestApiVersion:(NSNumber *)apiVersion;
+-(void)setRestApiVersion:(NSNumber *)apiVersion;
 
 
 -(NSString *)getDownloadUrl:(NSString *)dossierId
@@ -61,12 +61,14 @@
 
 
 -(void)getAnnotations:(NSString*)dossier
+			 document:(NSString *)document
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure;
 
 
 -(void)addAnnotations:(NSDictionary*)annotation
 		   forDossier:(NSString *)dossier
+		  andDocument:(NSString *)document
 			  success:(void (^)(NSArray *))success
 			  failure:(void (^)(NSError *))failure;
 
@@ -74,12 +76,14 @@
 -(void)updateAnnotation:(NSDictionary*)annotation
 				forPage:(int)page
 			 forDossier:(NSString *)dossier
+			andDocument:(NSString *)document
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure;
 
 
 -(void)removeAnnotation:(NSDictionary*)annotation
 			 forDossier:(NSString *)dossier
+			andDocument:(NSString *)document
 				success:(void (^)(NSArray *))success
 				failure:(void (^)(NSError *))failure;
 
