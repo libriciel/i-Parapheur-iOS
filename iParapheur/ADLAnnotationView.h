@@ -76,7 +76,7 @@
 
 @property (nonatomic, strong) ADLAnnotation *annotationModel;
 
-@property (nonatomic, strong) ADLDrawingView *drawingView;
+@property (nonatomic, weak) ADLDrawingView *drawingView;
 
 @property (nonatomic) BOOL selected;
 @property (nonatomic) NSUInteger currentPage;

@@ -53,6 +53,8 @@
 
 - (id)initWithFrame:(CGRect)frame {
 
+	// NSLog(@"ADLDrawingView initWithFrame %p", self);
+	
 	self = [super initWithFrame:frame];
 
 	if (self) {
@@ -102,6 +104,9 @@
 	return self;
 }
 
+-(void)dealloc {
+	// NSLog(@"ADLDrawingView dealloc %p", self);
+}
 
 - (void)awakeFromNib {
 
@@ -524,8 +529,6 @@
 			ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotModel];
 			[a setDrawingView:self];
 			[self addSubview:a];
-
-
 		}
 	}
 

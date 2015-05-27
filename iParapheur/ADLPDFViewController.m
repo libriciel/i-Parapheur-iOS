@@ -553,7 +553,7 @@
 		                    if (strongSelf) {
 			                    HIDE_HUD
 			                    strongSelf.circuit = [@[circuit] mutableCopy];
-			                    [strongSelf requestAnnotations];
+			                    //[strongSelf requestAnnotations];
 		                    }
 		                }
 			            failure:^(NSError *error) {
