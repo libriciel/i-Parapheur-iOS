@@ -184,11 +184,7 @@
 
 - (void)checkDemonstrationServer {
 	
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *url_preference = [preferences objectForKey:@"settings_server_url"];
-	BOOL isDemoServer = (url_preference == nil) || [url_preference isEqualToString:@""] || [url_preference isEqualToString:@"parapheur.demonstrations.adullact.org"];
-	
-	if (!isDemoServer)
+	if (![DeviceUtils isConnectedToDemoServer])
 		return;
 	
 	@try {

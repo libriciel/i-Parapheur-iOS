@@ -4,7 +4,7 @@
 @interface DeviceUtils : NSObject
 
 
-//+ (BOOL)isConnectedToInternet;
++ (BOOL)isConnectedToDemoServer;
 
 + (void)logError:(NSError *)error;
 
@@ -20,6 +20,9 @@
 + (void)logSuccessMessage:(NSString *)message;
 
 + (void)logInfoMessage:(NSString *)message;
+
++ (void)logInfoMessage:(NSString *)message
+			 withTitle:(NSString *)title;
 
 + (void)logWarningMessage:(NSString *)message
 				withTitle:(NSString *)title;

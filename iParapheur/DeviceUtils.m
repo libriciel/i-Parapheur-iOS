@@ -7,11 +7,14 @@
 @implementation DeviceUtils
 
 
-//+ (BOOL)isConnectedToInternet {
-//	Reachability *reachability = [Reachability reachabilityForInternetConnection];
-//	NetworkStatus networkStatus = [reachability currentReachabilityStatus];
-//	return networkStatus != NotReachable;
-//}
++ (BOOL)isConnectedToDemoServer {
+	
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *url_preference = [preferences objectForKey:@"settings_server_url"];
+	BOOL isDemoServer = (url_preference == nil) || [url_preference isEqualToString:@""] || [url_preference isEqualToString:@"parapheur.demonstrations.adullact.org"];
+	
+	return isDemoServer;
+}
 
 
 + (void)logError:(NSError *)error {
@@ -70,6 +73,18 @@
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:message
+										type:TSMessageNotificationTypeMessage];
+	});
+}
+
+
++ (void)logInfoMessage:(NSString *)message
+			 withTitle:(NSString *)title {
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:title
+									subtitle:message
 										type:TSMessageNotificationTypeMessage];
 	});
 }
