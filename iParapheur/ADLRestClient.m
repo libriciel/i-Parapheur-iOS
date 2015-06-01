@@ -41,7 +41,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 
 - (void)resetClient{
-	
+
 	_restClientApi = nil;
 	
 	if ([PARAPHEUR_API_VERSION intValue] == 4)

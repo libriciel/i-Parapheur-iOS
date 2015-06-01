@@ -130,8 +130,9 @@
 
 
 - (void)viewDidUnload {
-	[super viewDidUnload];
+	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewDidUnload];
 }
 
 

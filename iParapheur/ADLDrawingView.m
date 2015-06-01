@@ -51,6 +51,7 @@
 
 @implementation ADLDrawingView
 
+
 - (id)initWithFrame:(CGRect)frame {
 
 	// NSLog(@"ADLDrawingView initWithFrame %p", self);
@@ -101,13 +102,24 @@
 				                                     name:UIKeyboardWillHideNotification
 				                                   object:nil];
 	}
+	
 	return self;
 }
 
 
--(void)dealloc {
-	// NSLog(@"ADLDrawingView dealloc %p", self);
+- (void)removeFromSuperview {
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super removeFromSuperview];
 }
+
+
+-(void)dealloc {
+	for (UIView *a in [self subviews]) {
+		[a removeFromSuperview];
+	}
+}
+
 
 - (void)awakeFromNib {
 
@@ -513,7 +525,7 @@
 
 
 - (void)refreshAnnotations {
-
+	
 	for (UIView *a in [self subviews]) {
 		[a removeFromSuperview];
 	}
@@ -534,8 +546,6 @@
 
 
 - (void)updateAnnotation:(ADLAnnotation *)annotation {
-
-	NSLog(@"Adrien - update annotation %@", _masterViewController.dataSource);
 
 	[_masterViewController.dataSource updateAnnotation:annotation
 	                                           forPage:_pageNumber];

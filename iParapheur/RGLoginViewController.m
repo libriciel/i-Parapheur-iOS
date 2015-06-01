@@ -1,8 +1,3 @@
-//
-//  RGSplashscreenViewController.m
-//  iParapheur
-//
-//
 
 #import "RGLoginViewController.h"
 #import "DeviceUtils.h"
@@ -21,7 +16,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	NSLog(@"View Loaded : SplashScreenViewController");
+	NSLog(@"View Loaded : RGLoginViewController");
 	
 	_doneButton.target = self;
 	_doneButton.action = @selector(onValidateButtonClicked);
@@ -36,6 +31,10 @@
 	_loginTextField.text = [preferences objectForKey:@"settings_login"];
 	_passwordTextField.text = [preferences objectForKey:@"settings_password"];
 	_serverUrlTextField.text = [preferences objectForKey:@"settings_server_url"];
+}
+
+
+- (void) viewWillAppear:(BOOL)animated {
 	
 	// Change value events
 	
@@ -45,11 +44,13 @@
 	
 	[_passwordTextField addTarget:self
 						   action:@selector(onTextFieldValueChanged)
-				forControlEvents:UIControlEventEditingChanged];
-
+				 forControlEvents:UIControlEventEditingChanged];
+	
 	[_serverUrlTextField addTarget:self
 							action:@selector(onTextFieldValueChanged)
 				  forControlEvents:UIControlEventEditingChanged];
+	
+	[super viewWillAppear:animated];
 }
 
 
@@ -57,6 +58,23 @@
 	[super didReceiveMemoryWarning];
 }
 
+
+- (void)viewWillDisappear:(BOOL)animated {
+	
+	[_loginTextField removeTarget:nil
+						   action:NULL
+				 forControlEvents:UIControlEventAllEvents];
+	
+	[_passwordTextField removeTarget:nil
+							  action:NULL
+					forControlEvents:UIControlEventAllEvents];
+	
+	[_serverUrlTextField removeTarget:nil
+							   action:NULL
+					 forControlEvents:UIControlEventAllEvents];
+	
+	[super viewWillDisappear:animated];
+}
 
 #pragma mark - Private methods
 
@@ -174,7 +192,7 @@
 						forKey:@"settings_server_url"];
 	}
 	
-	// Reset singleton values
+	// Reset RestClient values
 	
 	[[ADLRestClient sharedManager] resetClient];
 	

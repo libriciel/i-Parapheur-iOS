@@ -78,39 +78,42 @@
 	}
 
 	_restClient = [ADLRestClient sharedManager];
-
-	// Notifications register
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(dossierSelected:)
-			                                     name:kDossierSelected
-			                                   object:nil];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(clearDetail:)
-			                                     name:kSelectBureauAppeared
-			                                   object:nil];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(clearDetail:)
-			                                     name:kDossierActionComplete
-			                                   object:nil];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(clearDetail:)
-			                                     name:kFilterChanged
-			                                   object:nil];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(showDocumentWithIndex:)
-			                                     name:kshowDocumentWithIndex
-			                                   object:nil];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
 
 	[super viewWillAppear:animated];
+	
+	// Notifications register
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(dossierSelected:)
+												 name:kDossierSelected
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(clearDetail:)
+												 name:kSelectBureauAppeared
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(clearDetail:)
+												 name:kDossierActionComplete
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(clearDetail:)
+												 name:kFilterChanged
+											   object:nil];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(showDocumentWithIndex:)
+												 name:kshowDocumentWithIndex
+											   object:nil];
+	
+	//
+	
 	[self.navigationController setNavigationBarHidden:NO
 	                                         animated:animated];
 }
@@ -124,6 +127,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super viewWillDisappear:animated];
 }
 
@@ -135,7 +139,6 @@
 
 
 - (void)viewDidUnload {
-
 	[super viewDidUnload];
 }
 
@@ -211,7 +214,6 @@
 
 
 - (void)dealloc {
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

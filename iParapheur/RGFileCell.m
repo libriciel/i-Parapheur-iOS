@@ -109,6 +109,24 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideMenuOptions) name:RGFileCellShouldHideMenuNotification object:nil];
 }
 
+-(void) removeFromSuperview {
+	
+	[_moreButton removeTarget:nil
+					   action:NULL
+			 forControlEvents:UIControlEventAllEvents];
+	
+	[_validateButton removeTarget:nil
+						   action:NULL
+				 forControlEvents:UIControlEventAllEvents];
+	
+	[_switchButton removeTarget:nil
+						 action:NULL
+			   forControlEvents:UIControlEventAllEvents];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super removeFromSuperview];
+}
+
 
 -(BOOL)isChecked {
     return [self.checkBox isSelected];

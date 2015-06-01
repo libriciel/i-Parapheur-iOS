@@ -242,6 +242,19 @@
 	}
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewWillDisappear:animated];
+}
+
+-(void)viewDidUnload {
+	
+	[self setLoadMoreButton:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewDidUnload];
+}
+
 
 #pragma mark Actions
 
@@ -698,11 +711,6 @@ numberOfRowsInSection:(NSInteger)section {
 	}
 }
 
-
--(void)viewDidUnload {
-	[self setLoadMoreButton:nil];
-	[super viewDidUnload];
-}
 
 #pragma mark UIActionSheetDelegate protocol implementation
 

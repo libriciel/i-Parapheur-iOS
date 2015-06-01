@@ -1,5 +1,5 @@
 //
-//  RGSplashscreenViewController.h
+//  RGLoginViewController.h
 //  iParapheur
 //
 //

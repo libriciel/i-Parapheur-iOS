@@ -163,7 +163,7 @@
 					 // There we fix them, to have proper errors (Authentication, SSL, etc)
 					 
 					 NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse*)task.response;
-					 
+
 					 if (urlResponse.statusCode == 401) {
 						 failure([NSError errorWithDomain:error.domain
 													 code:kCFURLErrorUserAuthenticationRequired
