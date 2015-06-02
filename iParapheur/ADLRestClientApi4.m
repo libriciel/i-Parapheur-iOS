@@ -14,7 +14,7 @@
 -(NSString *)getAnnotationUrlForDossier:(NSString*)dossier
 							andDocument:(NSString *)document
 						andAnnotationId:(NSString *)annotationId {
-	
+		
 	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/%@/annotations/%@", dossier, document, annotationId];
 }
 

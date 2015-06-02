@@ -548,7 +548,7 @@ typedef enum {
 							andDocument:(NSString *)document
 						andAnnotationId:(NSString *)annotationId {
 	
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/%@/annotations/%@", dossier, document, annotationId];
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossier, annotationId];
 }
 
 
