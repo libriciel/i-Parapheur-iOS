@@ -134,12 +134,11 @@
 					NSURL *requestURL = nil;
 					
 					if (alf_ticket != nil) {
-						if (downloadingDocument) {
+
+						if (downloadingDocument)
 							requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN, _collectivityDef.host, _documentPath, alf_ticket]];
-						}
-						else {
+						else
 							requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN, _collectivityDef.host, _request, alf_ticket]];
-						}
 					}
 					else {
 						//login or programming error

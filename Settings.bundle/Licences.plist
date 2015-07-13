@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Title</key>
+			<string>VFR - PDF Reader</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 2.8.6&#xA;https://github.com/vfr/Reader&#xA;Licenced under the MIT Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>AFNetworking</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 2.5.3&#xA;https://github.com/AFNetworking/AFNetworking&#xA;Licenced under the MIT Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Mantle</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 1.5.1&#xA;https://github.com/Mantle/Mantle&#xA;Licenced under the MIT Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>SCNetworkReachability</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 2.0.4&#xA;https://github.com/belkevich/reachability-ios&#xA;Licenced under the MIT Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>TSMessages</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 0.9.12&#xA;https://github.com/KrauseFx/TSMessages&#xA;Licenced under the MIT Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>CustomBadge</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 3.0.0&#xA;https://github.com/ckteebe/CustomBadge&#xA;Licenced under the MIT Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>OpenSSL Universal</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 1.0.1l&#xA;https://github.com/krzyzanowskim/OpenSSL&#xA;Licenced under a dual BSD Licence</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string>https://github.com/boredzo/iso-8601-date-formatter</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Version 0.7&#xA;https://github.com/boredzo/iso-8601-date-formatter&#xA;Licenced under the BSD Licence</string>
+		</dict>
+	</array>
+	<key>StringsTable</key>
+	<string>Root</string>
+</dict>
+</plist>

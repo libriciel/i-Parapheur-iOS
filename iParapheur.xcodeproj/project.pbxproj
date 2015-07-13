@@ -159,6 +159,7 @@
 		C59445FB1AAE41B900DD4473 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F71AAE41B900DD4473 /* Default-Portrait.png */; };
 		C59445FC1AAE41B900DD4473 /* Default-Portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */; };
 		C5A6AB9A1AAEE68000053B9F /* Icon-Small-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */; };
+		C5ACDFE21B5014AD00F3AA0F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */; };
 		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
@@ -431,6 +432,7 @@
 		C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x.png"; sourceTree = "<group>"; };
 		C5A6AB971AAEE68000053B9F /* Icon-Small-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-40.png"; sourceTree = "<group>"; };
 		C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-40@2x.png"; sourceTree = "<group>"; };
+		C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
 		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
@@ -832,6 +834,8 @@
 		B4FF33FB15473378006F7BF3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C5ACDFE31B501CAA00F3AA0F /* Licences */,
+				C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */,
 				9514BFDA187AA4CF00118B9C /* app-icons */,
 				B4A221B8162AA86900474A18 /* rejeter.png */,
 				B4A221B9162AA86900474A18 /* rejeter@2x.png */,
@@ -923,6 +927,13 @@
 				C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */,
 			);
 			name = "TopBar icons";
+			sourceTree = "<group>";
+		};
+		C5ACDFE31B501CAA00F3AA0F /* Licences */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Licences;
 			sourceTree = "<group>";
 		};
 		C5BC17931A5EED9B003D8E98 /* RestClientApi2 */ = {
@@ -1072,6 +1083,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5ACDFE21B5014AD00F3AA0F /* Settings.bundle in Resources */,
 				C516EDE91AB6D96F00216E5F /* ip-signature.png in Resources */,
 				C5901F0D1AA9ECCB00E4F264 /* icon_login@3x.png in Resources */,
 				882C40AD16FCBE0A00D824E9 /* (null) in Resources */,

@@ -71,6 +71,8 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossieMasterViewController");
 
+	[self updateVersionNumberInSettings];
+	
 	_firstLaunch = TRUE;
 	_bureauxArray = [[NSMutableArray alloc] init];
 	
@@ -206,6 +208,12 @@
 			[DeviceUtils logWarningMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."];
 	}
 	@catch (NSException *e) { }
+}
+
+
+- (void)updateVersionNumberInSettings {
+	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"version_preference"];
 }
 
 
