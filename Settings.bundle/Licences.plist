@@ -62,7 +62,7 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>https://github.com/boredzo/iso-8601-date-formatter</string>
+			<string>ISO-8601-date-formatter</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>

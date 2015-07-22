@@ -834,7 +834,6 @@
 		B4FF33FB15473378006F7BF3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C5ACDFE31B501CAA00F3AA0F /* Licences */,
 				C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */,
 				9514BFDA187AA4CF00118B9C /* app-icons */,
 				B4A221B8162AA86900474A18 /* rejeter.png */,
@@ -927,13 +926,6 @@
 				C5901F0E1AA9ECF100E4F264 /* icon_login_add@3x.png */,
 			);
 			name = "TopBar icons";
-			sourceTree = "<group>";
-		};
-		C5ACDFE31B501CAA00F3AA0F /* Licences */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Licences;
 			sourceTree = "<group>";
 		};
 		C5BC17931A5EED9B003D8E98 /* RestClientApi2 */ = {
