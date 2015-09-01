@@ -45,73 +45,143 @@
 //
 
 #import "RGDocumentsView.h"
-#import "ADLDocument.h"
-#import "ReaderDocument.h"
-#import "ReaderViewController.h"
 #import "ADLNotifications.h"
+
 
 @interface RGDocumentsView ()
 
 @end
 
+
 @implementation RGDocumentsView
+
 @synthesize documents = _documents;
+int numberOfMainDocs;
+int numberOfAnnexes;
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+- (id)initWithNibName:(NSString *)nibNameOrNil
+               bundle:(NSBundle *)nibBundleOrNil {
+
+	self = [super initWithNibName:nibNameOrNil
+	                       bundle:nibBundleOrNil];
+
+
+
+	return self;
 }
 
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+
+	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDocumentsView");
 
-	// Do any additional setup after loading the view.
+	[self computeSections];
+}
+
+
+- (void)computeSections {
+
+	numberOfMainDocs = 0;
+	numberOfAnnexes = 0;
+
+	if ((_documents == nil) || (_documents[0] == nil)) {
+		return;
+	}
+
+	// Retro-compatibility
+	// If the isMainDocument value is missing, then this is before 4.3
+	// And the multi-doc is not implemented yet.
+
+	if (_documents[0][@"isMainDocument"] == nil) {
+		numberOfMainDocs = 1;
+		numberOfAnnexes = (_documents.count - 1);
+	}
+
+	// Default case
+	// We search for multiple categories.
+
+	for (NSDictionary *document in _documents) {
+		if ([document[@"isMainDocument"] boolValue]) {
+			numberOfMainDocs++;
+		} else {
+			numberOfAnnexes++;
+		}
+	}
 }
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+
+	return YES;
 }
 
 
 #pragma mark - UITableViewDatasource
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_documents count];
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+	// Init cell
+
+	static NSString *cellIdentifier = @"cellID";
+	UITableViewCell *cell = (UITableViewCell *) [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+
+	if (cell == nil) {
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+		                              reuseIdentifier:cellIdentifier];
+	}
+
+	// Adapt cell
+
+	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+
+	NSDictionary *document = _documents[(NSUInteger) indexPath.row];
+	cell.textLabel.text = document[@"name"];
+
+	return cell;
 }
 
 
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"";
-    
-    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if(cell == nil) {
-        cell = [[UITableViewCell alloc] init];
-    }
-    
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-    
-    NSDictionary *document = [_documents objectAtIndex:[indexPath row]];
-    
-    [[cell textLabel] setText:[document objectForKey:@"name"]];
-    
-    return cell;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return (numberOfAnnexes > 0) ? 2 : 1;
 }
 
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSNumber *docIndex = [NSNumber numberWithInteger:[indexPath row]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kshowDocumentWithIndex object:docIndex];
-    
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section {
+
+	return (section == 0) ? numberOfMainDocs : numberOfAnnexes;
 }
+
+
+- (NSString *)tableView:(UITableView *)tableView
+titleForHeaderInSection:(NSInteger)section {
+
+	NSString *headerTitle;
+
+	if (section == 0) {
+		headerTitle = (numberOfMainDocs <= 1) ? @"Document principal" : @"Documents principaux";
+	} else {
+		headerTitle = (numberOfAnnexes > 1) ? @"Annexes" : @"Annexe";
+	}
+
+	return headerTitle;
+}
+
+
+- (void) tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+	NSNumber *docIndex = @(indexPath.row);
+	[[NSNotificationCenter defaultCenter] postNotificationName:kshowDocumentWithIndex
+	                                                    object:docIndex];
+}
+
+
+#pragma mark -
 
 
 @end

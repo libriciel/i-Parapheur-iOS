@@ -45,7 +45,7 @@
 @interface RGDocumentsView : UITableViewController {
     
 }
-    
+
 @property (strong, nonatomic) NSArray *documents;
 
 

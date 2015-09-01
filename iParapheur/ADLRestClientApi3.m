@@ -69,7 +69,7 @@
 	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 	[requestSerializer setAuthorizationHeaderFieldWithUsername:login
 													  password:password];
-	
+
 	_sessionManager.requestSerializer = requestSerializer;
 	
 	// GET needs a JSONResponseSerializer,
@@ -213,10 +213,10 @@
 	NSMutableDictionary *queryParams = [[NSMutableDictionary alloc] init];
 	[queryParams setValue:@true forKey:@"asc"];
 	[queryParams setValue:bureau forKey:@"bureau"];
-	[queryParams setValue:[NSNumber numberWithInt:page] forKey:@"page"];
-	[queryParams setValue:[NSNumber numberWithInt:size] forKey:@"pageSize"];
-	[queryParams setValue:[NSNumber numberWithInt:0] forKey:@"pendingFile"];
-	[queryParams setValue:[NSNumber numberWithInt:(page * (size-1))] forKey:@"skipped"];
+	[queryParams setValue:@(page) forKey:@"page"];
+	[queryParams setValue:@(size) forKey:@"pageSize"];
+	[queryParams setValue:@0 forKey:@"pendingFile"];
+	[queryParams setValue:@(page * (size - 1)) forKey:@"skipped"];
 	[queryParams setValue:@"cm:create" forKey:@"sort"];
 	
 	if (filterJson != nil)
@@ -474,29 +474,29 @@ typedef enum {
 	
 	NSMutableDictionary *result= [NSMutableDictionary new];
 	
-	[result setObject:[annotation valueForKey:@"author"] forKey:@"author"];
-	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
-	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
-	[result setObject:[annotation valueForKey:@"page"] forKey:@"page"];
-	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"uuid"];
+	result[@"author"] = [annotation valueForKey:@"author"];
+	result[@"text"] = [annotation valueForKey:@"text"];
+	result[@"type"] = [annotation valueForKey:@"type"];
+	result[@"page"] = [annotation valueForKey:@"page"];
+	result[@"uuid"] = [annotation valueForKey:@"uuid"];
 	
 	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
 	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
 	NSDictionary *annotationRectTopLeft = [annotationRect valueForKey:@"topLeft"];
 	
 	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"x"] forKey:@"x"];
-	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"y"] forKey:@"y"];
+	resultBottomRight[@"x"] = [annotationRectBottomRight valueForKey:@"x"];
+	resultBottomRight[@"y"] = [annotationRectBottomRight valueForKey:@"y"];
 	
 	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"x"] forKey:@"x"];
-	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"y"] forKey:@"y"];
+	resultTopLeft[@"x"] = [annotationRectTopLeft valueForKey:@"x"];
+	resultTopLeft[@"y"] = [annotationRectTopLeft valueForKey:@"y"];
 	
 	NSMutableDictionary *rect = [NSMutableDictionary new];
-	[rect setObject:resultBottomRight forKey:@"bottomRight"];
-	[rect setObject:resultTopLeft forKey:@"topLeft"];
+	rect[@"bottomRight"] = resultBottomRight;
+	rect[@"topLeft"] = resultTopLeft;
 	
-	[result setObject:rect forKey:@"rect"];
+	result[@"rect"] = rect;
 	
 	return result;
 }
@@ -509,29 +509,29 @@ typedef enum {
 	
 	// Fixme : send every other data form annotation
 	
-	[result setObject:page forKey:@"page"];
-	[result setObject:[annotation valueForKey:@"text"] forKey:@"text"];
-	[result setObject:[annotation valueForKey:@"type"] forKey:@"type"];
-	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"uuid"];
-	[result setObject:[annotation valueForKey:@"uuid"] forKey:@"id"];
+	result[@"page"] = page;
+	result[@"text"] = [annotation valueForKey:@"text"];
+	result[@"type"] = [annotation valueForKey:@"type"];
+	result[@"uuid"] = [annotation valueForKey:@"uuid"];
+	result[@"id"] = [annotation valueForKey:@"uuid"];
 	
 	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
 	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
 	NSDictionary *annotationRectTopLeft = [annotationRect valueForKey:@"topLeft"];
 	
 	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"x"] forKey:@"x"];
-	[resultBottomRight setObject:[annotationRectBottomRight valueForKey:@"y"] forKey:@"y"];
+	resultBottomRight[@"x"] = [annotationRectBottomRight valueForKey:@"x"];
+	resultBottomRight[@"y"] = [annotationRectBottomRight valueForKey:@"y"];
 	
 	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"x"] forKey:@"x"];
-	[resultTopLeft setObject:[annotationRectTopLeft valueForKey:@"y"] forKey:@"y"];
+	resultTopLeft[@"x"] = [annotationRectTopLeft valueForKey:@"x"];
+	resultTopLeft[@"y"] = [annotationRectTopLeft valueForKey:@"y"];
 	
 	NSMutableDictionary *rect = [NSMutableDictionary new];
-	[rect setObject:resultBottomRight forKey:@"bottomRight"];
-	[rect setObject:resultTopLeft forKey:@"topLeft"];
+	rect[@"bottomRight"] = resultBottomRight;
+	rect[@"topLeft"] = resultTopLeft;
 	
-	[result setObject:rect forKey:@"rect"];
+	result[@"rect"] = rect;
 	
 	return result;
 }
@@ -563,12 +563,12 @@ typedef enum {
 					 success:(void (^)(NSArray *))success
 					 failure:(void (^)(NSError *))failure {
 	
-	// Create arguments dictionnary
+	// Create arguments dictionary
 	
 	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	argumentDictionary[@"bureauCourant"] = bureauId;
+	argumentDictionary[@"annotPriv"] = privateAnnotation;
+	argumentDictionary[@"annotPub"] = publicAnnotation;
 	
 	// Send request
 	
@@ -593,10 +593,10 @@ typedef enum {
 					  failure:(void (^)(NSError *))failure {
 	
 	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
-	[argumentDictionary setObject:signature forKey:@"signature"];
+	argumentDictionary[@"bureauCourant"] = bureauId;
+	argumentDictionary[@"annotPriv"] = privateAnnotation;
+	argumentDictionary[@"annotPub"] = publicAnnotation;
+	argumentDictionary[@"signature"] = signature;
 	
 	// Send request
 	
@@ -619,12 +619,12 @@ typedef enum {
 					   success:(void (^)(NSArray *))success
 					   failure:(void (^)(NSError *))failure {
 	
-	// Create arguments dictionnary
+	// Create arguments dictionary
 	
 	NSMutableDictionary *argumentDictionary= [NSMutableDictionary new];
-	[argumentDictionary setObject:bureauId forKey:@"bureauCourant"];
-	[argumentDictionary setObject:privateAnnotation forKey:@"annotPriv"];
-	[argumentDictionary setObject:publicAnnotation forKey:@"annotPub"];
+	argumentDictionary[@"bureauCourant"] = bureauId;
+	argumentDictionary[@"annotPriv"] = privateAnnotation;
+	argumentDictionary[@"annotPub"] = publicAnnotation;
 	
 	// Send request
 	
@@ -646,7 +646,7 @@ typedef enum {
 				   success:(void (^)(NSArray *))success
 				   failure:(void (^)(NSError *))failure {
 	
-	// Create arguments dictionnary
+	// Create arguments dictionary
 	
 	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
 	
@@ -672,17 +672,17 @@ typedef enum {
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
-	// Create arguments dictionnary
+	// Create arguments dictionary
 	
 	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
-																		  forPage:[NSNumber numberWithInt:page]];
+	                                                                      forPage:@(page)];
 	
 	// Send request
 	
 	[self sendSimpleAction:ADLRequestTypePUT
 				   withUrl:[self getAnnotationUrlForDossier:dossierId
-												andDocument:document
-											andAnnotationId:[annotation objectForKey:@"uuid"]]
+				                                andDocument:document
+						                    andAnnotationId:annotation[@"uuid"]]
 				  withArgs:argumentDictionary
 				   success:^(NSArray *result) {
 					   success(nil);
@@ -699,17 +699,17 @@ typedef enum {
 					  success:(void (^)(NSArray *))success
 					  failure:(void (^)(NSError *))failure {
 	
-	// Create arguments dictionnary
+	// Create arguments dictionary
 	
 	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
-																		  forPage:[NSNumber numberWithInt:0]];
+	                                                                      forPage:@0];
 	
 	// Send request
 	
 	[self sendSimpleAction:ADLRequestTypeDELETE
 				   withUrl:[self getAnnotationUrlForDossier:dossierId
-												andDocument:document
-											andAnnotationId:[annotation objectForKey:@"uuid"]]
+				                                andDocument:document
+						                    andAnnotationId:annotation[@"uuid"]]
 				  withArgs:argumentDictionary
 				   success:^(NSArray *result) {
 					   success(nil);

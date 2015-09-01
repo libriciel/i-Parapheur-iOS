@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>C741D03A-0A18-4B41-A7AF-5CD1C79E2DF7</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>iParapheur</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>D1A9FFE77B2CD5742E2F27446C9C7FF29315B6E0</key>
 		<string>git+ssh://scm.adullact.net//var/lib/gforge/chroot/scmrepos/git/iparapheur-ios/iparapheur-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>iParapheur.xcodeproj/project.xcworkspace</string>
+	<string>iParapheur.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>D1A9FFE77B2CD5742E2F27446C9C7FF29315B6E0</key>

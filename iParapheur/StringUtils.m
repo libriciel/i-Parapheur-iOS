@@ -1,6 +1,5 @@
 
 #import "StringUtils.h"
-#import "DeviceUtils.h"
 
 
 @implementation StringUtils
@@ -12,13 +11,13 @@
 	
 	for (NSString* key in dictionary) {
 		
-		id value = [dictionary objectForKey:key];
+		id value = dictionary[key];
 		
 		if ((value == NULL) || ([value isEqual:[NSNull null]]))
 			[mutableDictionary setValue:nil
 								 forKey:key];
 		else
-			[mutableDictionary setValue:[dictionary objectForKey:key]
+			[mutableDictionary setValue:dictionary[key]
 								 forKey:key];
 	}
 	
@@ -48,7 +47,7 @@
 + (MTLValueTransformer *)getNullToFalseValueTransformer {
 	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
 		if (inObj == nil || inObj == [NSNull null])
-			return [NSNumber numberWithInteger: 0];
+			return @0;
 		else
 			return inObj;
 	}];
@@ -68,7 +67,7 @@
 + (MTLValueTransformer *)getNullToZeroValueTransformer {
 	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
 		if (inObj == nil || inObj == [NSNull null])
-			return [NSNumber numberWithInt:0];
+			return @0;
 		else
 			return inObj;
 	}];
