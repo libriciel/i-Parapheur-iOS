@@ -89,6 +89,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     self.typologyLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0f, CGRectGetHeight(self.bounds)*0.4f, CGRectGetWidth(self.bounds) - 75.0f, CGRectGetHeight(self.bounds)*0.4f)];
     self.typologyLabel.lineBreakMode = (NSLineBreakByWordWrapping | NSLineBreakByTruncatingTail);
     self.typologyLabel.font = [UIFont systemFontOfSize:14];
+	self.typologyLabel.textColor = [UIColor grayColor];
     //self.typologyLabel.textAlignment = NSTextAlignmentRight;
     [self.contentCellView addSubview:self.typologyLabel];
     

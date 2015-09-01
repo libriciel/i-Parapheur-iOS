@@ -97,6 +97,7 @@ int numberOfAnnexes;
 	if (_documents[0][@"isMainDocument"] == nil) {
 		numberOfMainDocs = 1;
 		numberOfAnnexes = (_documents.count - 1);
+		return;
 	}
 
 	// Default case
@@ -113,7 +114,6 @@ int numberOfAnnexes;
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-
 	return YES;
 }
 
@@ -132,13 +132,17 @@ int numberOfAnnexes;
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
 		                              reuseIdentifier:cellIdentifier];
+		[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 	}
 
 	// Adapt cell
 
-	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+	NSUInteger documentIndex = (NSUInteger)indexPath.row;
+	if (indexPath.section == 1) {
+		documentIndex = documentIndex + numberOfMainDocs;
+	}
 
-	NSDictionary *document = _documents[(NSUInteger) indexPath.row];
+	NSDictionary *document = _documents[documentIndex];
 	cell.textLabel.text = document[@"name"];
 
 	return cell;
@@ -175,9 +179,13 @@ titleForHeaderInSection:(NSInteger)section {
 - (void) tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	NSNumber *docIndex = @(indexPath.row);
+	int documentIndex = indexPath.row;
+	if (indexPath.section == 1) {
+		documentIndex = documentIndex + numberOfMainDocs;
+	}
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:kshowDocumentWithIndex
-	                                                    object:docIndex];
+	                                                    object:@(documentIndex)];
 }
 
 

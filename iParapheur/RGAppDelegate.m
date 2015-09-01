@@ -120,11 +120,9 @@
 																	otherButtonTitles:@"Confirmer", nil];
 		
 		alertView.p12Path = p12Path;
-		
 		[alertView show];
 	}
-	
-	
+
 	NSArray *keys = [self.keyStore listPrivateKeys];
 	for (PrivateKey *pkey in keys) {
 		NSLog(@"commonName %@", pkey.commonName);
@@ -133,7 +131,14 @@
 		NSString *cert = [[NSString alloc] initWithData:pkey.publicKey encoding:NSUTF8StringEncoding];
 		NSLog(@"certData %@", cert);
 	}
-	
+
+
+	// UI overrode parameters
+
+	[[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor lightGrayColor]];
+
+	//
+
 	return YES;
 }
 
@@ -298,6 +303,7 @@
 
 
 #pragma mark - Api requests delegate
+
 
 -(void)didEndWithRequestAnswer:(NSDictionary*)answer {
 	NSString *s = [answer objectForKey:@"_req"];
