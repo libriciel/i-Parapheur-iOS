@@ -45,19 +45,17 @@
 //
 
 #import "RGWorkflowDialogViewController.h"
-#import "ADLCollectivityDef.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "RGAppDelegate.h"
 #import "ADLPasswordAlertView.h"
 #import "ADLRequester.h"
 #import "ADLAPIHelper.h"
-#import "PrivateKey.h"
 #import "LGViewHUD.h"
 #import <NSData+Base64/NSData+Base64.h>
 #import "DeviceUtils.h"
 #import "StringUtils.h"
-#import "ADLResponseSignInfo.h"
+
 
 @interface RGWorkflowDialogViewController ()
 
@@ -68,12 +66,12 @@
 @implementation RGWorkflowDialogViewController
 
 
--(id)initWithNibName:(NSString *)nibNameOrNil
-			  bundle:(NSBundle *)nibBundleOrNil {
-	
+- (id)initWithNibName:(NSString *)nibNameOrNil
+               bundle:(NSBundle *)nibBundleOrNil {
+
 	self = [super initWithNibName:nibNameOrNil
-						   bundle:nibBundleOrNil];
-	
+	                       bundle:nibBundleOrNil];
+
 	if (self) {
 		// Custom initialization
 	}
@@ -81,7 +79,8 @@
 }
 
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
+
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
@@ -89,7 +88,8 @@
 }
 
 
--(void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
+
 	[super viewWillAppear:animated];
 	self.navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:self.action];
 	if ([self.action isEqualToString:@"SIGNER"]) {
@@ -102,322 +102,388 @@
 			self.annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
 		}
 	}
-	ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
-	
+	ADLKeyStore *keystore = [((RGAppDelegate *) [[UIApplication sharedApplication] delegate]) keyStore];
+
 	self.pkeys = [keystore listPrivateKeys];
 }
 
 
--(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+
 	return YES;
 }
 
 
--(IBAction)finish:(id)sender {
+- (IBAction)finish:(id)sender {
+
 	ADLRequester *requester = [ADLRequester sharedRequester];
-	
-	NSMutableDictionary *args = [[NSMutableDictionary alloc]
-								 initWithObjectsAndKeys:
-								 _dossiersRef, @"dossiers",
-								 [_annotationPublique text], @"annotPub",
-								 [_annotationPrivee text], @"annotPriv",
-								 [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
-								 nil];
+
+	NSMutableDictionary *args = [@{@"dossiers" : _dossiersRef,
+			@"annotPub" : [_annotationPublique text],
+			@"annotPriv" : [_annotationPrivee text],
+			@"bureauCourant" : [[ADLSingletonState sharedSingletonState] bureauCourant]} mutableCopy];
 
 	if ([self.action isEqualToString:@"VISER"]) {
 		[self showHud];
-		
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-			for (NSString* dossierRef in _dossiersRef) {
+
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+			for (NSString *dossierRef in _dossiersRef) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient actionViserForDossier:dossierRef
-										 forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-							  withPublicAnnotation:[_annotationPublique text]
-							 withPrivateAnnotation:[_annotationPrivee text]
-										   success:^(NSArray *result) {
-											   __strong typeof(weakSelf) strongSelf = weakSelf;
-											   if (strongSelf) {
-												   [strongSelf dismissDialogView];
-											   }
-										   }
-										   failure:^(NSError *error) {
-											   __strong typeof(weakSelf) strongSelf = weakSelf;
-											   if (strongSelf) {
-												   NSLog(@"actionViser error : %@", error.localizedDescription);
-												   [strongSelf didEndWithUnReachableNetwork];
-											   }
-										   }];
+				                         forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+						      withPublicAnnotation:[_annotationPublique text]
+						     withPrivateAnnotation:[_annotationPrivee text]
+						                   success:^(NSArray *result) {
+						                       __strong typeof(weakSelf) strongSelf = weakSelf;
+						                       if (strongSelf) {
+							                       [strongSelf dismissDialogView];
+						                       }
+						                   }
+						                   failure:^(NSError *error) {
+						                       __strong typeof(weakSelf) strongSelf = weakSelf;
+						                       if (strongSelf) {
+							                       NSLog(@"actionViser error : %@", error.localizedDescription);
+							                       [strongSelf didEndWithUnReachableNetwork];
+						                       }
+						                   }];
 			}
 		}
 		else {
-			[requester request:@"visa" andArgs:args delegate:self];
+			[requester request:@"visa"
+			           andArgs:args
+				      delegate:self];
 		}
 	}
 	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
 		[self showHud];
-		
+
 		// TODO Adrien : switch
-		[requester request:@"secretariat" andArgs:args delegate:self];
+		[requester request:@"secretariat"
+		           andArgs:args
+			      delegate:self];
 	}
 	else if ([self.action isEqualToString:@"REJETER"]) {
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
-			
+
 			if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
-				for (NSString* dossierRef in _dossiersRef) {
+				for (NSString *dossierRef in _dossiersRef) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossierRef
-											   forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-									withPublicAnnotation:[_annotationPublique text]
-								   withPrivateAnnotation:[_annotationPrivee text]
-												 success:^(NSArray *success) {
-													 __strong typeof(weakSelf) strongSelf = weakSelf;
-													 if (strongSelf) {
-														 [strongSelf dismissDialogView];
-													 }
-												 }
-												 failure:^(NSError *error) {
-													 __strong typeof(weakSelf) strongSelf = weakSelf;
-													 if (strongSelf) {
-														 NSLog(@"Action reject error : %@", error.localizedDescription);
-														 [strongSelf didEndWithUnReachableNetwork];
-													 }
-												 }];
+					                           forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+							        withPublicAnnotation:[_annotationPublique text]
+							       withPrivateAnnotation:[_annotationPrivee text]
+							                     success:^(NSArray *success) {
+							                         __strong typeof(weakSelf) strongSelf = weakSelf;
+							                         if (strongSelf) {
+								                         [strongSelf dismissDialogView];
+							                         }
+							                     }
+							                     failure:^(NSError *error) {
+							                         __strong typeof(weakSelf) strongSelf = weakSelf;
+							                         if (strongSelf) {
+								                         NSLog(@"Action reject error : %@", error.localizedDescription);
+								                         [strongSelf didEndWithUnReachableNetwork];
+							                         }
+							                     }];
 				}
 			}
 			else {
-				[requester request:@"reject" andArgs:args delegate:self];
+				[requester request:@"reject"
+				           andArgs:args
+					      delegate:self];
 			}
 		}
 		else {
 			[[[UIAlertView alloc] initWithTitle:@"Attention"
-										message:@"Veuillez saisir le motif de votre rejet"
-									   delegate:nil
-							  cancelButtonTitle:@"Fermer"
-							  otherButtonTitles:nil] show];
+			                            message:@"Veuillez saisir le motif de votre rejet"
+				                       delegate:nil
+				              cancelButtonTitle:@"Fermer"
+				              otherButtonTitles:nil] show];
 		}
-		
+
 	}
 	else if ([self.action isEqualToString:@"SIGNER"]) {
 		// create signatures array
 		PrivateKey *pkey = _currentPKey;
-		
+
 		/* Ask for pkey password */
-		
+
 		ADLPasswordAlertView *alertView =
-		[[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-											message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", [[pkey p12Filename] lastPathComponent]]
-										   delegate:self cancelButtonTitle:@"Annuler"
-								  otherButtonTitles:@"Confirmer", nil];
-		
+				[[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
+				                                    message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@",
+				                                                                       [[pkey p12Filename] lastPathComponent]]
+					                               delegate:self
+					                      cancelButtonTitle:@"Annuler"
+					                      otherButtonTitles:@"Confirmer", nil];
+
 		alertView.p12Path = [pkey p12Filename];
-		
+
 		[alertView show];
 	}
-	
+
 	// [args release];
 }
 
 
--(IBAction)cancel:(id)sender {
+- (IBAction)cancel:(id)sender {
+
 	[self dismissViewControllerAnimated:YES
-							 completion:nil];
+	                         completion:nil];
 }
 
 
--(void)showHud {
+- (void)showHud {
+
 	LGViewHUD *hud = [LGViewHUD defaultHUD];
-	hud.image=[UIImage imageNamed:@"rounded-checkmark.png"];
-	hud.topText=@"";
-	hud.bottomText=@"Chargement ...";
-	hud.activityIndicatorOn=YES;
+	hud.image = [UIImage imageNamed:@"rounded-checkmark.png"];
+	hud.topText = @"";
+	hud.bottomText = @"Chargement ...";
+	hud.activityIndicatorOn = YES;
 	[hud showInView:self.view];
 }
 
 
--(void)hideHud {
+- (void)hideHud {
+
 	LGViewHUD *hud = [LGViewHUD defaultHUD];
 	[hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
 
 
--(void)dismissDialogView {
+- (void)dismissDialogView {
+
 	[self hideHud];
-	[self dismissViewControllerAnimated:YES completion:nil];
+	[self dismissViewControllerAnimated:YES
+	                         completion:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete
-														object:nil];
+	                                                    object:nil];
 }
 
 
--(void)didEndWithRequestAnswer:(NSDictionary *)answer {
+- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
+
 	NSLog(@"MIKAF %@", answer);
-	
-	if ([[answer objectForKey:@"_req"] isEqualToString:@"getSignInfo"]) {
+
+	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
 		// get selected dossiers for some sign info action :)
-		
+
 		NSMutableArray *hashes = [[NSMutableArray alloc] init];
 		NSMutableArray *dossiers = [[NSMutableArray alloc] init];
 		NSMutableArray *signatures = [[NSMutableArray alloc] init];
-		
+
 		for (NSString *dossier in self.dossiersRef) {
-			NSDictionary *signInfo = [answer objectForKey:dossier];
-			
-			if ([[signInfo objectForKey:@"format"] isEqualToString:@"CMS"]) {
+			NSDictionary *signInfo = answer[dossier];
+
+			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
 				[dossiers addObject:dossier];
-				[hashes addObject:[signInfo objectForKey:@"hash"]];
+				[hashes addObject:signInfo[@"hash"]];
 			}
-			
+
 		}
-		
-		ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
+
+		ADLKeyStore *keystore = [((RGAppDelegate *) [[UIApplication sharedApplication] delegate]) keyStore];
 		PrivateKey *pkey = _currentPKey;
 		NSError *error = nil;
-		
+
 		for (NSString *hash in hashes) {
 			NSData *hash_data = [keystore bytesFromHexString:hash];
-			
+
 			NSFileManager *fileManager = [NSFileManager new];
 			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-												 inDomain:NSUserDomainMask
-										appropriateForURL:nil
-												   create:YES
-													error:NULL];
-			
-			NSString* p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
-			
+			                                     inDomain:NSUserDomainMask
+					                    appropriateForURL:nil
+					                               create:YES
+					                                error:NULL];
+
+			NSString *p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+
 			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-									   withPassword:[self p12password]
-											andData:hash_data
-											  error:&error];
-			
+			                           withPassword:[self p12password]
+						                    andData:hash_data
+						                      error:&error];
+
 			if (signature == nil && error != nil) {
 				[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-								   withTitle:@"Une erreur s'est produite lors de la signature"
-							inViewController:self];
+				                   withTitle:@"Une erreur s'est produite lors de la signature"
+						    inViewController:self];
 				break;
 			}
 			else {
 				NSString *b64EncodedSignature = [signature base64EncodedString];
 				[signatures addObject:b64EncodedSignature];
 			}
-			
+
 		}
-		
+
 		if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
-			NSMutableDictionary *args = [[NSMutableDictionary alloc]
-										 initWithObjectsAndKeys:
-										 dossiers, @"dossiers",
-										 [self.annotationPublique text], @"annotPub",
-										 [self.annotationPrivee text], @"annotPriv",
-										 [[ADLSingletonState sharedSingletonState] bureauCourant], @"bureauCourant",
-										 signatures, @"signatures",
-										 nil];
-			
+			NSMutableDictionary *args = [@{@"dossiers" : dossiers,
+					@"annotPub" : [self.annotationPublique text],
+					@"annotPriv" : [self.annotationPrivee text],
+					@"bureauCourant" : [[ADLSingletonState sharedSingletonState] bureauCourant],
+					@"signatures" : signatures} mutableCopy];
+
 			NSLog(@"%@", args);
 			ADLRequester *requester = [ADLRequester sharedRequester];
-			
+
 			[self showHud];
-			
-			[requester request:@"signature" andArgs:args delegate:self];
+
+			[requester request:@"signature"
+			           andArgs:args
+				      delegate:self];
 		}
 	}
-	else  {
+	else {
 		[self dismissDialogView];
 	}
-	
+
 }
 
 
--(void)didEndWithUnReachableNetwork {
+- (void)didEndWithUnReachableNetwork {
+
 	[[[UIAlertView alloc] initWithTitle:@"Erreur"
-								message:@"Une erreur est survenue lors de l'envoi de la requête"
-							   delegate:nil
-					  cancelButtonTitle:@"Fermer"
-					  otherButtonTitles: nil] show];
+	                            message:@"Une erreur est survenue lors de l'envoi de la requête"
+		                       delegate:nil
+		              cancelButtonTitle:@"Fermer"
+		              otherButtonTitles:nil] show];
 }
 
 
 /**
- * APIv3 response
- */
--(void)getSignInfoDidEndWithSuccess:(ADLResponseSignInfo *)responseSignInfo {
+* APIv3 response
+*/
+- (void)getSignInfoDidEndWithSuccess:(ADLResponseSignInfo *)responseSignInfo {
 
-	NSMutableArray *hashes = [[NSMutableArray alloc] init];
-	NSMutableArray *dossiers = [[NSMutableArray alloc] init];
-	NSMutableArray *signatures = [[NSMutableArray alloc] init];
-	
+	NSMutableArray *hashes = [NSMutableArray new];
+	NSMutableArray *dossiers = [NSMutableArray new];
+	NSMutableArray *signatures = [NSMutableArray new];
+
 	for (NSString *dossier in self.dossiersRef) {
 		NSDictionary *signInfo = responseSignInfo.signatureInformations;
-		
-		if ([[signInfo objectForKey:@"format"] isEqualToString:@"CMS"]) {
+
+		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
 			[dossiers addObject:dossier];
-			[hashes addObject:[signInfo objectForKey:@"hash"]];
+			[hashes addObject:signInfo[@"hash"]];
+		} else {
+			[DeviceUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
+			                     withTitle:@"Signature impossible"];
 		}
 	}
-	
-	ADLKeyStore *keystore = [((RGAppDelegate*)[[UIApplication sharedApplication] delegate]) keyStore];
+
+	ADLKeyStore *keystore = [((RGAppDelegate *) [[UIApplication sharedApplication] delegate]) keyStore];
 	PrivateKey *pkey = _currentPKey;
-	
-	NSError *error = nil;
-	
+
+	// Retrieving signature certificate
+
+	NSFileManager *fileManager = [NSFileManager new];
+	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
+	                                     inDomain:NSUserDomainMask
+			                    appropriateForURL:nil
+			                               create:YES
+			                                error:NULL];
+
+	NSString *p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+
+	// Building signature response
+
 	for (NSString *hash in hashes) {
-		NSData *hash_data = [keystore bytesFromHexString:hash];
-		
-		NSFileManager *fileManager = [NSFileManager new];
-		NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-											 inDomain:NSUserDomainMask
-									appropriateForURL:nil
-											   create:YES
-												error:NULL];
-		
-		NSString* p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
-		
-		error = nil;
-		NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-								   withPassword:[self p12password]
-										andData:hash_data
-										  error:&error];
-		
-		if (signature == nil && error != nil) {
-			[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-							   withTitle:@"Une erreur s'est produite lors de la signature"
-						inViewController:self];
-			break;
+		NSMutableString *signedHash;
+
+		// Signing hashes, multi-doc way if needed
+
+		if ([StringUtils doesString:hash
+		          containsSubString:@","]) {
+
+			NSArray *subHashes = [hash componentsSeparatedByString:@","];
+			for (NSString *subHash in subHashes) {
+
+				NSString *subSignedHash = [self signData:subHash
+				                            withKeystore:keystore
+							                     withP12:p12AbsolutePath];
+
+				if (subHash == subHashes.firstObject) {
+					signedHash = subSignedHash.mutableCopy;
+				} else {
+					[signedHash appendString:@","];
+					[signedHash appendString:subSignedHash];
+				}
+			}
+
+		} else {
+
+			signedHash = [self signData:hash
+			               withKeystore:keystore
+						        withP12:p12AbsolutePath].mutableCopy;
 		}
-		else {
-			NSString *b64EncodedSignature = [signature base64EncodedString];
-			[signatures addObject:b64EncodedSignature];
+
+		// Add result, or cancel on error
+
+		if (signedHash == nil)
+			break;
+
+		signedHash = [signedHash stringByReplacingOccurrencesOfString:@"\n"
+		                                                   withString:@""].mutableCopy;
+
+		[signatures addObject:signedHash];
+	}
+
+	// Checking and sending back result
+
+	if (signatures.count > 0 && signatures.count == hashes.count && dossiers.count == hashes.count) {
+
+		for (int i = 0; i < signatures.count; i++) {
+
+			NSLog(@"Send signature dossier=%@, signSize=%lu", dossiers[(NSUInteger) i], sizeof(signatures[(NSUInteger) i]));
+			[self showHud];
+
+			__weak typeof(self) weakSelf = self;
+			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
+			                          forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+					       withPublicAnnotation:[self.annotationPublique text]
+					      withPrivateAnnotation:[self.annotationPrivee text]
+					              withSignature:signatures[(NSUInteger) i]
+					                    success:^(NSArray *array) {
+					                        __strong typeof(weakSelf) strongSelf = weakSelf;
+					                        if (strongSelf) {
+						                        NSLog(@"Signature success");
+						                        [strongSelf dismissDialogView];
+					                        }
+					                    }
+					                    failure:^(NSError *restError) {
+					                        __strong typeof(weakSelf) strongSelf = weakSelf;
+					                        if (strongSelf) {
+						                        NSLog(@"Signature fail");
+						                        [strongSelf didEndWithUnReachableNetwork];
+					                        }
+					                    }];
 		}
 	}
-	
-	if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
-		
-		for (int i = 0; i<signatures.count; i++) {
-			
-			NSLog(@"Send signature dossier=%@, signSize=%lu", [dossiers objectAtIndex:i], sizeof([signatures objectAtIndex:i]));
-			[self showHud];
-			
-			__weak typeof(self) weakSelf = self;
-			[_restClient actionSignerForDossier:[dossiers objectAtIndex:i]
-									  forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-						   withPublicAnnotation:[self.annotationPublique text]
-						  withPrivateAnnotation:[self.annotationPrivee text]
-								  withSignature:[signatures objectAtIndex:i]
-										success:^(NSArray *array) {
-											__strong typeof(weakSelf) strongSelf = weakSelf;
-											if (strongSelf) {
-												NSLog(@"Signature success");
-												[strongSelf dismissDialogView];
-											}
-										}
-										failure:^(NSError *error) {
-											__strong typeof(weakSelf) strongSelf = weakSelf;
-											if (strongSelf) {
-												NSLog(@"Signature fail");
-												[strongSelf didEndWithUnReachableNetwork];
-											}
-										}];
-		}
+}
+
+
+- (NSString *)signData:(NSString *)hash
+		  withKeystore:(ADLKeyStore *)keystore
+			   withP12:(NSString *)p12AbsolutePath {
+
+	NSData *hash_data = [keystore bytesFromHexString:hash];
+
+	NSError *error = nil;
+	NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
+	                           withPassword:[self p12password]
+				                    andData:hash_data
+				                      error:&error];
+
+	if (signature == nil && error != nil) {
+
+		[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                   withTitle:@"Une erreur s'est produite lors de la signature"
+				    inViewController:self];
+
+		return nil;
+	}
+	else {
+		return [signature base64EncodedString];
 	}
 }
 
@@ -426,30 +492,32 @@
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+
 	return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
+
 	return _pkeys.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
-		 cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-	UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
-	
-	if(cell == nil) {
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
+
+	if (cell == nil) {
 		cell = [[UITableViewCell alloc] init];
 	}
-	
-	PrivateKey *pkey = [_pkeys objectAtIndex:[indexPath row]];
-	
-	[[cell textLabel] setText:[pkey commonName]];
-	
-	
+
+	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
+
+	[[cell textLabel] setText:pkey.commonName];
+
+
 	return cell;
 }
 
@@ -457,11 +525,12 @@
 #pragma mark - UITableView delegate
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)      tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	// we selected a private key now fetching it
-	
-	_currentPKey = [_pkeys objectAtIndex:(NSUInteger)[indexPath row]];
-	
+
+	_currentPKey = _pkeys[(NSUInteger) indexPath.row];
+
 	// now we have a pkey we can activate Sign Button
 	[self.navigationBar.topItem.rightBarButtonItem setEnabled:YES];
 }
@@ -470,34 +539,36 @@
 #pragma mark - UIAlertView delegate
 
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)   alertView:(UIAlertView *)alertView
+clickedButtonAtIndex:(NSInteger)buttonIndex {
+
 	if (buttonIndex == 1) {
 		UITextField *passwordTextField = [alertView textFieldAtIndex:0];
 		[self setP12password:[passwordTextField text]];
-		
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-			for (NSString* dossierRef in _dossiersRef) {
+
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+			for (NSString *dossierRef in _dossiersRef) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:dossierRef
-										 andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-										   success:^(ADLResponseSignInfo *signInfo) {
-											   __strong typeof(weakSelf) strongSelf = weakSelf;
-											   if (strongSelf) {
-												   [strongSelf getSignInfoDidEndWithSuccess:signInfo];
-											   }
-										   }
-										   failure:^(NSError * error) {
-											   NSLog(@"Error on getSignInfo %@", error.localizedDescription);
-										   }];
+				                         andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+						                   success:^(ADLResponseSignInfo *signInfo) {
+						                       __strong typeof(weakSelf) strongSelf = weakSelf;
+						                       if (strongSelf) {
+							                       [strongSelf getSignInfoDidEndWithSuccess:signInfo];
+						                       }
+						                   }
+						                   failure:^(NSError *error) {
+						                       NSLog(@"Error on getSignInfo %@", error.localizedDescription);
+						                   }];
 			}
 		}
 		else {
 			ADLRequester *requester = [ADLRequester sharedRequester];
-			NSDictionary *signInfoArgs = [NSDictionary dictionaryWithObjectsAndKeys:_dossiersRef, @"dossiers", nil];
-			
+			NSDictionary *signInfoArgs = @{@"dossiers" : _dossiersRef};
+
 			[requester request:@"getSignInfo"
-					   andArgs:signInfoArgs
-					  delegate:self];
+			           andArgs:signInfoArgs
+				      delegate:self];
 		}
 	}
 }

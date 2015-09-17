@@ -7,6 +7,9 @@
 
 + (NSDictionary *) nilifyValuesOfDictionary:(NSDictionary *)dictionary;
 
++ (BOOL)doesString:(NSString*)string
+ containsSubString:(NSString*)substring;
+
 + (NSString *)getErrorMessage:(NSError *)error;
 
 + (MTLValueTransformer *)getNullToFalseValueTransformer;

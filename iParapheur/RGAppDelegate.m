@@ -72,7 +72,7 @@
 		ADLPasswordAlertView *pwdAlertView = (ADLPasswordAlertView*)alertView;
 		NSError *error = nil;
 
-		BOOL success = [self.keyStore addKey:pwdAlertView.p12Path
+		BOOL success = [_keyStore addKey:pwdAlertView.p12Path
 								withPassword:passwordTextField.text
 									   error:&error];
 		
@@ -280,7 +280,7 @@
 	NSMutableArray *retval = [NSMutableArray array];
 	
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *publicDocumentsDir = [paths objectAtIndex:0];
+	NSString *publicDocumentsDir = paths[0];
 	
 	NSError *error;
 	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:publicDocumentsDir error:&error];
@@ -306,7 +306,7 @@
 
 
 -(void)didEndWithRequestAnswer:(NSDictionary*)answer {
-	NSString *s = [answer objectForKey:@"_req"];
+	NSString *s = answer[@"_req"];
 	
 	if ([s isEqual:LOGIN_API]) {
 		

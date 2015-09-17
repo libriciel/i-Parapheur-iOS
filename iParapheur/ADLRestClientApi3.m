@@ -597,7 +597,7 @@ typedef enum {
 	argumentDictionary[@"annotPriv"] = privateAnnotation;
 	argumentDictionary[@"annotPub"] = publicAnnotation;
 	argumentDictionary[@"signature"] = signature;
-	
+
 	// Send request
 	
 	[self sendSimpleAction:ADLRequestTypePOST

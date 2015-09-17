@@ -724,7 +724,7 @@ numberOfRowsInSection:(NSInteger)section {
 clickedButtonAtIndex:(NSInteger)buttonIndex {
 	
 	if (buttonIndex < self.secondaryActions.count) {
-		NSString *action = [self.secondaryActions objectAtIndex:buttonIndex];
+		NSString *action = self.secondaryActions[buttonIndex];
 		[self clickOnSecondaryAction:action];
 	}
 }

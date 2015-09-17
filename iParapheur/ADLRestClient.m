@@ -27,7 +27,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 -(void)setRestApiVersion:(NSNumber *)apiVersion {
 	
-	if ([apiVersion intValue] != PARAPHEUR_API_VERSION) {
+	if ([apiVersion intValue] != [PARAPHEUR_API_VERSION intValue]) {
 		PARAPHEUR_API_VERSION = apiVersion;
 		[self resetClient];
 	}
@@ -125,7 +125,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 	[_restClientApi getDossiers:[self fixBureauId:bureau]
 						   page:page
 						   size:size
-						 filter:(NSString*)filterJson
+						 filter:filterJson
 						success:^(NSArray *dossiers) { success(dossiers); }
 						failure:^(NSError *error) { failure(error); }];
 }
@@ -252,7 +252,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 								 forBureau:[self fixBureauId:bureauId]
 					  withPublicAnnotation:publicAnnotation
 					 withPrivateAnnotation:privateAnnotation
-							 withSignature:(NSString *)signature
+							 withSignature:signature
 								   success:^(NSArray *result) {
 									   success(result);
 								   }

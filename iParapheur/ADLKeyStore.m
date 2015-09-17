@@ -452,7 +452,7 @@ localizedDescription:(NSString *)localizedDescription
 	ERR_print_errors_fp(stderr);
 #endif
 	if (error) {
-		NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:localizedDescription, NSLocalizedDescriptionKey, nil];
+		NSDictionary *userInfo = @{NSLocalizedDescriptionKey : localizedDescription};
 		*error = [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
 	}
 }
@@ -550,8 +550,9 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error opening file %s\n", p12_file_path);
 		if (error) {
 			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
-												code:ENOENT
-											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			                                    code:ENOENT
+				                            userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert",
+				                                                                                              [p12Path lastPathComponent]]}];
 			
 		}
 		return NO;
@@ -563,8 +564,9 @@ localizedDescription:(NSString *)localizedDescription
 		ERR_print_errors_fp(stderr);
 		if (error) {
 			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
-												code:ENOENT
-											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			                                    code:ENOENT
+				                            userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de lire %@",
+				                                                                                              [p12Path lastPathComponent]]}];
 			PKCS12_free(p12);
 		}
 		return NO;
@@ -574,8 +576,9 @@ localizedDescription:(NSString *)localizedDescription
 		ERR_print_errors_fp(stderr);
 		if (error) {
 			*error = [[NSError alloc] initWithDomain:P12ErrorDomain
-												code:P12OpenErrorCode
-											userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]], NSLocalizedDescriptionKey, nil]];
+			                                    code:P12OpenErrorCode
+				                            userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe",
+				                                                                                              [p12Path lastPathComponent]]}];
 			
 		}
 		PKCS12_free(p12);
@@ -677,7 +680,7 @@ localizedDescription:(NSString *)localizedDescription
 		}
 	}
 	else {
-		NSLog(@"Object already in KeyStore %@", [[array objectAtIndex:0] commonName]);
+		NSLog(@"Object already in KeyStore %@", [array[0] commonName]);
 	}
 	
 	return YES;

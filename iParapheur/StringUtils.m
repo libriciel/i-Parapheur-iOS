@@ -25,6 +25,13 @@
 }
 
 
++ (BOOL)doesString:(NSString*)string
+ containsSubString:(NSString*)substring {
+	NSRange range = [string rangeOfString:substring];
+	return range.length != 0;
+}
+
+
 + (NSString *)getErrorMessage:(NSError *)error {
 	
 	NSString *message = error.localizedDescription;
