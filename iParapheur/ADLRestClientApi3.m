@@ -81,11 +81,14 @@
 	// Security policy, for SSL checks.
 	// The .cer files (mobile server public keys) are automatically loaded from the app bundle,
 	// We just have to put them in the supporting files folder
-	
+
 	_sessionManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
 	_sessionManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
 	_sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
 	_sessionManager.securityPolicy.validatesDomainName = YES;
+
+	// TODO : Remove NSAllowsArbitraryLoads ATS in pList file, to upgrade security from iOS8 to iOS9 level.
+	//        2015/10 : iOS9 simulator (but not devices) does not properly work with self-signed certificate (wrong -9802 errors)
 }
 
 
