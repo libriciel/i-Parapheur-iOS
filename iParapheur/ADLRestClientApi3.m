@@ -67,8 +67,7 @@
 	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
 	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[requestSerializer setAuthorizationHeaderFieldWithUsername:login
-													  password:password];
+	[requestSerializer setAuthorizationHeaderFieldWithUsername:login password:password];
 
 	_sessionManager.requestSerializer = requestSerializer;
 	
@@ -87,7 +86,6 @@
 	_sessionManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
 	_sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
 	_sessionManager.securityPolicy.validatesDomainName = YES;
-	
 }
 
 
