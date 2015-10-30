@@ -1,6 +1,10 @@
 
 #import <Foundation/Foundation.h>
-#import <Mantle.h>
+#import "MTLModel.h"
+#import "MTLJSONAdapter.h"
+
+
+static NSString *const kGLLevel = @"level";
 
 
 @interface ADLResponseGetLevel : MTLModel<MTLJSONSerializing>

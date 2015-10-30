@@ -5,12 +5,17 @@
 //
 
 #import "ADLResponseAnnotation.h"
-#import "StringUtils.h"
+
 
 @implementation ADLResponseAnnotation
 
 + (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{};
+
+	return @{
+			kRAData : kRAData,
+			kRAIdDossier : kRAIdDossier,
+			kRAIdAnnotation : kRAIdAnnotation
+	};
 }
 
 @end

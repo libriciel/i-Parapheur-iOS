@@ -1,43 +1,72 @@
-
 #import "ADLResponseDossiers.h"
 #import "StringUtils.h"
+
 
 @implementation ADLResponseDossiers
 
 
-+ (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{@"identifier":@"id"};
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+
+	return @{
+			kRDSTotal : kRDSTotal,
+			kRDSProtocol : kRDSProtocol,
+			kRDSActionDemandee : kRDSActionDemandee,
+			kRDSIsSent : kRDSIsSent,
+			kRDSType : kRDSType,
+			kRDSBureauName : kRDSBureauName,
+			kRDSCreator : kRDSCreator,
+			kRDSTitle : kRDSTitle,
+			kRDSPendingFile : kRDSPendingFile,
+			kRDSBanetteName : kRDSBanetteName,
+			kRDSSkipped : kRDSSkipped,
+			kRDSSousType : kRDSSousType,
+			kRDSIsSignPapier : kRDSIsSignPapier,
+			kRDSIsXemEnabled : kRDSIsXemEnabled,
+			kRDSHasRead : kRDSHasRead,
+			kRDSReadingMandatory : kRDSReadingMandatory,
+			kRDSDocumentPrincipal : kRDSDocumentPrincipal,
+			kRDSLocked : kRDSLocked,
+			kRDSActions : kRDSActions,
+			kRDSIsRead : kRDSIsRead,
+			kRDSDateEmission : kRDSDateEmission,
+			kRDSDateLimite : kRDSDateLimite,
+			kRDSIncludeAnnexes : kRDSIncludeAnnexes,
+			kRDSIdentifier : @"id"
+	};
 }
 
 
-+ (NSValueTransformer *)nameJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)protocolJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)actionDemandeeJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)typeJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)bureauNameJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)creatorJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)identifierJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)titleJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)banetteNameJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)sousTypeJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
++ (NSValueTransformer *)JSONTransformerForKey:(NSString *)key {
 
-+ (NSValueTransformer *)isSentJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)isSignPapierJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)isXemEnabledJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)hasReadJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)readingMandatoryJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)lockedJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)isReadJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)includeAnnexesJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
+	// Tests
 
-+ (NSValueTransformer *)documentPrincipalJSONTransformer { return [StringUtils getNullToEmptyDictionaryValueTransformer]; }
+	BOOL isStringKey = [StringUtils doesArray:@[kRDSProtocol, kRDSActionDemandee, kRDSType, kRDSSousType, kRDSBureauName, kRDSCreator, kRDSIdentifier, kRDSTitle, kRDSBanetteName]
+	                           containsString:key];
 
-+ (NSValueTransformer *)actionsJSONTransformer { return [StringUtils getNullToEmptyArrayValueTransformer]; }
+	BOOL isBooleanKey = [StringUtils doesArray:@[kRDSIsSent, kRDSIsSignPapier, kRDSIsXemEnabled, kRDSHasRead, kRDSReadingMandatory, kRDSLocked, kRDSIsRead, kRDSIncludeAnnexes]
+	                            containsString:key];
 
-+ (NSValueTransformer *)totalJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)pendingFileJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)skippedJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)dateEmissionJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)dateLimiteJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
+	BOOL isIntegerKey = [StringUtils doesArray:@[kRDSTotal, kRDSPendingFile, kRDSSkipped, kRDSDateEmission, kRDSDateLimite]
+	                            containsString:key];
+
+	BOOL isDictionaryKey = [key isEqualToString:kRDSDocumentPrincipal];
+	BOOL isArrayKey = [key isEqualToString:kRDSActions];
+
+	// Return proper Transformer
+
+	if (isStringKey)
+		return [StringUtils getNullToNilValueTransformer];
+	else if (isBooleanKey)
+		return [StringUtils getNullToFalseValueTransformer];
+	else if (isIntegerKey)
+		return [StringUtils getNullToZeroValueTransformer];
+	else if (isDictionaryKey)
+		return [StringUtils getNullToEmptyDictionaryValueTransformer];
+	else if (isArrayKey)
+		return [StringUtils getNullToEmptyArrayValueTransformer];
+
+	NSLog(@"ADLResponseDossiers, unknown parameter : %@", key);
+	return nil;
+}
 
 @end

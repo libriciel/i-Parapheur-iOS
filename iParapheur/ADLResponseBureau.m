@@ -1,44 +1,66 @@
-
 #import "ADLResponseBureau.h"
 #import "StringUtils.h"
-
 
 
 @implementation ADLResponseBureau
 
 
-+ (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{@"desc":@"description",
-			 @"enPreparation":@"en-preparation",
-			 @"enRetard":@"en-retard",
-			 @"showAVenir":@"show_a_venir",
-			 @"aArchiver":@"a-archiver",
-			 @"aTraiter":@"a-traiter",
-			 @"identifier":@"id",
-			 @"dossiersDelegues":@"dossier-delegues"};
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+
+	return @{
+			kBLevel : kBLevel,
+			kBHasSecretaire : kBHasSecretaire,
+			kBCollectivite : kBCollectivite,
+			kBNodeRef : kBNodeRef,
+			kBShortName : kBShortName,
+			kBImage : kBImage,
+			kBHabilitation : kBHabilitation,
+			kBIsSecretaire : kBIsSecretaire,
+			kBHabilitation : kBHabilitation,
+			kBIsSecretaire : kBIsSecretaire,
+			kBName : kBName,
+			kBRetournes : kBRetournes,
+			kBDesc : @"description",
+			kBEnPreparation : @"en-preparation",
+			kBEnRetard : @"en-retard",
+			kBShowAVenir : @"show_a_venir",
+			kBAArchiver : @"a-archiver",
+			kBATraiter : @"a-traiter",
+			kBIdentifier : @"id",
+			kBDossiersDelegues : @"dossier-delegues"
+	};
 }
 
 
-+ (NSValueTransformer *)levelJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)enPreparationJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)enRetardJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)aArchiverJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)aTraiterJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)dossiersDeleguesJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
-+ (NSValueTransformer *)retournesJSONTransformer { return [StringUtils getNullToZeroValueTransformer]; }
++ (NSValueTransformer *)JSONTransformerForKey:(NSString *)key {
 
-+ (NSValueTransformer *)showAVenirJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)hasSecretaireJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
-+ (NSValueTransformer *)isSecretaireJSONTransformer { return [StringUtils getNullToFalseValueTransformer]; }
+	// Tests
 
-+ (NSValueTransformer *)habilitationJSONTransformer { return [StringUtils getNullToEmptyDictionaryValueTransformer]; }
+	BOOL isStringKey = [StringUtils doesArray:@[kBDesc, kBCollectivite, kBNodeRef, kBIdentifier, kBImage, kBShortName, kBName]
+	                           containsString:key];
 
-+ (NSValueTransformer *)descJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)collectiviteJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)nodeRefJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)identifierJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)imageJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)shortNameJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
-+ (NSValueTransformer *)nameJSONTransformer { return [StringUtils getNullToNilValueTransformer]; }
+	BOOL isBooleanKey = [StringUtils doesArray:@[kBShowAVenir, kBHasSecretaire, kBIsSecretaire]
+	                            containsString:key];
+
+	BOOL isIntegerKey = [StringUtils doesArray:@[kBLevel, kBEnPreparation, kBEnRetard, kBAArchiver, kBATraiter, kBDossiersDelegues, kBRetournes]
+	                            containsString:key];
+
+	BOOL isDictionaryKey = [key isEqualToString:kBHabilitation];
+
+	// Return proper Transformer
+
+	if (isStringKey)
+		return [StringUtils getNullToNilValueTransformer];
+	else if (isBooleanKey)
+		return [StringUtils getNullToFalseValueTransformer];
+	else if (isIntegerKey)
+		return [StringUtils getNullToZeroValueTransformer];
+	else if (isDictionaryKey)
+		return [StringUtils getNullToEmptyDictionaryValueTransformer];
+
+	NSLog(@"ADLResponseBureau, unknown parameter : %@", key);
+	return nil;
+}
+
 
 @end

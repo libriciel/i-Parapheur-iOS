@@ -1,6 +1,6 @@
 
 #import <Foundation/Foundation.h>
-#import <Mantle.h>
+#import <MTLValueTransformer.h>
 
 
 @interface StringUtils : NSObject
@@ -9,6 +9,9 @@
 
 + (BOOL)doesString:(NSString*)string
  containsSubString:(NSString*)substring;
+
++ (BOOL)doesArray:(NSArray *)array
+   containsString:(NSString *)string;
 
 + (NSString *)getErrorMessage:(NSError *)error;
 
@@ -21,5 +24,6 @@
 + (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer;
 
 + (MTLValueTransformer *)getNullToEmptyArrayValueTransformer;
+
 
 @end

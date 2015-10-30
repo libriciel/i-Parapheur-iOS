@@ -27,8 +27,20 @@
 
 + (BOOL)doesString:(NSString*)string
  containsSubString:(NSString*)substring {
+
 	NSRange range = [string rangeOfString:substring];
 	return range.length != 0;
+}
+
+
++ (BOOL)doesArray:(NSArray *)array
+   containsString:(NSString *)string {
+
+	for (NSString *arrayElement in array)
+		if ([string isEqualToString:arrayElement])
+			return TRUE;
+
+	return FALSE;
 }
 
 

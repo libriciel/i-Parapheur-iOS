@@ -1,6 +1,11 @@
 
 #import <Foundation/Foundation.h>
-#import <Mantle.h>
+#import "MTLModel.h"
+#import "MTLJSONAdapter.h"
+
+
+static NSString *const kSISignatureInformations = @"signatureInformations";
+
 
 @interface ADLResponseSignInfo : MTLModel<MTLJSONSerializing>
 
