@@ -10,12 +10,10 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
-#include <openssl/pkcs7.h>
-#include <openssl/bio.h>
 #include <openssl/cms.h>
 
 #import "PrivateKey.h"
-#import <CoreData/CoreData.h>
+
 
 @implementation ADLKeyStore
 
@@ -453,7 +451,9 @@ localizedDescription:(NSString *)localizedDescription
 #endif
 	if (error) {
 		NSDictionary *userInfo = @{NSLocalizedDescriptionKey : localizedDescription};
-		*error = [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
+		*error = [NSError errorWithDomain:domain
+		                             code:code
+		                         userInfo:userInfo];
 	}
 }
 
@@ -549,11 +549,9 @@ localizedDescription:(NSString *)localizedDescription
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		fprintf(stderr, "Error opening file %s\n", p12_file_path);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
-			                                    code:ENOENT
-				                            userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert",
-				                                                                                              [p12Path lastPathComponent]]}];
-			
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain
+			                             code:ENOENT
+			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", p12Path.lastPathComponent]}];
 		}
 		return NO;
 	}
@@ -563,10 +561,9 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error reading PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain
-			                                    code:ENOENT
-				                            userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de lire %@",
-				                                                                                              [p12Path lastPathComponent]]}];
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain
+			                             code:ENOENT
+			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de lire %@", p12Path.lastPathComponent]}];
 			PKCS12_free(p12);
 		}
 		return NO;
@@ -575,11 +572,9 @@ localizedDescription:(NSString *)localizedDescription
 		fprintf(stderr, "Error parsing PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
-			*error = [[NSError alloc] initWithDomain:P12ErrorDomain
-			                                    code:P12OpenErrorCode
-				                            userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe",
-				                                                                                              [p12Path lastPathComponent]]}];
-			
+			*error = [NSError errorWithDomain:P12ErrorDomain
+			                             code:P12OpenErrorCode
+			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", p12Path.lastPathComponent]}];
 		}
 		PKCS12_free(p12);
 		
