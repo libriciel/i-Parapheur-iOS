@@ -64,7 +64,8 @@
 
 
 + (MTLValueTransformer *)getNullToFalseValueTransformer {
-	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
+
+	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
 			return @0;
 		else
@@ -74,7 +75,7 @@
 
 
 + (MTLValueTransformer *)getNullToNilValueTransformer {
-	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
+	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == [NSNull null])
 			return nil;
 		else
@@ -84,7 +85,7 @@
 
 
 + (MTLValueTransformer *)getNullToZeroValueTransformer {
-	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
+	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
 			return @0;
 		else
@@ -94,7 +95,7 @@
 
 
 + (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer {
-	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
+	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
 			return [[NSDictionary alloc] init];
 		else
@@ -104,7 +105,7 @@
 
 
 + (MTLValueTransformer *)getNullToEmptyArrayValueTransformer {
-	return [MTLValueTransformer transformerWithBlock:^id(id inObj) {
+	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
 			return [[NSArray alloc] init];
 		else
