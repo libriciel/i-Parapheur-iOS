@@ -29,6 +29,13 @@
 }
 
 
+- (NSString *)tableView:(UITableView *)tableView
+titleForHeaderInSection:(NSInteger)section {
+
+	return rowsDictionary.allKeys[(NSUInteger) section];
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
@@ -44,7 +51,7 @@
 	UITableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:MyIdentifier];
 
 	if (cell == nil)
-		cell = [[UITableViewCell new] initWithFrame:CGRectZero
+		cell = [[UITableViewCell new] initWithStyle:UITableViewCellStyleDefault
 		                            reuseIdentifier:MyIdentifier];
 
 	NSArray *sectionArray = rowsDictionary[rowsDictionary.allKeys[(NSUInteger) indexPath.section]];
@@ -52,6 +59,7 @@
 
 	return cell;
 }
+
 
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
