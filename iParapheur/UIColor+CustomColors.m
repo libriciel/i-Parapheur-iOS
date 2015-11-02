@@ -12,57 +12,57 @@
 
 
 +(UIColor*) darkGreenColor {
-	return [UIColor colorWithRed:11.0/255.0
-						   green:211.0/255.0
-							blue:24.0/255.0
+	return [UIColor colorWithRed:11.0f/255.0f
+						   green:211.0f/255.0f
+							blue:24.0f/255.0f
 						   alpha:1.0f]; // #0BD318
 }
 
 
 +(UIColor*) darkRedColor {
-	return [UIColor colorWithRed:255.0/255.0
-						   green:56.0/255.0
-							blue:36.0/255.0
+	return [UIColor colorWithRed:255.0f/255.0f
+						   green:56.0f/255.0f
+							blue:36.0f/255.0f
 						   alpha:1]; // #FF3824
 }
 
 
 +(UIColor*) darkOrangeColor {
-	return [UIColor colorWithRed:255.0/255.0
-						   green:150.0/255.0
-							blue:0.0/255.0
+	return [UIColor colorWithRed:255.0f/255.0f
+						   green:150.0f/255.0f
+							blue:0.0f/255.0f
 						   alpha:1]; // #FF9600
 }
 
 
 +(UIColor*) darkYellowColor {
-	return [UIColor colorWithRed:255.0/255.0
-						   green:205.0/255.0
-							blue:0.0/255.0
+	return [UIColor colorWithRed:255.0f/255.0f
+						   green:205.0f/255.0f
+							blue:0.0f/255.0f
 						   alpha:1]; // #FFCD00
 }
 
 
 +(UIColor*) darkPurpleColor {
-	return [UIColor colorWithRed:198.0/255.0
-						   green:68.0/255.0
-							blue:252.0/255.0
+	return [UIColor colorWithRed:198.0f/255.0f
+						   green:68.0f/255.0f
+							blue:252.0f/255.0f
 						   alpha:1]; // #C644FC
 }
 
 
 +(UIColor*) darkBlueColor {
-	return [UIColor colorWithRed:0.0/255.0
-						   green:118.0/255.0
-							blue:255.0/255.0
+	return [UIColor colorWithRed:0.0f/255.0f
+						   green:118.0f/255.0f
+							blue:255.0f/255.0f
 						   alpha:1.0f]; // #0076FF
 }
 
 
 +(UIColor*) selectedCellGreyColor {
-	return [UIColor colorWithRed:217.0/255.0
-						   green:217.0/255.0
-							blue:217.0/255.0
+	return [UIColor colorWithRed:217.0f/255.0f
+						   green:217.0f/255.0f
+							blue:217.0f/255.0f
 						   alpha:1.0f]; // #D9D9D9
 }
 

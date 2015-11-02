@@ -107,7 +107,10 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     [self.retardPlaceHolder addSubview:self.retardBadge];
     [self.contentCellView addSubview:self.retardPlaceHolder];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideMenuOptions) name:RGFileCellShouldHideMenuNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hideMenuOptions)
+                                                 name:RGFileCellShouldHideMenuNotification
+                                               object:nil];
 }
 
 -(void) removeFromSuperview {

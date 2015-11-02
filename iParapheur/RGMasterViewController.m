@@ -49,14 +49,9 @@
 #import "RGDeskCustomTableViewCell.h"
 #import "ADLNotifications.h"
 #import "UIColor+CustomColors.h"
-#import "ADLSingletonState.h"
 #import "ADLRequester.h"
-#import "ADLCollectivityDef.h"
-#import "LGViewHUD.h"
-#import "ADLRestClient.h"
 #import "SCNetworkReachability.h"
 #import "ADLResponseBureau.h"
-#import "StringUtils.h"
 #import "DeviceUtils.h"
 
 
@@ -82,13 +77,15 @@
 											   object:nil];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
-	
-	self.refreshControl = [[UIRefreshControl alloc]init];
+	self.refreshControl = [UIRefreshControl new];
 	self.refreshControl.tintColor = [UIColor selectedCellGreyColor];
 	
 	[self.refreshControl addTarget:self
 							action:@selector(loadBureaux)
 				  forControlEvents:UIControlEventValueChanged];
+
+	_settingsButton.target = self;
+	_settingsButton.action = @selector(onSettingsButtonClicked:);
 }
 
 
@@ -298,12 +295,34 @@
 							}
 						}];
 	}
-	else if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] == 2) {
+	else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == 2) {
 		API_GETBUREAUX();
 	}
-	else if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] == -1) {
+	else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == -1) {
 		[self.refreshControl endRefreshing];
 	}
+}
+
+
+#pragma mark - Button Listeners
+
+
+- (void)onSettingsButtonClicked:(id)sender {
+	// TODO : Direct call to login popup, on no-account set
+
+	// Displays secondary Settings.storyboard
+    // TODO : Switch to easier linked Storyboard
+	// (When iOS9 will be the oldest supported version)
+
+	UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Settings"
+	                                             bundle:nil];
+
+	UIViewController *vc = sb.instantiateInitialViewController;
+	vc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+
+	[self presentViewController:vc
+	                   animated:YES
+	                 completion:NULL];
 }
 
 
@@ -311,7 +330,7 @@
 
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer{
-	NSString *s = [answer objectForKey:@"_req"];
+	NSString *s = answer[@"_req"];
 	_loading = NO;
 	[self.refreshControl endRefreshing];
 	
@@ -320,8 +339,8 @@
 		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
 		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 		
-		[vault addCredentialForHost:[def host]
-						   andLogin:[def username]
+		[vault addCredentialForHost:def.host
+						   andLogin:def.username
 						 withTicket:API_LOGIN_GET_TICKET(answer)];
 
 		[self loadBureaux];
@@ -362,7 +381,7 @@
 	// Popup response
 	
 	NSDictionary *userInfo = notification.userInfo;
-	BOOL success = [(NSNumber *)[userInfo objectForKey:@"success"] boolValue];
+	BOOL success = ((NSNumber *) userInfo[@"success"]).boolValue;
 	
 	// Settings values
 	
@@ -384,7 +403,9 @@
 #pragma mark - UITableDataSource delegate
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section {
+
 	return _bureauxArray.count;
 }
 
@@ -394,13 +415,14 @@
  * and querying for available reusable cells with dequeueReusableCellWithIdentifier:
  * Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
  */
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	static NSString *CellIdentifier = @"DeskCell";
 	RGDeskCustomTableViewCell *cell = (RGDeskCustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-	[cell.todoBadge.badgeStyle setBadgeInsetColor:[UIColor darkBlueColor]];
-	[cell.lateBadge.badgeStyle setBadgeInsetColor:[UIColor darkRedColor]];
+	cell.todoBadge.badgeStyle.badgeInsetColor = [UIColor darkBlueColor];
+	cell.lateBadge.badgeStyle.badgeInsetColor = [UIColor darkRedColor];
 	
 	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
@@ -410,31 +432,32 @@
 	NSString *bureauATraiter;
 	
 	if (isLoaded && isVersion2) {
-		NSDictionary *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
-		bureauName = [bureau objectForKey:@"name"];
-		bureauEnRetard =  [NSString stringWithFormat:@"%@", [bureau objectForKey:@"en_retard"]];
-		bureauATraiter =  [NSString stringWithFormat:@"%@", [bureau objectForKey:@"a_traiter"]];
+		NSDictionary *bureau = _bureauxArray[(NSUInteger) indexPath.row];
+		bureauName = bureau[@"name"];
+		bureauEnRetard = [NSString stringWithFormat:@"%@", bureau[@"en_retard"]];
+		bureauATraiter = [NSString stringWithFormat:@"%@", bureau[@"a_traiter"]];
 	}
 	else {
-		ADLResponseBureau *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
+		ADLResponseBureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
 		bureauName = bureau.name;
-		bureauEnRetard = [bureau.enRetard stringValue];
-		bureauATraiter = [bureau.aTraiter stringValue];
+		bureauEnRetard = bureau.enRetard.stringValue;
+		bureauATraiter = bureau.aTraiter.stringValue;
 	}
 	
-	[[cell bureauNameLabel] setText:bureauName];
+	cell.bureauNameLabel.text = bureauName;
 		
-	[[cell todoBadge] setBadgeText:bureauATraiter];
-	[[cell todoBadge] autoBadgeSizeWithString:bureauATraiter];
+	cell.todoBadge.badgeText = bureauATraiter;
+	[cell.todoBadge autoBadgeSizeWithString:bureauATraiter];
 	
-	[[cell lateBadge] setBadgeText:bureauEnRetard];
+	cell.lateBadge.badgeText = bureauEnRetard;
 	[[cell lateBadge] autoBadgeSizeWithString:bureauEnRetard];
 	
 	return cell;
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)      tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	// Cancel event if no internet
 	
@@ -450,35 +473,35 @@
 //	}
 
 	// Call Desk view
-	
+
 	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
-	
+
 	NSString *bureauName;
 	NSString *bureauNodeRef;
-	
+
 	if (isLoaded && isVersion2) {
-		NSDictionary *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
-		bureauName = [bureau objectForKey:@"name"];
-		bureauNodeRef = [bureau objectForKey:@"nodeRef"];
+		NSDictionary *bureau = _bureauxArray[(NSUInteger) indexPath.row];
+		bureauName = bureau[@"name"];
+		bureauNodeRef = bureau[@"nodeRef"];
 	}
 	else {
-		ADLResponseBureau *bureau = [[self bureauxArray] objectAtIndex:[indexPath row]];
+		ADLResponseBureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
 		bureauName = bureau.name;
 		bureauNodeRef = bureau.nodeRef;
 	}
-	
+
 	NSLog(@"Selected Desk = %@", bureauNodeRef);
-	
-	RGDeskViewController *controller = [[self storyboard] instantiateViewControllerWithIdentifier:@"DeskViewController"];
+
+	RGDeskViewController *controller = (RGDeskViewController *) [self.storyboard instantiateViewControllerWithIdentifier:@"DeskViewController"];
 	[controller setDeskRef:bureauNodeRef];
-	
-	[[self navigationController] pushViewController:controller
-										   animated:YES];
-	
-	[[controller navigationItem] setTitle:bureauName];
-	
-	[[ADLSingletonState sharedSingletonState] setBureauCourant:bureauNodeRef];
+
+	[self.navigationController pushViewController:controller
+	                                     animated:YES];
+
+	controller.navigationItem.title = bureauName;
+
+	[ADLSingletonState sharedSingletonState].bureauCourant = bureauNodeRef;
 }
 
 

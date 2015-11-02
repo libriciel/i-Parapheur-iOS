@@ -1,10 +1,3 @@
-//
-//  UIColor+CustomColors.h
-//  iParapheur
-//
-//  Created by Jason MAIRE on 22/01/2014.
-//
-//
 
 #import <UIKit/UIKit.h>
 

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="WeV-sL-WhF">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="Ser-DI-dWv">
+            <objects>
+                <viewController id="EJr-JS-fyh" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="v16-AY-rhq"/>
+                        <viewControllerLayoutGuide type="bottom" id="onM-Hi-zMd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1Hf-VM-na8">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ddm-Y1-rJz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="552" y="514"/>
+        </scene>
+        <!--Root View Controller-->
+        <scene sceneID="mgL-yY-K32">
+            <objects>
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="6NZ-Mj-cHp" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="amH-Zc-gPz">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="zXm-Od-cBr">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zXm-Od-cBr" id="AYe-ya-hG0">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                </tableViewCellContentView>
+                                <animations/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="6NZ-Mj-cHp" id="FpV-t2-JzL"/>
+                            <outlet property="delegate" destination="6NZ-Mj-cHp" id="aj2-TO-75k"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="6K0-G6-38m"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ir9-dX-tO4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1372" y="-147"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="JvS-ic-Rbt">
+            <objects>
+                <navigationController id="eBz-st-vut" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="IB2-Jb-8uX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="6NZ-Mj-cHp" kind="relationship" relationship="rootViewController" id="CEc-kR-fbI"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nyc-XK-WuW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="552" y="-147"/>
+        </scene>
+        <!--Settings Split View Controller-->
+        <scene sceneID="qss-aT-ppG">
+            <objects>
+                <splitViewController storyboardIdentifier="settings_storyboard" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WeV-sL-WhF" customClass="ADLSettingsSplitViewController" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="eBz-st-vut" kind="relationship" relationship="masterViewController" id="kTG-lC-gOu"/>
+                        <segue destination="EJr-JS-fyh" kind="relationship" relationship="detailViewController" id="7mx-uj-xO5"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7ep-rz-duy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-268" y="182"/>
+        </scene>
+    </scenes>
+</document>

@@ -859,17 +859,15 @@ didCheckAtIndexPath:(NSIndexPath *)indexPath {
 didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
-		ADLResponseDossier *dossier = self.dossiersArray[indexPath.row];
-		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
-		                                                                                                                                      _possibleMainActions]];
+		ADLResponseDossier *dossier = self.dossiersArray[(NSUInteger) indexPath.row];
+		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
 
 		self.selectedDossiersArray = @[dossier].mutableCopy;
 		[self showMoreActions:cell];
 	}
 	else {
-		NSDictionary *dossier = self.dossiersArray[indexPath.row];
-		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
-		                                                                                                                           _possibleMainActions]];
+		NSDictionary *dossier = self.dossiersArray[(NSUInteger) indexPath.row];
+		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
 		_selectedDossiersArray = [@[dossier] mutableCopy];
 		[self showMoreActions:cell];
 	}
@@ -879,13 +877,12 @@ didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
 - (void)                 cell:(RGFileCell *)cell
 didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		ADLResponseDossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-		                                                                                                                                         _possibleMainActions]];
+		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", _possibleMainActions]];
 		if (mainActions.count > 0) {
 			_mainAction = mainActions[0];
-			_selectedDossiersArray = [@[dossier] mutableCopy];
+			_selectedDossiersArray = @[dossier].mutableCopy;
 			[self mainActionPressed];
 		}
 	}
