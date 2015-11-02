@@ -349,7 +349,7 @@ NSData* X509_to_NSData(X509 *cert) {
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:entity];
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName" ascending:YES];
-	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+	NSArray *sortDescriptors = @[sortDescriptor];
 	[request setSortDescriptors:sortDescriptors];
 	// Fetch the records and handle an error
 	NSError *error;
@@ -626,7 +626,7 @@ localizedDescription:(NSString *)localizedDescription
 											  entityForName:@"PrivateKey"
 											  inManagedObjectContext:self.managedObjectContext];
 	
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	NSFetchRequest *request = [NSFetchRequest new];
 	[request setEntity:entityDescription];
 	
 	NSString *commonName_to_find = [NSString stringWithCString:(const char*)alias encoding:NSUTF8StringEncoding];

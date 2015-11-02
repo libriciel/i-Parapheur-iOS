@@ -12,7 +12,7 @@
 
 
 +(ADLCollectivityDef*) copyDefaultCollectity {
-    ADLCollectivityDef* defaultDef = [[ADLCollectivityDef alloc] init];
+    ADLCollectivityDef* defaultDef = [ADLCollectivityDef new];
 	
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
 	

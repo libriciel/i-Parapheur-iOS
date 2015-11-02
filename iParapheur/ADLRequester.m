@@ -28,16 +28,16 @@ static ADLRequester *sharedRequester = nil;
 -(id)init {
     
     if (self = [super init]) {
-        downloadQueue = [[NSOperationQueue alloc] init];
+        downloadQueue = [NSOperationQueue new];
         downloadQueue.name = @"Download Queue";
         downloadQueue.maxConcurrentOperationCount = 1;
         
-        apiQueue = [[NSOperationQueue alloc] init];
+        apiQueue = [NSOperationQueue new];
         apiQueue.maxConcurrentOperationCount = 5;
         apiQueue.name = @"API Queue";
         
-        _lockApi = [[NSRecursiveLock alloc] init];
-        _lockDoc = [[NSRecursiveLock alloc] init];
+        _lockApi = [NSRecursiveLock new];
+        _lockDoc = [NSRecursiveLock new];
     }
     
     return self;

@@ -45,36 +45,26 @@
 //
 
 #import "RGDeskViewController.h"
-#import "RGMasterViewController.h"
 #import "RGWorkflowDialogViewController.h"
-#import "ADLFilterViewController.h"
-#import "LGViewHUD.h"
-#import "RGFileCell.h"
 #import <ISO8601DateFormatter/ISO8601DateFormatter.h>
 #import "ADLNotifications.h"
-#import "ADLSingletonState.h"
 #import "ADLRequester.h"
-#import "NSString+Contains.h"
 #import "UIColor+CustomColors.h"
-#import "ADLAPIHelper.h"
-#import "ADLRestClient.h"
 #import "ADLResponseDossiers.h"
-#import "StringUtils.h"
 #import "DeviceUtils.h"
 
 
-@interface RGDeskViewController()
-{
+@interface RGDeskViewController () {
 	int _currentPage;
 	UIBarButtonItem *moreBarButtonItem;
 }
 
-@property (nonatomic, weak) RGFileCell* swipedCell;
-@property (nonatomic, assign, getter = isInBatchMode) BOOL inBatchMode;
-@property (nonatomic, retain, readonly) NSArray* possibleMainActions;
-@property (nonatomic, retain, readonly) NSArray* actionsWithoutAnnotation;
-@property (nonatomic, retain) NSString* mainAction;
-@property (nonatomic, retain) NSArray* secondaryActions;
+@property(nonatomic, weak) RGFileCell *swipedCell;
+@property(nonatomic, assign, getter = isInBatchMode) BOOL inBatchMode;
+@property(nonatomic, retain, readonly) NSArray *possibleMainActions;
+@property(nonatomic, retain, readonly) NSArray *actionsWithoutAnnotation;
+@property(nonatomic, retain) NSString *mainAction;
+@property(nonatomic, retain) NSArray *secondaryActions;
 
 @end
 
@@ -88,170 +78,165 @@
 #pragma mark - UIViewController delegate
 
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
+
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDeskViewController");
 	//[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
-	
+
 	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor darkBlueColor]];
-	
-	self.refreshControl = [[UIRefreshControl alloc] init];
+
+	self.refreshControl = [UIRefreshControl new];
 	[self.refreshControl setTintColor:[UIColor selectedCellGreyColor]];
-	
+
 	[self.refreshControl addTarget:self
-							action:@selector(refresh)
-				  forControlEvents:UIControlEventValueChanged];
-	
+	                        action:@selector(refresh)
+	              forControlEvents:UIControlEventValueChanged];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(refresh)
-												 name:kDossierActionComplete
-											   object:nil];
-	
+	                                         selector:@selector(refresh)
+	                                             name:kDossierActionComplete
+	                                           object:nil];
+
 	self.searchDisplayController.searchResultsTableView.rowHeight = self.tableView.rowHeight;
 	[self.searchDisplayController.searchResultsTableView registerClass:[RGFileCell class]
-												forCellReuseIdentifier:@"dossierCell"];
+	                                            forCellReuseIdentifier:@"dossierCell"];
 	self.inBatchMode = NO;
-	
+
 	_restClient = [ADLRestClient sharedManager];
 }
 
 
--(void)refresh {
+- (void)refresh {
+
 	[self.refreshControl beginRefreshing];
 	[self loadDossiersWithPage:0];
 }
 
 
--(void)viewWillAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
+
 	[super viewWillAppear:YES];
-	
+
 	_currentPage = 0;
 	_dossiersArray = [NSMutableArray new];
-	_possibleMainActions = [NSArray arrayWithObjects:@"VISER", @"SIGNER", @"TDT", @"MAILSEC", @"ARCHIVER", nil];
-	_actionsWithoutAnnotation = [NSArray arrayWithObjects:@"RECUPERER", @"SUPPRIMER", @"SECRETARIAT", nil];
-	
+	_possibleMainActions = @[@"VISER", @"SIGNER", @"TDT", @"MAILSEC", @"ARCHIVER"];
+	_actionsWithoutAnnotation = @[@"RECUPERER", @"SUPPRIMER", @"SECRETARIAT"];
+
 	SHOW_HUD
 	[self loadDossiersWithPage:_currentPage];
 }
 
 
--(void)setInBatchMode:(BOOL)value {
+- (void)setInBatchMode:(BOOL)value {
+
 	_inBatchMode = value;
 }
 
 
--(void)loadDossiersWithPage:(int)page {
-	
+- (void)loadDossiersWithPage:(int)page {
+
 	NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
 
 	if (currentFilter != nil) {
-		
-		NSMutableArray *types = [NSMutableArray new];
-		for (NSString *type in [currentFilter objectForKey:@"types"])
-			[types addObject:[NSDictionary dictionaryWithObject:type forKey:@"ph:typeMetier"]];
-		
-		NSMutableArray *sousTypes = [NSMutableArray new];
-		for (NSString *sousType in [currentFilter objectForKey:@"sousTypes"])
-			[sousTypes addObject:[NSDictionary dictionaryWithObject:sousType forKey:@"ph:soustypeMetier"]];
 
-		NSDictionary *titre = [NSDictionary dictionaryWithObject:
-							   [NSArray arrayWithObject:
-								[NSDictionary dictionaryWithObject:
-								 [NSString stringWithFormat:@"*%@*", [currentFilter objectForKey:@"titre"]]
-														forKey:@"cm:title"]]
-														  forKey:@"or"];
-		
-		NSDictionary *filtersDictionnary = [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObject:types forKey:@"or"],
-																										[NSDictionary dictionaryWithObject:sousTypes forKey:@"or"],
-																										titre,
-																										nil]
-																	   forKey:@"and"];
-		
+		NSMutableArray *types = [NSMutableArray new];
+		for (NSString *type in currentFilter[@"types"])
+			[types addObject:@{@"ph:typeMetier" : type}];
+
+		NSMutableArray *sousTypes = [NSMutableArray new];
+		for (NSString *sousType in currentFilter[@"sousTypes"])
+			[sousTypes addObject:@{@"ph:soustypeMetier" : sousType}];
+
+		NSDictionary *titre = @{@"or" : @[@{@"cm:title" : [NSString stringWithFormat:@"*%@*", currentFilter[@"titre"]]}]};
+		NSDictionary *filtersDictionnary = @{@"and" : @[@{@"or" : types}, @{@"or" : sousTypes}, titre]};
+
 		// Send request
-		
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-			
+
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+
 			// Stringify JSON filter
-			
+
 			NSError *error;
 			NSData *jsonData = [NSJSONSerialization dataWithJSONObject:filtersDictionnary
-															   options:0
-																 error:&error];
-			
+			                                                   options:0
+			                                                     error:&error];
+
 			NSString *jsonString = nil;
 			if (jsonData)
-				jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-		
+				jsonString = [[NSString alloc] initWithData:jsonData
+				                                   encoding:NSUTF8StringEncoding];
+
 			// API3 request
-			
+
 			__weak typeof(self) weakSelf = self;
 			[_restClient getDossiers:self.deskRef
-								page:page
-								size:15
-							  filter:jsonString
-							 success:^(NSArray *dossiers) {
-								 __strong typeof(weakSelf) strongSelf = weakSelf;
-								 if (strongSelf) {
-									 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
-									 [strongSelf.refreshControl endRefreshing];
-									 HIDE_HUD
-									 [strongSelf getDossierDidEndWithSuccess:dossiers];
-								 }
-							 }
-							 failure:^(NSError *error) {
-								 __strong typeof(weakSelf) strongSelf = weakSelf;
-								 if (strongSelf) {
-									 [DeviceUtils logError:error];
-									 [strongSelf.refreshControl endRefreshing];
-									 HIDE_HUD
-								 }
-							 }];
+			                    page:page
+			                    size:15
+			                  filter:jsonString
+			                 success:^(NSArray *dossiers) {
+				                 __strong typeof(weakSelf) strongSelf = weakSelf;
+				                 if (strongSelf) {
+					                 NSLog(@"getDossiers success : %lu", (unsigned long) dossiers.count);
+					                 [strongSelf.refreshControl endRefreshing];
+					                 HIDE_HUD
+					                 [strongSelf getDossierDidEndWithSuccess:dossiers];
+				                 }
+			                 }
+			                 failure:^(NSError *error) {
+				                 __strong typeof(weakSelf) strongSelf = weakSelf;
+				                 if (strongSelf) {
+					                 [DeviceUtils logError:error];
+					                 [strongSelf.refreshControl endRefreshing];
+					                 HIDE_HUD
+				                 }
+			                 }];
 		}
 		else {
-			API_GETDOSSIERHEADERS_FILTERED(self.deskRef, [NSNumber numberWithInteger:page], @"15", [currentFilter objectForKey:@"banette"], filtersDictionnary);
+			API_GETDOSSIERHEADERS_FILTERED(self.deskRef, @(page), @"15", currentFilter[@"banette"], filtersDictionnary);
 		}
 	}
 	else {
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getDossiers:self.deskRef
-								page:page
-								size:15
-			 				  filter:nil
-							 success:^(NSArray *dossiers) {
-								 __strong typeof(weakSelf) strongSelf = weakSelf;
-								 if (strongSelf) {
-									 NSLog(@"getDossiers success : %lu", (unsigned long)dossiers.count);
-									 [strongSelf.refreshControl endRefreshing];
-									 HIDE_HUD
-									 [strongSelf getDossierDidEndWithSuccess:dossiers];
-								 }
-							 }
-							 failure:^(NSError *error) {
-								 __strong typeof(weakSelf) strongSelf = weakSelf;
-								 if (strongSelf) {
-									 [DeviceUtils logError:error];
-									 [strongSelf.refreshControl endRefreshing];
-									 HIDE_HUD
-								 }
-							 }];
+			                    page:page
+			                    size:15
+			                  filter:nil
+			                 success:^(NSArray *dossiers) {
+				                 __strong typeof(weakSelf) strongSelf = weakSelf;
+				                 if (strongSelf) {
+					                 NSLog(@"getDossiers success : %lu", (unsigned long) dossiers.count);
+					                 [strongSelf.refreshControl endRefreshing];
+					                 HIDE_HUD
+					                 [strongSelf getDossierDidEndWithSuccess:dossiers];
+				                 }
+			                 }
+			                 failure:^(NSError *error) {
+				                 __strong typeof(weakSelf) strongSelf = weakSelf;
+				                 if (strongSelf) {
+					                 [DeviceUtils logError:error];
+					                 [strongSelf.refreshControl endRefreshing];
+					                 HIDE_HUD
+				                 }
+			                 }];
 		}
 		else {
-			API_GETDOSSIERHEADERS(self.deskRef, [NSNumber numberWithInteger:page], @"15");
+			API_GETDOSSIERHEADERS(self.deskRef, @(page), @"15");
 		}
 	}
 }
 
 
--(void)viewWillDisappear:(BOOL)animated {
-	
+- (void)viewWillDisappear:(BOOL)animated {
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super viewWillDisappear:animated];
 }
 
 
--(void)viewDidUnload {
-	
+- (void)viewDidUnload {
+
 	[self setLoadMoreButton:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super viewDidUnload];
@@ -261,146 +246,157 @@
 #pragma mark Actions
 
 
--(void)updateToolBar {
+- (void)updateToolBar {
+
 	if (self.isInBatchMode) {
 		if (self.navigationController.toolbarHidden) {
 			[self.navigationController setToolbarHidden:NO
-											   animated:YES];
+			                                   animated:YES];
 		}
 		NSArray *actions = [self actionsForSelectedDossiers];
 		// Normalement il n'y a toujours qu'une seule action principale.
-		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
-		self.secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.possibleMainActions]];
-		
+		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+		                                                                                             self.possibleMainActions]];
+		self.secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
+		                                                                                              self.possibleMainActions]];
+
 		NSMutableArray *toolbarItems = [[NSMutableArray alloc] initWithCapacity:3];
-		
+
 		[toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-																			  target:self
-																			  action:nil]];
-		
+		                                                                      target:self
+		                                                                      action:nil]];
+
 		if (self.secondaryActions.count > 0) {
 			UIButton *moreActions = [UIButton buttonWithType:UIButtonTypeCustom];
 			moreActions.backgroundColor = [UIColor darkGrayColor];
 			moreActions.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
-			
+
 			[moreActions setTitle:@"Plus"
-						 forState:UIControlStateNormal];
-			
+			             forState:UIControlStateNormal];
+
 			[moreActions setTitleColor:[UIColor whiteColor]
-							  forState:UIControlStateNormal];
-			
+			                  forState:UIControlStateNormal];
+
 			[moreActions addTarget:self
-							action:@selector(showMoreActions:)
-				  forControlEvents:UIControlEventTouchUpInside];
-			
+			                action:@selector(showMoreActions:)
+			      forControlEvents:UIControlEventTouchUpInside];
+
 			moreBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:moreActions];
 			[toolbarItems addObject:moreBarButtonItem];
 		}
-		
+
 		if (mainActions.count > 0) {
-			self.mainAction = [mainActions objectAtIndex:0];
+			self.mainAction = mainActions[0];
 			UIButton *mainAction = [UIButton buttonWithType:UIButtonTypeCustom];
 			mainAction.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
 			//mainAction.titleLabel.font = [UIFont systemFontOfSize:14.0f];
 			mainAction.backgroundColor = [UIColor darkGreenColor];
 			mainAction.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
-			[mainAction setTitle:[ADLAPIHelper actionNameForAction:self.mainAction] forState:UIControlStateNormal];
-			[mainAction setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-			[mainAction addTarget:self action:@selector(mainActionPressed) forControlEvents:UIControlEventTouchUpInside];
-			
+			[mainAction setTitle:[ADLAPIHelper actionNameForAction:self.mainAction]
+			            forState:UIControlStateNormal];
+			[mainAction setTitleColor:[UIColor whiteColor]
+			                 forState:UIControlStateNormal];
+			[mainAction addTarget:self
+			               action:@selector(mainActionPressed)
+			     forControlEvents:UIControlEventTouchUpInside];
+
 			[toolbarItems addObject:[[UIBarButtonItem alloc] initWithCustomView:mainAction]];
 		}
-		[self.navigationController.toolbar setItems:[NSArray arrayWithArray:toolbarItems] animated:YES];
+		[self.navigationController.toolbar setItems:[NSArray arrayWithArray:toolbarItems]
+		                                   animated:YES];
 	}
 	else {
-		[self.navigationController setToolbarHidden:YES animated:YES];
+		[self.navigationController setToolbarHidden:YES
+		                                   animated:YES];
 		moreBarButtonItem = nil;
 	}
 }
 
 
--(void)mainActionPressed {
+- (void)mainActionPressed {
+
 	if (self.mainAction) {
 		@try {
-			[self performSegueWithIdentifier:self.mainAction sender:self];
+			[self performSegueWithIdentifier:self.mainAction
+			                          sender:self];
 		}
 		@catch (NSException *exception) {
 			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-										message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-									   delegate:nil
-							  cancelButtonTitle:@"Fermer"
-							  otherButtonTitles: nil] show];
+			                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+			                           delegate:nil
+			                  cancelButtonTitle:@"Fermer"
+			                  otherButtonTitles:nil] show];
 		}
 		@finally {}
 	}
 }
 
 
--(void)showMoreActions:(id) sender {
-	
+- (void)showMoreActions:(id)sender {
+
 	if ([UIAlertController class]) { // iOS8
-		
+
 		// Create Popup Controller
-		
+
 		UIAlertController *actionController = [UIAlertController alertControllerWithTitle:@"Traitement par lot"
-																				  message:nil
-																		   preferredStyle:UIAlertControllerStyleActionSheet];
-		
+		                                                                          message:nil
+		                                                                   preferredStyle:UIAlertControllerStyleActionSheet];
+
 		[actionController setModalPresentationStyle:UIModalPresentationPopover];
-		
+
 		// Create Popup actions
-		
+
 		for (NSString *action in _secondaryActions) {
-			
+
 			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
 			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
-															 style:UIAlertActionStyleDefault
-														   handler:^(UIAlertAction *action) {
-															   [self clickOnSecondaryAction:action.title];
-														   }];
+			                                                 style:UIAlertActionStyleDefault
+			                                               handler:^(UIAlertAction *action) {
+				                                               [self clickOnSecondaryAction:action.title];
+			                                               }];
 			[actionController addAction:action];
 		}
-		
+
 		UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
-																style:UIAlertActionStyleDefault
-															  handler:nil];
+		                                                        style:UIAlertActionStyleDefault
+		                                                      handler:nil];
 		[actionController addAction:actionAnnuler];
-		
+
 		// Find the barButtonItem
-		
+
 		UIBarButtonItem *moreItem = nil;
-		
+
 		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
-			if ([(UIView*)sender isDescendantOfView:item.customView]) {
+			if ([(UIView *) sender isDescendantOfView:item.customView]) {
 				moreItem = item;
 				break;
 			}
 		}
-		
+
 		// Display the popup
-		
+
 		[self presentViewController:actionController
-						   animated:YES
-						 completion:nil];
-		
+		                   animated:YES
+		                 completion:nil];
+
 		UIPopoverPresentationController *popPresenter = [actionController popoverPresentationController];
-		
+
 		if (moreItem) {
 			popPresenter.sourceView = moreItem.customView;
 			popPresenter.sourceRect = moreItem.customView.bounds;
 		}
 		else {
-			popPresenter.sourceView = (UIView *)sender;
-			popPresenter.sourceRect = ((UIView *)sender).bounds;
+			popPresenter.sourceView = (UIView *) sender;
+			popPresenter.sourceRect = ((UIView *) sender).bounds;
 		}
 	}
 	else { // iOS7
-		
+
 		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Traitement par lot"
-																 delegate:self
-														cancelButtonTitle:nil
-												   destructiveButtonTitle:nil
-														otherButtonTitles:nil];
+		                                                         delegate:self
+		                                                cancelButtonTitle:nil
+		                                           destructiveButtonTitle:nil
+		                                                otherButtonTitles:nil];
 
 		for (NSString *action in self.secondaryActions) {
 			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
@@ -411,9 +407,9 @@
 		// Find the barButtonItem
 
 		UIBarButtonItem *moreItem = nil;
-		
+
 		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
-			if ([(UIView*)sender isDescendantOfView:item.customView]) {
+			if ([(UIView *) sender isDescendantOfView:item.customView]) {
 				moreItem = item;
 				break;
 			}
@@ -421,53 +417,57 @@
 
 		if (moreItem) {
 			[actionSheet showFromBarButtonItem:moreItem
-									  animated:YES];
+			                          animated:YES];
 		}
 
-		//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
+			//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
 		else {
-			[actionSheet showFromRect:((UIView*)sender).frame
-							   inView:self.view
-							 animated:YES];
+			[actionSheet showFromRect:((UIView *) sender).frame
+			                   inView:self.view
+			                 animated:YES];
 		}
 	}
 }
 
 
--(IBAction)loadNextResultsPage:(id)sender {
+- (IBAction)loadNextResultsPage:(id)sender {
+
 	_currentPage += 1;
 	[self loadDossiersWithPage:_currentPage];
 }
 
 
--(NSArray*)actionsForSelectedDossiers {
-	NSMutableArray* actions;
-	
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-		for (ADLResponseDossier* dossier in _selectedDossiersArray) {
-			NSArray* dossierActions = [ADLAPIHelper actionsForADLResponseDossier:dossier];
-			
+- (NSArray *)actionsForSelectedDossiers {
+
+	NSMutableArray *actions;
+
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		for (ADLResponseDossier *dossier in _selectedDossiersArray) {
+			NSArray *dossierActions = [ADLAPIHelper actionsForADLResponseDossier:dossier];
+
 			if (!actions) { // the first dossier only
 				actions = [NSMutableArray arrayWithArray:dossierActions];
 			}
 			else {
-				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+				                                                               dossierActions]];
 			}
 		}
 	}
 	else {
-		for (NSDictionary* dossier in self.selectedDossiersArray) {
-			NSArray* dossierActions = [ADLAPIHelper actionsForDossier:dossier];
-			
+		for (NSDictionary *dossier in self.selectedDossiersArray) {
+			NSArray *dossierActions = [ADLAPIHelper actionsForDossier:dossier];
+
 			if (!actions) { // the first dossier only
 				actions = [NSMutableArray arrayWithArray:dossierActions];
 			}
 			else {
-				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
+				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+				                                                               dossierActions]];
 			}
 		}
 	}
-	
+
 	return actions;
 }
 
@@ -475,9 +475,9 @@
 #pragma mark - UITableViewDatasource
 
 
--(NSInteger)tableView:(UITableView *)tableView
-numberOfRowsInSection:(NSInteger)section {
-	
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section {
+
 	//if (tableView == self.searchDisplayController.searchResultsTableView) {
 	return [_filteredDossiersArray count];
 	//} else {
@@ -486,14 +486,14 @@ numberOfRowsInSection:(NSInteger)section {
 }
 
 
--(UITableViewCell*)tableView:(UITableView *)tableView
-	   cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
 	static NSString *CellIdentifier = @"dossierCell";
-	
+
 	RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	cell.delegate = self;
-	
+
 	NSString *dossierTitre;
 	NSString *dossierType;
 	NSString *dossierSousType;
@@ -502,9 +502,9 @@ numberOfRowsInSection:(NSInteger)section {
 	bool dossierPossibleSignature;
 	bool dossierPossibleArchive;
 	bool dossierPossibleViser;
-	
+
 	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
-		ADLResponseDossiers *dossier = [_filteredDossiersArray objectAtIndex:[indexPath row]];
+		ADLResponseDossiers *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
 		dossierTitre = dossier.title;
 		dossierType = dossier.type;
 		dossierSousType = dossier.sousType;
@@ -512,75 +512,78 @@ numberOfRowsInSection:(NSInteger)section {
 		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
 		dossierPossibleArchive = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
 		dossierPossibleViser = dossier.actions && [dossier.actions containsObject:@"VISA"];
-		
+
 		if ([dossier.dateLimite longLongValue] != 0)
-			dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.dateLimite.longLongValue/1000)];
+			dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.dateLimite.longLongValue / 1000)];
 		else
 			dossierDate = nil;
 	}
 	else {
-		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
-		dossierTitre = [dossier objectForKey:@"titre"];
-		dossierType = [dossier objectForKey:@"type"];
-		dossierSousType = [dossier objectForKey:@"sousType"];
-		dossierActionDemandee = [dossier objectForKey:@"actionDemandee"];
-		dossierPossibleSignature = [[[dossier objectForKey:@"actions"] objectForKey:@"sign"] boolValue];
-		dossierPossibleArchive = [[[dossier objectForKey:@"actions"] objectForKey:@"archive"] boolValue];
-		dossierPossibleViser = [[[dossier objectForKey:@"actions"] objectForKey:@"visa"] boolValue];
-		
+		NSDictionary *dossier = self.filteredDossiersArray[(NSUInteger) indexPath.row];
+		dossierTitre = dossier[@"titre"];
+		dossierType = dossier[@"type"];
+		dossierSousType = dossier[@"sousType"];
+		dossierActionDemandee = dossier[@"actionDemandee"];
+		dossierPossibleSignature = [dossier[@"actions"][@"sign"] boolValue];
+		dossierPossibleArchive = [dossier[@"actions"][@"archive"] boolValue];
+		dossierPossibleViser = [dossier[@"actions"][@"visa"] boolValue];
+
 		//Adrien TODO : check v2
-		if(dossierPossibleViser)
+		if (dossierPossibleViser)
 			NSLog(@"Adrien visa V2 :%@", dossier);
-		
-		NSString *dateLimite = [dossier objectForKey:@"dateLimite"];
-		
+
+		NSString *dateLimite = dossier[@"dateLimite"];
+
 		if (dateLimite != nil) {
-			ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
+			ISO8601DateFormatter *formatter = [ISO8601DateFormatter new];
 			//[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
 			dossierDate = [formatter dateFromString:dateLimite];
 		}
 	}
-	
+
 	// Adapter
-	
+
 	cell.dossierTitleLabel.text = dossierTitre;
-	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", dossierType, dossierSousType];
-	
+	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@",
+	                                                     dossierType,
+	                                                     dossierSousType];
+
 	if (dossierPossibleSignature || dossierPossibleArchive || dossierPossibleViser) {
 		NSString *actionName = [ADLAPIHelper actionNameForAction:dossierActionDemandee];
 		cell.validateButton.hidden = NO;
-		[cell.validateButton setTitle:actionName forState:UIControlStateNormal];
+		[cell.validateButton setTitle:actionName
+		                     forState:UIControlStateNormal];
 	}
 	else {
 		cell.validateButton.hidden = YES;
 	}
-	
-	
+
+
 	if (dossierDate != nil) {
-		
-		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+
+		NSDateFormatter *outputFormatter = [NSDateFormatter new];
 		[outputFormatter setDateStyle:NSDateFormatterShortStyle];
 		[outputFormatter setTimeStyle:NSDateFormatterNoStyle];
 		//[outputFormatter setDateFormat:@"dd MMM"];
-		
+
 		NSString *fdate = [outputFormatter stringFromDate:dossierDate];
 		cell.retardBadge.badgeText = fdate;
-		[cell.retardBadge autoBadgeSizeWithString: fdate];
+		[cell.retardBadge autoBadgeSizeWithString:fdate];
 		[cell.retardBadge setHidden:NO];
 	}
 	else {
 		[cell.retardBadge setHidden:YES];
 	}
-	
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-		ADLResponseDossier *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+		ADLResponseDossier *dossier = self.filteredDossiersArray[(NSUInteger) indexPath.row];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
 	else {
-		NSDictionary *dossier = [self.filteredDossiersArray objectAtIndex:[indexPath row]];
+		NSDictionary *dossier = self.filteredDossiersArray[(NSUInteger) indexPath.row];
 		cell.switchButton.on = [self.selectedDossiersArray containsObject:dossier];
 	}
-	
+
 	return cell;
 }
 
@@ -588,7 +591,8 @@ numberOfRowsInSection:(NSInteger)section {
 #pragma mark - Wall delegate
 
 
--(void)didEndWithRequestAnswer:(NSDictionary *)answer {
+- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
+
 	NSArray *dossiers = API_GETDOSSIERHEADERS_GET_DOSSIERS(answer);
 	[self.refreshControl endRefreshing];
 	HIDE_HUD
@@ -596,53 +600,58 @@ numberOfRowsInSection:(NSInteger)section {
 }
 
 
--(void)didEndWithUnAuthorizedAccess {
+- (void)didEndWithUnAuthorizedAccess {
+
 	[self.refreshControl endRefreshing];
 	HIDE_HUD
 }
 
 
--(void)didEndWithUnReachableNetwork {
+- (void)didEndWithUnReachableNetwork {
+
 	[self.refreshControl endRefreshing];
 	HIDE_HUD
 }
 
 
--(void)filterDossiersForSearchText:(NSString*) searchText {
-	
+- (void)filterDossiersForSearchText:(NSString *)searchText {
+
 	if (searchText && (searchText.length > 0)) {
-		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS[cd] %@)", @"title", searchText]; // TODO Adrien : test V2
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K CONTAINS[cd] %@)",
+		                                                          @"title",
+		                                                          searchText]; // TODO Adrien : test V2
 		NSArray *array = [self.dossiersArray filteredArrayUsingPredicate:predicate];
-		self.filteredDossiersArray = array;	}
+		self.filteredDossiersArray = array;
+	}
 	else {
 		self.filteredDossiersArray = [NSArray arrayWithArray:self.dossiersArray];
 	}
-	
+
 }
 
 
--(void)getDossierDidEndWithSuccess:(NSArray*)dossiers {
-	
+- (void)getDossierDidEndWithSuccess:(NSArray *)dossiers {
+
 	if (_currentPage > 0)
 		[self.dossiersArray removeLastObject];
 	else
 		[self.dossiersArray removeAllObjects];
-	
+
 	// Switch v2/v3
-	
+
 	bool isLoaded = (dossiers.count) > 0;
 	bool isVersion2 = isLoaded && [dossiers[0] isKindOfClass:[NSDictionary class]];
-	
+
 	/* manualy filters the locked files out */
 	if ([dossiers count] > 0) {
 		NSMutableArray *lockedDossiers = [NSMutableArray arrayWithCapacity:[dossiers count]];
-		
+
 		if (isVersion2) {
 			for (NSDictionary *dossier in dossiers) {
-				
-				NSNumber *locked = [dossier objectForKey:@"locked"];
-				
-				if (locked && [locked isEqualToNumber:[NSNumber numberWithBool:YES]])
+
+				NSNumber *locked = dossier[@"locked"];
+
+				if (locked && [locked isEqualToNumber:@YES])
 					[lockedDossiers addObject:dossier];
 			}
 		}
@@ -651,20 +660,20 @@ numberOfRowsInSection:(NSInteger)section {
 				if (dossier && dossier.locked)
 					[lockedDossiers addObject:dossier];
 		}
-		
+
 		if ([lockedDossiers count] > 0) {
 			dossiers = [NSMutableArray arrayWithArray:dossiers];
-			[(NSMutableArray*)dossiers removeObjectsInArray:lockedDossiers];
+			[(NSMutableArray *) dossiers removeObjectsInArray:lockedDossiers];
 		}
 	}
-	
+
 	[_dossiersArray addObjectsFromArray:dossiers];
 	_loadMoreButton.hidden = (dossiers.count < 15);
 	_filteredDossiersArray = [NSArray arrayWithArray:_dossiersArray];
 	_selectedDossiersArray = [NSMutableArray arrayWithCapacity:_dossiersArray.count];
-	
-	[((UITableView*)[self view]) reloadData];
-	
+
+	[((UITableView *) [self view]) reloadData];
+
 	HIDE_HUD
 }
 
@@ -672,9 +681,9 @@ numberOfRowsInSection:(NSInteger)section {
 #pragma mark - UISearchBarDelegate protocol implementation
 
 
--(void)searchBar:(UISearchBar *)searchBar
-   textDidChange:(NSString *)searchText {
-	
+- (void)searchBar:(UISearchBar *)searchBar
+    textDidChange:(NSString *)searchText {
+
 	[self filterDossiersForSearchText:searchText];
 	[self.tableView reloadData];
 }
@@ -683,66 +692,69 @@ numberOfRowsInSection:(NSInteger)section {
 #pragma mark - FilterDelegate protocol implementation
 
 
--(void)shouldReload:(NSDictionary *)filter {
-	[ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary: filter];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged object:nil];
+- (void)shouldReload:(NSDictionary *)filter {
+
+	[ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary:filter];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged
+	                                                    object:nil];
 	[self refresh];
 }
 
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue
-				sender:(id)sender {
-	
+- (void)prepareForSegue:(UIStoryboardSegue *)segue
+                 sender:(id)sender {
+
 	if ([segue.identifier isEqualToString:@"filterSegue"]) {
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
 	}
 	else {
-		NSMutableArray *selectedArray = [[NSMutableArray alloc] init];
-		
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-			for (ADLResponseDossiers* responseDossiers in _selectedDossiersArray)
+		NSMutableArray *selectedArray = [NSMutableArray new];
+
+		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+			for (ADLResponseDossiers *responseDossiers in _selectedDossiersArray)
 				[selectedArray addObject:responseDossiers.identifier];
 		}
 		else {
 			// Adrien TODO : test
 			selectedArray = [_selectedDossiersArray valueForKey:@"dossierRef"];
 		}
-		
-		((RGWorkflowDialogViewController*) segue.destinationViewController).dossiersRef = selectedArray; // Adrien [_selectedDossiersArray valueForKey:@"dossierRef"];
-		((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;
+
+		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiersRef = selectedArray; // Adrien [_selectedDossiersArray valueForKey:@"dossierRef"];
+		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
 	}
 }
 
 
 #pragma mark UIActionSheetDelegate protocol implementation
 
+
 /**
  * iOS7 response of ActionSheet events.
  * The UIActionSheetDelegate isn't used anymore in iOS8.
  */
--(void)actionSheet:(UIActionSheet *)actionSheet
+- (void) actionSheet:(UIActionSheet *)actionSheet
 clickedButtonAtIndex:(NSInteger)buttonIndex {
-	
+
 	if (buttonIndex < self.secondaryActions.count) {
-		NSString *action = self.secondaryActions[buttonIndex];
+		NSString *action = self.secondaryActions[(NSUInteger) buttonIndex];
 		[self clickOnSecondaryAction:action];
 	}
 }
 
 
--(void)clickOnSecondaryAction:(NSString *)actionName {
-	
+- (void)clickOnSecondaryAction:(NSString *)actionName {
+
 	@try {
 		[self performSegueWithIdentifier:actionName
-								  sender:self];
+		                          sender:self];
 	}
 	@catch (NSException *exception) {
 		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-									message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-								   delegate:nil
-						  cancelButtonTitle:@"Fermer"
-						  otherButtonTitles:nil]
-		 show];
+		                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+		                           delegate:nil
+		                  cancelButtonTitle:@"Fermer"
+		                  otherButtonTitles:nil]
+				show];
 	}
 }
 
@@ -750,18 +762,19 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 #pragma mark RGFileCellDelegate protocol implementation
 
 
--(void)cell:(RGFileCell *)cell didSelectAtIndexPath:(NSIndexPath *)indexPath {
-	
+- (void)        cell:(RGFileCell *)cell
+didSelectAtIndexPath:(NSIndexPath *)indexPath {
+
 	// Cancel event if reselection of a cell
-	
+
 	BOOL hasSomeSelected = (cell.tableView.indexPathForSelectedRow != nil);
 	BOOL areSameCell = (cell.tableView.indexPathForSelectedRow.row == indexPath.row);
-	
+
 	if (hasSomeSelected && areSameCell)
 		return;
-	
+
 	// Cancel event if no internet
-	
+
 //	if (![DeviceUtils isConnectedToInternet]) {
 //
 //		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
@@ -770,123 +783,139 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 //		[cell flickerSelection];
 //		return;
 //	}
-	
+
 	// v2/v3 compatibility
-	
+
 	bool isLoaded = (self.filteredDossiersArray.count > 0) || (self.dossiersArray.count > 0);
 	bool isFilteredVersion2 = isLoaded && [self.filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
 	bool isDossierVersion2 = isLoaded && [self.dossiersArray[0] isKindOfClass:[NSDictionary class]];
 	bool isVersion2 = isLoaded && (isFilteredVersion2 && isDossierVersion2);
-	
+
 	NSString *dossierRef;
-	
+
 	if (isLoaded && isVersion2) {
-		if(cell.tableView == self.searchDisplayController.searchResultsTableView)
-			dossierRef = [[self.filteredDossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+		if (cell.tableView == self.searchDisplayController.searchResultsTableView)
+			dossierRef = self.filteredDossiersArray[(NSUInteger) indexPath.row][@"dossierRef"];
 		else
-			dossierRef = [[self.dossiersArray objectAtIndex:indexPath.row] objectForKey:@"dossierRef"];
+			dossierRef = self.dossiersArray[(NSUInteger) indexPath.row][@"dossierRef"];
 	}
 	else {
-		if(cell.tableView == self.searchDisplayController.searchResultsTableView)
-			dossierRef = ((ADLResponseDossiers *)[self.filteredDossiersArray objectAtIndex:indexPath.row]).identifier;
+		if (cell.tableView == self.searchDisplayController.searchResultsTableView)
+			dossierRef = ((ADLResponseDossiers *) self.filteredDossiersArray[(NSUInteger) indexPath.row]).identifier;
 		else
-			dossierRef = ((ADLResponseDossiers *) [self.dossiersArray objectAtIndex:indexPath.row]).identifier;
+			dossierRef = ((ADLResponseDossiers *) self.dossiersArray[(NSUInteger) indexPath.row]).identifier;
 	}
-	
+
 	//
-	
-	[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:NO];
-	[cell.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	[cell setSelected:YES animated:NO];
-	
+
+	[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow]
+	                              animated:NO];
+
+	[cell.tableView selectRowAtIndexPath:indexPath
+	                            animated:NO
+	                      scrollPosition:UITableViewScrollPositionNone];
+
+	[cell setSelected:YES
+	         animated:NO];
+
 	[[ADLSingletonState sharedSingletonState] setDossierCourant:dossierRef];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected object:dossierRef];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected
+	                                                    object:dossierRef];
 }
 
 
--(void)cell:(RGFileCell *)cell didCheckAtIndexPath:(NSIndexPath *)indexPath {
+- (void)       cell:(RGFileCell *)cell
+didCheckAtIndexPath:(NSIndexPath *)indexPath {
+
 	[self.swipedCell hideMenuOptions];
 	//[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:YES];
-	NSDictionary * dossier;
+	NSDictionary *dossier;
 	//if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
-	dossier = [self.filteredDossiersArray objectAtIndex:indexPath.row];
+	dossier = self.filteredDossiersArray[(NSUInteger) indexPath.row];
 	//}
 	//else {
 	//    dossier = [self.dossiersArray objectAtIndex:indexPath.row];
 	//}
-	
-	if ([self.selectedDossiersArray containsObject:dossier])
-	{
+
+	if ([self.selectedDossiersArray containsObject:dossier]) {
 		[self.selectedDossiersArray removeObject:dossier];
 		if (self.selectedDossiersArray.count == 0) {
 			[self setInBatchMode:NO];
 		}
 	}
-	else
-	{
+	else {
 		[self.selectedDossiersArray addObject:dossier];
 		if (self.selectedDossiersArray.count == 1) {
 			[self setInBatchMode:YES];
 		}
 	}
 	[self updateToolBar];
-	
+
 }
 
 
--(void)cell:(RGFileCell*)cell didTouchSecondaryButtonAtIndexPath:(NSIndexPath*) indexPath {
-	
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-		ADLResponseDossier *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
-		
-		self.selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+- (void)                      cell:(RGFileCell *)cell
+didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
+
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		ADLResponseDossier *dossier = self.dossiersArray[indexPath.row];
+		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
+		                                                                                                                                      _possibleMainActions]];
+
+		self.selectedDossiersArray = @[dossier].mutableCopy;
 		[self showMoreActions:cell];
 	}
 	else {
-		NSDictionary *dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
-		_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+		NSDictionary *dossier = self.dossiersArray[indexPath.row];
+		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
+		                                                                                                                           _possibleMainActions]];
+		_selectedDossiersArray = [@[dossier] mutableCopy];
 		[self showMoreActions:cell];
 	}
 }
 
 
--(void)cell:(RGFileCell*)cell didTouchMainButtonAtIndexPath:(NSIndexPath*) indexPath {
-	
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) {
-		ADLResponseDossier *dossier = [_dossiersArray objectAtIndex:indexPath.row];
-		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", _possibleMainActions]];
+- (void)                 cell:(RGFileCell *)cell
+didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
+
+	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		ADLResponseDossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
+		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+		                                                                                                                                         _possibleMainActions]];
 		if (mainActions.count > 0) {
-			_mainAction = [mainActions objectAtIndex:0];
-			_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+			_mainAction = mainActions[0];
+			_selectedDossiersArray = [@[dossier] mutableCopy];
 			[self mainActionPressed];
 		}
 	}
 	else {
-		NSDictionary *dossier = [_dossiersArray objectAtIndex:indexPath.row];
-		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", self.possibleMainActions]];
+		NSDictionary *dossier = _dossiersArray[(NSUInteger) indexPath.row];
+		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+		                                                                                                                              self.possibleMainActions]];
 		if (mainActions.count > 0) {
-			_mainAction = [mainActions objectAtIndex:0];
-			_selectedDossiersArray = [NSMutableArray arrayWithObject:dossier];
+			_mainAction = mainActions[0];
+			_selectedDossiersArray = @[dossier].mutableCopy;
 			[self mainActionPressed];
 		}
 	}
 }
 
 
--(BOOL)canSelectCell:(RGFileCell *)cell {
+- (BOOL)canSelectCell:(RGFileCell *)cell {
+
 	return YES;
 }
 
 
--(BOOL)canSwipeCell:(RGFileCell *)cell {
+- (BOOL)canSwipeCell:(RGFileCell *)cell {
+
 	return (!self.isInBatchMode && (_swipedCell == cell));
 }
 
 
--(void)willSwipeCell:(RGFileCell *)cell {
+- (void)willSwipeCell:(RGFileCell *)cell {
+
 	if (cell != self.swipedCell) {
 		[self.swipedCell hideMenuOptions];
 	}
@@ -894,7 +923,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 }
 
 
--(void)willSelectCell:(RGFileCell *)cell {
+- (void)willSelectCell:(RGFileCell *)cell {
+
 	if (self.swipedCell) {
 		[self.swipedCell hideMenuOptions];
 		self.swipedCell = nil;
@@ -905,7 +935,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 #pragma mark - LGViewHUDDelegate protocol implementation
 
 
--(void)shallDismissHUD:(LGViewHUD*)hud {
+- (void)shallDismissHUD:(LGViewHUD *)hud {
+
 	HIDE_HUD
 }
 

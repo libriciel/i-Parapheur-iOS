@@ -22,7 +22,7 @@ static ADLCredentialVault *sharedCredentialVault = nil;
     static ADLCredentialVault *sharedCredentialVault = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedCredentialVault = [[self alloc] init];
+        sharedCredentialVault = [self new];
     });
     return sharedCredentialVault;
 }
@@ -64,20 +64,21 @@ static ADLCredentialVault *sharedCredentialVault = nil;
                    withTicket:(NSString*)ticket
 {
     if (vault == nil) {
-        vault = [[NSMutableDictionary alloc] init];
+        vault = [NSMutableDictionary new];
     }
     
     NSString *key = [self buildKeyWithHost:host andLogin:login];    
-    [vault setObject:ticket forKey:key];
+    vault[key] = ticket;
     
 }
 
 - (NSString*) getTicketForHost:(NSString*)host
                    andUsername:(NSString*)username
 {
-    NSString* key = [self buildKeyWithHost:host andLogin:username];
+    NSString* key = [self buildKeyWithHost:host
+                                  andLogin:username];
     
-    return [vault objectForKey:key];
+    return vault[key];
 }
 
 @end

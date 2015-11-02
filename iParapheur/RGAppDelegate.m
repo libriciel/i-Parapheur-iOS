@@ -199,7 +199,7 @@
 	
 	NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
 	if (coordinator != nil) {
-		_managedObjectContext = [[NSManagedObjectContext alloc] init];
+		_managedObjectContext = [NSManagedObjectContext new];
 		[_managedObjectContext setPersistentStoreCoordinator:coordinator];
 	}
 	return _managedObjectContext;
@@ -327,7 +327,7 @@
 -(ADLKeyStore*)keyStore {
 	
 	if (_keyStore == nil) {
-		_keyStore = [[ADLKeyStore alloc] init];
+		_keyStore = [ADLKeyStore new];
 		_keyStore.managedObjectContext = self.managedObjectContext;
 		[_keyStore checkUpdates];
 	}

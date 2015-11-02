@@ -44,14 +44,14 @@
 	[super viewWillAppear:animated];
 	
 	if (_actions == nil) {
-		_actions = [[NSMutableArray alloc] init];
+		_actions = [NSMutableArray new];
 	}
 	/*else {
 	 [_actions removeAllObjects];
 	 }*/
 	
 	if (_labels == nil) {
-		_labels = [[NSMutableArray alloc] init];
+		_labels = [NSMutableArray new];
 	}
 	else {
 		[_labels removeAllObjects];

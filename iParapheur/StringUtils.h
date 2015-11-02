@@ -5,7 +5,7 @@
 
 @interface StringUtils : NSObject
 
-+ (NSDictionary *) nilifyValuesOfDictionary:(NSDictionary *)dictionary;
++ (NSDictionary *)nilifyDictionaryValues:(NSDictionary *)dictionary;
 
 + (BOOL)doesString:(NSString*)string
  containsSubString:(NSString*)substring;

@@ -64,7 +64,7 @@ static ADLSingletonState *sharedSingletonState = nil;
     static ADLSingletonState *sharedSingletonState = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedSingletonState = [[self alloc] init];
+        sharedSingletonState = [self new];
     });
     return sharedSingletonState;
 }

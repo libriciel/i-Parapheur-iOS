@@ -74,7 +74,7 @@
 	[self updateVersionNumberInSettings];
 	
 	_firstLaunch = TRUE;
-	_bureauxArray = [[NSMutableArray alloc] init];
+	_bureauxArray = [NSMutableArray new];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(onLoginPopupDismissed:)
@@ -192,13 +192,13 @@
 	@try {
 		// Check UTC time, and warns for possible shutdowns
 		
-		NSDate *currentDate = [[NSDate alloc] init];
+		NSDate *currentDate = [NSDate new];
 		
-		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+		NSDateFormatter *dateFormatter = [NSDateFormatter new];
 		dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Europe/London"];
 		[dateFormatter setDateFormat:@"H"];
 		
-		NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+		NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
 		NSNumber *hour = [numberFormatter numberFromString:[dateFormatter stringFromDate:currentDate]];
 		
@@ -212,7 +212,7 @@
 
 
 - (void)updateVersionNumberInSettings {
-	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	NSString *version = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"version_preference"];
 }
 

@@ -94,6 +94,7 @@
 
 
 - (void)cancelAllOperations {
+
 	[_sessionManager.operationQueue cancelAllOperations];
 }
 
@@ -213,17 +214,18 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	NSMutableDictionary *queryParams = [[NSMutableDictionary alloc] init];
-	[queryParams setValue:@true forKey:@"asc"];
-	[queryParams setValue:bureau forKey:@"bureau"];
-	[queryParams setValue:@(page) forKey:@"page"];
-	[queryParams setValue:@(size) forKey:@"pageSize"];
-	[queryParams setValue:@0 forKey:@"pendingFile"];
-	[queryParams setValue:@(page * (size - 1)) forKey:@"skipped"];
-	[queryParams setValue:@"cm:create" forKey:@"sort"];
+	NSMutableDictionary *queryParams = [NSMutableDictionary new];
+	queryParams[@"asc"] = @true;
+	queryParams[@"bureau"] = bureau;
+	queryParams[@"page"] = @(page);
+	queryParams[@"pageSize"] = @(size);
+	queryParams[@"pendingFile"] = @0;
+	queryParams[@"skipped"] = @(page * (size - 1));
+	queryParams[@"sort"] = @"cm:create";
 
 	if (filterJson != nil)
-		[queryParams setValue:filterJson forKey:@"filter"];
+		[queryParams setValue:filterJson
+		               forKey:@"filter"];
 
 	//@"corbeilleName" : @"",
 	//@"metas" : @"",
@@ -355,10 +357,10 @@
 
 		             @try {
 			             NSArray *responseArray = responseObject;
-			             NSMutableArray *result = [[NSMutableArray alloc] init];
+			             NSMutableArray *result = [NSMutableArray new];
 
 			             for (id element in responseArray) {
-				             ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+				             ADLResponseAnnotation *response = [ADLResponseAnnotation new];
 				             response.data = element;
 				             [result addObject:response];
 			             }

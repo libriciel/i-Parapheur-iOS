@@ -13,10 +13,10 @@
 
 - (void)setEtapes:(NSArray *)etapes {
 
-	NSMutableArray *etapesMutableArray = [[NSMutableArray alloc] init];
+	NSMutableArray *etapesMutableArray = [NSMutableArray new];
 
 	for (NSDictionary *etape in etapes)
-		[etapesMutableArray addObject:[StringUtils nilifyValuesOfDictionary:etape]];
+		[etapesMutableArray addObject:[StringUtils nilifyDictionaryValues:etape]];
 
 	_etapes = etapesMutableArray;
 }

@@ -70,7 +70,7 @@
 
 - (void)awakeFromNib {
 
-	documents = [[NSArray alloc] init];
+	documents = [NSArray new];
 	[super awakeFromNib];
 }
 
@@ -83,7 +83,7 @@
 	_restClient = [ADLRestClient sharedManager];
 
 	self.navigationItem.rightBarButtonItem = nil;
-	_objects = [[NSMutableArray alloc] init];
+	_objects = [NSMutableArray new];
 
 	[self hidesEveryThing];
 	self.navigationBar.topItem.title = _dossier[@"titre"];
@@ -97,9 +97,8 @@
 		                success:^(ADLResponseCircuit *responseCircuit) {
 		                    __strong typeof(weakSelf) strongSelf = weakSelf;
 		                    if (strongSelf) {
-			                    NSMutableArray *responseArray = [[NSMutableArray alloc] init];
+			                    NSMutableArray *responseArray = [NSMutableArray new];
 			                    [responseArray addObjectsFromArray:responseCircuit.etapes];
-
 			                    [strongSelf refreshCircuits:responseArray];
 		                    }
 		                }
@@ -245,7 +244,7 @@
 	// TODO Adrien : check
 
 	if (cell == nil) {
-		cell = [[ADLCircuitCell alloc] init];
+		cell = [ADLCircuitCell new];
 	}
 
 	NSDictionary *object = _objects[(NSUInteger) indexPath.row];
@@ -261,7 +260,7 @@
 		cell.annotation.text = @"";
 	}
 
-	ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
+	ISO8601DateFormatter *formatter = [ISO8601DateFormatter new];
 
 	if (object[@"dateValidation"]) {
 
@@ -279,15 +278,15 @@
 				validationDate = [formatter dateFromString:validationDateIso];
 		}
 
-		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+		NSDateFormatter *outputFormatter = [NSDateFormatter new];
 		[outputFormatter setDateFormat:@"'le' dd/MM/yyyy 'à' HH:mm"];
 
 		NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
 
-		[[cell validationDate] setText:validationDateStr];
+		cell.validationDate.text = validationDateStr;
 	}
 	else {
-		[[cell validationDate] setText:nil];
+		cell.validationDate.text = nil;
 	}
 
 

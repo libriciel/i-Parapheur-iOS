@@ -5,9 +5,9 @@
 @implementation StringUtils
 
 
-+ (NSDictionary *) nilifyValuesOfDictionary:(NSDictionary *)dictionary {
++ (NSDictionary *)nilifyDictionaryValues:(NSDictionary *)dictionary {
 	
-	NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *mutableDictionary = [NSMutableDictionary new];
 	
 	for (NSString* key in dictionary) {
 		
@@ -97,7 +97,7 @@
 + (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer {
 	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
-			return [[NSDictionary alloc] init];
+			return [NSDictionary new];
 		else
 			return inObj;
 	}];
@@ -107,7 +107,7 @@
 + (MTLValueTransformer *)getNullToEmptyArrayValueTransformer {
 	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
-			return [[NSArray alloc] init];
+			return [NSArray new];
 		else
 			return inObj;
 	}];

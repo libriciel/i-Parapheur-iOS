@@ -14,7 +14,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 	static ADLRestClient *sharedMyManager = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		sharedMyManager = [[self alloc] init];
+		sharedMyManager = [self new];
 	});
 	return sharedMyManager;
 }
@@ -45,9 +45,9 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 	_restClientApi = nil;
 	
 	if ([PARAPHEUR_API_VERSION intValue] == 4)
-		_restClientApi = [[ADLRestClientApi4 alloc] init];
+		_restClientApi = [ADLRestClientApi4 new];
 	else
-		_restClientApi = [[ADLRestClientApi3 alloc] init];
+		_restClientApi = [ADLRestClientApi3 new];
 }
 
 

@@ -268,9 +268,9 @@
 	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
 		// get selected dossiers for some sign info action :)
 
-		NSMutableArray *hashes = [[NSMutableArray alloc] init];
-		NSMutableArray *dossiers = [[NSMutableArray alloc] init];
-		NSMutableArray *signatures = [[NSMutableArray alloc] init];
+		NSMutableArray *hashes = [NSMutableArray new];
+		NSMutableArray *dossiers = [NSMutableArray new];
+		NSMutableArray *signatures = [NSMutableArray new];
 
 		for (NSString *dossier in self.dossiersRef) {
 			NSDictionary *signInfo = answer[dossier];
@@ -509,14 +509,11 @@
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
 
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] init];
-	}
+	if (cell == nil)
+		cell = [UITableViewCell new];
 
 	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
-
-	[[cell textLabel] setText:pkey.commonName];
-
+	[cell textLabel].text = pkey.commonName;
 
 	return cell;
 }
