@@ -20,7 +20,10 @@
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
 		64F342FE62440F25CFD70911 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64F34704F4B7EF8FA7BC446C /* Settings.storyboard */; };
+		64F3457C61AE04BE1C89AF71 /* ic_settings_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 64F343050CCB821BB3189D10 /* ic_settings_white@2x.png */; };
 		64F345A88449009EF90DDF77 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64F346CB9C53743496551C5C /* SettingsTableViewController.m */; };
+		64F34C5B89BC50CE10115679 /* ic_settings_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 64F34F66E1A8AAD51F730B7C /* ic_settings_white.png */; };
+		64F34DB4177E015C2383EDE8 /* ic_settings_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 64F3435CB4F5B0CA08ABD3CA /* ic_settings_white@3x.png */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
 		9514BFE7187AA73800118B9C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDF187AA73800118B9C /* Icon.png */; };
@@ -212,8 +215,11 @@
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
 		3CAFD8DE0EAFEB60200C1C51 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E4070D769C2E4D1451F17C6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		64F343050CCB821BB3189D10 /* ic_settings_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_settings_white@2x.png"; sourceTree = "<group>"; };
+		64F3435CB4F5B0CA08ABD3CA /* ic_settings_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_settings_white@3x.png"; sourceTree = "<group>"; };
 		64F346CB9C53743496551C5C /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		64F34704F4B7EF8FA7BC446C /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		64F34F66E1A8AAD51F730B7C /* ic_settings_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_settings_white.png; sourceTree = "<group>"; };
 		64F34FBBC84FAFC339855437 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		9514BFDE187AA73800118B9C /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
@@ -550,6 +556,9 @@
 				9514BFE0187AA73800118B9C /* Icon@2x.png */,
 				9514BFE1187AA73800118B9C /* iTunesArtwork.png */,
 				9514BFE2187AA73800118B9C /* iTunesArtwork@2x.png */,
+				64F34F66E1A8AAD51F730B7C /* ic_settings_white.png */,
+				64F3435CB4F5B0CA08ABD3CA /* ic_settings_white@3x.png */,
+				64F343050CCB821BB3189D10 /* ic_settings_white@2x.png */,
 			);
 			name = "app-icons";
 			sourceTree = "<group>";
@@ -1165,6 +1174,9 @@
 				C58CB29E1AB71A2900C79A97 /* iw-visa.png in Resources */,
 				C58CB27E1AB7198B00C79A97 /* ip-tdt.png in Resources */,
 				64F342FE62440F25CFD70911 /* Settings.storyboard in Resources */,
+				64F34C5B89BC50CE10115679 /* ic_settings_white.png in Resources */,
+				64F34DB4177E015C2383EDE8 /* ic_settings_white@3x.png in Resources */,
+				64F3457C61AE04BE1C89AF71 /* ic_settings_white@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
