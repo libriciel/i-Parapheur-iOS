@@ -65,6 +65,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backButton" destination="has-HC-vje" id="n2X-TW-fJR"/>
+                        <outlet property="mainTableView" destination="amH-Zc-gPz" id="8sZ-0H-LDa"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ir9-dX-tO4" userLabel="First Responder" sceneMemberID="firstResponder"/>

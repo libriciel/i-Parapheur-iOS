@@ -66,8 +66,6 @@ int numberOfAnnexes;
 	self = [super initWithNibName:nibNameOrNil
 	                       bundle:nibBundleOrNil];
 
-
-
 	return self;
 }
 
