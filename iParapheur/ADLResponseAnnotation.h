@@ -5,7 +5,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Mantle.h"
+#import "MTLModel.h"
+#import "MTLJSONAdapter.h"
+
+
+static NSString *const kRAData = @"data";
+static NSString *const kRAIdDossier = @"idDossier";
+static NSString *const kRAIdAnnotation = @"idAnnotation";
+
 
 @interface ADLResponseAnnotation : MTLModel<MTLJSONSerializing>
 

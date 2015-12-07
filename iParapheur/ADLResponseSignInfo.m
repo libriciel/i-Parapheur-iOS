@@ -1,14 +1,22 @@
-
 #import "ADLResponseSignInfo.h"
 #import "StringUtils.h"
 
+
 @implementation ADLResponseSignInfo
 
-+ (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{};
+
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+	return @{kSISignatureInformations : kSISignatureInformations};
 }
 
 
-+ (NSValueTransformer *)signatureInformationsJSONTransformer { return [StringUtils getNullToEmptyDictionaryValueTransformer]; }
++ (NSValueTransformer *)JSONTransformerForKey:(NSString *)key {
+
+	if ([key isEqualToString:kSISignatureInformations])
+		return [StringUtils getNullToEmptyDictionaryValueTransformer];
+
+	return nil;
+}
 
 @end

@@ -158,7 +158,9 @@
 						}
 						else {
 							[request setHTTPMethod:@"POST"];
-							NSError *error = [NSError new];
+							NSError *error = [NSError errorWithDomain:NSURLErrorDomain
+							                                     code:nil
+							                                 userInfo:nil];
 							[request setHTTPBody:[NSJSONSerialization dataWithJSONObject:_args
 																				 options:0
 																				   error:&error]];
@@ -328,7 +330,9 @@
 	else {
 		// trigger api request delegate.
 		//[self parseResponse:_receivedData andReq:_request];
-		NSError *error = [NSError new];
+		NSError *error = [NSError errorWithDomain:NSArgumentDomain
+		                                     code:nil
+		                                 userInfo:nil];
 		NSMutableDictionary* responseObject = [NSJSONSerialization JSONObjectWithData:_receivedData
 																			  options:NSJSONReadingMutableContainers
 																				error:&error];

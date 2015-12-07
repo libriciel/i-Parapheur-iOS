@@ -79,11 +79,11 @@
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer {
 	
-	NSString *s = [answer objectForKey:@"_req"];
+	NSString *s = answer[@"_req"];
 	
 	if ([s isEqual:LOGIN_API]) {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Alert title when network error happens")
-															message:[NSString stringWithFormat:@"%@", [[answer objectForKey:@"data"] objectForKey:@"ticket"]]
+															message:[NSString stringWithFormat:@"%@", answer[@"data"][@"ticket"]]
 														   delegate:nil
 												  cancelButtonTitle:NSLocalizedString(@"Dismiss", @"Alert view dismiss button")
 												  otherButtonTitles:nil];
@@ -97,7 +97,7 @@
 				
         [vault addCredentialForHost:[collectivityDef host]
 						   andLogin:[collectivityDef username]
-						 withTicket:[[answer objectForKey:@"data"] objectForKey:@"ticket"]];
+						 withTicket:answer[@"data"][@"ticket"]];
     }
 }
 

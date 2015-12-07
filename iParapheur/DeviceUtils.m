@@ -1,7 +1,6 @@
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 #import <TSMessage.h>
-#import <SystemConfiguration/SystemConfiguration.h>
 
 
 @implementation DeviceUtils
@@ -64,6 +63,18 @@
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:message
 										type:TSMessageNotificationTypeSuccess];
+	});
+}
+
+
++ (void)logSuccessMessage:(NSString *)message
+                withTitle:(NSString *)title {
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		//call back to main queue to update user interface
+		[TSMessage showNotificationWithTitle:title
+		                            subtitle:message
+		                                type:TSMessageNotificationTypeSuccess];
 	});
 }
 
