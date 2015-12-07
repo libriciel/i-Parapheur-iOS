@@ -88,6 +88,32 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 }
 
 
+-(NSError *)downloadCertificateUrlWithUrl:(NSString *)url
+                                   onPath:(NSString *)localPath {
+
+	NSError *error = nil;
+
+	NSData *urlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+	if (urlData) {
+
+		NSString *filePath = [NSString stringWithFormat:@"%@/%@", localPath, url.lastPathComponent];
+		[urlData writeToFile:filePath
+		          atomically:YES];
+
+		uint64_t fileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath
+		                                                                     error:&error].fileSize;
+		NSLog(@"Downloaded - file : %@ (%llu)", filePath, fileSize);
+	}
+	else {
+		[[NSError alloc] initWithDomain:AFURLRequestSerializationErrorDomain
+		                           code:NSURLErrorBadURL
+		                       userInfo:nil];
+	}
+
+	return error;
+}
+
+
 #pragma mark API calls
 
 

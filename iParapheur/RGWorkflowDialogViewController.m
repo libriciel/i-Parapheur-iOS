@@ -48,7 +48,7 @@
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "RGAppDelegate.h"
-#import "ADLPasswordAlertView.h"
+#import "ADLCertificateAlertView.h"
 #import "ADLRequester.h"
 #import "ADLAPIHelper.h"
 #import "LGViewHUD.h"
@@ -170,9 +170,9 @@
 				for (NSString *dossierRef in _dossiersRef) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossierRef
-					                           forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-							        withPublicAnnotation:[_annotationPublique text]
-							       withPrivateAnnotation:[_annotationPrivee text]
+					                           forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+							        withPublicAnnotation:_annotationPublique.text
+							       withPrivateAnnotation:_annotationPrivee.text
 							                     success:^(NSArray *success) {
 							                         __strong typeof(weakSelf) strongSelf = weakSelf;
 							                         if (strongSelf) {
@@ -209,16 +209,14 @@
 
 		/* Ask for pkey password */
 
-		ADLPasswordAlertView *alertView =
-				[[ADLPasswordAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-				                                    message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@",
-				                                                                       [[pkey p12Filename] lastPathComponent]]
-					                               delegate:self
-					                      cancelButtonTitle:@"Annuler"
-					                      otherButtonTitles:@"Confirmer", nil];
+		ADLCertificateAlertView *alertView =
+				[[ADLCertificateAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
+				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", pkey.p12Filename.lastPathComponent]
+				                                      delegate:self
+				                             cancelButtonTitle:@"Annuler"
+				                             otherButtonTitles:@"Confirmer", nil];
 
 		alertView.p12Path = [pkey p12Filename];
-
 		[alertView show];
 	}
 

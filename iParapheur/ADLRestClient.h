@@ -33,6 +33,10 @@
 	            failure:(void (^)(NSError *))failure ;
 
 
+-(NSError *)downloadCertificateUrlWithUrl:(NSString *)url
+                                   onPath:(NSString *)localPath;
+
+
 -(void)getApiLevel:(void (^)(NSNumber *))success
 		   failure:(void (^)(NSError *))failure;
 

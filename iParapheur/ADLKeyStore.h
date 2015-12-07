@@ -42,6 +42,7 @@
 
 enum {
     P12OpenErrorCode,
+	P12AlreadyImported
 };
 
 #define P12ErrorDomain @"P12Errors"
