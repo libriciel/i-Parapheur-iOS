@@ -25,5 +25,6 @@
 
 + (MTLValueTransformer *)getNullToEmptyArrayValueTransformer;
 
++ (NSString *)decodeUrlString:(NSString *)encodedString;
 
 @end

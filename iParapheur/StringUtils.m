@@ -114,4 +114,11 @@
 }
 
 
++ (NSString *)decodeUrlString:(NSString *)encodedString {
+
+	NSString *result = [encodedString stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+	result = result.stringByRemovingPercentEncoding;
+	return result;
+}
+
 @end

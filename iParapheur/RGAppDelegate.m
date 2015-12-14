@@ -51,6 +51,8 @@
 #import "ADLAPIRequests.h"
 #import "ADLRestClient.h"
 #import "DeviceUtils.h"
+#import "StringUtils.h"
+
 
 #define RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT 1
 #define RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_DELETE 2
@@ -140,7 +142,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	if (managedObjectContext != nil) {
 		if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
 			// Replace this implementation with code to handle the error appropriately.
-			// abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+			// abort() causes the application to generate a crash log and terminate.
+			// You should not use this function in a shipping application, although it may be useful during development.
 			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			abort();
 		}
@@ -275,7 +278,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 
 /**
- * Parsing the given parameters
+ * Parsing the given parameters.
+ * This parsing takes a bit of code, and would be easier in iOS8.
+ * TODO : Use simplest NSURLComponents, when iOS7 support will be dropped
+ *
  * Waiting arguments like :
  *
  * iparapheur://importCertificate?iOsUrl=https://url/certif.p12             (mandatory)
@@ -289,7 +295,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	// Regex :	- should start with iparapheur://					                 ^iparapheur:\/\/
 	//			- followed with action name, and a ?	    				         importCertificate\?
-	//			- then, catching first group, non greedy						     ([^&]*)=(.*?)
+	//			- then, catching the first group, non greedy						 ([^&]*)=(.*?)
 	//          - then, any other group, if exists, till the end of line (max 3)     (?:&([^&]*)=(.*?))?    => 3 times
 
 	NSString *importCertifPattern = @"^iparapheur:\\/\\/importCertificate\\?([^&]*)=(.*?)(?:&([^&]*)=(.*?))?(?:&([^&]*)=(.*?))?(?:&([^&]*)=(.*?))?$";
@@ -321,7 +327,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSRange range = [firstMatch rangeAtIndex:i];
 
 		// iOS 9.1 poor regex system returns wrong values/length on variable groups catched.
-		// If the regex can catch 6 groups, but only capture 4, the remaining 2 will make the entire OS crash on rangeAtIndex.
+		// If the regex can catch 6 groups max, but only capture 4, the remaining 2 will make the entire OS crash on rangeAtIndex.
 		if ((range.length > urlString.length) || (range.location > urlString.length))
 			break;
 
@@ -330,9 +336,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSString *nextSubString = [urlString substringWithRange:nextRange];
 
 		if ([subString isEqualToString:@"iOsUrl"])
-			certificateUrl = nextSubString;
+			certificateUrl = [StringUtils decodeUrlString:nextSubString];
 		else if ([subString isEqualToString:@"iOsPwd"])
-			certificatePassword = nextSubString;
+			certificatePassword = [StringUtils decodeUrlString:nextSubString];
 	}
 
 	// Build result
