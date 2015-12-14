@@ -72,9 +72,6 @@
 @implementation RGDeskViewController
 
 
-@synthesize inBatchMode = _inBatchMode;
-
-
 #pragma mark - UIViewController delegate
 
 
@@ -171,7 +168,7 @@
 			// API3 request
 
 			__weak typeof(self) weakSelf = self;
-			[_restClient getDossiers:self.deskRef
+			[_restClient getDossiers:_deskRef
 			                    page:page
 			                    size:15
 			                  filter:jsonString
@@ -721,7 +718,7 @@
 			selectedArray = [_selectedDossiersArray valueForKey:@"dossierRef"];
 		}
 
-		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiersRef = selectedArray;
+		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiers = selectedArray;
 		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
 	}
 }

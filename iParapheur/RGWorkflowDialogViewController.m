@@ -119,8 +119,12 @@
 
 	ADLRequester *requester = [ADLRequester sharedRequester];
 
+	NSMutableArray *dossierIds = [NSMutableArray new];
+	for (ADLResponseDossier *dossier in _dossiers)
+		[dossierIds addObject:dossier.identifier];
+
 	NSMutableDictionary *args = @{
-			@"dossiers" : _dossiersRef,
+			@"dossiers" : dossierIds,
 			@"annotPub" : _annotationPublique.text,
 			@"annotPriv" : _annotationPrivee.text,
 			@"bureauCourant" : [ADLSingletonState sharedSingletonState].bureauCourant}.mutableCopy;
@@ -129,31 +133,31 @@
 		[self showHud];
 
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			for (NSString *dossierRef in _dossiersRef) {
+			for (ADLResponseDossier *dossier in _dossiers) {
 				__weak typeof(self) weakSelf = self;
-				[_restClient actionViserForDossier:dossierRef
+				[_restClient actionViserForDossier:dossier.identifier
 				                         forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-						      withPublicAnnotation:_annotationPublique.text
-						     withPrivateAnnotation:_annotationPrivee.text
-						                   success:^(NSArray *result) {
-						                       __strong typeof(weakSelf) strongSelf = weakSelf;
-						                       if (strongSelf) {
-							                       [strongSelf dismissDialogView];
-						                       }
-						                   }
-						                   failure:^(NSError *error) {
-						                       __strong typeof(weakSelf) strongSelf = weakSelf;
-						                       if (strongSelf) {
-							                       NSLog(@"actionViser error : %@", error.localizedDescription);
-							                       [strongSelf didEndWithUnReachableNetwork];
-						                       }
-						                   }];
+				              withPublicAnnotation:_annotationPublique.text
+				             withPrivateAnnotation:_annotationPrivee.text
+				                           success:^(NSArray *result) {
+					                           __strong typeof(weakSelf) strongSelf = weakSelf;
+					                           if (strongSelf) {
+						                           [strongSelf dismissDialogView];
+					                           }
+				                           }
+				                           failure:^(NSError *error) {
+					                           __strong typeof(weakSelf) strongSelf = weakSelf;
+					                           if (strongSelf) {
+						                           NSLog(@"actionViser error : %@", error.localizedDescription);
+						                           [strongSelf didEndWithUnReachableNetwork];
+					                           }
+				                           }];
 			}
 		}
 		else {
 			[requester request:@"visa"
 			           andArgs:args
-				      delegate:self];
+			          delegate:self];
 		}
 	}
 	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
@@ -162,46 +166,46 @@
 		// TODO Adrien : switch
 		[requester request:@"secretariat"
 		           andArgs:args
-			      delegate:self];
+		          delegate:self];
 	}
 	else if ([self.action isEqualToString:@"REJETER"]) {
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
 
 			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-				for (NSString *dossierRef in _dossiersRef) {
+				for (ADLResponseDossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
-					[_restClient actionRejeterForDossier:dossierRef
+					[_restClient actionRejeterForDossier:dossier.identifier
 					                           forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-							        withPublicAnnotation:_annotationPublique.text
-							       withPrivateAnnotation:_annotationPrivee.text
-							                     success:^(NSArray *success) {
-							                         __strong typeof(weakSelf) strongSelf = weakSelf;
-							                         if (strongSelf) {
-								                         [strongSelf dismissDialogView];
-							                         }
-							                     }
-							                     failure:^(NSError *error) {
-							                         __strong typeof(weakSelf) strongSelf = weakSelf;
-							                         if (strongSelf) {
-								                         NSLog(@"Action reject error : %@", error.localizedDescription);
-								                         [strongSelf didEndWithUnReachableNetwork];
-							                         }
-							                     }];
+					                withPublicAnnotation:_annotationPublique.text
+					               withPrivateAnnotation:_annotationPrivee.text
+					                             success:^(NSArray *success) {
+						                             __strong typeof(weakSelf) strongSelf = weakSelf;
+						                             if (strongSelf) {
+							                             [strongSelf dismissDialogView];
+						                             }
+					                             }
+					                             failure:^(NSError *error) {
+						                             __strong typeof(weakSelf) strongSelf = weakSelf;
+						                             if (strongSelf) {
+							                             NSLog(@"Action reject error : %@", error.localizedDescription);
+							                             [strongSelf didEndWithUnReachableNetwork];
+						                             }
+					                             }];
 				}
 			}
 			else {
 				[requester request:@"reject"
 				           andArgs:args
-					      delegate:self];
+				          delegate:self];
 			}
 		}
 		else {
 			[[[UIAlertView alloc] initWithTitle:@"Attention"
 			                            message:@"Veuillez saisir le motif de votre rejet"
-				                       delegate:nil
-				              cancelButtonTitle:@"Fermer"
-				              otherButtonTitles:nil] show];
+			                           delegate:nil
+			                  cancelButtonTitle:@"Fermer"
+			                  otherButtonTitles:nil] show];
 		}
 
 	}
@@ -213,7 +217,8 @@
 
 		ADLCertificateAlertView *alertView =
 				[[ADLCertificateAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", pkey.p12Filename.lastPathComponent]
+				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@",
+				                                                                          pkey.p12Filename.lastPathComponent]
 				                                      delegate:self
 				                             cancelButtonTitle:@"Annuler"
 				                             otherButtonTitles:@"Confirmer", nil];
@@ -272,11 +277,11 @@
 		NSMutableArray *dossiers = [NSMutableArray new];
 		NSMutableArray *signatures = [NSMutableArray new];
 
-		for (NSString *dossier in _dossiersRef) {
-			NSDictionary *signInfo = answer[dossier];
+		for (ADLResponseDossier *dossier in _dossiers) {
+			NSDictionary *signInfo = answer[dossier.identifier];
 
 			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-				[dossiers addObject:dossier];
+				[dossiers addObject:dossier.identifier];
 				[hashes addObject:signInfo[@"hash"]];
 			}
 
@@ -292,21 +297,21 @@
 			NSFileManager *fileManager = [NSFileManager new];
 			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
 			                                     inDomain:NSUserDomainMask
-					                    appropriateForURL:nil
-					                               create:YES
-					                                error:NULL];
+			                            appropriateForURL:nil
+			                                       create:YES
+			                                        error:NULL];
 
 			NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
 
 			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
 			                           withPassword:_p12password
-						                    andData:hash_data
-						                      error:&error];
+			                                andData:hash_data
+			                                  error:&error];
 
 			if (signature == nil && error != nil) {
 				[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
 				                   withTitle:@"Une erreur s'est produite lors de la signature"
-						    inViewController:self];
+				            inViewController:self];
 				break;
 			}
 			else {
@@ -331,7 +336,7 @@
 
 			[requester request:@"signature"
 			           andArgs:args
-				      delegate:self];
+			          delegate:self];
 		}
 	}
 	else {
@@ -345,9 +350,9 @@
 
 	[[[UIAlertView alloc] initWithTitle:@"Erreur"
 	                            message:@"Une erreur est survenue lors de l'envoi de la requête"
-		                       delegate:nil
-		              cancelButtonTitle:@"Fermer"
-		              otherButtonTitles:nil] show];
+	                           delegate:nil
+	                  cancelButtonTitle:@"Fermer"
+	                  otherButtonTitles:nil] show];
 }
 
 
@@ -360,11 +365,11 @@
 	NSMutableArray *dossiers = [NSMutableArray new];
 	NSMutableArray *signatures = [NSMutableArray new];
 
-	for (NSString *dossier in _dossiersRef) {
+	for (ADLResponseDossier *dossier in _dossiers) {
 		NSDictionary *signInfo = responseSignInfo.signatureInformations;
 
 		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-			[dossiers addObject:dossier];
+			[dossiers addObject:dossier.identifier];
 			[hashes addObject:signInfo[@"hash"]];
 		} else {
 			[DeviceUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
@@ -380,9 +385,9 @@
 	NSFileManager *fileManager = [NSFileManager new];
 	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
 	                                     inDomain:NSUserDomainMask
-			                    appropriateForURL:nil
-			                               create:YES
-			                                error:NULL];
+	                            appropriateForURL:nil
+	                                       create:YES
+	                                        error:NULL];
 
 	NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
 
@@ -401,7 +406,7 @@
 
 				NSString *subSignedHash = [self signData:subHash
 				                            withKeystore:keystore
-							                     withP12:p12AbsolutePath];
+				                                 withP12:p12AbsolutePath];
 
 				if (subHash == subHashes.firstObject) {
 					signedHash = subSignedHash.mutableCopy;
@@ -415,7 +420,7 @@
 
 			signedHash = [self signData:hash
 			               withKeystore:keystore
-						        withP12:p12AbsolutePath].mutableCopy;
+			                    withP12:p12AbsolutePath].mutableCopy;
 		}
 
 		// Add result, or cancel on error
@@ -441,45 +446,45 @@
 			__weak typeof(self) weakSelf = self;
 			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
 			                          forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-					       withPublicAnnotation:_annotationPublique.text
-					      withPrivateAnnotation:_annotationPrivee.text
-					              withSignature:signatures[(NSUInteger) i]
-					                    success:^(NSArray *array) {
-					                        __strong typeof(weakSelf) strongSelf = weakSelf;
-					                        if (strongSelf) {
-						                        NSLog(@"Signature success");
-						                        [strongSelf dismissDialogView];
-					                        }
-					                    }
-					                    failure:^(NSError *restError) {
-					                        __strong typeof(weakSelf) strongSelf = weakSelf;
-					                        if (strongSelf) {
-						                        NSLog(@"Signature fail");
-						                        [strongSelf didEndWithUnReachableNetwork];
-					                        }
-					                    }];
+			               withPublicAnnotation:_annotationPublique.text
+			              withPrivateAnnotation:_annotationPrivee.text
+			                      withSignature:signatures[(NSUInteger) i]
+			                            success:^(NSArray *array) {
+				                            __strong typeof(weakSelf) strongSelf = weakSelf;
+				                            if (strongSelf) {
+					                            NSLog(@"Signature success");
+					                            [strongSelf dismissDialogView];
+				                            }
+			                            }
+			                            failure:^(NSError *restError) {
+				                            __strong typeof(weakSelf) strongSelf = weakSelf;
+				                            if (strongSelf) {
+					                            NSLog(@"Signature fail");
+					                            [strongSelf didEndWithUnReachableNetwork];
+				                            }
+			                            }];
 		}
 	}
 }
 
 
 - (NSString *)signData:(NSString *)hash
-		  withKeystore:(ADLKeyStore *)keystore
-			   withP12:(NSString *)p12AbsolutePath {
+          withKeystore:(ADLKeyStore *)keystore
+               withP12:(NSString *)p12AbsolutePath {
 
 	NSData *hash_data = [keystore bytesFromHexString:hash];
 
 	NSError *error = nil;
 	NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
 	                           withPassword:_p12password
-				                    andData:hash_data
-				                      error:&error];
+	                                andData:hash_data
+	                                  error:&error];
 
 	if (signature == nil && error != nil) {
 
 		[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
 		                   withTitle:@"Une erreur s'est produite lors de la signature"
-				    inViewController:self];
+		            inViewController:self];
 
 		return nil;
 	}
@@ -539,7 +544,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 /**
- * TODO : Fix warning, this method is used, actually
+ * TODO : Fix this weird warning, this method is used actually
  */
 - (void)   alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -549,28 +554,33 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 		_p12password = passwordTextField.text;
 
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			for (NSString *dossierRef in _dossiersRef) {
+			for (ADLResponseDossier *dossier in _dossiers) {
 				__weak typeof(self) weakSelf = self;
-				[_restClient getSignInfoForDossier:dossierRef
+				[_restClient getSignInfoForDossier:dossier.identifier
 				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-						                   success:^(ADLResponseSignInfo *signInfo) {
-						                       __strong typeof(weakSelf) strongSelf = weakSelf;
-						                       if (strongSelf) {
-							                       [strongSelf getSignInfoDidEndWithSuccess:signInfo];
-						                       }
-						                   }
-						                   failure:^(NSError *error) {
-						                       NSLog(@"Error on getSignInfo %@", error.localizedDescription);
-						                   }];
+				                           success:^(ADLResponseSignInfo *signInfo) {
+					                           __strong typeof(weakSelf) strongSelf = weakSelf;
+					                           if (strongSelf) {
+						                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];
+					                           }
+				                           }
+				                           failure:^(NSError *error) {
+					                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);
+				                           }];
 			}
 		}
 		else {
 			ADLRequester *requester = [ADLRequester sharedRequester];
-			NSDictionary *signInfoArgs = @{@"dossiers" : _dossiersRef};
+			NSMutableArray *dossierIds = [NSMutableArray new];
+
+			for (ADLResponseDossier *dossier in _dossiers)
+				[dossierIds addObject:dossier.identifier];
+
+			NSDictionary *signInfoArgs = @{@"dossiers" : dossierIds};
 
 			[requester request:@"getSignInfo"
 			           andArgs:signInfoArgs
-				      delegate:self];
+			          delegate:self];
 		}
 	}
 }

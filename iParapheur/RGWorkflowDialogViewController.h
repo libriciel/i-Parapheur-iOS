@@ -48,7 +48,7 @@
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 
-@property (strong, nonatomic) NSArray *dossiersRef;
+@property (strong, nonatomic) NSArray *dossiers;
 @property (strong, nonatomic) NSString *action;
 @property (strong, nonatomic) IBOutlet UILabel *annotationPubliqueLabel;
 @property (strong, nonatomic) IBOutlet UITextView *annotationPublique;
