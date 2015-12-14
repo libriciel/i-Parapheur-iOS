@@ -287,14 +287,14 @@
 - (void)updateAnnotation:(ADLAnnotation *)annotation
                  forPage:(NSUInteger)page {
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		
 		NSDictionary *annotationDictionary = annotation.dict;
 		NSString *documentId = _document[@"id"];
 
 		[_restClient updateAnnotation:annotationDictionary
 		                      forPage:(int) page
-			               forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+			               forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 						  andDocument:documentId
 			                  success:^(NSArray *result) {
 			                      NSLog(@"updateAnnotation success");
@@ -309,7 +309,7 @@
 		NSDictionary *req = @{
 				@"page" : @(page),
 				@"annotation" : dict,
-				@"dossier" : [[ADLSingletonState sharedSingletonState] dossierCourant]
+				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
 		};
 
 		ADLRequester *requester = [ADLRequester sharedRequester];
@@ -322,13 +322,13 @@
 
 - (void)removeAnnotation:(ADLAnnotation *)annotation {
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		
 		NSDictionary *annotationDictionary = annotation.dict;
 		NSString *documentId = _document[@"id"];
 
 		[_restClient removeAnnotation:annotationDictionary
-		                   forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 						  andDocument:documentId
 				              success:^(NSArray *result) {
 				                  NSLog(@"deleteAnnotation success");
@@ -342,7 +342,7 @@
 		NSDictionary *req = @{
 				@"uuid" : [annotation uuid],
 				@"page" : @10,
-				@"dossier" : [[ADLSingletonState sharedSingletonState] dossierCourant]
+				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
 		};
 
 		ADLRequester *requester = [ADLRequester sharedRequester];
@@ -357,7 +357,7 @@
 - (void)addAnnotation:(ADLAnnotation *)annotation
               forPage:(NSUInteger)page {
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		
 		NSString *documentId = _document[@"id"];
 		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
@@ -365,19 +365,15 @@
 		if (login == nil)
 			login = @"bma";
 
-		NSDictionary *args = [annotation dict];
-		[args setValue:@(page)
-		        forKey:@"page"];
-		[args setValue:[NSDate date]
-		        forKey:@"date"];
-		[args setValue:@"rect"
-		        forKey:@"type"];
-		[args setValue:login
-		        forKey:@"author"];
+		NSMutableDictionary *args = annotation.dict.mutableCopy;
+		args[@"page"] = @(page);
+		args[@"date"] = [NSDate date];
+		args[@"type"] = @"rect";
+		args[@"author"] = login;
 
 		__weak typeof(self) weakSelf = self;
 		[_restClient addAnnotations:args
-		                 forDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+		                 forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 						andDocument:documentId
 				            success:^(NSArray *result) {
 				                __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -391,14 +387,14 @@
 				            }];
 	}
 	else {
-		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[annotation dict]];
+		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:annotation.dict];
 
 		[dict setValue:@(page)
 		        forKey:@"page"];
 
 		NSDictionary *args = @{
 				@"annotations" : @[dict],
-				@"dossier" : [[ADLSingletonState sharedSingletonState] dossierCourant]
+				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
 		};
 
 		ADLRequester *requester = [ADLRequester sharedRequester];
@@ -572,7 +568,7 @@
 			            }];
 	}
 	else {
-		API_GETDOSSIER(_dossierRef, [[ADLSingletonState sharedSingletonState] bureauCourant]);
+		API_GETDOSSIER(_dossierRef, [ADLSingletonState sharedSingletonState].bureauCourant);
 		API_GETCIRCUIT(_dossierRef);
 	}
 

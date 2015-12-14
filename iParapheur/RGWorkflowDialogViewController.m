@@ -75,6 +75,7 @@
 	if (self) {
 		// Custom initialization
 	}
+
 	return self;
 }
 
@@ -91,20 +92,20 @@
 - (void)viewWillAppear:(BOOL)animated {
 
 	[super viewWillAppear:animated];
-	self.navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:self.action];
-	if ([self.action isEqualToString:@"SIGNER"]) {
-		[self.navigationBar.topItem.rightBarButtonItem setEnabled:NO];
+	_navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:_action];
+	if ([_action isEqualToString:@"SIGNER"]) {
+		_navigationBar.topItem.rightBarButtonItem.enabled = NO;
 	}
 	else {
-		[self.certificateLabel setHidden:YES];
-		[self.certificatesTableView setHidden:YES];
-		if ([self.action isEqualToString:@"REJETER"]) {
-			self.annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
+		_certificateLabel.hidden = YES;
+		_certificatesTableView.hidden = YES;
+		if ([_action isEqualToString:@"REJETER"]) {
+			_annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
 		}
 	}
-	ADLKeyStore *keystore = [((RGAppDelegate *) [[UIApplication sharedApplication] delegate]) keyStore];
+	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
 
-	self.pkeys = [keystore listPrivateKeys];
+	_pkeys = keystore.listPrivateKeys;
 }
 
 
@@ -118,21 +119,22 @@
 
 	ADLRequester *requester = [ADLRequester sharedRequester];
 
-	NSMutableDictionary *args = [@{@"dossiers" : _dossiersRef,
-			@"annotPub" : [_annotationPublique text],
-			@"annotPriv" : [_annotationPrivee text],
-			@"bureauCourant" : [[ADLSingletonState sharedSingletonState] bureauCourant]} mutableCopy];
+	NSMutableDictionary *args = @{
+			@"dossiers" : _dossiersRef,
+			@"annotPub" : _annotationPublique.text,
+			@"annotPriv" : _annotationPrivee.text,
+			@"bureauCourant" : [ADLSingletonState sharedSingletonState].bureauCourant}.mutableCopy;
 
-	if ([self.action isEqualToString:@"VISER"]) {
+	if ([_action isEqualToString:@"VISER"]) {
 		[self showHud];
 
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			for (NSString *dossierRef in _dossiersRef) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient actionViserForDossier:dossierRef
-				                         forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-						      withPublicAnnotation:[_annotationPublique text]
-						     withPrivateAnnotation:[_annotationPrivee text]
+				                         forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+						      withPublicAnnotation:_annotationPublique.text
+						     withPrivateAnnotation:_annotationPrivee.text
 						                   success:^(NSArray *result) {
 						                       __strong typeof(weakSelf) strongSelf = weakSelf;
 						                       if (strongSelf) {
@@ -166,7 +168,7 @@
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
 
-			if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				for (NSString *dossierRef in _dossiersRef) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossierRef
@@ -216,7 +218,7 @@
 				                             cancelButtonTitle:@"Annuler"
 				                             otherButtonTitles:@"Confirmer", nil];
 
-		alertView.p12Path = [pkey p12Filename];
+		alertView.p12Path = pkey.p12Filename;
 		[alertView show];
 	}
 
@@ -266,11 +268,11 @@
 	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
 		// get selected dossiers for some sign info action :)
 
-		NSMutableArray *hashes = [[NSMutableArray alloc] init];
-		NSMutableArray *dossiers = [[NSMutableArray alloc] init];
-		NSMutableArray *signatures = [[NSMutableArray alloc] init];
+		NSMutableArray *hashes = [NSMutableArray new];
+		NSMutableArray *dossiers = [NSMutableArray new];
+		NSMutableArray *signatures = [NSMutableArray new];
 
-		for (NSString *dossier in self.dossiersRef) {
+		for (NSString *dossier in _dossiersRef) {
 			NSDictionary *signInfo = answer[dossier];
 
 			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
@@ -280,7 +282,7 @@
 
 		}
 
-		ADLKeyStore *keystore = [((RGAppDelegate *) [[UIApplication sharedApplication] delegate]) keyStore];
+		ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
 		PrivateKey *pkey = _currentPKey;
 		NSError *error = nil;
 
@@ -294,10 +296,10 @@
 					                               create:YES
 					                                error:NULL];
 
-			NSString *p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+			NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
 
 			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-			                           withPassword:[self p12password]
+			                           withPassword:_p12password
 						                    andData:hash_data
 						                      error:&error];
 
@@ -308,18 +310,19 @@
 				break;
 			}
 			else {
-				NSString *b64EncodedSignature = [signature base64EncodedString];
+				NSString *b64EncodedSignature = signature.base64EncodedString;
 				[signatures addObject:b64EncodedSignature];
 			}
 
 		}
 
-		if ([signatures count] > 0 && [signatures count] == [hashes count] && [dossiers count] == [hashes count]) {
-			NSMutableDictionary *args = [@{@"dossiers" : dossiers,
-					@"annotPub" : [self.annotationPublique text],
-					@"annotPriv" : [self.annotationPrivee text],
-					@"bureauCourant" : [[ADLSingletonState sharedSingletonState] bureauCourant],
-					@"signatures" : signatures} mutableCopy];
+		if ((signatures.count > 0) && (signatures.count == hashes.count) && (dossiers.count == hashes.count)) {
+			NSMutableDictionary *args = @{
+					@"dossiers" : dossiers,
+					@"annotPub" : _annotationPublique.text,
+					@"annotPriv" : _annotationPrivee.text,
+					@"bureauCourant" : [ADLSingletonState sharedSingletonState].bureauCourant,
+					@"signatures" : signatures}.mutableCopy;
 
 			NSLog(@"%@", args);
 			ADLRequester *requester = [ADLRequester sharedRequester];
@@ -357,7 +360,7 @@
 	NSMutableArray *dossiers = [NSMutableArray new];
 	NSMutableArray *signatures = [NSMutableArray new];
 
-	for (NSString *dossier in self.dossiersRef) {
+	for (NSString *dossier in _dossiersRef) {
 		NSDictionary *signInfo = responseSignInfo.signatureInformations;
 
 		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
@@ -369,7 +372,7 @@
 		}
 	}
 
-	ADLKeyStore *keystore = [((RGAppDelegate *) [[UIApplication sharedApplication] delegate]) keyStore];
+	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
 	PrivateKey *pkey = _currentPKey;
 
 	// Retrieving signature certificate
@@ -381,7 +384,7 @@
 			                               create:YES
 			                                error:NULL];
 
-	NSString *p12AbsolutePath = [[pathURL path] stringByAppendingPathComponent:pkey.p12Filename];
+	NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
 
 	// Building signature response
 
@@ -428,7 +431,7 @@
 
 	// Checking and sending back result
 
-	if (signatures.count > 0 && signatures.count == hashes.count && dossiers.count == hashes.count) {
+	if ((signatures.count > 0) && (signatures.count == hashes.count) && (dossiers.count == hashes.count)) {
 
 		for (int i = 0; i < signatures.count; i++) {
 
@@ -437,9 +440,9 @@
 
 			__weak typeof(self) weakSelf = self;
 			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
-			                          forBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-					       withPublicAnnotation:[self.annotationPublique text]
-					      withPrivateAnnotation:[self.annotationPrivee text]
+			                          forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+					       withPublicAnnotation:_annotationPublique.text
+					      withPrivateAnnotation:_annotationPrivee.text
 					              withSignature:signatures[(NSUInteger) i]
 					                    success:^(NSArray *array) {
 					                        __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -468,7 +471,7 @@
 
 	NSError *error = nil;
 	NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-	                           withPassword:[self p12password]
+	                           withPassword:_p12password
 				                    andData:hash_data
 				                      error:&error];
 
@@ -507,13 +510,11 @@
 
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
 
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] init];
-	}
+	if (cell == nil)
+		cell = [UITableViewCell new];
 
 	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
-
-	[[cell textLabel] setText:pkey.commonName];
+	cell.textLabel.text = pkey.commonName;
 
 
 	return cell;
@@ -530,25 +531,28 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	_currentPKey = _pkeys[(NSUInteger) indexPath.row];
 
 	// now we have a pkey we can activate Sign Button
-	[self.navigationBar.topItem.rightBarButtonItem setEnabled:YES];
+	_navigationBar.topItem.rightBarButtonItem.enabled = YES;
 }
 
 
 #pragma mark - UIAlertView delegate
 
 
+/**
+ * TODO : Fix warning, this method is used, actually
+ */
 - (void)   alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 	if (buttonIndex == 1) {
 		UITextField *passwordTextField = [alertView textFieldAtIndex:0];
-		[self setP12password:[passwordTextField text]];
+		_p12password = passwordTextField.text;
 
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			for (NSString *dossierRef in _dossiersRef) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:dossierRef
-				                         andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
 						                   success:^(ADLResponseSignInfo *signInfo) {
 						                       __strong typeof(weakSelf) strongSelf = weakSelf;
 						                       if (strongSelf) {

@@ -46,10 +46,15 @@
 
 #import <Foundation/Foundation.h>
 
+
+@class ADLResponseDossier;
+
+
 @interface ADLSingletonState : NSObject
 
 @property (strong, nonatomic) NSString* bureauCourant;
-@property (strong, nonatomic) NSString* dossierCourant;
+@property (strong, nonatomic) NSString* dossierCourantReference;
+@property (strong, nonatomic) ADLResponseDossier* dossierCourantObject;
 @property (strong, nonatomic) NSString* currentPrincipalDocPath;
 @property (strong, nonatomic) NSMutableDictionary *currentFilter;
 

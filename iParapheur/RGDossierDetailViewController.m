@@ -192,14 +192,14 @@
 
 	dossierRef = _dossierRef;
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		__weak typeof(self) weakSelf = self;
-		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] dossierCourant]
+		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 		                dossier:dossierRef
 			            success:^(ADLResponseDossier *responseDossier) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
-				                //TODO Adrien : why the response isn't used ??
+				                [ADLSingletonState sharedSingletonState].dossierCourantObject = responseDossier;
 				                [strongSelf getDossierDidEndWithREquestAnswer];
 			                }
 			            }
@@ -353,7 +353,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)getCircuit {
 
 	ADLRequester *requester = [ADLRequester sharedRequester];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:dossierRef, @"dossier", nil];
+	NSDictionary *args = @{@"dossier" : dossierRef};
 	[requester request:@"getCircuit"
 	           andArgs:args
 		      delegate:self];
