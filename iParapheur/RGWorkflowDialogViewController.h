@@ -44,12 +44,14 @@
 #import "ADLRestClient.h"
 
 
-@interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate>
+@interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 
 @property (strong, nonatomic) NSArray *dossiers;
 @property (strong, nonatomic) NSString *action;
+@property (nonatomic) BOOL isPaperSign;
+
 @property (strong, nonatomic) IBOutlet UILabel *annotationPubliqueLabel;
 @property (strong, nonatomic) IBOutlet UITextView *annotationPublique;
 @property (strong, nonatomic) IBOutlet UITextView *annotationPrivee;

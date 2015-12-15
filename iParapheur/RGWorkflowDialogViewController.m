@@ -57,6 +57,10 @@
 #import "StringUtils.h"
 
 
+#define RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE 1
+#define RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE 2
+
+
 @interface RGWorkflowDialogViewController () {
 
 	NSMutableDictionary *circuits;
@@ -93,14 +97,17 @@
 
 	_restClient = [ADLRestClient sharedManager];
 	circuits = [NSMutableDictionary new];
+	_bureauCourant = [ADLSingletonState sharedSingletonState].bureauCourant;
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
 
 	[super viewWillAppear:animated];
-	_navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:_action];
-	if ([_action isEqualToString:@"SIGNER"]) {
+	_navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:_action
+	                                                   withPaperSign:_isPaperSign];
+
+	if ([_action isEqualToString:@"SIGNER" ] && !_isPaperSign) {
 		_navigationBar.topItem.rightBarButtonItem.enabled = NO;
 	}
 	else {
@@ -149,25 +156,23 @@
 	ADLRequester *requester = [ADLRequester sharedRequester];
 
 	NSMutableArray *dossierIds = [NSMutableArray new];
-	for (ADLResponseDossier *dossier in _dossiers) {
-		NSLog(@"Adrien - %@ - %d", dossier.title, dossier.isSignPapier);
+	for (ADLResponseDossier *dossier in _dossiers)
 		[dossierIds addObject:dossier.identifier];
-	}
 
 	NSMutableDictionary *args = @{
 			@"dossiers" : dossierIds,
 			@"annotPub" : _annotationPublique.text,
 			@"annotPriv" : _annotationPrivee.text,
-			@"bureauCourant" : [ADLSingletonState sharedSingletonState].bureauCourant}.mutableCopy;
+			@"bureauCourant" : _bureauCourant}.mutableCopy;
 
-	if ([_action isEqualToString:@"VISER"]) {
+	if ([_action isEqualToString:@"VISER"] || ([_action isEqualToString:@"SIGNER"] && _isPaperSign)) {
 		[self showHud];
 
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			for (ADLResponseDossier *dossier in _dossiers) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient actionViserForDossier:dossier.identifier
-				                         forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+				                         forBureau:_bureauCourant
 				              withPublicAnnotation:_annotationPublique.text
 				             withPrivateAnnotation:_annotationPrivee.text
 				                           success:^(NSArray *result) {
@@ -207,7 +212,7 @@
 				for (ADLResponseDossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossier.identifier
-					                           forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+					                           forBureau:_bureauCourant
 					                withPublicAnnotation:_annotationPublique.text
 					               withPrivateAnnotation:_annotationPrivee.text
 					                             success:^(NSArray *success) {
@@ -248,13 +253,13 @@
 
 		ADLCertificateAlertView *alertView =
 				[[ADLCertificateAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@",
-				                                                                          pkey.p12Filename.lastPathComponent]
+				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", pkey.p12Filename.lastPathComponent]
 				                                      delegate:self
 				                             cancelButtonTitle:@"Annuler"
 				                             otherButtonTitles:@"Confirmer", nil];
 
 		alertView.p12Path = pkey.p12Filename;
+		alertView.tag = RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE;
 		[alertView show];
 	}
 
@@ -357,7 +362,7 @@
 					@"dossiers" : dossiers,
 					@"annotPub" : _annotationPublique.text,
 					@"annotPriv" : _annotationPrivee.text,
-					@"bureauCourant" : [ADLSingletonState sharedSingletonState].bureauCourant,
+					@"bureauCourant" : _bureauCourant,
 					@"signatures" : signatures}.mutableCopy;
 
 			NSLog(@"%@", args);
@@ -476,7 +481,7 @@
 
 			__weak typeof(self) weakSelf = self;
 			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
-			                          forBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+			                          forBureau:_bureauCourant
 			               withPublicAnnotation:_annotationPublique.text
 			              withPrivateAnnotation:_annotationPrivee.text
 			                      withSignature:signatures[(NSUInteger) i]
@@ -530,6 +535,34 @@
 }
 
 
+/**
+ * Switch every Dossier to paper signature.
+ * We can't launch every request at the same time, a new one will cancel the previous.
+ * That's why we have to reccursively call this method, with incremented index, to fetch every circuit.
+ */
+- (void)switchToPaperSigntureForDocumentAtIndex:(NSUInteger)index {
+
+	if (index >= _dossiers.count) {
+		[self dismissDialogView];
+		return;
+	}
+
+	__weak typeof(self) weakSelf = self;
+	[_restClient actionSwitchToPaperSignatureForDossier:((ADLResponseDossier *) _dossiers[index]).identifier
+	                                          forBureau:_bureauCourant
+	                                            success:^(NSArray *success) {
+		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
+		                                            if (strongSelf)
+			                                            [strongSelf switchToPaperSigntureForDocumentAtIndex:(index + 1)];
+	                                            }
+	                                            failure:^(NSError *error) {
+		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
+		                                            if (strongSelf)
+			                                            [strongSelf switchToPaperSigntureForDocumentAtIndex:(index + 1)];
+	                                            }];
+}
+
+
 - (void)checkSignPapierButtonVisibility {
 
 	BOOL isSignMandatory = false;
@@ -538,7 +571,8 @@
 		if ((circuits[dossier.identifier] == nil) || (((ADLResponseCircuit *) circuits[dossier.identifier]).isDigitalSignatureMandatory))
 			isSignMandatory = true;
 
-	_paperSignatureButton.hidden = isSignMandatory;
+	if ([_action isEqualToString:@"SIGNER"] && (!_isPaperSign))
+		_paperSignatureButton.hidden = isSignMandatory;
 }
 
 
@@ -573,7 +607,15 @@
 
 - (void)onPaperSignatureButtonClicked:(id)sender {
 
-	NSLog(@"Adrien - Click !");
+	UIAlertView *signPapierConfirm =
+			[[UIAlertView alloc] initWithTitle:@"Voulez vous réellement changer le mode de signature de ce dossier vers le mode signature papier ?"
+			                           message:@"Vous devrez imprimer et signer le document manuellement."
+			                          delegate:self
+			                 cancelButtonTitle:@"Annuler"
+			                 otherButtonTitles:@"Confirmer", nil];
+
+	signPapierConfirm.tag = RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE;
+	[signPapierConfirm show];
 }
 
 
@@ -626,46 +668,50 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - UIAlertView delegate
 
 
-/**
- * TODO : Fix this weird warning, this method is used actually
- */
 - (void)   alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-	if (buttonIndex == 1) {
-		UITextField *passwordTextField = [alertView textFieldAtIndex:0];
-		_p12password = passwordTextField.text;
+	if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE) {
+		if (buttonIndex == 1) {
+			UITextField *passwordTextField = [alertView textFieldAtIndex:0];
+			_p12password = passwordTextField.text;
 
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			for (ADLResponseDossier *dossier in _dossiers) {
-				__weak typeof(self) weakSelf = self;
-				[_restClient getSignInfoForDossier:dossier.identifier
-				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-				                           success:^(ADLResponseSignInfo *signInfo) {
-					                           __strong typeof(weakSelf) strongSelf = weakSelf;
-					                           if (strongSelf) {
-						                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];
+			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+				for (ADLResponseDossier *dossier in _dossiers) {
+					__weak typeof(self) weakSelf = self;
+					[_restClient getSignInfoForDossier:dossier.identifier
+					                         andBureau:_bureauCourant
+					                           success:^(ADLResponseSignInfo *signInfo) {
+						                           __strong typeof(weakSelf) strongSelf = weakSelf;
+						                           if (strongSelf)
+							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];
 					                           }
-				                           }
-				                           failure:^(NSError *error) {
-					                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);
-				                           }];
+					                           failure:^(NSError *error) {
+						                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);
+					                           }];
+				}
+			}
+			else {
+				ADLRequester *requester = [ADLRequester sharedRequester];
+				NSMutableArray *dossierIds = [NSMutableArray new];
+
+				for (ADLResponseDossier *dossier in _dossiers)
+					[dossierIds addObject:dossier.identifier];
+
+				NSDictionary *signInfoArgs = @{@"dossiers" : dossierIds};
+
+				[requester request:@"getSignInfo"
+				           andArgs:signInfoArgs
+				          delegate:self];
 			}
 		}
-		else {
-			ADLRequester *requester = [ADLRequester sharedRequester];
-			NSMutableArray *dossierIds = [NSMutableArray new];
+	}
+	else if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE) {
 
-			for (ADLResponseDossier *dossier in _dossiers)
-				[dossierIds addObject:dossier.identifier];
-
-			NSDictionary *signInfoArgs = @{@"dossiers" : dossierIds};
-
-			[requester request:@"getSignInfo"
-			           andArgs:signInfoArgs
-			          delegate:self];
-		}
+		if (buttonIndex == 1)
+			[self switchToPaperSigntureForDocumentAtIndex:0];
 	}
 }
+
 
 @end

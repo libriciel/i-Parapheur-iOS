@@ -126,7 +126,8 @@ numberOfRowsInSection:(NSInteger)section {
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	@try {
-		[self performSegueWithIdentifier:[_actions objectAtIndex:[indexPath row]] sender:self];
+		[self performSegueWithIdentifier:_actions[(NSUInteger) indexPath.row]
+		                          sender:self];
 	}
 	@catch (NSException *exception) {
 		[[[UIAlertView alloc] initWithTitle:@"Action impossible"

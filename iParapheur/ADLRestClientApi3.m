@@ -643,6 +643,30 @@ typedef enum {
 };
 
 
+- (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
+                                     forBureau:(NSString *)bureauId
+                                       success:(void (^)(NSArray *))success
+                                       failure:(void (^)(NSError *))failure {
+
+	// Create arguments dictionary
+
+	NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
+	argumentDictionary[@"bureauCourant"] = bureauId;
+
+	// Send request
+
+	[self sendSimpleAction:ADLRequestTypePOST
+	               withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier", dossierId]
+	              withArgs:argumentDictionary
+	               success:^(NSArray *result) {
+		               success(nil);
+	               }
+	               failure:^(NSError *error) {
+		               failure(error);
+	               }];
+}
+
+
 - (void)actionAddAnnotation:(NSDictionary *)annotation
                  forDossier:(NSString *)dossierId
                 andDocument:(NSString *)document

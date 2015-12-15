@@ -46,16 +46,17 @@
 #import "RGFileCell.h"
 #import "ADLRestClient.h"
 
+
 @interface RGDeskViewController : UITableViewController
-        <UISplitViewControllerDelegate,
-        ADLParapheurWallDelegateProtocol,
-        UITableViewDataSource,
-        UITableViewDelegate,
-        UIActionSheetDelegate,
-        UISearchBarDelegate,
-        RGFileCellDelegate,
-        FilterDelegate,
-        LGViewHUDDelegate>
+		<UISplitViewControllerDelegate,
+		ADLParapheurWallDelegateProtocol,
+		UITableViewDataSource,
+		UITableViewDelegate,
+		UIActionSheetDelegate,
+		UISearchBarDelegate,
+		RGFileCellDelegate,
+		FilterDelegate,
+		LGViewHUDDelegate>
 
 
 @property (nonatomic, strong) NSString* deskRef;

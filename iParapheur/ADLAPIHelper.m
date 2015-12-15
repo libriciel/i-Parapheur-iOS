@@ -7,95 +7,104 @@
 //
 
 #import "ADLAPIHelper.h"
-#import "ADLResponseDossier.h"
-#import "ADLRestClient.h"
+
 
 @implementation ADLAPIHelper
 
 
-+ (NSString*) actionNameForAction:(NSString*) action {
-	if ([action isEqualToString:@"VISER"] || [action isEqualToString:@"VISA"]) {
++ (NSString *)actionNameForAction:(NSString *)action {
+
+	return [self actionNameForAction:action
+	                   withPaperSign:NO];
+}
+
+
++ (NSString *)actionNameForAction:(NSString *)action
+                    withPaperSign:(BOOL)isPaperSign {
+
+	if ([action isEqualToString:@"VISER"] || [action isEqualToString:@"VISA"])
 		return @"Viser";
-	}
-	else if ([action isEqualToString:@"SIGNER"] || [action isEqualToString:@"SIGNATURE"]) {
-		return  @"Signer";
-	}
-	else if ([action isEqualToString:@"TDT"]) {
-		return  @"Envoyer au Tdt";
-	}
-	else if ([action isEqualToString:@"MAILSEC"]) {
-		return  @"Envoyer par mail sécurisé";
-	}
-	else if ([action isEqualToString:@"ARCHIVER"] || [action isEqualToString:@"ARCHIVAGE"]) {
-		return  @"Archiver";
-	}
-	else if ([action isEqualToString:@"SECRETARIAT"]) {
-		return  @"Envoyer au secrétariat";
-	}
-	else if ([action isEqualToString:@"SUPPRIMER"]) {
-		return  @"Supprimer";
-	}
-	else if ([action isEqualToString:@"REJETER"]) {
-		return  @"Rejeter";
-	}
-	else if ([action isEqualToString:@"REMORD"]) {
-		return  @"Récupérer";
-	}
+
+	else if (([action isEqualToString:@"SIGNER"] || [action isEqualToString:@"SIGNATURE"]) && (!isPaperSign))
+		return @"Signer";
+
+	else if (([action isEqualToString:@"SIGNER"] || [action isEqualToString:@"SIGNATURE"]) && (isPaperSign))
+		return @"Signature papier";
+
+	else if ([action isEqualToString:@"TDT"])
+		return @"Envoyer au Tdt";
+
+	else if ([action isEqualToString:@"MAILSEC"])
+		return @"Envoyer par mail sécurisé";
+
+	else if ([action isEqualToString:@"ARCHIVER"] || [action isEqualToString:@"ARCHIVAGE"])
+		return @"Archiver";
+
+	else if ([action isEqualToString:@"SECRETARIAT"])
+		return @"Envoyer au secrétariat";
+
+	else if ([action isEqualToString:@"SUPPRIMER"])
+		return @"Supprimer";
+
+	else if ([action isEqualToString:@"REJETER"])
+		return @"Rejeter";
+
+	else if ([action isEqualToString:@"REMORD"])
+		return @"Récupérer";
+
 	return nil;
 }
 
 
-+ (NSArray*) actionsForADLResponseDossier:(ADLResponseDossier*) dossier {
-	
++ (NSArray *)actionsForADLResponseDossier:(ADLResponseDossier *)dossier {
+
 	NSMutableArray *actions = [NSMutableArray new];
-	
 	NSArray *returnedActions = dossier.actions;
 	NSString *actionDemandee = dossier.actionDemandee;
-	
-	if ([returnedActions containsObject:actionDemandee])
-	{
+
+	if ([returnedActions containsObject:actionDemandee]) {
 		if ([actionDemandee isEqualToString:@"ARCHIVAGE"])
 			[actions addObject:@"ARCHIVER"];
-		
+
 		else if ([actionDemandee isEqualToString:@"SIGNATURE"])
 			[actions addObject:@"SIGNER"];
-		
+
 		else if ([actionDemandee isEqualToString:@"SUPPRESSION"])
 			[actions addObject:@"SUPPRIMER"];
-		
+
 		else if ([actionDemandee isEqualToString:@"REJET"])
 			[actions addObject:@"REJETER"];
-		
+
 		else if ([actionDemandee isEqualToString:@"REMORD"])
 			[actions addObject:@"REMORD"];
-		
+
 		else if ([actionDemandee isEqualToString:@"SECRETARIAT"])
 			[actions addObject:@"SECRETARIAT"];
-		
+
 		else if ([actionDemandee isEqualToString:@"VISA"])
 			[actions addObject:@"VISER"];
-		
+
 		else if ([actionDemandee isEqualToString:@"TDT"])
 			[actions addObject:@"TDT"];
-		
+
 		else if ([actionDemandee isEqualToString:@"MAILSEC"])
 			[actions addObject:@"MAILSEC"];
 	}
-	
+
 	return [NSArray arrayWithArray:actions];
 }
 
 
-+ (NSArray*) actionsForDossier:(NSDictionary*) dossier {
-	
++ (NSArray *)actionsForDossier:(NSDictionary *)dossier {
+
 	NSMutableArray *actions = [NSMutableArray new];
-	
-	NSDictionary *returnedActions = [dossier objectForKey:@"actions"];
-	NSString *actionDemandee = [dossier objectForKey:@"actionDemandee"];
-	
-	for (NSString *action in [returnedActions allKeys]) {
-		BOOL isActionEnabled = [[returnedActions objectForKey:action] boolValue];
-		
+
+	NSDictionary *returnedActions = dossier[@"actions"];
+	NSString *actionDemandee = dossier[@"actionDemandee"];
+
+	for (NSString *action in returnedActions.allKeys) {
+		BOOL isActionEnabled = [returnedActions[action] boolValue];
+
 		if (isActionEnabled) {
 			if ([action isEqualToString:@"archive"]) {
 				if ([actionDemandee isEqualToString:@"ARCHIVAGE"]) {
@@ -130,7 +139,7 @@
 			}
 		}
 	}
-	
+
 	return [NSArray arrayWithArray:actions];
 }
 

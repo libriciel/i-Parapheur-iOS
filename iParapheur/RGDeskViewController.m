@@ -708,18 +708,27 @@
 	}
 	else {
 		NSMutableArray *selectedArray = [NSMutableArray new];
+		for (ADLResponseDossiers *responseDossiers in _selectedDossiersArray)
+			[selectedArray addObject:responseDossiers];
 
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			for (ADLResponseDossiers *responseDossiers in _selectedDossiersArray)
-				[selectedArray addObject:responseDossiers];
-		}
-		else {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue < 3) {
 			// Adrien TODO : test
 			selectedArray = [_selectedDossiersArray valueForKey:@"dossierRef"];
 		}
 
+		// Paper signature is just a Visa, actually
+
+		BOOL isPaperSign = YES;
+
+		for (ADLResponseDossier *dossier in selectedArray)
+			if (!dossier.isSignPapier)
+				isPaperSign = NO;
+
+		// Launch popup
+
 		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiers = selectedArray;
 		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
+		((RGWorkflowDialogViewController *) segue.destinationViewController).isPaperSign = isPaperSign;
 	}
 }
 
