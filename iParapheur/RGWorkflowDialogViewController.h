@@ -54,6 +54,7 @@
 @property (strong, nonatomic) IBOutlet UITextView *annotationPublique;
 @property (strong, nonatomic) IBOutlet UITextView *annotationPrivee;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (strong, nonatomic) IBOutlet UIButton *paperSignatureButton;
 
 @property (strong, nonatomic) NSString *bureauCourant;
 

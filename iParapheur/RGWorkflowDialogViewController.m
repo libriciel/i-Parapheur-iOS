@@ -57,7 +57,10 @@
 #import "StringUtils.h"
 
 
-@interface RGWorkflowDialogViewController ()
+@interface RGWorkflowDialogViewController () {
+
+	NSMutableDictionary *circuits;
+}
 
 
 @end
@@ -80,12 +83,16 @@
 }
 
 
+#pragma mark - LifeCycle
+
+
 - (void)viewDidLoad {
 
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
 	_restClient = [ADLRestClient sharedManager];
+	circuits = [NSMutableDictionary new];
 }
 
 
@@ -99,13 +106,32 @@
 	else {
 		_certificateLabel.hidden = YES;
 		_certificatesTableView.hidden = YES;
-		if ([_action isEqualToString:@"REJETER"]) {
-			_annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
-		}
-	}
-	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
 
+		if ([_action isEqualToString:@"REJETER"])
+			_annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
+	}
+
+	// Paper Signature
+
+	BOOL isSignPapier = true;
+	for (ADLResponseDossier *dossier in _dossiers) {
+		isSignPapier = isSignPapier && dossier.isSignPapier;
+	}
+
+	[_paperSignatureButton addTarget:self
+	                          action:@selector(onPaperSignatureButtonClicked:)
+	                forControlEvents:UIControlEventTouchUpInside];
+
+	//
+
+	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
 	_pkeys = keystore.listPrivateKeys;
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+
+	[self retrieveCircuitsForDossierAtIndex:0];
 }
 
 
@@ -115,13 +141,18 @@
 }
 
 
+#pragma mark - Private methods
+
+
 - (IBAction)finish:(id)sender {
 
 	ADLRequester *requester = [ADLRequester sharedRequester];
 
 	NSMutableArray *dossierIds = [NSMutableArray new];
-	for (ADLResponseDossier *dossier in _dossiers)
+	for (ADLResponseDossier *dossier in _dossiers) {
+		NSLog(@"Adrien - %@ - %d", dossier.title, dossier.isSignPapier);
 		[dossierIds addObject:dossier.identifier];
+	}
 
 	NSMutableDictionary *args = @{
 			@"dossiers" : dossierIds,
@@ -468,6 +499,49 @@
 }
 
 
+/**
+ * Retrieve every circuit, to fetch isDigitalSignatureMandatory value.
+ * We can't launch every request at the same time, a new one will cancel the previous.
+ * That's why we have to reccursively call this method, with incremented index, to fetch every circuit.
+ */
+- (void)retrieveCircuitsForDossierAtIndex:(NSUInteger)index {
+
+	if (index >= _dossiers.count)
+		return;
+
+	__weak typeof(self) weakSelf = self;
+	[_restClient getCircuit:((ADLResponseDossier *) _dossiers[index]).identifier
+	                success:^(ADLResponseCircuit *circuit) {
+		                __strong typeof(weakSelf) strongSelf = weakSelf;
+		                if (strongSelf) {
+			                circuits[((ADLResponseDossier *) _dossiers[index]).identifier] = circuit;
+			                [strongSelf checkSignPapierButtonVisibility];
+			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+		                }
+	                }
+	                failure:^(NSError *error) {
+		                __strong typeof(weakSelf) strongSelf = weakSelf;
+		                if (strongSelf) {
+			                circuits[((ADLResponseDossier *) _dossiers[index]).identifier] = nil;
+			                [strongSelf checkSignPapierButtonVisibility];
+			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+		                }
+	                }];
+}
+
+
+- (void)checkSignPapierButtonVisibility {
+
+	BOOL isSignMandatory = false;
+
+	for (ADLResponseDossier *dossier in _dossiers)
+		if ((circuits[dossier.identifier] == nil) || (((ADLResponseCircuit *) circuits[dossier.identifier]).isDigitalSignatureMandatory))
+			isSignMandatory = true;
+
+	_paperSignatureButton.hidden = isSignMandatory;
+}
+
+
 - (NSString *)signData:(NSString *)hash
           withKeystore:(ADLKeyStore *)keystore
                withP12:(NSString *)p12AbsolutePath {
@@ -491,6 +565,15 @@
 	else {
 		return [signature base64EncodedString];
 	}
+}
+
+
+#pragma mark - UIButton delegate
+
+
+- (void)onPaperSignatureButtonClicked:(id)sender {
+
+	NSLog(@"Adrien - Click !");
 }
 
 
