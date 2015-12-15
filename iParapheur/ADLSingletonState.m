@@ -46,52 +46,30 @@
 
 #import "ADLSingletonState.h"
 
+
 @implementation ADLSingletonState
 
 @synthesize bureauCourant;
-@synthesize dossierCourant;
+@synthesize dossierCourantObject;
 @synthesize currentPrincipalDocPath;
 @synthesize currentFilter;
 
-#pragma mark -
+
 #pragma mark Singleton Wizardry
-#pragma mark -
+
 
 static ADLSingletonState *sharedSingletonState = nil;
 
+
 + (ADLSingletonState *)sharedSingletonState {
-    
-    static ADLSingletonState *sharedSingletonState = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedSingletonState = [[self alloc] init];
-    });
-    return sharedSingletonState;
-}
 
-/*+ (id)allocWithZone:(NSZone *)zone {
-    return [[self sharedSingletonState] retain];
+	static ADLSingletonState *sharedSingletonState = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedSingletonState = [[self alloc] init];
+	});
+	return sharedSingletonState;
 }
-
-- (id)copyWithZone:(NSZone *)zone {
-    return self;
-}
-
-- (id)retain {
-    return self;
-}
-
-- (NSUInteger)retainCount {
-    return NSUIntegerMax; // denotes an object that cannot be released
-}
-
-- (oneway void)release {
-    // do nothing
-}
-
-- (id)autorelease {
-    return self;
-}*/
 
 
 @end

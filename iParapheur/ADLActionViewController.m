@@ -87,10 +87,10 @@
 
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-	NSString *dossierRef = [[ADLSingletonState sharedSingletonState] dossierCourant];
-	NSArray *dossiers = [NSArray arrayWithObject:dossierRef];
-	[((RGWorkflowDialogViewController*) [segue destinationViewController]) setDossiersRef:dossiers];
-	[((RGWorkflowDialogViewController*) [segue destinationViewController]) setAction:[segue identifier]];
+	ADLResponseDossier *dossier = [ADLSingletonState sharedSingletonState].dossierCourantObject;
+	NSArray *dossiers = @[dossier];
+	((RGWorkflowDialogViewController*) segue.destinationViewController).dossiers = dossiers;
+	((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;
 }
 
 
@@ -104,29 +104,30 @@ numberOfRowsInSection:(NSInteger)section {
 }
 
 
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ADLActionCell* cell = (ADLActionCell*)[tableView dequeueReusableCellWithIdentifier:@"ActionCell"];
-	
-	if (cell == nil) {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+	ADLActionCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActionCell"];
+
+	if (cell == nil)
 		cell = [[ADLActionCell alloc] initWithStyle:UITableViewCellStyleDefault
-									reuseIdentifier:@"ActionCell"];
-	}
-	
-	[cell.actionLabel setText:[_labels objectAtIndex:[indexPath row]]];
-	if ([[_actions objectAtIndex:[indexPath row]] isEqualToString:@"REJETER"]) {
-		UIImage *rejectImg = [UIImage imageNamed:@"rejeter.png"];
-		[cell.imageView setImage:rejectImg];
-	}
-	else {
+		                            reuseIdentifier:@"ActionCell"];
+
+	cell.actionLabel.text = _labels[(NSUInteger) indexPath.row];
+
+	if ([_actions[(NSUInteger) indexPath.row] isEqualToString:@"REJETER"])
+		cell.imageView.image = [UIImage imageNamed:@"rejeter.png"];
+	else
 		[cell.imageView setImage:[UIImage imageNamed:@"viser.png"]];
-	}
+
 	return cell;
 }
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	@try {
-		[self performSegueWithIdentifier:[_actions objectAtIndex:[indexPath row]] sender:self];
+		[self performSegueWithIdentifier:_actions[(NSUInteger) indexPath.row]
+		                          sender:self];
 	}
 	@catch (NSException *exception) {
 		[[[UIAlertView alloc] initWithTitle:@"Action impossible"

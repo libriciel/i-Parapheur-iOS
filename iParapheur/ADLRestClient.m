@@ -294,17 +294,33 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		 withPrivateAnnotation:(NSString *)privateAnnotation
 					   success:(void (^)(NSArray *))success
 					   failure:(void (^)(NSError *))failure {
-	
+
 	[_restClientApi actionRejeterForDossier:dossierId
-								  forBureau:[self fixBureauId:bureauId]
-					   withPublicAnnotation:publicAnnotation
-					  withPrivateAnnotation:privateAnnotation
-									success:^(NSArray *result) {
-										success(result);
-									}
-									failure:^(NSError *error) {
-										failure(error);
-									}];
+	                              forBureau:[self fixBureauId:bureauId]
+	                   withPublicAnnotation:publicAnnotation
+	                  withPrivateAnnotation:privateAnnotation
+	                                success:^(NSArray *result) {
+		                                success(result);
+	                                }
+	                                failure:^(NSError *error) {
+		                                failure(error);
+	                                }];
+}
+
+
+- (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
+                                     forBureau:(NSString *)bureauId
+                                       success:(void (^)(NSArray *))success
+                                       failure:(void (^)(NSError *))failure {
+
+	[_restClientApi actionSwitchToPaperSignatureForDossier:dossierId
+	                                             forBureau:[self fixBureauId:bureauId]
+	                                               success:^(NSArray *result) {
+		                                               success(result);
+	                                               }
+	                                               failure:^(NSError *error) {
+		                                               failure(error);
+	                                               }];
 }
 
 
