@@ -297,7 +297,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	//			- followed with action name, and a ?	    				         importCertificate\?
 	//			- then, catching the first group, non greedy						 ([^&]*)=(.*?)
 	//          - then, any other group, if exists, till the end of line (max 3)     (?:&([^&]*)=(.*?))?    => 3 times
-
 	NSString *importCertifPattern = @"^iparapheur:\\/\\/importCertificate\\?([^&]*)=(.*?)(?:&([^&]*)=(.*?))?(?:&([^&]*)=(.*?))?(?:&([^&]*)=(.*?))?$";
 
 	NSRegularExpression *isImportCertifRegex = [NSRegularExpression regularExpressionWithPattern:importCertifPattern
