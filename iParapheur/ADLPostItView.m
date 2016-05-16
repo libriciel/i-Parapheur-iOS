@@ -22,9 +22,9 @@
         [_label setLineBreakMode:NSLineBreakByWordWrapping];
         [_label setNumberOfLines:4];
         */
-        _textView = [[UITextView alloc] initWithFrame:[self bounds]];
-        [_textView setBackgroundColor:[UIColor yellowColor]];
-        [_textView setDelegate:self];
+        _textView = [[UITextView alloc] initWithFrame:self.bounds];
+        _textView.backgroundColor = [UIColor yellowColor];
+        _textView.delegate = self;
                 
         
         [self addSubview:_textView];
@@ -34,7 +34,7 @@
 
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    [_annotationModel setText:[textView text]];
+	_annotationModel.text = textView.text;
 }
 
     
@@ -51,15 +51,14 @@
 	size.width = 100.0f;
 	size.height = size.height > 100.0f ? size.height : 100.0f;
 	
-	CGRect myFrame = [self frame];
+	CGRect myFrame = self.frame;
 	
 	myFrame.size.width = size.width;
 	myFrame.size.height = size.height;
 	
 	myFrame = CGRectInset(myFrame, -15, -15);
-	[_textView setFrame: CGRectMake(15.0f, 15.0f, size.width, size.height)];
-	[self setFrame:myFrame];
-	
+	_textView.frame = CGRectMake(15.0f, 15.0f, size.width, size.height);
+	self.frame = myFrame;
 }
 
 
@@ -106,8 +105,8 @@
 
 
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
-    [super setContentScaleFactor:contentScaleFactor];
-    [_label setContentScaleFactor:contentScaleFactor];
+    super.contentScaleFactor = contentScaleFactor;
+    _label.contentScaleFactor = contentScaleFactor;
 }
 
 
