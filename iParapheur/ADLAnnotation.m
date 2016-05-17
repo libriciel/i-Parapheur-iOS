@@ -57,7 +57,6 @@
                       (y1.floatValue / 150.0f * 72.0f) - (y.floatValue / 150.0f * 72.0f)); // height
     
     return CGRectInset(arect, -14.0f, -14.0f);
-    
 }
 
 -(NSDictionary*) dictWithRect:(CGRect) rect {
