@@ -262,18 +262,18 @@
 	    CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame),CGRectGetMinY(self.frame),kPostItWidth, kPostItheight)];
         _postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
         _postItView.userInteractionEnabled = _annotationModel.editable;
-        [_postItView setAnnotationModel:_annotationModel];
-        [_postItView setContentScaleFactor:[self contentScaleFactor]];
-        [[self superview] addSubview:_postItView];
+        _postItView.annotationModel = _annotationModel;
+        _postItView.contentScaleFactor = self.contentScaleFactor;
+        [self.superview addSubview:_postItView];
     }
 }
 
 
 // Override setContetScaleFactor to apply it to the close button;
 -(void)setContentScaleFactor:(CGFloat)contentScaleFactor {
-    [super setContentScaleFactor:contentScaleFactor];
-    [self.closeButton setContentScaleFactor:contentScaleFactor];
-    [self.postItButton setContentScaleFactor:contentScaleFactor];
+    super.contentScaleFactor = contentScaleFactor;
+    self.closeButton.contentScaleFactor = contentScaleFactor;
+    self.postItButton.contentScaleFactor = contentScaleFactor;
 }
 
 
