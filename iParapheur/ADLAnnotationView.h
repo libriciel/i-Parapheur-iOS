@@ -50,7 +50,6 @@
 #import "ADLInfoView.h"
 #import "ADLAnnotationButton.h"
 #import "ADLCloseButton.h"
-#import "ADLPostItButton.h"
 #import "ADLPostItView.h"
 
 #define kAnnotationMinWidth 100.0f

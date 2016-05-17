@@ -10,7 +10,6 @@
 		142B020816D61AF200EF3B8F /* acmobile.der in Resources */ = {isa = PBXBuildFile; fileRef = 142B020716D61AF200EF3B8F /* acmobile.der */; };
 		142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 142B021616D6580200EF3B8F /* ADLFilterTypeTableViewController.m */; };
 		142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 142B021916D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m */; };
-		142CDD8D1640260B009F4F84 /* ADLPostItButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 142CDD8C1640260B009F4F84 /* ADLPostItButton.m */; };
 		1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1434F66A168DFDD2000C115D /* ADLKeyStore.m */; };
 		1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 1434F66C168DFDD2000C115D /* PrivateKey.m */; };
 		1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1434F670168DFF98000C115D /* KeyStore.xcdatamodeld */; };
@@ -191,8 +190,6 @@
 		142B021616D6580200EF3B8F /* ADLFilterTypeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterTypeTableViewController.m; sourceTree = "<group>"; };
 		142B021816D6581400EF3B8F /* ADLFilterSubTypeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterSubTypeTableViewController.h; sourceTree = "<group>"; };
 		142B021916D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterSubTypeTableViewController.m; sourceTree = "<group>"; };
-		142CDD8B1640260B009F4F84 /* ADLPostItButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLPostItButton.h; sourceTree = "<group>"; };
-		142CDD8C1640260B009F4F84 /* ADLPostItButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLPostItButton.m; sourceTree = "<group>"; };
 		1434F669168DFDD2000C115D /* ADLKeyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLKeyStore.h; sourceTree = "<group>"; };
 		1434F66A168DFDD2000C115D /* ADLKeyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLKeyStore.m; sourceTree = "<group>"; };
 		1434F66B168DFDD2000C115D /* PrivateKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivateKey.h; sourceTree = "<group>"; };
@@ -544,8 +541,6 @@
 			children = (
 				B444316D160A230D00C8C475 /* ADLCloseButton.h */,
 				B444316E160A230D00C8C475 /* ADLCloseButton.m */,
-				142CDD8B1640260B009F4F84 /* ADLPostItButton.h */,
-				142CDD8C1640260B009F4F84 /* ADLPostItButton.m */,
 				95719C7D1893CECA00246F7C /* ADLAnnotationButton.h */,
 				95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */,
 			);
@@ -1283,7 +1278,6 @@
 				B44649E916241657002622DF /* ADLAnnotation.m in Sources */,
 				958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */,
 				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
-				142CDD8D1640260B009F4F84 /* ADLPostItButton.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
 				1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */,
 				1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */,
