@@ -249,8 +249,8 @@
         CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMinX(self.frame),CGRectGetMaxY(self.frame),kInfoWidth, kInfoHeight)];
         
         _infoView = [[ADLInfoView alloc] initWithFrame:clippedFrame];
-        [_infoView setAnnotationModel:_annotationModel];
-        [_infoView setContentScaleFactor:[self contentScaleFactor]];
+        _infoView.annotationModel = _annotationModel;
+        _infoView.contentScaleFactor = self.contentScaleFactor;
         [[self superview] addSubview:_infoView];
     }
 }
