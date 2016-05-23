@@ -1,11 +1,37 @@
-//
-//  ADLKeyStore.m
-//  LiberSignOpenSSL
-//
-//  Created by Emmanuel Peralta on 27/12/12.
-//  Copyright (c) 2012 Emmanuel Peralta. All rights reserved.
-//
-
+/*
+ * Copyright 2012-2016, Adullact-Projet.
+ *
+ * contact@adullact-projet.coop
+ *
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
+ *
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
 #import "ADLKeyStore.h"
 #include <openssl/pem.h>
 #include <openssl/err.h>
@@ -538,10 +564,10 @@ localizedDescription:(NSString *)localizedDescription
 }
 
 
--(BOOL) addKey:(NSString *)p12Path
+- (BOOL)addKey:(NSString *)p12Path
   withPassword:(NSString *)password
-		 error:(NSError**)error {
-		
+         error:(NSError **)error {
+
 	/* Read PKCS12 */
 	FILE *fp;
 	EVP_PKEY *pkey;
@@ -550,32 +576,34 @@ localizedDescription:(NSString *)localizedDescription
 	PKCS12 *p12;
 	// int i = 0;
 	unsigned char *alias = NULL;
-	
+
 	const char *p12_file_path = [p12Path cStringUsingEncoding:NSUTF8StringEncoding];
 	const char *p12_password = [password cStringUsingEncoding:NSUTF8StringEncoding];
-	
+
 	OpenSSL_add_all_algorithms();
 	ERR_load_crypto_strings();
 	EVP_add_digest(EVP_sha1());
-	
+
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		fprintf(stderr, "Error opening file %s\n", p12_file_path);
 		if (error) {
 			*error = [NSError errorWithDomain:NSPOSIXErrorDomain
 			                             code:ENOENT
-			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", p12Path.lastPathComponent]}];
+			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert",
+			                                                                                           p12Path.lastPathComponent]}];
 		}
 		return NO;
 	}
 	p12 = d2i_PKCS12_fp(fp, NULL);
-	fclose (fp);
+	fclose(fp);
 	if (!p12) {
 		fprintf(stderr, "Error reading PKCS#12 file\n");
 		ERR_print_errors_fp(stderr);
 		if (error) {
 			*error = [NSError errorWithDomain:NSPOSIXErrorDomain
 			                             code:ENOENT
-			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de lire %@", p12Path.lastPathComponent]}];
+			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de lire %@",
+			                                                                                           p12Path.lastPathComponent]}];
 			PKCS12_free(p12);
 		}
 		return NO;
@@ -586,10 +614,11 @@ localizedDescription:(NSString *)localizedDescription
 		if (error) {
 			*error = [NSError errorWithDomain:P12ErrorDomain
 			                             code:P12OpenErrorCode
-			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", p12Path.lastPathComponent]}];
+			                         userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe",
+			                                                                                           p12Path.lastPathComponent]}];
 		}
 		PKCS12_free(p12);
-		
+
 		return NO;
 	}
 	PKCS12_free(p12);
@@ -612,87 +641,94 @@ localizedDescription:(NSString *)localizedDescription
 		//for (i = 0; i < sk_X509_num(ca); i++) {
 		//PEM_write_X509_AUX(stdout, sk_X509_value(ca, i));
 		// int len = 0;
-		
+
 		//  unsigned char *alias = X509_alias_get0(sk_X509_value(ca, i), &len);
 		//  printf("%s", alias);
-		
+
 		//}
 	}
-	
+
 	// TODO : if (alias == null), error message
-	
+
 	// prepare data for the PrivateKey Entity
 	NSData *cert_data_to_store = X509_to_NSData(cert);
-	
+
 	X509_NAME *issuer_name = X509_get_issuer_name(cert);
-	ASN1_INTEGER* cert_serial_number = X509_get_serialNumber(cert);
+	ASN1_INTEGER *cert_serial_number = X509_get_serialNumber(cert);
 	BIGNUM *bnser = ASN1_INTEGER_to_BN(cert_serial_number, NULL);
-	
-	char* big_number_serial_str = BN_bn2hex(bnser);
+	char *big_number_serial_str = BN_bn2hex(bnser);
 	char issuer_name_str[256];
-	
+
 	X509_NAME_oneline(issuer_name, issuer_name_str, 256);
-	
+
 	NSEntityDescription *entityDescription = [NSEntityDescription
 											  entityForName:@"PrivateKey"
 											  inManagedObjectContext:self.managedObjectContext];
 	
 	NSFetchRequest *request = [NSFetchRequest new];
+
 	[request setEntity:entityDescription];
-	
-	NSString *commonName_to_find = [NSString stringWithCString:(const char*)alias encoding:NSUTF8StringEncoding];
-	
+
+	NSString *commonName_to_find = [NSString stringWithCString:(const char *) alias
+	                                                  encoding:NSUTF8StringEncoding];
+
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:
-							  @"commonName=%@ AND caName=%@ AND serialNumber=%@",
-							  commonName_to_find,
-							  [NSString stringWithCString:(const char*)issuer_name_str encoding:NSUTF8StringEncoding],
-							  [NSString stringWithCString:(const char*)big_number_serial_str encoding:NSUTF8StringEncoding]];
-	
+			                                      @"commonName=%@ AND caName=%@ AND serialNumber=%@",
+			                                      commonName_to_find,
+			                                      [NSString stringWithCString:(const char *) issuer_name_str
+			                                                         encoding:NSUTF8StringEncoding],
+			                                      [NSString stringWithCString:(const char *) big_number_serial_str
+			                                                         encoding:NSUTF8StringEncoding]];
+
 	[request setPredicate:predicate];
-	
+
 	if (error)
 		*error = nil;
 	NSArray *array = [self.managedObjectContext executeFetchRequest:request
 	                                                          error:error];
-	
+
 //	if (*error) {
 //		NSLog(@"Error fetching keys: %@", [*error localizedDescription]);
 //		return NO;
 //	}
-	
-	if (array.count == 0) {
-		
+
+	if ([array count] == 0) {
+
 		NSString *newPath = [self.applicationDataDirectory.path stringByAppendingPathComponent:self.UUID];
-		
+
 		// move the file to applicationDataDirectory
 		[[NSFileManager defaultManager] moveItemAtPath:p12Path
-												toPath:newPath
-												 error:error];
+		                                        toPath:newPath
+		                                         error:error];
+
 
 		// generate an entry for the new Key
-		PrivateKey *new_pk = (PrivateKey *) [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
-		                                                                  inManagedObjectContext:self.managedObjectContext];
+		PrivateKey *new_pk = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
+		                                                   inManagedObjectContext:self.managedObjectContext];
 		new_pk.p12Filename = newPath;
 		new_pk.publicKey = cert_data_to_store;
-		new_pk.commonName = [NSString stringWithCString:(const char*)alias encoding:NSUTF8StringEncoding];
-		new_pk.caName = [NSString stringWithCString:(const char*)issuer_name_str encoding:NSUTF8StringEncoding];
-		new_pk.serialNumber = [NSString stringWithCString:(const char*)big_number_serial_str encoding:NSUTF8StringEncoding];
-		
-		*error = nil;
+		new_pk.commonName = [NSString stringWithCString:(const char *) alias
+		                                       encoding:NSUTF8StringEncoding];
+		new_pk.caName = [NSString stringWithCString:(const char *) issuer_name_str
+		                                   encoding:NSUTF8StringEncoding];
+		new_pk.serialNumber = [NSString stringWithCString:(const char *) big_number_serial_str
+		                                         encoding:NSUTF8StringEncoding];
+
+		error = nil;
 		if (![self.managedObjectContext save:error]) {
 			// Something's gone seriously wrong
-			NSLog(@"Error saving new PrivateKey: %@", [*error localizedDescription]);
-			
+			NSLog(@"Error saving new PrivateKey: %@", (*error).localizedDescription);
 		}
 	}
 	else {
 		NSLog(@"Object already in KeyStore %@", [array[0] commonName]);
+		*error = [NSError errorWithDomain:P12ErrorDomain
+		                             code:P12AlreadyImported
+		                         userInfo:@{NSLocalizedDescriptionKey : @"Ce certificat a déjà été importé"}];
+		return NO;
 	}
-	
+
 	return YES;
-	
-	
-	
 }
 
 @end

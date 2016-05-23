@@ -1,6 +1,5 @@
 /*
  * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
@@ -33,30 +32,42 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import "ADLCircuitCell.h"
+#import "ADLCertificateAlertView.h"
 
-@implementation ADLCircuitCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style
-	reuseIdentifier:(NSString *)reuseIdentifier {
-	
-	self = [super initWithStyle:style
-				reuseIdentifier:reuseIdentifier];
-	
+@implementation ADLCertificateAlertView
+
+@synthesize p12Path;
+
+
+- (id)initWithFrame:(CGRect)frame {
+
+	self = [super initWithFrame:frame];
+
 	if (self) {
-        // Initialization code
-    }
-	
+		// Initialization code
+	}
+
 	return self;
 }
 
-- (void)setSelected:(BOOL)selected
-		   animated:(BOOL)animated {
-	
-	[super setSelected:selected
-			  animated:animated];
 
-    // Configure the view for the selected state
+- (id)initWithTitle:(NSString *)title
+            message:(NSString *)message
+           delegate:(id)delegate
+  cancelButtonTitle:(NSString *)cancelButtonTitle
+  otherButtonTitles:(NSString *)otherButtonTitles, ... {
+
+	self = [super initWithTitle:title
+	                    message:message
+	                   delegate:delegate
+	          cancelButtonTitle:cancelButtonTitle
+	          otherButtonTitles:otherButtonTitles, nil];
+
+	if (self)
+		self.alertViewStyle = UIAlertViewStyleSecureTextInput;
+
+	return self;
 }
 
 @end

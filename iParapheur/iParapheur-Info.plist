@@ -47,6 +47,17 @@
 	<string>1.4.07</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>coop.adullact-projet.iparapheur</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>iparapheur</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1.4.07</string>
 	<key>LSRequiresIPhoneOS</key>

@@ -1,6 +1,5 @@
 /*
  * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
@@ -33,30 +32,8 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import "ADLCircuitCell.h"
+#import <UIKit/UIKit.h>
 
-@implementation ADLCircuitCell
-
-- (id)initWithStyle:(UITableViewCellStyle)style
-	reuseIdentifier:(NSString *)reuseIdentifier {
-	
-	self = [super initWithStyle:style
-				reuseIdentifier:reuseIdentifier];
-	
-	if (self) {
-        // Initialization code
-    }
-	
-	return self;
-}
-
-- (void)setSelected:(BOOL)selected
-		   animated:(BOOL)animated {
-	
-	[super setSelected:selected
-			  animated:animated];
-
-    // Configure the view for the selected state
-}
-
+@interface ADLCertificateAlertView : UIAlertView
+@property (nonatomic, strong) NSString *p12Path;
 @end
