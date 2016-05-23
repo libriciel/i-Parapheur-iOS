@@ -227,7 +227,7 @@
   didFailWithError:(NSError *)error {
 	
 	if (!self.isCancelled) {
-		if (false && _delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)]) {
+		if (_delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)]) {
 			[_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork)
 										withObject:nil
 									 waitUntilDone:YES];
@@ -262,7 +262,7 @@
 	
 	
 	//NSArray *anchors = [[NSArray alloc] initWithObjects: (id)adullact_mobile, nil];
-	NSArray *anchors = [[NSArray alloc] initWithObjects: (__bridge id)adullact_mobile, nil];
+	NSArray *anchors = @[(__bridge id) adullact_mobile];
 	
 	SecTrustSetAnchorCertificatesOnly(trust, YES);
 	//SecTrustSetAnchorCertificates(trust, (CFArrayRef)anchors);
@@ -363,7 +363,7 @@
 																			  options:NSJSONReadingMutableContainers
 																				error:&error];
 		
-		[responseObject setObject:_request forKey:@"_req"];
+		responseObject[@"_req"] = _request;
 		
 		if (_delegate && [_delegate respondsToSelector:@selector(didEndWithRequestAnswer:) ]) {
 			[_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:)
