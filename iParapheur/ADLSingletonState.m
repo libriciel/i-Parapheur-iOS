@@ -49,7 +49,6 @@
 @implementation ADLSingletonState
 
 @synthesize bureauCourant;
-@synthesize dossierCourant;
 @synthesize currentPrincipalDocPath;
 @synthesize currentFilter;
 

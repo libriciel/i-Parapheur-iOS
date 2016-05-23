@@ -144,7 +144,7 @@
 			// Stringify JSON filter
 
 			NSError *error;
-			NSData *jsonData = [NSJSONSerialization dataWithJSONObject:filtersDictionary
+			NSData *jsonData = [NSJSONSerialization dataWithJSONObject:filtersDictionnary
 			                                                   options:0
 			                                                     error:&error];
 
@@ -180,7 +180,7 @@
 			                 }];
 		}
 		else {
-			API_GETDOSSIERHEADERS_FILTERED(self.deskRef, @(page), @"15", currentFilter[@"banette"], filtersDictionary);
+			API_GETDOSSIERHEADERS_FILTERED(self.deskRef, @(page), @"15", currentFilter[@"banette"], filtersDictionnary);
 		}
 	}
 	else {
