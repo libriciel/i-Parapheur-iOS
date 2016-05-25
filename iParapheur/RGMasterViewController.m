@@ -119,10 +119,10 @@
 }
 
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewDidUnload];
+	[super didReceiveMemoryWarning];
 }
 
 

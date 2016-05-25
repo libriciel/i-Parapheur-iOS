@@ -107,8 +107,11 @@
 
 
 -(void)didReceiveMemoryWarning {
+
+	[self setTableView:nil];
+	[self setTableView:nil];
+
 	[super didReceiveMemoryWarning];
-	// Dispose of any resources that can be recreated.
 }
 
 
@@ -163,13 +166,6 @@ numberOfRowsInSection:(NSInteger)section {
 						  otherButtonTitles: nil] show];
 	}
 	@finally {}
-}
-
-
--(void)viewDidUnload {
-	[self setTableView:nil];
-	[self setTableView:nil];
-	[super viewDidUnload];
 }
 
 

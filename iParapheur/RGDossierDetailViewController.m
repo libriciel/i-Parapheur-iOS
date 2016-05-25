@@ -120,14 +120,12 @@
 }
 
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
 
 	[self setCircuitTable:nil];
-
-	//unregister observer
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
+
+	[super didReceiveMemoryWarning];
 }
 
 

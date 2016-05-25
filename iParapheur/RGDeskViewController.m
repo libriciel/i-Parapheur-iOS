@@ -221,11 +221,12 @@
 }
 
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
 
 	[self setLoadMoreButton:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewDidUnload];
+
+	[super didReceiveMemoryWarning];
 }
 
 
