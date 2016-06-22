@@ -83,7 +83,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSLog(@"certData %@", cert);
 	}
 
-
 	// UI overrode parameters
 
 	[[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor lightGrayColor]];

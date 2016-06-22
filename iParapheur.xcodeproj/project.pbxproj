@@ -84,6 +84,8 @@
 		B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33EF1547333D006F7BF3 /* ReaderThumbView.m */; };
 		B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */; };
 		B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E11547333D006F7BF3 /* CGPDFDocument.m */; };
+		C50A87401D1AD07000025074 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C50A873F1D1AD07000025074 /* Settings.storyboard */; };
+		C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */; };
 		C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */; };
 		C51394121A65834000F46633 /* ADLResponseAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C51394111A65834000F46633 /* ADLResponseAnnotation.m */; };
 		C516EDE51AB6D94400216E5F /* iw-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE41AB6D94400216E5F /* iw-signature@2x.png */; };
@@ -349,6 +351,9 @@
 		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
 		BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		C50A873F1D1AD07000025074 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = Settings/Settings.storyboard; sourceTree = "<group>"; };
+		C50A87421D1AD0FD00025074 /* iParapheur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-Header.h"; sourceTree = "<group>"; };
+		C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsTableViewController.swift; path = Settings/SettingsTableViewController.swift; sourceTree = "<group>"; };
 		C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceUtils.h; sourceTree = "<group>"; };
 		C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceUtils.m; sourceTree = "<group>"; };
 		C51394101A65834000F46633 /* ADLResponseAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseAnnotation.h; sourceTree = "<group>"; };
@@ -690,6 +695,7 @@
 				B4E5ECB7153AF65F00BD514D /* MainStoryboard_iPad.storyboard */,
 				B4E5ECA9153AF65F00BD514D /* Supporting Files */,
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
+				C50A87411D1AD07A00025074 /* Settings */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -867,6 +873,16 @@
 			name = Graphics;
 			sourceTree = "<group>";
 		};
+		C50A87411D1AD07A00025074 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				C50A873F1D1AD07000025074 /* Settings.storyboard */,
+				C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */,
+				C50A87421D1AD0FD00025074 /* iParapheur-Bridging-Header.h */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		C524A6F11B15F4DF003DBED9 /* RestClientApi4 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1039,6 +1055,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = RG;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0710;
 				TargetAttributes = {
 					B4E5EC9D153AF65F00BD514D = {
@@ -1079,6 +1096,7 @@
 				B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */,
 				C58CB2921AB719F600C79A97 /* ir-visa.png in Resources */,
 				C58CB2B21AB72D3500C79A97 /* Icon-72@2x.png in Resources */,
+				C50A87401D1AD07000025074 /* Settings.storyboard in Resources */,
 				C5901F0F1AA9ECF100E4F264 /* icon_login_add@3x.png in Resources */,
 				C58CB2C21AB72F6E00C79A97 /* Icon-40.png in Resources */,
 				C5D7E7011AA9C05A00A736B4 /* icon_login.png in Resources */,
@@ -1229,6 +1247,7 @@
 				9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */,
 				B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */,
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
+				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
 				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,
 				B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */,
 				C51394121A65834000F46633 /* ADLResponseAnnotation.m in Sources */,
@@ -1432,6 +1451,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1453,6 +1473,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "iParapheur/iParapheur-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1462,6 +1484,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3E4070D769C2E4D1451F17C6 /* Pods.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1483,6 +1506,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "iParapheur/iParapheur-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
