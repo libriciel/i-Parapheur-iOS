@@ -34,6 +34,7 @@
  */
 #import <UIKit/UIKit.h>
 #import "ADLCloseButton.h"
+
 typedef enum {
 	HUDAnimationNone,
 	HUDAnimationShowZoom,

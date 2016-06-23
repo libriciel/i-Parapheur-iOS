@@ -34,7 +34,7 @@
  */
 #import "DeviceUtils.h"
 #import "StringUtils.h"
-#import <TSMessage.h>
+#import <TSMessages/TSMessage.h>
 
 
 @implementation DeviceUtils

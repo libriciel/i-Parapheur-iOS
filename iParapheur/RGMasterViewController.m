@@ -39,7 +39,7 @@
 #import "ADLNotifications.h"
 #import "UIColor+CustomColors.h"
 #import "ADLRequester.h"
-#import "SCNetworkReachability.h"
+#import "SCNetworkReachability/SCNetworkReachability.h"
 #import "ADLResponseBureau.h"
 #import "DeviceUtils.h"
 

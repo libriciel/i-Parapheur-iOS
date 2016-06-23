@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import <MTLValueTransformer.h>
+#import <Mantle/MTLValueTransformer.h>
 
 
 @interface StringUtils : NSObject

@@ -33,8 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "LGViewHUD.h"
-#import <QuartzCore/QuartzCore.h>
-#import "ADLCloseButton.h"
 
 static LGViewHUD* defaultHUD = nil;
 

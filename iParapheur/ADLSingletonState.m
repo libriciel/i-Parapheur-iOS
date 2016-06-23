@@ -37,13 +37,6 @@
  * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
  */
-
-//
-//  ADLSingletonState.m
-//  iParapheur
-//
-
-
 #import "ADLSingletonState.h"
 
 @implementation ADLSingletonState

@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import <AFHTTPSessionManager.h>
+#import <AFNetworking/AFHTTPSessionManager.h>
 #import "ADLResponseDossier.h"
 #import "ADLResponseSignInfo.h"
 #import "ADLResponseCircuit.h"

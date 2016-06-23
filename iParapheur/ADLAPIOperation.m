@@ -33,8 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLAPIOperation.h"
-#import "ADLDocument.h"
-#import "SCNetworkReachability.h"
+#import "SCNetworkReachability/SCNetworkReachability.h"
 #import "ADLCredentialVault.h"
 #import "DeviceUtils.h"
 

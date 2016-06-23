@@ -18,6 +18,7 @@
 		1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
+		92A9A769D7E9B0E1D37B4B8B /* libPods-iParapheur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0DC3A015B1699A625DC009 /* libPods-iParapheur.a */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
 		9514BFE7187AA73800118B9C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDF187AA73800118B9C /* Icon.png */; };
@@ -110,7 +111,6 @@
 		C57E67DE1A5DF6F800BC4A3A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
 		C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
-		C57E67E11A5DF6F800BC4A3A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 		C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */; };
 		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
 		C58971531AA751500077FC84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C58971551AA751500077FC84 /* Localizable.strings */; };
@@ -173,7 +173,6 @@
 		C5C803641A5D90F200D54F7D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803631A5D90F200D54F7D /* Foundation.framework */; };
 		C5D7E7011AA9C05A00A736B4 /* icon_login.png in Resources */ = {isa = PBXBuildFile; fileRef = C5D7E7001AA9C05A00A736B4 /* icon_login.png */; };
 		C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */; };
-		EA7029BB7E3A6A3A903A1932 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CAFD8DE0EAFEB60200C1C51 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +186,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		12F21AE0E916A230DF81F011 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
 		142B020716D61AF200EF3B8F /* acmobile.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = acmobile.der; sourceTree = "<group>"; };
 		142B021516D6580200EF3B8F /* ADLFilterTypeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterTypeTableViewController.h; sourceTree = "<group>"; };
 		142B021616D6580200EF3B8F /* ADLFilterTypeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterTypeTableViewController.m; sourceTree = "<group>"; };
@@ -207,8 +207,8 @@
 		14BBBD971690EBB9007FFD9F /* ADLActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLActionCell.h; sourceTree = "<group>"; };
 		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
-		3CAFD8DE0EAFEB60200C1C51 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E4070D769C2E4D1451F17C6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		4C13F631F22670CFFD94284C /* Pods-iParapheur.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.release.xcconfig"; sourceTree = "<group>"; };
+		7C0DC3A015B1699A625DC009 /* libPods-iParapheur.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iParapheur.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		9514BFDE187AA73800118B9C /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -350,7 +350,6 @@
 		B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
 		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
-		BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C50A873F1D1AD07000025074 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = Settings/Settings.storyboard; sourceTree = "<group>"; };
 		C50A87421D1AD0FD00025074 /* iParapheur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-Header.h"; sourceTree = "<group>"; };
 		C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsTableViewController.swift; path = Settings/SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -470,7 +469,7 @@
 				C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */,
 				C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */,
 				C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */,
-				EA7029BB7E3A6A3A903A1932 /* libPods.a in Frameworks */,
+				92A9A769D7E9B0E1D37B4B8B /* libPods-iParapheur.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,7 +486,6 @@
 				C57E67DE1A5DF6F800BC4A3A /* MessageUI.framework in Frameworks */,
 				C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */,
 				C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */,
-				C57E67E11A5DF6F800BC4A3A /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,15 +511,6 @@
 				1434F680168E087A000C115D /* ADLCertificateAlertView.m */,
 			);
 			name = AlertPrompt;
-			sourceTree = "<group>";
-		};
-		43F8F3B4EE231670EBF0469D /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */,
-				3E4070D769C2E4D1451F17C6 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		9514BFDA187AA4CF00118B9C /* app-icons */ = {
@@ -648,7 +637,7 @@
 				B4FF33FB15473378006F7BF3 /* Resources */,
 				B4E5ECA1153AF65F00BD514D /* Frameworks */,
 				B4E5EC9F153AF65F00BD514D /* Products */,
-				43F8F3B4EE231670EBF0469D /* Pods */,
+				EA62A308DDA3795505DFA1ED /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -674,7 +663,7 @@
 				C5C803591A5D90C200D54F7D /* QuartzCore.framework */,
 				C5C803571A5D90BA00D54F7D /* Security.framework */,
 				C5C803551A5D90AF00D54F7D /* CoreData.framework */,
-				3CAFD8DE0EAFEB60200C1C51 /* libPods.a */,
+				7C0DC3A015B1699A625DC009 /* libPods-iParapheur.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1006,6 +995,15 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		EA62A308DDA3795505DFA1ED /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				12F21AE0E916A230DF81F011 /* Pods-iParapheur.debug.xcconfig */,
+				4C13F631F22670CFFD94284C /* Pods-iParapheur.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1013,12 +1011,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B4E5ECD7153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheur" */;
 			buildPhases = (
-				D58E513E5596CB0936B9C060 /* Check Pods Manifest.lock */,
+				140678E8ECE4F554C5457D37 /* [CP] Check Pods Manifest.lock */,
 				B4E5EC9A153AF65F00BD514D /* Sources */,
 				B4E5EC9B153AF65F00BD514D /* Frameworks */,
 				B4E5EC9C153AF65F00BD514D /* Resources */,
-				F90A1171F11B49418945494D /* Copy Pods Resources */,
-				7186CF9F99082F0C89A6B1F2 /* Embed Pods Frameworks */,
+				B8873AE2EAD8273EBB0820CD /* [CP] Embed Pods Frameworks */,
+				178BBE27A4D65FC6722634D7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1174,19 +1172,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7186CF9F99082F0C89A6B1F2 /* Embed Pods Frameworks */ = {
+		140678E8ECE4F554C5457D37 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		178BBE27A4D65FC6722634D7 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B4E5ECC3153AF65F00BD514D /* ShellScript */ = {
@@ -1202,34 +1215,19 @@
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
-		D58E513E5596CB0936B9C060 /* Check Pods Manifest.lock */ = {
+		B8873AE2EAD8273EBB0820CD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		F90A1171F11B49418945494D /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1239,7 +1237,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
@@ -1275,6 +1272,7 @@
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,
 				B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */,
 				C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */,
+				C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */,
 				B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */,
 				C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */,
 				B46BCC4315693F7A00A96560 /* RGDocumentsView.m in Sources */,
@@ -1284,7 +1282,6 @@
 				C58971601AA88D420077FC84 /* RGLoginViewController.m in Sources */,
 				C5628EF81A63C37700CB884C /* ADLResponseDossiers.m in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
-				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
 				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
 				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,
@@ -1311,6 +1308,7 @@
 				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,
 				142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */,
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
+				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1449,7 +1447,7 @@
 		};
 		B4E5ECD8153AF65F00BD514D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BEECA2AD7A0909EB3619856B /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 12F21AE0E916A230DF81F011 /* Pods-iParapheur.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1482,7 +1480,7 @@
 		};
 		B4E5ECD9153AF65F00BD514D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E4070D769C2E4D1451F17C6 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 4C13F631F22670CFFD94284C /* Pods-iParapheur.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
