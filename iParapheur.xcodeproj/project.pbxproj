@@ -18,7 +18,7 @@
 		1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
-		92A9A769D7E9B0E1D37B4B8B /* libPods-iParapheur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C0DC3A015B1699A625DC009 /* libPods-iParapheur.a */; };
+		18551E2633576731DDE33C08 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56D850ED0DA5CD2CD5FC4AB2 /* Pods_iParapheur.framework */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
 		9514BFE7187AA73800118B9C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDF187AA73800118B9C /* Icon.png */; };
@@ -208,7 +208,7 @@
 		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
 		4C13F631F22670CFFD94284C /* Pods-iParapheur.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.release.xcconfig"; sourceTree = "<group>"; };
-		7C0DC3A015B1699A625DC009 /* libPods-iParapheur.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iParapheur.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		56D850ED0DA5CD2CD5FC4AB2 /* Pods_iParapheur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iParapheur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		9514BFDE187AA73800118B9C /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -469,7 +469,7 @@
 				C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */,
 				C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */,
 				C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */,
-				92A9A769D7E9B0E1D37B4B8B /* libPods-iParapheur.a in Frameworks */,
+				18551E2633576731DDE33C08 /* Pods_iParapheur.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -663,7 +663,7 @@
 				C5C803591A5D90C200D54F7D /* QuartzCore.framework */,
 				C5C803571A5D90BA00D54F7D /* Security.framework */,
 				C5C803551A5D90AF00D54F7D /* CoreData.framework */,
-				7C0DC3A015B1699A625DC009 /* libPods-iParapheur.a */,
+				56D850ED0DA5CD2CD5FC4AB2 /* Pods_iParapheur.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1460,7 +1460,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iParapheur/iParapheur-Prefix.pch";
 				INFOPLIST_FILE = "iParapheur/iParapheur-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1493,7 +1493,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iParapheur/iParapheur-Prefix.pch";
 				INFOPLIST_FILE = "iParapheur/iParapheur-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
