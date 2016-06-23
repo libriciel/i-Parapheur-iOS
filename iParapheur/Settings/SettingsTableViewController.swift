@@ -39,10 +39,31 @@ import UIKit.UITableViewController
 
 class SettingsTableViewController: UITableViewController {
 
+    var items: [String] = ["Comptes", "Certificats", "Filtres", "Informations légales", "Licences tierces"];
+
+    // MARK: LifeCycle
+
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad();
 
         print("View loaded : SettingsTableViewController");
+        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell");
+    }
+
+    // MARK: UITableViewController
+
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.items.count;
+    }
+
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath);
+        cell.textLabel?.text = self.items[indexPath.row];
+        return cell;
+    }
+
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("Clicked - plop");
     }
 
 }
