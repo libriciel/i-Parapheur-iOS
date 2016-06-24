@@ -119,7 +119,7 @@
 
 	_sessionManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
 	_sessionManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
-	_sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
+	// _sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
 	_sessionManager.securityPolicy.validatesDomainName = YES;
 
 	// TODO : Remove NSAllowsArbitraryLoads ATS in pList file, to upgrade security from iOS8 to iOS9 level.
