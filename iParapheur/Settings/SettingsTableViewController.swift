@@ -44,26 +44,111 @@ class SettingsTableViewController: UITableViewController {
     // MARK: LifeCycle
 
     override func viewDidLoad() {
-        super.viewDidLoad();
+        super.viewDidLoad()
+        print("View loaded : SettingsTableViewController")
+        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
-        print("View loaded : SettingsTableViewController");
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell");
+        // Adrien test iOS8
+
+        var manager: AFHTTPSessionManager = AFHTTPSessionManager(baseURL: NSURL(string:"https://m.parapheur.demonstrations.adullact.org"))
+        manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
+        manager.setSessionDidReceiveAuthenticationChallengeBlock { (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
+
+            if SettingsTableViewController.shouldTrustProtectionSpace(challenge, credential: credential) {
+                // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
+                return NSURLSessionAuthChallengeDisposition.UseCredential
+            }
+            return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
+        }
+
+        manager.GET("/parapheur/api/getApiLevel", parameters: nil, success: {
+            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+            print("success")
+
+        }, failure: {
+            (task: NSURLSessionDataTask!, error: NSError!) in
+            print("error")
+        })
     }
 
     // MARK: UITableViewController
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items.count;
+        return self.items.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath);
-        cell.textLabel?.text = self.items[indexPath.row];
-        return cell;
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        cell.textLabel?.text = self.items[indexPath.row]
+        return cell
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("Clicked - plop");
+        print("Clicked - plop")
+    }
+
+    // MARK: Test function
+
+    class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
+                                          var credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
+        // note: credential is a reference; any created credential should be sent back using credential.memory
+
+        let protectionSpace: NSURLProtectionSpace = challenge.protectionSpace
+        var trust: SecTrustRef = protectionSpace.serverTrust!
+
+        // load the root CA bundled with the app
+        let certPath: String? = NSBundle.mainBundle().pathForResource("acmobile", ofType: "der")
+        if certPath == nil {
+            print("Certificate does not exist!")
+            return false
+        }
+
+        let certData: NSData = NSData(contentsOfFile: certPath!)!
+        // takeUnretainedValue
+        let cert: SecCertificateRef? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
+
+        if cert == nil {
+            print("Certificate data could not be loaded. DER format?")
+            return false
+        }
+
+        // create a policy that ignores hostname
+        let domain: CFString? = nil
+        // takeRetainedValue
+        let policy:SecPolicy = SecPolicyCreateSSL(true, domain)
+
+        // takes all certificates from existing trust
+        let numCerts = SecTrustGetCertificateCount(trust)
+        var certs: [SecCertificateRef] = [SecCertificateRef]()
+        for var i = 0; i < numCerts; i++ {
+            // takeUnretainedValue
+            let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
+            certs.append(c!)
+        }
+
+        // and adds them to the new policy
+        var newTrust: SecTrust? = nil
+        var err: OSStatus = SecTrustCreateWithCertificates(certs, policy, &newTrust)
+        if err != noErr {
+            print("Could not create trust")
+        }
+        // TakeUnretainedValue
+        trust = newTrust! // replace old trust
+
+        // set root cert
+        let rootCerts: [AnyObject] = [cert!]
+        err = SecTrustSetAnchorCertificates(trust, rootCerts)
+
+        // evaluate the certificate and product a trustResult
+        var trustResult: SecTrustResultType = SecTrustResultType()
+        SecTrustEvaluate(trust, &trustResult)
+
+        if Int(trustResult) == Int(kSecTrustResultProceed) || Int(trustResult) == Int(kSecTrustResultUnspecified) {
+            // create the credential to be used
+            credential.memory = NSURLCredential(trust: trust)
+            return true
+        }
+        return false
     }
 
 }

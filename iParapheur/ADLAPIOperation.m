@@ -261,7 +261,7 @@
 	
 	
 	//NSArray *anchors = [[NSArray alloc] initWithObjects: (id)adullact_mobile, nil];
-	NSArray *anchors = [[NSArray alloc] initWithObjects: (__bridge id)adullact_mobile, nil];
+	NSArray *anchors = @[(__bridge id) adullact_mobile];
 	
 	SecTrustSetAnchorCertificatesOnly(trust, YES);
 	//SecTrustSetAnchorCertificates(trust, (CFArrayRef)anchors);

@@ -41,7 +41,7 @@
 #import "ADLRequester.h"
 #import "ADLAPIHelper.h"
 #import "LGViewHUD.h"
-#import <NSData_Base64/NSData+Base64.h>
+#import <NSData+Base64/NSData+Base64.h>
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 

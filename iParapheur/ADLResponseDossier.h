@@ -33,8 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "Mantle/MTLModel.h"
-#import "Mantle/MTLJSONAdapter.h"
+#import <Mantle/MTLModel.h>
+#import <Mantle/MTLJSONAdapter.h>
 
 
 static NSString *const kRDTitle = @"title";
