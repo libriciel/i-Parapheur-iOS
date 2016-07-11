@@ -36,14 +36,16 @@ import Foundation
 
 @objc class RestClientApiV3 : NSObject {
 	
-	var _manager: AFHTTPSessionManager;
+	var _manager: AFHTTPSessionManager
 
     // MARK: Constructor
 
-    init(baseUrl: NSString) {
+    init(baseUrl: NSString, login: NSString, password: NSString) {
 
+        _ticket = nil
 		_manager = AFHTTPSessionManager(baseURL: NSURL(string:baseUrl as String))
 		_manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
+        _manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password:password as String);
 		_manager.setSessionDidReceiveAuthenticationChallengeBlock { (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
 
             // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
@@ -59,6 +61,7 @@ import Foundation
 
 	class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
 	                                      var credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
+
 		// note: credential is a reference; any created credential should be sent back using credential.memory
 		
 		let protectionSpace: NSURLProtectionSpace = challenge.protectionSpace
@@ -121,15 +124,23 @@ import Foundation
 
     // MARK: Get methods
 
-    func getApiVersion() {
+    func getApiVersion(onResponse: ((AnyObject) -> Void)?, onError: ((AnyObject) -> Void)?) -> Void {
 
         _manager.GET("/parapheur/api/getApiLevel", parameters: nil, success: {
             (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            print("success \(responseObject)")
-
+            onResponse!(responseObject)
         }, failure: {
             (task: NSURLSessionDataTask!, error: NSError!) in
-            print("error")
+        })
+    }
+
+    func getBureaux(onResponse: ((AnyObject) -> Void)?, onError: ((AnyObject) -> Void)?) -> Void {
+
+        _manager.GET("/parapheur/bureaux", parameters: nil, success: {
+            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+            onResponse!(responseObject)
+        }, failure: {
+            (task: NSURLSessionDataTask!, error: NSError!) in
         })
     }
 
