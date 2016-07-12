@@ -148,7 +148,6 @@
 		[self cancelTasksInArray:uploadTasks withPath:path];
 		[self cancelTasksInArray:downloadTasks withPath:path];
 	}];
-
 	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 		[self cancelTasksInArray:dataTasks withPath:path];
 		[self cancelTasksInArray:uploadTasks withPath:path];
@@ -218,6 +217,8 @@
 - (void)getBureaux:(void (^)(NSArray *))success
            failure:(void (^)(NSError *))failure {
 
+	[self cancelAllHTTPOperationsWithPath:@"bureaux"];
+
 	[_swiftManager getBureaux:^(id response) {
 
 								  // Parse result
@@ -249,40 +250,29 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	NSMutableDictionary *queryParams = [[NSMutableDictionary alloc] init];
-	[queryParams setValue:@true forKey:@"asc"];
-	[queryParams setValue:bureau forKey:@"bureau"];
-	[queryParams setValue:@(page) forKey:@"page"];
-	[queryParams setValue:@(size) forKey:@"pageSize"];
-	[queryParams setValue:@0 forKey:@"pendingFile"];
-	[queryParams setValue:@(page * (size - 1)) forKey:@"skipped"];
-	[queryParams setValue:@"cm:create" forKey:@"sort"];
+	[self cancelAllHTTPOperationsWithPath:@"dossiers"];
 
-	if (filterJson != nil)
-		[queryParams setValue:filterJson forKey:@"filter"];
+	[_swiftManager getDossiers:bureau
+	                      page:@(page)
+	                      size:@(size)
+	                filterJson:filterJson
+	                onResponse:^(NSArray *response) {
 
-	//@"corbeilleName" : @"",
-	//@"metas" : @"",
+		                           NSError *error;
+		                           NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
+					                                                           fromJSONArray:response
+					                                                                   error:&error];
 
-	[_sessionManager GET:@"/parapheur/dossiers"
-	          parameters:queryParams
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+					               // Parse check and callback
 
-		             NSError *error;
-		             NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
-		                                                         fromJSONArray:responseObject
-		                                                                 error:&error];
-
-		             // Parse check and callback
-
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseDossiers);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+					               if (error)
+						               failure(error);
+					               else
+						               success(responseDossiers);
+				               }
+	                   onError:^(id error) {
+		                           failure(error);
+	                           }];
 }
 
 
@@ -291,27 +281,25 @@
            success:(void (^)(ADLResponseDossier *))success
            failure:(void (^)(NSError *))failure {
 
-	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
+	[_swiftManager getDossier:dossier
+	                   bureau:bureau
+	               onResponse:^(NSDictionary *response) {
 
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
-	          parameters:queryParams
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+					              NSError *error;
+					              ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
+					                                                              fromJSONDictionary:response
+					                                                                           error:&error];
 
-		             NSError *error;
-		             ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
-		                                                             fromJSONDictionary:responseObject
-		                                                                          error:&error];
+					              // Parse check and callback
 
-		             // Parse check and callback
-
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseDossier);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+					              if (error)
+						              failure(error);
+					              else
+						              success(responseDossier);
+						      }
+	                  onError:^(id error) {
+		                          failure(nil);
+	                          }];
 }
 
 
@@ -352,25 +340,24 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
-	          parameters:nil
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+	[_swiftManager getCircuit:dossier
+	               onResponse:^(NSDictionary *response) {
 
-		             NSError *error;
-		             ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-		                                                             fromJSONDictionary:responseObject[@"circuit"]
-		                                                                          error:&error];
+					              NSError *error;
+					              ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
+					                                                              fromJSONDictionary:response[@"circuit"]
+					                                                                           error:&error];
 
-		             // Parse check and callback
+					              // Parse check and callback
 
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseCircuit);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+					              if (error)
+						              failure(error);
+					              else
+						              success(responseCircuit);
+				              }
+	                  onError:^(id error) {
+		                          failure(nil);
+	                          }];
 }
 
 
@@ -382,33 +369,30 @@
 	[self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
 	                                                            andDocument:document]];
 
-	[_sessionManager GET:[self getAnnotationsUrlForDossier:dossier
-	                                           andDocument:document]
-	          parameters:nil
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+	[_swiftManager getAnnotations:dossier
+	                   onResponse:^(id responseAnnotation) {
 
-		             //TODO : Proper (Mantle based) JSON parse
+		                              //TODO : Proper (Mantle based) JSON parse
 
-		             @try {
-			             NSArray *responseArray = responseObject;
-			             NSMutableArray *result = [[NSMutableArray alloc] init];
+		                              @try {
+						                  NSArray *responseArray = responseAnnotation;
+						                  NSMutableArray *result = [[NSMutableArray alloc] init];
 
-			             for (id element in responseArray) {
-				             ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
-				             response.data = element;
-				             [result addObject:response];
-			             }
+						                  for (id element in responseArray) {
+							                  ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+							                  response.data = element;
+							                  [result addObject:response];
+						                  }
 
-			             success(result);
-		             }
-		             @catch (NSException *e) {
-			             failure(nil);
-		             }
-
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+						                  success(result);
+					                  }
+					                  @catch (NSException *e) {
+						                  failure(nil);
+					                  }
+	                              }
+	                      onError:^(id error) {
+		                              failure(error);
+	                              }];
 }
 
 
@@ -423,7 +407,7 @@
 
 	// Cancel previous download
 
-	[[_sessionManager session] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 		for (NSURLSessionTask *task in downloadTasks)
 			[task cancel];
 	}];
@@ -433,25 +417,27 @@
 	NSString *downloadUrlSuffix = [self getDownloadUrl:documentId
 	                                            forPdf:isPdf];
 
-	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@", _sessionManager.baseURL, downloadUrlSuffix];
-	NSMutableURLRequest *request = [_sessionManager.requestSerializer requestWithMethod:@"GET"
-	                                                                          URLString:downloadUrlString
-	                                                                         parameters:nil
-	                                                                              error:nil];
+	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@",
+	                                                         _swiftManager._manager.baseURL,
+	                                                         downloadUrlSuffix];
+	NSMutableURLRequest *request = [_swiftManager._manager.requestSerializer requestWithMethod:@"GET"
+	                                                                                 URLString:downloadUrlString
+	                                                                                parameters:nil
+	                                                                                     error:nil];
 
 	// Start download
 
-	NSURLSessionDownloadTask *downloadTask = [_sessionManager downloadTaskWithRequest:request
-	                                                                         progress:nil
-	                                                                      destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-		                                                                      return filePathUrl;
-	                                                                      }
-	                                                                completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-		                                                                if (error == nil)
-			                                                                success(filePath.path);
-		                                                                else if (error.code != kCFURLErrorCancelled)
-			                                                                failure(error);
-	                                                                }];
+	NSURLSessionDownloadTask *downloadTask = [_swiftManager._manager downloadTaskWithRequest:request
+	                                                                                progress:nil
+	                                                                             destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+					                                                                             return filePathUrl;
+				                                                                             }
+	                                                                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+							                                                                     if (error == nil)
+								                                                                     success(filePath.path);
+							                                                                     else if (error.code != kCFURLErrorCancelled)
+								                                                                     failure(error);
+						                                                                     }];
 
 	[downloadTask resume];
 }
