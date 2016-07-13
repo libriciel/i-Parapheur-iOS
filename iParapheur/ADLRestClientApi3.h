@@ -42,8 +42,6 @@
 
 @interface ADLRestClientApi3 : NSObject
 
-
-@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 @property (nonatomic, strong) RestClientApiV3 *swiftManager;
 
 
