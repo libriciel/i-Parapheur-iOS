@@ -41,7 +41,9 @@ import Foundation
 
     // MARK: Constructor
 
-    init(baseUrl: NSString, login: NSString, password: NSString) {
+    init(baseUrl: NSString,
+         login: NSString,
+         password: NSString) {
 
         _manager = AFHTTPSessionManager(baseURL: NSURL(string: baseUrl as String))
         _manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
@@ -125,24 +127,34 @@ import Foundation
 
     // MARK: Get methods
 
-    func getApiVersion(onResponse: ((AnyObject) -> Void)?, onError: ((AnyObject) -> Void)?) -> Void {
+    func getApiVersion(onResponse: ((AnyObject) -> Void)?,
+                       onError: ((NSError) -> Void)?) {
 
-        _manager.GET("/parapheur/api/getApiLevel", parameters: nil, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            onResponse!(responseObject)
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-        })
+        _manager.GET("/parapheur/api/getApiLevel",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
     }
 
-    func getBureaux(onResponse: ((AnyObject) -> Void)?, onError: ((AnyObject) -> Void)?) -> Void {
+    func getBureaux(onResponse: ((AnyObject) -> Void)?,
+                    onError: ((NSError) -> Void)?) {
 
-        _manager.GET("/parapheur/bureaux", parameters: nil, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            onResponse!(responseObject)
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-        })
+        _manager.GET("/parapheur/bureaux",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
     }
 
     func getDossiers(bureau: NSString,
@@ -150,7 +162,7 @@ import Foundation
                      size: NSNumber,
                      filterJson: NSString?,
                      onResponse: ((NSArray) -> Void)?,
-                     onError: ((AnyObject) -> Void)?) -> Void {
+                     onError: ((NSError) -> Void)?) {
 
         // Parameters
 
@@ -169,18 +181,22 @@ import Foundation
 
         // Request
 
-        _manager.GET("/parapheur/dossiers", parameters: paramsDict, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            onResponse!(responseObject as! NSArray)
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-        })
+        _manager.GET("/parapheur/dossiers",
+                     parameters: paramsDict,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject as! NSArray)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
     }
 
     func getDossier(dossier: NSString,
                     bureau: NSString,
                     onResponse: ((NSDictionary) -> Void)?,
-                    onError: ((AnyObject) -> Void)?) -> Void {
+                    onError: ((NSError) -> Void)?) {
 
         // Parameters
 
@@ -189,32 +205,116 @@ import Foundation
 
         // Request
 
-        _manager.GET("/parapheur/dossiers/\(dossier)", parameters: paramsDict, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            onResponse!(responseObject as! NSDictionary)
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-        })
+        _manager.GET("/parapheur/dossiers/\(dossier)",
+                     parameters: paramsDict,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject as! NSDictionary)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
     }
 
-    func getCircuit(dossier: NSString, onResponse: ((AnyObject) -> Void)?, onError: ((AnyObject) -> Void)?) -> Void {
+    func getCircuit(dossier: NSString,
+                    onResponse: ((AnyObject) -> Void)?,
+                    onError: ((NSError) -> Void)?) {
 
-        _manager.GET("/parapheur/dossiers/\(dossier)/circuit", parameters: nil, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            onResponse!(responseObject)
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-        })
+        _manager.GET("/parapheur/dossiers/\(dossier)/circuit",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
     }
 
-    func getAnnotations(dossier: NSString, onResponse: ((AnyObject) -> Void)?, onError: ((AnyObject) -> Void)?) -> Void {
+    func getAnnotations(dossier: NSString,
+                        onResponse: ((AnyObject) -> Void)?,
+                        onError: ((NSError) -> Void)?) {
 
-        _manager.GET("/parapheur/dossiers/\(dossier)/annotations", parameters: nil, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            onResponse!(responseObject)
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-        })
+        _manager.GET("/parapheur/dossiers/\(dossier)/annotations",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func getSignInfo(dossier: NSString,
+                     bureau: NSString,
+                     onResponse: ((AnyObject) -> Void)?,
+                     onError: ((NSError) -> Void)?) {
+
+        // Parameters
+
+        let paramsDict: NSMutableDictionary = NSMutableDictionary()
+        paramsDict["bureauCourant"] = bureau
+
+        // Request
+
+        _manager.GET("/parapheur/dossiers/\(dossier)/getSignInfo",
+                     parameters: paramsDict,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func sendSimpleAction(type: NSNumber,
+                          url: NSString,
+                          args: NSDictionary,
+                          onResponse: ((AnyObject) -> Void)?,
+                          onError: ((NSError) -> Void)?) {
+
+        if (type == 1) {
+            _manager.POST(url as String,
+                          parameters: args,
+                          success: {
+                              (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                              onResponse!(1)
+                          },
+                          failure: {
+                              (task: NSURLSessionDataTask!, error: NSError!) in
+                              onError!(error)
+                          })
+        }
+        else if (type == 2) {
+            _manager.PUT(url as String,
+                         parameters: args,
+                         success: {
+                             (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                             onResponse!(1)
+                         },
+                         failure: {
+                             (task: NSURLSessionDataTask!, error: NSError!) in
+                             onError!(error)
+                         })
+        }
+        else if (type == 3) {
+            _manager.DELETE(url as String,
+                            parameters: args,
+                            success: {
+                                (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                                onResponse!(1)
+                            },
+                            failure: {
+                                (task: NSURLSessionDataTask!, error: NSError!) in
+                                onError!(error)
+                            })
+        }
     }
 }
 

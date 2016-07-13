@@ -68,7 +68,7 @@
 	                          url:urlSettings];
 
 //	RestClientApiV3 *restApiV3 = [[RestClientApiV3 alloc] initWithBaseUrl:@"https://m.parapheur.demonstrations.adullact.org"];
-////	[restApiV3 getApiVersion];
+//	[restApiV3 getApiVersion];
 
 	return self;
 }
@@ -93,7 +93,8 @@
 	// Fix values
 
 	if (![url hasPrefix:@"https://m."])
-		url = [NSString stringWithFormat:@"https://m.%@", url];
+		url = [NSString stringWithFormat:@"https://m.%@",
+		                                 url];
 
 	// Initialize AFNetworking HTTPClient
 
@@ -104,9 +105,12 @@
 	_sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
 
 	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
-	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[requestSerializer setAuthorizationHeaderFieldWithUsername:login password:password];
+	[requestSerializer setValue:@"application/json"
+	         forHTTPHeaderField:@"Content-Type"];
+	[requestSerializer setValue:@"gzip"
+	         forHTTPHeaderField:@"Accept-Encoding"];
+	[requestSerializer setAuthorizationHeaderFieldWithUsername:login
+	                                                  password:password];
 
 	_sessionManager.requestSerializer = requestSerializer;
 
@@ -136,6 +140,7 @@
 
 
 - (void)cancelAllOperations {
+
 	[_sessionManager.operationQueue cancelAllOperations];
 	[_swiftManager._manager.operationQueue cancelAllOperations];
 }
@@ -144,14 +149,20 @@
 - (void)cancelAllHTTPOperationsWithPath:(NSString *)path {
 
 	[[_sessionManager session] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-		[self cancelTasksInArray:dataTasks withPath:path];
-		[self cancelTasksInArray:uploadTasks withPath:path];
-		[self cancelTasksInArray:downloadTasks withPath:path];
+		[self cancelTasksInArray:dataTasks
+		                withPath:path];
+		[self cancelTasksInArray:uploadTasks
+		                withPath:path];
+		[self cancelTasksInArray:downloadTasks
+		                withPath:path];
 	}];
 	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-		[self cancelTasksInArray:dataTasks withPath:path];
-		[self cancelTasksInArray:uploadTasks withPath:path];
-		[self cancelTasksInArray:downloadTasks withPath:path];
+		[self cancelTasksInArray:dataTasks
+		                withPath:path];
+		[self cancelTasksInArray:uploadTasks
+		                withPath:path];
+		[self cancelTasksInArray:downloadTasks
+		                withPath:path];
 	}];
 }
 
@@ -171,10 +182,12 @@
 - (NSString *)getDownloadUrl:(NSString *)dossierId
                       forPdf:(bool)isPdf {
 
-	NSString* result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content", dossierId];
+	NSString *result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content",
+	                                              dossierId];
 
 	if (isPdf)
-		result = [NSString stringWithFormat:@"%@;ph:visuel-pdf", result];
+		result = [NSString stringWithFormat:@"%@;ph:visuel-pdf",
+		                                    result];
 
 	return result;
 }
@@ -190,27 +203,27 @@
 
 	[_swiftManager getApiVersion:^(id response) {
 
-		                             // Parse check
+		 // Parse check
 
-		                             NSError *error;
-							         ADLResponseGetLevel *responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
-							                                                           fromJSONDictionary:(NSDictionary *) response
-							                                                                        error:&error];
+		 NSError *error;
+		 ADLResponseGetLevel *responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
+		                                                   fromJSONDictionary:(NSDictionary *) response
+		                                                                error:&error];
 
-							         if (error) {
-								         failure([NSError errorWithDomain:error.domain
-								                                     code:kCFURLErrorBadServerResponse
-								                                 userInfo:nil]);
-							         }
-							         else {
-								         success(responseGetLevel.level);
-							         }
-								 }
-	                     onError:^(id notConnected) {
-		                             failure([NSError errorWithDomain:notConnected
-			                                                     code:kCFURLErrorUserAuthenticationRequired
-			                                                 userInfo:nil]);
-	                             }];
+		 if (error) {
+			 failure([NSError errorWithDomain:error.domain
+			                             code:kCFURLErrorBadServerResponse
+			                         userInfo:nil]);
+		 }
+		 else {
+			 success(responseGetLevel.level);
+		 }
+	 }
+	                     onError:^(NSError *error) {
+		                     failure([NSError errorWithDomain:_swiftManager._manager.baseURL.absoluteString
+		                                                 code:kCFURLErrorUserAuthenticationRequired
+		                                             userInfo:nil]);
+	                     }];
 }
 
 
@@ -221,25 +234,25 @@
 
 	[_swiftManager getBureaux:^(id response) {
 
-								  // Parse result
+		 // Parse result
 
-								  NSError *error;
-								  NSArray *responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
-								                                             fromJSONArray:response
-								                                                     error:&error];
+		 NSError *error;
+		 NSArray *responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
+		                                            fromJSONArray:response
+		                                                    error:&error];
 
-								  // Callback
+		 // Callback
 
-								  if (error)
-									  failure(error);
-								  else
-									  success(responseBureaux);
-							  }
-	                  onError:^(id notConnected) {
-				                  failure([NSError errorWithDomain:notConnected
-				                                              code:kCFURLErrorUserAuthenticationRequired
-				                                          userInfo:nil]);
-			                  }];
+		 if (error)
+			 failure(error);
+		 else
+			 success(responseBureaux);
+	 }
+	                  onError:^(NSError *error) {
+		                  failure([NSError errorWithDomain:_swiftManager._manager.baseURL.absoluteString
+		                                              code:kCFURLErrorUserAuthenticationRequired
+		                                          userInfo:nil]);
+	                  }];
 }
 
 
@@ -258,21 +271,21 @@
 	                filterJson:filterJson
 	                onResponse:^(NSArray *response) {
 
-		                           NSError *error;
-		                           NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
-					                                                           fromJSONArray:response
-					                                                                   error:&error];
+		                NSError *error;
+		                NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
+		                                                            fromJSONArray:response
+		                                                                    error:&error];
 
-					               // Parse check and callback
+		                // Parse check and callback
 
-					               if (error)
-						               failure(error);
-					               else
-						               success(responseDossiers);
-				               }
-	                   onError:^(id error) {
-		                           failure(error);
-	                           }];
+		                if (error)
+			                failure(error);
+		                else
+			                success(responseDossiers);
+	                }
+	                   onError:^(NSError *error) {
+		                   failure(error);
+	                   }];
 }
 
 
@@ -285,21 +298,21 @@
 	                   bureau:bureau
 	               onResponse:^(NSDictionary *response) {
 
-					              NSError *error;
-					              ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
-					                                                              fromJSONDictionary:response
-					                                                                           error:&error];
+		               NSError *error;
+		               ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
+		                                                               fromJSONDictionary:response
+		                                                                            error:&error];
 
-					              // Parse check and callback
+		               // Parse check and callback
 
-					              if (error)
-						              failure(error);
-					              else
-						              success(responseDossier);
-						      }
-	                  onError:^(id error) {
-		                          failure(nil);
-	                          }];
+		               if (error)
+			               failure(error);
+		               else
+			               success(responseDossier);
+	               }
+	                  onError:^(NSError *error) {
+		                  failure(error);
+	                  }];
 }
 
 
@@ -310,27 +323,25 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
+	[_swiftManager getSignInfo:dossierId
+	                    bureau:bureauId
+	                onResponse:^(id response) {
 
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
-	          parameters:queryParams
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+		                NSError *error;
+		                ADLResponseSignInfo *responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
+		                                                                  fromJSONDictionary:response
+		                                                                               error:&error];
 
-		             NSError *error;
-		             ADLResponseSignInfo *responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
-		                                                               fromJSONDictionary:responseObject
-		                                                                            error:&error];
+		                // Parse check and callback
 
-		             // Parse check and callback
-
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseSignInfo);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+		                if (error)
+			                failure(error);
+		                else
+			                success(responseSignInfo);
+	                }
+	                   onError:^(NSError *error) {
+		                   failure(error);
+	                   }];
 }
 
 
@@ -343,21 +354,21 @@
 	[_swiftManager getCircuit:dossier
 	               onResponse:^(NSDictionary *response) {
 
-					              NSError *error;
-					              ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-					                                                              fromJSONDictionary:response[@"circuit"]
-					                                                                           error:&error];
+		               NSError *error;
+		               ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
+		                                                               fromJSONDictionary:response[@"circuit"]
+		                                                                            error:&error];
 
-					              // Parse check and callback
+		               // Parse check and callback
 
-					              if (error)
-						              failure(error);
-					              else
-						              success(responseCircuit);
-				              }
-	                  onError:^(id error) {
-		                          failure(nil);
-	                          }];
+		               if (error)
+			               failure(error);
+		               else
+			               success(responseCircuit);
+	               }
+	                  onError:^(NSError *error) {
+		                  failure(error);
+	                  }];
 }
 
 
@@ -372,27 +383,27 @@
 	[_swiftManager getAnnotations:dossier
 	                   onResponse:^(id responseAnnotation) {
 
-		                              //TODO : Proper (Mantle based) JSON parse
+		                   //TODO : Proper (Mantle based) JSON parse
 
-		                              @try {
-						                  NSArray *responseArray = responseAnnotation;
-						                  NSMutableArray *result = [[NSMutableArray alloc] init];
+		                   @try {
+			                   NSArray *responseArray = responseAnnotation;
+			                   NSMutableArray *result = [[NSMutableArray alloc] init];
 
-						                  for (id element in responseArray) {
-							                  ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
-							                  response.data = element;
-							                  [result addObject:response];
-						                  }
+			                   for (id element in responseArray) {
+				                   ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+				                   response.data = element;
+				                   [result addObject:response];
+			                   }
 
-						                  success(result);
-					                  }
-					                  @catch (NSException *e) {
-						                  failure(nil);
-					                  }
-	                              }
-	                      onError:^(id error) {
-		                              failure(error);
-	                              }];
+			                   success(result);
+		                   }
+		                   @catch (NSException *e) {
+			                   failure(nil);
+		                   }
+	                   }
+	                      onError:^(NSError *error) {
+		                      failure(error);
+	                      }];
 }
 
 
@@ -430,65 +441,16 @@
 	NSURLSessionDownloadTask *downloadTask = [_swiftManager._manager downloadTaskWithRequest:request
 	                                                                                progress:nil
 	                                                                             destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-					                                                                             return filePathUrl;
-				                                                                             }
+		                                                                             return filePathUrl;
+	                                                                             }
 	                                                                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-							                                                                     if (error == nil)
-								                                                                     success(filePath.path);
-							                                                                     else if (error.code != kCFURLErrorCancelled)
-								                                                                     failure(error);
-						                                                                     }];
+		                                                                       if (error == nil)
+			                                                                       success(filePath.path);
+		                                                                       else if (error.code != kCFURLErrorCancelled)
+			                                                                       failure(error);
+	                                                                       }];
 
 	[downloadTask resume];
-}
-
-
-#pragma mark - Simple action template
-
-
-typedef enum {
-	ADLRequestTypePOST = 1,
-	ADLRequestTypePUT = 2,
-	ADLRequestTypeDELETE = 3
-} ADLRequestType;
-
-
-- (void)sendSimpleAction:(ADLRequestType)type
-                 withUrl:(NSString *)url
-                withArgs:(NSDictionary *)args
-                 success:(void (^)(NSArray *))success
-                 failure:(void (^)(NSError *))failure {
-
-	if (type == ADLRequestTypePOST) {
-		[_sessionManager POST:url
-		           parameters:args
-		              success:^(NSURLSessionDataTask *operation, id responseObject) {
-			              success(nil);
-		              }
-		              failure:^(NSURLSessionDataTask *operation, NSError *error) {
-			              failure(error);
-		              }];
-	}
-	else if (type == ADLRequestTypePUT) {
-		[_sessionManager PUT:url
-		          parameters:args
-		             success:^(NSURLSessionDataTask *operation, id responseObject) {
-			             success(nil);
-		             }
-		             failure:^(NSURLSessionDataTask *operation, NSError *error) {
-			             failure(error);
-		             }];
-	}
-	else if (type == ADLRequestTypeDELETE) {
-		[_sessionManager DELETE:url
-		             parameters:args
-		                success:^(NSURLSessionDataTask *operation, id responseObject) {
-			                success(nil);
-		                }
-		                failure:^(NSURLSessionDataTask *operation, NSError *error) {
-			                failure(error);
-		                }];
-	}
 }
 
 
@@ -565,7 +527,8 @@ typedef enum {
 - (NSString *)getAnnotationsUrlForDossier:(NSString *)dossier
                               andDocument:(NSString *)document {
 
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier];
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations",
+	                                  dossier];
 }
 
 
@@ -573,7 +536,9 @@ typedef enum {
                              andDocument:(NSString *)document
                          andAnnotationId:(NSString *)annotationId {
 
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossier, annotationId];
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@",
+	                                  dossier,
+	                                  annotationId];
 }
 
 
@@ -597,15 +562,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -625,15 +591,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 };
 
 
@@ -653,15 +620,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 };
 
 
@@ -677,15 +645,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-	               withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -701,16 +670,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-	               withUrl:[self getAnnotationsUrlForDossier:dossierId
-	                                             andDocument:document]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[self getAnnotationsUrlForDossier:dossierId
+	                                                      andDocument:document]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -728,17 +697,17 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePUT
-	               withUrl:[self getAnnotationUrlForDossier:dossierId
-	                                            andDocument:document
-	                                        andAnnotationId:annotation[@"uuid"]]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(2)
+	                            url:[self getAnnotationUrlForDossier:dossierId
+	                                                     andDocument:document
+	                                                 andAnnotationId:annotation[@"uuid"]]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -755,17 +724,17 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypeDELETE
-	               withUrl:[self getAnnotationUrlForDossier:dossierId
-	                                            andDocument:document
-	                                        andAnnotationId:annotation[@"uuid"]]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(3)
+	                            url:[self getAnnotationUrlForDossier:dossierId
+	                                                     andDocument:document
+	                                                 andAnnotationId:annotation[@"uuid"]]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
