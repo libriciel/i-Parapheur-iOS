@@ -32,12 +32,11 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+#import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
-#import "ADLResponseBureau.h"
 #import "ADLResponseDossiers.h"
 #import "ADLResponseAnnotation.h"
 #import "iParapheur-Swift.h"
-#import "ADLResponseGetLevel.h"
 
 
 @implementation ADLRestClientApi3
@@ -93,8 +92,7 @@
 	// Fix values
 
 	if (![url hasPrefix:@"https://m."])
-		url = [NSString stringWithFormat:@"https://m.%@",
-		                                 url];
+		url = [NSString stringWithFormat:@"https://m.%@", url];
 
 	// Initialize AFNetworking HTTPClient
 
@@ -108,12 +106,12 @@
 
 
 - (void)cancelAllOperations {
-	[_swiftManager._manager.operationQueue cancelAllOperations];
+	[_swiftManager.manager.operationQueue cancelAllOperations];
 }
 
 
 - (void)cancelAllHTTPOperationsWithPath:(NSString *)path {
-	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 		[self cancelTasksInArray:dataTasks
 		                withPath:path];
 		[self cancelTasksInArray:uploadTasks
@@ -158,26 +156,11 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_swiftManager getApiVersion:^(id response) {
-
-		 // Parse check
-
-		 NSError *error;
-		 ADLResponseGetLevel *responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
-		                                                   fromJSONDictionary:(NSDictionary *) response
-		                                                                error:&error];
-
-		 if (error) {
-			 failure([NSError errorWithDomain:error.domain
-			                             code:kCFURLErrorBadServerResponse
-			                         userInfo:nil]);
-		 }
-		 else {
-			 success(responseGetLevel.level);
-		 }
+	[_swiftManager getApiVersion:^(int level) {
+		 success(@(level));
 	 }
 	                     onError:^(NSError *error) {
-		                     failure([NSError errorWithDomain:_swiftManager._manager.baseURL.absoluteString
+		                     failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
 		                                                 code:kCFURLErrorUserAuthenticationRequired
 		                                             userInfo:nil]);
 	                     }];
@@ -189,24 +172,11 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"bureaux"];
 
-	[_swiftManager getBureaux:^(id response) {
-
-		 // Parse result
-
-		 NSError *error;
-		 NSArray *responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
-		                                            fromJSONArray:response
-		                                                    error:&error];
-
-		 // Callback
-
-		 if (error)
-			 failure(error);
-		 else
-			 success(responseBureaux);
+	[_swiftManager getBureaux:^(NSArray *response) {
+		 success(response);
 	 }
 	                  onError:^(NSError *error) {
-		                  failure([NSError errorWithDomain:_swiftManager._manager.baseURL.absoluteString
+		                  failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
 		                                              code:kCFURLErrorUserAuthenticationRequired
 		                                          userInfo:nil]);
 	                  }];
@@ -375,7 +345,7 @@
 
 	// Cancel previous download
 
-	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 		for (NSURLSessionTask *task in downloadTasks)
 			[task cancel];
 	}];
@@ -386,16 +356,16 @@
 	                                            forPdf:isPdf];
 
 	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@",
-	                                                         _swiftManager._manager.baseURL,
+	                                                         _swiftManager.manager.baseURL,
 	                                                         downloadUrlSuffix];
-	NSMutableURLRequest *request = [_swiftManager._manager.requestSerializer requestWithMethod:@"GET"
+	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
 	                                                                                 URLString:downloadUrlString
 	                                                                                parameters:nil
 	                                                                                     error:nil];
 
 	// Start download
 
-	NSURLSessionDownloadTask *downloadTask = [_swiftManager._manager downloadTaskWithRequest:request
+	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
 	                                                                                progress:nil
 	                                                                             destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
 		                                                                             return filePathUrl;

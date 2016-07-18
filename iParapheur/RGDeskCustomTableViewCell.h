@@ -34,7 +34,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import <CustomBadge.h>
+#import <CustomBadge/CustomBadge.h>
 
 @interface RGDeskCustomTableViewCell : UITableViewCell {
 }

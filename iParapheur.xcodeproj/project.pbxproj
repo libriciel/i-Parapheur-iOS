@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04D0DFA98929F8817E77F4AE /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9632B7EFE55A9D2FBECA8E3C /* Pods_iParapheur.framework */; };
 		142B020816D61AF200EF3B8F /* acmobile.der in Resources */ = {isa = PBXBuildFile; fileRef = 142B020716D61AF200EF3B8F /* acmobile.der */; };
 		142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 142B021616D6580200EF3B8F /* ADLFilterTypeTableViewController.m */; };
 		142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 142B021916D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m */; };
@@ -18,7 +19,9 @@
 		1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
-		7F7C3315C7D8DB1D6D801307 /* libPods-iParapheur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6872C6D6DF36C94971388ED /* libPods-iParapheur.a */; };
+		64F3458F29347E699CD2441E /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F344A54134B58BCF315F65 /* ApiLevel.swift */; };
+		64F347935EB40D47C3F56D4A /* Dossier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F3421B3D3D2EB1C9EB6A89 /* Dossier.swift */; };
+		64F34ED535ED2660FFABDB28 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34A146E979A52ED25FF60 /* Bureau.swift */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
 		9514BFE7187AA73800118B9C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDF187AA73800118B9C /* Icon.png */; };
@@ -159,10 +162,8 @@
 		C59445FC1AAE41B900DD4473 /* Default-Portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */; };
 		C5A6AB9A1AAEE68000053B9F /* Icon-Small-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */; };
 		C5ACDFE21B5014AD00F3AA0F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */; };
-		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
-		C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
@@ -205,6 +206,9 @@
 		14BBBD971690EBB9007FFD9F /* ADLActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLActionCell.h; sourceTree = "<group>"; };
 		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
+		64F3421B3D3D2EB1C9EB6A89 /* Dossier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dossier.swift; sourceTree = "<group>"; };
+		64F344A54134B58BCF315F65 /* ApiLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApiLevel.swift; path = Models/ApiLevel.swift; sourceTree = "<group>"; };
+		64F34A146E979A52ED25FF60 /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bureau.swift; path = Models/Bureau.swift; sourceTree = "<group>"; };
 		7E8BF52AC84A7E2C11567043 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
 		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
 		9514BFDE187AA73800118B9C /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
@@ -226,6 +230,7 @@
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CustomColors.h"; sourceTree = "<group>"; };
 		958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CustomColors.m"; sourceTree = "<group>"; };
+		9632B7EFE55A9D2FBECA8E3C /* Pods_iParapheur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iParapheur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF1FEBBDDB64315152ECB76 /* Pods-iParapheur.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.release.xcconfig"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B609C15F0962100655827 /* ADLCircuitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCircuitCell.h; sourceTree = "<group>"; };
@@ -430,14 +435,10 @@
 		C5A6AB971AAEE68000053B9F /* Icon-Small-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-40.png"; sourceTree = "<group>"; };
 		C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-40@2x.png"; sourceTree = "<group>"; };
 		C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseGetLevel.h; sourceTree = "<group>"; };
-		C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseGetLevel.m; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
 		C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClientApi3.m; sourceTree = "<group>"; };
 		C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClient.h; sourceTree = "<group>"; };
 		C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClient.m; sourceTree = "<group>"; };
-		C5BC17A51A5FE8C3003D8E98 /* ADLResponseBureau.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseBureau.h; sourceTree = "<group>"; };
-		C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseBureau.m; sourceTree = "<group>"; };
 		C5C803551A5D90AF00D54F7D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C5C803571A5D90BA00D54F7D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C5C803591A5D90C200D54F7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -450,7 +451,6 @@
 		C5D7E7001AA9C05A00A736B4 /* icon_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_login.png; sourceTree = "<group>"; };
 		C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
 		C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
-		F6872C6D6DF36C94971388ED /* libPods-iParapheur.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iParapheur.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -467,7 +467,7 @@
 				C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */,
 				C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */,
 				C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */,
-				7F7C3315C7D8DB1D6D801307 /* libPods-iParapheur.a in Frameworks */,
+				04D0DFA98929F8817E77F4AE /* Pods_iParapheur.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,6 +509,16 @@
 				1434F680168E087A000C115D /* ADLCertificateAlertView.m */,
 			);
 			name = AlertPrompt;
+			sourceTree = "<group>";
+		};
+		64F3458BDBE857D52144F65A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				64F344A54134B58BCF315F65 /* ApiLevel.swift */,
+				64F34A146E979A52ED25FF60 /* Bureau.swift */,
+				64F3421B3D3D2EB1C9EB6A89 /* Dossier.swift */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		9514BFDA187AA4CF00118B9C /* app-icons */ = {
@@ -661,7 +671,7 @@
 				C5C803591A5D90C200D54F7D /* QuartzCore.framework */,
 				C5C803571A5D90BA00D54F7D /* Security.framework */,
 				C5C803551A5D90AF00D54F7D /* CoreData.framework */,
-				F6872C6D6DF36C94971388ED /* libPods-iParapheur.a */,
+				9632B7EFE55A9D2FBECA8E3C /* Pods_iParapheur.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -682,6 +692,7 @@
 				B4E5ECB7153AF65F00BD514D /* MainStoryboard_iPad.storyboard */,
 				B4E5ECA9153AF65F00BD514D /* Supporting Files */,
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
+				64F3458BDBE857D52144F65A /* Models */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -960,10 +971,6 @@
 		C5BC17951A5EEDC0003D8E98 /* ResponseModel */ = {
 			isa = PBXGroup;
 			children = (
-				C5BC17961A5EEDF8003D8E98 /* ADLResponseGetLevel.h */,
-				C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */,
-				C5BC17A51A5FE8C3003D8E98 /* ADLResponseBureau.h */,
-				C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */,
 				C5628EF61A63C37700CB884C /* ADLResponseDossiers.h */,
 				C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */,
 				C5628EF91A643E8600CB884C /* ADLResponseDossier.h */,
@@ -1000,6 +1007,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B4E5ECD7153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheur" */;
 			buildPhases = (
+				A90259FCF08057EED16A109D /* Check Pods Manifest.lock */,
 				8420F526400AF35E5C07205B /* [CP] Check Pods Manifest.lock */,
 				B4E5EC9A153AF65F00BD514D /* Sources */,
 				B4E5EC9B153AF65F00BD514D /* Frameworks */,
@@ -1007,6 +1015,7 @@
 				BC5B953157936A95A4791480 /* [CP] Embed Pods Frameworks */,
 				0D6E3F1274166CEBF19ED897 /* [CP] Copy Pods Resources */,
 				37FCF4BB286D73C15A590F66 /* Embed Pods Frameworks */,
+				2FDFD7401866DA823DE1E33D /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1062,6 +1071,8 @@
 			mainGroup = B4E5EC93153AF65E00BD514D;
 			productRefGroup = B4E5EC9F153AF65F00BD514D /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+			);
 			projectRoot = "";
 			targets = (
 				B4E5EC9D153AF65F00BD514D /* iParapheur */,
@@ -1176,6 +1187,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		2FDFD7401866DA823DE1E33D /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		37FCF4BB286D73C15A590F66 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1199,6 +1225,21 @@
 			inputPaths = (
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A90259FCF08057EED16A109D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1256,7 +1297,6 @@
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
-				C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,
@@ -1307,12 +1347,14 @@
 				C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
-				C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
 				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,
 				142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */,
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
+				64F3458F29347E699CD2441E /* ApiLevel.swift in Sources */,
+				64F34ED535ED2660FFABDB28 /* Bureau.swift in Sources */,
+				64F347935EB40D47C3F56D4A /* Dossier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

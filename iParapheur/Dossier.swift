@@ -32,13 +32,8 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import "ADLResponseGetLevel.h"
+import Foundation
+import Gloss
 
-@implementation ADLResponseGetLevel
-
-
-+ (NSDictionary*)JSONKeyPathsByPropertyKey {
-	return @{kGLLevel:kGLLevel};
+@objc class Dossier : NSObject, Glossy {
 }
-
-@end

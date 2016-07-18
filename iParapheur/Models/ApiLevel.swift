@@ -32,16 +32,20 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
-#import "MTLModel.h"
-#import "MTLJSONAdapter.h"
+import Foundation
+import Gloss
 
+class ApiLevel: Glossy {
 
-static NSString *const kGLLevel = @"level";
+    let level: Int?
 
+    // MARK: Glossy
 
-@interface ADLResponseGetLevel : MTLModel<MTLJSONSerializing>
+    required init?(json: JSON) {
+        level = "level" <~~ json
+    }
 
-@property (nonatomic, strong) NSNumber *level;
-
-@end
+    func toJSON() -> JSON? {
+        return nil /* Not used */
+    }
+}
