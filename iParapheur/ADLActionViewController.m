@@ -116,7 +116,7 @@
 
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-	ADLResponseDossier *dossier = [ADLSingletonState sharedSingletonState].dossierCourantObject;
+	Dossier *dossier = [ADLSingletonState sharedSingletonState].dossierCourantObject;
 	NSArray *dossiers = @[dossier];
 	((RGWorkflowDialogViewController*) segue.destinationViewController).dossiers = dossiers;
 	((RGWorkflowDialogViewController*) segue.destinationViewController).action = segue.identifier;

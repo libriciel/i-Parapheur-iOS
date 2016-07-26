@@ -36,4 +36,93 @@ import Foundation
 import Gloss
 
 @objc class Dossier : NSObject, Glossy {
+
+    let id: String?
+    let title: String?
+    let bureauName: String?
+    let banetteName: String?
+    let visibility: String?
+    let status: String?
+
+    let type: String?
+    let sousType: String?
+    let protocole: String?
+    let nomTdT: String?
+    let xPathSignature: String?
+
+    let actionDemandee: String?
+    let actions: Array<String>?
+    let documents: Array<Document>?
+    let acteursVariables: Array<String>?
+    let metadatas: Dictionary<String, AnyObject>?
+    let dateEmission: CLong?
+    let dateLimite: CLong?
+
+    let hasRead: Bool?
+    let includeAnnexes: Bool?
+    let isRead: Bool?
+    let isSent: Bool?
+    let canAdd: Bool?
+    let isLocked: Bool?
+    let isSignPapier: Bool?
+    let isXemEnabled: Bool?
+    let isReadingMandatory: Bool?
+
+    // MARK: Glossy
+
+    required init?(json: JSON) {
+
+        id = ("id" <~~ json) ?? ""
+        title = ("title" <~~ json) ?? "(vide)"
+        bureauName = ("bureauName" <~~ json) ?? "(vide)"
+        banetteName = ("banetteName" <~~ json) ?? ""
+        visibility = ("visibility" <~~ json) ?? ""
+        status = ("status" <~~ json) ?? ""
+
+        type = ("type" <~~ json) ?? ""
+        sousType = ("sousType" <~~ json) ?? ""
+        protocole = ("protocole" <~~ json) ?? ""
+        nomTdT = ("nomTdT" <~~ json) ?? ""
+        xPathSignature = ("xPathSignature" <~~ json) ?? ""
+
+        actionDemandee = ("actionDemandee" <~~ json) ?? (Action.VISA as? String)
+        actions = ("actions" <~~ json) ?? []
+        documents = ("documents" <~~ json) ?? []
+        acteursVariables = ("acteursVariables" <~~ json) ?? []
+        metadatas = ("metadatas" <~~ json) ?? [:]
+        dateEmission = ("dateEmission" <~~ json) ?? -1
+        dateLimite = ("dateLimite" <~~ json) ?? -1
+
+        hasRead = ("hasRead" <~~ json) ?? false
+        includeAnnexes = ("includeAnnexes" <~~ json) ?? false
+        isRead = ("isRead" <~~ json) ?? false
+        isSent = ("isSent" <~~ json) ?? false
+        canAdd = ("canAdd" <~~ json) ?? false
+        isLocked = ("locked" <~~ json) ?? false
+        isSignPapier = ("isSignPapier" <~~ json) ?? false
+        isXemEnabled = ("isXemEnabled" <~~ json) ?? false
+        isReadingMandatory = ("readingMandatory" <~~ json) ?? false
+    }
+
+    func toJSON() -> JSON? {
+        return nil /* Not used */
+    }
+
+    // MARK: ObjC accessors
+
+    func getUnwrappedDocuments() -> NSArray {
+        return documents as NSArray!
+    }
+
+    func getUnwrappedTitle() -> NSString {
+        return title as NSString!
+    }
+
+    func getUnwrappedActions() -> NSArray {
+        return actions as NSArray!
+    }
+
+    func getUnwrappedActionDemandee() -> NSString {
+        return actionDemandee as NSString!
+    }
 }

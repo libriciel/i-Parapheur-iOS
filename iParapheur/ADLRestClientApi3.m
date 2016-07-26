@@ -218,24 +218,13 @@
 
 - (void)getDossier:(NSString *)bureau
            dossier:(NSString *)dossier
-           success:(void (^)(ADLResponseDossier *))success
+           success:(void (^)(Dossier *))success
            failure:(void (^)(NSError *))failure {
 
 	[_swiftManager getDossier:dossier
 	                   bureau:bureau
-	               onResponse:^(NSDictionary *response) {
-
-		               NSError *error;
-		               ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
-		                                                               fromJSONDictionary:response
-		                                                                            error:&error];
-
-		               // Parse check and callback
-
-		               if (error)
-			               failure(error);
-		               else
-			               success(responseDossier);
+	               onResponse:^(Dossier *response) {
+			          success(response);
 	               }
 	                  onError:^(NSError *error) {
 		                  failure(error);

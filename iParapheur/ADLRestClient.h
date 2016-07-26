@@ -88,7 +88,7 @@
 
 -(void)getDossier:(NSString*)bureau
 		  dossier:(NSString*)dossier
-		  success:(void (^)(ADLResponseDossier *))success
+		  success:(void (^)(Dossier *))success
 		  failure:(void (^)(NSError *))failure;
 
 

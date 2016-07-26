@@ -161,45 +161,45 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
 
-	if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
+	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
 
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3)
-			[((RGDossierDetailViewController *) [segue destinationViewController]) setDossierRef:_dossierRef];
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3)
+			((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 		else
-			[((RGDossierDetailViewController *) [segue destinationViewController]) setDossier:_document];
+			((RGDossierDetailViewController *) segue.destinationViewController).dossier = _document;
 	}
 
-	if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
-		[((RGDocumentsView *) [segue destinationViewController]) setDocuments:_dossier.documents];
+	if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
+		((RGDocumentsView *) segue.destinationViewController).documents = [_dossier getUnwrappedDocuments];
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
-		_documentsPopover = [(UIStoryboardPopoverSegue *) segue popoverController];
-		[_documentsPopover setDelegate:self];
+		_documentsPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
+		_documentsPopover.delegate = self;
 	}
 
-	if ([[segue identifier] isEqualToString:@"showActionPopover"]) {
+	if ([segue.identifier isEqualToString:@"showActionPopover"]) {
 		if (_actionPopover != nil) {
 			[_actionPopover dismissPopoverAnimated:NO];
 		}
 
 		NSArray *actions;
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			actions = [ADLAPIHelper actionsForADLResponseDossier:_dossier];
 		}
 		else {
-			actions = [ADLAPIHelper actionsForDossier:self.document];
+			actions = [ADLAPIHelper actionsForDossier:_document];
 		}
 
-		_actionPopover = [(UIStoryboardPopoverSegue *) segue popoverController];
-		((ADLActionViewController *) [_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:actions];
+		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
+		((ADLActionViewController *) _actionPopover.contentViewController).actions = actions.mutableCopy;
 
 		// do something usefull there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
-			[((ADLActionViewController *) [_actionPopover contentViewController]) setSignatureEnabled:YES];
+			((ADLActionViewController *) _actionPopover.contentViewController).signatureEnabled = YES;
 		}
 		else if (_visaEnabled) {
-			[((ADLActionViewController *) [_actionPopover contentViewController]) setVisaEnabled:YES];
+			((ADLActionViewController *) _actionPopover.contentViewController).visaEnabled = YES;
 		}
 
 		[_actionPopover setDelegate:self];
@@ -291,7 +291,7 @@
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		
 		NSDictionary *annotationDictionary = annotation.dict;
-		NSString *documentId = _document[@"id"];
+		NSString *documentId = [_document getUnwrappedId];
 
 		[_restClient updateAnnotation:annotationDictionary
 		                      forPage:(int) page
@@ -326,7 +326,7 @@
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		
 		NSDictionary *annotationDictionary = annotation.dict;
-		NSString *documentId = _document[@"id"];
+		NSString *documentId = [_document getUnwrappedId];
 
 		[_restClient removeAnnotation:annotationDictionary
 		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
@@ -360,7 +360,7 @@
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		
-		NSString *documentId = _document[@"id"];
+		NSString *documentId = [_document getUnwrappedId];
 		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
 
 		if (login == nil)
@@ -418,15 +418,15 @@
 #pragma mark - ADLParapheurWallDelegateProtocol
 
 
-- (void)getDossierDidEndWithRequestAnswer:(ADLResponseDossier *)dossier {
+- (void)getDossierDidEndWithRequestAnswer:(Dossier *)dossier {
 
 	_dossier = dossier;
 
 	// Determine the first pdf file to display
 
-	for (NSDictionary *dossierDictionnary in dossier.documents) {
-		if ([dossierDictionnary valueForKey:@"visuelPdf"]) {
-			_document = dossierDictionnary;
+	for (Document *document in [dossier getUnwrappedDocuments]) {
+		if (document.isVisuelPdf) {
+			_document = document;
 			break;
 		}
 	}
@@ -434,13 +434,13 @@
 	//
 
 	[self displayDocumentAt:0];
-	self.navigationController.navigationBar.topItem.title = dossier.title;
+	self.navigationController.navigationBar.topItem.title = [dossier getUnwrappedTitle];
 
 	// Refresh buttons
 
 	NSArray *buttons;
 
-	if (dossier.documents.count > 1)
+	if ([dossier getUnwrappedDocuments].count > 1)
 		buttons = @[_actionButton, _documentsButton, _detailsButton];
 	else
 		buttons = @[_actionButton, _detailsButton];
@@ -460,37 +460,37 @@
 	HIDE_HUD
 
 	if ([s isEqual:GETDOSSIER_API]) {
-		_document = [answer copy];
+//		_document = answer.copy;
 		[self displayDocumentAt:0];
 
-		self.navigationController.navigationBar.topItem.title = _document[@"titre"];
+		self.navigationController.navigationBar.topItem.title = [_document getUnwrappedName];
 
 		NSArray *buttons;
 
-		if ([_document[@"documents"] count] > 1)
+		if (_dossier.getUnwrappedDocuments.count > 1)
 			buttons = @[_actionButton, _documentsButton, _detailsButton];
 		else
 			buttons = @[_actionButton, _detailsButton];
 
 		self.navigationItem.rightBarButtonItems = buttons;
 
-		NSString *documentPrincipal = [[_document[@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
-		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
-		NSLog(@"%@", _document[@"actions"]);
-
-		if ([[_document[@"actions"] objectForKey:@"sign"] isEqualToNumber:@YES]) {
-			if ([_document[@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
-				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
-				ADLRequester *requester = [ADLRequester sharedRequester];
-				[requester request:@"getSignInfo"
-				           andArgs:signInfoArgs
-					      delegate:self];
-			}
-			else {
-				_visaEnabled = YES;
-				_signatureFormat = nil;
-			}
-		}
+//		NSString *documentPrincipal = [[_document[@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
+//		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
+//		NSLog(@"%@", _document[@"actions"]);
+//
+//		if ([[_document[@"actions"] objectForKey:@"sign"] isEqualToNumber:@YES]) {
+//			if ([_document[@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
+//				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
+//				ADLRequester *requester = [ADLRequester sharedRequester];
+//				[requester request:@"getSignInfo"
+//				           andArgs:signInfoArgs
+//					      delegate:self];
+//			}
+//			else {
+//				_visaEnabled = YES;
+//				_signatureFormat = nil;
+//			}
+//		}
 
 		SHOW_HUD
 	}
@@ -544,7 +544,7 @@
 	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 		                dossier:_dossierRef
-			            success:^(ADLResponseDossier *result) {
+			            success:^(Dossier *result) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                HIDE_HUD
@@ -706,8 +706,8 @@
 
 - (void)requestAnnotations {
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
-		NSString *documentId = _document[@"id"];
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+		NSString *documentId = [_document getUnwrappedId];
 		
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
@@ -717,7 +717,7 @@
 		                        if (strongSelf) {
 			                        strongSelf.annotations = annotations;
 
-			                        for (NSNumber *contentViewIdx in [strongSelf.readerViewController getContentViews]) {
+			                        for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
 				                        ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
 				                        [[currentReaderContentView getContentPage] refreshAnnotations];
 			                        }
@@ -737,14 +737,14 @@
 }
 
 
-- (void)requestSignInfoForDossier:(ADLResponseDossier *)dossier {
+- (void)requestSignInfoForDossier:(Dossier *)dossier {
 
-	if ([dossier.actions containsObject:@"SIGNATURE"]) {
-		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
-			if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[dossier getUnwrappedActions] containsObject:@"SIGNATURE"]) {
+		if ([[dossier getUnwrappedActionDemandee] isEqualToString:@"SIGNATURE"]) {
+			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
-				                         andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
+				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
 						                   success:^(ADLResponseSignInfo *signInfo) {
 						                       __strong typeof(weakSelf) strongSelf = weakSelf;
 						                       if (strongSelf) {
@@ -793,14 +793,14 @@
 		_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
 		_readerViewController.delegate = self;
 		_readerViewController.dataSource = self;
-		_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
+		_readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 		_readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
-		[[self view] setAutoresizesSubviews:YES];
+		[self.view setAutoresizesSubviews:YES];
 		[self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
 		[self addChildViewController:_readerViewController];
-		[[self view] addSubview:_readerViewController.view];
+		[self.view addSubview:_readerViewController.view];
 	}
 	else // Log an error so that we know that something went wrong
 	{
@@ -812,8 +812,8 @@
 - (void)displayDocumentAt:(NSInteger)index {
 
 	_isDocumentPrincipal = (index == 0);
-	_document = _dossier.documents[(NSUInteger) index];
-	NSString *documentId = _document[@"id"];
+	_document = [_dossier getUnwrappedDocuments][(NSUInteger) index];
+	NSString *documentId = [_document getUnwrappedId];
 	
 	// File cache
 	
@@ -835,8 +835,8 @@
 	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	if (([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3) && _dossier.documents) {
-		bool isPdf = [_document[@"visuelPdf"] boolValue];
+	if (([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) && [_dossier getUnwrappedDocuments]) {
+		bool isPdf = (bool) _document.isVisuelPdf;
 
 		[_restClient downloadDocument:documentId
 		                        isPdf:isPdf
@@ -852,17 +852,17 @@
 			                  }];
 	}
 	else if (_document) {
-		NSDictionary *document = [_document[@"documents"] objectAtIndex:(NSUInteger) index];
-
-		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
-		if (document[@"visuelPdfUrl"] != nil) {
-			[requester downloadDocumentAt:document[@"visuelPdfUrl"]
-			                     delegate:self];
-		}
-		else if (document[@"downloadUrl"] != nil) {
-			[requester downloadDocumentAt:document[@"downloadUrl"]
-			                     delegate:self];
-		}
+//		NSDictionary *document = [_document[@"documents"] objectAtIndex:(NSUInteger) index];
+//
+//		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
+//		if (document[@"visuelPdfUrl"] != nil) {
+//			[requester downloadDocumentAt:document[@"visuelPdfUrl"]
+//			                     delegate:self];
+//		}
+//		else if (document[@"downloadUrl"] != nil) {
+//			[requester downloadDocumentAt:document[@"downloadUrl"]
+//			                     delegate:self];
+//		}
 	}
 }
 
@@ -887,7 +887,7 @@
 			               attributes:nil];
 
 	    file = [NSFileHandle fileHandleForWritingAtPath:filePath];
-	    [file writeData:[document documentData]];
+		[file writeData:document.documentData];
 
 
 	    dispatch_async(dispatch_get_main_queue(), ^{

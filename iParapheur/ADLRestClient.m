@@ -192,12 +192,12 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 -(void)getDossier:(NSString*)bureauId
 		  dossier:(NSString*)dossierId
-		  success:(void (^)(ADLResponseDossier *))success
+		  success:(void (^)(Dossier *))success
 		  failure:(void (^)(NSError *))failure {
 	
 	[_restClientApi getDossier:[self fixBureauId:bureauId]
 					   dossier:dossierId
-					   success:^(ADLResponseDossier *dossier) { success(dossier); }
+					   success:^(Dossier *dossier) { success(dossier); }
 					   failure:^(NSError *error) { failure(error); }];
 }
 

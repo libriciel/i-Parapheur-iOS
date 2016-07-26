@@ -212,7 +212,7 @@ import AFNetworking
 
     func getDossier(dossier: NSString,
                     bureau: NSString,
-                    onResponse: ((NSDictionary) -> Void)?,
+                    onResponse: ((Dossier) -> Void)?,
                     onError: ((NSError) -> Void)?) {
 
         // Parameters
@@ -226,7 +226,14 @@ import AFNetworking
                     parameters: paramsDict,
                     success: {
                          (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject as! NSDictionary)
+
+                         guard let responseDossier = Dossier(json: responseObject as! [String: AnyObject])
+                         else {
+                             onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                             return
+                         }
+
+                        onResponse!(responseDossier)
                      },
                     failure: {
                          (task: NSURLSessionDataTask!, error: NSError!) in

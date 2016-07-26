@@ -1,6 +1,5 @@
 /*
  * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
@@ -33,21 +32,51 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
-#import "iParapheur-Swift.h"
+import Foundation
+import Gloss
 
+@objc class Document : NSObject, Glossy {
 
-@class ADLResponseDossier;
+    let id: String?
+    let name: String?
 
+    let size: CLong
+    let pageCount: Int
+    let attestState: Int
 
-@interface ADLSingletonState : NSObject
+    let isMainDocument: Bool
+    let isVisuelPdf: Bool
+    let isLocked: Bool
+    let isDeletable: Bool
 
-@property (strong, nonatomic) NSString* bureauCourant;
-@property (strong, nonatomic) NSString* dossierCourantReference;
-@property (strong, nonatomic) Dossier* dossierCourantObject;
-@property (strong, nonatomic) NSString* currentPrincipalDocPath;
-@property (strong, nonatomic) NSMutableDictionary *currentFilter;
+    // MARK: Glossy
 
-+ (ADLSingletonState *)sharedSingletonState;
+    required init?(json: JSON) {
+        id = ("id" <~~ json) ?? ""
+        name = ("name" <~~ json) ?? "(vide)"
 
-@end
+        size = ("size" <~~ json) ?? -1
+        pageCount = ("pageCount" <~~ json) ?? -1
+        attestState = ("attestState" <~~ json) ?? 0
+
+        isMainDocument = "isMainDocument" <~~ json ?? false
+        isVisuelPdf = "visuelPdf" <~~ json ?? false
+        isLocked = "isLocked" <~~ json ?? false
+        isDeletable = "canDelete" <~~ json ?? false
+    }
+
+    func toJSON() -> JSON? {
+        return nil /* Not used */
+    }
+
+    // MARK: ObjC accessors
+
+    func getUnwrappedId() -> NSString {
+        return id as NSString!
+    }
+
+    func getUnwrappedName() -> NSString {
+        return name as NSString!
+    }
+
+}

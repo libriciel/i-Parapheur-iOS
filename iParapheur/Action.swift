@@ -1,6 +1,5 @@
 /*
  * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
@@ -33,21 +32,33 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
-#import "iParapheur-Swift.h"
+import Foundation
 
+enum Action: String {
 
-@class ADLResponseDossier;
+    case VISA
+    case SIGNATURE
+    case TDT
+    case TDT_ACTES
+    case TDT_HELIOS
+    case ARCHIVAGE
+    case MAILSEC
+    case REJET
+    case SECRETARIAT
+    case REMORD
+    case AVIS_COMPLEMENTAIRE
+    case TRANSFERT_SIGNATURE
+    case AJOUT_SIGNATURE
+    case EMAIL
+    case ENREGISTRER
+    case SUPPRESSION
+    case JOURNAL
 
+    // TODO :
 
-@interface ADLSingletonState : NSObject
-
-@property (strong, nonatomic) NSString* bureauCourant;
-@property (strong, nonatomic) NSString* dossierCourantReference;
-@property (strong, nonatomic) Dossier* dossierCourantObject;
-@property (strong, nonatomic) NSString* currentPrincipalDocPath;
-@property (strong, nonatomic) NSMutableDictionary *currentFilter;
-
-+ (ADLSingletonState *)sharedSingletonState;
-
-@end
+    case TRANSFERT_ACTION
+    case GET_ATTEST
+    case RAZ
+    case EDITION
+    case ENCHAINER_CIRCUIT;
+}
