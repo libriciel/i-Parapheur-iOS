@@ -23,6 +23,7 @@
 		64F3458F29347E699CD2441E /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F344A54134B58BCF315F65 /* ApiLevel.swift */; };
 		64F347935EB40D47C3F56D4A /* Dossier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F3421B3D3D2EB1C9EB6A89 /* Dossier.swift */; };
 		64F348DB5E8CF3DF3BA69F57 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34EA9DED39375743C2447 /* Document.swift */; };
+		64F34BA2943E02FDF1BB64A8 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34A850F7D50B2F5261117 /* Annotation.swift */; };
 		64F34ED535ED2660FFABDB28 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34A146E979A52ED25FF60 /* Bureau.swift */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
@@ -212,6 +213,7 @@
 		64F344A54134B58BCF315F65 /* ApiLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApiLevel.swift; path = Models/ApiLevel.swift; sourceTree = "<group>"; };
 		64F347B1E1D04CE57C3A99E0 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		64F34A146E979A52ED25FF60 /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bureau.swift; path = Models/Bureau.swift; sourceTree = "<group>"; };
+		64F34A850F7D50B2F5261117 /* Annotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		64F34EA9DED39375743C2447 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		7E8BF52AC84A7E2C11567043 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
 		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
@@ -523,6 +525,7 @@
 				64F3421B3D3D2EB1C9EB6A89 /* Dossier.swift */,
 				64F347B1E1D04CE57C3A99E0 /* Action.swift */,
 				64F34EA9DED39375743C2447 /* Document.swift */,
+				64F34A850F7D50B2F5261117 /* Annotation.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1077,8 +1080,6 @@
 			mainGroup = B4E5EC93153AF65E00BD514D;
 			productRefGroup = B4E5EC9F153AF65F00BD514D /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-			);
 			projectRoot = "";
 			targets = (
 				B4E5EC9D153AF65F00BD514D /* iParapheur */,
@@ -1288,6 +1289,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64F3458F29347E699CD2441E /* ApiLevel.swift in Sources */,
+				64F34ED535ED2660FFABDB28 /* Bureau.swift in Sources */,
+				64F347935EB40D47C3F56D4A /* Dossier.swift in Sources */,
+				64F341F7CAAD4CE871C9AE20 /* Action.swift in Sources */,
+				64F348DB5E8CF3DF3BA69F57 /* Document.swift in Sources */,
+				64F34BA2943E02FDF1BB64A8 /* Annotation.swift in Sources */,
 				C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
@@ -1358,11 +1365,6 @@
 				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,
 				142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */,
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
-				64F3458F29347E699CD2441E /* ApiLevel.swift in Sources */,
-				64F34ED535ED2660FFABDB28 /* Bureau.swift in Sources */,
-				64F347935EB40D47C3F56D4A /* Dossier.swift in Sources */,
-				64F341F7CAAD4CE871C9AE20 /* Action.swift in Sources */,
-				64F348DB5E8CF3DF3BA69F57 /* Document.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

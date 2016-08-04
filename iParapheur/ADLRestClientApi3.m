@@ -35,7 +35,6 @@
 #import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
 #import "ADLResponseDossiers.h"
-#import "ADLResponseAnnotation.h"
 #import "iParapheur-Swift.h"
 
 
@@ -65,9 +64,6 @@
 	[self initRestClientWithLogin:loginSettings
 	                     password:passwordSettings
 	                          url:urlSettings];
-
-//	RestClientApiV3 *restApiV3 = [[RestClientApiV3 alloc] initWithBaseUrl:@"https://m.parapheur.demonstrations.adullact.org"];
-//	[restApiV3 getApiVersion];
 
 	return self;
 }
@@ -297,25 +293,8 @@
 	                                                            andDocument:document]];
 
 	[_swiftManager getAnnotations:dossier
-	                   onResponse:^(id responseAnnotation) {
-
-		                   //TODO : Proper (Mantle based) JSON parse
-
-		                   @try {
-			                   NSArray *responseArray = responseAnnotation;
-			                   NSMutableArray *result = [[NSMutableArray alloc] init];
-
-			                   for (id element in responseArray) {
-				                   ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
-				                   response.data = element;
-				                   [result addObject:response];
-			                   }
-
-			                   success(result);
-		                   }
-		                   @catch (NSException *e) {
-			                   failure(nil);
-		                   }
+	                   onResponse:^(id annotations) {
+		                   success(annotations);
 	                   }
 	                      onError:^(NSError *error) {
 		                      failure(error);

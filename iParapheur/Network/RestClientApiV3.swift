@@ -150,6 +150,7 @@ import AFNetworking
                         (task: NSURLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
+
     }
 
     func getBureaux(onResponse: ((NSArray) -> Void)?,
@@ -258,19 +259,55 @@ import AFNetworking
     }
 
     func getAnnotations(dossier: NSString,
-                        onResponse: ((AnyObject) -> Void)?,
+                        onResponse: (([Annotation]) -> Void)?,
                         onError: ((NSError) -> Void)?) {
 
         manager.GET("/parapheur/dossiers/\(dossier)/annotations",
                     parameters: nil,
                     success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject)
-                     },
+                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+
+                        // Parse
+
+                        var parsedAnnotations = [Annotation]()
+
+                        if let etapes = responseObject as? [AnyObject] {
+                            for etapeIndex in 0 ..< etapes.count {
+
+                                if let documentPages = etapes[etapeIndex] as? [String:AnyObject] {
+                                    for documentPage in documentPages {
+
+                                        if let pages = documentPage.1 as? [String:AnyObject] {
+                                            for page in pages {
+
+                                                if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
+                                                    for jsonAnnotation in jsonAnnotations {
+
+                                                        var annotation = Annotation(json: jsonAnnotation)
+                                                        annotation!.step = etapeIndex
+                                                        annotation!.page = Int(page.0)
+                                                        annotation!.documentId = documentPage.0 as? String
+
+                                                        parsedAnnotations.append(annotation!)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                            return
+                        }
+
+                        onResponse!(parsedAnnotations)
+                    },
                     failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
-                         onError!(error)
-                     })
+                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        onError!(error)
+                    })
     }
 
     func getSignInfo(dossier: NSString,
@@ -304,6 +341,7 @@ import AFNetworking
                           onError: ((NSError) -> Void)?) {
 
         if (type == 1) {
+
             manager.POST(url as String,
                          parameters: args,
                          success: {
@@ -313,9 +351,10 @@ import AFNetworking
                          failure: {
                               (task: NSURLSessionDataTask!, error: NSError!) in
                               onError!(error)
-                          })
+                         })
         }
         else if (type == 2) {
+
             manager.PUT(url as String,
                         parameters: args,
                         success: {
@@ -328,6 +367,7 @@ import AFNetworking
                          })
         }
         else if (type == 3) {
+
             manager.DELETE(url as String,
                            parameters: args,
                            success: {

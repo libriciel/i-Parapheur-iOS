@@ -51,7 +51,7 @@
 -(id) initWithAnnotationDict:(NSDictionary *)annotation {
 	
     if (self = [super init]) {
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue ] >= 3)
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3)
 			_uuid = [annotation objectForKey:@"id"];
 		else
 			_uuid = [annotation objectForKey:@"uuid"];
