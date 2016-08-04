@@ -1,29 +1,38 @@
-//
-//	ReaderDemoController.m
-//	Reader v2.8.6
-//
-//	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
-//  Modified work : Copyright © 2016 Adullact-Projet
-//
-//	Permission is hereby granted, free of charge, to any person obtaining a copy
-//	of this software and associated documentation files (the "Software"), to deal
-//	in the Software without restriction, including without limitation the rights to
-//	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-//	of the Software, and to permit persons to whom the Software is furnished to
-//	do so, subject to the following conditions:
-//
-//	The above copyright notice and this permission notice shall be included in all
-//	copies or substantial portions of the Software.
-//
-//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-//	OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-
+/*
+ * Copyright 2012-2016, Adullact-Projet.
+ * Contributors : SKROBS (2012)
+ *
+ * contact@adullact-projet.coop
+ *
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
+ *
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
 #import "ADLPDFViewController.h"
 #import "ReaderContentView.h"
 #import "ReaderContentPage.h"
@@ -34,9 +43,7 @@
 #import "ADLRequester.h"
 #import "ADLActionViewController.h"
 #import "UIColor+CustomColors.h"
-#import "ADLResponseAnnotation.h"
 #import "DeviceUtils.h"
-#import "StringUtils.h"
 
 
 @interface ADLPDFViewController () <ReaderViewControllerDelegate>
@@ -240,169 +247,167 @@
 
 - (NSArray *)annotationsForPage:(NSInteger)page {
 
-	NSMutableArray *annotsAtPage = [[NSMutableArray alloc] init];
+	NSLog(@"Adrien -------- 0");
 
-	int i = 0; // etapeNumber
+	NSMutableArray *result = [NSMutableArray new];
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		for (ADLResponseAnnotation *etape in _annotations) {
-			NSArray *annotationsAtPageForEtape = etape.data[[NSString stringWithFormat:@"%ld",
-			                                                                           (long) page]];
+	// Get current step
 
-			if (_circuit && (_circuit.count > 0)) {
-				ADLResponseCircuit *circuit = _circuit[0];
+	int currentStep = 0;
+	NSLog(@"Adrien -------- 1");
 
-				for (NSDictionary *annot in annotationsAtPageForEtape) {
+	if (_circuit && (_circuit.count > 0)) {
+		for (NSUInteger i=0; i <_circuit.count; i++) {
 
-					NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
-					modifiedAnnot[@"editable"] = @(![((NSDictionary *) circuit.etapes[i])[@"approved"] boolValue]);
-					[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
-				}
+			NSArray *steps = ((ADLResponseCircuit *) _circuit[i]).etapes;
+			for (NSUInteger j = 0; j < steps.count; j++) {
+
+				NSDictionary *stepDict = ((NSDictionary *) steps[i]);
+				if ([stepDict[@"approved"] boolValue])
+					currentStep = j;
 			}
-
-			i++;
-		}
-	}
-	else {
-		for (NSDictionary *etape in _annotations) {
-			NSArray *annotationsAtPageForEtape = etape[[NSString stringWithFormat:@"%ld",
-			                                                                      (long) page]];
-
-			if (self.circuit) {
-				for (NSDictionary *annot in annotationsAtPageForEtape) {
-
-					NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
-					modifiedAnnot[@"editable"] = @(![((NSDictionary *) self.circuit[i])[@"approved"] boolValue]);
-					[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
-				}
-			}
-
-			i++;
 		}
 	}
 
-	return annotsAtPage;
+	// Updating annotations
+
+	NSLog(@"Adrien -------- 2");
+	for (Annotation *annotation in _annotations) {
+
+		NSLog(@"Adrien -- %p + %i", annotation.step, currentStep);
+
+		int isEditable = (annotation.step >= currentStep);
+		[annotation setUnwrappedEditable:isEditable];
+	}
+
+	// Filtering annotations
+
+
+
+	//
+
+	return result;
 }
 
 
-- (void)updateAnnotation:(ADLAnnotation *)annotation
+- (void)updateAnnotation:(Annotation *)annotation
                  forPage:(NSUInteger)page {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		
-		NSDictionary *annotationDictionary = annotation.dict;
-		NSString *documentId = [_document getUnwrappedId];
-
-		[_restClient updateAnnotation:annotationDictionary
-		                      forPage:(int) page
-			               forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-						  andDocument:documentId
-			                  success:^(NSArray *result) {
-			                      NSLog(@"updateAnnotation success");
-			                  }
-							  failure:^(NSError *error) {
-								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-													 withTitle:@"Erreur à la sauvegarde de l'annotation"];
-							  }];
-	}
-	else {
-		NSDictionary *dict = [annotation dict];
-		NSDictionary *req = @{
-				@"page" : @(page),
-				@"annotation" : dict,
-				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-		};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:@"updateAnnotation"
-		           andArgs:req
-			      delegate:self];
-	}
+//	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+//
+//		NSDictionary *annotationDictionary = annotation.dict;
+//		NSString *documentId = [_document getUnwrappedId];
+//
+//		[_restClient updateAnnotation:annotationDictionary
+//		                      forPage:(int) page
+//			               forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+//						  andDocument:documentId
+//			                  success:^(NSArray *result) {
+//			                      NSLog(@"updateAnnotation success");
+//			                  }
+//							  failure:^(NSError *error) {
+//								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+//													 withTitle:@"Erreur à la sauvegarde de l'annotation"];
+//							  }];
+//	}
+//	else {
+//		NSDictionary *dict = [annotation dict];
+//		NSDictionary *req = @{
+//				@"page" : @(page),
+//				@"annotation" : dict,
+//				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
+//		};
+//
+//		ADLRequester *requester = [ADLRequester sharedRequester];
+//		[requester request:@"updateAnnotation"
+//		           andArgs:req
+//			      delegate:self];
+//	}
 }
 
 
-- (void)removeAnnotation:(ADLAnnotation *)annotation {
+- (void)removeAnnotation:(Annotation *)annotation {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		
-		NSDictionary *annotationDictionary = annotation.dict;
-		NSString *documentId = [_document getUnwrappedId];
-
-		[_restClient removeAnnotation:annotationDictionary
-		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-						  andDocument:documentId
-				              success:^(NSArray *result) {
-				                  NSLog(@"deleteAnnotation success");
-				              }
-				              failure:^(NSError *error) {
-				                  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-													 withTitle:@"Erreur à la suppression de l'annotation"];
-				              }];
-	}
-	else {
-		NSDictionary *req = @{
-				@"uuid" : [annotation uuid],
-				@"page" : @10,
-				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-		};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-
-		[requester request:@"removeAnnotation"
-		           andArgs:req
-			      delegate:self];
-	}
+//	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+//
+//		NSDictionary *annotationDictionary = annotation.dict;
+//		NSString *documentId = [_document getUnwrappedId];
+//
+//		[_restClient removeAnnotation:annotationDictionary
+//		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+//						  andDocument:documentId
+//				              success:^(NSArray *result) {
+//				                  NSLog(@"deleteAnnotation success");
+//				              }
+//				              failure:^(NSError *error) {
+//				                  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+//													 withTitle:@"Erreur à la suppression de l'annotation"];
+//				              }];
+//	}
+//	else {
+//		NSDictionary *req = @{
+//				@"uuid" : [annotation uuid],
+//				@"page" : @10,
+//				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
+//		};
+//
+//		ADLRequester *requester = [ADLRequester sharedRequester];
+//
+//		[requester request:@"removeAnnotation"
+//		           andArgs:req
+//			      delegate:self];
+//	}
 }
 
 
-- (void)addAnnotation:(ADLAnnotation *)annotation
+- (void)addAnnotation:(Annotation *)annotation
               forPage:(NSUInteger)page {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		
-		NSString *documentId = [_document getUnwrappedId];
-		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
-
-		if (login == nil)
-			login = @"bma";
-
-		NSMutableDictionary *args = annotation.dict.mutableCopy;
-		args[@"page"] = @(page);
-		args[@"date"] = [NSDate date];
-		args[@"type"] = @"rect";
-		args[@"author"] = login;
-
-		__weak typeof(self) weakSelf = self;
-		[_restClient addAnnotations:args
-		                 forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-						andDocument:documentId
-				            success:^(NSArray *result) {
-				                __strong typeof(weakSelf) strongSelf = weakSelf;
-				                if (strongSelf) {
-					                [strongSelf requestAnnotations];
-				                }
-				            }
-				            failure:^(NSError *error) {
-				                [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-												   withTitle:@"Erreur à la sauvegarde de l'annotation"];
-				            }];
-	}
-	else {
-		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:annotation.dict];
-
-		[dict setValue:@(page)
-		        forKey:@"page"];
-
-		NSDictionary *args = @{
-				@"annotations" : @[dict],
-				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-		};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:@"addAnnotation"
-		           andArgs:args
-			      delegate:self];
-	}
+//	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+//
+//		NSString *documentId = [_document getUnwrappedId];
+//		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
+//
+//		if (login == nil)
+//			login = @"bma";
+//
+//		NSMutableDictionary *args = annotation.dict.mutableCopy;
+//		args[@"page"] = @(page);
+//		args[@"date"] = [NSDate date];
+//		args[@"type"] = @"rect";
+//		args[@"author"] = login;
+//
+//		__weak typeof(self) weakSelf = self;
+//		[_restClient addAnnotations:args
+//		                 forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+//						andDocument:documentId
+//				            success:^(NSArray *result) {
+//				                __strong typeof(weakSelf) strongSelf = weakSelf;
+//				                if (strongSelf) {
+//					                [strongSelf requestAnnotations];
+//				                }
+//				            }
+//				            failure:^(NSError *error) {
+//				                [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+//												   withTitle:@"Erreur à la sauvegarde de l'annotation"];
+//				            }];
+//	}
+//	else {
+//		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:annotation.dict];
+//
+//		[dict setValue:@(page)
+//		        forKey:@"page"];
+//
+//		NSDictionary *args = @{
+//				@"annotations" : @[dict],
+//				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
+//		};
+//
+//		ADLRequester *requester = [ADLRequester sharedRequester];
+//		[requester request:@"addAnnotation"
+//		           andArgs:args
+//			      delegate:self];
+//	}
 }
 
 

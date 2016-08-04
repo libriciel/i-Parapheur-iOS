@@ -532,7 +532,7 @@
 
 		for (NSDictionary *annotation in annotations) {
 			
-			ADLAnnotation *annotModel = [[ADLAnnotation alloc] initWithAnnotationDict:annotation];
+			Annotation *annotModel = [[Annotation alloc] initWithAuth:@"testAdrien"];
 			ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotModel];
 			
 			[a setDrawingView:self];

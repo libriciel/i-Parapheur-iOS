@@ -48,7 +48,7 @@ import Gloss
     let penColor: String?
     let type: String?
 
-    var step: Int?
+    var step: Int
     var page: Int?
     var documentId: String?
     var editable: Bool?
@@ -68,6 +68,7 @@ import Gloss
         date = NSDate(timeIntervalSince1970: (("date" <~~ json) ?? -1))
         secretaire = ("secretaire" <~~ json) ?? 0
         rect = ("rect" <~~ json)
+        step = 0
     }
 
     init?(auth: NSString) {
@@ -83,6 +84,7 @@ import Gloss
         date = NSDate()
         secretaire = 0
         rect = nil
+        step = 0
     }
 
     func toJSON() -> JSON? {
@@ -127,7 +129,15 @@ import Gloss
         return dateFormatter.stringFromDate(date!)
     }
 
+//    func getUnwrappedStep() -> Int {
+//        return step as Int!
+//    }
+
     func getUnwrappedEditable() -> Bool {
         return editable as Bool!
+    }
+
+    func setUnwrappedEditable(value: Int) {
+        editable = value as? Bool
     }
 }

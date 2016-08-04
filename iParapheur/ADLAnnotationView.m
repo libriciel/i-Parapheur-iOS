@@ -54,7 +54,7 @@
 		self.autoresizingMask = UIViewAutoresizingNone;
 		self.backgroundColor = [UIColor clearColor];
 
-		_annotationModel = [[ADLAnnotation alloc] init];
+		_annotationModel = [[Annotation alloc] initWithAuth:@"adrienTest"];
 		_selected = NO;
 
 		[self addButtons];
