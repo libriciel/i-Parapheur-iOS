@@ -35,14 +35,14 @@
 import Foundation
 import Gloss
 
-@objc class Annotation : NSObject, Glossy {
+@objc class Annotation: NSObject, Glossy {
 
     let author: String?
     let id: String?
-    let text: String?
-    let date: CLong?
+    var text: String?
+    let date: NSDate?
     let secretaire: Int?
-    let rect: CGRect?
+    var rect: CGRect?
 
     let fillColor: String?
     let penColor: String?
@@ -51,6 +51,7 @@ import Gloss
     var step: Int?
     var page: Int?
     var documentId: String?
+    var editable: Bool?
 
     // MARK: Glossy
 
@@ -64,9 +65,24 @@ import Gloss
         penColor = ("penColor" <~~ json) ?? "undefined"
         type = ("type" <~~ json) ?? "rect"
 
-        date = ("date" <~~ json)
+        date = NSDate(timeIntervalSince1970: (("date" <~~ json) ?? -1))
         secretaire = ("secretaire" <~~ json) ?? 0
         rect = ("rect" <~~ json)
+    }
+
+    init?(auth: NSString) {
+
+        author = auth as String
+        id = "_new"
+        text = ""
+
+        fillColor = "undefined"
+        penColor = "undefined"
+        type = "rect"
+
+        date = NSDate()
+        secretaire = 0
+        rect = nil
     }
 
     func toJSON() -> JSON? {
@@ -75,8 +91,8 @@ import Gloss
 
     // MARK: ObjC accessors
 
-    func getUnwrappedId() -> String {
-        return id as String!
+    func getUnwrappedId() -> NSString {
+        return id as NSString!
     }
 
     func getUnwrappedPage() -> Int {
@@ -87,11 +103,31 @@ import Gloss
         return rect as CGRect!
     }
 
-    func getUnwrappedText() -> String {
-        return text as String!
+    func setUnwrappedRect(rct: CGRect) {
+        rect = rct as? CGRect
     }
 
-    func getUnwrappedAuthor() -> String {
-        return author as String!
+    func getUnwrappedText() -> NSString {
+        return text as NSString!
+    }
+
+    func setUnwrappedText(txt: NSString) {
+        text = txt as? String
+    }
+
+    func getUnwrappedAuthor() -> NSString {
+        return author as NSString!
+    }
+
+    func getUnwrappedDate() -> NSString {
+
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+
+        return dateFormatter.stringFromDate(date!)
+    }
+
+    func getUnwrappedEditable() -> Bool {
+        return editable as Bool!
     }
 }

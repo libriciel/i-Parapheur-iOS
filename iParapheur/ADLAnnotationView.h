@@ -35,12 +35,13 @@
  */
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "ADLAnnotation.h"
 #import "ADLDrawingView.h"
 #import "ADLInfoView.h"
 #import "ADLAnnotationButton.h"
 #import "ADLCloseButton.h"
 #import "ADLPostItView.h"
+#import "iParapheur-Swift.h"
+
 
 #define kAnnotationMinWidth 100.0f
 #define kAnnotationMinHeight 100.0f
@@ -52,34 +53,36 @@
 #define kInfoHeight 80.0f
 
 @class ADLDrawingView;
+
+
 @interface ADLAnnotationView : UIView
 
 
-@property (nonatomic, strong) ADLAnnotationButton *closeButton;
+@property(nonatomic, strong) ADLAnnotationButton *closeButton;
 
-@property (nonatomic, strong) ADLAnnotationButton *infoButton;
-@property (nonatomic, strong) ADLInfoView *infoView;
+@property(nonatomic, strong) ADLAnnotationButton *infoButton;
+@property(nonatomic, strong) ADLInfoView *infoView;
 
-@property (nonatomic, strong) ADLAnnotationButton *postItButton;
-@property (nonatomic, strong) ADLPostItView *postItView;
+@property(nonatomic, strong) ADLAnnotationButton *postItButton;
+@property(nonatomic, strong) ADLPostItView *postItView;
 
-@property (nonatomic, strong) ADLAnnotation *annotationModel;
+@property(nonatomic, strong) Annotation *annotationModel;
 
-@property (nonatomic, weak) ADLDrawingView *drawingView;
+@property(nonatomic, weak) ADLDrawingView *drawingView;
 
-@property (nonatomic) BOOL selected;
-@property (nonatomic) NSUInteger currentPage;
+@property(nonatomic) BOOL selected;
+@property(nonatomic) NSUInteger currentPage;
 
 
-@property (nonatomic) CGPoint anchor;
+@property(nonatomic) CGPoint anchor;
 
--(id)initWithAnnotation:(ADLAnnotation*)annotation;
+- (id)initWithAnnotation:(Annotation *)annotation;
 
--(BOOL)isInHandle:(CGPoint)touchPoint;
+- (BOOL)isInHandle:(CGPoint)touchPoint;
 
--(void)refreshModel;
+- (void)refreshModel;
 
--(void)handleTouchInside;
+- (void)handleTouchInside;
 
 
 @end

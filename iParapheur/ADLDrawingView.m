@@ -270,7 +270,7 @@
 
 	CGPoint touchPoint = [gestureRecognizer locationInView:self];
 
-	if (_hittedView && _enabled && _hittedView.annotationModel.editable) {
+	if (_hittedView && _enabled && [_hittedView.annotationModel getUnwrappedEditable]) {
 		[self animateviewOnLongPressGesture:touchPoint];
 		_hasBeenLongPressed = YES;
 	}
@@ -365,7 +365,7 @@
 
 		if ([_hittedView isKindOfClass:[ADLAnnotationView class]] || [_hittedView isKindOfClass:[ADLDrawingView class]]) {
 			CGPoint point = [self clipPointToView:[touch locationInView:self]];
-			if (_hittedView.annotationModel.editable) {
+			if ([_hittedView.annotationModel getUnwrappedEditable]) {
 				if ([_hittedView isInHandle:[touch locationInView:self]]) {
 
 					CGRect frame = [_hittedView frame];
@@ -417,9 +417,9 @@
 		if (_hittedView != nil && [_hittedView isKindOfClass:[ADLAnnotationView class]] && _shallUpdateCurrent) {
 
 			[_hittedView refreshModel];
-			ADLAnnotation *annotation = [_hittedView annotationModel];
+			Annotation *annotation = _hittedView.annotationModel;
 
-			if (self.hittedView.annotationModel.uuid && self.hittedView.annotationModel.editable)
+			if ([_hittedView.annotationModel getUnwrappedId] && [_hittedView.annotationModel getUnwrappedEditable])
 				[self updateAnnotation:annotation];
 		}
 
@@ -542,21 +542,21 @@
 }
 
 
-- (void)updateAnnotation:(ADLAnnotation *)annotation {
+- (void)updateAnnotation:(Annotation *)annotation {
 
 	[_masterViewController.dataSource updateAnnotation:annotation
 	                                           forPage:_pageNumber];
 }
 
 
-- (void)addAnnotation:(ADLAnnotation *)annotation {
+- (void)addAnnotation:(Annotation *)annotation {
 
 	[_masterViewController.dataSource addAnnotation:annotation
 	                                        forPage:_pageNumber];
 }
 
 
-- (void)removeAnnotation:(ADLAnnotation *)annotation {
+- (void)removeAnnotation:(Annotation *)annotation {
 
 	[_masterViewController.dataSource removeAnnotation:annotation];
 }

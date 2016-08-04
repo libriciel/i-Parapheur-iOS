@@ -63,14 +63,15 @@
 
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-	_annotationModel.text = textView.text;
+
+	[_annotationModel setUnwrappedText:textView.text];
 }
 
 
-- (void)setAnnotationModel:(ADLAnnotation *)annotationModel {
+- (void)setAnnotationModel:(Annotation *)annotationModel {
 
 	_annotationModel = annotationModel;
-	_textView.text = annotationModel.text;
+	_textView.text = [annotationModel getUnwrappedText];
 
 	CGSize size = [annotationModel.text boundingRectWithSize:CGSizeMake(100.0f, FLT_MAX)
 	                                                 options:NSStringDrawingUsesLineFragmentOrigin

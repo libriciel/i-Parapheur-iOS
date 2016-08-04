@@ -36,6 +36,7 @@
 #import <UIKit/UIKit.h>
 #import "ADLAnnotationView.h"
 #import "ReaderViewController.h"
+#import "iParapheur-Swift.h"
 
 
 #define MIN_WIDTH 50
@@ -46,12 +47,12 @@
 
 - (NSArray *)annotationsForPage:(NSInteger)page;
 
-- (void)updateAnnotation:(ADLAnnotation *)annotation
+- (void)updateAnnotation:(Annotation *)annotation
                  forPage:(NSUInteger)page;
 
-- (void)removeAnnotation:(ADLAnnotation *)annotation;
+- (void)removeAnnotation:(Annotation *)annotation;
 
-- (void)addAnnotation:(ADLAnnotation *)annotation
+- (void)addAnnotation:(Annotation *)annotation
               forPage:(NSUInteger)page;
 
 @optional
@@ -98,11 +99,11 @@
 
 - (CGRect)clipRectInView:(CGRect)rect;
 
-- (void)updateAnnotation:(ADLAnnotation *)annotation;
+- (void)updateAnnotation:(Annotation *)annotation;
 
-- (void)addAnnotation:(ADLAnnotation *)annotation;
+- (void)addAnnotation:(Annotation *)annotation;
 
-- (void)removeAnnotation:(ADLAnnotation *)annotation;
+- (void)removeAnnotation:(Annotation *)annotation;
 
 - (NSArray *)annotationsForPage:(NSUInteger)page;
 

@@ -50,7 +50,6 @@
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
 		B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316C160A230D00C8C475 /* ADLAnnotationView.m */; };
 		B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316E160A230D00C8C475 /* ADLCloseButton.m */; };
-		B44649E916241657002622DF /* ADLAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = B44649E816241657002622DF /* ADLAnnotation.m */; };
 		B46BCC4315693F7A00A96560 /* RGDocumentsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC4215693F7A00A96560 /* RGDocumentsView.m */; };
 		B46BCC47156956E300A96560 /* ADLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC46156956E300A96560 /* ADLDocument.m */; };
 		B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */; };
@@ -259,8 +258,6 @@
 		B444316C160A230D00C8C475 /* ADLAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotationView.m; sourceTree = "<group>"; };
 		B444316D160A230D00C8C475 /* ADLCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCloseButton.h; sourceTree = "<group>"; };
 		B444316E160A230D00C8C475 /* ADLCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCloseButton.m; sourceTree = "<group>"; };
-		B44649E716241657002622DF /* ADLAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAnnotation.h; sourceTree = "<group>"; };
-		B44649E816241657002622DF /* ADLAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotation.m; sourceTree = "<group>"; };
 		B46BCC4115693F7A00A96560 /* RGDocumentsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGDocumentsView.h; sourceTree = "<group>"; };
 		B46BCC4215693F7A00A96560 /* RGDocumentsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGDocumentsView.m; sourceTree = "<group>"; };
 		B46BCC45156956E300A96560 /* ADLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLDocument.h; sourceTree = "<group>"; };
@@ -628,8 +625,6 @@
 				95719C7C1893CE9900246F7C /* Buttons */,
 				B47944D61622BCDE0061E09B /* ADLPostItView.h */,
 				B47944D71622BCDE0061E09B /* ADLPostItView.m */,
-				B44649E716241657002622DF /* ADLAnnotation.h */,
-				B44649E816241657002622DF /* ADLAnnotation.m */,
 				95719C801893D50600246F7C /* ADLInfoView.h */,
 				95719C811893D50600246F7C /* ADLInfoView.m */,
 			);
@@ -1348,7 +1343,6 @@
 				B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */,
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
-				B44649E916241657002622DF /* ADLAnnotation.m in Sources */,
 				958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */,
 				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,

@@ -244,7 +244,7 @@
 
 	int i = 0; // etapeNumber
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		for (ADLResponseAnnotation *etape in _annotations) {
 			NSArray *annotationsAtPageForEtape = etape.data[[NSString stringWithFormat:@"%ld",
 			                                                                           (long) page]];
