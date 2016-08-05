@@ -101,7 +101,8 @@
 
 - (id)initWithAnnotation:(Annotation *)annotation {
 
-	CGRect frame = [annotation getUnwrappedRect];
+	CGRect frame = annotation.unwrappedRect.CGRectValue;
+
 	self = [super initWithFrame:frame];
 	if (self) {
 		// Initialization code
@@ -149,7 +150,7 @@
 	buttonFrame.origin.y = 0;
 	buttonFrame.size.width = kFingerSize;
 	buttonFrame.size.height = kFingerSize;
-	if ([_annotationModel getUnwrappedEditable]) {
+	if ([_annotationModel unwrappedEditable]) {
 		// CLOSE BUTTON
 		_closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
 		[_closeButton setTitle:@"X"
@@ -201,7 +202,7 @@
 	if ((_postItView) && !_selected) {
 		[_postItView setHidden:YES];
 		[_postItView removeFromSuperview];
-		if ([_annotationModel getUnwrappedEditable]) {
+		if (_annotationModel.unwrappedEditable) {
 			[_drawingView updateAnnotation:_annotationModel];
 		}
 		_postItView = nil;
@@ -237,7 +238,7 @@
 		_infoView = nil;
 	}
 
-	if ([_annotationModel getUnwrappedId] != nil)
+	if (_annotationModel.unwrappedId != nil)
 		[_drawingView removeAnnotation:_annotationModel];
 
 	[self removeFromSuperview];
@@ -262,7 +263,7 @@
 	if (!_postItView) {
 		CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame), CGRectGetMinY(self.frame), kPostItWidth, kPostItheight)];
 		_postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
-		_postItView.userInteractionEnabled = [_annotationModel getUnwrappedEditable];
+		_postItView.userInteractionEnabled = [_annotationModel unwrappedEditable].boolValue;
 		_postItView.annotationModel = _annotationModel;
 		_postItView.contentScaleFactor = self.contentScaleFactor;
 		[self.superview addSubview:_postItView];
@@ -293,7 +294,7 @@
 	CGContextRef context = UIGraphicsGetCurrentContext();
 
 
-	if ([self.annotationModel getUnwrappedEditable]) {
+	if (self.annotationModel.unwrappedEditable) {
 		CGContextSaveGState(context);
 		UIGraphicsPushContext(context);
 		{
@@ -384,7 +385,7 @@
 
 - (void)refreshModel {
 
-	[self.annotationModel setUnwrappedRect:self.frame];
+	[self.annotationModel setUnwrappedRect:[NSValue valueWithCGRect:self.frame]];
 }
 
 

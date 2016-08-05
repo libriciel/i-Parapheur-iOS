@@ -247,44 +247,41 @@
 
 - (NSArray *)annotationsForPage:(NSInteger)page {
 
-	NSLog(@"Adrien -------- 0");
-
-	NSMutableArray *result = [NSMutableArray new];
-
 	// Get current step
 
 	int currentStep = 0;
-	NSLog(@"Adrien -------- 1");
 
 	if (_circuit && (_circuit.count > 0)) {
-		for (NSUInteger i=0; i <_circuit.count; i++) {
+		for (NSUInteger i = 0; i < _circuit.count; i++) {
 
 			NSArray *steps = ((ADLResponseCircuit *) _circuit[i]).etapes;
 			for (NSUInteger j = 0; j < steps.count; j++) {
 
-				NSDictionary *stepDict = ((NSDictionary *) steps[i]);
-				if ([stepDict[@"approved"] boolValue])
-					currentStep = j;
+				NSDictionary *stepDict = ((NSDictionary *) steps[j]);
+				if ([stepDict[@"approved"] boolValue]) {
+					// If this step was approved, the current step might be the next one
+					currentStep = j + 1;
+				}
 			}
 		}
 	}
 
 	// Updating annotations
 
-	NSLog(@"Adrien -------- 2");
 	for (Annotation *annotation in _annotations) {
-
-		NSLog(@"Adrien -- %p + %i", annotation.step, currentStep);
-
-		int isEditable = (annotation.step >= currentStep);
-		[annotation setUnwrappedEditable:isEditable];
+		bool isEditable = (annotation.unwrappedStep.intValue >= currentStep);
+		[annotation setUnwrappedEditable:(isEditable ? @(1) : @(0))];
 	}
 
 	// Filtering annotations
 
+	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
 
+		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
+		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.getUnwrappedId];
 
-	//
+		return isPage && isDoc;
+	}]];
 
 	return result;
 }
@@ -293,36 +290,19 @@
 - (void)updateAnnotation:(Annotation *)annotation
                  forPage:(NSUInteger)page {
 
-//	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-//
-//		NSDictionary *annotationDictionary = annotation.dict;
-//		NSString *documentId = [_document getUnwrappedId];
-//
-//		[_restClient updateAnnotation:annotationDictionary
-//		                      forPage:(int) page
-//			               forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-//						  andDocument:documentId
-//			                  success:^(NSArray *result) {
-//			                      NSLog(@"updateAnnotation success");
-//			                  }
-//							  failure:^(NSError *error) {
-//								  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-//													 withTitle:@"Erreur à la sauvegarde de l'annotation"];
-//							  }];
-//	}
-//	else {
-//		NSDictionary *dict = [annotation dict];
-//		NSDictionary *req = @{
-//				@"page" : @(page),
-//				@"annotation" : dict,
-//				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-//		};
-//
-//		ADLRequester *requester = [ADLRequester sharedRequester];
-//		[requester request:@"updateAnnotation"
-//		           andArgs:req
-//			      delegate:self];
-//	}
+	NSString *documentId = _document.getUnwrappedId;
+
+//	[_restClient updateAnnotation:annotation
+//	                      forPage:(int) page
+//	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+//	                  andDocument:documentId
+//	                      success:^(NSArray *result) {
+//		                      NSLog(@"updateAnnotation success");
+//	                      }
+//	                      failure:^(NSError *error) {
+//		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+//		                                         withTitle:@"Erreur à la sauvegarde de l'annotation"];
+//	                      }];
 }
 
 

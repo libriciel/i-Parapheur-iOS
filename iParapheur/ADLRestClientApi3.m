@@ -36,6 +36,7 @@
 #import "ADLRestClientApi3.h"
 #import "ADLResponseDossiers.h"
 #import "iParapheur-Swift.h"
+#import "DeviceUtils.h"
 
 
 @implementation ADLRestClientApi3
@@ -384,30 +385,29 @@
 }
 
 
-- (NSMutableDictionary *)fixUpdateAnnotationDictionary:(NSDictionary *)annotation
-                                               forPage:(NSNumber *)page {
+- (NSMutableDictionary *)createAnnotationDictionary:(Annotation *)annotation {
 
 	NSMutableDictionary *result = [NSMutableDictionary new];
 
 	// Fixme : send every other data form annotation
 
-	result[@"page"] = page;
-	result[@"text"] = [annotation valueForKey:@"text"];
-	result[@"type"] = [annotation valueForKey:@"type"];
-	result[@"uuid"] = [annotation valueForKey:@"uuid"];
-	result[@"id"] = [annotation valueForKey:@"uuid"];
+	result[@"page"] = annotation.unwrappedPage;
+	result[@"text"] = annotation.unwrappedText;
+	result[@"type"] = annotation.unwrappedType;
+	result[@"uuid"] = annotation.unwrappedId;
+	result[@"id"] = annotation.unwrappedId;
 
-	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
-	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
-	NSDictionary *annotationRectTopLeft = [annotationRect valueForKey:@"topLeft"];
-
-	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-	resultBottomRight[@"x"] = [annotationRectBottomRight valueForKey:@"x"];
-	resultBottomRight[@"y"] = [annotationRectBottomRight valueForKey:@"y"];
+	CGRect rectData = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
+	                                         oldDpi:72
+	                                         newDpi:150];
 
 	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-	resultTopLeft[@"x"] = [annotationRectTopLeft valueForKey:@"x"];
-	resultTopLeft[@"y"] = [annotationRectTopLeft valueForKey:@"y"];
+	resultTopLeft[@"x"] = @(rectData.origin.x);
+	resultTopLeft[@"y"] = @(rectData.origin.y);
+
+	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
+	resultBottomRight[@"x"] = @(rectData.origin.x + rectData.size.width);
+	resultBottomRight[@"y"] = @(rectData.origin.y + rectData.size.height);
 
 	NSMutableDictionary *rect = [NSMutableDictionary new];
 	rect[@"bottomRight"] = resultBottomRight;
@@ -553,21 +553,20 @@
 }
 
 
-- (void)actionAddAnnotation:(NSDictionary *)annotation
+- (void)actionAddAnnotation:(Annotation *)annotation
                  forDossier:(NSString *)dossierId
-                andDocument:(NSString *)document
                     success:(void (^)(NSArray *))success
                     failure:(void (^)(NSError *))failure {
 
 	// Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
+	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation]; // Adrien ???
 
 	// Send request
 
 	[_swiftManager sendSimpleAction:@(1)
 	                            url:[self getAnnotationsUrlForDossier:dossierId
-	                                                      andDocument:document]
+	                                                      andDocument:annotation.unwrappedDocumentId]
 	                           args:argumentDictionary
 	                     onResponse:^(id result) {
 		                     success(nil);
@@ -578,24 +577,21 @@
 }
 
 
-- (void)actionUpdateAnnotation:(NSDictionary *)annotation
-                       forPage:(int)page
+- (void)actionUpdateAnnotation:(Annotation *)annotation
                     forDossier:(NSString *)dossierId
-                   andDocument:(NSString *)document
                        success:(void (^)(NSArray *))success
                        failure:(void (^)(NSError *))failure {
 
 	// Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
-	                                                                      forPage:@(page)];
+	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
 
 	// Send request
 
 	[_swiftManager sendSimpleAction:@(2)
 	                            url:[self getAnnotationUrlForDossier:dossierId
-	                                                     andDocument:document
-	                                                 andAnnotationId:annotation[@"uuid"]]
+	                                                     andDocument:annotation.unwrappedDocumentId
+	                                                 andAnnotationId:annotation.unwrappedId]
 	                           args:argumentDictionary
 	                     onResponse:^(id result) {
 		                     success(nil);
@@ -606,23 +602,21 @@
 }
 
 
-- (void)actionRemoveAnnotation:(NSDictionary *)annotation
+- (void)actionRemoveAnnotation:(Annotation *)annotation
                     forDossier:(NSString *)dossierId
-                   andDocument:(NSString *)document
                        success:(void (^)(NSArray *))success
                        failure:(void (^)(NSError *))failure {
 
 	// Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self fixUpdateAnnotationDictionary:annotation
-	                                                                      forPage:@0];
+	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
 
 	// Send request
 
 	[_swiftManager sendSimpleAction:@(3)
 	                            url:[self getAnnotationUrlForDossier:dossierId
-	                                                     andDocument:document
-	                                                 andAnnotationId:annotation[@"uuid"]]
+	                                                     andDocument:annotation.unwrappedDocumentId
+	                                                 andAnnotationId:annotation.unwrappedId]
 	                           args:argumentDictionary
 	                     onResponse:^(id result) {
 		                     success(nil);

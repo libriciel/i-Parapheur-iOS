@@ -42,13 +42,13 @@ import Gloss
     var text: String?
     let date: NSDate?
     let secretaire: Int?
-    var rect: CGRect?
+    var rect: NSValue?
 
     let fillColor: String?
     let penColor: String?
     let type: String?
 
-    var step: Int
+    var step: Int?
     var page: Int?
     var documentId: String?
     var editable: Bool?
@@ -67,7 +67,20 @@ import Gloss
 
         date = NSDate(timeIntervalSince1970: (("date" <~~ json) ?? -1))
         secretaire = ("secretaire" <~~ json) ?? 0
-        rect = ("rect" <~~ json)
+
+        if let jsonRect: Dictionary<String, AnyObject>? = "rect" <~~ json {
+
+            let jsonRectTopLeft: Dictionary<String, AnyObject>? = jsonRect!["topLeft"] as! Dictionary<String, AnyObject>?
+            let jsonRectBottomRight: Dictionary<String, AnyObject>? = jsonRect!["bottomRight"] as! Dictionary<String, AnyObject>?
+
+            rect = NSValue(CGRect: DeviceUtils.translateDpiRect(CGRectMake(jsonRectTopLeft!["x"] as! CGFloat,
+                                                                           jsonRectTopLeft!["y"] as! CGFloat,
+                                                                           (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
+                                                                           (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)),
+                                                                oldDpi: 150,
+                                                                newDpi: 72))
+        }
+
         step = 0
     }
 
@@ -83,8 +96,11 @@ import Gloss
 
         date = NSDate()
         secretaire = 0
-        rect = nil
+        rect = NSValue(CGRect: DeviceUtils.translateDpiRect(CGRectMake(0, 0, 150, 150),
+                                                            oldDpi:150,
+                                                            newDpi:72))
         step = 0
+        editable = false
     }
 
     func toJSON() -> JSON? {
@@ -93,23 +109,23 @@ import Gloss
 
     // MARK: ObjC accessors
 
-    func getUnwrappedId() -> NSString {
+    func unwrappedId() -> NSString {
         return id as NSString!
     }
 
-    func getUnwrappedPage() -> Int {
-        return page as Int!
+    func unwrappedPage() -> NSNumber {
+        return page as NSNumber!
     }
 
-    func getUnwrappedRect() -> CGRect {
-        return rect as CGRect!
+    func unwrappedRect() -> NSValue {
+        return rect!
     }
 
-    func setUnwrappedRect(rct: CGRect) {
-        rect = rct as? CGRect
+    func setUnwrappedRect(rct: NSValue) {
+        rect = rct
     }
 
-    func getUnwrappedText() -> NSString {
+    func unwrappedText() -> NSString {
         return text as NSString!
     }
 
@@ -117,11 +133,15 @@ import Gloss
         text = txt as? String
     }
 
-    func getUnwrappedAuthor() -> NSString {
+    func unwrappedAuthor() -> NSString {
         return author as NSString!
     }
 
-    func getUnwrappedDate() -> NSString {
+    func unwrappedDocumentId() -> NSString {
+        return documentId as NSString!
+    }
+
+    func unwrappedDate() -> NSString {
 
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
@@ -129,15 +149,19 @@ import Gloss
         return dateFormatter.stringFromDate(date!)
     }
 
-//    func getUnwrappedStep() -> Int {
-//        return step as Int!
-//    }
-
-    func getUnwrappedEditable() -> Bool {
-        return editable as Bool!
+    func unwrappedStep() -> NSNumber {
+        return step as! NSNumber
     }
 
-    func setUnwrappedEditable(value: Int) {
+    func unwrappedEditable() -> NSNumber {
+        return editable as NSNumber!
+    }
+
+    func setUnwrappedEditable(value: NSNumber) {
         editable = value as? Bool
+    }
+
+    func unwrappedType() -> NSString {
+        return type as NSString!
     }
 }

@@ -91,7 +91,6 @@
 		B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */; };
 		B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E11547333D006F7BF3 /* CGPDFDocument.m */; };
 		C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */; };
-		C51394121A65834000F46633 /* ADLResponseAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C51394111A65834000F46633 /* ADLResponseAnnotation.m */; };
 		C516EDE51AB6D94400216E5F /* iw-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE41AB6D94400216E5F /* iw-signature@2x.png */; };
 		C516EDE71AB6D94E00216E5F /* ip-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE61AB6D94E00216E5F /* ip-signature@2x.png */; };
 		C516EDE91AB6D96F00216E5F /* ip-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE81AB6D96F00216E5F /* ip-signature.png */; };
@@ -358,8 +357,6 @@
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
 		C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceUtils.h; sourceTree = "<group>"; };
 		C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceUtils.m; sourceTree = "<group>"; };
-		C51394101A65834000F46633 /* ADLResponseAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseAnnotation.h; sourceTree = "<group>"; };
-		C51394111A65834000F46633 /* ADLResponseAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseAnnotation.m; sourceTree = "<group>"; };
 		C516EDE41AB6D94400216E5F /* iw-signature@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-signature@2x.png"; sourceTree = "<group>"; };
 		C516EDE61AB6D94E00216E5F /* ip-signature@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-signature@2x.png"; sourceTree = "<group>"; };
 		C516EDE81AB6D96F00216E5F /* ip-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-signature.png"; sourceTree = "<group>"; };
@@ -981,8 +978,6 @@
 				C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */,
 				C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */,
 				C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */,
-				C51394101A65834000F46633 /* ADLResponseAnnotation.h */,
-				C51394111A65834000F46633 /* ADLResponseAnnotation.m */,
 				C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */,
 				C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */,
 			);
@@ -1300,7 +1295,6 @@
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
 				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,
 				B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */,
-				C51394121A65834000F46633 /* ADLResponseAnnotation.m in Sources */,
 				B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */,
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,

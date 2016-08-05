@@ -75,5 +75,8 @@
 
 + (void)logWarningMessage:(NSString *)message;
 
++ (CGRect)translateDpiRect:(CGRect) rect
+                    oldDpi:(int) oldDpi
+                    newDpi:(int) newDpi;
 
 @end

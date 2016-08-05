@@ -71,7 +71,7 @@
 - (void)setAnnotationModel:(Annotation *)annotationModel {
 
 	_annotationModel = annotationModel;
-	_textView.text = [annotationModel getUnwrappedText];
+	_textView.text = annotationModel.unwrappedText;
 
 	CGSize size = [annotationModel.text boundingRectWithSize:CGSizeMake(100.0f, FLT_MAX)
 	                                                 options:NSStringDrawingUsesLineFragmentOrigin
