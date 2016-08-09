@@ -47,13 +47,11 @@
 
 - (NSArray *)annotationsForPage:(NSInteger)page;
 
-- (void)updateAnnotation:(Annotation *)annotation
-                 forPage:(NSUInteger)page;
+- (void)updateAnnotation:(Annotation *)annotation;
 
 - (void)removeAnnotation:(Annotation *)annotation;
 
-- (void)addAnnotation:(Annotation *)annotation
-              forPage:(NSUInteger)page;
+- (void)addAnnotation:(Annotation *)annotation;
 
 @optional
 

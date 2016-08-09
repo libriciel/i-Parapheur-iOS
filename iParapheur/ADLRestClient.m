@@ -249,10 +249,10 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 }
 
 
-- (void)addAnnotations:(Annotation *)annotation
-            forDossier:(NSString *)dossier
-               success:(void (^)(NSArray *))success
-               failure:(void (^)(NSError *))failure {
+- (void)addAnnotation:(Annotation *)annotation
+           forDossier:(NSString *)dossier
+              success:(void (^)(NSArray *))success
+              failure:(void (^)(NSError *))failure {
 
 	[_restClientApi actionAddAnnotation:annotation
 	                         forDossier:dossier

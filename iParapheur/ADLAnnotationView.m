@@ -54,7 +54,7 @@
 		self.autoresizingMask = UIViewAutoresizingNone;
 		self.backgroundColor = [UIColor clearColor];
 
-		_annotationModel = [[Annotation alloc] initWithAuth:@"adrienTest"];
+		_annotationModel = [[Annotation alloc] initWithCurrentPage:@(_currentPage)];
 		_selected = NO;
 
 		[self addButtons];
@@ -150,7 +150,7 @@
 	buttonFrame.origin.y = 0;
 	buttonFrame.size.width = kFingerSize;
 	buttonFrame.size.height = kFingerSize;
-	if ([_annotationModel unwrappedEditable]) {
+	if (_annotationModel.unwrappedEditable) {
 		// CLOSE BUTTON
 		_closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
 		[_closeButton setTitle:@"X"
@@ -263,7 +263,7 @@
 	if (!_postItView) {
 		CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame), CGRectGetMinY(self.frame), kPostItWidth, kPostItheight)];
 		_postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
-		_postItView.userInteractionEnabled = [_annotationModel unwrappedEditable].boolValue;
+		_postItView.userInteractionEnabled = _annotationModel.unwrappedEditable.boolValue;
 		_postItView.annotationModel = _annotationModel;
 		_postItView.contentScaleFactor = self.contentScaleFactor;
 		[self.superview addSubview:_postItView];

@@ -532,7 +532,7 @@
 
 		for (Annotation *annotation in annotations) {
 			ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotation];
-			[a setDrawingView:self];
+			a.drawingView = self;
 			[self addSubview:a];
 		}
 	}
@@ -541,15 +541,15 @@
 
 - (void)updateAnnotation:(Annotation *)annotation {
 
-	[_masterViewController.dataSource updateAnnotation:annotation
-	                                           forPage:_pageNumber];
+	[annotation setUnwrappedPage:@(_pageNumber)];
+	[_masterViewController.dataSource updateAnnotation:annotation];
 }
 
 
 - (void)addAnnotation:(Annotation *)annotation {
 
-	[_masterViewController.dataSource addAnnotation:annotation
-	                                        forPage:_pageNumber];
+	[annotation setUnwrappedPage:@(_pageNumber)];
+	[_masterViewController.dataSource addAnnotation:annotation];
 }
 
 

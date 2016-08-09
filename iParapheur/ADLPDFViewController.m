@@ -44,6 +44,7 @@
 #import "ADLActionViewController.h"
 #import "UIColor+CustomColors.h"
 #import "DeviceUtils.h"
+#import "StringUtils.h"
 
 
 @interface ADLPDFViewController () <ReaderViewControllerDelegate>
@@ -177,7 +178,7 @@
 	}
 
 	if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
-		((RGDocumentsView *) segue.destinationViewController).documents = [_dossier getUnwrappedDocuments];
+		((RGDocumentsView *) segue.destinationViewController).documents = _dossier.unwrappedDocuments;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
@@ -278,7 +279,7 @@
 	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
 
 		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
-		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.getUnwrappedId];
+		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.unwrappedId];
 
 		return isPage && isDoc;
 	}]];
@@ -287,107 +288,52 @@
 }
 
 
-- (void)updateAnnotation:(Annotation *)annotation
-                 forPage:(NSUInteger)page {
+- (void)updateAnnotation:(Annotation *)annotation {
 
-	NSString *documentId = _document.getUnwrappedId;
-
-//	[_restClient updateAnnotation:annotation
-//	                      forPage:(int) page
-//	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-//	                  andDocument:documentId
-//	                      success:^(NSArray *result) {
-//		                      NSLog(@"updateAnnotation success");
-//	                      }
-//	                      failure:^(NSError *error) {
-//		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-//		                                         withTitle:@"Erreur à la sauvegarde de l'annotation"];
-//	                      }];
+	[_restClient updateAnnotation:annotation
+	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+	                      success:^(NSArray *result) {
+		                      NSLog(@"updateAnnotation success");
+	                      }
+	                      failure:^(NSError *error) {
+		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                         withTitle:@"Erreur à la sauvegarde de l'annotation"];
+	                      }];
 }
 
 
 - (void)removeAnnotation:(Annotation *)annotation {
 
-//	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-//
-//		NSDictionary *annotationDictionary = annotation.dict;
-//		NSString *documentId = [_document getUnwrappedId];
-//
-//		[_restClient removeAnnotation:annotationDictionary
-//		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-//						  andDocument:documentId
-//				              success:^(NSArray *result) {
-//				                  NSLog(@"deleteAnnotation success");
-//				              }
-//				              failure:^(NSError *error) {
-//				                  [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-//													 withTitle:@"Erreur à la suppression de l'annotation"];
-//				              }];
-//	}
-//	else {
-//		NSDictionary *req = @{
-//				@"uuid" : [annotation uuid],
-//				@"page" : @10,
-//				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-//		};
-//
-//		ADLRequester *requester = [ADLRequester sharedRequester];
-//
-//		[requester request:@"removeAnnotation"
-//		           andArgs:req
-//			      delegate:self];
-//	}
+	[_restClient removeAnnotation:annotation
+	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+	                      success:^(NSArray *result) {
+		                      NSLog(@"deleteAnnotation success");
+	                      }
+	                      failure:^(NSError *error) {
+		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                         withTitle:@"Erreur à la suppression de l'annotation"];
+	                      }];
 }
 
 
-- (void)addAnnotation:(Annotation *)annotation
-              forPage:(NSUInteger)page {
+- (void)addAnnotation:(Annotation *)annotation {
 
-//	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-//
-//		NSString *documentId = [_document getUnwrappedId];
-//		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
-//
-//		if (login == nil)
-//			login = @"bma";
-//
-//		NSMutableDictionary *args = annotation.dict.mutableCopy;
-//		args[@"page"] = @(page);
-//		args[@"date"] = [NSDate date];
-//		args[@"type"] = @"rect";
-//		args[@"author"] = login;
-//
-//		__weak typeof(self) weakSelf = self;
-//		[_restClient addAnnotations:args
-//		                 forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-//						andDocument:documentId
-//				            success:^(NSArray *result) {
-//				                __strong typeof(weakSelf) strongSelf = weakSelf;
-//				                if (strongSelf) {
-//					                [strongSelf requestAnnotations];
-//				                }
-//				            }
-//				            failure:^(NSError *error) {
-//				                [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-//												   withTitle:@"Erreur à la sauvegarde de l'annotation"];
-//				            }];
-//	}
-//	else {
-//		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:annotation.dict];
-//
-//		[dict setValue:@(page)
-//		        forKey:@"page"];
-//
-//		NSDictionary *args = @{
-//				@"annotations" : @[dict],
-//				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-//		};
-//
-//		ADLRequester *requester = [ADLRequester sharedRequester];
-//		[requester request:@"addAnnotation"
-//		           andArgs:args
-//			      delegate:self];
-//	}
+	NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
+	[annotation setUnwrappedAuthor:login];
+
+	__weak typeof(self) weakSelf = self;
+	[_restClient addAnnotation:annotation
+	                forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+	                   success:^(NSArray *result) {
+		                   __strong typeof(weakSelf) strongSelf = weakSelf;
+		                   if (strongSelf) {
+			                   [strongSelf requestAnnotations];
+		                   }
+	                   }
+	                   failure:^(NSError *error) {
+		                   [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                      withTitle:@"Erreur à la sauvegarde de l'annotation"];
+	                   }];
 }
 
 
@@ -409,7 +355,7 @@
 
 	// Determine the first pdf file to display
 
-	for (Document *document in [dossier getUnwrappedDocuments]) {
+	for (Document *document in [dossier unwrappedDocuments]) {
 		if (document.isVisuelPdf) {
 			_document = document;
 			break;
@@ -419,13 +365,13 @@
 	//
 
 	[self displayDocumentAt:0];
-	self.navigationController.navigationBar.topItem.title = [dossier getUnwrappedTitle];
+	self.navigationController.navigationBar.topItem.title = dossier.unwrappedTitle;
 
 	// Refresh buttons
 
 	NSArray *buttons;
 
-	if ([dossier getUnwrappedDocuments].count > 1)
+	if ([dossier unwrappedDocuments].count > 1)
 		buttons = @[_actionButton, _documentsButton, _detailsButton];
 	else
 		buttons = @[_actionButton, _detailsButton];
@@ -448,11 +394,11 @@
 //		_document = answer.copy;
 		[self displayDocumentAt:0];
 
-		self.navigationController.navigationBar.topItem.title = [_document getUnwrappedName];
+		self.navigationController.navigationBar.topItem.title = _document.unwrappedName;
 
 		NSArray *buttons;
 
-		if (_dossier.getUnwrappedDocuments.count > 1)
+		if (_dossier.unwrappedDocuments.count > 1)
 			buttons = @[_actionButton, _documentsButton, _detailsButton];
 		else
 			buttons = @[_actionButton, _detailsButton];
@@ -692,7 +638,7 @@
 - (void)requestAnnotations {
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		NSString *documentId = [_document getUnwrappedId];
+		NSString *documentId = [_document unwrappedId];
 		
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
@@ -724,8 +670,8 @@
 
 - (void)requestSignInfoForDossier:(Dossier *)dossier {
 
-	if ([[dossier getUnwrappedActions] containsObject:@"SIGNATURE"]) {
-		if ([[dossier getUnwrappedActionDemandee] isEqualToString:@"SIGNATURE"]) {
+	if ([dossier.unwrappedActions containsObject:@"SIGNATURE"]) {
+		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
 			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
@@ -797,8 +743,8 @@
 - (void)displayDocumentAt:(NSInteger)index {
 
 	_isDocumentPrincipal = (index == 0);
-	_document = [_dossier getUnwrappedDocuments][(NSUInteger) index];
-	NSString *documentId = [_document getUnwrappedId];
+	_document = _dossier.unwrappedDocuments[(NSUInteger) index];
+	NSString *documentId = [_document unwrappedId];
 	
 	// File cache
 	
@@ -820,34 +766,21 @@
 	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
 	
-	if (([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) && [_dossier getUnwrappedDocuments]) {
+	if (_dossier.unwrappedDocuments) {
 		bool isPdf = (bool) _document.isVisuelPdf;
 
 		[_restClient downloadDocument:documentId
 		                        isPdf:isPdf
-			                   atPath:[self getFileUrlWithDossierRef:documentId]
-			                  success:^(NSString *string) {
+		                       atPath:[self getFileUrlWithDossierRef:documentId]
+		                      success:^(NSString *string) {
 			                      HIDE_HUD
 			                      [self loadPdfAt:string];
 			                      [self requestAnnotations];
-			                  }
-			                  failure:^(NSError *error) {
+		                      }
+		                      failure:^(NSError *error) {
 			                      HIDE_HUD
-				                  [DeviceUtils logError:error];
-			                  }];
-	}
-	else if (_document) {
-//		NSDictionary *document = [_document[@"documents"] objectAtIndex:(NSUInteger) index];
-//
-//		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
-//		if (document[@"visuelPdfUrl"] != nil) {
-//			[requester downloadDocumentAt:document[@"visuelPdfUrl"]
-//			                     delegate:self];
-//		}
-//		else if (document[@"downloadUrl"] != nil) {
-//			[requester downloadDocumentAt:document[@"downloadUrl"]
-//			                     delegate:self];
-//		}
+			                      [DeviceUtils logError:error];
+		                      }];
 	}
 }
 

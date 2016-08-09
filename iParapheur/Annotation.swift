@@ -37,8 +37,8 @@ import Gloss
 
 @objc class Annotation: NSObject, Glossy {
 
-    let author: String?
-    let id: String?
+    var author: String?
+    var id: String?
     var text: String?
     let date: NSDate?
     let secretaire: Int?
@@ -84,9 +84,9 @@ import Gloss
         step = 0
     }
 
-    init?(auth: NSString) {
+    init?(currentPage: NSNumber) {
 
-        author = auth as String
+        author = ""
         id = "_new"
         text = ""
 
@@ -101,6 +101,8 @@ import Gloss
                                                             newDpi:72))
         step = 0
         editable = false
+        documentId = ""
+        page = currentPage as Int?
     }
 
     func toJSON() -> JSON? {
@@ -115,6 +117,10 @@ import Gloss
 
     func unwrappedPage() -> NSNumber {
         return page as NSNumber!
+    }
+
+    func setUnwrappedPage(i: NSNumber) {
+        page = i as? Int
     }
 
     func unwrappedRect() -> NSValue {
@@ -133,12 +139,20 @@ import Gloss
         text = txt as? String
     }
 
+    func setUnwrappedAuthor(txt: NSString) {
+        author = txt as? String
+    }
+
     func unwrappedAuthor() -> NSString {
         return author as NSString!
     }
 
     func unwrappedDocumentId() -> NSString {
         return documentId as NSString!
+    }
+
+    func setUnwrappedDocumentId(txt: NSString) {
+        documentId = txt as? String
     }
 
     func unwrappedDate() -> NSString {

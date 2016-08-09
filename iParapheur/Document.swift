@@ -71,11 +71,11 @@ import Gloss
 
     // MARK: ObjC accessors
 
-    func getUnwrappedId() -> NSString {
+    func unwrappedId() -> NSString {
         return id as NSString!
     }
 
-    func getUnwrappedName() -> NSString {
+    func unwrappedName() -> NSString {
         return name as NSString!
     }
 

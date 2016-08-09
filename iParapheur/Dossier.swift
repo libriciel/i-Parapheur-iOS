@@ -110,19 +110,19 @@ import Gloss
 
     // MARK: ObjC accessors
 
-    func getUnwrappedDocuments() -> NSArray {
+    func unwrappedDocuments() -> NSArray {
         return documents as NSArray!
     }
 
-    func getUnwrappedTitle() -> NSString {
+    func unwrappedTitle() -> NSString {
         return title as NSString!
     }
 
-    func getUnwrappedActions() -> NSArray {
+    func unwrappedActions() -> NSArray {
         return actions as NSArray!
     }
 
-    func getUnwrappedActionDemandee() -> NSString {
+    func unwrappedActionDemandee() -> NSString {
         return actionDemandee as NSString!
     }
 }

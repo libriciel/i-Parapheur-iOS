@@ -87,19 +87,19 @@ import Gloss
 
     // MARK: ObjC accessors
 
-    func getUnwrappedName() -> NSString {
+    func unwrappedName() -> NSString {
         return name as! NSString
     }
 
-    func getUnwrappedNodeRef() -> NSString {
+    func unwrappedNodeRef() -> NSString {
         return nodeRef as! NSString
     }
 
-    func getUnwrappedEnRetard() -> Int {
+    func unwrappedEnRetard() -> Int {
         return enRetard!
     }
 
-    func getUnwrappedATraiter() -> Int {
+    func unwrappedATraiter() -> Int {
         return aTraiter!
     }
 

@@ -413,9 +413,9 @@
 	}
 	else {
 		Bureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau.getUnwrappedName;
-		bureauEnRetard = [NSString stringWithFormat:@"%d", (int) bureau.getUnwrappedEnRetard];
-		bureauATraiter = [NSString stringWithFormat:@"%d", (int) bureau.getUnwrappedATraiter];
+		bureauName = bureau.unwrappedName;
+		bureauEnRetard = [NSString stringWithFormat:@"%d", (int) bureau.unwrappedEnRetard];
+		bureauATraiter = [NSString stringWithFormat:@"%d", (int) bureau.unwrappedATraiter];
 	}
 
 	cell.bureauNameLabel.text = bureauName;
@@ -461,8 +461,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	}
 	else {
 		Bureau *bureau = self.bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau.getUnwrappedName;
-		bureauNodeRef = bureau.getUnwrappedNodeRef;
+		bureauName = bureau.unwrappedName;
+		bureauNodeRef = bureau.unwrappedNodeRef;
 	}
 
 	NSLog(@"Selected Desk = %@", bureauNodeRef);

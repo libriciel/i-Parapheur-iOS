@@ -103,11 +103,13 @@
 
 
 - (void)cancelAllOperations {
+
 	[_swiftManager.manager.operationQueue cancelAllOperations];
 }
 
 
 - (void)cancelAllHTTPOperationsWithPath:(NSString *)path {
+
 	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 		[self cancelTasksInArray:dataTasks
 		                withPath:path];
@@ -221,7 +223,7 @@
 	[_swiftManager getDossier:dossier
 	                   bureau:bureau
 	               onResponse:^(Dossier *response) {
-			          success(response);
+		               success(response);
 	               }
 	                  onError:^(NSError *error) {
 		                  failure(error);
@@ -328,23 +330,23 @@
 	                                                         _swiftManager.manager.baseURL,
 	                                                         downloadUrlSuffix];
 	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
-	                                                                                 URLString:downloadUrlString
-	                                                                                parameters:nil
-	                                                                                     error:nil];
+	                                                                                URLString:downloadUrlString
+	                                                                               parameters:nil
+	                                                                                    error:nil];
 
 	// Start download
 
 	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
-	                                                                                progress:nil
-	                                                                             destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-		                                                                             return filePathUrl;
-	                                                                             }
-	                                                                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-		                                                                       if (error == nil)
-			                                                                       success(filePath.path);
-		                                                                       else if (error.code != kCFURLErrorCancelled)
-			                                                                       failure(error);
-	                                                                       }];
+	                                                                               progress:nil
+	                                                                            destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+		                                                                            return filePathUrl;
+	                                                                            }
+	                                                                      completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+		                                                                      if (error == nil)
+			                                                                      success(filePath.path);
+		                                                                      else if (error.code != kCFURLErrorCancelled)
+			                                                                      failure(error);
+	                                                                      }];
 
 	[downloadTask resume];
 }
@@ -353,33 +355,32 @@
 #pragma mark - Private Methods
 
 
-- (NSMutableDictionary *)fixAddAnnotationDictionary:(NSDictionary *)annotation {
+- (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
 
 	NSMutableDictionary *result = [NSMutableDictionary new];
 
-	result[@"author"] = [annotation valueForKey:@"author"];
-	result[@"text"] = [annotation valueForKey:@"text"];
-	result[@"type"] = [annotation valueForKey:@"type"];
-	result[@"page"] = [annotation valueForKey:@"page"];
-	result[@"uuid"] = [annotation valueForKey:@"uuid"];
+//	result[@"author"] = annotation.unwrappedAuthor;
+	result[@"text"] = annotation.unwrappedText;
+	result[@"type"] = annotation.unwrappedType;
+	result[@"page"] = annotation.unwrappedPage;
+//	result[@"uuid"] = annotation.unwrappedId;
 
-	NSDictionary *annotationRect = [annotation valueForKey:@"rect"];
-	NSDictionary *annotationRectBottomRight = [annotationRect valueForKey:@"bottomRight"];
-	NSDictionary *annotationRectTopLeft = [annotationRect valueForKey:@"topLeft"];
+	CGRect rect = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
+	                                     oldDpi:72
+	                                     newDpi:150];
+	NSDictionary *annotationRectTopLeft = @{
+			@"x" : @(rect.origin.x),
+			@"y" : @(rect.origin.y)
+	};
+	NSDictionary *annotationRectBottomRight = @{
+			@"x" : @(rect.origin.x + rect.size.width),
+			@"y" : @(rect.origin.y + rect.size.height)
+	};
 
-	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-	resultBottomRight[@"x"] = [annotationRectBottomRight valueForKey:@"x"];
-	resultBottomRight[@"y"] = [annotationRectBottomRight valueForKey:@"y"];
-
-	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-	resultTopLeft[@"x"] = [annotationRectTopLeft valueForKey:@"x"];
-	resultTopLeft[@"y"] = [annotationRectTopLeft valueForKey:@"y"];
-
-	NSMutableDictionary *rect = [NSMutableDictionary new];
-	rect[@"bottomRight"] = resultBottomRight;
-	rect[@"topLeft"] = resultTopLeft;
-
-	result[@"rect"] = rect;
+	result[@"rect"] = @{
+			@"topLeft" : annotationRectTopLeft,
+			@"bottomRight" : annotationRectBottomRight
+	};
 
 	return result;
 }
@@ -560,7 +561,8 @@
 
 	// Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation]; // Adrien ???
+	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
+	NSLog(@"Adrien add - %@", argumentDictionary);
 
 	// Send request
 
@@ -585,6 +587,7 @@
 	// Create arguments dictionary
 
 	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
+	NSLog(@"Adrien update - %@", argumentDictionary);
 
 	// Send request
 

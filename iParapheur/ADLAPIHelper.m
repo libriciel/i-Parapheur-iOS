@@ -86,8 +86,8 @@
 + (NSArray *)actionsForADLResponseDossier:(Dossier *)dossier {
 
 	NSMutableArray *actions = [NSMutableArray new];
-	NSArray *returnedActions = [dossier getUnwrappedDocuments];
-	NSString *actionDemandee = [dossier getUnwrappedActionDemandee];
+	NSArray *returnedActions = dossier.unwrappedDocuments;
+	NSString *actionDemandee = dossier.unwrappedActionDemandee;
 
 	if ([returnedActions containsObject:actionDemandee]) {
 		if ([actionDemandee isEqualToString:@"ARCHIVAGE"])
