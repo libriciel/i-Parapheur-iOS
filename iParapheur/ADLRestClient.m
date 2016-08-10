@@ -62,7 +62,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 - (void)setRestApiVersion:(NSNumber *)apiVersion {
 
-	if ([apiVersion intValue] != [PARAPHEUR_API_VERSION intValue]) {
+	if (apiVersion.intValue != PARAPHEUR_API_VERSION.intValue) {
 		PARAPHEUR_API_VERSION = apiVersion;
 		[self resetClient];
 	}
@@ -80,7 +80,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 	_restClientApi = nil;
 
-	if ([PARAPHEUR_API_VERSION intValue] == 4)
+	if (PARAPHEUR_API_VERSION.intValue == 4)
 		_restClientApi = [[ADLRestClientApi4 alloc] init];
 	else
 		_restClientApi = [[ADLRestClientApi3 alloc] init];

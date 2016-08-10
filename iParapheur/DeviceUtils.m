@@ -40,13 +40,16 @@
 @implementation DeviceUtils
 
 
-+ (BOOL)isConnectedToDemoServer {
++ (BOOL)isConnectedToDemoAccount {
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *url_preference = [preferences objectForKey:@"settings_server_url"];
-	BOOL isDemoServer = (url_preference == nil) || [url_preference isEqualToString:@""] || [url_preference isEqualToString:@"parapheur.demonstrations.adullact.org"];
 
-	return isDemoServer;
+	NSString *url = [preferences objectForKey:@"settings_server_url"];
+	NSString *login = [preferences objectForKey:@"settings_login"];
+	BOOL isDemoServer = (url == nil) || [url isEqualToString:@""] || [url isEqualToString:@"parapheur.demonstrations.adullact.org"];
+	BOOL isDemoAccount = (login == nil) || [login isEqualToString:@"parapheur.demonstrations.adullact.org"];
+
+	return (isDemoServer && isDemoAccount);
 }
 
 

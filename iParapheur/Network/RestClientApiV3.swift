@@ -66,7 +66,7 @@ import AFNetworking
     // MARK: Static methods
 
     class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
-                                          var credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
+                                          credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
 
         // note: credential is a reference; any created credential should be sent back using credential.memory
 
@@ -126,6 +126,30 @@ import AFNetworking
         }
 
         return false
+    }
+
+    class func parsePageAnnotations(pages: [String:AnyObject],
+                                    step: Int,
+                                    documentId: String) -> [Annotation] {
+
+        var parsedAnnotations = [Annotation]()
+
+        for page in pages {
+
+            if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
+                for jsonAnnotation in jsonAnnotations {
+
+                    var annotation = Annotation(json: jsonAnnotation)
+                    annotation!.step = step
+                    annotation!.page = Int(page.0)
+                    annotation!.documentId = documentId
+
+                    parsedAnnotations.append(annotation!)
+                }
+            }
+        }
+
+        return parsedAnnotations
     }
 
     // MARK: Get methods
@@ -275,25 +299,21 @@ import AFNetworking
                             for etapeIndex in 0 ..< etapes.count {
 
                                 if let documentPages = etapes[etapeIndex] as? [String:AnyObject] {
+
                                     for documentPage in documentPages {
-
                                         if let pages = documentPage.1 as? [String:AnyObject] {
-                                            for page in pages {
 
-                                                if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
-                                                    for jsonAnnotation in jsonAnnotations {
-
-                                                        var annotation = Annotation(json: jsonAnnotation)
-                                                        annotation!.step = etapeIndex
-                                                        annotation!.page = Int(page.0)
-                                                        annotation!.documentId = documentPage.0 as? String
-
-                                                        parsedAnnotations.append(annotation!)
-                                                    }
-                                                }
-                                            }
+                                            // Parsing API4
+                                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages,
+                                                                                                      step: etapeIndex,
+                                                                                                      documentId: documentPage.0 as String)
                                         }
                                     }
+
+                                    // Parsing API3
+                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(documentPages,
+                                                                                              step: etapeIndex,
+                                                                                              documentId: "*")
                                 }
                             }
                         }

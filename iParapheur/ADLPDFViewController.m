@@ -280,8 +280,9 @@
 
 		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
 		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.unwrappedId];
+		bool isApi3 = [((Annotation *) object).unwrappedDocumentId isEqualToString:@"*"];
 
-		return isPage && isDoc;
+		return isPage && (isDoc || isApi3);
 	}]];
 
 	return result;
@@ -320,6 +321,7 @@
 
 	NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
 	[annotation setUnwrappedAuthor:login];
+	[annotation setUnwrappedDocumentId:_document.unwrappedId];
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient addAnnotation:annotation
@@ -472,10 +474,10 @@
 	SHOW_HUD
 
 	__weak typeof(self) weakSelf = self;
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 		                dossier:_dossierRef
-			            success:^(Dossier *result) {
+		                success:^(Dossier *result) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                HIDE_HUD
@@ -638,19 +640,20 @@
 - (void)requestAnnotations {
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		NSString *documentId = [_document unwrappedId];
+		NSString *documentId = _document.unwrappedId;
 		
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
 						   document:documentId
 		                    success:^(NSArray *annotations) {
+
 		                        __strong typeof(weakSelf) strongSelf = weakSelf;
 		                        if (strongSelf) {
 			                        strongSelf.annotations = annotations;
 
 			                        for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
 				                        ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
-				                        [[currentReaderContentView getContentPage] refreshAnnotations];
+				                        [currentReaderContentView.getContentPage refreshAnnotations];
 			                        }
 		                        }
 		                    }

@@ -562,7 +562,8 @@
 	// Create arguments dictionary
 
 	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
-	NSLog(@"Adrien add - %@", argumentDictionary);
+	NSString *testUrl = [self getAnnotationsUrlForDossier:dossierId
+	                                          andDocument:annotation.unwrappedDocumentId];
 
 	// Send request
 

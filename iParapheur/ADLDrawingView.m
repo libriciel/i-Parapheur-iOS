@@ -35,6 +35,7 @@
  */
 #import "ADLDrawingView.h"
 #import "DeviceUtils.h"
+#import "ADLSingletonState.h"
 
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
@@ -237,7 +238,7 @@
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 
-	if ([DeviceUtils isConnectedToDemoServer]) {
+	if ([DeviceUtils isConnectedToDemoAccount]) {
 		[DeviceUtils logInfoMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
 						  withTitle:@"Action indisponible"];
 		return;

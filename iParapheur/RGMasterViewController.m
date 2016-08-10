@@ -174,7 +174,7 @@
 
 - (void)checkDemonstrationServer {
 
-	if (![DeviceUtils isConnectedToDemoServer])
+	if (![DeviceUtils isConnectedToDemoAccount])
 		return;
 
 	@try {

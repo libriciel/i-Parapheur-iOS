@@ -37,7 +37,7 @@
 @interface DeviceUtils : NSObject
 
 
-+ (BOOL)isConnectedToDemoServer;
++ (BOOL)isConnectedToDemoAccount;
 
 
 + (void)logError:(NSError *)error;
