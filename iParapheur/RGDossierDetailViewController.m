@@ -76,24 +76,25 @@
 
 	[self hidesEveryThing];
 	self.navigationBar.topItem.title = _dossier[@"titre"];
-	[[self typeLabel] setText:_dossier[@"type"]];
-	[[self sousTypeLabel] setText:_dossier[@"sousType"]];
+	self.typeLabel.text = _dossier[@"type"];
+	self.sousTypeLabel.text = _dossier[@"sousType"];
 	documents = _dossier[@"documents"];
 
 	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getCircuit:dossierRef
 		                success:^(ADLResponseCircuit *responseCircuit) {
-		                    __strong typeof(weakSelf) strongSelf = weakSelf;
-		                    if (strongSelf) {
-			                    NSMutableArray *responseArray = [NSMutableArray new];
-			                    [responseArray addObjectsFromArray:responseCircuit.etapes];
-			                    [strongSelf refreshCircuits:responseArray];
-		                    }
+			                __strong typeof(weakSelf) strongSelf = weakSelf;
+			                if (strongSelf) {
+				                NSMutableArray *responseArray = [[NSMutableArray alloc] init];
+				                [responseArray addObjectsFromArray:responseCircuit.etapes];
+
+				                [strongSelf refreshCircuits:responseArray];
+			                }
 		                }
-			            failure:^(NSError *error) {
+		                failure:^(NSError *error) {
 			                NSLog(@"getCircuit error : %@", error);
-			            }];
+		                }];
 	}
 	else {
 		dossierRef = _dossier[@"dossierRef"];
@@ -119,14 +120,12 @@
 }
 
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
 
 	[self setCircuitTable:nil];
-
-	//unregister observer
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
+
+	[super didReceiveMemoryWarning];
 }
 
 
@@ -161,7 +160,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
 		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	} else {
 		return YES;
@@ -184,16 +183,16 @@
 		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 		                dossier:dossierRef
-			            success:^(ADLResponseDossier *responseDossier) {
+		                success:^(ADLResponseDossier *responseDossier) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                [ADLSingletonState sharedSingletonState].dossierCourantObject = responseDossier;
 				                [strongSelf getDossierDidEndWithREquestAnswer];
 			                }
-			            }
-			            failure:^(NSError *error) {
+		                }
+		                failure:^(NSError *error) {
 			                NSLog(@"getDossier error %@ : ", error.localizedDescription);
-			            }];
+		                }];
 	}
 	else {
 		NSDictionary *args = @{@"dossierRef" : _dossierRef};
@@ -201,7 +200,7 @@
 		ADLRequester *requester = [ADLRequester sharedRequester];
 		[requester request:GETDOSSIER_API
 		           andArgs:args
-			      delegate:self];
+		          delegate:self];
 	}
 
 	SHOW_HUD
@@ -239,9 +238,9 @@
 	NSDictionary *object = _objects[(NSUInteger) indexPath.row];
 	// cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [object objectForKey:@"parapheurName"], [object objectForKey:@"actionDemandee"]];
 
-	[[cell parapheurName] setText:object[@"parapheurName"]];
+	cell.parapheurName.text = object[@"parapheurName"];
 	if ([object[@"approved"] intValue] == 1) {
-		[[cell validateurName] setText:object[@"signataire"]];
+		cell.validateurName.text = object[@"signataire"];
 		cell.annotation.text = object[@"annotPub"];
 	}
 	else {
@@ -255,10 +254,10 @@
 
 		NSDate *validationDate;
 
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			if ([object[@"dateValidation"] isKindOfClass:[NSNumber class]]) {
 				NSNumber *dateMs = object[@"dateValidation"];
-				validationDate = [NSDate dateWithTimeIntervalSince1970:[dateMs doubleValue] / 1000];
+				validationDate = [NSDate dateWithTimeIntervalSince1970:dateMs.doubleValue / 1000];
 			}
 		}
 		else {
@@ -267,8 +266,8 @@
 				validationDate = [formatter dateFromString:validationDateIso];
 		}
 
-		NSDateFormatter *outputFormatter = [NSDateFormatter new];
-		[outputFormatter setDateFormat:@"'le' dd/MM/yyyy 'à' HH:mm"];
+		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+		outputFormatter.dateFormat = @"'le' dd/MM/yyyy 'à' HH:mm";
 
 		NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
 
@@ -289,9 +288,9 @@
 
 	NSString *action = [object[@"actionDemandee"] lowercaseString];
 
-	[[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png",
-	                                                                              imagePrefix,
-	                                                                              action]]];
+	cell.etapeTypeIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png",
+	                                                                          imagePrefix,
+	                                                                          action]];
 
 	return cell;
 }
@@ -331,8 +330,8 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		NSDate *object = _objects[indexPath.row];
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		NSDate *object = _objects[(NSUInteger) indexPath.row];
 		self.detailViewController.detailItem = object;
 	}
 }
@@ -344,7 +343,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSDictionary *args = @{@"dossier" : dossierRef};
 	[requester request:@"getCircuit"
 	           andArgs:args
-		      delegate:self];
+	          delegate:self];
 
 	SHOW_HUD
 }
@@ -415,27 +414,27 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf"
 	                                                   inDirectory:nil];
 
-	NSString *filePath = [pdfs lastObject];
+	NSString *filePath = pdfs.lastObject;
 
 	ReaderDocument *document = [[ReaderDocument alloc] initWithFilePath:filePath
 	                                                           password:nil];
 
 	readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-	[readerViewController setDelegate:self];
+	readerViewController.delegate = self;
 
 	readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
-	[[self splitViewController] presentViewController:readerViewController
-	                                         animated:YES
-			                               completion:nil];
+	[self.splitViewController presentViewController:readerViewController
+	                                       animated:YES
+	                                     completion:nil];
 }
 
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController {
 	// do nothing for now
-	[[self splitViewController] dismissViewControllerAnimated:YES
-	                                               completion:nil];
+	[self.splitViewController dismissViewControllerAnimated:YES
+	                                             completion:nil];
 }
 
 
@@ -474,23 +473,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)hidesEveryThing {
 
-	[self setHiddenForEveryone:YES];
+	self.hiddenForEveryone = YES;
 }
 
 
 - (void)showsEveryThing {
 
-	[self setHiddenForEveryone:NO];
+	self.hiddenForEveryone = NO;
 }
 
 
 - (void)setHiddenForEveryone:(BOOL)val {
 
-	[dossierName setHidden:val];
-	[typeLabel setHidden:val];
-	[sousTypeLabel setHidden:val];
-	[circuitTable setHidden:val];
-	[circuitLabel setHidden:val];
+	dossierName.hidden = val;
+	typeLabel.hidden = val;
+	sousTypeLabel.hidden = val;
+	circuitTable.hidden = val;
+	circuitLabel.hidden = val;
 }
 
 

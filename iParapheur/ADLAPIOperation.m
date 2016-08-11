@@ -226,7 +226,7 @@
   didFailWithError:(NSError *)error {
 	
 	if (!self.isCancelled) {
-		if (false && _delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)]) {
+		if (_delegate && [_delegate respondsToSelector:@selector(didEndWithUnReachableNetwork)]) {
 			[_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork)
 										withObject:nil
 									 waitUntilDone:YES];
@@ -362,7 +362,7 @@
 																			  options:NSJSONReadingMutableContainers
 																				error:&error];
 		
-		[responseObject setObject:_request forKey:@"_req"];
+		responseObject[@"_req"] = _request;
 		
 		if (_delegate && [_delegate respondsToSelector:@selector(didEndWithRequestAnswer:) ]) {
 			[_delegate performSelectorOnMainThread:@selector(didEndWithRequestAnswer:)

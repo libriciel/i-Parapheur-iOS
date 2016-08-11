@@ -135,7 +135,7 @@
 			[sousTypes addObject:@{@"ph:soustypeMetier" : sousType}];
 
 		NSDictionary *titre = @{@"or" : @[@{@"cm:title" : [NSString stringWithFormat:@"*%@*", currentFilter[@"titre"]]}]};
-		NSDictionary *filtersDictionnary = @{@"and" : @[@{@"or" : types}, @{@"or" : sousTypes}, titre]};
+		NSDictionary *filtersDictionary = @{@"and" : @[@{@"or" : types}, @{@"or" : sousTypes}, titre]};
 
 		// Send request
 
@@ -170,10 +170,10 @@
 					                 [strongSelf getDossierDidEndWithSuccess:dossiers];
 				                 }
 			                 }
-			                 failure:^(NSError *error) {
+			                 failure:^(NSError *getDossiersError) {
 				                 __strong typeof(weakSelf) strongSelf = weakSelf;
 				                 if (strongSelf) {
-					                 [DeviceUtils logError:error];
+					                 [DeviceUtils logError:getDossiersError];
 					                 [strongSelf.refreshControl endRefreshing];
 					                 HIDE_HUD
 				                 }
@@ -222,11 +222,12 @@
 }
 
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
 
 	[self setLoadMoreButton:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewDidUnload];
+
+	[super didReceiveMemoryWarning];
 }
 
 
@@ -339,8 +340,8 @@
 			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
 			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
 			                                                 style:UIAlertActionStyleDefault
-			                                               handler:^(UIAlertAction *action) {
-				                                               [self clickOnSecondaryAction:action.title];
+			                                               handler:^(UIAlertAction *alertAction) {
+				                                               [self clickOnSecondaryAction:alertAction.title];
 			                                               }];
 			[actionController addAction:action];
 		}
@@ -718,9 +719,10 @@
 
 		// Launch popup
 
-		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiers = selectedArray;
-		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
-		((RGWorkflowDialogViewController *) segue.destinationViewController).isPaperSign = isPaperSign;
+		RGWorkflowDialogViewController *workflowDialogViewController = segue.destinationViewController;
+		workflowDialogViewController.dossiers = selectedArray;
+		workflowDialogViewController.action = segue.identifier;
+		workflowDialogViewController.isPaperSign = isPaperSign;
 	}
 }
 
