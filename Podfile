@@ -1,4 +1,5 @@
 platform :ios, '8.0'
+use_frameworks!
 
 target "iParapheur" do
   pod 'SCNetworkReachability'
@@ -9,4 +10,5 @@ target "iParapheur" do
   pod 'TSMessages', :git => 'https://github.com/KrauseFx/TSMessages.git', :branch => 'master'
   pod 'NSData+Base64'
   pod 'OpenSSL-Universal', '1.0.1.19'
+  pod 'Gloss'
 end
