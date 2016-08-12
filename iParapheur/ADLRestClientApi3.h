@@ -37,12 +37,12 @@
 #import "ADLResponseDossier.h"
 #import "ADLResponseSignInfo.h"
 #import "ADLResponseCircuit.h"
+#import "iParapheur-Swift.h"
 
 
 @interface ADLRestClientApi3 : NSObject
 
-
-@property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
+@property (nonatomic, strong) RestClientApiV3 *swiftManager;
 
 
 -(id)init;

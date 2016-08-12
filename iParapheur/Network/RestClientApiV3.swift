@@ -32,106 +32,289 @@
 * The fact that you are presently reading this means that you have had
 * knowledge of the CeCILL license and that you accept its terms.
 */
+
 import Foundation
 
-@objc class RestClientApiV3 : NSObject {
-	
-	var _manager: AFHTTPSessionManager;
+@objc class RestClientApiV3: NSObject {
+
+    var _manager: AFHTTPSessionManager
 
     // MARK: Constructor
 
-    init(baseUrl: NSString) {
+    init(baseUrl: NSString,
+         login: NSString,
+         password: NSString) {
 
-		_manager = AFHTTPSessionManager(baseURL: NSURL(string:baseUrl as String))
-		_manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
-		_manager.setSessionDidReceiveAuthenticationChallengeBlock { (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
+        _manager = AFHTTPSessionManager(baseURL: NSURL(string: baseUrl as String))
+        _manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
+        _manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
+        _manager.setSessionDidReceiveAuthenticationChallengeBlock {
+            (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
 
             // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
-			if RestClientApiV3.shouldTrustProtectionSpace(challenge, credential: credential) {
+            if RestClientApiV3.shouldTrustProtectionSpace(challenge, credential: credential) {
                 return NSURLSessionAuthChallengeDisposition.UseCredential
             }
 
-			return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
-		}
+            return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
+        }
     }
 
     // MARK: Static methods
 
-	class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
-	                                      var credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
-		// note: credential is a reference; any created credential should be sent back using credential.memory
-		
-		let protectionSpace: NSURLProtectionSpace = challenge.protectionSpace
-		var trust: SecTrustRef = protectionSpace.serverTrust!
-		
-		// load the root CA bundled with the app
-		let certPath: String? = NSBundle.mainBundle().pathForResource("acmobile", ofType: "der")
-		if (certPath == nil) {
-			print("Certificate does not exist!")
-			return false
-		}
-		
-		let certData: NSData = NSData(contentsOfFile: certPath!)!
-		let cert: SecCertificateRef? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
+    class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
+                                          var credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
 
-		if (cert == nil) {
-			print("Certificate data could not be loaded. DER format?")
-			return false
-		}
-		
-		// create a policy that ignores hostname
-		let domain: CFString? = nil
-		let policy:SecPolicy = SecPolicyCreateSSL(true, domain)
-		
-		// takes all certificates from existing trust
-		let numCerts = SecTrustGetCertificateCount(trust)
-		var certs: [SecCertificateRef] = [SecCertificateRef]()
-		for (var i = 0; i < numCerts; i++) {
-			// takeUnretainedValue
-			let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
-			certs.append(c!)
-		}
-		
-		// and adds them to the new policy
-		var newTrust: SecTrust? = nil
-		var err: OSStatus = SecTrustCreateWithCertificates(certs, policy, &newTrust)
-		if (err != noErr) {
-			print("Could not create trust")
-		}
+        // note: credential is a reference; any created credential should be sent back using credential.memory
 
-		// TakeUnretainedValue
-		trust = newTrust! // replace old trust
-		
-		// set root cert
-		let rootCerts: [AnyObject] = [cert!]
-		err = SecTrustSetAnchorCertificates(trust, rootCerts)
-		
-		// evaluate the certificate and product a trustResult
-		var trustResult: SecTrustResultType = SecTrustResultType()
-		SecTrustEvaluate(trust, &trustResult)
-		
-		if (Int(trustResult) == Int(kSecTrustResultProceed) || Int(trustResult) == Int(kSecTrustResultUnspecified)) {
-			// create the credential to be used
-			credential.memory = NSURLCredential(trust: trust)
-			return true
-		}
+        let protectionSpace: NSURLProtectionSpace = challenge.protectionSpace
+        var trust: SecTrustRef = protectionSpace.serverTrust!
 
-		return false
-	}
+        // load the root CA bundled with the app
+        let certPath: String? = NSBundle.mainBundle().pathForResource("acmobile", ofType: "der")
+        if (certPath == nil) {
+            print("Certificate does not exist!")
+            return false
+        }
+
+        let certData: NSData = NSData(contentsOfFile: certPath!)!
+        let cert: SecCertificateRef? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
+
+        if (cert == nil) {
+            print("Certificate data could not be loaded. DER format?")
+            return false
+        }
+
+        // create a policy that ignores hostname
+        let domain: CFString? = nil
+        let policy: SecPolicy = SecPolicyCreateSSL(true, domain)
+
+        // takes all certificates from existing trust
+        let numCerts = SecTrustGetCertificateCount(trust)
+        var certs: [SecCertificateRef] = [SecCertificateRef]()
+        for (var i = 0; i < numCerts; i++) {
+            // takeUnretainedValue
+            let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
+            certs.append(c!)
+        }
+
+        // and adds them to the new policy
+        var newTrust: SecTrust? = nil
+        var err: OSStatus = SecTrustCreateWithCertificates(certs, policy, &newTrust)
+        if (err != noErr) {
+            print("Could not create trust")
+        }
+
+        // TakeUnretainedValue
+        trust = newTrust! // replace old trust
+
+        // set root cert
+        let rootCerts: [AnyObject] = [cert!]
+        err = SecTrustSetAnchorCertificates(trust, rootCerts)
+
+        // evaluate the certificate and product a trustResult
+        var trustResult: SecTrustResultType = SecTrustResultType()
+        SecTrustEvaluate(trust, &trustResult)
+
+        if (Int(trustResult) == Int(kSecTrustResultProceed) || Int(trustResult) == Int(kSecTrustResultUnspecified)) {
+            // create the credential to be used
+            credential.memory = NSURLCredential(trust: trust)
+            return true
+        }
+
+        return false
+    }
 
     // MARK: Get methods
 
-    func getApiVersion() {
+    func getApiVersion(onResponse: ((AnyObject) -> Void)?,
+                       onError: ((NSError) -> Void)?) {
 
-        _manager.GET("/parapheur/api/getApiLevel", parameters: nil, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            print("success \(responseObject)")
-
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-            print("error")
-        })
+        _manager.GET("/parapheur/api/getApiLevel",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
     }
 
+    func getBureaux(onResponse: ((AnyObject) -> Void)?,
+                    onError: ((NSError) -> Void)?) {
+
+        _manager.GET("/parapheur/bureaux",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func getDossiers(bureau: NSString,
+                     page: NSNumber,
+                     size: NSNumber,
+                     filterJson: NSString?,
+                     onResponse: ((NSArray) -> Void)?,
+                     onError: ((NSError) -> Void)?) {
+
+        // Parameters
+
+        let paramsDict: NSMutableDictionary = NSMutableDictionary()
+        paramsDict["asc"] = true
+        paramsDict["bureau"] = bureau
+        paramsDict["page"] = page
+        paramsDict["pageSize"] = size
+        paramsDict["pendingFile"] = 0
+        paramsDict["skipped"] = Double(page) * (Double(size) - 1)
+        paramsDict["sort"] = "cm:create"
+
+        if (filterJson != nil) {
+            paramsDict["filter"] = filterJson
+        }
+
+        // Request
+
+        _manager.GET("/parapheur/dossiers",
+                     parameters: paramsDict,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject as! NSArray)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func getDossier(dossier: NSString,
+                    bureau: NSString,
+                    onResponse: ((NSDictionary) -> Void)?,
+                    onError: ((NSError) -> Void)?) {
+
+        // Parameters
+
+        let paramsDict: NSMutableDictionary = NSMutableDictionary()
+        paramsDict["bureauCourant"] = bureau
+
+        // Request
+
+        _manager.GET("/parapheur/dossiers/\(dossier)",
+                     parameters: paramsDict,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject as! NSDictionary)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func getCircuit(dossier: NSString,
+                    onResponse: ((AnyObject) -> Void)?,
+                    onError: ((NSError) -> Void)?) {
+
+        _manager.GET("/parapheur/dossiers/\(dossier)/circuit",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func getAnnotations(dossier: NSString,
+                        onResponse: ((AnyObject) -> Void)?,
+                        onError: ((NSError) -> Void)?) {
+
+        _manager.GET("/parapheur/dossiers/\(dossier)/annotations",
+                     parameters: nil,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func getSignInfo(dossier: NSString,
+                     bureau: NSString,
+                     onResponse: ((AnyObject) -> Void)?,
+                     onError: ((NSError) -> Void)?) {
+
+        // Parameters
+
+        let paramsDict: NSMutableDictionary = NSMutableDictionary()
+        paramsDict["bureauCourant"] = bureau
+
+        // Request
+
+        _manager.GET("/parapheur/dossiers/\(dossier)/getSignInfo",
+                     parameters: paramsDict,
+                     success: {
+                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         onResponse!(responseObject)
+                     },
+                     failure: {
+                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         onError!(error)
+                     })
+    }
+
+    func sendSimpleAction(type: NSNumber,
+                          url: NSString,
+                          args: NSDictionary,
+                          onResponse: ((AnyObject) -> Void)?,
+                          onError: ((NSError) -> Void)?) {
+
+        if (type == 1) {
+            _manager.POST(url as String,
+                          parameters: args,
+                          success: {
+                              (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                              onResponse!(1)
+                          },
+                          failure: {
+                              (task: NSURLSessionDataTask!, error: NSError!) in
+                              onError!(error)
+                          })
+        }
+        else if (type == 2) {
+            _manager.PUT(url as String,
+                         parameters: args,
+                         success: {
+                             (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                             onResponse!(1)
+                         },
+                         failure: {
+                             (task: NSURLSessionDataTask!, error: NSError!) in
+                             onError!(error)
+                         })
+        }
+        else if (type == 3) {
+            _manager.DELETE(url as String,
+                            parameters: args,
+                            success: {
+                                (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                                onResponse!(1)
+                            },
+                            failure: {
+                                (task: NSURLSessionDataTask!, error: NSError!) in
+                                onError!(error)
+                            })
+        }
+    }
 }
 

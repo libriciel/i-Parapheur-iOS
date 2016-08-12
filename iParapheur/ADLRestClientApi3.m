@@ -33,12 +33,11 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLRestClientApi3.h"
-#import "ADLResponseGetLevel.h"
 #import "ADLResponseBureau.h"
 #import "ADLResponseDossiers.h"
 #import "ADLResponseAnnotation.h"
 #import "iParapheur-Swift.h"
-#import "ADLAnnotation.h"
+#import "ADLResponseGetLevel.h"
 
 
 @implementation ADLRestClientApi3
@@ -68,8 +67,8 @@
 	                     password:passwordSettings
 	                          url:urlSettings];
 
-	RestClientApiV3 *restApiV3 = [[RestClientApiV3 alloc] initWithBaseUrl:@"https://m.parapheur.demonstrations.adullact.org"];
-	[restApiV3 getApiVersion];
+//	RestClientApiV3 *restApiV3 = [[RestClientApiV3 alloc] initWithBaseUrl:@"https://m.parapheur.demonstrations.adullact.org"];
+//	[restApiV3 getApiVersion];
 
 	return self;
 }
@@ -94,56 +93,33 @@
 	// Fix values
 
 	if (![url hasPrefix:@"https://m."])
-		url = [NSString stringWithFormat:@"https://m.%@", url];
+		url = [NSString stringWithFormat:@"https://m.%@",
+		                                 url];
 
 	// Initialize AFNetworking HTTPClient
 
-	if (_sessionManager)
+	if (_swiftManager)
 		[self cancelAllOperations];
 
-	NSURL *baseURL = [NSURL URLWithString:url];
-	_sessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-
-	AFJSONRequestSerializer *requestSerializer = [AFJSONRequestSerializer serializer];
-	[requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-	[requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-	[requestSerializer setAuthorizationHeaderFieldWithUsername:login password:password];
-
-	_sessionManager.requestSerializer = requestSerializer;
-
-	// GET needs a JSONResponseSerializer,
-	// POST/PUT/DELETE needs an HTTPResponseSerializer
-
-	AFHTTPResponseSerializer *compoundResponseSerializer = [AFCompoundResponseSerializer compoundSerializerWithResponseSerializers:@[[AFJSONResponseSerializer serializer],
-			[AFHTTPResponseSerializer serializer]]];
-	[_sessionManager setResponseSerializer:compoundResponseSerializer];
-
-	// Security policy, for SSL checks.
-	// The .cer files (mobile server public keys) are automatically loaded from the app bundle,
-	// We just have to put them in the supporting files folder
-
-	_sessionManager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-	_sessionManager.securityPolicy.allowInvalidCertificates = YES; // To allow non iOS recognized CA.
-	// _sessionManager.securityPolicy.validatesCertificateChain = NO; // Currently (iOS 7) no chain support on self-signed certificates.
-	_sessionManager.securityPolicy.validatesDomainName = YES;
-
-	// TODO : Remove NSAllowsArbitraryLoads ATS in pList file, to upgrade security from iOS8 to iOS9 level.
-	//        2015/10 : iOS9 simulator (but not devices) does not properly work with self-signed certificate (wrong -9802 errors)
+	_swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
+	                                                   login:login
+	                                                password:password];
 }
 
 
 - (void)cancelAllOperations {
-
-	[_sessionManager.operationQueue cancelAllOperations];
+	[_swiftManager._manager.operationQueue cancelAllOperations];
 }
 
 
 - (void)cancelAllHTTPOperationsWithPath:(NSString *)path {
-
-	[[_sessionManager session] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-		[self cancelTasksInArray:dataTasks withPath:path];
-		[self cancelTasksInArray:uploadTasks withPath:path];
-		[self cancelTasksInArray:downloadTasks withPath:path];
+	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+		[self cancelTasksInArray:dataTasks
+		                withPath:path];
+		[self cancelTasksInArray:uploadTasks
+		                withPath:path];
+		[self cancelTasksInArray:downloadTasks
+		                withPath:path];
 	}];
 }
 
@@ -163,10 +139,12 @@
 - (NSString *)getDownloadUrl:(NSString *)dossierId
                       forPdf:(bool)isPdf {
 
-	NSString* result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content", dossierId];
+	NSString *result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content",
+	                                              dossierId];
 
 	if (isPdf)
-		result = [NSString stringWithFormat:@"%@;ph:visuel-pdf", result];
+		result = [NSString stringWithFormat:@"%@;ph:visuel-pdf",
+		                                    result];
 
 	return result;
 }
@@ -180,69 +158,58 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_sessionManager GET:@"/parapheur/api/getApiLevel"
-	          parameters:nil
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+	[_swiftManager getApiVersion:^(id response) {
 
-		             // Parse check
+		 // Parse check
 
-		             NSError *error;
-		             ADLResponseGetLevel *responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
-		                                                               fromJSONDictionary:responseObject
-		                                                                            error:&error];
+		 NSError *error;
+		 ADLResponseGetLevel *responseGetLevel = [MTLJSONAdapter modelOfClass:[ADLResponseGetLevel class]
+		                                                   fromJSONDictionary:(NSDictionary *) response
+		                                                                error:&error];
 
-		             if (error) {
-			             failure([NSError errorWithDomain:error.domain
-			                                         code:kCFURLErrorBadServerResponse
-			                                     userInfo:nil]);
-		             }
-		             else {
-			             success(responseGetLevel.level);
-		             }
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-
-		             // AFNetworking seems to throw back only BadRequest errors,
-		             // There we fix them, to have proper errors (Authentication, SSL, etc)
-
-		             NSHTTPURLResponse *urlResponse = (NSHTTPURLResponse *) task.response;
-
-		             if (urlResponse.statusCode == 401) {
-			             failure([NSError errorWithDomain:error.domain
-			                                         code:kCFURLErrorUserAuthenticationRequired
-			                                     userInfo:nil]);
-		             }
-		             else {
-			             failure(error);
-		             }
-	             }];
+		 if (error) {
+			 failure([NSError errorWithDomain:error.domain
+			                             code:kCFURLErrorBadServerResponse
+			                         userInfo:nil]);
+		 }
+		 else {
+			 success(responseGetLevel.level);
+		 }
+	 }
+	                     onError:^(NSError *error) {
+		                     failure([NSError errorWithDomain:_swiftManager._manager.baseURL.absoluteString
+		                                                 code:kCFURLErrorUserAuthenticationRequired
+		                                             userInfo:nil]);
+	                     }];
 }
 
 
 - (void)getBureaux:(void (^)(NSArray *))success
            failure:(void (^)(NSError *))failure {
 
-	[_sessionManager GET:@"/parapheur/bureaux"
-	          parameters:nil
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+	[self cancelAllHTTPOperationsWithPath:@"bureaux"];
 
-		             // Parse result
+	[_swiftManager getBureaux:^(id response) {
 
-		             NSError *error;
-		             NSArray *responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
-		                                                        fromJSONArray:responseObject
-		                                                                error:&error];
+		 // Parse result
 
-		             // Callback
+		 NSError *error;
+		 NSArray *responseBureaux = [MTLJSONAdapter modelsOfClass:[ADLResponseBureau class]
+		                                            fromJSONArray:response
+		                                                    error:&error];
 
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseBureaux);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+		 // Callback
+
+		 if (error)
+			 failure(error);
+		 else
+			 success(responseBureaux);
+	 }
+	                  onError:^(NSError *error) {
+		                  failure([NSError errorWithDomain:_swiftManager._manager.baseURL.absoluteString
+		                                              code:kCFURLErrorUserAuthenticationRequired
+		                                          userInfo:nil]);
+	                  }];
 }
 
 
@@ -253,41 +220,29 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	NSMutableDictionary *queryParams = [NSMutableDictionary new];
-	queryParams[@"asc"] = @true;
-	queryParams[@"bureau"] = bureau;
-	queryParams[@"page"] = @(page);
-	queryParams[@"pageSize"] = @(size);
-	queryParams[@"pendingFile"] = @0;
-	queryParams[@"skipped"] = @(page * (size - 1));
-	queryParams[@"sort"] = @"cm:create";
+	[self cancelAllHTTPOperationsWithPath:@"dossiers"];
 
-	if (filterJson != nil)
-		[queryParams setValue:filterJson
-		               forKey:@"filter"];
+	[_swiftManager getDossiers:bureau
+	                      page:@(page)
+	                      size:@(size)
+	                filterJson:filterJson
+	                onResponse:^(NSArray *response) {
 
-	//@"corbeilleName" : @"",
-	//@"metas" : @"",
+		                NSError *error;
+		                NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
+		                                                            fromJSONArray:response
+		                                                                    error:&error];
 
-	[_sessionManager GET:@"/parapheur/dossiers"
-	          parameters:queryParams
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+		                // Parse check and callback
 
-		             NSError *error;
-		             NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
-		                                                         fromJSONArray:responseObject
-		                                                                 error:&error];
-
-		             // Parse check and callback
-
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseDossiers);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+		                if (error)
+			                failure(error);
+		                else
+			                success(responseDossiers);
+	                }
+	                   onError:^(NSError *error) {
+		                   failure(error);
+	                   }];
 }
 
 
@@ -296,27 +251,25 @@
            success:(void (^)(ADLResponseDossier *))success
            failure:(void (^)(NSError *))failure {
 
-	NSDictionary *queryParams = @{@"bureauCourant" : bureau};
+	[_swiftManager getDossier:dossier
+	                   bureau:bureau
+	               onResponse:^(NSDictionary *response) {
 
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@", dossier]
-	          parameters:queryParams
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+		               NSError *error;
+		               ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
+		                                                               fromJSONDictionary:response
+		                                                                            error:&error];
 
-		             NSError *error;
-		             ADLResponseDossier *responseDossier = [MTLJSONAdapter modelOfClass:[ADLResponseDossier class]
-		                                                             fromJSONDictionary:responseObject
-		                                                                          error:&error];
+		               // Parse check and callback
 
-		             // Parse check and callback
-
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseDossier);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+		               if (error)
+			               failure(error);
+		               else
+			               success(responseDossier);
+	               }
+	                  onError:^(NSError *error) {
+		                  failure(error);
+	                  }];
 }
 
 
@@ -327,27 +280,25 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-	NSDictionary *queryParams = @{@"bureauCourant" : bureauId};
+	[_swiftManager getSignInfo:dossierId
+	                    bureau:bureauId
+	                onResponse:^(id response) {
 
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/getSignInfo", dossierId]
-	          parameters:queryParams
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+		                NSError *error;
+		                ADLResponseSignInfo *responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
+		                                                                  fromJSONDictionary:response
+		                                                                               error:&error];
 
-		             NSError *error;
-		             ADLResponseSignInfo *responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
-		                                                               fromJSONDictionary:responseObject
-		                                                                            error:&error];
+		                // Parse check and callback
 
-		             // Parse check and callback
-
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseSignInfo);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+		                if (error)
+			                failure(error);
+		                else
+			                success(responseSignInfo);
+	                }
+	                   onError:^(NSError *error) {
+		                   failure(error);
+	                   }];
 }
 
 
@@ -357,25 +308,24 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 
-	[_sessionManager GET:[NSString stringWithFormat:@"/parapheur/dossiers/%@/circuit", dossier]
-	          parameters:nil
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+	[_swiftManager getCircuit:dossier
+	               onResponse:^(NSDictionary *response) {
 
-		             NSError *error;
-		             ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-		                                                             fromJSONDictionary:responseObject[@"circuit"]
-		                                                                          error:&error];
+		               NSError *error;
+		               ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
+		                                                               fromJSONDictionary:response[@"circuit"]
+		                                                                            error:&error];
 
-		             // Parse check and callback
+		               // Parse check and callback
 
-		             if (error)
-			             failure(error);
-		             else
-			             success(responseCircuit);
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+		               if (error)
+			               failure(error);
+		               else
+			               success(responseCircuit);
+	               }
+	                  onError:^(NSError *error) {
+		                  failure(error);
+	                  }];
 }
 
 
@@ -387,33 +337,30 @@
 	[self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
 	                                                            andDocument:document]];
 
-	[_sessionManager GET:[self getAnnotationsUrlForDossier:dossier
-	                                           andDocument:document]
-	          parameters:nil
-	             success:^(NSURLSessionDataTask *task, id responseObject) {
+	[_swiftManager getAnnotations:dossier
+	                   onResponse:^(id responseAnnotation) {
 
-		             //TODO : Proper (Mantle based) JSON parse
+		                   //TODO : Proper (Mantle based) JSON parse
 
-		             @try {
-			             NSArray *responseArray = responseObject;
-			             NSMutableArray *result = [NSMutableArray new];
+		                   @try {
+			                   NSArray *responseArray = responseAnnotation;
+			                   NSMutableArray *result = [[NSMutableArray alloc] init];
 
-			             for (id element in responseArray) {
-				             ADLResponseAnnotation *response = [ADLResponseAnnotation new];
-				             response.data = element;
-				             [result addObject:response];
-			             }
+			                   for (id element in responseArray) {
+				                   ADLResponseAnnotation *response = [[ADLResponseAnnotation alloc] init];
+				                   response.data = element;
+				                   [result addObject:response];
+			                   }
 
-			             success(result);
-		             }
-		             @catch (NSException *e) {
-			             failure(nil);
-		             }
-
-	             }
-	             failure:^(NSURLSessionDataTask *task, NSError *error) {
-		             failure(error);
-	             }];
+			                   success(result);
+		                   }
+		                   @catch (NSException *e) {
+			                   failure(nil);
+		                   }
+	                   }
+	                      onError:^(NSError *error) {
+		                      failure(error);
+	                      }];
 }
 
 
@@ -428,7 +375,7 @@
 
 	// Cancel previous download
 
-	[[_sessionManager session] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+	[_swiftManager._manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 		for (NSURLSessionTask *task in downloadTasks)
 			[task cancel];
 	}];
@@ -438,76 +385,29 @@
 	NSString *downloadUrlSuffix = [self getDownloadUrl:documentId
 	                                            forPdf:isPdf];
 
-	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@", _sessionManager.baseURL, downloadUrlSuffix];
-	NSMutableURLRequest *request = [_sessionManager.requestSerializer requestWithMethod:@"GET"
-	                                                                          URLString:downloadUrlString
-	                                                                         parameters:nil
-	                                                                              error:nil];
+	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@",
+	                                                         _swiftManager._manager.baseURL,
+	                                                         downloadUrlSuffix];
+	NSMutableURLRequest *request = [_swiftManager._manager.requestSerializer requestWithMethod:@"GET"
+	                                                                                 URLString:downloadUrlString
+	                                                                                parameters:nil
+	                                                                                     error:nil];
 
 	// Start download
 
-	NSURLSessionDownloadTask *downloadTask = [_sessionManager downloadTaskWithRequest:request
-	                                                                         progress:nil
-	                                                                      destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-		                                                                      return filePathUrl;
-	                                                                      }
-	                                                                completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-		                                                                if (error == nil)
-			                                                                success(filePath.path);
-		                                                                else if (error.code != kCFURLErrorCancelled)
-			                                                                failure(error);
-	                                                                }];
+	NSURLSessionDownloadTask *downloadTask = [_swiftManager._manager downloadTaskWithRequest:request
+	                                                                                progress:nil
+	                                                                             destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+		                                                                             return filePathUrl;
+	                                                                             }
+	                                                                       completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+		                                                                       if (error == nil)
+			                                                                       success(filePath.path);
+		                                                                       else if (error.code != kCFURLErrorCancelled)
+			                                                                       failure(error);
+	                                                                       }];
 
 	[downloadTask resume];
-}
-
-
-#pragma mark - Simple action template
-
-
-typedef enum {
-	ADLRequestTypePOST = 1,
-	ADLRequestTypePUT = 2,
-	ADLRequestTypeDELETE = 3
-} ADLRequestType;
-
-
-- (void)sendSimpleAction:(ADLRequestType)type
-                 withUrl:(NSString *)url
-                withArgs:(NSDictionary *)args
-                 success:(void (^)(NSArray *))success
-                 failure:(void (^)(NSError *))failure {
-
-	if (type == ADLRequestTypePOST) {
-		[_sessionManager POST:url
-		           parameters:args
-		              success:^(NSURLSessionDataTask *operation, id responseObject) {
-			              success(nil);
-		              }
-		              failure:^(NSURLSessionDataTask *operation, NSError *error) {
-			              failure(error);
-		              }];
-	}
-	else if (type == ADLRequestTypePUT) {
-		[_sessionManager PUT:url
-		          parameters:args
-		             success:^(NSURLSessionDataTask *operation, id responseObject) {
-			             success(nil);
-		             }
-		             failure:^(NSURLSessionDataTask *operation, NSError *error) {
-			             failure(error);
-		             }];
-	}
-	else if (type == ADLRequestTypeDELETE) {
-		[_sessionManager DELETE:url
-		             parameters:args
-		                success:^(NSURLSessionDataTask *operation, id responseObject) {
-			                success(nil);
-		                }
-		                failure:^(NSURLSessionDataTask *operation, NSError *error) {
-			                failure(error);
-		                }];
-	}
 }
 
 
@@ -584,7 +484,8 @@ typedef enum {
 - (NSString *)getAnnotationsUrlForDossier:(NSString *)dossier
                               andDocument:(NSString *)document {
 
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations", dossier];
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations",
+	                                  dossier];
 }
 
 
@@ -592,7 +493,9 @@ typedef enum {
                              andDocument:(NSString *)document
                          andAnnotationId:(NSString *)annotationId {
 
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@", dossier, annotationId];
+	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@",
+	                                  dossier,
+	                                  annotationId];
 }
 
 
@@ -616,15 +519,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -644,15 +548,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 };
 
 
@@ -672,15 +577,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-				   withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 };
 
 
@@ -696,15 +602,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-	               withUrl:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier", dossierId]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
+	                                                           dossierId]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -720,16 +627,16 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePOST
-	               withUrl:[self getAnnotationsUrlForDossier:dossierId
-	                                             andDocument:document]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(1)
+	                            url:[self getAnnotationsUrlForDossier:dossierId
+	                                                      andDocument:document]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -747,17 +654,17 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypePUT
-	               withUrl:[self getAnnotationUrlForDossier:dossierId
-	                                            andDocument:document
-	                                        andAnnotationId:annotation[@"uuid"]]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(2)
+	                            url:[self getAnnotationUrlForDossier:dossierId
+	                                                     andDocument:document
+	                                                 andAnnotationId:annotation[@"uuid"]]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
@@ -774,17 +681,17 @@ typedef enum {
 
 	// Send request
 
-	[self sendSimpleAction:ADLRequestTypeDELETE
-	               withUrl:[self getAnnotationUrlForDossier:dossierId
-	                                            andDocument:document
-	                                        andAnnotationId:annotation[@"uuid"]]
-	              withArgs:argumentDictionary
-	               success:^(NSArray *result) {
-		               success(nil);
-	               }
-	               failure:^(NSError *error) {
-		               failure(error);
-	               }];
+	[_swiftManager sendSimpleAction:@(3)
+	                            url:[self getAnnotationUrlForDossier:dossierId
+	                                                     andDocument:document
+	                                                 andAnnotationId:annotation[@"uuid"]]
+	                           args:argumentDictionary
+	                     onResponse:^(id result) {
+		                     success(nil);
+	                     }
+	                        onError:^(NSError *error) {
+		                        failure(error);
+	                        }];
 }
 
 
