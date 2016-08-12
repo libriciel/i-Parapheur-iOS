@@ -18,6 +18,7 @@
 		1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
+		64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
 		9514BFE7187AA73800118B9C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDF187AA73800118B9C /* Icon.png */; };
@@ -206,6 +207,7 @@
 		14BBBD971690EBB9007FFD9F /* ADLActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLActionCell.h; sourceTree = "<group>"; };
 		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
+		64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RestClientApiV3.swift; path = Network/RestClientApiV3.swift; sourceTree = "<group>"; };
 		664B53E206E40F44FDD0CD62 /* Pods-iParapheur.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.release.xcconfig"; sourceTree = "<group>"; };
 		7AA5EF4EB414279A92EA7275 /* Pods_iParapheur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iParapheur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CE0B8F376F5C572C4C2CACA /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
@@ -761,6 +763,7 @@
 				C5BC17931A5EED9B003D8E98 /* RestClientApi2 */,
 				C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */,
 				C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */,
+				64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -1309,6 +1312,7 @@
 				142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */,
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
 				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
+				64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
