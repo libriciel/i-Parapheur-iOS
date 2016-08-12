@@ -18,7 +18,13 @@
 		1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
 		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
+		64F3407028BF31A1030F88DB /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34804C057A886DBA3B22A /* Action.swift */; };
 		64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */; };
+		64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348D17E34A71E2E14D64A /* Bureau.swift */; };
+		64F34337A5DAD1018A554EF0 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348C6F782C7A1B08C3958 /* Document.swift */; };
+		64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */; };
+		64F34CFB3E7C2633BE3B0B3C /* Dossier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F3452BBCC73632CB8C15B6 /* Dossier.swift */; };
+		64F34D466D7EA1A09DCCB1E6 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F346AAECEA87928954CD15 /* Annotation.swift */; };
 		9514BFE5187AA73800118B9C /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDD187AA73800118B9C /* Icon-Small.png */; };
 		9514BFE6187AA73800118B9C /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDE187AA73800118B9C /* Icon-Small@2x.png */; };
 		9514BFE7187AA73800118B9C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9514BFDF187AA73800118B9C /* Icon.png */; };
@@ -207,7 +213,13 @@
 		14BBBD971690EBB9007FFD9F /* ADLActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLActionCell.h; sourceTree = "<group>"; };
 		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
+		64F3452BBCC73632CB8C15B6 /* Dossier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dossier.swift; path = iParapheur/Dossier.swift; sourceTree = SOURCE_ROOT; };
+		64F346AAECEA87928954CD15 /* Annotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Annotation.swift; path = iParapheur/Annotation.swift; sourceTree = SOURCE_ROOT; };
+		64F34804C057A886DBA3B22A /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Action.swift; path = iParapheur/Action.swift; sourceTree = SOURCE_ROOT; };
+		64F348C6F782C7A1B08C3958 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Document.swift; path = iParapheur/Document.swift; sourceTree = SOURCE_ROOT; };
+		64F348D17E34A71E2E14D64A /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bureau.swift; sourceTree = "<group>"; };
 		64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RestClientApiV3.swift; path = Network/RestClientApiV3.swift; sourceTree = "<group>"; };
+		64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiLevel.swift; sourceTree = "<group>"; };
 		664B53E206E40F44FDD0CD62 /* Pods-iParapheur.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.release.xcconfig"; sourceTree = "<group>"; };
 		7AA5EF4EB414279A92EA7275 /* Pods_iParapheur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iParapheur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CE0B8F376F5C572C4C2CACA /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
@@ -515,6 +527,19 @@
 			name = AlertPrompt;
 			sourceTree = "<group>";
 		};
+		64F34840F5C054530F9BE7A2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */,
+				64F348D17E34A71E2E14D64A /* Bureau.swift */,
+				64F3452BBCC73632CB8C15B6 /* Dossier.swift */,
+				64F34804C057A886DBA3B22A /* Action.swift */,
+				64F348C6F782C7A1B08C3958 /* Document.swift */,
+				64F346AAECEA87928954CD15 /* Annotation.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		9514BFDA187AA4CF00118B9C /* app-icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -687,6 +712,7 @@
 				B4E5ECA9153AF65F00BD514D /* Supporting Files */,
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
 				C50A87411D1AD07A00025074 /* Settings */,
+				64F34840F5C054530F9BE7A2 /* Models */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -1313,6 +1339,12 @@
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
 				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
 				64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */,
+				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
+				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
+				64F34CFB3E7C2633BE3B0B3C /* Dossier.swift in Sources */,
+				64F3407028BF31A1030F88DB /* Action.swift in Sources */,
+				64F34337A5DAD1018A554EF0 /* Document.swift in Sources */,
+				64F34D466D7EA1A09DCCB1E6 /* Annotation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
