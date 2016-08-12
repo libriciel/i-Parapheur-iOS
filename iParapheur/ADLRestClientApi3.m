@@ -37,6 +37,8 @@
 #import "ADLResponseBureau.h"
 #import "ADLResponseDossiers.h"
 #import "ADLResponseAnnotation.h"
+#import "iParapheur-Swift.h"
+#import "ADLAnnotation.h"
 
 
 @implementation ADLRestClientApi3
@@ -65,6 +67,9 @@
 	[self initRestClientWithLogin:loginSettings
 	                     password:passwordSettings
 	                          url:urlSettings];
+
+	RestClientApiV3 *restApiV3 = [[RestClientApiV3 alloc] initWithBaseUrl:@"https://m.parapheur.demonstrations.adullact.org"];
+	[restApiV3 getApiVersion];
 
 	return self;
 }
