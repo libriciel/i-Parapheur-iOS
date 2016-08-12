@@ -40,63 +40,67 @@
 @implementation DeviceUtils
 
 
-+ (BOOL)isConnectedToDemoServer {
-	
++ (BOOL)isConnectedToDemoAccount {
+
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *url_preference = [preferences objectForKey:@"settings_server_url"];
-	BOOL isDemoServer = (url_preference == nil) || [url_preference isEqualToString:@""] || [url_preference isEqualToString:@"parapheur.demonstrations.adullact.org"];
-	
-	return isDemoServer;
+
+	NSString *url = [preferences objectForKey:@"settings_server_url"];
+	NSString *login = [preferences objectForKey:@"settings_login"];
+	BOOL isDemoServer = (url == nil) || [url isEqualToString:@""] || [url isEqualToString:@"parapheur.demonstrations.adullact.org"];
+	BOOL isDemoAccount = (login == nil) || [login isEqualToString:@"parapheur.demonstrations.adullact.org"];
+
+	return (isDemoServer && isDemoAccount);
 }
 
 
 + (void)logError:(NSError *)error {
+
 	[self logErrorMessage:[StringUtils getErrorMessage:error]];
 }
 
 
 + (void)logErrorMessage:(NSString *)message
-			  withTitle:(NSString *)title
-	   inViewController:(UIViewController *)viewController {
-	
+              withTitle:(NSString *)title
+       inViewController:(UIViewController *)viewController {
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationInViewController:viewController
-											  title:message
-										   subtitle:nil
-											   type:TSMessageNotificationTypeError];
+		                                      title:message
+		                                   subtitle:nil
+		                                       type:TSMessageNotificationTypeError];
 	});
 }
 
 
 + (void)logErrorMessage:(NSString *)message {
-	
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:message
-										type:TSMessageNotificationTypeError];
+		                                type:TSMessageNotificationTypeError];
 	});
 }
 
 
 + (void)logErrorMessage:(NSString *)message
-			  withTitle:(NSString *)title {
-	
+              withTitle:(NSString *)title {
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:title
-									subtitle:message
-										type:TSMessageNotificationTypeError];
+		                            subtitle:message
+		                                type:TSMessageNotificationTypeError];
 	});
 }
 
 
 + (void)logSuccessMessage:(NSString *)message {
-	
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:message
-										type:TSMessageNotificationTypeSuccess];
+		                                type:TSMessageNotificationTypeSuccess];
 	});
 }
 
@@ -114,47 +118,68 @@
 
 
 + (void)logInfoMessage:(NSString *)message {
-	
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:message
-										type:TSMessageNotificationTypeMessage];
+		                                type:TSMessageNotificationTypeMessage];
 	});
 }
 
 
 + (void)logInfoMessage:(NSString *)message
-			 withTitle:(NSString *)title {
-	
+             withTitle:(NSString *)title {
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:title
-									subtitle:message
-										type:TSMessageNotificationTypeMessage];
+		                            subtitle:message
+		                                type:TSMessageNotificationTypeMessage];
 	});
 }
 
 
 + (void)logWarningMessage:(NSString *)message
-				withTitle:(NSString *)title {
-	
+                withTitle:(NSString *)title {
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:title
-									subtitle:message
-										type:TSMessageNotificationTypeWarning];
+		                            subtitle:message
+		                                type:TSMessageNotificationTypeWarning];
 	});
 }
 
 
 + (void)logWarningMessage:(NSString *)message {
-	
+
 	dispatch_async(dispatch_get_main_queue(), ^{
 		//call back to main queue to update user interface
 		[TSMessage showNotificationWithTitle:message
-										type:TSMessageNotificationTypeWarning];
+		                                type:TSMessageNotificationTypeWarning];
 	});
 }
 
+
+/**
+ * Here's the trick : VFR on Android rasterizes its PDF at 72dpi.
+ * Ghostscript on the server rasterize at 150dpi, and takes that as a root scale.
+ * Every Annotation has a pixel-coordinates based on that 150dpi, on the server.
+ * We need to translate it from 150 to 72dpi, by default.
+ * <p/>
+ * Not by default : The server-dpi is an open parameter, in the alfresco-global.properties file...
+ * So we can't hardcode the old "150 dpi", we have to let an open parameter too, to allow any density coordinates.
+ * <p/>
+ * Maybe some day, we'll want some crazy 300dpi on tablets, that's why we don't want to hardcode the new "72 dpi" one.
+ */
++ (CGRect)translateDpiRect:(CGRect)rect
+                    oldDpi:(int)oldDpi
+                    newDpi:(int)newDpi {
+
+	return CGRectMake(rect.origin.x * newDpi / oldDpi,
+			rect.origin.y * newDpi / oldDpi,
+			rect.size.width * newDpi / oldDpi,
+			rect.size.height * newDpi / oldDpi);
+}
 
 @end

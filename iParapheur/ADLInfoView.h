@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLAnnotation.h"
+#import "iParapheur-Swift.h"
 
 @interface ADLInfoView : UIView
 
@@ -41,6 +41,6 @@
 @property (strong, nonatomic) UILabel *date;
 @property (strong, nonatomic) UILabel *info;
 
-@property (nonatomic, strong) ADLAnnotation *annotationModel;
+@property (nonatomic, strong) Annotation *annotationModel;
 
 @end

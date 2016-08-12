@@ -33,11 +33,11 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLAnnotation.h"
+#import "iParapheur-Swift.h"
 
 @interface ADLPostItView : UIView<UITextViewDelegate>
 
-@property (nonatomic, strong) ADLAnnotation *annotationModel;
+@property (nonatomic, strong) Annotation *annotationModel;
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) UITextView *textView;
 @end

@@ -50,25 +50,25 @@ class SettingsTableViewController: UITableViewController {
 
         // Adrien test iOS8
 
-        var manager: AFHTTPSessionManager = AFHTTPSessionManager(baseURL: NSURL(string:"https://m.parapheur.demonstrations.adullact.org"))
-        manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
-        manager.setSessionDidReceiveAuthenticationChallengeBlock { (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
-
-            if SettingsTableViewController.shouldTrustProtectionSpace(challenge, credential: credential) {
-                // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
-                return NSURLSessionAuthChallengeDisposition.UseCredential
-            }
-            return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
-        }
-
-        manager.GET("/parapheur/api/getApiLevel", parameters: nil, success: {
-            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-            print("success")
-
-        }, failure: {
-            (task: NSURLSessionDataTask!, error: NSError!) in
-            print("error")
-        })
+//        var manager: AFHTTPSessionManager = AFHTTPSessionManager(baseURL: NSURL(string:"https://m.parapheur.demonstrations.adullact.org"))
+//        manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
+//        manager.setSessionDidReceiveAuthenticationChallengeBlock { (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
+//
+//            if SettingsTableViewController.shouldTrustProtectionSpace(challenge, credential: credential) {
+//                // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
+//                return NSURLSessionAuthChallengeDisposition.UseCredential
+//            }
+//            return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
+//        }
+//
+//        manager.GET("/parapheur/api/getApiLevel", parameters: nil, success: {
+//            (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+//            print("success")
+//
+//        }, failure: {
+//            (task: NSURLSessionDataTask!, error: NSError!) in
+//            print("error")
+//        })
     }
 
     // MARK: UITableViewController

@@ -37,7 +37,7 @@
 @interface DeviceUtils : NSObject
 
 
-+ (BOOL)isConnectedToDemoServer;
++ (BOOL)isConnectedToDemoAccount;
 
 
 + (void)logError:(NSError *)error;
@@ -75,5 +75,8 @@
 
 + (void)logWarningMessage:(NSString *)message;
 
++ (CGRect)translateDpiRect:(CGRect) rect
+                    oldDpi:(int) oldDpi
+                    newDpi:(int) newDpi;
 
 @end

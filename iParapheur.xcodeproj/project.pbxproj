@@ -50,7 +50,6 @@
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
 		B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316C160A230D00C8C475 /* ADLAnnotationView.m */; };
 		B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316E160A230D00C8C475 /* ADLCloseButton.m */; };
-		B44649E916241657002622DF /* ADLAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = B44649E816241657002622DF /* ADLAnnotation.m */; };
 		B46BCC4315693F7A00A96560 /* RGDocumentsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC4215693F7A00A96560 /* RGDocumentsView.m */; };
 		B46BCC47156956E300A96560 /* ADLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC46156956E300A96560 /* ADLDocument.m */; };
 		B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */; };
@@ -94,7 +93,6 @@
 		C50A87401D1AD07000025074 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C50A873F1D1AD07000025074 /* Settings.storyboard */; };
 		C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */; };
 		C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */; };
-		C51394121A65834000F46633 /* ADLResponseAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C51394111A65834000F46633 /* ADLResponseAnnotation.m */; };
 		C516EDE51AB6D94400216E5F /* iw-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE41AB6D94400216E5F /* iw-signature@2x.png */; };
 		C516EDE71AB6D94E00216E5F /* ip-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE61AB6D94E00216E5F /* ip-signature@2x.png */; };
 		C516EDE91AB6D96F00216E5F /* ip-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE81AB6D96F00216E5F /* ip-signature.png */; };
@@ -166,10 +164,8 @@
 		C59445FC1AAE41B900DD4473 /* Default-Portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */; };
 		C5A6AB9A1AAEE68000053B9F /* Icon-Small-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */; };
 		C5ACDFE21B5014AD00F3AA0F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C5ACDFE11B5014AD00F3AA0F /* Settings.bundle */; };
-		C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17971A5EEDF8003D8E98 /* ADLResponseGetLevel.m */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
-		C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A61A5FE8C3003D8E98 /* ADLResponseBureau.m */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
@@ -264,8 +260,6 @@
 		B444316C160A230D00C8C475 /* ADLAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotationView.m; sourceTree = "<group>"; };
 		B444316D160A230D00C8C475 /* ADLCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCloseButton.h; sourceTree = "<group>"; };
 		B444316E160A230D00C8C475 /* ADLCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCloseButton.m; sourceTree = "<group>"; };
-		B44649E716241657002622DF /* ADLAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAnnotation.h; sourceTree = "<group>"; };
-		B44649E816241657002622DF /* ADLAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotation.m; sourceTree = "<group>"; };
 		B46BCC4115693F7A00A96560 /* RGDocumentsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGDocumentsView.h; sourceTree = "<group>"; };
 		B46BCC4215693F7A00A96560 /* RGDocumentsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGDocumentsView.m; sourceTree = "<group>"; };
 		B46BCC45156956E300A96560 /* ADLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLDocument.h; sourceTree = "<group>"; };
@@ -364,6 +358,7 @@
 		B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
 		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
+		C50861951D5DC361009BDFD3 /* iParapheur-Bridging-header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-header.h"; sourceTree = "<group>"; };
 		C50A873F1D1AD07000025074 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = Settings/Settings.storyboard; sourceTree = "<group>"; };
 		C50A87421D1AD0FD00025074 /* iParapheur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-Header.h"; sourceTree = "<group>"; };
 		C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsTableViewController.swift; path = Settings/SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -638,8 +633,6 @@
 				95719C7C1893CE9900246F7C /* Buttons */,
 				B47944D61622BCDE0061E09B /* ADLPostItView.h */,
 				B47944D71622BCDE0061E09B /* ADLPostItView.m */,
-				B44649E716241657002622DF /* ADLAnnotation.h */,
-				B44649E816241657002622DF /* ADLAnnotation.m */,
 				95719C801893D50600246F7C /* ADLInfoView.h */,
 				95719C811893D50600246F7C /* ADLInfoView.m */,
 			);
@@ -713,6 +706,7 @@
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
 				C50A87411D1AD07A00025074 /* Settings */,
 				64F34840F5C054530F9BE7A2 /* Models */,
+				C50861951D5DC361009BDFD3 /* iParapheur-Bridging-header.h */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -1266,6 +1260,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
+				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
+				64F34337A5DAD1018A554EF0 /* Document.swift in Sources */,
+				64F34D466D7EA1A09DCCB1E6 /* Annotation.swift in Sources */,
+				64F3407028BF31A1030F88DB /* Action.swift in Sources */,
+				64F34CFB3E7C2633BE3B0B3C /* Dossier.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
@@ -1276,12 +1276,10 @@
 				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
 				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,
 				B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */,
-				C51394121A65834000F46633 /* ADLResponseAnnotation.m in Sources */,
 				B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */,
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
-				C5BC17981A5EEDF8003D8E98 /* ADLResponseGetLevel.m in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,
@@ -1320,7 +1318,6 @@
 				B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */,
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
-				B44649E916241657002622DF /* ADLAnnotation.m in Sources */,
 				958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */,
 				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
@@ -1331,7 +1328,6 @@
 				C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
-				C5BC17A71A5FE8C3003D8E98 /* ADLResponseBureau.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
 				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,
@@ -1339,12 +1335,6 @@
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
 				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
 				64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */,
-				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
-				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
-				64F34CFB3E7C2633BE3B0B3C /* Dossier.swift in Sources */,
-				64F3407028BF31A1030F88DB /* Action.swift in Sources */,
-				64F34337A5DAD1018A554EF0 /* Document.swift in Sources */,
-				64F34D466D7EA1A09DCCB1E6 /* Annotation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,6 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLAPIHelper.h"
+#import "iParapheur-Swift.h"
 
 
 @implementation ADLAPIHelper
@@ -82,11 +83,11 @@
 }
 
 
-+ (NSArray *)actionsForADLResponseDossier:(ADLResponseDossier *)dossier {
++ (NSArray *)actionsForADLResponseDossier:(Dossier *)dossier {
 
 	NSMutableArray *actions = [NSMutableArray new];
-	NSArray *returnedActions = dossier.actions;
-	NSString *actionDemandee = dossier.actionDemandee;
+	NSArray *returnedActions = dossier.unwrappedDocuments;
+	NSString *actionDemandee = dossier.unwrappedActionDemandee;
 
 	if ([returnedActions containsObject:actionDemandee]) {
 		if ([actionDemandee isEqualToString:@"ARCHIVAGE"])

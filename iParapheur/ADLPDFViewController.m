@@ -1,29 +1,38 @@
-//
-//	ReaderDemoController.m
-//	Reader v2.8.6
-//
-//	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
-//  Modified work : Copyright © 2016 Adullact-Projet
-//
-//	Permission is hereby granted, free of charge, to any person obtaining a copy
-//	of this software and associated documentation files (the "Software"), to deal
-//	in the Software without restriction, including without limitation the rights to
-//	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-//	of the Software, and to permit persons to whom the Software is furnished to
-//	do so, subject to the following conditions:
-//
-//	The above copyright notice and this permission notice shall be included in all
-//	copies or substantial portions of the Software.
-//
-//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-//	OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-
+/*
+ * Copyright 2012-2016, Adullact-Projet.
+ * Contributors : SKROBS (2012)
+ *
+ * contact@adullact-projet.coop
+ *
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
+ *
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
 #import "ADLPDFViewController.h"
 #import "ReaderContentView.h"
 #import "ReaderContentPage.h"
@@ -34,7 +43,6 @@
 #import "ADLRequester.h"
 #import "ADLActionViewController.h"
 #import "UIColor+CustomColors.h"
-#import "ADLResponseAnnotation.h"
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 
@@ -150,45 +158,45 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
 
-	if ([[segue identifier] isEqualToString:@"dossierDetails"]) {
+	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
 
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3)
-			[((RGDossierDetailViewController *) [segue destinationViewController]) setDossierRef:_dossierRef];
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3)
+			((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 		else
-			[((RGDossierDetailViewController *) [segue destinationViewController]) setDossier:_document];
+			((RGDossierDetailViewController *) segue.destinationViewController).dossier = _document;
 	}
 
-	if ([[segue identifier] isEqualToString:@"showDocumentPopover"]) {
-		[((RGDocumentsView *) [segue destinationViewController]) setDocuments:_dossier.documents];
+	if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
+		((RGDocumentsView *) segue.destinationViewController).documents = _dossier.unwrappedDocuments;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
-		_documentsPopover = [(UIStoryboardPopoverSegue *) segue popoverController];
-		[_documentsPopover setDelegate:self];
+		_documentsPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
+		_documentsPopover.delegate = self;
 	}
 
-	if ([[segue identifier] isEqualToString:@"showActionPopover"]) {
+	if ([segue.identifier isEqualToString:@"showActionPopover"]) {
 		if (_actionPopover != nil) {
 			[_actionPopover dismissPopoverAnimated:NO];
 		}
 
 		NSArray *actions;
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			actions = [ADLAPIHelper actionsForADLResponseDossier:_dossier];
 		}
 		else {
-			actions = [ADLAPIHelper actionsForDossier:self.document];
+			actions = [ADLAPIHelper actionsForDossier:_document];
 		}
 
-		_actionPopover = [(UIStoryboardPopoverSegue *) segue popoverController];
-		((ADLActionViewController *) [_actionPopover contentViewController]).actions = [NSMutableArray arrayWithArray:actions];
+		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
+		((ADLActionViewController *) _actionPopover.contentViewController).actions = actions.mutableCopy;
 
 		// do something usefull there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
-			[((ADLActionViewController *) [_actionPopover contentViewController]) setSignatureEnabled:YES];
+			((ADLActionViewController *) _actionPopover.contentViewController).signatureEnabled = YES;
 		}
 		else if (_visaEnabled) {
-			[((ADLActionViewController *) [_actionPopover contentViewController]) setVisaEnabled:YES];
+			((ADLActionViewController *) _actionPopover.contentViewController).visaEnabled = YES;
 		}
 
 		[_actionPopover setDelegate:self];
@@ -230,169 +238,94 @@
 
 - (NSArray *)annotationsForPage:(NSInteger)page {
 
-	NSMutableArray *annotsAtPage = [NSMutableArray new];
+	// Get current step
 
-	NSUInteger i = 0; // etapeNumber
+	int currentStep = 0;
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
-		for (ADLResponseAnnotation *etape in _annotations) {
-			NSArray *annotationsAtPageForEtape = etape.data[[NSString stringWithFormat:@"%ld",
-			                                                                           (long) page]];
+	if (_circuit && (_circuit.count > 0)) {
+		for (NSUInteger i = 0; i < _circuit.count; i++) {
 
-			if (_circuit && (_circuit.count > 0)) {
-				ADLResponseCircuit *circuit = _circuit[0];
+			NSArray *steps = ((ADLResponseCircuit *) _circuit[i]).etapes;
+			for (NSUInteger j = 0; j < steps.count; j++) {
 
-				for (NSDictionary *annot in annotationsAtPageForEtape) {
-
-					NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
-					modifiedAnnot[@"editable"] = @(![((NSDictionary *) circuit.etapes[i])[@"approved"] boolValue]);
-					[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
+				NSDictionary *stepDict = ((NSDictionary *) steps[j]);
+				if ([stepDict[@"approved"] boolValue]) {
+					// If this step was approved, the current step might be the next one
+					currentStep = j + 1;
 				}
 			}
-
-			i++;
-		}
-	}
-	else {
-		for (NSDictionary *etape in _annotations) {
-			NSArray *annotationsAtPageForEtape = etape[[NSString stringWithFormat:@"%ld",
-			                                                                      (long) page]];
-
-			if (self.circuit) {
-				for (NSDictionary *annot in annotationsAtPageForEtape) {
-
-					NSMutableDictionary *modifiedAnnot = [NSMutableDictionary dictionaryWithDictionary:annot];
-					modifiedAnnot[@"editable"] = @(![((NSDictionary *) self.circuit[i])[@"approved"] boolValue]);
-					[annotsAtPage addObject:[NSDictionary dictionaryWithDictionary:modifiedAnnot]];
-				}
-			}
-
-			i++;
 		}
 	}
 
-	return annotsAtPage;
+	// Updating annotations
+
+	for (Annotation *annotation in _annotations) {
+		bool isEditable = (annotation.unwrappedStep.intValue >= currentStep);
+		[annotation setUnwrappedEditable:(isEditable ? @(1) : @(0))];
+	}
+
+	// Filtering annotations
+
+	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+
+		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
+		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.unwrappedId];
+		bool isApi3 = [((Annotation *) object).unwrappedDocumentId isEqualToString:@"*"];
+
+		return isPage && (isDoc || isApi3);
+	}]];
+
+	return result;
 }
 
 
-- (void)updateAnnotation:(ADLAnnotation *)annotation
-                 forPage:(NSUInteger)page {
+- (void)updateAnnotation:(Annotation *)annotation {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-
-		NSDictionary *annotationDictionary = annotation.dict;
-		NSString *documentId = _document[@"id"];
-
-		[_restClient updateAnnotation:annotationDictionary
-		                      forPage:(int) page
-		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-		                  andDocument:documentId
-		                      success:^(NSArray *result) {
-			                      NSLog(@"updateAnnotation success");
-		                      }
-		                      failure:^(NSError *error) {
-			                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-			                                         withTitle:@"Erreur à la sauvegarde de l'annotation"];
-		                      }];
-	}
-	else {
-		NSDictionary *dict = [annotation dict];
-		NSDictionary *req = @{
-				@"page" : @(page),
-				@"annotation" : dict,
-				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-		};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:@"updateAnnotation"
-		           andArgs:req
-		          delegate:self];
-	}
+	[_restClient updateAnnotation:annotation
+	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+	                      success:^(NSArray *result) {
+		                      NSLog(@"updateAnnotation success");
+	                      }
+	                      failure:^(NSError *error) {
+		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                         withTitle:@"Erreur à la sauvegarde de l'annotation"];
+	                      }];
 }
 
 
-- (void)removeAnnotation:(ADLAnnotation *)annotation {
+- (void)removeAnnotation:(Annotation *)annotation {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		
-		NSDictionary *annotationDictionary = annotation.dict;
-		NSString *documentId = _document[@"id"];
-
-		[_restClient removeAnnotation:annotationDictionary
-		                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-		                  andDocument:documentId
-		                      success:^(NSArray *result) {
-			                      NSLog(@"deleteAnnotation success");
-		                      }
-		                      failure:^(NSError *error) {
-			                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-			                                         withTitle:@"Erreur à la suppression de l'annotation"];
-		                      }];
-	}
-	else {
-		NSDictionary *req = @{
-				@"uuid" : [annotation uuid],
-				@"page" : @10,
-				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-		};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-
-		[requester request:@"removeAnnotation"
-		           andArgs:req
-		          delegate:self];
-	}
+	[_restClient removeAnnotation:annotation
+	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+	                      success:^(NSArray *result) {
+		                      NSLog(@"deleteAnnotation success");
+	                      }
+	                      failure:^(NSError *error) {
+		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                         withTitle:@"Erreur à la suppression de l'annotation"];
+	                      }];
 }
 
 
-- (void)addAnnotation:(ADLAnnotation *)annotation
-              forPage:(NSUInteger)page {
+- (void)addAnnotation:(Annotation *)annotation {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+	NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
+	[annotation setUnwrappedAuthor:login];
+	[annotation setUnwrappedDocumentId:_document.unwrappedId];
 
-		NSString *documentId = _document[@"id"];
-		NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
-
-		if (login == nil)
-			login = @"bma";
-
-		NSMutableDictionary *args = annotation.dict.mutableCopy;
-		args[@"page"] = @(page);
-		args[@"date"] = [NSDate date];
-		args[@"type"] = @"rect";
-		args[@"author"] = login;
-
-		__weak typeof(self) weakSelf = self;
-		[_restClient addAnnotations:args
-		                 forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-		                andDocument:documentId
-		                    success:^(NSArray *result) {
-			                    __strong typeof(weakSelf) strongSelf = weakSelf;
-			                    if (strongSelf) {
-				                    [strongSelf requestAnnotations];
-			                    }
-		                    }
-		                    failure:^(NSError *error) {
-			                    [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-			                                       withTitle:@"Erreur à la sauvegarde de l'annotation"];
-		                    }];
-	}
-	else {
-		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:annotation.dict];
-
-		[dict setValue:@(page)
-		        forKey:@"page"];
-
-		NSDictionary *args = @{
-				@"annotations" : @[dict],
-				@"dossier" : [ADLSingletonState sharedSingletonState].dossierCourantReference
-		};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:@"addAnnotation"
-		           andArgs:args
-		          delegate:self];
-	}
+	__weak typeof(self) weakSelf = self;
+	[_restClient addAnnotation:annotation
+	                forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+	                   success:^(NSArray *result) {
+		                   __strong typeof(weakSelf) strongSelf = weakSelf;
+		                   if (strongSelf) {
+			                   [strongSelf requestAnnotations];
+		                   }
+	                   }
+	                   failure:^(NSError *error) {
+		                   [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                      withTitle:@"Erreur à la sauvegarde de l'annotation"];
+	                   }];
 }
 
 
@@ -408,15 +341,15 @@
 #pragma mark - ADLParapheurWallDelegateProtocol
 
 
-- (void)getDossierDidEndWithRequestAnswer:(ADLResponseDossier *)dossier {
+- (void)getDossierDidEndWithRequestAnswer:(Dossier *)dossier {
 
 	_dossier = dossier;
 
 	// Determine the first pdf file to display
 
-	for (NSDictionary *dossierDictionnary in dossier.documents) {
-		if ([dossierDictionnary valueForKey:@"visuelPdf"]) {
-			_document = dossierDictionnary;
+	for (Document *document in [dossier unwrappedDocuments]) {
+		if (document.isVisuelPdf) {
+			_document = document;
 			break;
 		}
 	}
@@ -424,13 +357,13 @@
 	//
 
 	[self displayDocumentAt:0];
-	self.navigationController.navigationBar.topItem.title = dossier.title;
+	self.navigationController.navigationBar.topItem.title = dossier.unwrappedTitle;
 
 	// Refresh buttons
 
 	NSArray *buttons;
 
-	if (dossier.documents.count > 1)
+	if ([dossier unwrappedDocuments].count > 1)
 		buttons = @[_actionButton, _documentsButton, _detailsButton];
 	else
 		buttons = @[_actionButton, _detailsButton];
@@ -450,37 +383,37 @@
 	HIDE_HUD
 
 	if ([s isEqual:GETDOSSIER_API]) {
-		_document = [answer copy];
+//		_document = answer.copy;
 		[self displayDocumentAt:0];
 
-		self.navigationController.navigationBar.topItem.title = _document[@"titre"];
+		self.navigationController.navigationBar.topItem.title = _document.unwrappedName;
 
 		NSArray *buttons;
 
-		if ([_document[@"documents"] count] > 1)
+		if (_dossier.unwrappedDocuments.count > 1)
 			buttons = @[_actionButton, _documentsButton, _detailsButton];
 		else
 			buttons = @[_actionButton, _detailsButton];
 
 		self.navigationItem.rightBarButtonItems = buttons;
 
-		NSString *documentPrincipal = [[_document[@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
-		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
-		NSLog(@"%@", _document[@"actions"]);
-
-		if ([[_document[@"actions"] objectForKey:@"sign"] isEqualToNumber:@YES]) {
-			if ([_document[@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
-				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
-				ADLRequester *requester = [ADLRequester sharedRequester];
-				[requester request:@"getSignInfo"
-				           andArgs:signInfoArgs
-				          delegate:self];
-			}
-			else {
-				_visaEnabled = YES;
-				_signatureFormat = nil;
-			}
-		}
+//		NSString *documentPrincipal = [[_document[@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
+//		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
+//		NSLog(@"%@", _document[@"actions"]);
+//
+//		if ([[_document[@"actions"] objectForKey:@"sign"] isEqualToNumber:@YES]) {
+//			if ([_document[@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
+//				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
+//				ADLRequester *requester = [ADLRequester sharedRequester];
+//				[requester request:@"getSignInfo"
+//				           andArgs:signInfoArgs
+//					      delegate:self];
+//			}
+//			else {
+//				_visaEnabled = YES;
+//				_signatureFormat = nil;
+//			}
+//		}
 
 		SHOW_HUD
 	}
@@ -531,10 +464,10 @@
 	SHOW_HUD
 
 	__weak typeof(self) weakSelf = self;
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
 		                dossier:_dossierRef
-		                success:^(ADLResponseDossier *result) {
+		                success:^(Dossier *result) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                HIDE_HUD
@@ -698,22 +631,23 @@
 
 - (void)requestAnnotations {
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
-		NSString *documentId = _document[@"id"];
-
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+		NSString *documentId = _document.unwrappedId;
+		
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
 		                   document:documentId
 		                    success:^(NSArray *annotations) {
-			                    __strong typeof(weakSelf) strongSelf = weakSelf;
-			                    if (strongSelf) {
-				                    strongSelf.annotations = annotations;
 
-				                    for (NSNumber *contentViewIdx in [strongSelf.readerViewController getContentViews]) {
-					                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
-					                    [[currentReaderContentView getContentPage] refreshAnnotations];
-				                    }
-			                    }
+		                        __strong typeof(weakSelf) strongSelf = weakSelf;
+		                        if (strongSelf) {
+			                        strongSelf.annotations = annotations;
+
+			                        for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
+				                        ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
+				                        [currentReaderContentView.getContentPage refreshAnnotations];
+			                        }
+		                        }
 		                    }
 		                    failure:^(NSError *error) {
 			                    NSLog(@"getAnnotations error");
@@ -729,23 +663,23 @@
 }
 
 
-- (void)requestSignInfoForDossier:(ADLResponseDossier *)dossier {
+- (void)requestSignInfoForDossier:(Dossier *)dossier {
 
-	if ([dossier.actions containsObject:@"SIGNATURE"]) {
-		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
-			if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([dossier.unwrappedActions containsObject:@"SIGNATURE"]) {
+		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
+			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
-				                         andBureau:[[ADLSingletonState sharedSingletonState] bureauCourant]
-				                           success:^(ADLResponseSignInfo *signInfo) {
-					                           __strong typeof(weakSelf) strongSelf = weakSelf;
-					                           if (strongSelf) {
-						                           strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
-					                           }
-				                           }
-				                           failure:^(NSError *error) {
-					                           NSLog(@"getSignInfo %@", error.localizedDescription);
-				                           }];
+				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
+						                   success:^(ADLResponseSignInfo *signInfo) {
+						                       __strong typeof(weakSelf) strongSelf = weakSelf;
+						                       if (strongSelf) {
+							                       strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
+						                       }
+						                   }
+						                   failure:^(NSError *error) {
+						                       NSLog(@"getSignInfo %@", error.localizedDescription);
+						                   }];
 			}
 			else {
 				SHOW_HUD
@@ -785,14 +719,14 @@
 		_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
 		_readerViewController.delegate = self;
 		_readerViewController.dataSource = self;
-		_readerViewController.view.frame = CGRectMake(0, 0, [self view].frame.size.width, [self view].frame.size.height);
+		_readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
 		_readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
-		[[self view] setAutoresizesSubviews:YES];
+		[self.view setAutoresizesSubviews:YES];
 		[self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
 		[self addChildViewController:_readerViewController];
-		[[self view] addSubview:_readerViewController.view];
+		[self.view addSubview:_readerViewController.view];
 	}
 	else // Log an error so that we know that something went wrong
 	{
@@ -804,9 +738,9 @@
 - (void)displayDocumentAt:(NSInteger)index {
 
 	_isDocumentPrincipal = (index == 0);
-	_document = _dossier.documents[(NSUInteger) index];
-	NSString *documentId = _document[@"id"];
-
+	_document = _dossier.unwrappedDocuments[(NSUInteger) index];
+	NSString *documentId = [_document unwrappedId];
+	
 	// File cache
 
 	NSString *filePath = [self getFileUrlWithDossierRef:documentId].path;
@@ -826,9 +760,9 @@
 
 	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
-
-	if (([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) && _dossier.documents) {
-		bool isPdf = [_document[@"visuelPdf"] boolValue];
+	
+	if (_dossier.unwrappedDocuments) {
+		bool isPdf = (bool) _document.isVisuelPdf;
 
 		[_restClient downloadDocument:documentId
 		                        isPdf:isPdf
@@ -842,19 +776,6 @@
 			                      HIDE_HUD
 			                      [DeviceUtils logError:error];
 		                      }];
-	}
-	else if (_document) {
-		NSDictionary *document = [_document[@"documents"] objectAtIndex:(NSUInteger) index];
-
-		// Si le document n'a pas de visuelPdf on suppose que le document est en PDF
-		if (document[@"visuelPdfUrl"] != nil) {
-			[requester downloadDocumentAt:document[@"visuelPdfUrl"]
-			                     delegate:self];
-		}
-		else if (document[@"downloadUrl"] != nil) {
-			[requester downloadDocumentAt:document[@"downloadUrl"]
-			                     delegate:self];
-		}
 	}
 }
 
@@ -878,9 +799,8 @@
 		                     contents:nil
 		                   attributes:nil];
 
-		file = [NSFileHandle fileHandleForWritingAtPath:filePath];
-		[file writeData:[document documentData]];
-
+	    file = [NSFileHandle fileHandleForWritingAtPath:filePath];
+		[file writeData:document.documentData];
 
 		dispatch_async(dispatch_get_main_queue(), ^{
 			//call back to main queue to update user interface

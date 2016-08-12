@@ -39,9 +39,9 @@
 #import "ADLNotifications.h"
 #import "UIColor+CustomColors.h"
 #import "ADLRequester.h"
-#import "SCNetworkReachability/SCNetworkReachability.h"
-#import "ADLResponseBureau.h"
+#import "SCNetworkReachability.h"
 #import "DeviceUtils.h"
+#import "iParapheur-Swift.h"
 
 
 @interface RGMasterViewController ()
@@ -177,7 +177,7 @@
 
 - (void)checkDemonstrationServer {
 
-	if (![DeviceUtils isConnectedToDemoServer])
+	if (![DeviceUtils isConnectedToDemoAccount])
 		return;
 
 	@try {
@@ -437,10 +437,10 @@
 		bureauATraiter = [NSString stringWithFormat:@"%@", bureau[@"a_traiter"]];
 	}
 	else {
-		ADLResponseBureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau.name;
-		bureauEnRetard = bureau.enRetard.stringValue;
-		bureauATraiter = bureau.aTraiter.stringValue;
+		Bureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
+		bureauName = bureau.unwrappedName;
+		bureauEnRetard = [NSString stringWithFormat:@"%d", (int) bureau.unwrappedEnRetard];
+		bureauATraiter = [NSString stringWithFormat:@"%d", (int) bureau.unwrappedATraiter];
 	}
 
 	cell.bureauNameLabel.text = bureauName;
@@ -485,9 +485,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		bureauNodeRef = bureau[@"nodeRef"];
 	}
 	else {
-		ADLResponseBureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau.name;
-		bureauNodeRef = bureau.nodeRef;
+		Bureau *bureau = self.bureauxArray[(NSUInteger) indexPath.row];
+		bureauName = bureau.unwrappedName;
+		bureauNodeRef = bureau.unwrappedNodeRef;
 	}
 
 	NSLog(@"Selected Desk = %@", bureauNodeRef);

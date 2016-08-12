@@ -183,7 +183,7 @@
 		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 		                dossier:dossierRef
-		                success:^(ADLResponseDossier *responseDossier) {
+		                success:^(Dossier *responseDossier) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                [ADLSingletonState sharedSingletonState].dossierCourantObject = responseDossier;

@@ -35,6 +35,7 @@
  */
 #import "ADLDrawingView.h"
 #import "DeviceUtils.h"
+#import "ADLSingletonState.h"
 
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
@@ -237,7 +238,7 @@
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 
-	if ([DeviceUtils isConnectedToDemoServer]) {
+	if ([DeviceUtils isConnectedToDemoAccount]) {
 		[DeviceUtils logInfoMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
 						  withTitle:@"Action indisponible"];
 		return;
@@ -270,7 +271,7 @@
 
 	CGPoint touchPoint = [gestureRecognizer locationInView:self];
 
-	if (_hittedView && _enabled && _hittedView.annotationModel.editable) {
+	if (_hittedView && _enabled && _hittedView.annotationModel.unwrappedEditable) {
 		[self animateviewOnLongPressGesture:touchPoint];
 		_hasBeenLongPressed = YES;
 	}
@@ -365,7 +366,7 @@
 
 		if ([_hittedView isKindOfClass:[ADLAnnotationView class]] || [_hittedView isKindOfClass:[ADLDrawingView class]]) {
 			CGPoint point = [self clipPointToView:[touch locationInView:self]];
-			if (_hittedView.annotationModel.editable) {
+			if (_hittedView.annotationModel.unwrappedEditable) {
 				if ([_hittedView isInHandle:[touch locationInView:self]]) {
 
 					CGRect frame = [_hittedView frame];
@@ -417,9 +418,9 @@
 		if (_hittedView != nil && [_hittedView isKindOfClass:[ADLAnnotationView class]] && _shallUpdateCurrent) {
 
 			[_hittedView refreshModel];
-			ADLAnnotation *annotation = [_hittedView annotationModel];
+			Annotation *annotation = _hittedView.annotationModel;
 
-			if (self.hittedView.annotationModel.uuid && self.hittedView.annotationModel.editable)
+			if (_hittedView.annotationModel.unwrappedId && _hittedView.annotationModel.unwrappedEditable)
 				[self updateAnnotation:annotation];
 		}
 
@@ -530,33 +531,30 @@
 	if (_masterViewController.dataSource != nil) {
 		NSArray *annotations = [self annotationsForPage:_pageNumber];
 
-		for (NSDictionary *annotation in annotations) {
-			
-			ADLAnnotation *annotModel = [[ADLAnnotation alloc] initWithAnnotationDict:annotation];
-			ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotModel];
-			
-			[a setDrawingView:self];
+		for (Annotation *annotation in annotations) {
+			ADLAnnotationView *a = [[ADLAnnotationView alloc] initWithAnnotation:annotation];
+			a.drawingView = self;
 			[self addSubview:a];
 		}
 	}
 }
 
 
-- (void)updateAnnotation:(ADLAnnotation *)annotation {
+- (void)updateAnnotation:(Annotation *)annotation {
 
-	[_masterViewController.dataSource updateAnnotation:annotation
-	                                           forPage:_pageNumber];
+	[annotation setUnwrappedPage:@(_pageNumber)];
+	[_masterViewController.dataSource updateAnnotation:annotation];
 }
 
 
-- (void)addAnnotation:(ADLAnnotation *)annotation {
+- (void)addAnnotation:(Annotation *)annotation {
 
-	[_masterViewController.dataSource addAnnotation:annotation
-	                                        forPage:_pageNumber];
+	[annotation setUnwrappedPage:@(_pageNumber)];
+	[_masterViewController.dataSource addAnnotation:annotation];
 }
 
 
-- (void)removeAnnotation:(ADLAnnotation *)annotation {
+- (void)removeAnnotation:(Annotation *)annotation {
 
 	[_masterViewController.dataSource removeAnnotation:annotation];
 }

@@ -34,6 +34,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
+#import "iParapheur-Swift.h"
 
 
 @class ADLResponseDossier;
@@ -43,7 +44,7 @@
 
 @property (strong, nonatomic) NSString* bureauCourant;
 @property (strong, nonatomic) NSString* dossierCourantReference;
-@property (strong, nonatomic) ADLResponseDossier* dossierCourantObject;
+@property (strong, nonatomic) Dossier* dossierCourantObject;
 @property (strong, nonatomic) NSString* currentPrincipalDocPath;
 @property (strong, nonatomic) NSMutableDictionary *currentFilter;
 
