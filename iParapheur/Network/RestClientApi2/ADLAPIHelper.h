@@ -33,15 +33,17 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "Mantle/MTLModel.h"
-#import "Mantle/MTLJSONAdapter.h"
+#import "iParapheur-Swift.h"
 
+@interface ADLAPIHelper : NSObject
 
-static NSString *const kGLLevel = @"level";
++ (NSString*) actionNameForAction:(NSString*) action;
 
++ (NSString*) actionNameForAction:(NSString*) action
+              withPaperSign:(BOOL)isPaperSign;
 
-@interface ADLResponseGetLevel : MTLModel<MTLJSONSerializing>
++ (NSArray*) actionsForADLResponseDossier:(Dossier*) dossier;
 
-@property (nonatomic, strong) NSNumber *level;
++ (NSArray*) actionsForDossier:(NSDictionary*) dossier;
 
 @end
