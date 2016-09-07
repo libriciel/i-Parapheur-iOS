@@ -70,7 +70,7 @@
 	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
 	self.navigationItem.rightBarButtonItem = nil;
 
-	if ([[[UIDevice currentDevice] systemVersion] floatValue] > 8.0) {
+	if ([UIDevice currentDevice].systemVersion.floatValue > 8.0) {
 		UISplitViewController *uiSplitView = (UISplitViewController *) [UIApplication sharedApplication].delegate.window.rootViewController;
 		UIBarButtonItem *backButton = uiSplitView.displayModeButtonItem;
 

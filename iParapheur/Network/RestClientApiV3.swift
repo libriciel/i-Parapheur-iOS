@@ -95,7 +95,7 @@ import AFNetworking
         // takes all certificates from existing trust
         let numCerts = SecTrustGetCertificateCount(trust)
         var certs: [SecCertificateRef] = [SecCertificateRef]()
-        for (var i = 0; i < numCerts; i++) {
+        for i in 0 ..< numCerts {
             // takeUnretainedValue
             let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
             certs.append(c!)
@@ -139,7 +139,7 @@ import AFNetworking
             if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
                 for jsonAnnotation in jsonAnnotations {
 
-                    var annotation = Annotation(json: jsonAnnotation)
+                    let annotation = Annotation(json: jsonAnnotation)
                     annotation!.step = step
                     annotation!.page = Int(page.0)
                     annotation!.documentId = documentId
@@ -174,7 +174,6 @@ import AFNetworking
                         (task: NSURLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
-
     }
 
     func getBureaux(onResponse: ((NSArray) -> Void)?,

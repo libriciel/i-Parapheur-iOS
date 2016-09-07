@@ -262,6 +262,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 		return NO;
 	}
+	
+	return YES;
 }
 
 

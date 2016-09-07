@@ -59,56 +59,54 @@
     _typesTableView.dataSource = self;
     _typesTableView.delegate = self;
     _banettePicker.delegate = self;
-    _banettePicker.dataSource = self;
-	
-    _banettesNames = [NSDictionary dictionaryWithObjectsAndKeys:
-                     @"À transmettre", @"en-preparation",
-                     @"À traiter", @"a-traiter",
-                     @"En fin de circuit", @"a-archiver",
-                     @"Retournés", @"retournes",
-                     @"En cours", @"en-cours",
-                     @"À venir", @"a-venir",
-                     @"Récupérables", @"recuperables",
-                     @"En retard", @"en-retard",
-                     @"Traités", @"traites",
-                     @"Dossiers en délégation", @"dossiers-delegues",
-                     @"Toutes les banettes", @"no-corbeille",
-                     @"Tout i-Parapheur", @"no-bureau",
-                     nil];
+	_banettePicker.dataSource = self;
+
+	_banettesNames = @{
+			@"en-preparation": @"À transmettre",
+			@"a-traiter": @"À traiter",
+			@"a-archiver": @"En fin de circuit",
+			@"retournes": @"Retournés",
+			@"en-cours": @"En cours",
+			@"a-venir": @"À venir",
+			@"recuperables": @"Récupérables",
+			@"en-retard": @"En retard",
+			@"traites": @"Traités",
+			@"dossiers-delegues": @"Dossiers en délégation",
+			@"no-corbeille": @"Toutes les banettes",
+			@"no-bureau": @"Tout i-Parapheur"};
     
-    _banettes = [NSArray arrayWithObjects:
-                     @"en-preparation",
-                     @"a-traiter",
-                     @"a-archiver",
-                     @"retournes",
-                     @"en-cours",
-                     @"a-venir",
-                     @"recuperables",
-                     @"en-retard",
-                     @"traites",
-                     @"dossiers-delegues",
-                     @"no-corbeille",
-                     @"no-bureau",
-                     nil];
+    _banettes = @[
+		    @"en-preparation",
+		    @"a-traiter",
+		    @"a-archiver",
+		    @"retournes",
+		    @"en-cours",
+		    @"a-venir",
+		    @"recuperables",
+		    @"en-retard",
+		    @"traites",
+		    @"dossiers-delegues",
+		    @"no-corbeille",
+		    @"no-bureau"];
 
     
-    NSDictionary *currentFilter = [[ADLSingletonState sharedSingletonState] currentFilter];
+    NSDictionary *currentFilter = [ADLSingletonState sharedSingletonState].currentFilter;
     
-    _titreTextField.text = [currentFilter objectForKey:@"titre"];
-    NSString * selected = [currentFilter objectForKey:@"banette"];
+    _titreTextField.text = currentFilter[@"titre"];
+    NSString * selected = currentFilter[@"banette"];
 	
 	if (selected != nil)
         _selectedBanette = selected;
     else
         _selectedBanette = @"a-traiter";
 
-	[_banetteButton setTitle:[_banettesNames objectForKey:_selectedBanette]
-						forState:UIControlStateNormal];
-    
-    _selectedTypes = [NSMutableArray arrayWithArray:[currentFilter objectForKey:@"types"]];
-    _selectedSousTypes = [NSMutableArray arrayWithArray:[currentFilter objectForKey:@"sousTypes"]];
+	[_banetteButton setTitle:_banettesNames[_selectedBanette]
+	                forState:UIControlStateNormal];
 
-    NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:@"true", @"getAll", nil];
+	_selectedTypes = [NSMutableArray arrayWithArray:currentFilter[@"types"]];
+	_selectedSousTypes = [NSMutableArray arrayWithArray:currentFilter[@"sousTypes"]];
+
+    NSDictionary *args = @{@"getAll": @"true"};
 
     API_REQUEST(@"getTypologie", args);
 }
@@ -116,8 +114,8 @@
 
 - (void) reloadTypologyTable {
     for (NSString *selectedType in _selectedTypes) {
-        int typeIndex = (int)[[_typologie allKeys] indexOfObject:selectedType];
-        NSArray *sousTypes = [_typologie objectForKey:selectedType];
+        int typeIndex = (int)[_typologie.allKeys indexOfObject:selectedType];
+        NSArray *sousTypes = _typologie[selectedType];
         for (NSString *selectedSousType in _selectedSousTypes) {
             NSUInteger sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
             if (sousTypeIndex != NSNotFound) {
@@ -132,12 +130,11 @@
 
 
 - (IBAction)handleSave:(id)sender {
-    NSDictionary * filter = [NSDictionary dictionaryWithObjectsAndKeys:
-                             _titreTextField.text, @"titre",
-                             _selectedBanette, @"banette",
-                             _selectedTypes, @"types",
-                             _selectedSousTypes, @"sousTypes",
-                             nil];
+    NSDictionary * filter = @{
+		    @"titre": _titreTextField.text,
+		    @"banette": _selectedBanette,
+		    @"types": _selectedTypes,
+		    @"sousTypes": _selectedSousTypes};
     
     if ([_delegate respondsToSelector:@selector(shouldReload:)]) {
         [_delegate shouldReload:filter];
@@ -150,7 +147,7 @@
 - (IBAction)handleClear:(id)sender {
     [_titreTextField setText:@""];
     _selectedBanette = @"a-traiter";
-    [_banetteButton setTitle:[_banettesNames objectForKey:_selectedBanette]
+    [_banetteButton setTitle:_banettesNames[_selectedBanette]
 					forState:UIControlStateNormal];
     [_selectedSousTypes removeAllObjects];
     [_selectedTypes removeAllObjects];
@@ -167,28 +164,28 @@
 - (IBAction)displayBanettePicker:(id)sender {
     
     // Setting banette UIPickerView
-    self.banettePicker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 216)];
-    self.banettePicker.backgroundColor = [UIColor clearColor];
-    self.banettePicker.showsSelectionIndicator = YES;
-    self.banettePicker.delegate = self;
-    self.banettePicker.dataSource = self;
-    //self.banettePicker.transform = CGAffineTransformMakeScale(-1, 1);
+    _banettePicker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 216)];
+    _banettePicker.backgroundColor = [UIColor clearColor];
+    _banettePicker.showsSelectionIndicator = YES;
+    _banettePicker.delegate = self;
+    _banettePicker.dataSource = self;
+    //_banettePicker.transform = CGAffineTransformMakeScale(-1, 1);
     // Adding it to a UIViewController
     UIViewController *pickerController = [UIViewController new];
     [pickerController setPreferredContentSize:CGSizeMake(320, 216)];
-    pickerController.view = self.banettePicker;
+    pickerController.view = _banettePicker;
     // Make it popover
-    self.pickerPopover = [[UIPopoverController alloc] initWithContentViewController:pickerController];
+    _pickerPopover = [[UIPopoverController alloc] initWithContentViewController:pickerController];
     
     // The anchor is on the banette button
-    [self.pickerPopover presentPopoverFromRect:((UIButton *)sender).frame
+    [_pickerPopover presentPopoverFromRect:((UIButton *)sender).frame
 										inView:self.view
 					  permittedArrowDirections:UIPopoverArrowDirectionAny
 									  animated:YES];
     
-    self.pickerPopover.delegate = self;
+    _pickerPopover.delegate = self;
 	
-    [self.banettePicker selectRow:[self.banettes indexOfObject:self.selectedBanette]
+    [_banettePicker selectRow:[_banettes indexOfObject:_selectedBanette]
 					  inComponent:0
 						 animated:NO];
 
@@ -199,8 +196,8 @@
 
 
 - (void)didEndWithRequestAnswer:(NSDictionary*)answer {
-    self.typologie = [[answer objectForKey:@"data"] objectForKey:@"typology"];
-    [self.typesTableView reloadData];
+    _typologie = [answer[@"data"] objectForKey:@"typology"];
+    [_typesTableView reloadData];
     [self reloadTypologyTable];
 }
 
@@ -211,22 +208,22 @@
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-    NSString* type = [[self.typologie allKeys] objectAtIndex:indexPath.section];
-    NSString* sousType = [[self.typologie objectForKey:type] objectAtIndex:indexPath.row];
+    NSString* type = _typologie.allKeys[(NSUInteger) indexPath.section];
+    NSString* sousType = [_typologie[type] objectAtIndex:(NSUInteger) indexPath.row];
     
-    [self.selectedTypes addObject:type];
-    [self.selectedSousTypes addObject:sousType];
+    [_selectedTypes addObject:type];
+    [_selectedSousTypes addObject:sousType];
 }
 
 
 - (void)tableView:(UITableView *)tableView
 didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-    NSString* type = [[self.typologie allKeys] objectAtIndex:indexPath.section];
-    NSString* sousType = [[self.typologie objectForKey:type] objectAtIndex:indexPath.row];
+    NSString* type = _typologie.allKeys[(NSUInteger) indexPath.section];
+    NSString* sousType = [_typologie[type] objectAtIndex:(NSUInteger) indexPath.row];
     
-    [self.selectedTypes removeObject:type];
-    [self.selectedSousTypes removeObject:sousType];
+    [_selectedTypes removeObject:type];
+    [_selectedSousTypes removeObject:sousType];
 
 }
 
@@ -237,8 +234,8 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 	
-    NSString * type = [[self.typologie allKeys] objectAtIndex:section];
-    return [[self.typologie objectForKey:type] count];
+    NSString * type = _typologie.allKeys[(NSUInteger) section];
+    return [_typologie[type] count];
 }
 
 
@@ -248,22 +245,22 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"TypeCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    NSString * type = [[self.typologie allKeys] objectAtIndex:indexPath.section];
-    NSString * sousType = [[self.typologie objectForKey:type] objectAtIndex:indexPath.row];
+    NSString * type = [_typologie allKeys][(NSUInteger) indexPath.section];
+    NSString * sousType = [_typologie[type] objectAtIndex:(NSUInteger) indexPath.row];
     cell.textLabel.text = sousType;
     return cell;
 }
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [self.typologie count];
+    return _typologie.count;
 }
 
 
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section {
 	
-    return [[self.typologie allKeys] objectAtIndex:section];
+    return _typologie.allKeys[(NSUInteger) section];
 }
 
 
@@ -274,8 +271,8 @@ titleForHeaderInSection:(NSInteger)section {
 	  didSelectRow:(NSInteger)row
 	   inComponent:(NSInteger)component {
 	
-    self.selectedBanette = [self.banettes objectAtIndex:row];
-    [self.banetteButton setTitle:[self.banettesNames objectForKey:self.selectedBanette]
+    _selectedBanette = _banettes[(NSUInteger) row];
+    [_banetteButton setTitle:_banettesNames[_selectedBanette]
 						forState:UIControlStateNormal];
 }
 
@@ -284,7 +281,7 @@ titleForHeaderInSection:(NSInteger)section {
 			 titleForRow:(NSInteger)row
 			forComponent:(NSInteger)component {
 	
-    return [self.banettesNames objectForKey:[self.banettes objectAtIndex:row]];
+    return _banettesNames[_banettes[(NSUInteger) row]];
 }
 
 
@@ -299,7 +296,7 @@ titleForHeaderInSection:(NSInteger)section {
 - (NSInteger)pickerView:(UIPickerView *)pickerView
 numberOfRowsInComponent:(NSInteger)component {
 	
-    return self.banettes.count;
+    return _banettes.count;
 }
 
 

@@ -85,7 +85,7 @@ import Gloss
         nomTdT = ("nomTdT" <~~ json) ?? ""
         xPathSignature = ("xPathSignature" <~~ json) ?? ""
 
-        actionDemandee = ("actionDemandee" <~~ json) ?? (Action.VISA as? String)
+        actionDemandee = ("actionDemandee" <~~ json) ?? Action.VISA.rawValue
         actions = ("actions" <~~ json) ?? []
         documents = ("documents" <~~ json) ?? []
         acteursVariables = ("acteursVariables" <~~ json) ?? []

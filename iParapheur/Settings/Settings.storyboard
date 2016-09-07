@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bnr-eQ-qWs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bnr-eQ-qWs">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -46,7 +46,12 @@
                             <outlet property="delegate" destination="scn-aS-wGv" id="Ngi-O6-2Uf"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="DWG-pA-QbG" customClass="SettingsTableViewController"/>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="DWG-pA-QbG" customClass="SettingsTableViewController">
+                        <barButtonItem key="leftBarButtonItem" title="Retour" id="Yvn-GK-kgU"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="backButton" destination="Yvn-GK-kgU" id="ah1-A2-sRv"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bCN-2f-86I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
