@@ -90,6 +90,11 @@
 		B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33EF1547333D006F7BF3 /* ReaderThumbView.m */; };
 		B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */; };
 		B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33E11547333D006F7BF3 /* CGPDFDocument.m */; };
+		C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */; };
+		C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */; };
+		C5065EE11D82AB89008FE301 /* SettingsFiltersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */; };
+		C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EE21D82ABB2008FE301 /* SettingsCertificatesController.swift */; };
+		C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EE41D82ABCD008FE301 /* SettingsAccountsController.swift */; };
 		C50A87401D1AD07000025074 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C50A873F1D1AD07000025074 /* Settings.storyboard */; };
 		C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */; };
 		C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */; };
@@ -358,6 +363,11 @@
 		B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
 		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
+		C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsAboutController.swift; path = Settings/SettingsAboutController.swift; sourceTree = "<group>"; };
+		C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsLicencesController.swift; path = Settings/SettingsLicencesController.swift; sourceTree = "<group>"; };
+		C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFiltersController.swift; path = Settings/SettingsFiltersController.swift; sourceTree = "<group>"; };
+		C5065EE21D82ABB2008FE301 /* SettingsCertificatesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsCertificatesController.swift; path = Settings/SettingsCertificatesController.swift; sourceTree = "<group>"; };
+		C5065EE41D82ABCD008FE301 /* SettingsAccountsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsAccountsController.swift; path = Settings/SettingsAccountsController.swift; sourceTree = "<group>"; };
 		C50861951D5DC361009BDFD3 /* iParapheur-Bridging-header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-header.h"; sourceTree = "<group>"; };
 		C50A873F1D1AD07000025074 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = Settings/Settings.storyboard; sourceTree = "<group>"; };
 		C50A87421D1AD0FD00025074 /* iParapheur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -894,6 +904,11 @@
 				C50A873F1D1AD07000025074 /* Settings.storyboard */,
 				C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */,
 				C50A87421D1AD0FD00025074 /* iParapheur-Bridging-Header.h */,
+				C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */,
+				C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */,
+				C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */,
+				C5065EE21D82ABB2008FE301 /* SettingsCertificatesController.swift */,
+				C5065EE41D82ABCD008FE301 /* SettingsAccountsController.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1272,6 +1287,7 @@
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,
 				B4FF340415473B43006F7BF3 /* ReaderMainToolbar.m in Sources */,
+				C5065EE11D82AB89008FE301 /* SettingsFiltersController.swift in Sources */,
 				B4FF340515473B46006F7BF3 /* ReaderMainPagebar.m in Sources */,
 				B4FF340615473B4B006F7BF3 /* ReaderContentView.m in Sources */,
 				B4FF340715473B4F006F7BF3 /* ReaderContentPage.m in Sources */,
@@ -1280,6 +1296,7 @@
 				B4FF340A15473B60006F7BF3 /* ThumbsMainToolbar.m in Sources */,
 				B4FF340B15473B6F006F7BF3 /* ReaderThumbCache.m in Sources */,
 				B4FF340C15473B6F006F7BF3 /* ReaderThumbRequest.m in Sources */,
+				C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */,
 				B4FF340D15473B6F006F7BF3 /* ReaderThumbQueue.m in Sources */,
 				B4FF340E15473B6F006F7BF3 /* ReaderThumbFetch.m in Sources */,
 				B4FF340F15473B6F006F7BF3 /* ReaderThumbRender.m in Sources */,
@@ -1296,6 +1313,7 @@
 				B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */,
 				C58971601AA88D420077FC84 /* RGLoginViewController.m in Sources */,
 				C5628EF81A63C37700CB884C /* ADLResponseDossiers.m in Sources */,
+				C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
 				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
@@ -1309,9 +1327,11 @@
 				958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */,
 				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
+				C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */,
 				1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */,
 				1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */,
 				C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */,
+				C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */,
 				95719C821893D50600246F7C /* ADLInfoView.m in Sources */,
 				C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,

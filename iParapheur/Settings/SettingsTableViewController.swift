@@ -40,8 +40,15 @@ import UIKit.UITableViewController
 class SettingsTableViewController: UITableViewController {
 
 	@IBOutlet var backButton: UIBarButtonItem!
-    var items: [String] = ["Comptes", "Certificats", "Filtres", "Informations légales", "Licences tierces"];
 
+	let menuElements: [(title:String, segue:String)] = [
+		("Comptes", "accountsSegue"),
+		("Certificats", "certificatesSegue"),
+		("Filtres", "filtersSegue"),
+		("Informations légales", "aboutSegue"),
+		("Licences tierces", "licencesSegue"),
+	]
+	
     // MARK: LifeCycle
 
     override func viewDidLoad() {
@@ -55,6 +62,22 @@ class SettingsTableViewController: UITableViewController {
 		backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
     }
 
+	// TODO: why ?
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//if ([[segue identifier] isEqualToString:@"detail1"]) {
+//    DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
+//    controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+//    controller.navigationItem.leftItemsSupplementBackButton = YES;
+//    return;
+//}
+//if ([[segue identifier] isEqualToString:@"detail2"]) {
+//    DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
+//    controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+//    controller.navigationItem.leftItemsSupplementBackButton = YES;
+//    return;
+//}
+//}
+
     // MARK: Listeners
 
     func onBackButtonClicked() {
@@ -64,17 +87,17 @@ class SettingsTableViewController: UITableViewController {
     // MARK: UITableViewController
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items.count
+        return self.menuElements.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-        cell.textLabel?.text = self.items[indexPath.row]
+        cell.textLabel?.text = self.menuElements[indexPath.row].title
         return cell
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("Clicked - plop")
+        performSegueWithIdentifier(self.menuElements[indexPath.row].segue, sender: self)
     }
 
 }
