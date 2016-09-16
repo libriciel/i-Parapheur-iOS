@@ -178,4 +178,5 @@ import Gloss
     func unwrappedType() -> NSString {
         return type as NSString!
     }
+	
 }

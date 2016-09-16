@@ -368,7 +368,6 @@
 		C5065EFD1D88053C008FE301 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C50861951D5DC361009BDFD3 /* iParapheur-Bridging-header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-header.h"; sourceTree = "<group>"; };
 		C50A873F1D1AD07000025074 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = Settings/Settings.storyboard; sourceTree = "<group>"; };
-		C50A87421D1AD0FD00025074 /* iParapheur-Bridging-header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-header.h"; sourceTree = "<group>"; };
 		C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsTableViewController.swift; path = Settings/SettingsTableViewController.swift; sourceTree = "<group>"; };
 		C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceUtils.h; sourceTree = "<group>"; };
 		C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceUtils.m; sourceTree = "<group>"; };
@@ -911,7 +910,6 @@
 			children = (
 				C50A873F1D1AD07000025074 /* Settings.storyboard */,
 				C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */,
-				C50A87421D1AD0FD00025074 /* iParapheur-Bridging-header.h */,
 				C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */,
 				C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */,
 				C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */,
