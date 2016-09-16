@@ -39,3 +39,5 @@
 //
 #include <AFNetworking/AFNetworking.h>
 #include "DeviceUtils.h"
+#include "ADLKeyStore.h"
+#include "RGAppDelegate.h"

@@ -46,8 +46,6 @@ import AFNetworking
          login: NSString,
          password: NSString) {
 
-        let test = kCFErrorDomainSystemConfiguration;
-
         manager = AFHTTPSessionManager(baseURL: NSURL(string: baseUrl as String))
         manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
         manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);

@@ -80,7 +80,7 @@ import Gloss
                                                                 oldDpi: 150,
                                                                 newDpi: 72))
         }
-
+		
         step = 0
     }
 

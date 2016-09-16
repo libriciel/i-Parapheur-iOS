@@ -34,31 +34,80 @@
 * knowledge of the CeCILL license and that you accept its terms.
 */
 
-
 import UIKit
+import Foundation
 
-class SettingsCertificatesController: UIViewController {
+@objc class SettingsCertificatesController:  UIViewController, UITableViewDataSource {
+
+    @IBOutlet var certificatesTableView: UITableView!
+    var certificateList: Array<String>!
+
+    // MARK: - Life cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        certificateList = ["Plop 1", "Plop 2", "Plop 3"]
+        certificatesTableView.dataSource = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    // MARK: - Private methods
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func loadCertificateList() -> Array<AnyObject> {
+		
+//        let keystore: ADLKeystore = (UIApplication.sharedApplication().delegate as RGAppDelegate).keystore
+//        return keystore.listPrivateKeys
+		
+		return []
     }
-    */
+
+    // MARK: - Listeners
+
+    func onDeleteButtonClicked(sender: UIButton) {
+
+        let indexPath: Int = sender.tag
+        print("deleted : \(indexPath)")
+    }
+
+    // MARK: - UITableViewDataSource
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        print("Adrien numberOfRowsInSection \(certificateList.count)")
+        return certificateList.count
+    }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+
+        print("Adrien cellForRowAtIndexPath")
+
+        let cell = tableView.dequeueReusableCellWithIdentifier("CertificateCell", forIndexPath: indexPath)
+        let certificate = certificateList[indexPath.row] as String
+
+        if let nameLabel = cell.viewWithTag(101) as? UILabel {
+            nameLabel.text = certificate
+        }
+
+        if let expirationDateLabel = cell.viewWithTag(102) as? UILabel {
+            expirationDateLabel.text = expirationDateLabel.text?.stringByReplacingOccurrencesOfString(":date:", withString: "12/12/2016")
+        }
+
+        if let deleteButton = cell.viewWithTag(103) as? UIButton {
+
+            // FIXME : Storyboard tint not working if not set manually
+            let image = UIImage(named: "ic_delete_white")?.imageWithRenderingMode(.AlwaysTemplate)
+            print("Adrien image : \(UIImage(named: "ic_delete_white.png"))")
+            deleteButton.setImage(image, forState: .Normal)
+            deleteButton.tintColor = CustomColor.tealColor()
+            // FIXME end
+			
+//			let annotation: Annotation
+
+            deleteButton.tag = indexPath.row
+            deleteButton.addTarget(self, action: #selector(onDeleteButtonClicked), forControlEvents: .TouchUpInside)
+        }
+
+        return cell
+    }
 
 }
