@@ -149,6 +149,8 @@
 		 if (strongSelf) {
 			 [[ADLRestClient sharedManager] setRestApiVersion:versionNumber];
 			 [strongSelf loadBureaux];
+			 if (versionNumber.intValue == 2)
+				 [self initAlfrescoToken];
 		 }
 	 }
 	                 failure:^(NSError *error) {
@@ -167,8 +169,6 @@
 			                 }
 		                 }
 	                 }];
-
-	[self initAlfrescoToken];
 }
 
 
