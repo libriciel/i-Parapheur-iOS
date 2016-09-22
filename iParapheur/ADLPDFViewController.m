@@ -93,36 +93,36 @@
 - (void)viewWillAppear:(BOOL)animated {
 
 	[super viewWillAppear:animated];
-	
+
 	// Notifications register
-	
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(dossierSelected:)
-												 name:kDossierSelected
-											   object:nil];
-	
+	                                         selector:@selector(dossierSelected:)
+	                                             name:kDossierSelected
+	                                           object:nil];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(clearDetail:)
-												 name:kSelectBureauAppeared
-											   object:nil];
-	
+	                                         selector:@selector(clearDetail:)
+	                                             name:kSelectBureauAppeared
+	                                           object:nil];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(clearDetail:)
-												 name:kDossierActionComplete
-											   object:nil];
-	
+	                                         selector:@selector(clearDetail:)
+	                                             name:kDossierActionComplete
+	                                           object:nil];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(clearDetail:)
-												 name:kFilterChanged
-											   object:nil];
-	
+	                                         selector:@selector(clearDetail:)
+	                                             name:kFilterChanged
+	                                           object:nil];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(showDocumentWithIndex:)
-												 name:kshowDocumentWithIndex
-											   object:nil];
-	
+	                                         selector:@selector(showDocumentWithIndex:)
+	                                             name:kshowDocumentWithIndex
+	                                           object:nil];
+
 	//
-	
+
 	[self.navigationController setNavigationBarHidden:NO
 	                                         animated:animated];
 }
@@ -148,6 +148,7 @@
 
 
 - (void)viewDidUnload {
+
 	[super viewDidUnload];
 }
 
@@ -193,25 +194,22 @@
 
 		NSArray *actions;
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			actions = [ADLAPIHelper actionsForADLResponseDossier:_dossier];
-		}
-		else {
+			actions = _dossier.unwrappedActions;
+		} else {
 			actions = [ADLAPIHelper actionsForDossier:_document];
 		}
 
 		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
 		((ADLActionViewController *) _actionPopover.contentViewController).actions = actions.mutableCopy;
 
-		// do something usefull there
+		// do something useful there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
 			((ADLActionViewController *) _actionPopover.contentViewController).signatureEnabled = YES;
-		}
-		else if (_visaEnabled) {
+		} else if (_visaEnabled) {
 			((ADLActionViewController *) _actionPopover.contentViewController).visaEnabled = YES;
 		}
 
 		[_actionPopover setDelegate:self];
-
 	}
 }
 
@@ -223,6 +221,7 @@
 
 
 - (void)dealloc {
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -426,11 +425,9 @@
 //		}
 
 		SHOW_HUD
-	}
-	else if ([s isEqualToString:@"getSignInfo"]) {
+	} else if ([s isEqualToString:@"getSignInfo"]) {
 		_signatureFormat = [[answer[_dossierRef] objectForKey:@"format"] copy];
-	}
-	else if ([s isEqualToString:GETANNOTATIONS_API]) {
+	} else if ([s isEqualToString:GETANNOTATIONS_API]) {
 		NSArray *annotations = [answer[@"annotations"] copy];
 
 		_annotations = annotations;
@@ -439,11 +436,9 @@
 			ReaderContentView *currentReaderContentView = [_readerViewController getContentViews][contentViewIdx];
 			[[currentReaderContentView getContentPage] refreshAnnotations];
 		}
-	}
-	else if ([s isEqualToString:@"addAnnotation"]) {
+	} else if ([s isEqualToString:@"addAnnotation"]) {
 		API_GETANNOTATIONS(_dossierRef);
-	}
-	else if ([s isEqual:GETCIRCUIT_API]) {
+	} else if ([s isEqual:GETCIRCUIT_API]) {
 		self.circuit = answer[@"circuit"];
 		API_GETANNOTATIONS(_dossierRef);
 	}
@@ -483,25 +478,24 @@
 				                HIDE_HUD
 				                [strongSelf getDossierDidEndWithRequestAnswer:result];
 			                }
-			            }
-			            failure:^(NSError *error) {
+		                }
+		                failure:^(NSError *error) {
 			                NSLog(@"getBureau fail : %@", error.localizedDescription);
-			            }];
+		                }];
 
 		[_restClient getCircuit:_dossierRef
 		                success:^(ADLResponseCircuit *circuit) {
-		                    __strong typeof(weakSelf) strongSelf = weakSelf;
-		                    if (strongSelf) {
-			                    HIDE_HUD
-			                    strongSelf.circuit = [@[circuit] mutableCopy];
-			                    //[strongSelf requestAnnotations];
-		                    }
+			                __strong typeof(weakSelf) strongSelf = weakSelf;
+			                if (strongSelf) {
+				                HIDE_HUD
+				                strongSelf.circuit = [@[circuit] mutableCopy];
+				                //[strongSelf requestAnnotations];
+			                }
 		                }
-			            failure:^(NSError *error) {
+		                failure:^(NSError *error) {
 			                NSLog(@"getCircuit fail : %@", error.localizedDescription);
-			            }];
-	}
-	else {
+		                }];
+	} else {
 		API_GETDOSSIER(_dossierRef, [ADLSingletonState sharedSingletonState].bureauCourant);
 		API_GETCIRCUIT(_dossierRef);
 	}
@@ -547,8 +541,8 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController
      willHideViewController:(UIViewController *)viewController
-		  withBarButtonItem:(UIBarButtonItem *)barButtonItem
-	   forPopoverController:(UIPopoverController *)popoverController {
+          withBarButtonItem:(UIBarButtonItem *)barButtonItem
+       forPopoverController:(UIPopoverController *)popoverController {
 
 	barButtonItem.title = @"Dossiers";
 	barButtonItem.tintColor = [UIColor darkBlueColor];
@@ -577,31 +571,31 @@
 - (void)deleteEveryBinFile {
 
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-	    //here everything you want to perform in background
+		//here everything you want to perform in background
 
-	    // The preferred way to get the apps documents directory
+		// The preferred way to get the apps documents directory
 
-	    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	    NSString *docDirectory = documentsPaths[0];
+		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		NSString *docDirectory = documentsPaths[0];
 
-	    // Grab all the files in the documents dir
+		// Grab all the files in the documents dir
 
-	    NSFileManager *fileManager = [NSFileManager defaultManager];
-	    NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory
-	                                                         error:nil];
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory
+		                                                     error:nil];
 
-	    // Filter the array for only bin files
+		// Filter the array for only bin files
 
-	    NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.bin'"];
-	    NSArray *binFiles = [allFiles filteredArrayUsingPredicate:fltr];
+		NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.bin'"];
+		NSArray *binFiles = [allFiles filteredArrayUsingPredicate:fltr];
 
-	    // Use fast enumeration to iterate the array and delete the files
+		// Use fast enumeration to iterate the array and delete the files
 
-	    for (NSString *binFile in binFiles) {
-		    NSError *error = nil;
-		    [fileManager removeItemAtPath:[docDirectory stringByAppendingPathComponent:binFile]
-		                            error:&error];
-	    }
+		for (NSString *binFile in binFiles) {
+			NSError *error = nil;
+			[fileManager removeItemAtPath:[docDirectory stringByAppendingPathComponent:binFile]
+			                        error:&error];
+		}
 	});
 }
 
@@ -622,13 +616,13 @@
 }
 
 
--(NSURL *)getFileUrlWithDossierRef:(NSString *)dossierRef {
+- (NSURL *)getFileUrlWithDossierRef:(NSString *)dossierRef {
 
 	NSURL *documentsDirectoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory
 	                                                                      inDomain:NSUserDomainMask
-			                                                     appropriateForURL:nil
-			                                                                create:YES
-			                                                                 error:nil];
+	                                                             appropriateForURL:nil
+	                                                                        create:YES
+	                                                                         error:nil];
 
 	NSString *fileName = [NSString stringWithFormat:@"%@.bin", dossierRef];
 	documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:fileName];
@@ -641,32 +635,31 @@
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		NSString *documentId = _document.unwrappedId;
-		
+
 		__weak typeof(self) weakSelf = self;
 		[_restClient getAnnotations:_dossierRef
-						   document:documentId
+		                   document:documentId
 		                    success:^(NSArray *annotations) {
 
-		                        __strong typeof(weakSelf) strongSelf = weakSelf;
-		                        if (strongSelf) {
-			                        strongSelf.annotations = annotations;
+			                    __strong typeof(weakSelf) strongSelf = weakSelf;
+			                    if (strongSelf) {
+				                    strongSelf.annotations = annotations;
 
-			                        for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
-				                        ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
-				                        [currentReaderContentView.getContentPage refreshAnnotations];
-			                        }
-		                        }
+				                    for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
+					                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
+					                    [currentReaderContentView.getContentPage refreshAnnotations];
+				                    }
+			                    }
 		                    }
-			                failure:^(NSError *error) {
+		                    failure:^(NSError *error) {
 			                    NSLog(@"getAnnotations error");
-			                }];
-	}
-	else {
+		                    }];
+	} else {
 		ADLRequester *requester = [ADLRequester sharedRequester];
-		NSDictionary *args = @{@"dossier" : _dossierRef};
+		NSDictionary *args = @{@"dossier": _dossierRef};
 		[requester request:GETANNOTATIONS_API
 		           andArgs:args
-			      delegate:self];
+		          delegate:self];
 	}
 }
 
@@ -679,26 +672,24 @@
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-						                   success:^(ADLResponseSignInfo *signInfo) {
-						                       __strong typeof(weakSelf) strongSelf = weakSelf;
-						                       if (strongSelf) {
-							                       strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
-						                       }
-						                   }
-						                   failure:^(NSError *error) {
-						                       NSLog(@"getSignInfo %@", error.localizedDescription);
-						                   }];
-			}
-			else {
+				                           success:^(ADLResponseSignInfo *signInfo) {
+					                           __strong typeof(weakSelf) strongSelf = weakSelf;
+					                           if (strongSelf) {
+						                           strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
+					                           }
+				                           }
+				                           failure:^(NSError *error) {
+					                           NSLog(@"getSignInfo %@", error.localizedDescription);
+				                           }];
+			} else {
 				SHOW_HUD
-				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
+				NSDictionary *signInfoArgs = @{@"dossiers": @[_dossierRef]};
 				ADLRequester *requester = [ADLRequester sharedRequester];
 				[requester request:@"getSignInfo"
 				           andArgs:signInfoArgs
-					      delegate:self];
+				          delegate:self];
 			}
-		}
-		else {
+		} else {
 			_visaEnabled = YES;
 			_signatureFormat = nil;
 		}
@@ -735,8 +726,7 @@
 
 		[self addChildViewController:_readerViewController];
 		[self.view addSubview:_readerViewController.view];
-	}
-	else // Log an error so that we know that something went wrong
+	} else // Log an error so that we know that something went wrong
 	{
 		NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:nil] failed.", __FUNCTION__, filePath);
 	}
@@ -748,9 +738,9 @@
 	_isDocumentPrincipal = (index == 0);
 	_document = _dossier.unwrappedDocuments[(NSUInteger) index];
 	NSString *documentId = [_document unwrappedId];
-	
+
 	// File cache
-	
+
 	NSString *filePath = [self getFileUrlWithDossierRef:documentId].path;
 	if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
 
@@ -768,7 +758,7 @@
 
 	SHOW_HUD
 	ADLRequester *requester = [ADLRequester sharedRequester];
-	
+
 	if (_dossier.unwrappedDocuments) {
 		bool isPdf = (bool) _document.isVisuelPdf;
 
@@ -792,30 +782,30 @@
 
 	HIDE_HUD
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-	    //here everything you want to perform in background
+		//here everything you want to perform in background
 
-	    NSFileManager *fileManager = [NSFileManager defaultManager];
-	    NSFileHandle *file;
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSFileHandle *file;
 
-	    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 
-	    NSString *docPath = documentsPaths[0];
-	    NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin",
-	                                                    docPath,
-	                                                    _dossierRef];
-	    [fileManager createFileAtPath:filePath
-	                         contents:nil
-			               attributes:nil];
+		NSString *docPath = documentsPaths[0];
+		NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin",
+		                                                docPath,
+		                                                _dossierRef];
+		[fileManager createFileAtPath:filePath
+		                     contents:nil
+		                   attributes:nil];
 
-	    file = [NSFileHandle fileHandleForWritingAtPath:filePath];
+		file = [NSFileHandle fileHandleForWritingAtPath:filePath];
 		[file writeData:document.documentData];
 
 
-	    dispatch_async(dispatch_get_main_queue(), ^{
-	        //call back to main queue to update user interface
-	        [self loadPdfAt:filePath];
-	        [self requestAnnotations];
-	    });
+		dispatch_async(dispatch_get_main_queue(), ^{
+			//call back to main queue to update user interface
+			[self loadPdfAt:filePath];
+			[self requestAnnotations];
+		});
 	});
 }
 

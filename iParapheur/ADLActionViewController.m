@@ -57,7 +57,7 @@
 -(void)viewDidLoad {
 	[super viewDidLoad];
 	NSLog(@"View Loaded : ActionViewController");
-	
+
 	// Uncomment the following line to preserve selection between presentations.
 	// self.clearsSelectionOnViewWillAppear = NO;
  
@@ -68,7 +68,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	
+
 	if (_actions == nil) {
 		_actions = [[NSMutableArray alloc] init];
 	}
@@ -86,10 +86,11 @@
 	if (!_signatureEnabled) {
 		[_actions removeObject:@"SIGNER"];
 	}
+
 	for (NSString *action in _actions) {
 		[_labels addObject:[ADLAPIHelper actionNameForAction:action]];
 	}
-	
+
 	if (_signatureEnabled && ![_actions containsObject:@"SIGNER"]) {
 		[_actions addObject:@"SIGNER"];
 		[_labels addObject:@"Signer"];
@@ -101,7 +102,8 @@
 	
 	[_actions addObject:@"REJETER"];
 	[_labels addObject:@"Rejeter"];
-	
+
+	self.preferredContentSize = CGSizeMake(300, 66 * _actions.count);
 	[[self tableView] reloadData];
 }
 

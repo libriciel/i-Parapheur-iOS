@@ -79,7 +79,7 @@
 	else if ([action isEqualToString:@"REMORD"])
 		return @"Récupérer";
 
-	return nil;
+	return [NSString stringWithFormat:@"unknown : %@", action];
 }
 
 
