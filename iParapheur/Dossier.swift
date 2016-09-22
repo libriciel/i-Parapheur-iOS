@@ -110,6 +110,10 @@ import Gloss
 
     // MARK: ObjC accessors
 
+    func unwrappedId() -> NSString {
+        return id as NSString!
+    }
+
     func unwrappedDocuments() -> NSArray {
         return documents as NSArray!
     }
@@ -124,5 +128,9 @@ import Gloss
 
     func unwrappedActionDemandee() -> NSString {
         return actionDemandee as NSString!
+    }
+
+    func unwrappedIsSignPapier() -> Bool {
+        return isSignPapier!
     }
 }

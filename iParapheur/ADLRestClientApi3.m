@@ -588,7 +588,6 @@
 	// Create arguments dictionary
 
 	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-	NSLog(@"Adrien update - %@", argumentDictionary);
 
 	// Send request
 

@@ -110,9 +110,8 @@
 	// Paper Signature
 
 	BOOL isSignPapier = true;
-	for (ADLResponseDossier *dossier in _dossiers) {
-		isSignPapier = isSignPapier && dossier.isSignPapier;
-	}
+	for (Dossier *dossier in _dossiers)
+		isSignPapier = isSignPapier && dossier.unwrappedIsSignPapier;
 
 	[_paperSignatureButton addTarget:self
 	                          action:@selector(onPaperSignatureButtonClicked:)
@@ -145,8 +144,8 @@
 	ADLRequester *requester = [ADLRequester sharedRequester];
 
 	NSMutableArray *dossierIds = [NSMutableArray new];
-	for (ADLResponseDossier *dossier in _dossiers)
-		[dossierIds addObject:dossier.identifier];
+	for (Dossier *dossier in _dossiers)
+		[dossierIds addObject:dossier.unwrappedId];
 
 	NSMutableDictionary *args = @{
 			@"dossiers" : dossierIds,
@@ -158,9 +157,9 @@
 		[self showHud];
 
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			for (ADLResponseDossier *dossier in _dossiers) {
+			for (Dossier *dossier in _dossiers) {
 				__weak typeof(self) weakSelf = self;
-				[_restClient actionViserForDossier:dossier.identifier
+				[_restClient actionViserForDossier:dossier.unwrappedId
 				                         forBureau:_bureauCourant
 				              withPublicAnnotation:_annotationPublique.text
 				             withPrivateAnnotation:_annotationPrivee.text
@@ -198,9 +197,9 @@
 			[self showHud];
 
 			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-				for (ADLResponseDossier *dossier in _dossiers) {
+				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
-					[_restClient actionRejeterForDossier:dossier.identifier
+					[_restClient actionRejeterForDossier:dossier.unwrappedId
 					                           forBureau:_bureauCourant
 					                withPublicAnnotation:_annotationPublique.text
 					               withPrivateAnnotation:_annotationPrivee.text
@@ -302,11 +301,11 @@
 		NSMutableArray *dossiers = [NSMutableArray new];
 		NSMutableArray *signatures = [NSMutableArray new];
 
-		for (ADLResponseDossier *dossier in _dossiers) {
-			NSDictionary *signInfo = answer[dossier.identifier];
+		for (Dossier *dossier in _dossiers) {
+			NSDictionary *signInfo = answer[dossier.unwrappedId];
 
 			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-				[dossiers addObject:dossier.identifier];
+				[dossiers addObject:dossier.unwrappedId];
 				[hashes addObject:signInfo[@"hash"]];
 			}
 
@@ -390,11 +389,11 @@
 	NSMutableArray *dossiers = [NSMutableArray new];
 	NSMutableArray *signatures = [NSMutableArray new];
 
-	for (ADLResponseDossier *dossier in _dossiers) {
+	for (Dossier *dossier in _dossiers) {
 		NSDictionary *signInfo = responseSignInfo.signatureInformations;
 
 		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-			[dossiers addObject:dossier.identifier];
+			[dossiers addObject:dossier.unwrappedId];
 			[hashes addObject:signInfo[@"hash"]];
 		} else {
 			[DeviceUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
@@ -504,11 +503,11 @@
 		return;
 
 	__weak typeof(self) weakSelf = self;
-	[_restClient getCircuit:((ADLResponseDossier *) _dossiers[index]).identifier
+	[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
 	                success:^(ADLResponseCircuit *circuit) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
-			                circuits[((ADLResponseDossier *) _dossiers[index]).identifier] = circuit;
+			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
 			                [strongSelf checkSignPapierButtonVisibility];
 			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
 		                }
@@ -516,7 +515,7 @@
 	                failure:^(NSError *error) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
-			                circuits[((ADLResponseDossier *) _dossiers[index]).identifier] = nil;
+			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = nil;
 			                [strongSelf checkSignPapierButtonVisibility];
 			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
 		                }
@@ -537,7 +536,7 @@
 	}
 
 	__weak typeof(self) weakSelf = self;
-	[_restClient actionSwitchToPaperSignatureForDossier:((ADLResponseDossier *) _dossiers[index]).identifier
+	[_restClient actionSwitchToPaperSignatureForDossier:((Dossier *) _dossiers[index]).unwrappedId
 	                                          forBureau:_bureauCourant
 	                                            success:^(NSArray *success) {
 		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -556,8 +555,8 @@
 
 	BOOL isSignMandatory = false;
 
-	for (ADLResponseDossier *dossier in _dossiers)
-		if ((circuits[dossier.identifier] == nil) || (((ADLResponseCircuit *) circuits[dossier.identifier]).isDigitalSignatureMandatory))
+	for (Dossier *dossier in _dossiers)
+		if ((circuits[dossier.unwrappedId] == nil) || (((ADLResponseCircuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
 			isSignMandatory = true;
 
 	if ([_action isEqualToString:@"SIGNER"] && (!_isPaperSign))
@@ -666,9 +665,9 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 			_p12password = passwordTextField.text;
 
 			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-				for (ADLResponseDossier *dossier in _dossiers) {
+				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
-					[_restClient getSignInfoForDossier:dossier.identifier
+					[_restClient getSignInfoForDossier:dossier.unwrappedId
 					                         andBureau:_bureauCourant
 					                           success:^(ADLResponseSignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -684,8 +683,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 				ADLRequester *requester = [ADLRequester sharedRequester];
 				NSMutableArray *dossierIds = [NSMutableArray new];
 
-				for (ADLResponseDossier *dossier in _dossiers)
-					[dossierIds addObject:dossier.identifier];
+				for (Dossier *dossier in _dossiers)
+					[dossierIds addObject:dossier.unwrappedId];
 
 				NSDictionary *signInfoArgs = @{@"dossiers" : dossierIds};
 

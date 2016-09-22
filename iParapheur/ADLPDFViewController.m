@@ -192,15 +192,9 @@
 			[_actionPopover dismissPopoverAnimated:NO];
 		}
 
-		NSArray *actions;
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			actions = _dossier.unwrappedActions;
-		} else {
-			actions = [ADLAPIHelper actionsForDossier:_document];
-		}
-
 		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-		((ADLActionViewController *) _actionPopover.contentViewController).actions = actions.mutableCopy;
+		((ADLActionViewController *) _actionPopover.contentViewController).actions = _dossier.unwrappedActions.mutableCopy;
+		((ADLActionViewController *) _actionPopover.contentViewController).currentDossier = _dossier;
 
 		// do something useful there
 		if ([_signatureFormat isEqualToString:@"CMS"]) {
