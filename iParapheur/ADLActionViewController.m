@@ -69,31 +69,17 @@
 
 	[super viewWillAppear:animated];
 
-	_actions = [NSMutableArray new];
+	_actions = [Dossier filterActions:@[_currentDossier]];
 	_labels = [NSMutableArray new];
-	
-	NSLog(@"Adrien - %@", _currentDossier.unwrappedActions);
 
-	if ([_currentDossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
-		[_actions addObject:@"SIGNATURE"];
-		[_labels addObject:@"Signer"];
-	}
-	else if ([_currentDossier.unwrappedActions containsObject:@"VISA"]) {
-		[_actions addObject:@"VISA"];
-		[_labels addObject:@"Viser"];
-	}
+	for (NSString *action in _actions)
+		[_labels addObject:[ADLAPIHelper actionNameForAction:action
+		                                       withPaperSign:_currentDossier.unwrappedIsSignPapier]];
 
-	if ([_currentDossier.unwrappedActions containsObject:@"TDT"]) {
-		[_actions addObject:@"TDT"];
-		[_labels addObject:@"TDT"];
-	}
-	
-	if ([_currentDossier.unwrappedActions containsObject:@"REJET"]) {
-		[_actions addObject:@"REJET"];
-		[_labels addObject:@"Rejeter"];
-	}
-	
+	// 66 pixels, times the number of rows.
+	// Row size is hardcoded in the Storyboard
 	self.preferredContentSize = CGSizeMake(300, 66 * _actions.count);
+
 	[self.tableView reloadData];
 }
 

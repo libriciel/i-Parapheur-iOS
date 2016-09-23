@@ -234,16 +234,14 @@
 - (void)updateToolBar {
 
 	if (self.isInBatchMode) {
-		if (self.navigationController.toolbarHidden) {
+
+		if (self.navigationController.toolbarHidden)
 			[self.navigationController setToolbarHidden:NO
 			                                   animated:YES];
-		}
-		NSArray *actions = self.actionsForSelectedDossiers;
-		// Normalement il n'y a toujours qu'une seule action principale.
-		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-		                                                                                             _possibleMainActions]];
-		self.secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
-		                                                                                              _possibleMainActions]];
+
+		NSMutableArray *actions = [Dossier filterActions:_selectedDossiersArray];
+		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", _possibleMainActions]];
+		_secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
 
 		NSMutableArray *toolbarItems = [[NSMutableArray alloc] initWithCapacity:3];
 
@@ -419,31 +417,6 @@
 
 	_currentPage += 1;
 	[self loadDossiersWithPage:_currentPage];
-}
-
-
-- (NSArray *)actionsForSelectedDossiers {
-
-	NSMutableArray *actions;
-
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		NSLog(@"Adrien 1");
-		for (Dossier *dossier in _selectedDossiersArray) {
-			NSLog(@"Adrien 2");
-			NSArray *dossierActions = dossier.unwrappedActions;
-
-			NSLog(@"Adrien 3");
-			if (!actions) { // the first dossier only
-				actions = [NSMutableArray arrayWithArray:dossierActions];
-			}
-			else {
-				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
-			}
-			NSLog(@"Adrien 4");
-		}
-	}
-
-	return actions;
 }
 
 
@@ -764,20 +737,13 @@ didCheckAtIndexPath:(NSIndexPath *)indexPath {
 
 	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
 
-	if ([_selectedDossiersArray containsObject:dossier]) {
+	if ([_selectedDossiersArray containsObject:dossier])
 		[_selectedDossiersArray removeObject:dossier];
-		if (_selectedDossiersArray.count == 0) {
-			_inBatchMode = NO;
-		}
-	}
-	else {
+	else
 		[_selectedDossiersArray addObject:dossier];
-		if (_selectedDossiersArray.count == 1) {
-			_inBatchMode = YES;
-		}
-	}
-	[self updateToolBar];
 
+	_inBatchMode = _selectedDossiersArray.count != 0;
+	[self updateToolBar];
 }
 
 

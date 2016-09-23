@@ -116,7 +116,7 @@ import Gloss
     // MARK: ObjC accessors
 
     func unwrappedId() -> NSString {
-        return id as NSString!
+        return NSString(string: id!)
     }
 
     func unwrappedDocuments() -> NSArray {
@@ -132,7 +132,7 @@ import Gloss
     }
 
     func unwrappedActionDemandee() -> NSString {
-        return actionDemandee as NSString!
+        return NSString(string: actionDemandee!)
     }
 
     func unwrappedIsSignPapier() -> Bool {
@@ -140,11 +140,11 @@ import Gloss
     }
 
     func unwrappedType() -> NSString {
-        return type as NSString!
+        return NSString(string: type!)
     }
 
     func unwrappedSubType() -> NSString {
-        return sousType as NSString!
+        return NSString(string: sousType!)
     }
 
     func unwrappedLimitDate() -> NSNumber {
@@ -153,5 +153,42 @@ import Gloss
 
     func unwrappedIsLocked() -> Bool {
         return isLocked!
+    }
+
+    // MARK: static utils
+
+	class func filterActions(dossierList: NSArray) -> NSMutableArray {
+
+		let result:NSMutableArray = NSMutableArray()
+
+        // Compute values
+
+        var hasVisa: Bool = true
+        var hasSignature: Bool = true
+        var hasOnlyVisa: Bool = true
+        var hasRejet: Bool = true
+        var hasTDT: Bool = true
+
+		for dossierItem in dossierList {
+            if let dossier = dossierItem as? Dossier {
+                hasVisa = hasVisa && dossier.actions!.contains("VISA")
+                hasSignature = hasSignature && (dossier.actions!.contains("SIGNATURE") || dossier.actions!.contains("VISA"))
+                hasOnlyVisa = hasOnlyVisa && !dossier.actions!.contains("SIGNATURE")
+                hasRejet = hasRejet && dossier.actions!.contains("REJET")
+                hasTDT = hasTDT && dossier.actions!.contains("TDT")
+            }
+        }
+
+        hasSignature = hasSignature && !hasOnlyVisa
+
+        // Build result
+
+        if (hasSignature) { result.addObject(NSString(string: "SIGNATURE")) }
+        else if (hasVisa) { result.addObject(NSString(string: "VISA")) }
+
+        if (hasRejet) { result.addObject(NSString(string: "REJET")) }
+        if (hasTDT) { result.addObject(NSString(string: "TDT")) }
+
+        return result
     }
 }

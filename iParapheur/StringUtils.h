@@ -52,11 +52,7 @@
 
 + (MTLValueTransformer *)getNullToNilValueTransformer;
 
-+ (MTLValueTransformer *)getNullToZeroValueTransformer;
-
 + (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer;
-
-+ (MTLValueTransformer *)getNullToEmptyArrayValueTransformer;
 
 + (NSString *)decodeUrlString:(NSString *)encodedString;
 
