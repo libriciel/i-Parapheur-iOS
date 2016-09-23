@@ -34,7 +34,6 @@
  */
 #import <Foundation/Foundation.h>
 #import <AFNetworking/AFHTTPSessionManager.h>
-#import "ADLResponseDossier.h"
 #import "ADLResponseSignInfo.h"
 #import "ADLResponseCircuit.h"
 #import "iParapheur-Swift.h"

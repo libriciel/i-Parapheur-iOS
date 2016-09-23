@@ -35,11 +35,9 @@
  */
 #import "RGDeskViewController.h"
 #import "RGWorkflowDialogViewController.h"
-#import <ISO8601DateFormatter/ISO8601DateFormatter.h>
 #import "ADLNotifications.h"
 #import "ADLRequester.h"
 #import "UIColor+CustomColors.h"
-#import "ADLResponseDossiers.h"
 #import "DeviceUtils.h"
 
 
@@ -429,29 +427,19 @@
 	NSMutableArray *actions;
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		for (ADLResponseDossier *dossier in _selectedDossiersArray) {
-			NSArray *dossierActions = [ADLAPIHelper actionsForADLResponseDossier:dossier];
+		NSLog(@"Adrien 1");
+		for (Dossier *dossier in _selectedDossiersArray) {
+			NSLog(@"Adrien 2");
+			NSArray *dossierActions = dossier.unwrappedActions;
 
+			NSLog(@"Adrien 3");
 			if (!actions) { // the first dossier only
 				actions = [NSMutableArray arrayWithArray:dossierActions];
 			}
 			else {
-				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-				                                                               dossierActions]];
+				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", dossierActions]];
 			}
-		}
-	}
-	else {
-		for (NSDictionary *dossier in self.selectedDossiersArray) {
-			NSArray *dossierActions = [ADLAPIHelper actionsForDossier:dossier];
-
-			if (!actions) { // the first dossier only
-				actions = [NSMutableArray arrayWithArray:dossierActions];
-			}
-			else {
-				[actions filterUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-				                                                               dossierActions]];
-			}
+			NSLog(@"Adrien 4");
 		}
 	}
 
@@ -490,43 +478,19 @@
 	bool dossierPossibleArchive;
 	bool dossierPossibleViser;
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		ADLResponseDossiers *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-		dossierTitre = dossier.title;
-		dossierType = dossier.type;
-		dossierSousType = dossier.sousType;
-		dossierActionDemandee = dossier.actionDemandee;
-		dossierPossibleSignature = dossier.actions && [dossier.actions containsObject:@"SIGNATURE"];
-		dossierPossibleArchive = dossier.actions && [dossier.actions containsObject:@"ARCHIVAGE"];
-		dossierPossibleViser = dossier.actions && [dossier.actions containsObject:@"VISA"];
+	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
+	dossierTitre = dossier.unwrappedTitle;
+	dossierType = dossier.unwrappedType;
+	dossierSousType = dossier.unwrappedSubType;
+	dossierActionDemandee = dossier.unwrappedActionDemandee;
+	dossierPossibleSignature = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
+	dossierPossibleArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
+	dossierPossibleViser = [dossier.unwrappedActions containsObject:@"VISA"];
 
-		if (dossier.dateLimite.longLongValue != 0)
-			dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.dateLimite.longLongValue / 1000)];
-		else
-			dossierDate = nil;
-	}
-	else {
-		NSMutableDictionary *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-		dossierTitre = dossier[@"titre"];
-		dossierType = dossier[@"type"];
-		dossierSousType = dossier[@"sousType"];
-		dossierActionDemandee = dossier[@"actionDemandee"];
-		dossierPossibleSignature = [dossier[@"actions"][@"sign"] boolValue];
-		dossierPossibleArchive = [dossier[@"actions"][@"archive"] boolValue];
-		dossierPossibleViser = [dossier[@"actions"][@"visa"] boolValue];
-
-		//Adrien TODO : check v2
-		if (dossierPossibleViser)
-			NSLog(@"Adrien visa V2 :%@", dossier);
-
-		NSString *dateLimite = dossier[@"dateLimite"];
-
-		if (dateLimite != nil) {
-			ISO8601DateFormatter *formatter = [[ISO8601DateFormatter alloc] init];
-			//[formatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH:mm:ss'Z'"];
-			dossierDate = [formatter dateFromString:dateLimite];
-		}
-	}
+	if (dossier.unwrappedLimitDate.longLongValue != 0)
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.unwrappedLimitDate.longLongValue / 1000)];
+	else
+		dossierDate = nil;
 
 	// Adapter
 
@@ -563,11 +527,7 @@
 	}
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		ADLResponseDossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-		cell.switchButton.on = [_selectedDossiersArray containsObject:dossier];
-	}
-	else {
-		NSDictionary *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
+		Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
 		cell.switchButton.on = [_selectedDossiersArray containsObject:dossier];
 	}
 
@@ -633,21 +593,10 @@
 	if (dossiers.count > 0) {
 		NSMutableArray *lockedDossiers = [NSMutableArray arrayWithCapacity:dossiers.count];
 
-		if (isVersion2) {
-			for (NSDictionary *dossier in dossiers) {
-
-				NSNumber *locked = dossier[@"locked"];
-
-				if (locked && [locked isEqualToNumber:@YES])
-					[lockedDossiers addObject:dossier];
-			}
-		}
-		else {
-			for (ADLResponseDossiers *dossier in dossiers)
-				if (dossier && dossier.locked)
-					[lockedDossiers addObject:dossier];
-		}
-
+		for (Dossier *dossier in dossiers)
+			if (dossier && dossier.unwrappedIsLocked)
+				[lockedDossiers addObject:dossier];
+		
 		if ([lockedDossiers count] > 0) {
 			dossiers = [NSMutableArray arrayWithArray:dossiers];
 			[(NSMutableArray *) dossiers removeObjectsInArray:lockedDossiers];
@@ -697,20 +646,15 @@
 	}
 	else {
 		NSMutableArray *selectedArray = [NSMutableArray new];
-		for (ADLResponseDossiers *responseDossiers in _selectedDossiersArray)
-			[selectedArray addObject:responseDossiers];
-
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue < 3) {
-			// Adrien TODO : test
-			selectedArray = [_selectedDossiersArray valueForKey:@"dossierRef"];
-		}
+		for (Dossier *dossier in _selectedDossiersArray)
+			[selectedArray addObject:dossier];
 
 		// Paper signature is just a Visa, actually
 
 		BOOL isPaperSign = YES;
 
-		for (ADLResponseDossier *dossier in selectedArray)
-			if (!dossier.isSignPapier)
+		for (Dossier *dossier in selectedArray)
+			if (!dossier.unwrappedIsSignPapier)
 				isPaperSign = NO;
 
 		// Launch popup
@@ -791,18 +735,10 @@ didSelectAtIndexPath:(NSIndexPath *)indexPath {
 
 	NSString *dossierRef;
 
-	if (isLoaded && isVersion2) {
-		if (cell.tableView == self.searchDisplayController.searchResultsTableView)
-			dossierRef = _filteredDossiersArray[(NSUInteger) indexPath.row][@"dossierRef"];
-		else
-			dossierRef = _dossiersArray[(NSUInteger) indexPath.row][@"dossierRef"];
-	}
-	else {
-		if (cell.tableView == self.searchDisplayController.searchResultsTableView)
-			dossierRef = ((ADLResponseDossiers *) _filteredDossiersArray[(NSUInteger) indexPath.row]).identifier;
-		else
-			dossierRef = ((ADLResponseDossiers *) _dossiersArray[(NSUInteger) indexPath.row]).identifier;
-	}
+	if (cell.tableView == self.searchDisplayController.searchResultsTableView)
+		dossierRef = ((Dossier *) _filteredDossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
+	else
+		dossierRef = ((Dossier *) _dossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
 
 	//
 
@@ -825,14 +761,8 @@ didSelectAtIndexPath:(NSIndexPath *)indexPath {
 didCheckAtIndexPath:(NSIndexPath *)indexPath {
 
 	[self.swipedCell hideMenuOptions];
-	//[cell.tableView deselectRowAtIndexPath:[cell.tableView indexPathForSelectedRow] animated:YES];
-	NSDictionary *dossier;
-	//if(cell.tableView == self.searchDisplayController.searchResultsTableView) {
-	dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-	//}
-	//else {
-	//    dossier = [self.dossiersArray objectAtIndex:indexPath.row];
-	//}
+
+	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
 
 	if ([_selectedDossiersArray containsObject:dossier]) {
 		[_selectedDossiersArray removeObject:dossier];
@@ -855,19 +785,13 @@ didCheckAtIndexPath:(NSIndexPath *)indexPath {
 didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		ADLResponseDossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-		_secondaryActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
-		                                                                                                                                      _possibleMainActions]];
-
-		_selectedDossiersArray = @[dossier].mutableCopy;
-		[self showMoreActions:cell];
-	}
-	else {
-		NSDictionary *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
-		                                                                                                                           _possibleMainActions]];
-		_selectedDossiersArray = @[dossier].mutableCopy;
-		[self showMoreActions:cell];
+		// Adrien
+//		Dossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
+//		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
+//		                                                                                                                                      _possibleMainActions]];
+//
+//		_selectedDossiersArray = @[dossier].mutableCopy;
+//		[self showMoreActions:cell];
 	}
 }
 
@@ -876,24 +800,15 @@ didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
 didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		ADLResponseDossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-		NSArray *mainActions = [[ADLAPIHelper actionsForADLResponseDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-		                                                                                                                                         _possibleMainActions]];
-		if (mainActions.count > 0) {
-			_mainAction = mainActions[0];
-			_selectedDossiersArray = @[dossier].mutableCopy;
-			[self mainActionPressed];
-		}
-	}
-	else {
-		NSDictionary *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-		                                                                                                                              _possibleMainActions]];
-		if (mainActions.count > 0) {
-			_mainAction = mainActions[0];
-			_selectedDossiersArray = @[dossier].mutableCopy;
-			[self mainActionPressed];
-		}
+		// Adrien
+//		Dossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
+//		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+//		                                                                                                                                         _possibleMainActions]];
+//		if (mainActions.count > 0) {
+//			_mainAction = mainActions[0];
+//			_selectedDossiersArray = @[dossier].mutableCopy;
+//			[self mainActionPressed];
+//		}
 	}
 }
 

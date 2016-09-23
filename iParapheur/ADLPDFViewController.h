@@ -40,7 +40,6 @@
 #import "ADLDrawingView.h"
 #import "ADLAPIHelper.h"
 #import "ADLRestClient.h"
-#import "ADLResponseDossier.h"
 
 
 @interface ADLPDFViewController : UIViewController

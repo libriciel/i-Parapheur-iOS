@@ -226,13 +226,14 @@ import AFNetworking
         manager.GET("/parapheur/dossiers",
                     parameters: paramsDict,
                     success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject as! NSArray)
-                     },
+                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
+                        onResponse!(dossierList)
+                    },
                     failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
-                         onError!(error)
-                     })
+                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        onError!(error)
+                    })
     }
 
     func getDossier(dossier: NSString,

@@ -98,8 +98,6 @@
 		C516EDEE1AB6DD3B00216E5F /* ir-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDEC1AB6DD3B00216E5F /* ir-signature.png */; };
 		C516EDEF1AB6DD3B00216E5F /* ir-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDED1AB6DD3B00216E5F /* ir-signature@2x.png */; };
 		C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */ = {isa = PBXBuildFile; fileRef = C524A6EF1B15F4DA003DBED9 /* ADLRestClientApi4.m */; };
-		C5628EF81A63C37700CB884C /* ADLResponseDossiers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */; };
-		C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */; };
 		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
 		C56BFEF11D1D67A500A517A5 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56BFEF01D1D67A500A517A5 /* RestClientApiV3.swift */; };
 		C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */; };
@@ -365,10 +363,6 @@
 		C516EDED1AB6DD3B00216E5F /* ir-signature@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-signature@2x.png"; sourceTree = "<group>"; };
 		C524A6EE1B15F4DA003DBED9 /* ADLRestClientApi4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi4.h; sourceTree = "<group>"; };
 		C524A6EF1B15F4DA003DBED9 /* ADLRestClientApi4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClientApi4.m; sourceTree = "<group>"; };
-		C5628EF61A63C37700CB884C /* ADLResponseDossiers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseDossiers.h; sourceTree = "<group>"; };
-		C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseDossiers.m; sourceTree = "<group>"; };
-		C5628EF91A643E8600CB884C /* ADLResponseDossier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseDossier.h; sourceTree = "<group>"; };
-		C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseDossier.m; sourceTree = "<group>"; };
 		C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseCircuit.h; sourceTree = "<group>"; };
 		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C56BFEEF1D1D67A400A517A5 /* iParapheur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -972,10 +966,6 @@
 		C5BC17951A5EEDC0003D8E98 /* ResponseModel */ = {
 			isa = PBXGroup;
 			children = (
-				C5628EF61A63C37700CB884C /* ADLResponseDossiers.h */,
-				C5628EF71A63C37700CB884C /* ADLResponseDossiers.m */,
-				C5628EF91A643E8600CB884C /* ADLResponseDossier.h */,
-				C5628EFA1A643E8600CB884C /* ADLResponseDossier.m */,
 				C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */,
 				C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */,
 				C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */,
@@ -1325,9 +1315,7 @@
 				B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */,
 				B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */,
 				C58971601AA88D420077FC84 /* RGLoginViewController.m in Sources */,
-				C5628EF81A63C37700CB884C /* ADLResponseDossiers.m in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
-				C5628EFB1A643E8600CB884C /* ADLResponseDossier.m in Sources */,
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
 				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
 				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,

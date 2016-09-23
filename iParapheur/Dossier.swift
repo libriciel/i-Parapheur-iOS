@@ -138,4 +138,20 @@ import Gloss
     func unwrappedIsSignPapier() -> Bool {
         return isSignPapier!
     }
+
+    func unwrappedType() -> NSString {
+        return type as NSString!
+    }
+
+    func unwrappedSubType() -> NSString {
+        return sousType as NSString!
+    }
+
+    func unwrappedLimitDate() -> NSNumber {
+        return dateLimite as NSNumber!
+    }
+
+    func unwrappedIsLocked() -> Bool {
+        return isLocked!
+    }
 }

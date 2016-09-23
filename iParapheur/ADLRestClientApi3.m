@@ -34,7 +34,6 @@
  */
 #import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
-#import "ADLResponseDossiers.h"
 #import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
 
@@ -196,21 +195,10 @@
 	                      size:@(size)
 	                filterJson:filterJson
 	                onResponse:^(NSArray *response) {
-
-		                NSError *error;
-		                NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
-		                                                            fromJSONArray:response
-		                                                                    error:&error];
-
-		                // Parse check and callback
-
-		                if (error)
-			                failure(error);
-		                else
-			                success(responseDossiers);
+		               success(response);
 	                }
-	                   onError:^(NSError *error) {
-		                   failure(error);
+					   onError:^(NSError *error) {
+						   failure(error);
 	                   }];
 }
 
