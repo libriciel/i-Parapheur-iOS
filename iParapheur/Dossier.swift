@@ -91,7 +91,7 @@ import Gloss
         acteursVariables = ("acteursVariables" <~~ json) ?? []
         metadatas = ("metadatas" <~~ json) ?? [:]
         dateEmission = ("dateEmission" <~~ json) ?? -1
-        dateLimite = ("dateLimite" <~~ json) ?? -1
+        dateLimite = ("dateLimite" <~~ json) ?? 0
 
         hasRead = ("hasRead" <~~ json) ?? false
         includeAnnexes = ("includeAnnexes" <~~ json) ?? false
