@@ -106,7 +106,7 @@
 
 	_currentPage = 0;
 	_dossiersArray = [NSMutableArray new];
-	_possibleMainActions = @[@"VISER", @"SIGNER", @"TDT", @"MAILSEC", @"ARCHIVER"];
+	_possibleMainActions = @[@"VISA", @"SIGNATURE", @"TDT", @"MAILSEC", @"ARCHIVER"];
 	_actionsWithoutAnnotation = @[@"RECUPERER", @"SUPPRIMER", @"SECRETARIAT"];
 
 	SHOW_HUD

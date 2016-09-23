@@ -96,14 +96,14 @@
 	_navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:_action
 	                                                   withPaperSign:_isPaperSign];
 
-	if ([_action isEqualToString:@"SIGNER" ] && !_isPaperSign) {
+	if ([_action isEqualToString:@"SIGNATURE" ] && !_isPaperSign) {
 		_navigationBar.topItem.rightBarButtonItem.enabled = NO;
 	}
 	else {
 		_certificateLabel.hidden = YES;
 		_certificatesTableView.hidden = YES;
 
-		if ([_action isEqualToString:@"REJETER"])
+		if ([_action isEqualToString:@"REJET"])
 			_annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
 	}
 
@@ -153,7 +153,7 @@
 			@"annotPriv" : _annotationPrivee.text,
 			@"bureauCourant" : _bureauCourant}.mutableCopy;
 
-	if ([_action isEqualToString:@"VISER"] || ([_action isEqualToString:@"SIGNER"] && _isPaperSign)) {
+	if ([_action isEqualToString:@"VISA"] || ([_action isEqualToString:@"SIGNATURE"] && _isPaperSign)) {
 		[self showHud];
 
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
@@ -192,7 +192,7 @@
 		           andArgs:args
 		          delegate:self];
 	}
-	else if ([self.action isEqualToString:@"REJETER"]) {
+	else if ([self.action isEqualToString:@"REJET"]) {
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
 
@@ -233,7 +233,7 @@
 		}
 
 	}
-	else if ([self.action isEqualToString:@"SIGNER"]) {
+	else if ([self.action isEqualToString:@"SIGNATURE"]) {
 		// create signatures array
 		PrivateKey *pkey = _currentPKey;
 
@@ -559,7 +559,7 @@
 		if ((circuits[dossier.unwrappedId] == nil) || (((ADLResponseCircuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
 			isSignMandatory = true;
 
-	if ([_action isEqualToString:@"SIGNER"] && (!_isPaperSign))
+	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
 		_paperSignatureButton.hidden = isSignMandatory;
 }
 

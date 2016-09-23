@@ -85,7 +85,7 @@ import Gloss
         nomTdT = ("nomTdT" <~~ json) ?? ""
         xPathSignature = ("xPathSignature" <~~ json) ?? ""
 
-        actionDemandee = ("actionDemandee" <~~ json) ?? (Action.VISA as? String)
+        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
         actions = ("actions" <~~ json) ?? []
         documents = ("documents" <~~ json) ?? []
         acteursVariables = ("acteursVariables" <~~ json) ?? []
@@ -102,7 +102,12 @@ import Gloss
         isSignPapier = ("isSignPapier" <~~ json) ?? false
         isXemEnabled = ("isXemEnabled" <~~ json) ?? false
         isReadingMandatory = ("readingMandatory" <~~ json) ?? false
-    }
+
+		// Sometimes it happens
+		if (!(actions!.contains(actionDemandee!))) {
+			actions!.append(actionDemandee!)
+		}
+	}
 
     func toJSON() -> JSON? {
         return nil /* Not used */

@@ -34,7 +34,6 @@
  */
 #import "ADLActionViewController.h"
 #import "RGWorkflowDialogViewController.h"
-#import "ADLSingletonState.h"
 #import "ADLActionCell.h"
 #import "ADLAPIHelper.h"
 
@@ -70,35 +69,30 @@
 
 	[super viewWillAppear:animated];
 
-	if (_actions == nil)
-		_actions = [[NSMutableArray alloc] init];
+	_actions = [NSMutableArray new];
+	_labels = [NSMutableArray new];
+	
+	NSLog(@"Adrien - %@", _currentDossier.unwrappedActions);
 
-	/*else {
-	 [_actions removeAllObjects];
-	 }*/
-
-	if (_labels == nil)
-		_labels = [[NSMutableArray alloc] init];
-	else
-		[_labels removeAllObjects];
-
-	if (!_signatureEnabled)
-		[_actions removeObject:@"SIGNER"];
-
-	for (NSString *action in _actions)
-		[_labels addObject:[ADLAPIHelper actionNameForAction:action]];
-
-	if (_signatureEnabled && ![_actions containsObject:@"SIGNER"]) {
-		[_actions addObject:@"SIGNER"];
+	if ([_currentDossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
+		[_actions addObject:@"SIGNATURE"];
 		[_labels addObject:@"Signer"];
-	} else if (_visaEnabled) {
-		[_actions addObject:@"VISER"];
+	}
+	else if ([_currentDossier.unwrappedActions containsObject:@"VISA"]) {
+		[_actions addObject:@"VISA"];
 		[_labels addObject:@"Viser"];
 	}
 
-	[_actions addObject:@"REJETER"];
-	[_labels addObject:@"Rejeter"];
-
+	if ([_currentDossier.unwrappedActions containsObject:@"TDT"]) {
+		[_actions addObject:@"TDT"];
+		[_labels addObject:@"TDT"];
+	}
+	
+	if ([_currentDossier.unwrappedActions containsObject:@"REJET"]) {
+		[_actions addObject:@"REJET"];
+		[_labels addObject:@"Rejeter"];
+	}
+	
 	self.preferredContentSize = CGSizeMake(300, 66 * _actions.count);
 	[self.tableView reloadData];
 }
@@ -143,7 +137,7 @@
 
 	cell.actionLabel.text = _labels[(NSUInteger) indexPath.row];
 
-	if ([_actions[(NSUInteger) indexPath.row] isEqualToString:@"REJETER"])
+	if ([_actions[(NSUInteger) indexPath.row] isEqualToString:@"REJET"])
 		cell.imageView.image = [UIImage imageNamed:@"rejeter.png"];
 	else
 		[cell.imageView setImage:[UIImage imageNamed:@"viser.png"]];
