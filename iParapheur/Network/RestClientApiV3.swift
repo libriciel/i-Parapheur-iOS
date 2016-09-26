@@ -61,6 +61,14 @@ import AFNetworking
 
             return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
         }
+
+		// GET needs a JSONResponseSerializer,
+		// POST/PUT/DELETE needs an HTTPResponseSerializer
+
+		let compoundResponseSerializer = AFCompoundResponseSerializer.compoundSerializerWithResponseSerializers([AFJSONResponseSerializer(),
+                                                                                                                 AFHTTPResponseSerializer()])
+		manager.responseSerializer = compoundResponseSerializer
+
     }
 
     // MARK: Static methods
