@@ -357,14 +357,15 @@ NSData* X509_to_NSData(X509 *cert) {
 	NSArray *pkeys = [self listPrivateKeys];
 	for (PrivateKey *key in pkeys) {
 		NSError *error = nil;
-		if ([[NSFileManager defaultManager] removeItemAtPath:[key p12Filename] error:&error] != YES)
-			NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+		if (![[NSFileManager defaultManager] removeItemAtPath:key.p12Filename
+		                                                error:&error])
+			NSLog(@"Unable to delete file: %@", error.localizedDescription);
 		[self.managedObjectContext deleteObject:key];
 	}
 	NSError *error;
 	if (![self.managedObjectContext save:&error]) {
 		// Something's gone seriously wrong
-		NSLog(@"Error clearing KeyStore: %@", [error localizedDescription]);
+		NSLog(@"Error clearing KeyStore: %@", error.localizedDescription);
 		
 	}
 }
