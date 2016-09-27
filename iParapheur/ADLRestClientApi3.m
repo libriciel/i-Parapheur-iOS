@@ -154,8 +154,8 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_swiftManager getApiVersion:^(int level) {
-		 success(@(level));
+	[_swiftManager getApiVersion:^(NSNumber *level) {
+		 success(level);
 	 }
 	                     onError:^(NSError *error) {
 		                     failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString

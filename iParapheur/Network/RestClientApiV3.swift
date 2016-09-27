@@ -162,7 +162,7 @@ import AFNetworking
 
     // MARK: Get methods
 
-    func getApiVersion(onResponse: ((Int) -> Void)?,
+    func getApiVersion(onResponse: ((NSNumber) -> Void)?,
                        onError: ((NSError) -> Void)?) {
 
         manager.GET("/parapheur/api/getApiLevel",
@@ -176,7 +176,7 @@ import AFNetworking
                             return
                         }
 
-                        onResponse!(apiLevel.level!)
+						onResponse!(NSNumber(integer: apiLevel.level!))
                     },
                     failure: {
                         (task: NSURLSessionDataTask!, error: NSError!) in
