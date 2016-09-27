@@ -1,49 +1,38 @@
 /*
- * Version 1.1
- * CeCILL Copyright (c) 2012, SKROBS, ADULLACT-projet
- * Initiated by ADULLACT-projet S.A.
- * Developped by SKROBS
+ * Copyright 2012-2016, Adullact-Projet.
+ * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
- * Ce logiciel est un programme informatique servant à faire circuler des
- * documents au travers d'un circuit de validation, où chaque acteur vise
- * le dossier, jusqu'à l'étape finale de signature.
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
- * sur le site "http://www.cecill.info".
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
  */
-
-//
-//  RGMasterViewController.m
-//  iParapheur
-//
-//
-
 #import "RGMasterViewController.h"
 #import "ADLNotifications.h"
 #import "ADLRequester.h"
@@ -87,25 +76,25 @@
 
 	[self hidesEveryThing];
 	self.navigationBar.topItem.title = _dossier[@"titre"];
-	[[self typeLabel] setText:_dossier[@"type"]];
-	[[self sousTypeLabel] setText:_dossier[@"sousType"]];
+	self.typeLabel.text = _dossier[@"type"];
+	self.sousTypeLabel.text = _dossier[@"sousType"];
 	documents = _dossier[@"documents"];
 
 	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getCircuit:dossierRef
 		                success:^(ADLResponseCircuit *responseCircuit) {
-		                    __strong typeof(weakSelf) strongSelf = weakSelf;
-		                    if (strongSelf) {
-			                    NSMutableArray *responseArray = [[NSMutableArray alloc] init];
-			                    [responseArray addObjectsFromArray:responseCircuit.etapes];
+			                __strong typeof(weakSelf) strongSelf = weakSelf;
+			                if (strongSelf) {
+				                NSMutableArray *responseArray = [[NSMutableArray alloc] init];
+				                [responseArray addObjectsFromArray:responseCircuit.etapes];
 
-			                    [strongSelf refreshCircuits:responseArray];
-		                    }
+				                [strongSelf refreshCircuits:responseArray];
+			                }
 		                }
-			            failure:^(NSError *error) {
+		                failure:^(NSError *error) {
 			                NSLog(@"getCircuit error : %@", error);
-			            }];
+		                }];
 	}
 	else {
 		dossierRef = _dossier[@"dossierRef"];
@@ -131,14 +120,12 @@
 }
 
 
-- (void)viewDidUnload {
+- (void)didReceiveMemoryWarning {
 
 	[self setCircuitTable:nil];
-
-	//unregister observer
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
+
+	[super didReceiveMemoryWarning];
 }
 
 
@@ -173,7 +160,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
 		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	} else {
 		return YES;
@@ -196,16 +183,16 @@
 		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 		                dossier:dossierRef
-			            success:^(ADLResponseDossier *responseDossier) {
+		                success:^(Dossier *responseDossier) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                [ADLSingletonState sharedSingletonState].dossierCourantObject = responseDossier;
 				                [strongSelf getDossierDidEndWithREquestAnswer];
 			                }
-			            }
-			            failure:^(NSError *error) {
+		                }
+		                failure:^(NSError *error) {
 			                NSLog(@"getDossier error %@ : ", error.localizedDescription);
-			            }];
+		                }];
 	}
 	else {
 		NSDictionary *args = @{@"dossierRef" : _dossierRef};
@@ -213,7 +200,7 @@
 		ADLRequester *requester = [ADLRequester sharedRequester];
 		[requester request:GETDOSSIER_API
 		           andArgs:args
-			      delegate:self];
+		          delegate:self];
 	}
 
 	SHOW_HUD
@@ -251,9 +238,9 @@
 	NSDictionary *object = _objects[(NSUInteger) indexPath.row];
 	// cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [object objectForKey:@"parapheurName"], [object objectForKey:@"actionDemandee"]];
 
-	[[cell parapheurName] setText:object[@"parapheurName"]];
+	cell.parapheurName.text = object[@"parapheurName"];
 	if ([object[@"approved"] intValue] == 1) {
-		[[cell validateurName] setText:object[@"signataire"]];
+		cell.validateurName.text = object[@"signataire"];
 		cell.annotation.text = object[@"annotPub"];
 	}
 	else {
@@ -267,10 +254,10 @@
 
 		NSDate *validationDate;
 
-		if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			if ([object[@"dateValidation"] isKindOfClass:[NSNumber class]]) {
 				NSNumber *dateMs = object[@"dateValidation"];
-				validationDate = [NSDate dateWithTimeIntervalSince1970:[dateMs doubleValue] / 1000];
+				validationDate = [NSDate dateWithTimeIntervalSince1970:dateMs.doubleValue / 1000];
 			}
 		}
 		else {
@@ -280,14 +267,14 @@
 		}
 
 		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-		[outputFormatter setDateFormat:@"'le' dd/MM/yyyy 'à' HH:mm"];
+		outputFormatter.dateFormat = @"'le' dd/MM/yyyy 'à' HH:mm";
 
 		NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
 
-		[[cell validationDate] setText:validationDateStr];
+		cell.validationDate.text = validationDateStr;
 	}
 	else {
-		[[cell validationDate] setText:nil];
+		cell.validationDate.text = nil;
 	}
 
 
@@ -301,9 +288,9 @@
 
 	NSString *action = [object[@"actionDemandee"] lowercaseString];
 
-	[[cell etapeTypeIcon] setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png",
-	                                                                              imagePrefix,
-	                                                                              action]]];
+	cell.etapeTypeIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png",
+	                                                                          imagePrefix,
+	                                                                          action]];
 
 	return cell;
 }
@@ -343,8 +330,8 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		NSDate *object = _objects[indexPath.row];
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		NSDate *object = _objects[(NSUInteger) indexPath.row];
 		self.detailViewController.detailItem = object;
 	}
 }
@@ -356,7 +343,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSDictionary *args = @{@"dossier" : dossierRef};
 	[requester request:@"getCircuit"
 	           andArgs:args
-		      delegate:self];
+	          delegate:self];
 
 	SHOW_HUD
 }
@@ -427,27 +414,27 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf"
 	                                                   inDirectory:nil];
 
-	NSString *filePath = [pdfs lastObject];
+	NSString *filePath = pdfs.lastObject;
 
 	ReaderDocument *document = [[ReaderDocument alloc] initWithFilePath:filePath
 	                                                           password:nil];
 
 	readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-	[readerViewController setDelegate:self];
+	readerViewController.delegate = self;
 
 	readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
-	[[self splitViewController] presentViewController:readerViewController
-	                                         animated:YES
-			                               completion:nil];
+	[self.splitViewController presentViewController:readerViewController
+	                                       animated:YES
+	                                     completion:nil];
 }
 
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController {
 	// do nothing for now
-	[[self splitViewController] dismissViewControllerAnimated:YES
-	                                               completion:nil];
+	[self.splitViewController dismissViewControllerAnimated:YES
+	                                             completion:nil];
 }
 
 
@@ -486,23 +473,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)hidesEveryThing {
 
-	[self setHiddenForEveryone:YES];
+	self.hiddenForEveryone = YES;
 }
 
 
 - (void)showsEveryThing {
 
-	[self setHiddenForEveryone:NO];
+	self.hiddenForEveryone = NO;
 }
 
 
 - (void)setHiddenForEveryone:(BOOL)val {
 
-	[dossierName setHidden:val];
-	[typeLabel setHidden:val];
-	[sousTypeLabel setHidden:val];
-	[circuitTable setHidden:val];
-	[circuitLabel setHidden:val];
+	dossierName.hidden = val;
+	typeLabel.hidden = val;
+	sousTypeLabel.hidden = val;
+	circuitTable.hidden = val;
+	circuitLabel.hidden = val;
 }
 
 

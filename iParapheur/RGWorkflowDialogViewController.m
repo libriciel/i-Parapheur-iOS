@@ -1,49 +1,38 @@
 /*
- * Version 1.1
- * CeCILL Copyright (c) 2012, SKROBS, ADULLACT-projet
- * Initiated by ADULLACT-projet S.A.
- * Developped by SKROBS
+ * Copyright 2012-2016, Adullact-Projet.
+ * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
- * Ce logiciel est un programme informatique servant à faire circuler des
- * documents au travers d'un circuit de validation, où chaque acteur vise
- * le dossier, jusqu'à l'étape finale de signature.
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
- * sur le site "http://www.cecill.info".
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
  */
-
-//
-//  RGWorkflowDialogViewController.m
-//  iParapheur
-//
-//
-
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
@@ -52,7 +41,7 @@
 #import "ADLRequester.h"
 #import "ADLAPIHelper.h"
 #import "LGViewHUD.h"
-#import <NSData+Base64/NSData+Base64.h>
+#import <NSData_Base64/NSData+Base64.h>
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 
@@ -107,23 +96,22 @@
 	_navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:_action
 	                                                   withPaperSign:_isPaperSign];
 
-	if ([_action isEqualToString:@"SIGNER" ] && !_isPaperSign) {
+	if ([_action isEqualToString:@"SIGNATURE" ] && !_isPaperSign) {
 		_navigationBar.topItem.rightBarButtonItem.enabled = NO;
 	}
 	else {
 		_certificateLabel.hidden = YES;
 		_certificatesTableView.hidden = YES;
 
-		if ([_action isEqualToString:@"REJETER"])
+		if ([_action isEqualToString:@"REJET"])
 			_annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
 	}
 
 	// Paper Signature
 
 	BOOL isSignPapier = true;
-	for (ADLResponseDossier *dossier in _dossiers) {
-		isSignPapier = isSignPapier && dossier.isSignPapier;
-	}
+	for (Dossier *dossier in _dossiers)
+		isSignPapier = isSignPapier && dossier.unwrappedIsSignPapier;
 
 	[_paperSignatureButton addTarget:self
 	                          action:@selector(onPaperSignatureButtonClicked:)
@@ -156,8 +144,8 @@
 	ADLRequester *requester = [ADLRequester sharedRequester];
 
 	NSMutableArray *dossierIds = [NSMutableArray new];
-	for (ADLResponseDossier *dossier in _dossiers)
-		[dossierIds addObject:dossier.identifier];
+	for (Dossier *dossier in _dossiers)
+		[dossierIds addObject:dossier.unwrappedId];
 
 	NSMutableDictionary *args = @{
 			@"dossiers" : dossierIds,
@@ -165,13 +153,13 @@
 			@"annotPriv" : _annotationPrivee.text,
 			@"bureauCourant" : _bureauCourant}.mutableCopy;
 
-	if ([_action isEqualToString:@"VISER"] || ([_action isEqualToString:@"SIGNER"] && _isPaperSign)) {
+	if ([_action isEqualToString:@"VISA"] || ([_action isEqualToString:@"SIGNATURE"] && _isPaperSign)) {
 		[self showHud];
 
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			for (ADLResponseDossier *dossier in _dossiers) {
+			for (Dossier *dossier in _dossiers) {
 				__weak typeof(self) weakSelf = self;
-				[_restClient actionViserForDossier:dossier.identifier
+				[_restClient actionViserForDossier:dossier.unwrappedId
 				                         forBureau:_bureauCourant
 				              withPublicAnnotation:_annotationPublique.text
 				             withPrivateAnnotation:_annotationPrivee.text
@@ -204,14 +192,14 @@
 		           andArgs:args
 		          delegate:self];
 	}
-	else if ([self.action isEqualToString:@"REJETER"]) {
+	else if ([self.action isEqualToString:@"REJET"]) {
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
 
 			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-				for (ADLResponseDossier *dossier in _dossiers) {
+				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
-					[_restClient actionRejeterForDossier:dossier.identifier
+					[_restClient actionRejeterForDossier:dossier.unwrappedId
 					                           forBureau:_bureauCourant
 					                withPublicAnnotation:_annotationPublique.text
 					               withPrivateAnnotation:_annotationPrivee.text
@@ -245,7 +233,7 @@
 		}
 
 	}
-	else if ([self.action isEqualToString:@"SIGNER"]) {
+	else if ([self.action isEqualToString:@"SIGNATURE"]) {
 		// create signatures array
 		PrivateKey *pkey = _currentPKey;
 
@@ -313,11 +301,11 @@
 		NSMutableArray *dossiers = [NSMutableArray new];
 		NSMutableArray *signatures = [NSMutableArray new];
 
-		for (ADLResponseDossier *dossier in _dossiers) {
-			NSDictionary *signInfo = answer[dossier.identifier];
+		for (Dossier *dossier in _dossiers) {
+			NSDictionary *signInfo = answer[dossier.unwrappedId];
 
 			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-				[dossiers addObject:dossier.identifier];
+				[dossiers addObject:dossier.unwrappedId];
 				[hashes addObject:signInfo[@"hash"]];
 			}
 
@@ -401,11 +389,11 @@
 	NSMutableArray *dossiers = [NSMutableArray new];
 	NSMutableArray *signatures = [NSMutableArray new];
 
-	for (ADLResponseDossier *dossier in _dossiers) {
+	for (Dossier *dossier in _dossiers) {
 		NSDictionary *signInfo = responseSignInfo.signatureInformations;
 
 		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-			[dossiers addObject:dossier.identifier];
+			[dossiers addObject:dossier.unwrappedId];
 			[hashes addObject:signInfo[@"hash"]];
 		} else {
 			[DeviceUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
@@ -515,11 +503,11 @@
 		return;
 
 	__weak typeof(self) weakSelf = self;
-	[_restClient getCircuit:((ADLResponseDossier *) _dossiers[index]).identifier
+	[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
 	                success:^(ADLResponseCircuit *circuit) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
-			                circuits[((ADLResponseDossier *) _dossiers[index]).identifier] = circuit;
+			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
 			                [strongSelf checkSignPapierButtonVisibility];
 			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
 		                }
@@ -527,7 +515,7 @@
 	                failure:^(NSError *error) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
-			                circuits[((ADLResponseDossier *) _dossiers[index]).identifier] = nil;
+			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = nil;
 			                [strongSelf checkSignPapierButtonVisibility];
 			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
 		                }
@@ -548,7 +536,7 @@
 	}
 
 	__weak typeof(self) weakSelf = self;
-	[_restClient actionSwitchToPaperSignatureForDossier:((ADLResponseDossier *) _dossiers[index]).identifier
+	[_restClient actionSwitchToPaperSignatureForDossier:((Dossier *) _dossiers[index]).unwrappedId
 	                                          forBureau:_bureauCourant
 	                                            success:^(NSArray *success) {
 		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -567,11 +555,11 @@
 
 	BOOL isSignMandatory = false;
 
-	for (ADLResponseDossier *dossier in _dossiers)
-		if ((circuits[dossier.identifier] == nil) || (((ADLResponseCircuit *) circuits[dossier.identifier]).isDigitalSignatureMandatory))
+	for (Dossier *dossier in _dossiers)
+		if ((circuits[dossier.unwrappedId] == nil) || (((ADLResponseCircuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
 			isSignMandatory = true;
 
-	if ([_action isEqualToString:@"SIGNER"] && (!_isPaperSign))
+	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
 		_paperSignatureButton.hidden = isSignMandatory;
 }
 
@@ -677,9 +665,9 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 			_p12password = passwordTextField.text;
 
 			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-				for (ADLResponseDossier *dossier in _dossiers) {
+				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
-					[_restClient getSignInfoForDossier:dossier.identifier
+					[_restClient getSignInfoForDossier:dossier.unwrappedId
 					                         andBureau:_bureauCourant
 					                           success:^(ADLResponseSignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -695,8 +683,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 				ADLRequester *requester = [ADLRequester sharedRequester];
 				NSMutableArray *dossierIds = [NSMutableArray new];
 
-				for (ADLResponseDossier *dossier in _dossiers)
-					[dossierIds addObject:dossier.identifier];
+				for (Dossier *dossier in _dossiers)
+					[dossierIds addObject:dossier.unwrappedId];
 
 				NSDictionary *signInfoArgs = @{@"dossiers" : dossierIds};
 
