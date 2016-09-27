@@ -287,7 +287,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	//			- followed with action name, and a ?	    				         importCertificate\?
 	//			- then, catching the first group, non greedy						 ([^&]*)=(.*?)
 	//          - then, any other group, if exists, till the end of line (max 3)     (?:&([^&]*)=(.*?))?    => 3 times
-
 	NSString *importCertifPattern = @"^iparapheur:\\/\\/importCertificate\\?([^&]*)=(.*?)(?:&([^&]*)=(.*?))?(?:&([^&]*)=(.*?))?(?:&([^&]*)=(.*?))?$";
 
 	NSRegularExpression *isImportCertifRegex = [NSRegularExpression regularExpressionWithPattern:importCertifPattern
@@ -482,8 +481,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
 		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
 
-		[vault addCredentialForHost:[def host]
-		                   andLogin:[def username]
+		[vault addCredentialForHost:def.host
+		                   andLogin:def.username
 		                 withTicket:API_LOGIN_GET_TICKET(answer)];
 	}
 
@@ -514,7 +513,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 	ADLCertificateAlertView *pwdAlertView = (ADLCertificateAlertView *) alertView;
 
 	if (alertView.tag == RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT) {
-
 		if (buttonIndex == 1) {
 			UITextField *passwordTextField = [alertView textFieldAtIndex:0];
 
@@ -522,7 +520,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 			           withPassword:passwordTextField.text];
 		}
 		else {
-
 			ADLCertificateAlertView *realert = [[ADLCertificateAlertView alloc] initWithTitle:@"Voulez-vous supprimer ce certificat ?"
 			                                                                          message:pwdAlertView.p12Path.lastPathComponent
 			                                                                         delegate:self
@@ -533,14 +530,11 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 			realert.p12Path = pwdAlertView.p12Path;
 			realert.alertViewStyle = UIAlertViewStyleDefault;
 			[realert show];
-
 		}
 	}
 	else if (alertView.tag == RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_DELETE) {
-
-		if (buttonIndex == 1) {
+		if (buttonIndex == 1)
 			[self deleteCertificate:pwdAlertView.p12Path];
-		}
 	}
 }
 

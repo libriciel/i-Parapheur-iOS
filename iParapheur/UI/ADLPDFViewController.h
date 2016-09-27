@@ -40,39 +40,34 @@
 #import "ADLDrawingView.h"
 #import "ADLAPIHelper.h"
 #import "ADLRestClient.h"
-#import "ADLResponseDossier.h"
 
 
 @interface ADLPDFViewController : UIViewController
-<ADLParapheurWallDelegateProtocol,
-ReaderViewControllerDelegate,
-UIPopoverControllerDelegate,
-ADLDrawingViewDataSource,
-LGViewHUDDelegate>
+		<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
 
-@property (nonatomic, strong) ADLRestClient *restClient;
+@property(nonatomic, strong) ADLRestClient *restClient;
 
-@property (strong, nonatomic) id detailItem;
-@property (strong, nonatomic) Document *document;
-@property (strong, nonatomic) Dossier *dossier;
-@property (strong, nonatomic) NSString *dossierRef;
+@property(strong, nonatomic) id detailItem;
+@property(strong, nonatomic) Document *document;
+@property(strong, nonatomic) Dossier *dossier;
+@property(strong, nonatomic) NSString *dossierRef;
 
-@property (strong, nonatomic) ReaderViewController* readerViewController;
-@property (strong, nonatomic) ReaderDocument *readerDocument;
-@property (strong, nonatomic) UIPopoverController *documentsPopover;
-@property (strong, nonatomic) UIPopoverController *actionPopover;
+@property(strong, nonatomic) ReaderViewController *readerViewController;
+@property(strong, nonatomic) ReaderDocument *readerDocument;
+@property(strong, nonatomic) UIPopoverController *documentsPopover;
+@property(strong, nonatomic) UIPopoverController *actionPopover;
 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *detailsButton;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *documentsButton;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *actionButton;
+@property(strong, nonatomic) IBOutlet UIBarButtonItem *detailsButton;
+@property(strong, nonatomic) IBOutlet UIBarButtonItem *documentsButton;
+@property(strong, nonatomic) IBOutlet UIBarButtonItem *actionButton;
 
-@property (strong, nonatomic) NSArray* annotations;
-@property (strong, nonatomic) NSArray* circuit;
+@property(strong, nonatomic) NSArray *annotations;
+@property(strong, nonatomic) NSArray *circuit;
 
-@property (strong, nonatomic) NSString* signatureFormat;
-@property (assign, nonatomic) BOOL visaEnabled;
+@property(strong, nonatomic) NSString *signatureFormat;
+@property(assign, nonatomic) BOOL visaEnabled;
 
-@property (assign, nonatomic) BOOL isDocumentPrincipal;
+@property(assign, nonatomic) BOOL isDocumentPrincipal;
 
 
 - (void)requestAnnotations;

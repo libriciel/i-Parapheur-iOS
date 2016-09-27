@@ -34,31 +34,35 @@
  */
 import Foundation
 
-enum Action: String {
-
-    case VISA
-    case SIGNATURE
-    case TDT
-    case TDT_ACTES
-    case TDT_HELIOS
-    case ARCHIVAGE
-    case MAILSEC
-    case REJET
-    case SECRETARIAT
-    case REMORD
-    case AVIS_COMPLEMENTAIRE
-    case TRANSFERT_SIGNATURE
-    case AJOUT_SIGNATURE
-    case EMAIL
-    case ENREGISTRER
-    case SUPPRESSION
-    case JOURNAL
-
-    // TODO :
-
-    case TRANSFERT_ACTION
-    case GET_ATTEST
-    case RAZ
-    case EDITION
-    case ENCHAINER_CIRCUIT;
-}
+/**
+ * Those are not used yet, ObjC is really sloppy with Swift enums.
+ * TODO : Use real Action when everything would be Swift-ified
+ */
+//enum Action: String {
+//
+//    case VISA
+//    case SIGNATURE
+//    case TDT
+//    case TDT_ACTES
+//    case TDT_HELIOS
+//    case ARCHIVAGE
+//    case MAILSEC
+//    case REJET
+//    case SECRETARIAT
+//    case REMORD
+//    case AVIS_COMPLEMENTAIRE
+//    case TRANSFERT_SIGNATURE
+//    case AJOUT_SIGNATURE
+//    case EMAIL
+//    case ENREGISTRER
+//    case SUPPRESSION
+//    case JOURNAL
+//
+//    // TODO :
+//
+//    case TRANSFERT_ACTION
+//    case GET_ATTEST
+//    case RAZ
+//    case EDITION
+//    case ENCHAINER_CIRCUIT;
+//}

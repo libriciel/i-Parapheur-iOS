@@ -33,6 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
+#import "iParapheur-Swift.h"
 
 @interface ADLActionViewController : UITableViewController
 
@@ -40,6 +41,7 @@
 @property (nonatomic, assign) BOOL signatureEnabled;
 @property (nonatomic, assign) BOOL visaEnabled;
 @property (nonatomic, strong) NSMutableArray *actions;
+@property (nonatomic, strong) Dossier *currentDossier;
 @property (nonatomic, strong) NSMutableArray *labels;
 
 

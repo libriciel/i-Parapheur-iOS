@@ -112,7 +112,7 @@ import Gloss
     // MARK: ObjC accessors
 
     func unwrappedId() -> NSString {
-        return id as NSString!
+        return NSString(string: id!)
     }
 
     func unwrappedPage() -> NSNumber {
@@ -120,7 +120,7 @@ import Gloss
     }
 
     func setUnwrappedPage(i: NSNumber) {
-        page = i as Int
+		page = Int(i)
     }
 
     func unwrappedRect() -> NSValue {
@@ -132,27 +132,27 @@ import Gloss
     }
 
     func unwrappedText() -> NSString {
-        return text as NSString!
+        return NSString(string: text!)
     }
 
     func setUnwrappedText(txt: NSString) {
-        text = txt as String
+        text = txt as String?
     }
 
     func setUnwrappedAuthor(txt: NSString) {
-        author = txt as String
+        author = txt as String?
     }
 
     func unwrappedAuthor() -> NSString {
-        return author as NSString!
+        return NSString(string: author!)
     }
 
     func unwrappedDocumentId() -> NSString {
-        return documentId as NSString!
+        return NSString(string: documentId!)
     }
 
     func setUnwrappedDocumentId(txt: NSString) {
-        documentId = txt as String
+        documentId = txt as String?
     }
 
     func unwrappedDate() -> NSString {
@@ -172,11 +172,11 @@ import Gloss
     }
 
     func setUnwrappedEditable(value: NSNumber) {
-        editable = value as Bool
+        editable = value as Bool?
     }
 
     func unwrappedType() -> NSString {
-        return type as NSString!
+        return NSString(string: type!)
     }
 	
 }

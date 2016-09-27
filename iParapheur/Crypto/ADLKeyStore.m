@@ -306,16 +306,19 @@ NSData* X509_to_NSData(X509 *cert) {
 }
 
 - (NSURL *)applicationDataDirectory {
-	NSString *appBundleId = [NSBundle mainBundle].bundleIdentifier;
+	NSString *appBundleId = [[NSBundle mainBundle] bundleIdentifier];
 	
 	NSError *error;
-	NSString *result = [self findOrCreateDirectory:NSApplicationSupportDirectory
-	                                      inDomain:NSUserDomainMask
-	                           appendPathComponent:appBundleId
-	                                         error:&error];
+	NSString *result =
+	[self
+	 findOrCreateDirectory:NSApplicationSupportDirectory
+	 inDomain:NSUserDomainMask
+	 appendPathComponent:appBundleId
+	 error:&error];
 	if (error)
+	{
 		NSLog(@"Unable to find or create application support directory:\n%@", error);
-
+	}
 	return [NSURL fileURLWithPath:result];
 }
 
@@ -323,18 +326,15 @@ NSData* X509_to_NSData(X509 *cert) {
 -(void)recursiveCopyURL:(NSURL*)from
 				  toUrl:(NSURL*)to {
 	
-	NSFileManager* fileManager = [NSFileManager defaultManager];
-	NSArray *fileList = [fileManager contentsOfDirectoryAtPath:from.path
-	                                                     error:nil];
-
+	NSFileManager* fileManager = [NSFileManager defaultManager]
+	;
+	NSArray *fileList = [fileManager contentsOfDirectoryAtPath:[from path] error:nil];
 	for (NSString *s in fileList) {
 		NSURL *newFileURL = [to URLByAppendingPathComponent:s];
 		NSURL *oldFileURL = [from URLByAppendingPathComponent:s];
-		if (![fileManager fileExistsAtPath:newFileURL.path]) {
+		if (![fileManager fileExistsAtPath:[newFileURL path]]) {
 			//File does not exist, copy it
-			[fileManager copyItemAtPath:oldFileURL.path
-			                     toPath:newFileURL.path
-			                      error:nil];
+			[fileManager copyItemAtPath:[oldFileURL path] toPath:[newFileURL path] error:nil];
 		} else {
 			// NSLog(@"File exists: %@", [newFileURL path]);
 		}
@@ -359,31 +359,28 @@ NSData* X509_to_NSData(X509 *cert) {
 		NSError *error = nil;
 		if (![[NSFileManager defaultManager] removeItemAtPath:key.p12Filename
 		                                                error:&error])
-			NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+			NSLog(@"Unable to delete file: %@", error.localizedDescription);
 		[self.managedObjectContext deleteObject:key];
 	}
 	NSError *error;
 	if (![self.managedObjectContext save:&error]) {
 		// Something's gone seriously wrong
-		NSLog(@"Error clearing KeyStore: %@", [error localizedDescription]);
+		NSLog(@"Error clearing KeyStore: %@", error.localizedDescription);
 		
 	}
 }
 
 
 -(NSArray*)listPrivateKeys {
-	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PrivateKey"
-	                                          inManagedObjectContext:self.managedObjectContext];
-
-	NSFetchRequest *request = [NSFetchRequest new];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PrivateKey" inManagedObjectContext:self.managedObjectContext];
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:entity];
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName" ascending:YES];
-	NSArray *sortDescriptors = @[sortDescriptor];
+	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	[request setSortDescriptors:sortDescriptors];
 	// Fetch the records and handle an error
 	NSError *error;
-	NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request
-	                                                          error:&error];
+	NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request error:&error];
 	return pkeys;
 }
 
@@ -436,7 +433,7 @@ NSData* X509_to_NSData(X509 *cert) {
 	NSData *retVal = nil;
 	
 	if (!(fp = fopen(p12_file_path, "rb"))) {
-		NSString* localizedDescritpion = [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", p12Path.lastPathComponent];
+		NSString* localizedDescritpion = [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert", [p12Path lastPathComponent]];
 		perror("Opening p12 file error : ");
 		
 		[self emitFileIOError:error
@@ -446,21 +443,16 @@ NSData* X509_to_NSData(X509 *cert) {
 		p12 = d2i_PKCS12_fp(fp, NULL);
 		fclose(fp);
 		if (!p12) {
-			NSString* localizedDescritpion = [NSString stringWithFormat:@"Impossible de lire %@", p12Path.lastPathComponent];
+			NSString* localizedDescritpion = [NSString stringWithFormat:@"Impossible de lire %@", [p12Path lastPathComponent]];
 			[self emitFileIOError:error localizedDescritpion:localizedDescritpion];
 		}
 		else {
 			if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
-				NSString *localizedDescription = [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", p12Path.lastPathComponent];
-				[self emitError:error
-		   localizedDescription:localizedDescription
-		                 domain:P12ErrorDomain
-		                   code:P12OpenErrorCode];
+				NSString *localizedDescription = [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe", [p12Path lastPathComponent]];
+				[self emitError:error localizedDescription:localizedDescription domain:P12ErrorDomain code:P12OpenErrorCode];
 			}
 			else {
-				retVal = [self signData:data
-				                   pkey:pkey
-				                   cert:cert];
+				retVal = [self signData:data pkey:pkey cert:cert];
 			}
 		}
 		PKCS12_free(p12);
@@ -493,9 +485,7 @@ localizedDescription:(NSString *)localizedDescription
 }
 
 
--(NSData *)signData:(NSData *)data
-               pkey:(EVP_PKEY *)pkey
-               cert:(X509 *)cert {
+-(NSData *)signData:(NSData *)data pkey:(EVP_PKEY *)pkey cert:(X509 *)cert {
 	
 	BIO * bio_data = BIO_new(BIO_s_mem());
 	
@@ -535,7 +525,7 @@ localizedDescription:(NSString *)localizedDescription
 		BIO_write(p7bio,buf,i);
 	}
 	
-	if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) data.bytes, data.length)) {
+	if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *)[data bytes], [data length])) {
 		return nil;
 	}
 	BIO_free(p7bio);
@@ -549,8 +539,7 @@ localizedDescription:(NSString *)localizedDescription
 	char *outputBuffer;
 	long outputLength = BIO_get_mem_data(signature_bio, &outputBuffer);
 	
-	NSData *retVal = [NSData dataWithBytes:outputBuffer
-	                                length:(NSUInteger)outputLength];
+	NSData *retVal = [NSData dataWithBytes:outputBuffer length:(NSUInteger)outputLength];
 	
 	
 #ifdef DEBUG
@@ -656,17 +645,18 @@ localizedDescription:(NSString *)localizedDescription
 	X509_NAME *issuer_name = X509_get_issuer_name(cert);
 	ASN1_INTEGER *cert_serial_number = X509_get_serialNumber(cert);
 	BIGNUM *bnser = ASN1_INTEGER_to_BN(cert_serial_number, NULL);
+
 	char *big_number_serial_str = BN_bn2hex(bnser);
+
 	char issuer_name_str[256];
 
 	X509_NAME_oneline(issuer_name, issuer_name_str, 256);
 
 	NSEntityDescription *entityDescription = [NSEntityDescription
-											  entityForName:@"PrivateKey"
-											  inManagedObjectContext:self.managedObjectContext];
-	
-	NSFetchRequest *request = [NSFetchRequest new];
+			entityForName:@"PrivateKey"
+   inManagedObjectContext:self.managedObjectContext];
 
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:entityDescription];
 
 	NSString *commonName_to_find = [NSString stringWithCString:(const char *) alias
@@ -694,7 +684,8 @@ localizedDescription:(NSString *)localizedDescription
 
 	if ([array count] == 0) {
 
-		NSString *newPath = [self.applicationDataDirectory.path stringByAppendingPathComponent:self.UUID];
+		NSString *newPath = [[[self applicationDataDirectory] path]
+				stringByAppendingPathComponent:[self UUID]];
 
 		// move the file to applicationDataDirectory
 		[[NSFileManager defaultManager] moveItemAtPath:p12Path

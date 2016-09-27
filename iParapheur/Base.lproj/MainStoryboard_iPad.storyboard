@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="5">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -307,9 +307,9 @@
                     <connections>
                         <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="y8S-1e-sKB"/>
                         <outlet property="searchBar" destination="Z1O-cw-X8C" id="wCO-7j-eDV"/>
-                        <segue destination="zs0-y1-eAs" kind="modal" identifier="VISER" modalPresentationStyle="formSheet" id="lZY-A3-bSY"/>
-                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SIGNER" modalPresentationStyle="formSheet" id="hYJ-he-8AH"/>
-                        <segue destination="zs0-y1-eAs" kind="modal" identifier="REJETER" modalPresentationStyle="formSheet" id="Fd0-lJ-x2N"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="VISA" modalPresentationStyle="formSheet" id="lZY-A3-bSY"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SIGNATURE" modalPresentationStyle="formSheet" id="hYJ-he-8AH"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="REJET" modalPresentationStyle="formSheet" id="Fd0-lJ-x2N"/>
                         <segue destination="2Dr-6H-2Si" kind="modal" identifier="AVIS-TODO" modalPresentationStyle="formSheet" id="Les-T2-Xz2"/>
                         <segue destination="2Dr-6H-2Si" kind="modal" identifier="TRANSFERT-TODO" modalPresentationStyle="formSheet" id="3XH-4w-NAP"/>
                         <segue destination="zs0-y1-eAs" kind="modal" identifier="SECRETARIAT" modalPresentationStyle="formSheet" id="SLb-2U-c77"/>
@@ -569,9 +569,9 @@
                     </tableView>
                     <connections>
                         <outlet property="tableView" destination="5VH-q2-sNA" id="T7k-HO-69g"/>
-                        <segue destination="zs0-y1-eAs" kind="modal" identifier="VISER" modalPresentationStyle="formSheet" id="f7O-db-eHh"/>
-                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SIGNER" modalPresentationStyle="formSheet" id="frU-Qg-PoU"/>
-                        <segue destination="zs0-y1-eAs" kind="modal" identifier="REJETER" modalPresentationStyle="formSheet" id="5jE-mb-c2S"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="VISA" modalPresentationStyle="formSheet" id="f7O-db-eHh"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="SIGNATURE" modalPresentationStyle="formSheet" id="frU-Qg-PoU"/>
+                        <segue destination="zs0-y1-eAs" kind="modal" identifier="REJET" modalPresentationStyle="formSheet" id="5jE-mb-c2S"/>
                         <segue destination="zs0-y1-eAs" kind="modal" identifier="SECRETARIAT" modalPresentationStyle="formSheet" id="Az1-11-imz"/>
                     </connections>
                 </tableViewController>
@@ -737,7 +737,7 @@
         <image name="icon_login.png" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="lZY-A3-bSY"/>
-        <segue reference="3XH-4w-NAP"/>
+        <segue reference="Fd0-lJ-x2N"/>
+        <segue reference="Les-T2-Xz2"/>
     </inferredMetricsTieBreakers>
 </document>

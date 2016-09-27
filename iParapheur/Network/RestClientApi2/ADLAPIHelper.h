@@ -42,8 +42,6 @@
 + (NSString*) actionNameForAction:(NSString*) action
               withPaperSign:(BOOL)isPaperSign;
 
-+ (NSArray*) actionsForADLResponseDossier:(Dossier*) dossier;
-
 + (NSArray*) actionsForDossier:(NSDictionary*) dossier;
 
 @end

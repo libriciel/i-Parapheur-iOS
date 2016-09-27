@@ -117,30 +117,10 @@
 }
 
 
-+ (MTLValueTransformer *)getNullToZeroValueTransformer {
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == nil || inObj == [NSNull null])
-			return @0;
-		else
-			return inObj;
-	}];
-}
-
-
 + (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer {
 	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
 		if (inObj == nil || inObj == [NSNull null])
 			return [NSDictionary new];
-		else
-			return inObj;
-	}];
-}
-
-
-+ (MTLValueTransformer *)getNullToEmptyArrayValueTransformer {
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == nil || inObj == [NSNull null])
-			return [NSArray new];
 		else
 			return inObj;
 	}];

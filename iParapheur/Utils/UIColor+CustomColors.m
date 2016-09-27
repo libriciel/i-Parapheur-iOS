@@ -100,9 +100,9 @@
 
 +(UIColor*) colorForAction:(NSString*) action {
 
-	if ([action isEqualToString:@"VISER"] || [action isEqualToString:@"SIGNER"])
+	if ([action isEqualToString:@"VISA"] || [action isEqualToString:@"SIGNATURE"])
         return [UIColor darkGreenColor];
-    else if ([action isEqualToString:@"REJETER"])
+    else if ([action isEqualToString:@"REJET"])
         return [UIColor darkRedColor];
     else if ([action isEqualToString:@"ARCHIVER"])
         return [UIColor blackColor];

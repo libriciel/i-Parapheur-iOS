@@ -34,7 +34,6 @@
  */
 #import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
-#import "ADLResponseDossiers.h"
 #import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
 
@@ -155,8 +154,8 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_swiftManager getApiVersion:^(int level) {
-		 success(@(level));
+	[_swiftManager getApiVersion:^(NSNumber *level) {
+		 success(level);
 	 }
 	                     onError:^(NSError *error) {
 		                     failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
@@ -196,21 +195,10 @@
 	                      size:@(size)
 	                filterJson:filterJson
 	                onResponse:^(NSArray *response) {
-
-		                NSError *error;
-		                NSArray *responseDossiers = [MTLJSONAdapter modelsOfClass:[ADLResponseDossiers class]
-		                                                            fromJSONArray:response
-		                                                                    error:&error];
-
-		                // Parse check and callback
-
-		                if (error)
-			                failure(error);
-		                else
-			                success(responseDossiers);
+		               success(response);
 	                }
-	                   onError:^(NSError *error) {
-		                   failure(error);
+					   onError:^(NSError *error) {
+						   failure(error);
 	                   }];
 }
 
@@ -586,7 +574,6 @@
 	// Create arguments dictionary
 
 	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-	NSLog(@"Adrien update - %@", argumentDictionary);
 
 	// Send request
 

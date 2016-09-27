@@ -85,13 +85,13 @@ import Gloss
         nomTdT = ("nomTdT" <~~ json) ?? ""
         xPathSignature = ("xPathSignature" <~~ json) ?? ""
 
-        actionDemandee = ("actionDemandee" <~~ json) ?? Action.VISA.rawValue
+        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
         actions = ("actions" <~~ json) ?? []
         documents = ("documents" <~~ json) ?? []
         acteursVariables = ("acteursVariables" <~~ json) ?? []
         metadatas = ("metadatas" <~~ json) ?? [:]
         dateEmission = ("dateEmission" <~~ json) ?? -1
-        dateLimite = ("dateLimite" <~~ json) ?? -1
+        dateLimite = ("dateLimite" <~~ json) ?? 0
 
         hasRead = ("hasRead" <~~ json) ?? false
         includeAnnexes = ("includeAnnexes" <~~ json) ?? false
@@ -102,13 +102,22 @@ import Gloss
         isSignPapier = ("isSignPapier" <~~ json) ?? false
         isXemEnabled = ("isXemEnabled" <~~ json) ?? false
         isReadingMandatory = ("readingMandatory" <~~ json) ?? false
-    }
+
+		// Sometimes it happens
+		if (!(actions!.contains(actionDemandee!))) {
+			actions!.append(actionDemandee!)
+		}
+	}
 
     func toJSON() -> JSON? {
         return nil /* Not used */
     }
 
     // MARK: ObjC accessors
+
+    func unwrappedId() -> NSString {
+        return NSString(string: id!)
+    }
 
     func unwrappedDocuments() -> NSArray {
         return documents as NSArray!
@@ -123,6 +132,63 @@ import Gloss
     }
 
     func unwrappedActionDemandee() -> NSString {
-        return actionDemandee as NSString!
+        return NSString(string: actionDemandee!)
+    }
+
+    func unwrappedIsSignPapier() -> Bool {
+        return isSignPapier!
+    }
+
+    func unwrappedType() -> NSString {
+        return NSString(string: type!)
+    }
+
+    func unwrappedSubType() -> NSString {
+        return NSString(string: sousType!)
+    }
+
+    func unwrappedLimitDate() -> NSNumber {
+        return dateLimite as NSNumber!
+    }
+
+    func unwrappedIsLocked() -> Bool {
+        return isLocked!
+    }
+
+    // MARK: static utils
+
+	class func filterActions(dossierList: NSArray) -> NSMutableArray {
+
+		let result:NSMutableArray = NSMutableArray()
+
+        // Compute values
+
+        var hasVisa: Bool = true
+        var hasSignature: Bool = true
+        var hasOnlyVisa: Bool = true
+        var hasRejet: Bool = true
+        var hasTDT: Bool = true
+
+		for dossierItem in dossierList {
+            if let dossier = dossierItem as? Dossier {
+                hasVisa = hasVisa && dossier.actions!.contains("VISA")
+                hasSignature = hasSignature && (dossier.actions!.contains("SIGNATURE") || dossier.actions!.contains("VISA"))
+                hasOnlyVisa = hasOnlyVisa && !dossier.actions!.contains("SIGNATURE")
+                hasRejet = hasRejet && dossier.actions!.contains("REJET")
+                hasTDT = hasTDT && dossier.actions!.contains("TDT")
+            }
+        }
+
+        hasSignature = hasSignature && !hasOnlyVisa
+
+        // Build result
+
+        if (hasSignature) { result.addObject(NSString(string: "SIGNATURE")) }
+        else if (hasVisa) { result.addObject(NSString(string: "VISA")) }
+
+        if (hasRejet) { result.addObject(NSString(string: "REJET")) }
+        if (hasTDT) { result.addObject(NSString(string: "TDT")) }
+
+        return result
     }
 }

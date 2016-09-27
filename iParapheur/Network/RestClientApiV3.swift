@@ -59,6 +59,14 @@ import AFNetworking
 
             return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
         }
+
+		// GET needs a JSONResponseSerializer,
+		// POST/PUT/DELETE needs an HTTPResponseSerializer
+
+		let compoundResponseSerializer = AFCompoundResponseSerializer.compoundSerializerWithResponseSerializers([AFJSONResponseSerializer(),
+                                                                                                                 AFHTTPResponseSerializer()])
+		manager.responseSerializer = compoundResponseSerializer
+
     }
 
     // MARK: Static methods
@@ -152,7 +160,7 @@ import AFNetworking
 
     // MARK: Get methods
 
-    func getApiVersion(onResponse: ((Int) -> Void)?,
+    func getApiVersion(onResponse: ((NSNumber) -> Void)?,
                        onError: ((NSError) -> Void)?) {
 
         manager.GET("/parapheur/api/getApiLevel",
@@ -166,7 +174,7 @@ import AFNetworking
                             return
                         }
 
-                        onResponse!(apiLevel.level!)
+						onResponse!(NSNumber(integer: apiLevel.level!))
                     },
                     failure: {
                         (task: NSURLSessionDataTask!, error: NSError!) in
@@ -223,13 +231,14 @@ import AFNetworking
         manager.GET("/parapheur/dossiers",
                     parameters: paramsDict,
                     success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject as! NSArray)
-                     },
+                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
+                        onResponse!(dossierList)
+                    },
                     failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
-                         onError!(error)
-                     })
+                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        onError!(error)
+                    })
     }
 
     func getDossier(dossier: NSString,
