@@ -85,7 +85,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	// UI overrode parameters
 
-	[[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor lightGrayColor]];
+	[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil].textColor = [UIColor lightGrayColor];
 
 	//
 
@@ -114,7 +114,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 	//  API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"settings_login"], [[NSUserDefaults standardUserDefaults] stringForKey:@"settings_password"]);
-
 }
 
 
@@ -200,8 +199,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		 * The persistent store is not accessible;
 		 * The schema for the persistent store is incompatible with current managed object model.
 		 Check the error message to determine what the actual problem was.
-		 
-		 
+
 		 If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
 		 
 		 If you encounter schema incompatibility errors during development, you can reduce their frequency by:
@@ -215,7 +213,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		 
 		 */
 		NSLog(@"%@", storeURL);
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		NSLog(@"Unresolved error %@, %@", error, error.userInfo);
 		abort();
 	}
 
@@ -389,7 +387,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:publicDocumentsDir
 	                                                                     error:&error];
 	if (files == nil) {
-		NSLog(@"Error reading contents of documents directory: %@", [error localizedDescription]);
+		NSLog(@"Error reading contents of documents directory: %@", error.localizedDescription);
 		return retval;
 	}
 

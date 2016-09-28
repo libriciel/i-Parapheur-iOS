@@ -235,7 +235,7 @@ err:
 	NSArray* keys = [self listPrivateKeys];
 
 	for (PrivateKey* oldKey in keys) {
-		if ([oldKey.p12Filename pathComponents].count != 2) {
+		if (oldKey.p12Filename.pathComponents.count != 2) {
 			
 			NSString* relativePath = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] bundleIdentifier], [oldKey.p12Filename lastPathComponent]];
 			oldKey.p12Filename = relativePath;
@@ -373,11 +373,11 @@ NSData* X509_to_NSData(X509 *cert) {
 
 -(NSArray*)listPrivateKeys {
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PrivateKey" inManagedObjectContext:self.managedObjectContext];
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:entity];
+	NSFetchRequest *request = [NSFetchRequest new];
+	request.entity = entity;
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName" ascending:YES];
-	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-	[request setSortDescriptors:sortDescriptors];
+	NSArray *sortDescriptors = @[sortDescriptor];
+	request.sortDescriptors = sortDescriptors;
 	// Fetch the records and handle an error
 	NSError *error;
 	NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -670,7 +670,7 @@ localizedDescription:(NSString *)localizedDescription
 			                                      [NSString stringWithCString:(const char *) big_number_serial_str
 			                                                         encoding:NSUTF8StringEncoding]];
 
-	[request setPredicate:predicate];
+	request.predicate = predicate;
 
 	if (error)
 		*error = nil;
@@ -682,10 +682,10 @@ localizedDescription:(NSString *)localizedDescription
 //		return NO;
 //	}
 
-	if ([array count] == 0) {
+	if (array.count == 0) {
 
-		NSString *newPath = [[[self applicationDataDirectory] path]
-				stringByAppendingPathComponent:[self UUID]];
+		NSString *newPath = [self.applicationDataDirectory.path
+				stringByAppendingPathComponent:self.UUID];
 
 		// move the file to applicationDataDirectory
 		[[NSFileManager defaultManager] moveItemAtPath:p12Path

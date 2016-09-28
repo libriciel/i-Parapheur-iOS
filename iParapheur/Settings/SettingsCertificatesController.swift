@@ -60,7 +60,7 @@ import Foundation
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCellWithIdentifier("CertificateCell", forIndexPath: indexPath)
-        print("Adrien - \(certificateList[indexPath.row])")
+         print("Adrien - \(certificateList[indexPath.row])")
 
         if let nameLabel = cell.viewWithTag(101) as? UILabel {
             nameLabel.text = "certificate"
