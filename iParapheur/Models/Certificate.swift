@@ -55,4 +55,10 @@ import Foundation
         expirationDate = NSDate(timeIntervalSince1970: -1)
     }
 
+    // MARK: ObjC accessors
+
+    func unwrappedP12File() -> NSString {
+        return NSString(string: p12Filename!)
+    }
+
 }

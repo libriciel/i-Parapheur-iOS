@@ -35,8 +35,9 @@
  */
 #import <Foundation/Foundation.h>
 
+
 enum {
-    P12OpenErrorCode,
+	P12OpenErrorCode,
 	P12AlreadyImported
 };
 
@@ -44,47 +45,46 @@ enum {
 
 
 @interface ADLKeyStore : NSObject {
-    NSManagedObjectContext *managedObjectContext;
+	NSManagedObjectContext *managedObjectContext;
 }
 
 /* Only usable on the soft KeyStore*/
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property(nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 
 #pragma mark - Key Management methods
 
 
--(void)checkUpdates;
 
-	
--(void)resetKeyStore;
+- (void)checkUpdates;
 
 
--(NSArray*)listPrivateKeys;
+- (void)resetKeyStore;
 
 
--(NSArray*)listCertificates;
+- (NSArray *)listPrivateKeys;
 
 
--(BOOL) addKey:(NSString *)p12Path
+- (BOOL)addKey:(NSString *)p12Path
   withPassword:(NSString *)password
-		 error:(NSError**)error;
-
+         error:(NSError **)error;
 
 #pragma mark - Crypto methods
 
 
--(NSData*)PKCS7Sign:(NSString*)p12Path
-	   withPassword:(NSString*)password
-			andData:(NSData*)data
-			  error:(NSError**)error;
+- (NSData *)PKCS7Sign:(NSString *)p12Path
+         withPassword:(NSString *)password
+              andData:(NSData *)data
+                error:(NSError **)error;
 
 
 #pragma mark - Utilities
 
++ (NSDictionary *)getX509ValuesforP12:(NSString *)p12Path
+                         withPassword:(NSString *)password;
 
--(NSData*) bytesFromHexString:(NSString *)aString;
+- (NSData *)bytesFromHexString:(NSString *)aString;
 
 
 @end

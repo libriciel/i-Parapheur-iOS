@@ -38,7 +38,6 @@
 #include <openssl/pkcs12.h>
 #include <openssl/cms.h>
 #import "PrivateKey.h"
-#import "iParapheur-Swift.h"
 
 
 @implementation ADLKeyStore
@@ -244,8 +243,44 @@ NSData *X509_to_NSData(X509 *cert) {
 	(void) BIO_flush(mem);
 	int base64Length = BIO_get_mem_data(mem, &cert_data);
 	NSData *retVal = [NSData dataWithBytes:cert_data
-	                                length:base64Length];
+	                                length:(NSUInteger) base64Length];
 	return retVal;
+}
+
+
+static NSDate *asn1TimeToNSDate(ASN1_TIME *time) {
+
+	NSDate *resultDate = nil;
+
+	ASN1_GENERALIZEDTIME *generalizedTime = ASN1_TIME_to_generalizedtime(time, NULL);
+	if (generalizedTime != NULL) {
+		unsigned char *generalizedTimeData = ASN1_STRING_data(generalizedTime);
+
+		// ASN1 generalized times look like this: "20131114230046Z"
+		//                                format:  YYYYMMDDHHMMSS
+		//                               indices:  01234567890123
+		//                                                   1111
+		// There are other formats (e.g. specifying partial seconds or
+		// time zones) but this is good enough for our purposes since
+		// we only use the date and not the time.
+		//
+		// (Source: http://www.obj-sys.com/asn1tutorial/node14.html)
+
+		NSString *timeStr = [NSString stringWithUTF8String:(char *) generalizedTimeData];
+		NSDateComponents *dateComponents = [NSDateComponents new];
+
+		dateComponents.year = [timeStr substringWithRange:NSMakeRange(0, 4)].intValue;
+		dateComponents.month = [timeStr substringWithRange:NSMakeRange(4, 2)].intValue;
+		dateComponents.day = [timeStr substringWithRange:NSMakeRange(6, 2)].intValue;
+		dateComponents.hour = [timeStr substringWithRange:NSMakeRange(8, 2)].intValue;
+		dateComponents.minute = [timeStr substringWithRange:NSMakeRange(10, 2)].intValue;
+		dateComponents.second = [timeStr substringWithRange:NSMakeRange(12, 2)].intValue;
+
+		NSCalendar *calendar = [NSCalendar currentCalendar];
+		resultDate = [calendar dateFromComponents:dateComponents];
+	}
+
+	return resultDate;
 }
 
 
@@ -382,20 +417,6 @@ NSData *X509_to_NSData(X509 *cert) {
 }
 
 
-- (NSArray *)listCertificates {
-
-	NSArray *pkeys = [self listPrivateKeys];
-
-	// Casting and building result
-
-	NSMutableArray *result = [NSMutableArray new];
-	for (PrivateKey *managedKey in pkeys)
-		[result addObject:[[Certificate alloc] initWithManagedObject:managedKey]];
-
-	return result;
-}
-
-
 - (NSData *)bytesFromHexString:(NSString *)aString; {
 
 	NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:nil];
@@ -447,7 +468,7 @@ NSData *X509_to_NSData(X509 *cert) {
 
 	if (!(fp = fopen(p12_file_path, "rb"))) {
 		NSString *localizedDescritpion = [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert",
-		                                                            [p12Path lastPathComponent]];
+		                                                            p12Path.lastPathComponent];
 		perror("Opening p12 file error : ");
 
 		[self emitFileIOError:error
@@ -457,13 +478,13 @@ NSData *X509_to_NSData(X509 *cert) {
 		fclose(fp);
 		if (!p12) {
 			NSString *localizedDescritpion = [NSString stringWithFormat:@"Impossible de lire %@",
-			                                                            [p12Path lastPathComponent]];
+			                                                            p12Path.lastPathComponent];
 			[self emitFileIOError:error
 			 localizedDescritpion:localizedDescritpion];
 		} else {
 			if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
 				NSString *localizedDescription = [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe",
-				                                                            [p12Path lastPathComponent]];
+				                                                            p12Path.lastPathComponent];
 				[self emitError:error
 		   localizedDescription:localizedDescription
 		                 domain:P12ErrorDomain
@@ -514,7 +535,7 @@ localizedDescription:(NSString *)localizedDescription
 
 	BIO *bio_data = BIO_new(BIO_s_mem());
 
-	BIO_write(bio_data, [data bytes], [data length]);
+	BIO_write(bio_data, data.bytes, data.length);
 
 
 	PKCS7 *p7 = PKCS7_new();
@@ -672,7 +693,6 @@ localizedDescription:(NSString *)localizedDescription
 	BIGNUM *bnser = ASN1_INTEGER_to_BN(cert_serial_number, NULL);
 
 	char *big_number_serial_str = BN_bn2hex(bnser);
-
 	char issuer_name_str[256];
 
 	X509_NAME_oneline(issuer_name, issuer_name_str, 256);
@@ -681,8 +701,8 @@ localizedDescription:(NSString *)localizedDescription
 			entityForName:@"PrivateKey"
    inManagedObjectContext:self.managedObjectContext];
 
-	NSFetchRequest *request = [[NSFetchRequest alloc] init];
-	[request setEntity:entityDescription];
+	NSFetchRequest *request = [NSFetchRequest new];
+	request.entity = entityDescription;
 
 	NSString *commonName_to_find = [NSString stringWithCString:(const char *) alias
 	                                                  encoding:NSUTF8StringEncoding];
@@ -745,5 +765,89 @@ localizedDescription:(NSString *)localizedDescription
 
 	return YES;
 }
+
+
++ (NSDictionary *)getX509ValuesforP12:(NSString *)path
+                         withPassword:(NSString *)password {
+
+	NSFileManager *fileManager = [NSFileManager new];
+	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
+	                                     inDomain:NSUserDomainMask
+	                            appropriateForURL:nil
+	                                       create:YES
+	                                        error:NULL];
+
+	NSString *p12Path = [pathURL.path stringByAppendingPathComponent:path];
+
+	FILE *fp;
+	EVP_PKEY *pkey;
+	X509 *cert;
+	STACK_OF(X509) *ca = NULL;
+	PKCS12 *p12;
+
+	const char *p12_file_path = [p12Path cStringUsingEncoding:NSUTF8StringEncoding];
+	const char *p12_password = [password cStringUsingEncoding:NSUTF8StringEncoding];
+
+	OpenSSL_add_all_algorithms();
+	ERR_load_crypto_strings();
+	EVP_add_digest(EVP_sha1());
+
+	// Check p12 file
+
+	if (!(fp = fopen(p12_file_path, "rb"))) {
+		NSLog(@"Update certificate error - Can't open file %@", p12Path.lastPathComponent);
+		return nil;
+	}
+
+	p12 = d2i_PKCS12_fp(fp, NULL);
+	fclose(fp);
+
+	if (!p12) {
+		PKCS12_free(p12);
+		NSLog(@"Update certificate error - Can't read file %@", p12Path.lastPathComponent);
+		return nil;
+	}
+
+	if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
+		NSLog(@"Update certificate error - Wrong password %@ / %@", p12Path.lastPathComponent, password);
+		PKCS12_free(p12);
+		return nil;
+	}
+
+	PKCS12_free(p12);
+
+	if (!cert) {
+		NSLog(@"Update certificate error - no certificate in KeyStore %@", p12Path.lastPathComponent);
+		return nil;
+	}
+
+	// Fetch values from p12, with OpenSSL
+
+	unsigned char *alias = NULL;
+	int len = 0;
+	X509_alias_get0(cert, &len);
+
+	ASN1_TIME *notBefore = X509_get_notBefore(cert);
+	ASN1_TIME *notAfter = X509_get_notAfter(cert);;
+
+	// Convert values
+
+	NSDate *notBeforeDate = asn1TimeToNSDate(notBefore);
+	NSDate *notAfterDate = asn1TimeToNSDate(notAfter);
+
+	NSDateFormatter *formatter = [NSDateFormatter new];
+	formatter.dateFormat = @"dd/MM/yyyy";
+
+	NSString *aliasString = [NSString stringWithFormat:@"%s", alias];
+	NSString *notBeforeString = [formatter stringFromDate:notBeforeDate];
+	NSString *notAfterString = [formatter stringFromDate:notAfterDate];
+
+	// Result
+
+	return @{@"alias": aliasString,
+			@"notBefore": notBeforeString,
+			@"notAfter": notAfterString};
+}
+
 
 @end

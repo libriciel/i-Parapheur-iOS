@@ -312,7 +312,7 @@
 		}
 
 		ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
-		Certificate *pkey = _currentPKey;
+		PrivateKey *pkey = _currentPKey;
 		NSError *error = nil;
 
 		for (NSString *hash in hashes) {
