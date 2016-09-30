@@ -1,6 +1,5 @@
 /*
  * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
  *
  * contact@adullact-projet.coop
  *
@@ -33,59 +32,27 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
+import Foundation
 
-enum {
-    P12OpenErrorCode,
-	P12AlreadyImported
-};
+@objc class Certificate: NSObject {
 
-#define P12ErrorDomain @"P12Errors"
+    let commonName: String?
+    let caName: String?
+    var p12Filename: String?
+    let publicKey: String?
+    let serialNumber: String?
+    let expirationDate: NSDate?
 
+    // MARK: Constructor
 
-@interface ADLKeyStore : NSObject {
-    NSManagedObjectContext *managedObjectContext;
+    init(managedObject:NSManagedObject) {
+
+        commonName = managedObject.valueForKey("commonName") as? String
+        caName = managedObject.valueForKey("caName") as? String
+        p12Filename = managedObject.valueForKey("p12Filename") as? String
+        publicKey = managedObject.valueForKey("publicKey") as? String
+        serialNumber = managedObject.valueForKey("serialNumber") as? String
+        expirationDate = NSDate(timeIntervalSince1970: -1)
+    }
+
 }
-
-/* Only usable on the soft KeyStore*/
-
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-
-
-#pragma mark - Key Management methods
-
-
--(void)checkUpdates;
-
-	
--(void)resetKeyStore;
-
-
--(NSArray*)listPrivateKeys;
-
-
--(NSArray*)listCertificates;
-
-
--(BOOL) addKey:(NSString *)p12Path
-  withPassword:(NSString *)password
-		 error:(NSError**)error;
-
-
-#pragma mark - Crypto methods
-
-
--(NSData*)PKCS7Sign:(NSString*)p12Path
-	   withPassword:(NSString*)password
-			andData:(NSData*)data
-			  error:(NSError**)error;
-
-
-#pragma mark - Utilities
-
-
--(NSData*) bytesFromHexString:(NSString *)aString;
-
-
-@end
-

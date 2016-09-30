@@ -25,6 +25,7 @@
 		64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */; };
 		64F34CFB3E7C2633BE3B0B3C /* Dossier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F3452BBCC73632CB8C15B6 /* Dossier.swift */; };
 		64F34D466D7EA1A09DCCB1E6 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F346AAECEA87928954CD15 /* Annotation.swift */; };
+		64F34FD00654A813D7151026 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348427F7EBCBC0A731851 /* Certificate.swift */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
 		9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9540519B1892BB8100018E80 /* ADLAPIHelper.m */; };
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
@@ -212,6 +213,7 @@
 		64F3452BBCC73632CB8C15B6 /* Dossier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Dossier.swift; path = iParapheur/Dossier.swift; sourceTree = SOURCE_ROOT; };
 		64F346AAECEA87928954CD15 /* Annotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Annotation.swift; path = iParapheur/Annotation.swift; sourceTree = SOURCE_ROOT; };
 		64F34804C057A886DBA3B22A /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Action.swift; path = iParapheur/Action.swift; sourceTree = SOURCE_ROOT; };
+		64F348427F7EBCBC0A731851 /* Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		64F348C6F782C7A1B08C3958 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Document.swift; path = iParapheur/Document.swift; sourceTree = SOURCE_ROOT; };
 		64F348D17E34A71E2E14D64A /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bureau.swift; sourceTree = "<group>"; };
 		64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestClientApiV3.swift; sourceTree = "<group>"; };
@@ -544,6 +546,7 @@
 				64F34804C057A886DBA3B22A /* Action.swift */,
 				64F348C6F782C7A1B08C3958 /* Document.swift */,
 				64F346AAECEA87928954CD15 /* Annotation.swift */,
+				64F348427F7EBCBC0A731851 /* Certificate.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1383,6 +1386,7 @@
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
 				C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */,
 				64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */,
+				64F34FD00654A813D7151026 /* Certificate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

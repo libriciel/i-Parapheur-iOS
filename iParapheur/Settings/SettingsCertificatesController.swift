@@ -40,7 +40,7 @@ import Foundation
 @objc class SettingsCertificatesController:  UIViewController, UITableViewDataSource {
 
     @IBOutlet var certificatesTableView: UITableView!
-    var certificateList: Array<AnyObject>!
+    var certificateList: Array<Certificate>!
 
     // MARK: - Life cycle
 
@@ -60,10 +60,10 @@ import Foundation
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCellWithIdentifier("CertificateCell", forIndexPath: indexPath)
-         print("Adrien - \(certificateList[indexPath.row])")
+        let keyManagedObject = certificateList[indexPath.row] as! Certificate
 
         if let nameLabel = cell.viewWithTag(101) as? UILabel {
-            nameLabel.text = "certificate"
+            nameLabel.text = keyManagedObject.commonName
         }
 
         if let expirationDateLabel = cell.viewWithTag(102) as? UILabel {
@@ -82,12 +82,12 @@ import Foundation
 
     // MARK: - Private methods
 
-    func loadCertificateList() -> Array<AnyObject> {
+    func loadCertificateList() -> Array<Certificate> {
 
         let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
 		
-        return keystore.listPrivateKeys()
+        return keystore.listCertificates() as! [Certificate]
     }
 
     // MARK: - Listeners

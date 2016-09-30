@@ -41,3 +41,4 @@
 #include "DeviceUtils.h"
 #include "ADLKeyStore.h"
 #include "RGAppDelegate.h"
+#include "PrivateKey.h"

@@ -235,7 +235,7 @@
 	}
 	else if ([self.action isEqualToString:@"SIGNATURE"]) {
 		// create signatures array
-		PrivateKey *pkey = _currentPKey;
+		Certificate *pkey = _currentPKey;
 
 		/* Ask for pkey password */
 
@@ -312,7 +312,7 @@
 		}
 
 		ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
-		PrivateKey *pkey = _currentPKey;
+		Certificate *pkey = _currentPKey;
 		NSError *error = nil;
 
 		for (NSString *hash in hashes) {
@@ -402,7 +402,7 @@
 	}
 
 	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
-	PrivateKey *pkey = _currentPKey;
+	Certificate *pkey = _currentPKey;
 
 	// Retrieving signature certificate
 
@@ -631,7 +631,7 @@
 	if (cell == nil)
 		cell = [UITableViewCell new];
 
-	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
+	Certificate *pkey = _pkeys[(NSUInteger) indexPath.row];
 	cell.textLabel.text = pkey.commonName;
 
 	return cell;
