@@ -691,8 +691,8 @@ localizedDescription:(NSString *)localizedDescription
 	NSString *serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
 	NSString *certString = [[NSString alloc] initWithData:certNsData encoding:NSUTF8StringEncoding];
 
-	NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNSDate:notBeforeAsn1Time];
-	NSDate *notAfterDate = [ADLKeyStore asn1TimeToNSDate:notAfterAsn1Time];
+	NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNsDate:notBeforeAsn1Time];
+	NSDate *notAfterDate = [ADLKeyStore asn1TimeToNsDate:notAfterAsn1Time];
 
 	NSDateFormatter *formatter = [NSDateFormatter new];
 	[formatter setDateFormat:ISO_8601_FORMAT];
@@ -711,7 +711,7 @@ localizedDescription:(NSString *)localizedDescription
 }
 
 
-+ (NSDate *)asn1TimeToNSDate:(ASN1_TIME *)time {
++ (NSDate *)asn1TimeToNsDate:(ASN1_TIME *)time {
 
 	NSDate *resultDate = nil;
 

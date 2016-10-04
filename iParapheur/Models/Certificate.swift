@@ -41,7 +41,8 @@ import Foundation
     var p12Filename: String?
     let publicKey: String?
     let serialNumber: String?
-    let expirationDate: NSDate?
+    let notBefore: NSDate?
+    let notAfter: NSDate?
 
     // MARK: Constructor
 
@@ -52,7 +53,8 @@ import Foundation
         p12Filename = managedObject.valueForKey("p12Filename") as? String
         publicKey = managedObject.valueForKey("publicKey") as? String
         serialNumber = managedObject.valueForKey("serialNumber") as? String
-        expirationDate = NSDate(timeIntervalSince1970: -1)
+        notBefore = managedObject.valueForKey("notBefore") as? NSDate
+        notAfter = managedObject.valueForKey("notAfter") as? NSDate
     }
 
     // MARK: ObjC accessors

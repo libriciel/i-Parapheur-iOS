@@ -71,7 +71,6 @@ import Foundation
         }
 
         if let deleteButton = cell.viewWithTag(103) as? UIButton {
-            deleteButton.tag = indexPath.row
             deleteButton.addTarget(self,
                                    action: #selector(onDeleteButtonClicked),
                                    forControlEvents: .TouchUpInside)
@@ -104,7 +103,8 @@ import Foundation
 
     func onDeleteButtonClicked(sender: UIButton) {
 
-        let indexPath: Int = sender.tag
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView:certificatesTableView);
+        let indexPath: NSIndexPath = certificatesTableView.indexPathForRowAtPoint(buttonPosition)!;
 
         // Find from NSManagedObjectContext
 
@@ -113,7 +113,7 @@ import Foundation
         let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
         for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-            if (pkeyManagedObject.valueForKey("commonName") as! String == certificateList[indexPath].commonName) {
+            if (pkeyManagedObject.valueForKey("serialNumber") as! String == certificateList[indexPath.row].serialNumber) {
                 privateKeyToDelete = pkeyManagedObject
             }
         }
@@ -123,18 +123,17 @@ import Foundation
         if (privateKeyToDelete == nil) {
             return
         }
-        print("Deleted : \(indexPath)")
 
         // Delete from NSManagedObjectContext
 
         let context:NSManagedObjectContext = appDelegate.managedObjectContext!
         context.deleteObject(privateKeyToDelete!)
-        certificateList.removeAtIndex(indexPath)
+        certificateList.removeAtIndex(indexPath.row)
         try! context.save()
 
         // Delete from UITableView
 
-        certificatesTableView.deleteRowsAtIndexPaths([NSIndexPath(index: indexPath)],
+        certificatesTableView.deleteRowsAtIndexPaths([indexPath],
                                                      withRowAnimation: .Fade)
     }
 

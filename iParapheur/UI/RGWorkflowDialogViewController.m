@@ -402,7 +402,7 @@
 	}
 
 	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
-	Certificate *pkey = _currentPKey;
+	PrivateKey *pkey = _currentPKey;
 
 	// Retrieving signature certificate
 
@@ -631,7 +631,7 @@
 	if (cell == nil)
 		cell = [UITableViewCell new];
 
-	Certificate *pkey = _pkeys[(NSUInteger) indexPath.row];
+	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
 	cell.textLabel.text = pkey.commonName;
 
 	return cell;

@@ -98,7 +98,7 @@ enum {
                          withPassword:(NSString *)password;
 
 
-+ (NSDate *)asn1TimeToNSDate:(ASN1_TIME *)time;
++ (NSDate *)asn1TimeToNsDate:(ASN1_TIME *)time;
 
 
 @end
