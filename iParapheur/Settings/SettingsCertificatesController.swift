@@ -73,12 +73,21 @@ import Foundation
         }
 
         if let expirationDateLabel = cell.viewWithTag(102) as? UILabel {
-            let notAfterString: String = dateFormatter.stringFromDate(certificate.notAfter!)
-            expirationDateLabel.text = expirationDateLabel.text?.stringByReplacingOccurrencesOfString(":date:",
-                                                                                                      withString: notAfterString)
 
-            let notAfterCompare: NSComparisonResult = certificate.notAfter!.compare(NSDate())
-            expirationDateLabel.textColor = notAfterCompare == NSComparisonResult.OrderedAscending ? UIColor.redColor() : UIColor.lightGrayColor()
+            // For Keystore CoreDataModel v2
+            if (certificate.notAfter != nil) {
+                expirationDateLabel.hidden = false
+                let notAfterString: String = dateFormatter.stringFromDate(certificate.notAfter!)
+                expirationDateLabel.text = expirationDateLabel.text?.stringByReplacingOccurrencesOfString(":date:",
+                                                                                                          withString: notAfterString)
+
+                let notAfterCompare: NSComparisonResult = certificate.notAfter!.compare(NSDate())
+                expirationDateLabel.textColor = notAfterCompare == NSComparisonResult.OrderedAscending ? UIColor.redColor() : UIColor.lightGrayColor()
+            }
+            // For Keystore CoreDataModel v1
+            else {
+                expirationDateLabel.hidden = true
+            }
         }
 
         if let deleteButton = cell.viewWithTag(103) as? UIButton {
