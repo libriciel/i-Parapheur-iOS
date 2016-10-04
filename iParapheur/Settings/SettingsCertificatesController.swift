@@ -105,7 +105,37 @@ import Foundation
     func onDeleteButtonClicked(sender: UIButton) {
 
         let indexPath: Int = sender.tag
-        print("deleted : \(indexPath)")
+
+        // Find from NSManagedObjectContext
+
+        var privateKeyToDelete: NSManagedObject? = nil
+
+        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
+        let keystore: ADLKeyStore = appDelegate.keyStore
+        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
+            if (pkeyManagedObject.valueForKey("commonName") as! String == certificateList[indexPath].commonName) {
+                privateKeyToDelete = pkeyManagedObject
+            }
+        }
+
+        // Safety check
+
+        if (privateKeyToDelete == nil) {
+            return
+        }
+        print("Deleted : \(indexPath)")
+
+        // Delete from NSManagedObjectContext
+
+        let context:NSManagedObjectContext = appDelegate.managedObjectContext!
+        context.deleteObject(privateKeyToDelete!)
+        certificateList.removeAtIndex(indexPath)
+        try! context.save()
+
+        // Delete from UITableView
+
+        certificatesTableView.deleteRowsAtIndexPaths([NSIndexPath(index: indexPath)],
+                                                     withRowAnimation: .Fade)
     }
 
 }

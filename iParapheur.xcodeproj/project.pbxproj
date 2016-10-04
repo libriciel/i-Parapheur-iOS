@@ -357,6 +357,7 @@
 		B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
 		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
 		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
+		C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KeyStore 2.xcdatamodel"; sourceTree = "<group>"; };
 		C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsAboutController.swift; path = Settings/SettingsAboutController.swift; sourceTree = "<group>"; };
 		C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsLicencesController.swift; path = Settings/SettingsLicencesController.swift; sourceTree = "<group>"; };
 		C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsFiltersController.swift; path = Settings/SettingsFiltersController.swift; sourceTree = "<group>"; };
@@ -1668,9 +1669,10 @@
 		1434F670168DFF98000C115D /* KeyStore.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */,
 				1434F671168DFF98000C115D /* KeyStore.xcdatamodel */,
 			);
-			currentVersion = 1434F671168DFF98000C115D /* KeyStore.xcdatamodel */;
+			currentVersion = C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */;
 			path = KeyStore.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

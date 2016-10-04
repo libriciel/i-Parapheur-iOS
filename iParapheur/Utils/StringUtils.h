@@ -56,4 +56,6 @@
 
 + (NSString *)decodeUrlString:(NSString *)encodedString;
 
++ (NSData *)bytesFromHexString:(NSString *)aString;
+
 @end

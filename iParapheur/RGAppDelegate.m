@@ -165,9 +165,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	if (_managedObjectModel != nil) {
 		return _managedObjectModel;
 	}
+
 	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"KeyStore"
 	                                          withExtension:@"momd"];
 	NSLog(@"%@", modelURL);
+
 	_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
 	return _managedObjectModel;
 }
@@ -181,14 +183,18 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		return _persistentStoreCoordinator;
 	}
 
-	NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"keystore.sqlite"];
+	NSURL *storeURL = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@"keystore.sqlite"];
 
 	NSError *error = nil;
-	_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+	_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+	NSDictionary *options = @{
+			NSMigratePersistentStoresAutomaticallyOption: @YES,
+			NSInferMappingModelAutomaticallyOption: @YES
+	};
 	if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
 	                                               configuration:nil
 	                                                         URL:storeURL
-	                                                     options:nil
+	                                                     options:options
 	                                                       error:&error]) {
 		/*
 		 Replace this implementation with code to handle the error appropriately.
@@ -244,10 +250,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 			if (certifPwd) {
 				NSArray *p12Docs = [self importableP12Stores];
 
-				for (NSString *p12store in p12Docs)
-					if ([p12store.lastPathComponent isEqualToString:certifUrl.lastPathComponent])
+				for (NSString *p12store in p12Docs) {
+					if ([p12store.lastPathComponent isEqualToString:certifUrl.lastPathComponent]) {
+
 						[self importCertificate:p12store
 						           withPassword:certifPwd];
+					}
+				}
 			}
 			else {
 				[self checkP12FilesInLocalDirectory];
@@ -392,6 +401,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	}
 
 	for (NSString *file in files) {
+
 		if (([file.pathExtension compare:@"p12"
 		                         options:NSCaseInsensitiveSearch] == NSOrderedSame) ||
 				([file.pathExtension compare:@"pfx"
@@ -402,7 +412,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	}
 
 	return retval;
-
 }
 
 

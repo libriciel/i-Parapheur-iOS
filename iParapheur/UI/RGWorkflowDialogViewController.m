@@ -235,7 +235,7 @@
 	}
 	else if ([self.action isEqualToString:@"SIGNATURE"]) {
 		// create signatures array
-		Certificate *pkey = _currentPKey;
+		PrivateKey *pkey = _currentPKey;
 
 		/* Ask for pkey password */
 
@@ -316,7 +316,7 @@
 		NSError *error = nil;
 
 		for (NSString *hash in hashes) {
-			NSData *hash_data = [keystore bytesFromHexString:hash];
+			NSData *hash_data = [StringUtils bytesFromHexString:hash];
 
 			NSFileManager *fileManager = [NSFileManager new];
 			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
@@ -568,7 +568,7 @@
           withKeystore:(ADLKeyStore *)keystore
                withP12:(NSString *)p12AbsolutePath {
 
-	NSData *hash_data = [keystore bytesFromHexString:hash];
+	NSData *hash_data = [StringUtils bytesFromHexString:hash];
 
 	NSError *error = nil;
 	NSData *signature = [keystore PKCS7Sign:p12AbsolutePath

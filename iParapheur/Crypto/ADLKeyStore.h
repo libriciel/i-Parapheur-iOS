@@ -34,6 +34,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
+#include <openssl/cms.h>
 
 
 enum {
@@ -56,7 +57,6 @@ enum {
 #pragma mark - Key Management methods
 
 
-
 - (void)checkUpdates;
 
 
@@ -70,6 +70,7 @@ enum {
   withPassword:(NSString *)password
          error:(NSError **)error;
 
+
 #pragma mark - Crypto methods
 
 
@@ -79,12 +80,25 @@ enum {
                 error:(NSError **)error;
 
 
-#pragma mark - Utilities
+#pragma mark - Utils
 
+
+/**
+ * P12 data into Dictionary containing "commonName", "issuerName", "notBefore", "notAfter", "serialNumber", "publicKey",
+ * or nil if something went wrong.
+ *
+ * The publicKey value is an NSData in UTF8 encoding.
+ * notBefore and notAfter dates are in ISO 8601 encoding.
+ *
+ * @param path the p12 absolute path
+ * @param password
+ * @return a Dictionary of NSString
+ */
 + (NSDictionary *)getX509ValuesforP12:(NSString *)p12Path
                          withPassword:(NSString *)password;
 
-- (NSData *)bytesFromHexString:(NSString *)aString;
+
++ (NSDate *)asn1TimeToNSDate:(ASN1_TIME *)time;
 
 
 @end

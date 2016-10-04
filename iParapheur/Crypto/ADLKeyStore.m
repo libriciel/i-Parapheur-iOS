@@ -36,13 +36,15 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
-#include <openssl/cms.h>
 #import "PrivateKey.h"
 
 
 @implementation ADLKeyStore
 
 @synthesize managedObjectContext;
+
+
+static NSString *ISO_8601_FORMAT = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
 
 static int PKCS7_type_is_other(PKCS7 *p7) {
@@ -248,42 +250,6 @@ NSData *X509_to_NSData(X509 *cert) {
 }
 
 
-static NSDate *asn1TimeToNSDate(ASN1_TIME *time) {
-
-	NSDate *resultDate = nil;
-
-	ASN1_GENERALIZEDTIME *generalizedTime = ASN1_TIME_to_generalizedtime(time, NULL);
-	if (generalizedTime != NULL) {
-		unsigned char *generalizedTimeData = ASN1_STRING_data(generalizedTime);
-
-		// ASN1 generalized times look like this: "20131114230046Z"
-		//                                format:  YYYYMMDDHHMMSS
-		//                               indices:  01234567890123
-		//                                                   1111
-		// There are other formats (e.g. specifying partial seconds or
-		// time zones) but this is good enough for our purposes since
-		// we only use the date and not the time.
-		//
-		// (Source: http://www.obj-sys.com/asn1tutorial/node14.html)
-
-		NSString *timeStr = [NSString stringWithUTF8String:(char *) generalizedTimeData];
-		NSDateComponents *dateComponents = [NSDateComponents new];
-
-		dateComponents.year = [timeStr substringWithRange:NSMakeRange(0, 4)].intValue;
-		dateComponents.month = [timeStr substringWithRange:NSMakeRange(4, 2)].intValue;
-		dateComponents.day = [timeStr substringWithRange:NSMakeRange(6, 2)].intValue;
-		dateComponents.hour = [timeStr substringWithRange:NSMakeRange(8, 2)].intValue;
-		dateComponents.minute = [timeStr substringWithRange:NSMakeRange(10, 2)].intValue;
-		dateComponents.second = [timeStr substringWithRange:NSMakeRange(12, 2)].intValue;
-
-		NSCalendar *calendar = [NSCalendar currentCalendar];
-		resultDate = [calendar dateFromComponents:dateComponents];
-	}
-
-	return resultDate;
-}
-
-
 - (NSString *)findOrCreateDirectory:(NSSearchPathDirectory)searchPathDirectory
                            inDomain:(NSSearchPathDomainMask)domainMask
                 appendPathComponent:(NSString *)appendComponent
@@ -406,41 +372,14 @@ static NSDate *asn1TimeToNSDate(ASN1_TIME *time) {
 	request.entity = entity;
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName"
 	                                                               ascending:YES];
-	NSArray *sortDescriptors = @[sortDescriptor];
-	request.sortDescriptors = sortDescriptors;
+	request.sortDescriptors = @[sortDescriptor];
+
 	// Fetch the records and handle an error
 	NSError *error;
 	NSArray *pkeys = [self.managedObjectContext executeFetchRequest:request
 	                                                          error:&error];
 
 	return pkeys;
-}
-
-
-- (NSData *)bytesFromHexString:(NSString *)aString; {
-
-	NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:nil];
-	NSMutableData *data = [NSMutableData data];
-	int idx;
-	for (idx = 0; idx + 2 <= theString.length; idx += 2) {
-		NSRange range = NSMakeRange(idx, 2);
-		NSString *hexStr = [theString substringWithRange:range];
-		NSScanner *scanner = [NSScanner scannerWithString:hexStr];
-		unsigned int intValue;
-		if ([scanner scanHexInt:&intValue])
-			[data appendBytes:&intValue
-			           length:1];
-	}
-	return data;
-}
-
-
-- (NSDictionary *)PKCS7BatchSign:(NSString *)p12Path
-                    withPassword:(NSString *)password
-                       andHashes:(NSDictionary *)hashes
-                           error:(NSError **)error {
-
-	return nil;
 }
 
 
@@ -603,99 +542,15 @@ localizedDescription:(NSString *)localizedDescription
   withPassword:(NSString *)password
          error:(NSError **)error {
 
-	/* Read PKCS12 */
-	FILE *fp;
-	EVP_PKEY *pkey;
-	X509 *cert;
-	STACK_OF(X509) *ca = NULL;
-	PKCS12 *p12;
-	// int i = 0;
-	unsigned char *alias = NULL;
+	// Parse X509 values
 
-	const char *p12_file_path = [p12Path cStringUsingEncoding:NSUTF8StringEncoding];
-	const char *p12_password = [password cStringUsingEncoding:NSUTF8StringEncoding];
+	NSDictionary *x509Values = [ADLKeyStore getX509ValuesforP12:p12Path
+	                                               withPassword:password];
 
-	OpenSSL_add_all_algorithms();
-	ERR_load_crypto_strings();
-	EVP_add_digest(EVP_sha1());
-
-	if (!(fp = fopen(p12_file_path, "rb"))) {
-		fprintf(stderr, "Error opening file %s\n", p12_file_path);
-		if (error) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain
-			                             code:ENOENT
-			                         userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Le fichier %@ n'a pas pu être ouvert",
-			                                                                                          p12Path.lastPathComponent]}];
-		}
+	if (!x509Values)  	// TODO : error message
 		return NO;
-	}
-	p12 = d2i_PKCS12_fp(fp, NULL);
-	fclose(fp);
-	if (!p12) {
-		fprintf(stderr, "Error reading PKCS#12 file\n");
-		ERR_print_errors_fp(stderr);
-		if (error) {
-			*error = [NSError errorWithDomain:NSPOSIXErrorDomain
-			                             code:ENOENT
-			                         userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Impossible de lire %@",
-			                                                                                          p12Path.lastPathComponent]}];
-			PKCS12_free(p12);
-		}
-		return NO;
-	}
-	if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
-		fprintf(stderr, "Error parsing PKCS#12 file\n");
-		ERR_print_errors_fp(stderr);
-		if (error) {
-			*error = [NSError errorWithDomain:P12ErrorDomain
-			                             code:P12OpenErrorCode
-			                         userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Impossible de d'ouvrir %@ verifiez le mot de passe",
-			                                                                                          p12Path.lastPathComponent]}];
-		}
-		PKCS12_free(p12);
-
-		return NO;
-	}
-	PKCS12_free(p12);
-	/*if (!(fp = fopen(argv[3], "w"))) {
-	 fprintf(stderr, "Error opening file %s\n", argv[1]);
-	 exit(1);
-	 }*/
-	if (pkey) {
-		//  fprintf(stdout, "***Private Key***\n");
-		// PEM_write_PrivateKey(stdout, pkey, NULL, NULL, 0, NULL, NULL);
-	}
-	if (cert) {
-		// fprintf(stdout, "***User Certificate***\n");
-		// PEM_write_X509_AUX(stdout, cert);
-		int len = 0;
-		alias = X509_alias_get0(cert, &len);
-	}
-	if (ca && sk_X509_num(ca)) {
-		// fprintf(stdout, "***Other Certificates***\n");
-		//for (i = 0; i < sk_X509_num(ca); i++) {
-		//PEM_write_X509_AUX(stdout, sk_X509_value(ca, i));
-		// int len = 0;
-
-		//  unsigned char *alias = X509_alias_get0(sk_X509_value(ca, i), &len);
-		//  printf("%s", alias);
-
-		//}
-	}
-
-	// TODO : if (alias == null), error message
 
 	// prepare data for the PrivateKey Entity
-	NSData *cert_data_to_store = X509_to_NSData(cert);
-
-	X509_NAME *issuer_name = X509_get_issuer_name(cert);
-	ASN1_INTEGER *cert_serial_number = X509_get_serialNumber(cert);
-	BIGNUM *bnser = ASN1_INTEGER_to_BN(cert_serial_number, NULL);
-
-	char *big_number_serial_str = BN_bn2hex(bnser);
-	char issuer_name_str[256];
-
-	X509_NAME_oneline(issuer_name, issuer_name_str, 256);
 
 	NSEntityDescription *entityDescription = [NSEntityDescription
 			entityForName:@"PrivateKey"
@@ -704,28 +559,19 @@ localizedDescription:(NSString *)localizedDescription
 	NSFetchRequest *request = [NSFetchRequest new];
 	request.entity = entityDescription;
 
-	NSString *commonName_to_find = [NSString stringWithCString:(const char *) alias
-	                                                  encoding:NSUTF8StringEncoding];
-
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:
 			                                      @"commonName=%@ AND caName=%@ AND serialNumber=%@",
-			                                      commonName_to_find,
-			                                      [NSString stringWithCString:(const char *) issuer_name_str
-			                                                         encoding:NSUTF8StringEncoding],
-			                                      [NSString stringWithCString:(const char *) big_number_serial_str
-			                                                         encoding:NSUTF8StringEncoding]];
+			                                      x509Values[@"commonName"],
+			                                      x509Values[@"issuerName"],
+			                                      x509Values[@"serialNumber"]];
 
 	request.predicate = predicate;
 
 	if (error)
 		*error = nil;
+
 	NSArray *array = [self.managedObjectContext executeFetchRequest:request
 	                                                          error:error];
-
-//	if (*error) {
-//		NSLog(@"Error fetching keys: %@", [*error localizedDescription]);
-//		return NO;
-//	}
 
 	if (array.count == 0) {
 
@@ -737,18 +583,21 @@ localizedDescription:(NSString *)localizedDescription
 		                                        toPath:newPath
 		                                         error:error];
 
-
 		// generate an entry for the new Key
-		PrivateKey *new_pk = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
-		                                                   inManagedObjectContext:self.managedObjectContext];
-		new_pk.p12Filename = newPath;
-		new_pk.publicKey = cert_data_to_store;
-		new_pk.commonName = [NSString stringWithCString:(const char *) alias
-		                                       encoding:NSUTF8StringEncoding];
-		new_pk.caName = [NSString stringWithCString:(const char *) issuer_name_str
-		                                   encoding:NSUTF8StringEncoding];
-		new_pk.serialNumber = [NSString stringWithCString:(const char *) big_number_serial_str
-		                                         encoding:NSUTF8StringEncoding];
+
+		PrivateKey *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
+		                                                          inManagedObjectContext:self.managedObjectContext];
+
+		NSDateFormatter *formatter = [NSDateFormatter new];
+		[formatter setDateFormat:ISO_8601_FORMAT];
+
+		newPrivateKey.p12Filename = newPath;
+		newPrivateKey.publicKey = [x509Values[@"publicKey"] dataUsingEncoding:NSUTF8StringEncoding];
+		newPrivateKey.serialNumber = x509Values[@"serialNumber"];
+		newPrivateKey.notBefore = [formatter dateFromString:x509Values[@"notBefore"]];
+		newPrivateKey.notAfter = [formatter dateFromString:x509Values[@"notAfter"]];
+		newPrivateKey.commonName = x509Values[@"commonName"];
+		newPrivateKey.caName = x509Values[@"issuerName"];
 
 		error = nil;
 		if (![self.managedObjectContext save:error]) {
@@ -767,21 +616,17 @@ localizedDescription:(NSString *)localizedDescription
 }
 
 
+#pragma mark - Utils
+
+
 + (NSDictionary *)getX509ValuesforP12:(NSString *)path
                          withPassword:(NSString *)password {
 
-	NSFileManager *fileManager = [NSFileManager new];
-	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-	                                     inDomain:NSUserDomainMask
-	                            appropriateForURL:nil
-	                                       create:YES
-	                                        error:NULL];
-
-	NSString *p12Path = [pathURL.path stringByAppendingPathComponent:path];
+	NSString *p12Path = path;
 
 	FILE *fp;
 	EVP_PKEY *pkey;
-	X509 *cert;
+	X509 *certX509;
 	STACK_OF(X509) *ca = NULL;
 	PKCS12 *p12;
 
@@ -808,7 +653,7 @@ localizedDescription:(NSString *)localizedDescription
 		return nil;
 	}
 
-	if (!PKCS12_parse(p12, p12_password, &pkey, &cert, &ca)) {
+	if (!PKCS12_parse(p12, p12_password, &pkey, &certX509, &ca)) {
 		NSLog(@"Update certificate error - Wrong password %@ / %@", p12Path.lastPathComponent, password);
 		PKCS12_free(p12);
 		return nil;
@@ -816,37 +661,89 @@ localizedDescription:(NSString *)localizedDescription
 
 	PKCS12_free(p12);
 
-	if (!cert) {
+	if (!certX509) {
 		NSLog(@"Update certificate error - no certificate in KeyStore %@", p12Path.lastPathComponent);
 		return nil;
 	}
 
 	// Fetch values from p12, with OpenSSL
 
-	unsigned char *alias = NULL;
 	int len = 0;
-	X509_alias_get0(cert, &len);
+	unsigned char *aliasChar = X509_alias_get0(certX509, &len);
 
-	ASN1_TIME *notBefore = X509_get_notBefore(cert);
-	ASN1_TIME *notAfter = X509_get_notAfter(cert);;
+	char issuerChar[256];
+	X509_NAME *issuerX509Name = X509_get_issuer_name(certX509);
+	X509_NAME_oneline(issuerX509Name, issuerChar, 256);
 
-	// Convert values
+	ASN1_TIME *notBeforeAsn1Time = X509_get_notBefore(certX509);
+	ASN1_TIME *notAfterAsn1Time = X509_get_notAfter(certX509);;
 
-	NSDate *notBeforeDate = asn1TimeToNSDate(notBefore);
-	NSDate *notAfterDate = asn1TimeToNSDate(notAfter);
+	ASN1_INTEGER *serialAsn1 = X509_get_serialNumber(certX509);
+	BIGNUM *serialBigNumber = ASN1_INTEGER_to_BN(serialAsn1, NULL);
+	char *serialChar = BN_bn2hex(serialBigNumber);
+
+	NSData *certNsData = X509_to_NSData(certX509);
+
+	// Convert values into Foundation classes
+
+	NSString *aliasString = [NSString stringWithCString:(const char *) aliasChar encoding:NSUTF8StringEncoding];
+	NSString *issuerString = [NSString stringWithCString:(const char *) issuerChar encoding:NSUTF8StringEncoding];
+	NSString *serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
+	NSString *certString = [[NSString alloc] initWithData:certNsData encoding:NSUTF8StringEncoding];
+
+	NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNSDate:notBeforeAsn1Time];
+	NSDate *notAfterDate = [ADLKeyStore asn1TimeToNSDate:notAfterAsn1Time];
 
 	NSDateFormatter *formatter = [NSDateFormatter new];
-	formatter.dateFormat = @"dd/MM/yyyy";
+	[formatter setDateFormat:ISO_8601_FORMAT];
 
-	NSString *aliasString = [NSString stringWithFormat:@"%s", alias];
 	NSString *notBeforeString = [formatter stringFromDate:notBeforeDate];
 	NSString *notAfterString = [formatter stringFromDate:notAfterDate];
 
 	// Result
 
-	return @{@"alias": aliasString,
+	return @{@"commonName": aliasString,
+			@"issuerName": issuerString,
 			@"notBefore": notBeforeString,
-			@"notAfter": notAfterString};
+			@"notAfter": notAfterString,
+			@"serialNumber" : serialString,
+			@"publicKey" : certString};
+}
+
+
++ (NSDate *)asn1TimeToNSDate:(ASN1_TIME *)time {
+
+	NSDate *resultDate = nil;
+
+	ASN1_GENERALIZEDTIME *generalizedTime = ASN1_TIME_to_generalizedtime(time, NULL);
+	if (generalizedTime != NULL) {
+		unsigned char *generalizedTimeData = ASN1_STRING_data(generalizedTime);
+
+		// ASN1 generalized times look like this: "20131114230046Z"
+		//                                format:  YYYYMMDDHHMMSS
+		//                               indices:  01234567890123
+		//                                                   1111
+		// There are other formats (e.g. specifying partial seconds or
+		// time zones) but this is good enough for our purposes since
+		// we only use the date and not the time.
+		//
+		// (Source: http://www.obj-sys.com/asn1tutorial/node14.html)
+
+		NSString *timeStr = [NSString stringWithUTF8String:(char *) generalizedTimeData];
+		NSDateComponents *dateComponents = [NSDateComponents new];
+
+		dateComponents.year = [timeStr substringWithRange:NSMakeRange(0, 4)].intValue;
+		dateComponents.month = [timeStr substringWithRange:NSMakeRange(4, 2)].intValue;
+		dateComponents.day = [timeStr substringWithRange:NSMakeRange(6, 2)].intValue;
+		dateComponents.hour = [timeStr substringWithRange:NSMakeRange(8, 2)].intValue;
+		dateComponents.minute = [timeStr substringWithRange:NSMakeRange(10, 2)].intValue;
+		dateComponents.second = [timeStr substringWithRange:NSMakeRange(12, 2)].intValue;
+
+		NSCalendar *calendar = [NSCalendar currentCalendar];
+		resultDate = [calendar dateFromComponents:dateComponents];
+	}
+
+	return resultDate;
 }
 
 

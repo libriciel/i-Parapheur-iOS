@@ -44,5 +44,7 @@
 @property (nonatomic, strong) NSString * p12Filename;
 @property (nonatomic, strong) NSData * publicKey;
 @property (nonatomic, strong) NSString * serialNumber;
+@property (nonatomic, strong) NSDate * notBefore;
+@property (nonatomic, strong) NSDate * notAfter;
 
 @end
