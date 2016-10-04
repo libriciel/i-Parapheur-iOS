@@ -41,6 +41,7 @@ import Foundation
 
     @IBOutlet var certificatesTableView: UITableView!
     var certificateList: Array<Certificate>!
+    var dateFormatter: NSDateFormatter!
 
     // MARK: - Life cycle
 
@@ -49,6 +50,11 @@ import Foundation
 
         certificateList = loadCertificateList()
         certificatesTableView.dataSource = self
+
+        dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        dateFormatter.locale = NSLocale.currentLocale();
     }
 
     // MARK: - UITableViewDataSource
@@ -60,14 +66,19 @@ import Foundation
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCellWithIdentifier("CertificateCell", forIndexPath: indexPath)
-        let keyManagedObject = certificateList[indexPath.row] as! Certificate
+        let certificate = certificateList[indexPath.row] as! Certificate
 
         if let nameLabel = cell.viewWithTag(101) as? UILabel {
-            nameLabel.text = keyManagedObject.commonName
+            nameLabel.text = certificate.commonName
         }
 
         if let expirationDateLabel = cell.viewWithTag(102) as? UILabel {
-            expirationDateLabel.text = expirationDateLabel.text?.stringByReplacingOccurrencesOfString(":date:", withString: "12/12/2016")
+            let notAfterString: String = dateFormatter.stringFromDate(certificate.notAfter!)
+            expirationDateLabel.text = expirationDateLabel.text?.stringByReplacingOccurrencesOfString(":date:",
+                                                                                                      withString: notAfterString)
+
+            let notAfterCompare: NSComparisonResult = certificate.notAfter!.compare(NSDate())
+            expirationDateLabel.textColor = notAfterCompare == NSComparisonResult.OrderedAscending ? UIColor.redColor() : UIColor.lightGrayColor()
         }
 
         if let deleteButton = cell.viewWithTag(103) as? UIButton {
