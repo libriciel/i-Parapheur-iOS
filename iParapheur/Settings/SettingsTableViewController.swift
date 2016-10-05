@@ -42,11 +42,11 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet var backButton: UIBarButtonItem!
 
     let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String)])] = [
-            ("Général", [("Comptes", "accountsSegue", "ic_account_box_white.png"),
-                         ("Certificats", "certificatesSegue", "ic_verified_user_white.png"),
-                         ("Filtres", "filtersSegue", "ic_filter_list_white.png")]),
-            ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white.png"),
-                          ("Licences tierces", "licencesSegue", "ic_copyright_white.png")])
+            ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png"),
+                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png"),
+                         ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png")]),
+            ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png"),
+                          ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png")])
     ]
 
     // MARK: LifeCycle
@@ -89,7 +89,7 @@ class SettingsTableViewController: UITableViewController {
         return menuElements.count
     }
 
-    override func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String! {
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
         return menuElements[section].title
     }
 
