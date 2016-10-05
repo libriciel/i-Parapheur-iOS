@@ -54,7 +54,6 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("View loaded : SettingsTableViewController")
-		print("test : \(backButton)")
 
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 		

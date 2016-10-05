@@ -278,12 +278,12 @@
 }
 
 
-- (void)touchesBegan:(NSSet *)touches
+- (void)	:(NSSet *)touches
            withEvent:(UIEvent *)event {
 
 	if (_enabled) {
 
-		UITouch *touch = [[event allTouches] anyObject];
+		UITouch *touch = [event allTouches].anyObject;
 
 		CGPoint touchPoint = [self clipPointToView:[touch locationInView:self]];
 
@@ -311,7 +311,7 @@
 					_longPressGestureRecognizer.enabled = NO;
 				}
 
-				[_hittedView setSelected:true];
+				_hittedView.selected = true;
 				[_hittedView setNeedsDisplay];
 			}
 			else {

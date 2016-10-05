@@ -137,11 +137,11 @@
 
 + (NSData *)bytesFromHexString:(NSString *)aString; {
 
-	NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:nil];
+	NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:@""];
 	NSMutableData *data = [NSMutableData data];
 	int idx;
 	for (idx = 0; idx + 2 <= theString.length; idx += 2) {
-		NSRange range = NSMakeRange(idx, 2);
+		NSRange range = NSMakeRange((NSUInteger) idx, 2);
 		NSString *hexStr = [theString substringWithRange:range];
 		NSScanner *scanner = [NSScanner scannerWithString:hexStr];
 		unsigned int intValue;

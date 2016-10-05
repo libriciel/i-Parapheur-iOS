@@ -560,11 +560,6 @@
 	else
 		[_dossiersArray removeAllObjects];
 
-	// Switch v2/v3
-
-	bool isLoaded = (dossiers.count) > 0;
-	bool isVersion2 = isLoaded && [dossiers[0] isKindOfClass:[NSDictionary class]];
-
 	/* manualy filters the locked files out */
 	if (dossiers.count > 0) {
 		NSMutableArray *lockedDossiers = [NSMutableArray arrayWithCapacity:dossiers.count];
@@ -704,11 +699,6 @@ didSelectAtIndexPath:(NSIndexPath *)indexPath {
 //	}
 
 	// v2/v3 compatibility
-
-	bool isLoaded = (_filteredDossiersArray.count > 0) || (_dossiersArray.count > 0);
-	bool isFilteredVersion2 = isLoaded && [_filteredDossiersArray[0] isKindOfClass:[NSDictionary class]];
-	bool isDossierVersion2 = isLoaded && [_dossiersArray[0] isKindOfClass:[NSDictionary class]];
-	bool isVersion2 = isLoaded && (isFilteredVersion2 && isDossierVersion2);
 
 	NSString *dossierRef;
 

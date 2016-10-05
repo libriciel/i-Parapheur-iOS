@@ -79,7 +79,7 @@
 	_settingsButton.action = @selector(onSettingsButtonClicked:);
 
 	_accountButton.target = self;
-	_accountButton.action = @selector(onSettingsButtonClicked:);
+	_accountButton.action = @selector(onAccountButtonClicked:);
 }
 
 
@@ -380,8 +380,6 @@
 
 	// Popup response
 
-	NSDictionary *userInfo = notification.userInfo;
-	BOOL success = ((NSNumber *) userInfo[@"success"]).boolValue;
 	BOOL isDemo = [DeviceUtils isConnectedToDemoAccount];
 
 	// Check

@@ -66,7 +66,7 @@ import Foundation
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCellWithIdentifier("CertificateCell", forIndexPath: indexPath)
-        let certificate = certificateList[indexPath.row] as! Certificate
+        let certificate = certificateList[indexPath.row] 
 
         if let nameLabel = cell.viewWithTag(101) as? UILabel {
             nameLabel.text = certificate.commonName
@@ -133,7 +133,7 @@ import Foundation
         let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
         for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-            if (pkeyManagedObject.valueForKey("serialNumber") as! String == certificateList[indexPath.row].serialNumber) {
+            if (pkeyManagedObject.valueForKey("serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
                 privateKeyToDelete = pkeyManagedObject
             }
         }

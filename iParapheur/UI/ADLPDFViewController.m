@@ -159,11 +159,7 @@
                  sender:(id)sender {
 
 	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
-
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3)
-			((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
-		else
-			((RGDossierDetailViewController *) segue.destinationViewController).dossier = _document;
+		((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 	}
 
 	if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
