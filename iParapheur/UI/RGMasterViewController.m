@@ -72,11 +72,14 @@
 	self.refreshControl.tintColor = [UIColor selectedCellGreyColor];
 
 	[self.refreshControl addTarget:self
-							action:@selector(loadBureaux)
-				  forControlEvents:UIControlEventValueChanged];
+	                        action:@selector(loadBureaux)
+	              forControlEvents:UIControlEventValueChanged];
 
 	_settingsButton.target = self;
 	_settingsButton.action = @selector(onSettingsButtonClicked:);
+
+	_accountButton.target = self;
+	_accountButton.action = @selector(onSettingsButtonClicked:);
 }
 
 
@@ -101,13 +104,8 @@
 	if (_firstLaunch) {
 		if (areSettingsSet) {
 			[self initRestClient];
-		}
-		else {
-			UIViewController *splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
-			[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-			[self presentViewController:splashscreenViewController
-			                   animated:YES
-			                 completion:nil];
+		} else {
+			[self displayAccountPopup];
 		}
 	}
 
@@ -159,8 +157,7 @@
 			                 if (error.code == kCFURLErrorNotConnectedToInternet) {
 				                 [strongSelf setNewConnectionTryOnNetworkRetrieved];
 				                 [DeviceUtils logInfoMessage:@"Une connexion Internet est nécessaire au lancement de l'application."];
-			                 }
-			                 else {
+			                 } else {
 				                 [DeviceUtils logError:error];
 			                 }
 		                 }
@@ -176,11 +173,11 @@
 	@try {
 		// Check UTC time, and warns for possible shutdowns	
 		NSDate *currentDate = [NSDate new];
-		
+
 		NSDateFormatter *dateFormatter = [NSDateFormatter new];
 		dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"Europe/London"];
 		[dateFormatter setDateFormat:@"H"];
-		
+
 		NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
 
 		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
@@ -271,11 +268,9 @@
 				                [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 			                }
 		                }];
-	}
-	else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == 2) {
+	} else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == 2) {
 		API_GETBUREAUX();
-	}
-	else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == -1) {
+	} else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == -1) {
 		[self.refreshControl endRefreshing];
 	}
 }
@@ -287,6 +282,16 @@
 }
 
 
+- (void)displayAccountPopup {
+
+	UIViewController *splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
+	[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+	[self presentViewController:splashscreenViewController
+	                   animated:YES
+	                 completion:nil];
+}
+
+
 #pragma mark - Button Listeners
 
 
@@ -294,7 +299,7 @@
 	// TODO : Direct call to login popup, on no-account set
 
 	// Displays secondary Settings.storyboard
-    // TODO : Switch to easier linked Storyboard
+	// TODO : Switch to easier linked Storyboard
 	// (When iOS9 will be the oldest supported version)
 
 	UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Settings"
@@ -306,6 +311,16 @@
 	[self presentViewController:vc
 	                   animated:YES
 	                 completion:NULL];
+}
+
+
+- (void)onAccountButtonClicked:(id)sender {
+
+	if ([DeviceUtils isConnectedToDemoAccount]) {
+		[self displayAccountPopup];
+	} else {
+		// TODO : account list
+	}
 }
 
 
@@ -328,8 +343,7 @@
 		                 withTicket:API_LOGIN_GET_TICKET(answer)];
 
 		[self loadBureaux];
-	}
-	else if ([s isEqual:GETBUREAUX_API]) {
+	} else if ([s isEqual:GETBUREAUX_API]) {
 		NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
 
 		self.bureauxArray = array;
@@ -411,14 +425,17 @@
 	if (isLoaded && isVersion2) {
 		NSDictionary *bureau = _bureauxArray[(NSUInteger) indexPath.row];
 		bureauName = bureau[@"name"];
-		bureauEnRetard = [NSString stringWithFormat:@"%@", bureau[@"en_retard"]];
-		bureauATraiter = [NSString stringWithFormat:@"%@", bureau[@"a_traiter"]];
-	}
-	else {
+		bureauEnRetard = [NSString stringWithFormat:@"%@",
+		                                            bureau[@"en_retard"]];
+		bureauATraiter = [NSString stringWithFormat:@"%@",
+		                                            bureau[@"a_traiter"]];
+	} else {
 		Bureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
 		bureauName = bureau.unwrappedName;
-		bureauEnRetard = [NSString stringWithFormat:@"%d", (int) bureau.unwrappedEnRetard];
-		bureauATraiter = [NSString stringWithFormat:@"%d", (int) bureau.unwrappedATraiter];
+		bureauEnRetard = [NSString stringWithFormat:@"%d",
+		                                            (int) bureau.unwrappedEnRetard];
+		bureauATraiter = [NSString stringWithFormat:@"%d",
+		                                            (int) bureau.unwrappedATraiter];
 	}
 
 	cell.bureauNameLabel.text = bureauName;
@@ -461,8 +478,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		NSDictionary *bureau = _bureauxArray[(NSUInteger) indexPath.row];
 		bureauName = bureau[@"name"];
 		bureauNodeRef = bureau[@"nodeRef"];
-	}
-	else {
+	} else {
 		Bureau *bureau = self.bureauxArray[(NSUInteger) indexPath.row];
 		bureauName = bureau.unwrappedName;
 		bureauNodeRef = bureau.unwrappedNodeRef;

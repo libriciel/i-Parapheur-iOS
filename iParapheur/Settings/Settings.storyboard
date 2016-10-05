@@ -131,7 +131,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="DWG-pA-QbG" customClass="SettingsTableViewController">
-                        <barButtonItem key="leftBarButtonItem" title="Retour" id="Yvn-GK-kgU"/>
+                        <barButtonItem key="leftBarButtonItem" image="ic_close_white.png" id="Yvn-GK-kgU">
+                            <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="backButton" destination="Yvn-GK-kgU" id="ah1-A2-sRv"/>
@@ -523,6 +525,7 @@ Initié et Developpé par ADULLACT-Projet S.A.</string>
         </scene>
     </scenes>
     <resources>
+        <image name="ic_close_white.png" width="24" height="24"/>
         <image name="ic_delete_white.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
