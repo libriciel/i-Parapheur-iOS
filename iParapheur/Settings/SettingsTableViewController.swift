@@ -39,29 +39,29 @@ import UIKit.UITableViewController
 
 class SettingsTableViewController: UITableViewController {
 
-	@IBOutlet var backButton: UIBarButtonItem!
+    @IBOutlet var backButton: UIBarButtonItem!
 
-	let menuElements: [(title:String, segue:String)] = [
-		("Comptes", "accountsSegue"),
-		("Certificats", "certificatesSegue"),
-		("Filtres", "filtersSegue"),
-		("Informations légales", "aboutSegue"),
-		("Licences tierces", "licencesSegue"),
-	]
-	
+    let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String)])] = [
+            ("Général", [("Comptes", "accountsSegue", "ic_account_box_white.png"),
+                         ("Certificats", "certificatesSegue", "ic_verified_user_white.png"),
+                         ("Filtres", "filtersSegue", "ic_filter_list_white.png")]),
+            ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white.png"),
+                          ("Licences tierces", "licencesSegue", "ic_copyright_white.png")])
+    ]
+
     // MARK: LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         print("View loaded : SettingsTableViewController")
 
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-		
-		backButton.target = self
-		backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
+        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+
+        backButton.target = self
+        backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
     }
 
-	// TODO: why ?
+    // TODO: why ?
 //- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 //if ([[segue identifier] isEqualToString:@"detail1"]) {
 //    DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
@@ -80,23 +80,46 @@ class SettingsTableViewController: UITableViewController {
     // MARK: Listeners
 
     func onBackButtonClicked() {
-		self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: UITableViewController
 
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return menuElements.count
+    }
+
+    override func tableView(tableView: UITableView!, titleForHeaderInSection section: Int) -> String! {
+        return menuElements[section].title
+    }
+
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SettingsMenuHeader")
+
+        return header
+    }
+
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.menuElements.count
+        return menuElements[section].elements.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-        cell.textLabel?.text = self.menuElements[indexPath.row].title
+        let cell = tableView.dequeueReusableCellWithIdentifier("SettingsMenuCell", forIndexPath: indexPath)
+
+        if let iconView = cell.viewWithTag(101) as? UIImageView {
+            iconView.image = UIImage(named: menuElements[indexPath.section].elements[indexPath.row].icon)?.imageWithRenderingMode(.AlwaysTemplate)
+        }
+
+        if let textLabel = cell.viewWithTag(102) as? UILabel {
+            print("here textLabel \(textLabel)")
+            textLabel.text = menuElements[indexPath.section].elements[indexPath.row].name
+        }
+
         return cell
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier(self.menuElements[indexPath.row].segue, sender: self)
+        performSegueWithIdentifier(menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
 
 }

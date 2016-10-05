@@ -37,7 +37,6 @@
 #import "ADLNotifications.h"
 #import "ADLRequester.h"
 #import "ADLCircuitCell.h"
-#import <ISO8601DateFormatter/ISO8601DateFormatter.h>
 
 
 @interface RGDossierDetailViewController () {
@@ -248,22 +247,13 @@
 		cell.annotation.text = @"";
 	}
 
-	ISO8601DateFormatter *formatter = [ISO8601DateFormatter new];
-
 	if (object[@"dateValidation"]) {
 
 		NSDate *validationDate;
 
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-			if ([object[@"dateValidation"] isKindOfClass:[NSNumber class]]) {
-				NSNumber *dateMs = object[@"dateValidation"];
-				validationDate = [NSDate dateWithTimeIntervalSince1970:dateMs.doubleValue / 1000];
-			}
-		}
-		else {
-			NSString *validationDateIso = object[@"dateValidation"];
-			if (validationDateIso != nil && ![validationDateIso isEqualToString:@""])
-				validationDate = [formatter dateFromString:validationDateIso];
+		if ([object[@"dateValidation"] isKindOfClass:[NSNumber class]]) {
+			NSNumber *dateMs = object[@"dateValidation"];
+			validationDate = [NSDate dateWithTimeIntervalSince1970:dateMs.doubleValue / 1000];
 		}
 
 		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];

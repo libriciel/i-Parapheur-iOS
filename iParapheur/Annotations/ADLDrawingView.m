@@ -278,7 +278,7 @@
 }
 
 
-- (void)	:(NSSet *)touches
+- (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event {
 
 	if (_enabled) {

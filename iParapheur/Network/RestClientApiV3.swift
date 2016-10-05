@@ -191,12 +191,12 @@ import AFNetworking
                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
 
                         let bureauList = [Bureau].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        if (bureauList.count == 0) {
+                        if (bureauList!.count == 0) {
                             onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
                             return
                         }
 
-                        onResponse!(bureauList)
+                        onResponse!(bureauList!)
                     },
                     failure: {
                         (task: NSURLSessionDataTask!, error: NSError!) in
@@ -233,7 +233,7 @@ import AFNetworking
                     success: {
                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
 						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(dossierList)
+                        onResponse!(dossierList!)
                     },
                     failure: {
                         (task: NSURLSessionDataTask!, error: NSError!) in
