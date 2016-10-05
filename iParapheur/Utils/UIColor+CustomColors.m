@@ -93,6 +93,14 @@
 }
 
 
++(UIColor*) steelColor {
+	return [UIColor colorWithRed:121.0f/255.0f
+						   green:121.0f/255.0f
+							blue:121.0f/255.0f
+						   alpha:1.0f]; // #797979
+}
+
+
 +(UIColor*) defaultTintColor {
     return [self darkBlueColor];
 }

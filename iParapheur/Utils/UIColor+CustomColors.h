@@ -52,6 +52,8 @@
 
 +(UIColor*) defaultTintColor;
 
++(UIColor*) steelColor;
+
 +(UIColor*) colorForAction:(NSString*) action;
 
 @end

@@ -43,6 +43,7 @@
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *accountButton;
 @property (nonatomic, strong) NSArray *bureauxArray;
 @property (nonatomic) BOOL firstLaunch;
 @property (nonatomic) BOOL loading;

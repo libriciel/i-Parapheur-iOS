@@ -125,7 +125,7 @@
 
 	// Convert the rect to get the view's distance from the top of the scrollView.
 	CGRect rect = [view convertRect:view.bounds
-	                         toView:[self superScrollView]];
+	                         toView:self.superScrollView];
 
 	// Set starting offset to that point
 	CGFloat offset = rect.origin.y - (space / 2.0f) + (rect.size.height / 2.0f);
@@ -155,7 +155,7 @@
 - (UIView *)findFirstResponderBeneathView:(UIView *)view {
 	// Search recursively for first responder
 	for (UIView *childView in view.subviews) {
-		if ([childView respondsToSelector:@selector(isFirstResponder)] && [childView isFirstResponder]) return childView;
+		if ([childView respondsToSelector:@selector(isFirstResponder)] && childView.isFirstResponder) return childView;
 		UIView *result = [self findFirstResponderBeneathView:childView];
 		if (result) return result;
 	}
@@ -183,14 +183,14 @@
 	// Shrink view's inset by the keyboard's height, and scroll to show the text field/view being edited
 	[UIView beginAnimations:nil
 	                context:NULL];
-	[UIView setAnimationCurve:(UIViewAnimationCurve) [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] intValue]];
-	[UIView setAnimationDuration:[[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+	[UIView setAnimationCurve:(UIViewAnimationCurve) [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] intValue]];
+	[UIView setAnimationDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue]];
 
-	self.contentInset = [self contentInsetForKeyboard];
+	self.contentInset = self.contentInsetForKeyboard;
 
-	[[self superScrollView] setContentOffset:CGPointMake(self.superScrollView.contentOffset.x, [self idealOffsetForView:firstResponder
-	                                                                                                          withSpace:self.keyboardRect.size.width])
-	                                animated:YES];
+	[self.superScrollView setContentOffset:CGPointMake(self.superScrollView.contentOffset.x, [self idealOffsetForView:firstResponder
+	                                                                                                        withSpace:self.keyboardRect.size.width])
+	                              animated:YES];
 
 	[[self parentScrollView] setScrollIndicatorInsets:_contentInset];
 
@@ -369,7 +369,7 @@
 			if (_hittedView.annotationModel.unwrappedEditable) {
 				if ([_hittedView isInHandle:[touch locationInView:self]]) {
 
-					CGRect frame = [_hittedView frame];
+					CGRect frame = _hittedView.frame;
 
 					frame.size.width = point.x - frame.origin.x;
 					frame.size.height = point.y - frame.origin.y;
@@ -377,11 +377,11 @@
 					_superScrollView.scrollEnabled = NO;
 					_shallUpdateCurrent = YES;
 
-					[_hittedView setFrame:frame];
+					_hittedView.frame = frame;
 					[_hittedView setNeedsDisplay];
 				}
 				else if (_hittedView && _hasBeenLongPressed) {
-					CGRect frame = [_hittedView frame];
+					CGRect frame = _hittedView.frame;
 
 					frame.origin.x = point.x - _dx;
 					frame.origin.y = point.y - _dy;
@@ -391,7 +391,7 @@
 					_parentScrollView.scrollEnabled = NO;
 					_superScrollView.scrollEnabled = NO;
 					_shallUpdateCurrent = YES;
-					[_hittedView setFrame:frame];
+					_hittedView.frame = frame;
 				}
 			}
 
@@ -408,7 +408,7 @@
 
 	if (_enabled) {
 
-		UITouch *touch = [touches anyObject];
+		UITouch *touch = touches.anyObject;
 
 		if (_hasBeenLongPressed) {
 			_hasBeenLongPressed = NO;
@@ -459,7 +459,7 @@
 
 - (CGRect)clipRectInView:(CGRect)rect {
 
-	CGRect frame = [self frame];
+	CGRect frame = self.frame;
 	CGRect clippedRect = rect;
 
 	CGFloat dx = 0.0f;

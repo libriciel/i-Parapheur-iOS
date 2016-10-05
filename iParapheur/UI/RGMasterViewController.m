@@ -68,8 +68,6 @@
 	                                             name:@"loginPopupDismiss"
 	                                           object:nil];
 
-	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
-
 	self.refreshControl = [UIRefreshControl new];
 	self.refreshControl.tintColor = [UIColor selectedCellGreyColor];
 
@@ -79,12 +77,6 @@
 
 	_settingsButton.target = self;
 	_settingsButton.action = @selector(onSettingsButtonClicked:);
-}
-
-
-- (void)viewWillAppear:(BOOL)animated {
-
-	[super viewWillAppear:YES];
 }
 
 
@@ -101,7 +93,7 @@
 	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
 
 	BOOL areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
-	[self settingsButtonWithWarning:!areSettingsSet];
+	[self refreshAccountIcon:areSettingsSet];
 
 	// First launch behavior.
 	// We can't do it on viewDidLoad, we can display a modal view only here.
@@ -254,18 +246,6 @@
 }
 
 
-- (void)settingsButtonWithWarning:(BOOL)warning {
-
-	if (warning) {
-		_settingsButton.image = [UIImage imageNamed:@"icon_login_add.png"];
-		_settingsButton.tintColor = [UIColor darkRedColor];
-	} else {
-		_settingsButton.image = [UIImage imageNamed:@"icon_login.png"];
-		_settingsButton.tintColor = [UIColor darkBlueColor];
-	}
-}
-
-
 - (void)loadBureaux {
 
 	[self.refreshControl beginRefreshing];
@@ -298,6 +278,12 @@
 	else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == -1) {
 		[self.refreshControl endRefreshing];
 	}
+}
+
+
+- (void)refreshAccountIcon:(BOOL)isAccountSet {
+
+	_accountButton.tintColor = isAccountSet ? [UIColor steelColor] : [UIColor darkRedColor];
 }
 
 
@@ -382,21 +368,12 @@
 
 	NSDictionary *userInfo = notification.userInfo;
 	BOOL success = ((NSNumber *) userInfo[@"success"]).boolValue;
-
-	// Settings values
-
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
-	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
-	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
-	BOOL areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
+	BOOL isDemo = [DeviceUtils isConnectedToDemoAccount];
 
 	// Check
 
-	[self settingsButtonWithWarning:(!areSettingsSet && !success)];
-
-	if (success || !areSettingsSet)
-		[self initRestClient];
+	[self refreshAccountIcon:!isDemo];
+	[self initRestClient];
 }
 
 
