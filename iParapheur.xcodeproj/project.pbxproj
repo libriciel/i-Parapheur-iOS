@@ -205,6 +205,8 @@
 		C5B874571DA56EAC00909F80 /* ic_verified_user_outline_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B874541DA56EAC00909F80 /* ic_verified_user_outline_white_24dp.png */; };
 		C5B874581DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B874551DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@2x.png */; };
 		C5B874591DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B874561DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@3x.png */; };
+		C5B8745C1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8745B1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift */; };
+		C5B8745E1DA6482900909F80 /* SettingsTableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5B8745D1DA6482900909F80 /* SettingsTableViewHeaderFooterView.xib */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
@@ -532,6 +534,8 @@
 		C5B874541DA56EAC00909F80 /* ic_verified_user_outline_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_verified_user_outline_white_24dp.png; path = Icons/ic_verified_user_outline_white_24dp/ic_verified_user_outline_white_24dp.png; sourceTree = "<group>"; };
 		C5B874551DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_verified_user_outline_white_24dp@2x.png"; path = "Icons/ic_verified_user_outline_white_24dp/ic_verified_user_outline_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C5B874561DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_verified_user_outline_white_24dp@3x.png"; path = "Icons/ic_verified_user_outline_white_24dp/ic_verified_user_outline_white_24dp@3x.png"; sourceTree = "<group>"; };
+		C5B8745B1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
+		C5B8745D1DA6482900909F80 /* SettingsTableViewHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsTableViewHeaderFooterView.xib; sourceTree = "<group>"; };
 		C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClientApi3.h; sourceTree = "<group>"; };
 		C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClientApi3.m; sourceTree = "<group>"; };
 		C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClient.h; sourceTree = "<group>"; };
@@ -1011,6 +1015,8 @@
 				C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */,
 				C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */,
 				C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */,
+				C5B8745B1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift */,
+				C5B8745D1DA6482900909F80 /* SettingsTableViewHeaderFooterView.xib */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1409,6 +1415,7 @@
 				C58CB27F1AB7198B00C79A97 /* ip-tdt@2x.png in Resources */,
 				C5B8742D1DA5674900909F80 /* ic_account_white_24dp.png in Resources */,
 				C5B8742E1DA5674900909F80 /* ic_account_white_24dp@2x.png in Resources */,
+				C5B8745E1DA6482900909F80 /* SettingsTableViewHeaderFooterView.xib in Resources */,
 				C54DDBEB1DA4EE6D001DEAE8 /* ic_close_white@3x.png in Resources */,
 				C516EDE51AB6D94400216E5F /* iw-signature@2x.png in Resources */,
 				C54DDBF81DA4F080001DEAE8 /* ic_account_circle_white@3x.png in Resources */,
@@ -1605,6 +1612,7 @@
 				C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */,
 				B4FF340D15473B6F006F7BF3 /* ReaderThumbQueue.m in Sources */,
 				B4FF340E15473B6F006F7BF3 /* ReaderThumbFetch.m in Sources */,
+				C5B8745C1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift in Sources */,
 				B4FF340F15473B6F006F7BF3 /* ReaderThumbRender.m in Sources */,
 				B4FF341015473B6F006F7BF3 /* ReaderThumbsView.m in Sources */,
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,

@@ -1,6 +1,5 @@
 /*
 * Copyright 2012-2016, Adullact-Projet.
-* Contributors : SKROBS (2012)
 *
 * contact@adullact-projet.coop
 *
@@ -55,27 +54,16 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         print("View loaded : SettingsTableViewController")
 
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-
         backButton.target = self
         backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
-    }
 
-    // TODO: why ?
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//if ([[segue identifier] isEqualToString:@"detail1"]) {
-//    DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-//    controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-//    controller.navigationItem.leftItemsSupplementBackButton = YES;
-//    return;
-//}
-//if ([[segue identifier] isEqualToString:@"detail2"]) {
-//    DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-//    controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-//    controller.navigationItem.leftItemsSupplementBackButton = YES;
-//    return;
-//}
-//}
+        // Registering cells
+
+        let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
+		tableView.registerNib(nib, forHeaderFooterViewReuseIdentifier: "SettingsMenuHeader")
+
+        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+	}
 
     // MARK: Listeners
 
@@ -89,14 +77,16 @@ class SettingsTableViewController: UITableViewController {
         return menuElements.count
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
-        return menuElements[section].title
-    }
-
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SettingsMenuHeader")
+
+        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SettingsMenuHeader") as! SettingsTableViewHeaderFooterView
+        header.label.text = menuElements[section].title
 
         return header
+    }
+
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,7 +101,6 @@ class SettingsTableViewController: UITableViewController {
         }
 
         if let textLabel = cell.viewWithTag(102) as? UILabel {
-            print("here textLabel \(textLabel)")
             textLabel.text = menuElements[indexPath.section].elements[indexPath.row].name
         }
 

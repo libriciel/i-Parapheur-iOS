@@ -1,6 +1,5 @@
 /*
 * Copyright 2012-2016, Adullact-Projet.
-* Contributors : SKROBS (2012)
 *
 * contact@adullact-projet.coop
 *
