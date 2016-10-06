@@ -44,7 +44,7 @@ import Foundation
     let notBefore: NSDate?
     let notAfter: NSDate?
 
-    // MARK: Constructor
+    // MARK: - Constructor
 
     init(managedObject:NSManagedObject) {
 
@@ -57,7 +57,7 @@ import Foundation
         notAfter = managedObject.valueForKey("notAfter") as? NSDate
     }
 
-    // MARK: ObjC accessors
+    // MARK: - ObjC accessors
 
     func unwrappedP12File() -> NSString {
         return NSString(string: p12Filename!)

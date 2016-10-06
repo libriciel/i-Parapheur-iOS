@@ -57,7 +57,7 @@ import Gloss
     let retournes: Bool?
     let dossiersDelegues: Bool?
 
-    // MARK: Glossy
+    // MARK: - Glossy
 
     required init?(json: JSON) {
         name = ("name" <~~ json) ?? "(vide)"
@@ -85,7 +85,7 @@ import Gloss
         return nil /* Not used */
     }
 
-    // MARK: ObjC accessors
+    // MARK: - ObjC accessors
 
     func unwrappedName() -> NSString {
 		return NSString(string:name!)

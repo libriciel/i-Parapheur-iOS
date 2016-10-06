@@ -49,7 +49,7 @@ import Gloss
     let isLocked: Bool
     let isDeletable: Bool
 
-    // MARK: Glossy
+    // MARK: - Glossy
 
     required init?(json: JSON) {
         id = ("id" <~~ json) ?? ""
@@ -69,7 +69,7 @@ import Gloss
         return nil /* Not used */
     }
 
-    // MARK: ObjC accessors
+    // MARK: - ObjC accessors
 
     func unwrappedId() -> NSString {
         return NSString(string: id!)

@@ -68,7 +68,7 @@ import Gloss
     let isXemEnabled: Bool?
     let isReadingMandatory: Bool?
 
-    // MARK: Glossy
+    // MARK: - Glossy
 
     required init?(json: JSON) {
 
@@ -113,7 +113,7 @@ import Gloss
         return nil /* Not used */
     }
 
-    // MARK: ObjC accessors
+    // MARK: - ObjC accessors
 
     func unwrappedId() -> NSString {
         return NSString(string: id!)
@@ -155,7 +155,7 @@ import Gloss
         return isLocked!
     }
 
-    // MARK: static utils
+    // MARK: - Static utils
 
 	class func filterActions(dossierList: NSArray) -> NSMutableArray {
 

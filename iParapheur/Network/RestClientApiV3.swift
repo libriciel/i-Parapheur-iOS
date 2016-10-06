@@ -40,7 +40,7 @@ import AFNetworking
     let kCFURLErrorBadServerResponse = -1011
     var manager: AFHTTPSessionManager
 
-    // MARK: Constructor
+    // MARK: - Constructor
 
     init(baseUrl: NSString,
          login: NSString,
@@ -69,7 +69,7 @@ import AFNetworking
 
     }
 
-    // MARK: Static methods
+    // MARK: - Static methods
 
     class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
                                           credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
@@ -158,7 +158,7 @@ import AFNetworking
         return parsedAnnotations
     }
 
-    // MARK: Get methods
+    // MARK: - Get methods
 
     func getApiVersion(onResponse: ((NSNumber) -> Void)?,
                        onError: ((NSError) -> Void)?) {

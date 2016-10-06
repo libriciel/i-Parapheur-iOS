@@ -40,15 +40,15 @@ class SettingsTableViewController: UITableViewController {
 
     @IBOutlet var backButton: UIBarButtonItem!
 
-    let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String)])] = [
-            ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png"),
-                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png"),
-                         ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png")]),
-            ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png"),
-                          ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png")])
+    let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String, iconHighlight:String)])] = [
+            ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png", "ic_account_white_24dp.png"),
+                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png", "ic_verified_user_white_24dp.png"),
+                         ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
+            ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png", "ic_information_white_24dp.png"),
+                          ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]
 
-    // MARK: LifeCycle
+    // MARK: - LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,13 +65,13 @@ class SettingsTableViewController: UITableViewController {
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 	}
 
-    // MARK: Listeners
+    // MARK: - Listeners
 
     func onBackButtonClicked() {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    // MARK: UITableViewController
+    // MARK: - UITableViewController
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return menuElements.count
@@ -97,7 +97,9 @@ class SettingsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("SettingsMenuCell", forIndexPath: indexPath)
 
         if let iconView = cell.viewWithTag(101) as? UIImageView {
-            iconView.image = UIImage(named: menuElements[indexPath.section].elements[indexPath.row].icon)?.imageWithRenderingMode(.AlwaysTemplate)
+            let element = menuElements[indexPath.section].elements[indexPath.row]
+            iconView.image = UIImage(named: element.icon)?.imageWithRenderingMode(.AlwaysTemplate)
+            iconView.highlightedImage = UIImage(named: element.iconHighlight)?.imageWithRenderingMode(.AlwaysTemplate)
         }
 
         if let textLabel = cell.viewWithTag(102) as? UILabel {
