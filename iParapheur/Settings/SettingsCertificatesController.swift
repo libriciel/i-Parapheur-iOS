@@ -36,7 +36,7 @@
 import UIKit
 import Foundation
 
-@objc class SettingsCertificatesController:  UIViewController, UITableViewDataSource {
+@objc class SettingsCertificatesController: UIViewController, UITableViewDataSource {
 
     @IBOutlet var certificatesTableView: UITableView!
     var certificateList: Array<Certificate>!

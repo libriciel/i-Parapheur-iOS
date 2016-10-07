@@ -33,33 +33,137 @@
 * knowledge of the CeCILL license and that you accept its terms.
 */
 
-
 import UIKit
+import Foundation
 
-class SettingsAccountsController: UIViewController {
+@objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
-    @IBOutlet var testLabel: UILabel!
+	@IBOutlet var addAccountButton: UIBarButtonItem!
+	@IBOutlet var accountTableView: UITableView!
 	
+    var accountList: Array<AnyObject> = []
+
+    // MARK: - Life cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        accountList = loadAccountList()
+        accountTableView.dataSource = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    // MARK: - UITableViewDataSource
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return accountList.count
     }
-    */
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+
+        let cell = tableView.dequeueReusableCellWithIdentifier("AccountCell", forIndexPath: indexPath)
+        let account = accountList[indexPath.row]
+
+        if let nameTextField = cell.viewWithTag(101) as? UITextField {
+
+        }
+
+        if let urlTextField = cell.viewWithTag(102) as? UITextField {
+
+        }
+
+        if let loginTextField = cell.viewWithTag(103) as? UITextField {
+
+        }
+
+        if let passwordTextField = cell.viewWithTag(104) as? UITextField {
+
+        }
+
+        if let testButton = cell.viewWithTag(201) as? UIButton {
+            testButton.addTarget(self,
+                                 action: #selector(onTestButtonClicked),
+                                 forControlEvents: .TouchUpInside)
+        }
+
+        if let deleteButton = cell.viewWithTag(202) as? UIButton {
+            deleteButton.addTarget(self,
+                                   action: #selector(onDeleteButtonClicked),
+                                   forControlEvents: .TouchUpInside)
+        }
+
+        if let saveButton = cell.viewWithTag(202) as? UIButton {
+            saveButton.addTarget(self,
+                                 action: #selector(onSaveButtonClicked),
+                                 forControlEvents: .TouchUpInside)
+        }
+
+        return cell
+    }
+
+    // MARK: - Private methods
+
+    func loadAccountList() -> Array<AnyObject> {
+
+//        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
+//        let keystore: ADLKeyStore = appDelegate.keyStore
+//
+//        var result = Array<Certificate>()
+//        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
+//            result.append(Certificate(managedObject: pkeyManagedObject))
+//        }
+//
+//        for cert: Certificate in result {
+//            ADLKeyStore.getX509ValuesforP12(cert.p12Filename,
+//                                            withPassword: "bma")
+//        }
+
+        return ["","",""]
+    }
+
+    // MARK: - Listeners
+
+    func onTestButtonClicked(sender: UIButton) {
+
+    }
+
+    func onDeleteButtonClicked(sender: UIButton) {
+
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
+        let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+
+        // Find from NSManagedObjectContext
+
+//        var privateKeyToDelete: NSManagedObject? = nil
+//
+//        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
+//        let keystore: ADLKeyStore = appDelegate.keyStore
+//        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
+//            if (pkeyManagedObject.valueForKey("serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
+//                privateKeyToDelete = pkeyManagedObject
+//            }
+//        }
+//
+//        // Safety check
+//
+//        if (privateKeyToDelete == nil) {
+//            return
+//        }
+//
+//        // Delete from NSManagedObjectContext
+//
+//        let context: NSManagedObjectContext = appDelegate.managedObjectContext!
+//        context.deleteObject(privateKeyToDelete!)
+//        certificateList.removeAtIndex(indexPath.row)
+//        try! context.save()
+//
+//        // Delete from UITableView
+//
+//        certificatesTableView.deleteRowsAtIndexPaths([indexPath],
+//                                                     withRowAnimation: .Fade)
+    }
+
+    func onSaveButtonClicked(sender: UIButton) {
+
+    }
 
 }

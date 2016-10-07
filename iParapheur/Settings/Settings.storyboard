@@ -18,18 +18,76 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Comptes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4I-o6-q2X">
-                                <rect key="frame" x="251" y="289" width="70" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="162" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Bq3-qH-egY">
+                                <rect key="frame" x="92" y="0.0" width="416" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="416" id="eV1-zQ-lwA"/>
+                                </constraints>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="U2T-ye-sGr">
+                                    <rect key="frame" x="0.0" y="254" width="416" height="0.0"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AccountCell" rowHeight="162" id="9PT-n7-Kb2">
+                                        <rect key="frame" x="0.0" y="92" width="416" height="162"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9PT-n7-Kb2" id="a0U-Vd-DjQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="416" height="161"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" tag="101" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nom du compte" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="trb-y1-Zgb">
+                                                    <rect key="frame" x="8" y="8" width="400" height="30"/>
+                                                    <color key="textColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                                </textField>
+                                                <textField opaque="NO" clipsSubviews="YES" tag="102" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="URL" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cg9-hZ-4Og">
+                                                    <rect key="frame" x="8" y="46" width="400" height="30"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL"/>
+                                                </textField>
+                                                <textField opaque="NO" clipsSubviews="YES" tag="103" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nom d'utilisateur" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="p9l-JZ-clL">
+                                                    <rect key="frame" x="8" y="84" width="196" height="30"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                                </textField>
+                                                <button opaque="NO" tag="201" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPd-JJ-NzT">
+                                                    <rect key="frame" x="8" y="122" width="46" height="30"/>
+                                                    <state key="normal" title="Tester"/>
+                                                </button>
+                                                <button opaque="NO" tag="203" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y6p-WX-C4L">
+                                                    <rect key="frame" x="332" y="122" width="76" height="30"/>
+                                                    <state key="normal" title="Enregistrer"/>
+                                                </button>
+                                                <button opaque="NO" tag="202" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHk-tV-jxO">
+                                                    <rect key="frame" x="236" y="122" width="72" height="30"/>
+                                                    <state key="normal" title="Supprimer"/>
+                                                </button>
+                                                <textField opaque="NO" clipsSubviews="YES" tag="104" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mot de passe" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qvH-Iw-2DF">
+                                                    <rect key="frame" x="212" y="84" width="196" height="30"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                                </textField>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Bq3-qH-egY" firstAttribute="centerX" secondItem="47k-Q6-rSB" secondAttribute="centerX" id="hNf-LY-4Ps"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="igD-JD-tHj"/>
+                    <navigationItem key="navigationItem" id="igD-JD-tHj">
+                        <barButtonItem key="rightBarButtonItem" image="ic_account_plus_outline_white_24dp.png" id="yCB-3G-2Ze"/>
+                    </navigationItem>
                     <connections>
-                        <outlet property="testLabel" destination="C4I-o6-q2X" id="ecU-gC-6Uh"/>
+                        <outlet property="accountTableView" destination="Bq3-qH-egY" id="ee1-ui-J3j"/>
+                        <outlet property="addAccountButton" destination="yCB-3G-2Ze" id="SAw-nY-h9Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hog-Pg-pF1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -48,12 +106,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kfu-fI-fnX">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kfu-fI-fnX">
                                 <rect key="frame" x="60" y="0.0" width="480" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="480" id="3qj-yX-zuL"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="480" id="4gb-of-wdM"/>
                                 </constraints>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="3sC-VU-jhr">
                                     <rect key="frame" x="0.0" y="158" width="480" height="0.0"/>
@@ -93,9 +150,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Kfu-fI-fnX" firstAttribute="top" secondItem="FlR-Ab-knm" secondAttribute="topMargin" id="YQB-jr-SjA"/>
-                            <constraint firstItem="Kfu-fI-fnX" firstAttribute="centerX" secondItem="FlR-Ab-knm" secondAttribute="centerX" id="mkG-sa-sR2"/>
-                            <constraint firstItem="jfG-YN-Rg9" firstAttribute="top" secondItem="Kfu-fI-fnX" secondAttribute="bottom" id="vRS-2w-a5w"/>
+                            <constraint firstItem="Kfu-fI-fnX" firstAttribute="centerX" secondItem="FlR-Ab-knm" secondAttribute="centerX" id="hvl-e8-VjN"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="oeR-wE-W3u"/>
@@ -541,6 +596,7 @@ Initié et Developpé par ADULLACT-Projet S.A.</string>
         </scene>
     </scenes>
     <resources>
+        <image name="ic_account_plus_outline_white_24dp.png" width="24" height="24"/>
         <image name="ic_close_white.png" width="24" height="24"/>
         <image name="ic_delete_white.png" width="24" height="24"/>
     </resources>

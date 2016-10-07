@@ -23,7 +23,7 @@
             <connections>
                 <outlet property="label" destination="6HW-h5-xgs" id="LD6-fJ-F7g"/>
             </connections>
-            <point key="canvasLocation" x="538" y="327"/>
+            <point key="canvasLocation" x="487" y="350"/>
         </view>
     </objects>
 </document>
