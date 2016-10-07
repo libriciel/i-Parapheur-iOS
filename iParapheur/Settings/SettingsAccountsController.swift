@@ -63,37 +63,29 @@ import Foundation
         let cell = tableView.dequeueReusableCellWithIdentifier("AccountCell", forIndexPath: indexPath)
         let account = accountList[indexPath.row]
 
-        if let nameTextField = cell.viewWithTag(101) as? UITextField {
+        if let titleLabel = cell.viewWithTag(101) as? UILabel {
 
         }
 
-        if let urlTextField = cell.viewWithTag(102) as? UITextField {
+        if let accountLabel = cell.viewWithTag(102) as? UILabel {
 
         }
 
-        if let loginTextField = cell.viewWithTag(103) as? UITextField {
-
-        }
-
-        if let passwordTextField = cell.viewWithTag(104) as? UITextField {
-
-        }
-
-        if let testButton = cell.viewWithTag(201) as? UIButton {
-            testButton.addTarget(self,
-                                 action: #selector(onTestButtonClicked),
-                                 forControlEvents: .TouchUpInside)
-        }
-
-        if let deleteButton = cell.viewWithTag(202) as? UIButton {
+        if let deleteButton = cell.viewWithTag(201) as? UIButton {
             deleteButton.addTarget(self,
                                    action: #selector(onDeleteButtonClicked),
                                    forControlEvents: .TouchUpInside)
         }
 
-        if let saveButton = cell.viewWithTag(202) as? UIButton {
-            saveButton.addTarget(self,
-                                 action: #selector(onSaveButtonClicked),
+        if let testButton = cell.viewWithTag(202) as? UIButton {
+            testButton.addTarget(self,
+                                 action: #selector(onTestButtonClicked),
+                                 forControlEvents: .TouchUpInside)
+        }
+
+        if let editButton = cell.viewWithTag(203) as? UIButton {
+            editButton.addTarget(self,
+                                 action: #selector(onEditButtonClicked),
                                  forControlEvents: .TouchUpInside)
         }
 
@@ -123,10 +115,11 @@ import Foundation
     // MARK: - Listeners
 
     func onTestButtonClicked(sender: UIButton) {
-
+        print("Test pressed")
     }
 
     func onDeleteButtonClicked(sender: UIButton) {
+        print("Delete pressed")
 
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
@@ -162,8 +155,8 @@ import Foundation
 //                                                     withRowAnimation: .Fade)
     }
 
-    func onSaveButtonClicked(sender: UIButton) {
-
+    func onEditButtonClicked(sender: UIButton) {
+        print("Edit pressed")
     }
 
 }
