@@ -34,14 +34,14 @@
 */
 
 import UIKit
+import CoreData
 import Foundation
 
 @objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
 	@IBOutlet var addAccountButton: UIBarButtonItem!
 	@IBOutlet var accountTableView: UITableView!
-	
-    var accountList: Array<AnyObject> = []
+    var accountList: Array<Account> = []
 
     // MARK: - Life cycle
 

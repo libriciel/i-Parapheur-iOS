@@ -137,6 +137,8 @@
 		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
 		C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */; };
 		C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */; };
+		C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */; };
+		C57B63751DABD36E005776F2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63731DABD36E005776F2 /* Account.swift */; };
 		C57E67C81A5DF21400BC4A3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803551A5D90AF00D54F7D /* CoreData.framework */; };
 		C57E67C91A5DF23A00BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
 		C57E67D81A5DF6F800BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
@@ -459,7 +461,6 @@
 		C526D8CD1DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_cloud_queue_white_24dp.png; path = ic_cloud_queue_white_24dp/ic_cloud_queue_white_24dp.png; sourceTree = "<group>"; };
 		C526D8CE1DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_cloud_queue_white_24dp@2x.png"; path = "ic_cloud_queue_white_24dp/ic_cloud_queue_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C526D8CF1DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_cloud_queue_white_24dp@3x.png"; path = "ic_cloud_queue_white_24dp/ic_cloud_queue_white_24dp@3x.png"; sourceTree = "<group>"; };
-		C526D8D71DA7FC5A00EE8BA9 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		C526D8D81DA7FC5A00EE8BA9 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		C526D8D91DA7FC5A00EE8BA9 /* Annotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
@@ -486,6 +487,8 @@
 		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
 		C57B636D1DABD00A005776F2 /* Models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Models.xcdatamodel; sourceTree = "<group>"; };
+		C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C57B63731DABD36E005776F2 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		C587BFDE1AD53743009AE6C3 /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocumentOutline.h; sourceTree = "<group>"; };
 		C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocumentOutline.m; sourceTree = "<group>"; };
@@ -660,7 +663,8 @@
 			isa = PBXGroup;
 			children = (
 				C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */,
-				C526D8D71DA7FC5A00EE8BA9 /* Account.swift */,
+				C57B63731DABD36E005776F2 /* Account.swift */,
+				C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */,
 				C526D8D81DA7FC5A00EE8BA9 /* Action.swift */,
 				C526D8D91DA7FC5A00EE8BA9 /* Annotation.swift */,
 				64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */,
@@ -1739,6 +1743,7 @@
 				C526D8DE1DA7FC5A00EE8BA9 /* Annotation.swift in Sources */,
 				B43C7ACE1541632800BA43A8 /* RGDeskCustomTableViewCell.m in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
+				C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,
@@ -1761,6 +1766,7 @@
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,
 				B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */,
 				C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */,
+				C57B63751DABD36E005776F2 /* Account.swift in Sources */,
 				C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */,
 				B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */,
 				C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */,
