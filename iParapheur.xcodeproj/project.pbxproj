@@ -21,6 +21,7 @@
 		64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */; };
 		64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348D17E34A71E2E14D64A /* Bureau.swift */; };
 		64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */; };
+		64F34C95A073619B7586D894 /* ModelsDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F344871EECF705F8C071C3 /* ModelsDataController.swift */; };
 		64F34FD00654A813D7151026 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348427F7EBCBC0A731851 /* Certificate.swift */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
@@ -276,6 +277,7 @@
 		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
 		38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iParapheur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		64F344871EECF705F8C071C3 /* ModelsDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelsDataController.swift; path = iParapheur/Models/Storage/ModelsDataController.swift; sourceTree = SOURCE_ROOT; };
 		64F348427F7EBCBC0A731851 /* Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		64F348D17E34A71E2E14D64A /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bureau.swift; sourceTree = "<group>"; };
 		64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestClientApiV3.swift; sourceTree = "<group>"; };
@@ -662,7 +664,7 @@
 		64F34840F5C054530F9BE7A2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */,
+				C57B63761DABDDB6005776F2 /* Storage */,
 				C57B63731DABD36E005776F2 /* Account.swift */,
 				C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */,
 				C526D8D81DA7FC5A00EE8BA9 /* Action.swift */,
@@ -1189,6 +1191,15 @@
 				C54DDBEF1DA4F078001DEAE8 /* ic_account_box_white@3x.png */,
 			);
 			name = ic_account_box_white_24dp;
+			sourceTree = "<group>";
+		};
+		C57B63761DABDDB6005776F2 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */,
+				64F344871EECF705F8C071C3 /* ModelsDataController.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		C58CB2BE1AB72DB400C79A97 /* App icons */ = {
@@ -1725,6 +1736,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64F34C95A073619B7586D894 /* ModelsDataController.swift in Sources */,
 				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
 				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,

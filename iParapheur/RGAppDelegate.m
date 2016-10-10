@@ -171,6 +171,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSLog(@"%@", modelURL);
 
 	_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+
 	return _managedObjectModel;
 }
 

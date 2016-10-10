@@ -50,6 +50,13 @@ class SettingsTableViewController: UITableViewController {
 
     // MARK: - LifeCycle
 
+    override func viewWillAppear() {
+
+        tableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0),
+                                       animated: false,
+                                       scrollPosition: UITableViewScrollPosition.None)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         print("View loaded : SettingsTableViewController")
