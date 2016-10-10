@@ -112,7 +112,6 @@
 		C526D8D01DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C526D8CD1DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp.png */; };
 		C526D8D11DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C526D8CE1DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@2x.png */; };
 		C526D8D21DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C526D8CF1DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@3x.png */; };
-		C526D8D61DA7FB8000EE8BA9 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8D51DA7FB8000EE8BA9 /* Account.swift */; };
 		C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8D81DA7FC5A00EE8BA9 /* Action.swift */; };
 		C526D8DE1DA7FC5A00EE8BA9 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8D91DA7FC5A00EE8BA9 /* Annotation.swift */; };
 		C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */; };
@@ -137,6 +136,7 @@
 		C54DDC111DA4F0B2001DEAE8 /* ic_verified_user_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DDC0E1DA4F0B2001DEAE8 /* ic_verified_user_white_24dp.png */; };
 		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
 		C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */; };
+		C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */; };
 		C57E67C81A5DF21400BC4A3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803551A5D90AF00D54F7D /* CoreData.framework */; };
 		C57E67C91A5DF23A00BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
 		C57E67D81A5DF6F800BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
@@ -485,6 +485,7 @@
 		C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseCircuit.h; sourceTree = "<group>"; };
 		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
+		C57B636D1DABD00A005776F2 /* Models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Models.xcdatamodel; sourceTree = "<group>"; };
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		C587BFDE1AD53743009AE6C3 /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocumentOutline.h; sourceTree = "<group>"; };
 		C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocumentOutline.m; sourceTree = "<group>"; };
@@ -658,6 +659,7 @@
 		64F34840F5C054530F9BE7A2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */,
 				C526D8D71DA7FC5A00EE8BA9 /* Account.swift */,
 				C526D8D81DA7FC5A00EE8BA9 /* Action.swift */,
 				C526D8D91DA7FC5A00EE8BA9 /* Annotation.swift */,
@@ -666,7 +668,6 @@
 				64F348427F7EBCBC0A731851 /* Certificate.swift */,
 				C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */,
 				C526D8DB1DA7FC5A00EE8BA9 /* Dossier.swift */,
-				C526D8D51DA7FB8000EE8BA9 /* Account.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1730,7 +1731,6 @@
 				B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */,
 				C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */,
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
-				C526D8DC1DA7FC5A00EE8BA9 /* Account.swift in Sources */,
 				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
 				954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */,
 				B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */,
@@ -1796,6 +1796,7 @@
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
+				C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */,
 				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,
 				142B021716D6580200EF3B8F /* ADLFilterTypeTableViewController.m in Sources */,
 				142B021A16D6581400EF3B8F /* ADLFilterSubTypeTableViewController.m in Sources */,
@@ -2088,6 +2089,16 @@
 			);
 			currentVersion = C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */;
 			path = KeyStore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C57B636D1DABD00A005776F2 /* Models.xcdatamodel */,
+			);
+			currentVersion = C57B636D1DABD00A005776F2 /* Models.xcdatamodel */;
+			path = Models.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

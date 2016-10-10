@@ -38,4 +38,12 @@ import Gloss
 
 @objc class Account: NSObject, Glossy {
 
+    let id: String!
+    var title: String!
+    var url: String!
+    var login: String!
+    var password: String!
+    var url: String!
+    var isTested: Bool
+
 }
