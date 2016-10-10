@@ -96,18 +96,7 @@ import Foundation
 
     func loadAccountList() -> Array<AnyObject> {
 
-//        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
-//        let keystore: ADLKeyStore = appDelegate.keyStore
-//
-//        var result = Array<Certificate>()
-//        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-//            result.append(Certificate(managedObject: pkeyManagedObject))
-//        }
-//
-//        for cert: Certificate in result {
-//            ADLKeyStore.getX509ValuesforP12(cert.p12Filename,
-//                                            withPassword: "bma")
-//        }
+
 
         return ["","",""]
     }
