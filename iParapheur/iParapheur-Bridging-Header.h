@@ -42,4 +42,3 @@
 #include "ADLKeyStore.h"
 #include "RGAppDelegate.h"
 #include "PrivateKey.h"
-#include "UIColor+CustomColors.h"

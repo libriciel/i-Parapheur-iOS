@@ -37,7 +37,7 @@
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
 #import "ADLRequester.h"
-#import "UIColor+CustomColors.h"
+#import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
 
 
@@ -68,10 +68,10 @@
 	NSLog(@"View Loaded : RGDeskViewController");
 	//[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
 
-	[[self.navigationItem backBarButtonItem] setTintColor:[UIColor darkBlueColor]];
+	[[self.navigationItem backBarButtonItem] setTintColor:[ColorUtils DarkBlue]];
 
 	self.refreshControl = [UIRefreshControl new];
-	[self.refreshControl setTintColor:[UIColor selectedCellGreyColor]];
+	[self.refreshControl setTintColor:[ColorUtils SelectedCellGrey]];
 
 	[self.refreshControl addTarget:self
 	                        action:@selector(refresh)
@@ -275,7 +275,7 @@
 			UIButton *mainAction = [UIButton buttonWithType:UIButtonTypeCustom];
 			mainAction.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
 			//mainAction.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-			mainAction.backgroundColor = [UIColor darkGreenColor];
+			mainAction.backgroundColor = [ColorUtils DarkGreen];
 			mainAction.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
 			[mainAction setTitle:[ADLAPIHelper actionNameForAction:_mainAction]
 			            forState:UIControlStateNormal];

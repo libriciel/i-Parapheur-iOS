@@ -38,7 +38,7 @@
 #import "ADLCredentialVault.h"
 #import "RGDeskCustomTableViewCell.h"
 #import "ADLNotifications.h"
-#import "UIColor+CustomColors.h"
+#import "iParapheur-Swift.h"
 #import "ADLRequester.h"
 #import "SCNetworkReachability.h"
 #import "DeviceUtils.h"
@@ -69,7 +69,7 @@
 	                                           object:nil];
 
 	self.refreshControl = [UIRefreshControl new];
-	self.refreshControl.tintColor = [UIColor selectedCellGreyColor];
+	self.refreshControl.tintColor = [ColorUtils SelectedCellGrey];
 
 	[self.refreshControl addTarget:self
 	                        action:@selector(loadBureaux)
@@ -278,7 +278,7 @@
 
 - (void)refreshAccountIcon:(BOOL)isAccountSet {
 
-	_accountButton.tintColor = isAccountSet ? [UIColor steelColor] : [UIColor darkRedColor];
+	_accountButton.tintColor = isAccountSet ? [ColorUtils Steel] : [ColorUtils DarkRed];
 }
 
 
@@ -410,8 +410,8 @@
 	static NSString *CellIdentifier = @"DeskCell";
 	RGDeskCustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	cell.todoBadge.badgeStyle.badgeInsetColor = [UIColor darkBlueColor];
-	cell.lateBadge.badgeStyle.badgeInsetColor = [UIColor darkRedColor];
+	cell.todoBadge.badgeStyle.badgeInsetColor = [ColorUtils DarkBlue];
+	cell.lateBadge.badgeStyle.badgeInsetColor = [ColorUtils DarkRed];
 
 	bool isLoaded = _bureauxArray.count > 0;
 	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];

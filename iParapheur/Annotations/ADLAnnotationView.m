@@ -34,7 +34,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLAnnotationView.h"
-#import "UIColor+CustomColors.h"
+#import "iParapheur-Swift.h"
 
 
 #define SHOW_RULES 0
@@ -298,8 +298,8 @@
 		CGContextSaveGState(context);
 		UIGraphicsPushContext(context);
 		{
-			[[UIColor darkPurpleColor] setStroke];
-			[[UIColor darkPurpleColor] setFill];
+			[[ColorUtils DarkPurple] setStroke];
+			[[ColorUtils DarkPurple] setFill];
 			CGContextSetLineWidth(context, 1.0f);
 
 			CGFloat width = CGRectGetMaxX(self.bounds);
@@ -342,9 +342,9 @@
 
 		path.lineWidth = 4;
 
-		[[UIColor darkYellowColor] setFill];
+		[[ColorUtils DarkYellow] setFill];
 
-		[[UIColor darkPurpleColor] setStroke];
+		[[ColorUtils DarkPurple] setStroke];
 		[path stroke];
 
 	}

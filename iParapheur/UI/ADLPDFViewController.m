@@ -42,7 +42,7 @@
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
 #import "ADLActionViewController.h"
-#import "UIColor+CustomColors.h"
+#import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 
@@ -67,7 +67,7 @@
 
 	// Build UI
 
-	self.navigationController.navigationBar.tintColor = [UIColor darkBlueColor];
+	self.navigationController.navigationBar.tintColor = [ColorUtils DarkBlue];
 	self.navigationItem.rightBarButtonItem = nil;
 
 	if ([UIDevice currentDevice].systemVersion.floatValue > 8.0) {
@@ -523,7 +523,7 @@
        forPopoverController:(UIPopoverController *)popoverController {
 
 	barButtonItem.title = @"Dossiers";
-	barButtonItem.tintColor = [UIColor darkBlueColor];
+	barButtonItem.tintColor = [ColorUtils DarkBlue];
 
 //	[self.navigationItem setLeftBarButtonItem:barButtonItem
 //									 animated:YES];

@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "RGFileCell.h"
-#import "UIColor+CustomColors.h"
+#import "iParapheur-Swift.h"
 
 
 NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMenuNotification";
@@ -100,7 +100,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 	
     // VALIDATE
     self.validateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.validateButton.backgroundColor = [UIColor darkGreenColor];
+    self.validateButton.backgroundColor = [ColorUtils DarkGreen];
     self.validateButton.frame = CGRectMake(kCatchWidth / 2.0f, 0, kCatchWidth / 2.0f, CGRectGetHeight(self.bounds));
     [self.validateButton setTitle:@"Valider" forState:UIControlStateNormal];
     [self.validateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -135,7 +135,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     // RETARD
     self.retardPlaceHolder = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetHeight(self.bounds) - 25.0f, 20.0f, 20.0f)];
     self.retardBadge = [CustomBadge customBadgeWithString:@""];
-	[self.retardBadge.badgeStyle setBadgeInsetColor:[UIColor darkRedColor]];
+	[self.retardBadge.badgeStyle setBadgeInsetColor:[ColorUtils DarkRed]];
     [self.retardBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
     [self.retardPlaceHolder addSubview:self.retardBadge];
     [self.contentCellView addSubview:self.retardPlaceHolder];
@@ -171,7 +171,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 
 
 -(void)flickerSelection {
-	_contentCellView.backgroundColor = [UIColor selectedCellGreyColor];
+	_contentCellView.backgroundColor = [ColorUtils SelectedCellGrey];
 
 	[UIView animateWithDuration:0.4 animations:^{
 		_contentCellView.backgroundColor = [UIColor whiteColor];
@@ -313,7 +313,7 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
 	
     if (selected) {
         if (![self.delegate respondsToSelector:@selector(canSelectCell:)] || [self.delegate canSelectCell:self]) {
-            _contentCellView.backgroundColor = [UIColor selectedCellGreyColor];
+            _contentCellView.backgroundColor = [ColorUtils SelectedCellGrey];
         }
     }
     else {

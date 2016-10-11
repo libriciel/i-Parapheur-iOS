@@ -73,6 +73,7 @@ import Foundation
         }
 
         if let deleteButton = cell.viewWithTag(201) as? UIButton {
+            deleteButton.hidden = (account.id == Account.DemoId)
             deleteButton.addTarget(self,
                                    action: #selector(onDeleteButtonClicked),
                                    forControlEvents: .TouchUpInside)
@@ -88,6 +89,21 @@ import Foundation
             editButton.addTarget(self,
                                  action: #selector(onEditButtonClicked),
                                  forControlEvents: .TouchUpInside)
+        }
+
+        if let visibilityButton = cell.viewWithTag(204) as? UIButton {
+            visibilityButton.hidden = (account.id != Account.DemoId)
+
+            let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+            let imageOn = UIImage(named: "ic_visibility_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+
+            visibilityButton.setImage(imageOff, forState: .Normal)
+            visibilityButton.setImage(imageOn, forState: .Selected)
+            visibilityButton.tintColor = ColorUtils.Aqua
+
+            visibilityButton.addTarget(self,
+                                       action: #selector(onVisibilityButtonClicked),
+                                       forControlEvents: .TouchUpInside)
         }
 
         return cell
@@ -112,7 +128,7 @@ import Foundation
 
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
-        let accountToDelete:Account = accountList[indexPath.row]
+        let accountToDelete: Account = accountList[indexPath.row]
 
         // Delete from NSManagedObjectContext
 
@@ -133,4 +149,8 @@ import Foundation
 
     }
 
+    func onVisibilityButtonClicked(sender: UIButton) {
+        print("Adrien - Plop : \(sender.selected)")
+        sender.selected = !sender.selected
+    }
 }

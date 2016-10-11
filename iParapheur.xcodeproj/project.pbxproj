@@ -29,7 +29,6 @@
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
-		958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
@@ -192,7 +191,7 @@
 		C59445F91AAE41B900DD4473 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F51AAE41B900DD4473 /* Default-Landscape.png */; };
 		C59445FA1AAE41B900DD4473 /* Default-Landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F61AAE41B900DD4473 /* Default-Landscape@2x.png */; };
 		C59445FC1AAE41B900DD4473 /* Default-Portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */; };
-		C5978BCE1D8C1E7F0097AC55 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5978BCD1D8C1E7F0097AC55 /* CustomColor.swift */; };
+		C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5978BCD1D8C1E7F0097AC55 /* ColorUtils.swift */; };
 		C5978BE41D8C42BE0097AC55 /* ic_add_circle_outline_white.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BE11D8C42BE0097AC55 /* ic_add_circle_outline_white.png */; };
 		C5978BE51D8C42BE0097AC55 /* ic_add_circle_outline_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BE21D8C42BE0097AC55 /* ic_add_circle_outline_white@2x.png */; };
 		C5978BE61D8C42BE0097AC55 /* ic_add_circle_outline_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BE31D8C42BE0097AC55 /* ic_add_circle_outline_white@3x.png */; };
@@ -301,8 +300,6 @@
 		95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotationButton.m; sourceTree = "<group>"; };
 		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
-		958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CustomColors.h"; sourceTree = "<group>"; };
-		958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CustomColors.m"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B609C15F0962100655827 /* ADLCircuitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCircuitCell.h; sourceTree = "<group>"; };
 		B41B609D15F0962100655827 /* ADLCircuitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCircuitCell.m; sourceTree = "<group>"; };
@@ -544,7 +541,7 @@
 		C59445F61AAE41B900DD4473 /* Default-Landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x.png"; sourceTree = "<group>"; };
 		C59445F71AAE41B900DD4473 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
 		C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x.png"; sourceTree = "<group>"; };
-		C5978BCD1D8C1E7F0097AC55 /* CustomColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
+		C5978BCD1D8C1E7F0097AC55 /* ColorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtils.swift; sourceTree = "<group>"; };
 		C5978BE11D8C42BE0097AC55 /* ic_add_circle_outline_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_add_circle_outline_white.png; path = ic_add_circle_outline_white_24dp/ic_add_circle_outline_white.png; sourceTree = "<group>"; };
 		C5978BE21D8C42BE0097AC55 /* ic_add_circle_outline_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_add_circle_outline_white@2x.png"; path = "ic_add_circle_outline_white_24dp/ic_add_circle_outline_white@2x.png"; sourceTree = "<group>"; };
 		C5978BE31D8C42BE0097AC55 /* ic_add_circle_outline_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_add_circle_outline_white@3x.png"; path = "ic_add_circle_outline_white_24dp/ic_add_circle_outline_white@3x.png"; sourceTree = "<group>"; };
@@ -1436,13 +1433,11 @@
 			children = (
 				954A7389188D371D00A13D1E /* NSString+Contains.h */,
 				954A738A188D371D00A13D1E /* NSString+Contains.m */,
-				958BA9F1188F3B1000640313 /* UIColor+CustomColors.h */,
-				958BA9F2188F3B1000640313 /* UIColor+CustomColors.m */,
 				C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */,
 				C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */,
 				C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */,
 				C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */,
-				C5978BCD1D8C1E7F0097AC55 /* CustomColor.swift */,
+				C5978BCD1D8C1E7F0097AC55 /* ColorUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1739,6 +1734,7 @@
 				64F34C95A073619B7586D894 /* ModelsDataController.swift in Sources */,
 				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
 				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
+				C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
@@ -1795,13 +1791,11 @@
 				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
 				C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */,
-				C5978BCE1D8C1E7F0097AC55 /* CustomColor.swift in Sources */,
 				B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */,
 				B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */,
 				B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */,
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
-				958BA9F3188F3B1000640313 /* UIColor+CustomColors.m in Sources */,
 				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
 				C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */,
