@@ -102,48 +102,35 @@ import Foundation
     // MARK: - Listeners
 
     func onTestButtonClicked(sender: UIButton) {
-        print("Test pressed")
-    }
-
-    func onDeleteButtonClicked(sender: UIButton) {
-        print("Delete pressed")
 
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
 
-        // Find from NSManagedObjectContext
+    }
 
-//        var privateKeyToDelete: NSManagedObject? = nil
-//
-//        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
-//        let keystore: ADLKeyStore = appDelegate.keyStore
-//        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-//            if (pkeyManagedObject.valueForKey("serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
-//                privateKeyToDelete = pkeyManagedObject
-//            }
-//        }
-//
-//        // Safety check
-//
-//        if (privateKeyToDelete == nil) {
-//            return
-//        }
-//
-//        // Delete from NSManagedObjectContext
-//
-//        let context: NSManagedObjectContext = appDelegate.managedObjectContext!
-//        context.deleteObject(privateKeyToDelete!)
-//        certificateList.removeAtIndex(indexPath.row)
-//        try! context.save()
-//
-//        // Delete from UITableView
-//
-//        certificatesTableView.deleteRowsAtIndexPaths([indexPath],
-//                                                     withRowAnimation: .Fade)
+    func onDeleteButtonClicked(sender: UIButton) {
+
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
+        let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+        let accountToDelete:Account = accountList[indexPath.row]
+
+        // Delete from NSManagedObjectContext
+
+        dataController.managedObjectContext.deleteObject(accountToDelete)
+        dataController.save()
+
+        // Delete from UITableView
+
+        accountList.removeAtIndex(indexPath.row)
+        accountTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
     }
 
     func onEditButtonClicked(sender: UIButton) {
-        print("Edit pressed")
+
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
+        let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+
+
     }
 
 }

@@ -110,11 +110,6 @@ import Foundation
             result.append(Certificate(managedObject: pkeyManagedObject))
         }
 
-        for cert: Certificate in result {
-            ADLKeyStore.getX509ValuesforP12(cert.p12Filename,
-                                            withPassword: "bma")
-        }
-
         return result
     }
 
@@ -152,8 +147,7 @@ import Foundation
 
         // Delete from UITableView
 
-        certificatesTableView.deleteRowsAtIndexPaths([indexPath],
-                                                     withRowAnimation: .Fade)
+        certificatesTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
     }
 
 }
