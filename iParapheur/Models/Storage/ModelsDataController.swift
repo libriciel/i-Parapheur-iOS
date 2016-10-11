@@ -69,10 +69,53 @@ class ModelsDataController: NSObject {
             let storeURL = docURL.URLByAppendingPathComponent("DataModel.sqlite")
             do {
                 try psc.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
-            }
-                    catch {
+            } catch {
                 fatalError("Error migrating store: \(error)")
             }
         }
     }
+
+    // Public methods
+
+    func fetchAccounts() -> [Account] {
+
+        var result: [Account] = []
+
+        // Request
+
+        do {
+            let fetchRequest = NSFetchRequest(entityName: Account.EntityName)
+            result = try managedObjectContext.executeFetchRequest(fetchRequest) as! [Account]
+        } catch {
+            print("Could not fetch Accounts")
+            return result
+        }
+
+        // Default init
+
+        if result.count == 0 {
+
+            var demoAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName, inManagedObjectContext:managedObjectContext) as! Account
+            demoAccount.id = Account.DemoId
+            demoAccount.title = Account.DemoTitle
+            demoAccount.url = Account.DemoUrl
+            demoAccount.login = Account.DemoLogin
+            demoAccount.password = Account.DemoPassword
+
+            save()
+        }
+
+        //
+
+        return result
+    }
+
+    func save() {
+        do {
+            try managedObjectContext.save()
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+    }
+
 }

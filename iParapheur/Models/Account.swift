@@ -38,6 +38,12 @@ import CoreData
 
 class Account: NSManagedObject {
 
-    // Insert code here to add functionality to your managed object subclass
+    static let EntityName: String! = "Account"
+
+    static let DemoId: String! = "DemoAccountId"
+    static let DemoTitle: String! = "iParapheur demo"
+    static let DemoUrl: String! = "parapheur.demonstrations.adullact.org"
+    static let DemoLogin: String! = "bma"
+    static let DemoPassword: String! = "secret"
 
 }

@@ -41,7 +41,7 @@ import Foundation
 
     @IBOutlet var addAccountButton: UIBarButtonItem!
     @IBOutlet var accountTableView: UITableView!
-    let modelsMOC: NSManagedObjectContext = ModelsDataController().managedObjectContext
+    let dataController: ModelsDataController = ModelsDataController()
     var accountList: Array<Account> = []
 
     // MARK: - Life cycle
@@ -96,33 +96,7 @@ import Foundation
     // MARK: - Private methods
 
     func loadAccountList() -> Array<Account> {
-
-        var result: [Account] = []
-
-        // Fetch
-
-        do {
-            let fetchRequest = NSFetchRequest(entityName: "Account")
-            let requestResult = try modelsMOC.executeFetchRequest(fetchRequest)
-            result = requestResult as! [Account]
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
-
-        //
-
-        print("Adrien >>> \(result)")
-        return result
-    }
-
-    func saveContext() {
-
-        do {
-            try modelsMOC.save()
-            result.append(account1)
-        } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
-        }
+        return dataController.fetchAccounts()
     }
 
     // MARK: - Listeners

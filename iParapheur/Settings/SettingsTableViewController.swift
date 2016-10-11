@@ -50,7 +50,7 @@ class SettingsTableViewController: UITableViewController {
 
     // MARK: - LifeCycle
 
-    override func viewWillAppear() {
+    override func viewWillAppear(animated: Bool) {
 
         tableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0),
                                        animated: false,
