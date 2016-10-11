@@ -49,8 +49,13 @@ import Foundation
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        accountTableView.allowsSelection = false
+
         accountList = loadAccountList()
         accountTableView.dataSource = self
+
+        addAccountButton.action = #selector(onAddAccountButtonClicked)
+        addAccountButton.target = self
     }
 
     // MARK: - UITableViewDataSource
@@ -65,11 +70,11 @@ import Foundation
         let account = accountList[indexPath.row]
 
         if let titleLabel = cell.viewWithTag(101) as? UILabel {
-
+            titleLabel.text = account.title
         }
 
         if let accountLabel = cell.viewWithTag(102) as? UILabel {
-
+            accountLabel.text = "\(account.login!) @ \(account.url!)"
         }
 
         if let deleteButton = cell.viewWithTag(201) as? UIButton {
@@ -80,6 +85,15 @@ import Foundation
         }
 
         if let testButton = cell.viewWithTag(202) as? UIButton {
+            testButton.selected = account.isTested!.boolValue
+
+            let imageOff = UIImage(named: "ic_cloud_queue_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+            let imageOn = UIImage(named: "ic_cloud_done_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+
+            testButton.setImage(imageOff, forState: .Normal)
+            testButton.setImage(imageOn, forState: .Selected)
+            testButton.tintColor = ColorUtils.Aqua
+
             testButton.addTarget(self,
                                  action: #selector(onTestButtonClicked),
                                  forControlEvents: .TouchUpInside)
@@ -118,11 +132,47 @@ import Foundation
 
     // MARK: - Listeners
 
+    func onAddAccountButtonClicked(sender: UIButton) {
+
+        // TODO : Show popup
+
+        var newAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
+                                                                             inManagedObjectContext:dataController.managedObjectContext) as! Account
+
+        newAccount.id = NSUUID().UUIDString
+        newAccount.title = "iParapheur admin"
+        newAccount.url = "parapheur.test.adullact.org"
+        newAccount.login = "admin"
+        newAccount.password = "admin"
+        newAccount.isVisible = true
+        newAccount.isTested = false
+
+        dataController.save()
+
+        // Add to UI
+
+        accountList.append(newAccount)
+        let newIndexPath = NSIndexPath(forRow: accountList.count - 1, inSection: 0)
+        accountTableView.beginUpdates()
+        accountTableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        accountTableView.endUpdates()
+    }
+
     func onTestButtonClicked(sender: UIButton) {
 
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
 
+        // TODO : Send test
+
+        accountList[indexPath.row].isTested = true
+        dataController.save()
+
+        // Refresh UI
+
+        accountTableView.beginUpdates()
+        accountTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+        accountTableView.endUpdates()
     }
 
     func onDeleteButtonClicked(sender: UIButton) {
@@ -134,19 +184,32 @@ import Foundation
         // Delete from NSManagedObjectContext
 
         dataController.managedObjectContext.deleteObject(accountToDelete)
-        dataController.save()
 
         // Delete from UITableView
 
         accountList.removeAtIndex(indexPath.row)
         accountTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+
+        // Refresh the demo Account, and forces it to visible, if it's the last one
+
+        if (accountList.count == 1) {
+            accountList[0].isVisible = true
+
+            let demoIndexPath = NSIndexPath(forRow: 0, inSection: 0)
+            accountTableView.beginUpdates()
+            accountTableView.reloadRowsAtIndexPaths([demoIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+            accountTableView.endUpdates()
+        }
+
+        //
+
+        dataController.save()
     }
 
     func onEditButtonClicked(sender: UIButton) {
 
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
-
 
     }
 
