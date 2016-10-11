@@ -101,6 +101,7 @@ class ModelsDataController: NSObject {
             demoAccount.url = Account.DemoUrl
             demoAccount.login = Account.DemoLogin
             demoAccount.password = Account.DemoPassword
+            demoAccount.isVisible = true
 
             save()
         }

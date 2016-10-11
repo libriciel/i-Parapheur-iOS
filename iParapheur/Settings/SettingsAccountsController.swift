@@ -93,6 +93,7 @@ import Foundation
 
         if let visibilityButton = cell.viewWithTag(204) as? UIButton {
             visibilityButton.hidden = (account.id != Account.DemoId)
+            visibilityButton.selected = (account.isVisible!.boolValue || (accountList.count == 1))
 
             let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
             let imageOn = UIImage(named: "ic_visibility_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
@@ -150,7 +151,15 @@ import Foundation
     }
 
     func onVisibilityButtonClicked(sender: UIButton) {
-        print("Adrien - Plop : \(sender.selected)")
+
+        // Keeping user from hiding the last Account
+
+        if accountList.count == 1 {
+            return
+        }
+
+        // Default behaviour
+
         sender.selected = !sender.selected
     }
 }

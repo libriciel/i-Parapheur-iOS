@@ -3,12 +3,13 @@
     <entity name="Account" representedClassName=".Account" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isTested" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isVisible" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="login" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Account" positionX="-54" positionY="-9" width="128" height="135"/>
+        <element name="Account" positionX="-54" positionY="-9" width="128" height="150"/>
     </elements>
 </model>
