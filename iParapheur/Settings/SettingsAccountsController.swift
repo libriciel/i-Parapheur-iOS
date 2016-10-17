@@ -84,28 +84,14 @@ import Foundation
                                    forControlEvents: .TouchUpInside)
         }
 
-        if let testButton = cell.viewWithTag(202) as? UIButton {
-            testButton.selected = account.isTested!.boolValue
-
-            let imageOff = UIImage(named: "ic_cloud_queue_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
-            let imageOn = UIImage(named: "ic_cloud_done_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
-
-            testButton.setImage(imageOff, forState: .Normal)
-            testButton.setImage(imageOn, forState: .Selected)
-            testButton.tintColor = ColorUtils.Aqua
-
-            testButton.addTarget(self,
-                                 action: #selector(onTestButtonClicked),
-                                 forControlEvents: .TouchUpInside)
-        }
-
-        if let editButton = cell.viewWithTag(203) as? UIButton {
+        if let editButton = cell.viewWithTag(202) as? UIButton {
+            editButton.hidden = (account.id == Account.DemoId)
             editButton.addTarget(self,
                                  action: #selector(onEditButtonClicked),
                                  forControlEvents: .TouchUpInside)
         }
 
-        if let visibilityButton = cell.viewWithTag(204) as? UIButton {
+        if let visibilityButton = cell.viewWithTag(203) as? UIButton {
             visibilityButton.hidden = (account.id != Account.DemoId)
             visibilityButton.selected = (account.isVisible!.boolValue || (accountList.count == 1))
 
@@ -158,23 +144,6 @@ import Foundation
         accountTableView.endUpdates()
     }
 
-    func onTestButtonClicked(sender: UIButton) {
-
-        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
-        let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
-
-        // TODO : Send test
-
-        accountList[indexPath.row].isTested = true
-        dataController.save()
-
-        // Refresh UI
-
-        accountTableView.beginUpdates()
-        accountTableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-        accountTableView.endUpdates()
-    }
-
     func onDeleteButtonClicked(sender: UIButton) {
 
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
@@ -211,6 +180,7 @@ import Foundation
         let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
 
+        performSegueWithIdentifier("EditAccountSegue", sender: nil)
     }
 
     func onVisibilityButtonClicked(sender: UIButton) {

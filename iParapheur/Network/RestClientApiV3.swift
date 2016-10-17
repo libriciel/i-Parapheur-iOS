@@ -46,7 +46,7 @@ import AFNetworking
          login: NSString,
          password: NSString) {
 
-        manager = AFHTTPSessionManager(baseURL: NSURL(string: baseUrl as String))
+        manager = AFHTTPSessionManager(baseURL: NSURL(string: RestClientApiV3.cleanupServerName(baseUrl) as String))
         manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
         manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
         manager.setSessionDidReceiveAuthenticationChallengeBlock {
@@ -70,6 +70,33 @@ import AFNetworking
     }
 
     // MARK: - Static methods
+
+    class func cleanupServerName(url: NSString) -> NSString {
+
+        // Removing space
+        // TODO Adrien : add special character restrictions tests ?
+
+        var urlFixed = url.mutableCopy()
+        urlFixed = urlFixed.stringByReplacingOccurrencesOfString(" ", withString: "")
+
+        // Getting the server name
+        // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
+        //			- then ignore following "m." (if exists)						(?:m\.)*
+        //			- then catch every char but "/"									([^\/]*)
+        //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
+        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
+                                                                  options: NSRegularExpressionOptions.CaseInsensitive)
+
+        let match: NSTextCheckingResult? = regex.firstMatchInString(urlFixed as! String,
+                                                                   options: NSMatchingOptions.Anchored,
+                                                                   range: NSMakeRange(0, urlFixed.length))
+
+        if (match != nil) {
+			urlFixed = urlFixed.substringWithRange(match!.rangeAtIndex(1))
+		}
+		
+        return NSString(string: "https://m.\(urlFixed)")
+    }
 
     class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
                                           credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
