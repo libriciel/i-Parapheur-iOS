@@ -37,7 +37,7 @@ import UIKit
 import CoreData
 import Foundation
 
-@objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
+@objc class SettingsAccountsController: UIViewController, UITableViewDataSource, SettingsAccountsEditPopupControllerDelegate {
 
     @IBOutlet var addAccountButton: UIBarButtonItem!
     @IBOutlet var accountTableView: UITableView!
@@ -56,6 +56,20 @@ import Foundation
 
         addAccountButton.action = #selector(onAddAccountButtonClicked)
         addAccountButton.target = self
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+
+        if (segue.identifier == "EditAccountSegue") {
+
+            let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
+            let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+
+
+            let editViewController: SettingsAccountsEditPopupController = segue!.destinationViewController as! SettingsAccountsEditPopupController
+            editViewController.currentAccount = accountList[indexPath.row]
+            editViewController.delegate = self
+        }
     }
 
     // MARK: - UITableViewDataSource
@@ -114,6 +128,23 @@ import Foundation
 
     func loadAccountList() -> Array<Account> {
         return dataController.fetchAccounts()
+    }
+
+    // MARK: - SettingsAccountsEditPopupControllerDelegate
+
+    func onAccountSaved(account: Account) {
+
+        let accountIndex = accountList.indexOf(account)
+        if (accountIndex == nil) {
+            return
+        }
+
+        let accountIndexPath = NSIndexPath(forRow: accountIndex!, inSection: 0)
+        accountTableView.beginUpdates()
+        accountTableView.reloadRowsAtIndexPaths([accountIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+        accountTableView.endUpdates()
+
+        dataController.save()
     }
 
     // MARK: - Listeners
@@ -176,11 +207,7 @@ import Foundation
     }
 
     func onEditButtonClicked(sender: UIButton) {
-
-        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
-        let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
-
-        performSegueWithIdentifier("EditAccountSegue", sender: nil)
+        performSegueWithIdentifier("EditAccountSegue", sender: sender)
     }
 
     func onVisibilityButtonClicked(sender: UIButton) {
@@ -194,5 +221,10 @@ import Foundation
         // Default behaviour
 
         sender.selected = !sender.selected
+
+        // TODO : bottom message, maybe ?
+//        ViewUtils.logInfoMessage(sender.selected ? "Le compte de démo sera masqué dans la liste de sélection" : "Le compte de démo sera visible dans la liste de sélection",
+//                                 title: nil,
+//                                 viewController: self)
     }
 }

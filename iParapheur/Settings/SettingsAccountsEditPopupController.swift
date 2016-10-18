@@ -37,6 +37,13 @@ import UIKit
 import CoreData
 import Foundation
 
+
+protocol SettingsAccountsEditPopupControllerDelegate {
+    func onAccountSaved(account: Account)
+}
+
+
+
 @objc class SettingsAccountsEditPopupController: UIViewController {
 	
 	@IBOutlet var cancelButton: UIButton!
@@ -48,13 +55,26 @@ import Foundation
 	@IBOutlet var loginTextView: UITextField!
 	@IBOutlet var passwordTextView: UITextField!
 
+    var currentAccount: Account?
     var currentRestClient: RestClientApiV3?
+    var delegate: SettingsAccountsEditPopupControllerDelegate?
 
 	// MARK: - Life cycle
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.preferredContentSize = CGSizeMake(500, 252);
+
+        // Values
+
+        if (currentAccount != nil) {
+            titleTextView.text = currentAccount!.title
+            urlTextView.text = currentAccount!.url
+            loginTextView.text = currentAccount!.login
+            passwordTextView.text = currentAccount!.password
+        }
+
+        // Listeners
 
         cancelButton.addTarget(self,
                                action: #selector(onCancelButtonClicked),
@@ -72,6 +92,7 @@ import Foundation
     // MARK: - Listeners
 
     func onCancelButtonClicked(sender: UIButton) {
+        delegate = nil
         dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -100,6 +121,18 @@ import Foundation
     }
 
     func onSaveButtonClicked(sender: UIButton) {
+
+        // Update model
+
+        currentAccount!.title = titleTextView.text
+        currentAccount!.url = urlTextView.text
+        currentAccount!.login = loginTextView.text
+        currentAccount!.password = passwordTextView.text
+
+        // Callback and dismiss
+
+        delegate?.onAccountSaved(currentAccount!)
+        delegate = nil
         dismissViewControllerAnimated(true, completion: nil)
     }
 
