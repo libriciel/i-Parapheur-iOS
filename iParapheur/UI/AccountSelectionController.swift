@@ -36,7 +36,7 @@
 import Foundation
 import UIKit
 
-@objc class AccountSelectionController: UIViewController, UITableViewDataSource {
+@objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
 	@IBOutlet var backButton: UIBarButtonItem!
 	@IBOutlet var accountTableView: UITableView!
@@ -52,6 +52,7 @@ import UIKit
 
         accountList = loadAccountList()
         accountTableView.dataSource = self
+        accountTableView.delegate = self
 
 		backButton.target = self
 		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
@@ -60,7 +61,11 @@ import UIKit
     // MARK: - Private methods
 
     func loadAccountList() -> Array<Account> {
-        return dataController.fetchAccounts()
+
+        var result: Array<Account> = dataController.fetchAccounts()
+        result = result.filter{ $0.isVisible!.boolValue }
+
+        return result
     }
 
     // MARK: - Button Listeners
@@ -69,7 +74,7 @@ import UIKit
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableViewDataSource & UITableViewDelegate
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
@@ -91,6 +96,10 @@ import UIKit
         }
 
         return cell
+    }
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        print("Account : \(accountList[indexPath.row])")
     }
 
 }
