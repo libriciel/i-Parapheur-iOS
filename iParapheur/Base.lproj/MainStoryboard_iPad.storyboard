@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -707,7 +708,6 @@
         <!--Account Selection Controller-->
         <scene sceneID="Tr0-La-JXU">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zv2-Ua-lIv" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController modalPresentationStyle="overCurrentContext" id="F5u-IV-zaL" customClass="AccountSelectionController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="tIl-V9-RTw"/>
@@ -716,17 +716,58 @@
                     <view key="view" contentMode="scaleToFill" id="Zow-Uy-AGQ">
                         <rect key="frame" x="0.0" y="0.0" width="400" height="456"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WMJ-P5-llO">
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="456"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="N1A-0o-NpD">
+                                    <rect key="frame" x="0.0" y="136" width="400" height="1"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AccountCell" id="Zb7-YR-UUi">
+                                        <rect key="frame" x="0.0" y="92" width="400" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zb7-YR-UUi" id="fsg-T1-gd7">
+                                            <rect key="frame" x="0.0" y="0.0" width="400" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" tag="201" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_inbox_white_24dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="UBx-kk-lkc">
+                                                    <rect key="frame" x="16" y="10" width="24" height="24"/>
+                                                    <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Account name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSz-w2-rVG">
+                                                    <rect key="frame" x="56" y="11" width="336" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="eu4-Nk-pfJ" firstAttribute="top" secondItem="WMJ-P5-llO" secondAttribute="bottom" id="FFJ-r5-nIs"/>
+                            <constraint firstItem="WMJ-P5-llO" firstAttribute="top" secondItem="Zow-Uy-AGQ" secondAttribute="topMargin" id="GE2-xC-ODv"/>
+                            <constraint firstItem="WMJ-P5-llO" firstAttribute="leading" secondItem="Zow-Uy-AGQ" secondAttribute="leadingMargin" id="eT3-BM-PNv"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="WMJ-P5-llO" secondAttribute="trailing" id="wSx-3P-0lm"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="qgB-xk-crN">
-                        <barButtonItem key="leftBarButtonItem" image="ic_arrow_back_white_24dp.png" id="hah-qG-qZI"/>
+                        <barButtonItem key="leftBarButtonItem" image="ic_arrow_back_white_24dp.png" id="hah-qG-qZI" userLabel="Back Button"/>
                     </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="456"/>
                     <connections>
-                        <outlet property="testBackButton" destination="hah-qG-qZI" id="3Rf-Cl-Ahs"/>
+                        <outlet property="accountTableView" destination="WMJ-P5-llO" id="tuB-pb-cmg"/>
+                        <outlet property="backButton" destination="hah-qG-qZI" id="YQD-QH-kMU"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zv2-Ua-lIv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="659" y="1413"/>
         </scene>
@@ -790,6 +831,7 @@
     <resources>
         <image name="ic_account_circle_white.png" width="24" height="24"/>
         <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
+        <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
         <image name="ic_settings_white.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>

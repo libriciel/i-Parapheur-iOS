@@ -36,9 +36,13 @@
 import Foundation
 import UIKit
 
-@objc class AccountSelectionController: UIViewController {
+@objc class AccountSelectionController: UIViewController, UITableViewDataSource {
 
-	@IBOutlet var testBackButton: UIBarButtonItem!
+	@IBOutlet var backButton: UIBarButtonItem!
+	@IBOutlet var accountTableView: UITableView!
+	
+    let dataController: ModelsDataController = ModelsDataController()
+    var accountList: Array<Account> = []
 
 	// MARK: - LifeCycle
 
@@ -46,13 +50,47 @@ import UIKit
 		super.viewDidLoad()
 		print("View loaded : AccountSelectionController")
 
-		testBackButton.target = self
-		testBackButton.action = #selector(AccountSelectionController.onBackButtonClicked)
+        accountList = loadAccountList()
+        accountTableView.dataSource = self
+
+		backButton.target = self
+		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 	}
+
+    // MARK: - Private methods
+
+    func loadAccountList() -> Array<Account> {
+        return dataController.fetchAccounts()
+    }
 
     // MARK: - Button Listeners
 
     func onBackButtonClicked() {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
+
+    // MARK: - UITableViewDataSource
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return accountList.count
+    }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+
+        let cell = tableView.dequeueReusableCellWithIdentifier("AccountCell", forIndexPath: indexPath)
+        let account = accountList[indexPath.row]
+
+        if let titleLabel = cell.viewWithTag(101) as? UILabel {
+            titleLabel.text = account.title
+        }
+
+        if let inboxIcon = cell.viewWithTag(201) as? UIImageView {
+            let inboxImage = UIImage(named: "ic_inbox_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+            inboxIcon.image = inboxImage
+            inboxIcon.tintColor = ColorUtils.Aqua
+        }
+
+        return cell
+    }
+
 }
