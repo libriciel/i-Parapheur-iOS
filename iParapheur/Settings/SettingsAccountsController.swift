@@ -212,6 +212,9 @@ import Foundation
 
     func onVisibilityButtonClicked(sender: UIButton) {
 
+        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
+        let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+
         // Keeping user from hiding the last Account
 
         if accountList.count == 1 {
@@ -221,6 +224,8 @@ import Foundation
         // Default behaviour
 
         sender.selected = !sender.selected
+        accountList[indexPath.row].isVisible = sender.selected
+        dataController.save()
 
         // TODO : bottom message, maybe ?
 //        ViewUtils.logInfoMessage(sender.selected ? "Le compte de démo sera masqué dans la liste de sélection" : "Le compte de démo sera visible dans la liste de sélection",

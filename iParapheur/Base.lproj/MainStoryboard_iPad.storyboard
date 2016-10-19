@@ -240,6 +240,9 @@
                     <navigationItem key="navigationItem" title="Bureaux" id="PxO-wH-GeW">
                         <barButtonItem key="leftBarButtonItem" image="ic_account_circle_white.png" id="Cjo-Ew-HTT">
                             <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <segue destination="nxB-H0-cxL" kind="modal" identifier="AccountListSegue" modalPresentationStyle="currentContext" id="GrA-mP-kF0"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="ic_settings_white.png" id="XVu-qm-8t4">
                             <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -512,7 +515,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3060" y="1035"/>
+            <point key="canvasLocation" x="4296" y="1035"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="1GW-4K-Vsd">
@@ -699,7 +702,33 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-o7-ybk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="26" y="1605"/>
+            <point key="canvasLocation" x="-345" y="957"/>
+        </scene>
+        <!--Account Selection Controller-->
+        <scene sceneID="Tr0-La-JXU">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zv2-Ua-lIv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController modalPresentationStyle="overCurrentContext" id="F5u-IV-zaL" customClass="AccountSelectionController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tIl-V9-RTw"/>
+                        <viewControllerLayoutGuide type="bottom" id="eu4-Nk-pfJ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Zow-Uy-AGQ">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="456"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="qgB-xk-crN">
+                        <barButtonItem key="leftBarButtonItem" image="ic_arrow_back_white_24dp.png" id="hah-qG-qZI"/>
+                    </navigationItem>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="400" height="456"/>
+                    <connections>
+                        <outlet property="testBackButton" destination="hah-qG-qZI" id="3Rf-Cl-Ahs"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="659" y="1413"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="18">
@@ -737,9 +766,30 @@
             </objects>
             <point key="canvasLocation" x="-569.60000000000002" y="175.78666666666669"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="xva-c2-2ks">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="currentContext" id="nxB-H0-cxL" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="400" height="300"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="m73-Qq-a7o">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="F5u-IV-zaL" kind="relationship" relationship="rootViewController" id="pkZ-JJ-8J3"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="62J-N8-HVF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="659" y="937"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ic_account_circle_white.png" width="24" height="24"/>
+        <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
         <image name="ic_settings_white.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>

@@ -316,11 +316,13 @@
 
 - (void)onAccountButtonClicked:(id)sender {
 
-	if ([DeviceUtils isConnectedToDemoAccount]) {
-		[self displayAccountPopup];
-	} else {
-		// TODO : account list
-	}
+//	if ([DeviceUtils isConnectedToDemoAccount]) {
+//		[self displayAccountPopup];
+//	} else {
+//		// TODO : account list
+		[self performSegueWithIdentifier:@"AccountListSegue"
+		                          sender:self];
+//	}
 }
 
 
