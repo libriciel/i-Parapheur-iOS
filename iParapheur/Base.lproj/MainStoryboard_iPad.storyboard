@@ -705,7 +705,7 @@
             </objects>
             <point key="canvasLocation" x="-345" y="957"/>
         </scene>
-        <!--Account Selection Controller-->
+        <!--Sélection de compte-->
         <scene sceneID="Tr0-La-JXU">
             <objects>
                 <viewController modalPresentationStyle="overCurrentContext" id="F5u-IV-zaL" customClass="AccountSelectionController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
@@ -740,7 +740,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Account name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSz-w2-rVG">
                                                     <rect key="frame" x="56" y="11" width="336" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -757,7 +757,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="WMJ-P5-llO" secondAttribute="trailing" id="wSx-3P-0lm"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="qgB-xk-crN">
+                    <navigationItem key="navigationItem" title="Sélection de compte" id="qgB-xk-crN">
                         <barButtonItem key="leftBarButtonItem" image="ic_arrow_back_white_24dp.png" id="hah-qG-qZI" userLabel="Back Button"/>
                     </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

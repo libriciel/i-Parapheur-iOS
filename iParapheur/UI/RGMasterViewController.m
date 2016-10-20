@@ -135,6 +135,7 @@
 - (void)initRestClient {
 
 	[self checkDemonstrationServer];
+	[[ADLRestClient sharedManager] resetClient];
 
 	_restClient = [ADLRestClient sharedManager];
 	__weak typeof(self) weakSelf = self;
@@ -380,6 +381,7 @@
 
 - (void)onLoginPopupDismissed:(NSNotification *)notification {
 
+	NSLog(@"Adrien - onLoginPopupDismissed");
 	// Popup response
 
 	BOOL isDemo = [DeviceUtils isConnectedToDemoAccount];

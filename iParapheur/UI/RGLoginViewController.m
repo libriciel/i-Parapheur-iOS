@@ -224,10 +224,6 @@
 						forKey:@"settings_server_url"];
 	}
 
-	// Reset RestClient values
-
-	[[ADLRestClient sharedManager] resetClient];
-
 	//
 
 	[self.presentingViewController dismissViewControllerAnimated:YES

@@ -99,7 +99,19 @@ import UIKit
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("Account : \(accountList[indexPath.row])")
+
+        let accountSelected: Account = accountList[indexPath.row]
+        let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        print("Account selected : \(accountSelected)")
+
+        preferences.setObject(accountSelected.login, forKey: "settings_login")
+        preferences.setObject(accountSelected.password, forKey: "settings_password")
+        preferences.setObject(accountSelected.url, forKey: "settings_server_url")
+
+        NSNotificationCenter.defaultCenter().postNotificationName("loginPopupDismiss",
+                                                                  object: nil,
+                                                                  userInfo: ["success": true])
+        onBackButtonClicked()
     }
 
 }

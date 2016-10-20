@@ -65,7 +65,6 @@ import Foundation
             let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
             let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
 
-
             let editViewController: SettingsAccountsEditPopupController = segue!.destinationViewController as! SettingsAccountsEditPopupController
             editViewController.currentAccount = accountList[indexPath.row]
             editViewController.delegate = self
