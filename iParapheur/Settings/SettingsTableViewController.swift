@@ -34,16 +34,18 @@
 */
 
 import Foundation
-import UIKit.UITableViewController
+import UIKit
 
-class SettingsTableViewController: UITableViewController {
+class SettingsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var backButton: UIBarButtonItem!
+	@IBOutlet var menuTableView: UITableView!
 
+    // TODO : Add filters
+    // ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png"),
     let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String, iconHighlight:String)])] = [
             ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png", "ic_account_white_24dp.png"),
-                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png", "ic_verified_user_white_24dp.png"),
-                         ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
+                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png", "ic_verified_user_white_24dp.png")]),
             ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png", "ic_information_white_24dp.png"),
                           ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]
@@ -52,14 +54,14 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
 
-        tableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0),
+        menuTableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0),
                                        animated: false,
                                        scrollPosition: UITableViewScrollPosition.None)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : SettingsTableViewController")
+        print("View loaded : SettingsTableViewCoColorntroller")
 
         backButton.target = self
         backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
@@ -67,9 +69,9 @@ class SettingsTableViewController: UITableViewController {
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-		tableView.registerNib(nib, forHeaderFooterViewReuseIdentifier: "SettingsMenuHeader")
+		menuTableView.registerNib(nib, forHeaderFooterViewReuseIdentifier: "SettingsMenuHeader")
 
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        menuTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 	}
 
     // MARK: - Listeners
@@ -78,13 +80,13 @@ class SettingsTableViewController: UITableViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    // MARK: - UITableViewController
+    // MARK: - UITableViewDataSource & UITableViewDelegate
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return menuElements.count
     }
 
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SettingsMenuHeader") as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
@@ -92,15 +94,15 @@ class SettingsTableViewController: UITableViewController {
         return header
     }
 
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 44
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuElements[section].elements.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SettingsMenuCell", forIndexPath: indexPath)
 
         if let iconView = cell.viewWithTag(101) as? UIImageView {
@@ -116,7 +118,7 @@ class SettingsTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier(menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
 

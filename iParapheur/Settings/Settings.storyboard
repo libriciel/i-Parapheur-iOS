@@ -310,6 +310,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backButton" destination="Yvn-GK-kgU" id="ah1-A2-sRv"/>
+                        <outlet property="menuTableView" destination="io7-83-3uP" id="mXv-TH-P1i"/>
                         <segue destination="mvM-UA-afB" kind="showDetail" identifier="accountsSegue" id="v0z-lX-j1p"/>
                         <segue destination="qt6-oO-w6V" kind="showDetail" identifier="certificatesSegue" id="Lza-a0-RFW"/>
                         <segue destination="p7x-47-bfS" kind="showDetail" identifier="filtersSegue" id="zlQ-Oh-PnI"/>

@@ -90,9 +90,11 @@ import UIKit
         }
 
         if let inboxIcon = cell.viewWithTag(201) as? UIImageView {
-            let inboxImage = UIImage(named: "ic_inbox_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
-            inboxIcon.image = inboxImage
-            inboxIcon.tintColor = ColorUtils.Aqua
+            inboxIcon.image = inboxIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
+        }
+
+        if let checkIcon = cell.viewWithTag(202) as? UIImageView {
+            checkIcon.image = checkIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
         }
 
         return cell
