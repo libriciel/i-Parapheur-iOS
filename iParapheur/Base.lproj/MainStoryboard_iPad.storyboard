@@ -793,7 +793,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Sélection de compte" id="qgB-xk-crN">
-                        <barButtonItem key="leftBarButtonItem" image="ic_arrow_back_white_24dp.png" id="hah-qG-qZI" userLabel="Back Button"/>
+                        <barButtonItem key="leftBarButtonItem" image="ic_arrow_back_white_24dp.png" id="hah-qG-qZI" userLabel="Back Button">
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
                     </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="456"/>

@@ -279,20 +279,20 @@
                             <color key="backgroundColor" red="0.68174219131469727" green="0.67019027471542358" blue="0.70829695463180542" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsMenuCell" id="u2T-nB-PUZ">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SettingsMenuCell" id="u2T-nB-PUZ">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="u2T-nB-PUZ" id="MKv-pz-5UP">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="102" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrt-wu-gVP">
-                                            <rect key="frame" x="56" y="11" width="536" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="102" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrt-wu-gVP">
+                                            <rect key="frame" x="56" y="12" width="503" height="20"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16.5"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Os-lV-1YN">
+                                        <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5Os-lV-1YN">
                                             <rect key="frame" x="16" y="10" width="24" height="24"/>
                                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
@@ -302,9 +302,11 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="vrt-wu-gVP" secondAttribute="trailing" constant="8" id="0Br-YL-cQf"/>
+                                        <constraint firstItem="5Os-lV-1YN" firstAttribute="top" secondItem="MKv-pz-5UP" secondAttribute="topMargin" constant="2" id="XeR-IG-8mI"/>
                                         <constraint firstItem="vrt-wu-gVP" firstAttribute="centerY" secondItem="MKv-pz-5UP" secondAttribute="centerY" id="Zvd-M3-IZ3"/>
                                         <constraint firstItem="vrt-wu-gVP" firstAttribute="leading" secondItem="5Os-lV-1YN" secondAttribute="trailing" constant="16" id="aAg-cx-bxP"/>
                                         <constraint firstItem="5Os-lV-1YN" firstAttribute="centerY" secondItem="MKv-pz-5UP" secondAttribute="centerY" id="g6W-1s-gfU"/>
+                                        <constraint firstItem="5Os-lV-1YN" firstAttribute="centerY" secondItem="MKv-pz-5UP" secondAttribute="centerY" id="hgM-za-wn8"/>
                                         <constraint firstItem="5Os-lV-1YN" firstAttribute="leading" secondItem="MKv-pz-5UP" secondAttribute="leading" constant="16" id="x6b-f8-8DU"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -317,7 +319,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="DWG-pA-QbG" customClass="SettingsTableViewController">
                         <barButtonItem key="leftBarButtonItem" image="ic_close_white.png" id="Yvn-GK-kgU">
-                            <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
