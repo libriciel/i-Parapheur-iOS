@@ -57,8 +57,7 @@
 	NSString *loginSettings = nil;
 	NSString *passwordSettings = nil;
 
-	ModelsDataController *modelsDataController = [ModelsDataController new];
-	NSArray *accountList = [modelsDataController fetchAccounts];
+	NSArray *accountList = [ModelsDataController fetchAccounts];
 
 	for (Account *account in accountList) {
 		if ([selectedAccountId isEqualToString:account.unwrappedId]) {

@@ -41,7 +41,6 @@ import UIKit
 	@IBOutlet var backButton: UIBarButtonItem!
 	@IBOutlet var accountTableView: UITableView!
 
-    let dataController: ModelsDataController = ModelsDataController()
     var accountList: Array<Account> = []
     var selectedAccountId: String?
 
@@ -51,7 +50,7 @@ import UIKit
 		super.viewDidLoad()
 		print("View loaded : AccountSelectionController")
 
-        dataController.cleanupAccounts()
+        ModelsDataController.cleanupAccounts()
 
         accountList = loadAccountList()
         accountTableView.dataSource = self
@@ -68,7 +67,7 @@ import UIKit
 
     func loadAccountList() -> Array<Account> {
 
-        var result: Array<Account> = dataController.fetchAccounts()
+        var result: Array<Account> = ModelsDataController.fetchAccounts()
         result = result.filter{ $0.isVisible!.boolValue }
 
         return result
@@ -101,7 +100,7 @@ import UIKit
 
         if let checkIcon = cell.viewWithTag(202) as? UIImageView {
             checkIcon.image = checkIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
-            checkIcon.hidden = ((selectedAccountId == nil) || (selectedAccountId == account.id))
+            checkIcon.hidden = (selectedAccountId != account.id)
         }
 
         return cell

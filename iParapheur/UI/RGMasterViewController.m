@@ -58,10 +58,9 @@
 	NSLog(@"View Loaded : RGMasterViewController");
 
 	// Patch Acounts
-
 	// FIXME Adrien
-	// ModelsDataController *modelsDataController = [[ModelsDataController alloc] init];
-    // [modelsDataController cleanupAccounts];
+
+	[ModelsDataController loadManagedObjectContext];
 
 	//
 
@@ -74,6 +73,11 @@
 	                                         selector:@selector(onLoginPopupDismissed:)
 	                                             name:@"loginPopupDismiss"
 	                                           object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	                                         selector:@selector(onModelsCoreDataLoaded:)
+	                                             name:[ModelsDataController NotificationModelsDataControllerLoaded]
+		                                       object:nil];
 
 	self.refreshControl = [UIRefreshControl new];
 	self.refreshControl.tintColor = [ColorUtils SelectedCellGrey];
@@ -91,32 +95,7 @@
 
 
 - (void)viewDidAppear:(BOOL)animated {
-
 	[super viewDidAppear:animated];
-
-	// Settings check
-
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-
-	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
-	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
-	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
-
-	BOOL areSettingsSet = (urlSettings.length != 0) && (loginSettings.length != 0) && (passwordSettings.length != 0);
-	[self refreshAccountIcon:areSettingsSet];
-
-	// First launch behavior.
-	// We can't do it on viewDidLoad, we can display a modal view only here.
-
-	if (_firstLaunch) {
-		if (areSettingsSet) {
-			[self initRestClient];
-		} else {
-			[self displayAccountPopup];
-		}
-	}
-
-	_firstLaunch = FALSE;
 }
 
 
@@ -386,15 +365,44 @@
 #pragma mark - NotificationCenter messages
 
 
+- (void)onModelsCoreDataLoaded:(NSNotification *)notification {
+
+	[ModelsDataController cleanupAccounts];
+
+	// Settings check
+
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+
+	BOOL areSettingsSet = (selectedAccountId.length > 1);
+	[self refreshAccountIcon:areSettingsSet];
+
+	// First launch behavior.
+	// We can't do it on viewDidLoad, we can display a modal view only here.
+
+	if (_firstLaunch) {
+		if (areSettingsSet) {
+			[self initRestClient];
+		} else {
+			[self displayAccountPopup];
+		}
+	}
+
+	_firstLaunch = FALSE;
+}
+
 - (void)onLoginPopupDismissed:(NSNotification *)notification {
 
 	// Popup response
 
-	BOOL isDemo = [DeviceUtils isConnectedToDemoAccount];
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+
+	BOOL areSettingsSet = (selectedAccountId.length > 1);
 
 	// Check
 
-	[self refreshAccountIcon:!isDemo];
+	[self refreshAccountIcon:areSettingsSet];
 	[self initRestClient];
 }
 

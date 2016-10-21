@@ -126,7 +126,7 @@ import Foundation
     // MARK: - Private methods
 
     func loadAccountList() -> Array<Account> {
-        return dataController.fetchAccounts()
+        return ModelsDataController.fetchAccounts()
     }
 
     // MARK: - SettingsAccountsEditPopupControllerDelegate
@@ -143,7 +143,7 @@ import Foundation
         accountTableView.reloadRowsAtIndexPaths([accountIndexPath], withRowAnimation: UITableViewRowAnimation.None)
         accountTableView.endUpdates()
 
-        dataController.save()
+        ModelsDataController.save()
     }
 
     // MARK: - Listeners
@@ -153,7 +153,7 @@ import Foundation
         // TODO : Show popup
 
         var newAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                             inManagedObjectContext:dataController.managedObjectContext) as! Account
+                                                                             inManagedObjectContext:ModelsDataController.Context!) as! Account
 
         newAccount.id = NSUUID().UUIDString
         newAccount.title = "iParapheur admin"
@@ -162,7 +162,7 @@ import Foundation
         newAccount.password = "admin"
         newAccount.isVisible = true
 
-        dataController.save()
+        ModelsDataController.save()
 
         // Add to UI
 
@@ -181,7 +181,7 @@ import Foundation
 
         // Delete from NSManagedObjectContext
 
-        dataController.managedObjectContext.deleteObject(accountToDelete)
+        ModelsDataController.Context!.deleteObject(accountToDelete)
 
         // Delete from UITableView
 
@@ -201,7 +201,7 @@ import Foundation
 
         //
 
-        dataController.save()
+        ModelsDataController.save()
     }
 
     func onEditButtonClicked(sender: UIButton) {
@@ -223,7 +223,7 @@ import Foundation
 
         sender.selected = !sender.selected
         accountList[indexPath.row].isVisible = sender.selected
-        dataController.save()
+        ModelsDataController.save()
 
         // TODO : bottom message, maybe ?
 //        ViewUtils.logInfoMessage(sender.selected ? "Le compte de démo sera masqué dans la liste de sélection" : "Le compte de démo sera visible dans la liste de sélection",

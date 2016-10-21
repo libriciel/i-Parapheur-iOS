@@ -35,6 +35,7 @@
 
 #import "DeviceUtils.h"
 #import "StringUtils.h"
+#import "iParapheur-Swift.h"
 #import <TSMessages/TSMessage.h>
 
 
@@ -44,13 +45,9 @@
 + (BOOL)isConnectedToDemoAccount {
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *selectedId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
 
-	NSString *url = [preferences objectForKey:@"settings_server_url"];
-	NSString *login = [preferences objectForKey:@"settings_login"];
-	BOOL isDemoServer = (url == nil) || [url isEqualToString:@""] || [url isEqualToString:@"parapheur.demonstrations.adullact.org"];
-	BOOL isDemoAccount = (login == nil) || [login isEqualToString:@"parapheur.demonstrations.adullact.org"];
-
-	return (isDemoServer && isDemoAccount);
+	return [[Account PreferencesKeySelectedAccount] isEqualToString:selectedId];
 }
 
 
