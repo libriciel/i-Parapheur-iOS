@@ -58,14 +58,14 @@ import Foundation
         addAccountButton.target = self
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
 
         if (segue.identifier == "EditAccountSegue") {
 
             let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
             let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
 
-            let editViewController: SettingsAccountsEditPopupController = segue!.destinationViewController as! SettingsAccountsEditPopupController
+            let editViewController: SettingsAccountsEditPopupController = segue.destinationViewController as! SettingsAccountsEditPopupController
             editViewController.currentAccount = accountList[indexPath.row]
             editViewController.delegate = self
         }
@@ -152,7 +152,7 @@ import Foundation
 
         // TODO : Show popup
 
-        var newAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
+        let newAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
                                                                              inManagedObjectContext:ModelsDataController.Context!) as! Account
 
         newAccount.id = NSUUID().UUIDString

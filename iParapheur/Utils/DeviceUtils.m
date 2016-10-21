@@ -47,7 +47,7 @@
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
 	NSString *selectedId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
 
-	return [[Account PreferencesKeySelectedAccount] isEqualToString:selectedId];
+	return [[Account DemoId] isEqualToString:selectedId];
 }
 
 
