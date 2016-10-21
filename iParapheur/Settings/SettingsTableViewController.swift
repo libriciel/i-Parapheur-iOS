@@ -90,12 +90,13 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
         let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SettingsMenuHeader") as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
+        header.upSeparator.hidden = (section == 0)
 
         return header
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44
+        return 36
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

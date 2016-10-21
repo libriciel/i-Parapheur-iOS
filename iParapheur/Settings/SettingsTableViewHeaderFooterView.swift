@@ -38,6 +38,8 @@ import Foundation
 class SettingsTableViewHeaderFooterView: UITableViewHeaderFooterView {
 
 	@IBOutlet var label: UILabel!
+	@IBOutlet var upSeparator: UIView!
+	@IBOutlet var downSeparator: UIView!
 	
 }
 
