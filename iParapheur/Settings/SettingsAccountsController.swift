@@ -161,7 +161,6 @@ import Foundation
         newAccount.login = "admin"
         newAccount.password = "admin"
         newAccount.isVisible = true
-        newAccount.isTested = false
 
         dataController.save()
 

@@ -40,9 +40,10 @@ import UIKit
 
 	@IBOutlet var backButton: UIBarButtonItem!
 	@IBOutlet var accountTableView: UITableView!
-	
+
     let dataController: ModelsDataController = ModelsDataController()
     var accountList: Array<Account> = []
+    var selectedAccountId: String?
 
 	// MARK: - LifeCycle
 
@@ -50,12 +51,17 @@ import UIKit
 		super.viewDidLoad()
 		print("View loaded : AccountSelectionController")
 
+        dataController.cleanupAccounts()
+
         accountList = loadAccountList()
         accountTableView.dataSource = self
         accountTableView.delegate = self
 
 		backButton.target = self
 		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
+
+        let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        selectedAccountId = preferences.stringForKey(Account.PreferencesKeySelectedAccount as String)
 	}
 
     // MARK: - Private methods
@@ -95,6 +101,7 @@ import UIKit
 
         if let checkIcon = cell.viewWithTag(202) as? UIImageView {
             checkIcon.image = checkIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
+            checkIcon.hidden = ((selectedAccountId == nil) || (selectedAccountId == account.id))
         }
 
         return cell
@@ -104,11 +111,7 @@ import UIKit
 
         let accountSelected: Account = accountList[indexPath.row]
         let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        print("Account selected : \(accountSelected)")
-
-        preferences.setObject(accountSelected.login, forKey: "settings_login")
-        preferences.setObject(accountSelected.password, forKey: "settings_password")
-        preferences.setObject(accountSelected.url, forKey: "settings_server_url")
+        preferences.setObject(accountSelected.id, forKey: Account.PreferencesKeySelectedAccount as String)
 
         NSNotificationCenter.defaultCenter().postNotificationName("loginPopupDismiss",
                                                                   object: nil,

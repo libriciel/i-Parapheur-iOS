@@ -43,17 +43,34 @@
 
 - (id)init {
 
-	// Retrieve info from settings
+	// Fetch selected Account Id
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
 
-	NSString *urlSettings = [preferences objectForKey:@"settings_server_url"];
-	NSString *loginSettings = [preferences objectForKey:@"settings_login"];
-	NSString *passwordSettings = [preferences objectForKey:@"settings_password"];
+	if (selectedAccountId.length == 0)
+		selectedAccountId = [Account DemoId];
+
+	// Fetch Account model values
+
+	NSString *urlSettings = nil;
+	NSString *loginSettings = nil;
+	NSString *passwordSettings = nil;
+
+	ModelsDataController *modelsDataController = [ModelsDataController new];
+	NSArray *accountList = [modelsDataController fetchAccounts];
+
+	for (Account *account in accountList) {
+		if ([selectedAccountId isEqualToString:account.unwrappedId]) {
+			urlSettings = account.unwrappedUrl;
+			loginSettings = account.unwrappedLogin;
+			passwordSettings =  account.unwrappedPassword;
+		}
+	}
 
 	// Demo values
 
-	if (urlSettings.length == 0) {
+	if ((urlSettings == nil) || (urlSettings.length == 0)) {
 		urlSettings = @"parapheur.demonstrations.adullact.org";
 		loginSettings = @"bma";
 		passwordSettings = @"secret";

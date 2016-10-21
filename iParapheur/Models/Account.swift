@@ -40,10 +40,30 @@ class Account: NSManagedObject {
 
     static let EntityName: String! = "Account"
 
-    static let DemoId: String! = "DemoAccountId"
+    static let PreferencesKeySelectedAccount: NSString! = "selected_account"
+    static let PreferencesLegacyAccountId: NSString! = "legacy_account"
+
+    static let DemoId: NSString! = "DemoAccountId"
     static let DemoTitle: String! = "iParapheur demo"
     static let DemoUrl: String! = "parapheur.demonstrations.adullact.org"
     static let DemoLogin: String! = "bma"
     static let DemoPassword: String! = "secret"
 
+    // MARK: - ObjC accessors
+
+    func unwrappedId() -> NSString {
+        return NSString(string: id!)
+    }
+
+    func unwrappedUrl() -> NSString {
+        return NSString(string: url!)
+    }
+
+    func unwrappedPassword() -> NSString {
+        return NSString(string: password!)
+    }
+
+    func unwrappedLogin() -> NSString {
+        return NSString(string: login!)
+    }
 }

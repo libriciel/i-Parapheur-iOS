@@ -54,9 +54,16 @@
 
 
 - (void)viewDidLoad {
-
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGMasterViewController");
+
+	// Patch Acounts
+
+	// FIXME Adrien
+	// ModelsDataController *modelsDataController = [[ModelsDataController alloc] init];
+    // [modelsDataController cleanupAccounts];
+
+	//
 
 	[self updateVersionNumberInSettings];
 
@@ -381,7 +388,6 @@
 
 - (void)onLoginPopupDismissed:(NSNotification *)notification {
 
-	NSLog(@"Adrien - onLoginPopupDismissed");
 	// Popup response
 
 	BOOL isDemo = [DeviceUtils isConnectedToDemoAccount];

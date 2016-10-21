@@ -39,7 +39,7 @@ import CoreData
  * Took from
  * https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
  */
-class ModelsDataController: NSObject {
+@objc class ModelsDataController: NSObject {
 
     var managedObjectContext: NSManagedObjectContext
 
@@ -75,13 +75,10 @@ class ModelsDataController: NSObject {
         }
     }
 
-    // Public methods
+    // MARK: - Public methods
 
     func fetchAccounts() -> [Account] {
-
         var result: [Account] = []
-
-        // Request
 
         do {
             let fetchRequest = NSFetchRequest(entityName: Account.EntityName)
@@ -91,25 +88,57 @@ class ModelsDataController: NSObject {
             return result
         }
 
-        // Default init
+        return result
+    }
 
+    func cleanupAccounts() {
+
+        var isSaveNeeded = false
+
+        // Setup demo account
+
+        let result: [Account] = fetchAccounts()
         if result.count == 0 {
 
-            var demoAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName, inManagedObjectContext:managedObjectContext) as! Account
-            demoAccount.id = Account.DemoId
+            let demoAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
+                                                                                  inManagedObjectContext:managedObjectContext) as! Account
+            demoAccount.id = Account.DemoId as String
             demoAccount.title = Account.DemoTitle
             demoAccount.url = Account.DemoUrl
             demoAccount.login = Account.DemoLogin
             demoAccount.password = Account.DemoPassword
             demoAccount.isVisible = true
-            demoAccount.isTested = true
 
-            save()
+            isSaveNeeded = true
         }
 
-        //
+        // Backup legacy settings
 
-        return result
+        let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        if (preferences.stringForKey("settings_login") != nil) {
+            let legacyAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
+                                                                                    inManagedObjectContext: managedObjectContext) as! Account
+            legacyAccount.id = Account.PreferencesLegacyAccountId as String
+            legacyAccount.title = preferences.stringForKey("settings_login")
+            legacyAccount.url = preferences.stringForKey("settings_server_url")
+            legacyAccount.login = preferences.stringForKey("settings_login")
+            legacyAccount.password = preferences.stringForKey("settings_password")
+            legacyAccount.isVisible = true
+
+            preferences.setObject(legacyAccount.id, forKey: Account.PreferencesKeySelectedAccount as String)
+            preferences.removeObjectForKey("settings_login")
+            preferences.removeObjectForKey("settings_password")
+            preferences.removeObjectForKey("settings_server_url")
+
+            isSaveNeeded = true
+        }
+
+        // Saving twice in a row is a buggy
+        // We have to use a boolean
+
+        if isSaveNeeded {
+            save()
+        }
     }
 
     func save() {
