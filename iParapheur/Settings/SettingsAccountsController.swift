@@ -79,46 +79,38 @@ import Foundation
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("AccountCell", forIndexPath: indexPath)
+        let cell: SettingsAccountCell = tableView.dequeueReusableCellWithIdentifier(SettingsAccountCell.CellIdentifier,
+                                                                                    forIndexPath: indexPath) as! SettingsAccountCell
+
         let account = accountList[indexPath.row]
 
-        if let titleLabel = cell.viewWithTag(101) as? UILabel {
-            titleLabel.text = account.title
-        }
+        cell.titleLabel.text = account.title
+        cell.infoLabel.text = "\(account.login!) @ \(account.url!)"
 
-        if let accountLabel = cell.viewWithTag(102) as? UILabel {
-            accountLabel.text = "\(account.login!) @ \(account.url!)"
-        }
+        cell.deleteButton.hidden = (account.id == Account.DemoId)
+        cell.deleteButton.addTarget(self,
+                                    action: #selector(onDeleteButtonClicked),
+                                    forControlEvents: .TouchUpInside)
 
-        if let deleteButton = cell.viewWithTag(201) as? UIButton {
-            deleteButton.hidden = (account.id == Account.DemoId)
-            deleteButton.addTarget(self,
-                                   action: #selector(onDeleteButtonClicked),
-                                   forControlEvents: .TouchUpInside)
-        }
+        cell.editButton.hidden = (account.id == Account.DemoId)
+        cell.editButton.addTarget(self,
+                                  action: #selector(onEditButtonClicked),
+                                  forControlEvents: .TouchUpInside)
 
-        if let editButton = cell.viewWithTag(202) as? UIButton {
-            editButton.hidden = (account.id == Account.DemoId)
-            editButton.addTarget(self,
-                                 action: #selector(onEditButtonClicked),
-                                 forControlEvents: .TouchUpInside)
-        }
 
-        if let visibilityButton = cell.viewWithTag(203) as? UIButton {
-            visibilityButton.hidden = (account.id != Account.DemoId)
-            visibilityButton.selected = (account.isVisible!.boolValue || (accountList.count == 1))
+        cell.visibilityButton.hidden = (account.id != Account.DemoId)
+        cell.visibilityButton.selected = (account.isVisible!.boolValue || (accountList.count == 1))
 
-            let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
-            let imageOn = UIImage(named: "ic_visibility_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+        let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+        let imageOn = UIImage(named: "ic_visibility_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
 
-            visibilityButton.setImage(imageOff, forState: .Normal)
-            visibilityButton.setImage(imageOn, forState: .Selected)
-            visibilityButton.tintColor = ColorUtils.Aqua
+        cell.visibilityButton.setImage(imageOff, forState: .Normal)
+        cell.visibilityButton.setImage(imageOn, forState: .Selected)
+        cell.visibilityButton.tintColor = ColorUtils.Aqua
 
-            visibilityButton.addTarget(self,
-                                       action: #selector(onVisibilityButtonClicked),
-                                       forControlEvents: .TouchUpInside)
-        }
+        cell.visibilityButton.addTarget(self,
+                                        action: #selector(onVisibilityButtonClicked),
+                                        forControlEvents: .TouchUpInside)
 
         return cell
     }

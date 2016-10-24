@@ -498,13 +498,15 @@
 		//[outputFormatter setDateFormat:@"dd MMM"];
 
 		NSString *fdate = [outputFormatter stringFromDate:dossierDate];
-		cell.retardBadge.badgeText = fdate;
-		[cell.retardBadge autoBadgeSizeWithString:fdate];
-		cell.retardBadge.hidden = NO;
+		// FIXME Adrien
+//		cell.retardBadge.badgeText = fdate;
+//		[cell.retardBadge autoBadgeSizeWithString:fdate];
+//		cell.retardBadge.hidden = NO;
 	}
-	else {
-		cell.retardBadge.hidden = YES;
-	}
+//	else {
+		// FIXME Adrien
+//		cell.retardBadge.hidden = YES;
+//	}
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];

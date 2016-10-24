@@ -134,10 +134,11 @@ NSString *const RGFileCellShouldHideMenuNotification = @"RGFileCellShouldHideMen
     
     // RETARD
     self.retardPlaceHolder = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetHeight(self.bounds) - 25.0f, 20.0f, 20.0f)];
-    self.retardBadge = [CustomBadge customBadgeWithString:@""];
-	[self.retardBadge.badgeStyle setBadgeInsetColor:[ColorUtils DarkRed]];
-    [self.retardBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
-    [self.retardPlaceHolder addSubview:self.retardBadge];
+	// FIXME Adrien
+//    self.retardBadge = [CustomBadge customBadgeWithString:@""];
+//	[self.retardBadge.badgeStyle setBadgeInsetColor:[ColorUtils DarkRed]];
+//    [self.retardBadge setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin];
+//    [self.retardPlaceHolder addSubview:self.retardBadge];
     [self.contentCellView addSubview:self.retardPlaceHolder];
     
     [[NSNotificationCenter defaultCenter] addObserver:self

@@ -148,6 +148,7 @@
 		C5675ECB1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675EC81DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp.png */; };
 		C5675ECC1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675EC91DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@2x.png */; };
 		C5675ECD1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675ECA1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png */; };
+		C5675ED21DBE74CC003FA418 /* SettingsAccountsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */; };
 		C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */; };
 		C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */; };
 		C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */; };
@@ -513,6 +514,7 @@
 		C5675EC81DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_fiber_manual_record_white_18dp.png; path = ic_fiber_manual_record_white_18dp/ic_fiber_manual_record_white_18dp.png; sourceTree = "<group>"; };
 		C5675EC91DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_fiber_manual_record_white_18dp@2x.png"; path = "ic_fiber_manual_record_white_18dp/ic_fiber_manual_record_white_18dp@2x.png"; sourceTree = "<group>"; };
 		C5675ECA1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_fiber_manual_record_white_18dp@3x.png"; path = "ic_fiber_manual_record_white_18dp/ic_fiber_manual_record_white_18dp@3x.png"; sourceTree = "<group>"; };
+		C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsAccountsCell.swift; sourceTree = "<group>"; };
 		C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
 		C57B636D1DABD00A005776F2 /* Models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Models.xcdatamodel; sourceTree = "<group>"; };
 		C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -1093,6 +1095,7 @@
 			children = (
 				C50A873F1D1AD07000025074 /* Settings.storyboard */,
 				C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */,
+				C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */,
 				C5065EE41D82ABCD008FE301 /* SettingsAccountsController.swift */,
 				C5A03D881DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift */,
 				C5065EE21D82ABB2008FE301 /* SettingsCertificatesController.swift */,
@@ -1842,6 +1845,7 @@
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
 				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
 				C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */,
+				C5675ED21DBE74CC003FA418 /* SettingsAccountsCell.swift in Sources */,
 				C526D8DE1DA7FC5A00EE8BA9 /* Annotation.swift in Sources */,
 				C57B63751DABD36E005776F2 /* Account.swift in Sources */,
 				C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */,
