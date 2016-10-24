@@ -275,7 +275,7 @@
 
 - (void)refreshAccountIcon:(BOOL)isAccountSet {
 
-	_accountButton.tintColor = isAccountSet ? [ColorUtils Steel] : [ColorUtils DarkRed];
+	_accountButton.tintColor = isAccountSet ? [ColorUtils Aqua] : [ColorUtils Salmon];
 }
 
 

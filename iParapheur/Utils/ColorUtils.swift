@@ -48,6 +48,7 @@ import Foundation
     static let DarkBlue: UIColor = UIColor(red: 0 / 255, green: 118 / 255, blue: 255 / 255, alpha: 1)               // #0076FF
     static let SelectedCellGrey: UIColor = UIColor(red: 217 / 255, green: 217 / 255, blue: 217 / 255, alpha: 1)     // #D9D9D9
     static let BlueGreySeparator: UIColor = UIColor(red: 200 / 255, green: 199 / 255, blue: 204 / 255, alpha: 1)    // #C8C7CC
+    static let Salmon: UIColor = UIColor(red: 241 / 255, green: 124 / 255, blue: 121 / 255, alpha: 1)               // #F17C79
 
     // #F9F9F9 Blue-grey  3%
     // #F5F5F7 Blue-grey  5%
