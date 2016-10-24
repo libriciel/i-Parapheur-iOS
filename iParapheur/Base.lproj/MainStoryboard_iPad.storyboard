@@ -197,39 +197,90 @@
         <scene sceneID="fiw-Dl-fUJ">
             <objects>
                 <tableViewController id="TGh-sj-pLc" customClass="RGMasterViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="84" sectionHeaderHeight="22" sectionFooterHeight="22" id="l9D-4g-Gh7">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="98" sectionHeaderHeight="22" sectionFooterHeight="22" id="l9D-4g-Gh7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="separatorColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <inset key="separatorInset" minX="24" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="6Tq-Cw-KJm" userLabel="Header">
+                            <rect key="frame" x="0.0" y="64" width="320" height="1"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="6GC-86-Yl2" userLabel="Footer">
+                            <rect key="frame" x="0.0" y="185" width="320" height="1"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.79991227388381958" green="0.80005061626434326" blue="0.7999035120010376" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DeskCell" rowHeight="84" id="d5X-Qv-yiP" customClass="RGDeskCustomTableViewCell">
-                                <rect key="frame" x="0.0" y="86" width="320" height="84"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DeskListCell" rowHeight="98" id="d5X-Qv-yiP" customClass="DeskListCell" customModule="iParapheur" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="87" width="320" height="98"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d5X-Qv-yiP" id="7El-1b-FJz">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="83"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="97"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Le nom de bureau le plus long et le plus relou de la terre" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="244" translatesAutoresizingMaskIntoConstraints="NO" id="egb-5n-Bhb">
-                                            <rect key="frame" x="37" y="20" width="244" height="43"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_fiber_manual_record_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="csW-YY-SEh">
+                                            <rect key="frame" x="3" y="7" width="18" height="18"/>
+                                            <color key="tintColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="18" id="9kP-U7-SOM"/>
+                                                <constraint firstAttribute="height" constant="18" id="BhG-a0-t9p"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Le nom de bureau le plus long et le plus relou de la terre" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="244" translatesAutoresizingMaskIntoConstraints="NO" id="egb-5n-Bhb">
+                                            <rect key="frame" x="24" y="8" width="288" height="36"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fQ1-D3-ZM9">
-                                            <rect key="frame" x="0.0" y="0.0" width="29" height="29"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        </view>
-                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j7v-ob-G5N">
-                                            <rect key="frame" x="0.0" y="54" width="29" height="29"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dossiers à traiter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7pq-XZ-BF0">
+                                            <rect key="frame" x="24" y="50" width="288" height="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_navigate_next_white_24dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="Est-9x-Hhw">
+                                            <rect key="frame" x="288" y="37" width="24" height="24"/>
+                                            <color key="tintColor" red="0.78094810247421265" green="0.78005361557006836" blue="0.80138212442398071" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="24" id="Zea-hh-hmx"/>
+                                                <constraint firstAttribute="height" constant="24" id="juP-lS-rVH"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dossiers en retard" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wE6-9a-HHH">
+                                            <rect key="frame" x="24" y="70" width="288" height="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" red="1" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="Est-9x-Hhw" secondAttribute="trailing" constant="8" id="600-fJ-Eq0"/>
+                                        <constraint firstItem="csW-YY-SEh" firstAttribute="top" secondItem="7El-1b-FJz" secondAttribute="top" constant="7" id="7fE-bY-mxL"/>
+                                        <constraint firstItem="wE6-9a-HHH" firstAttribute="leading" secondItem="7El-1b-FJz" secondAttribute="leading" constant="24" id="GA6-83-bwD"/>
+                                        <constraint firstItem="egb-5n-Bhb" firstAttribute="leading" secondItem="7El-1b-FJz" secondAttribute="leading" constant="24" id="GEU-zR-orH"/>
+                                        <constraint firstItem="csW-YY-SEh" firstAttribute="leading" secondItem="7El-1b-FJz" secondAttribute="leading" constant="3" id="PUq-qG-A5o"/>
+                                        <constraint firstItem="wE6-9a-HHH" firstAttribute="top" secondItem="7pq-XZ-BF0" secondAttribute="bottom" constant="4" id="SzJ-Yu-Pcq"/>
+                                        <constraint firstItem="egb-5n-Bhb" firstAttribute="top" secondItem="7El-1b-FJz" secondAttribute="top" constant="8" id="Uh2-Bf-oZz"/>
+                                        <constraint firstAttribute="trailing" secondItem="wE6-9a-HHH" secondAttribute="trailing" constant="8" id="XWx-qY-hVR"/>
+                                        <constraint firstAttribute="trailing" secondItem="7pq-XZ-BF0" secondAttribute="trailing" constant="8" id="an9-3c-NtL"/>
+                                        <constraint firstItem="Est-9x-Hhw" firstAttribute="centerY" secondItem="7El-1b-FJz" secondAttribute="centerY" id="gKK-qS-6YH"/>
+                                        <constraint firstAttribute="trailing" secondItem="egb-5n-Bhb" secondAttribute="trailing" constant="8" id="k6K-9a-68R"/>
+                                        <constraint firstItem="7pq-XZ-BF0" firstAttribute="leading" secondItem="7El-1b-FJz" secondAttribute="leading" constant="24" id="lmJ-XS-Jqj"/>
+                                        <constraint firstItem="Est-9x-Hhw" firstAttribute="centerY" secondItem="7El-1b-FJz" secondAttribute="centerY" id="pOr-fw-gyB"/>
+                                        <constraint firstAttribute="trailing" secondItem="Est-9x-Hhw" secondAttribute="trailing" constant="8" id="pZA-qq-ft4"/>
+                                        <constraint firstItem="7pq-XZ-BF0" firstAttribute="top" secondItem="egb-5n-Bhb" secondAttribute="bottom" constant="6" id="t2K-pN-6QE"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <outlet property="bureauNameLabel" destination="egb-5n-Bhb" id="N6G-ny-3UB"/>
-                                    <outlet property="latePlaceHolder" destination="j7v-ob-G5N" id="Job-d5-Bg7"/>
-                                    <outlet property="todoPlaceHolder" destination="fQ1-D3-ZM9" id="Gaj-lg-ZPt"/>
+                                    <outlet property="disclosureIndicator" destination="Est-9x-Hhw" id="c4x-n4-y4d"/>
+                                    <outlet property="dot" destination="csW-YY-SEh" id="99R-Dp-uFR"/>
+                                    <outlet property="foldersToDo" destination="7pq-XZ-BF0" id="thz-Gc-Rfa"/>
+                                    <outlet property="lateFolders" destination="wE6-9a-HHH" id="qTE-BG-QNE"/>
+                                    <outlet property="title" destination="egb-5n-Bhb" id="DeO-uT-T0i"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -872,7 +923,9 @@
         <image name="ic_account_circle_white.png" width="24" height="24"/>
         <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
         <image name="ic_check_white_18dp.png" width="18" height="18"/>
+        <image name="ic_fiber_manual_record_white_18dp.png" width="18" height="18"/>
         <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
+        <image name="ic_navigate_next_white_24dp.png" width="24" height="24"/>
         <image name="ic_settings_white.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>

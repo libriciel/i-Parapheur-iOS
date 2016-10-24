@@ -36,7 +36,6 @@
 #import <SCNetworkReachability/SCNetworkStatus.h>
 #import "RGMasterViewController.h"
 #import "ADLCredentialVault.h"
-#import "RGDeskCustomTableViewCell.h"
 #import "ADLNotifications.h"
 #import "iParapheur-Swift.h"
 #import "ADLRequester.h"
@@ -436,43 +435,33 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	static NSString *CellIdentifier = @"DeskCell";
-	RGDeskCustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	cell.todoBadge.badgeStyle.badgeInsetColor = [ColorUtils DarkBlue];
-	cell.lateBadge.badgeStyle.badgeInsetColor = [ColorUtils DarkRed];
+	DeskListCell *cell = [tableView dequeueReusableCellWithIdentifier:[DeskListCell CellIdentifier]];
+	Bureau *bureau = (Bureau *) _bureauxArray[(NSUInteger) indexPath.row];
 
-	bool isLoaded = _bureauxArray.count > 0;
-	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
+	// Folders to do
+	
+	if (bureau.unwrappedATraiter.intValue == 0)
+		cell.foldersToDo.text = @"Aucun dossier à traiter";
+	else if (bureau.unwrappedATraiter.intValue == 1)
+		cell.foldersToDo.text = @"1 dossier à traiter";
+	else
+		cell.foldersToDo.text = [NSString stringWithFormat:@"%d dossiers à traiter", bureau.unwrappedATraiter.intValue];
+	
+	// Late Folders
+	
+	cell.lateFolders.hidden = (bureau.unwrappedEnRetard.intValue == 0);
+	
+	if (bureau.unwrappedATraiter.intValue == 1)
+		cell.lateFolders.text = @"1 dossier en retard";
+	else
+		cell.lateFolders.text = [NSString stringWithFormat:@"%d dossiers en retard", bureau.unwrappedEnRetard.intValue];
+	
+	//
 
-	NSString *bureauName;
-	NSString *bureauEnRetard;
-	NSString *bureauATraiter;
-
-	if (isLoaded && isVersion2) {
-		NSDictionary *bureau = _bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau[@"name"];
-		bureauEnRetard = [NSString stringWithFormat:@"%@",
-		                                            bureau[@"en_retard"]];
-		bureauATraiter = [NSString stringWithFormat:@"%@",
-		                                            bureau[@"a_traiter"]];
-	} else {
-		Bureau *bureau = _bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau.unwrappedName;
-		bureauEnRetard = [NSString stringWithFormat:@"%d",
-		                                            (int) bureau.unwrappedEnRetard];
-		bureauATraiter = [NSString stringWithFormat:@"%d",
-		                                            (int) bureau.unwrappedATraiter];
-	}
-
-	cell.bureauNameLabel.text = bureauName;
-
-	cell.todoBadge.badgeText = bureauATraiter;
-	[cell.todoBadge autoBadgeSizeWithString:bureauATraiter];
-
-	cell.lateBadge.badgeText = bureauEnRetard;
-	[cell.lateBadge autoBadgeSizeWithString:bureauEnRetard];
-
+	cell.title.text = bureau.unwrappedName;
+	cell.disclosureIndicator.image = [cell.disclosureIndicator.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	
 	return cell;
 }
 

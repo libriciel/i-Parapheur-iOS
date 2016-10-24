@@ -95,12 +95,12 @@ import Gloss
 		return NSString(string:nodeRef!)
     }
 
-    func unwrappedEnRetard() -> Int {
-        return enRetard!
+    func unwrappedEnRetard() -> NSNumber {
+        return enRetard as! NSNumber
     }
 
-    func unwrappedATraiter() -> Int {
-        return aTraiter!
+    func unwrappedATraiter() -> NSNumber {
+        return aTraiter as! NSNumber
     }
 
 }
