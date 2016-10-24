@@ -42,7 +42,6 @@
 #import "ADLAPIHelper.h"
 #import "LGViewHUD.h"
 #import <NSData_Base64/NSData+Base64.h>
-#import "DeviceUtils.h"
 #import "StringUtils.h"
 
 
@@ -333,9 +332,9 @@
 			                                  error:&error];
 
 			if (signature == nil && error != nil) {
-				[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-				                   withTitle:@"Une erreur s'est produite lors de la signature"
-				            inViewController:self];
+				[ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+				                     title:@"Une erreur s'est produite lors de la signature"
+				            viewController:self];
 				break;
 			}
 			else {
@@ -396,8 +395,9 @@
 			[dossiers addObject:dossier.unwrappedId];
 			[hashes addObject:signInfo[@"hash"]];
 		} else {
-			[DeviceUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
-			                     withTitle:@"Signature impossible"];
+			[ViewUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
+			                       title:@"Signature impossible"
+			              viewController:nil];
 		}
 	}
 
@@ -578,9 +578,9 @@
 
 	if (signature == nil && error != nil) {
 
-		[DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-		                   withTitle:@"Une erreur s'est produite lors de la signature"
-		            inViewController:self];
+		[ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                     title:@"Une erreur s'est produite lors de la signature"
+		            viewController:self];
 
 		return nil;
 	}

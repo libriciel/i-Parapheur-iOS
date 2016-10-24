@@ -39,6 +39,7 @@
 #import "ADLRequester.h"
 #import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
+#import "StringUtils.h"
 
 
 @interface RGDeskViewController () {
@@ -171,7 +172,9 @@
 			                 failure:^(NSError *getDossiersError) {
 				                 __strong typeof(weakSelf) strongSelf = weakSelf;
 				                 if (strongSelf) {
-					                 [DeviceUtils logError:getDossiersError];
+					                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+					                                      title:nil
+					                             viewController:nil];
 					                 [strongSelf.refreshControl endRefreshing];
 					                 HIDE_HUD
 				                 }
@@ -200,7 +203,9 @@
 			                 failure:^(NSError *error) {
 				                 __strong typeof(weakSelf) strongSelf = weakSelf;
 				                 if (strongSelf) {
-					                 [DeviceUtils logError:error];
+					                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+					                                      title:nil
+					                             viewController:nil];
 					                 [strongSelf.refreshControl endRefreshing];
 					                 HIDE_HUD
 				                 }

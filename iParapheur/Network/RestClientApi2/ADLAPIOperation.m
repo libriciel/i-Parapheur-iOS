@@ -236,8 +236,8 @@
 		}
 	}
 	
-	[self setIsExecuting: NO];
-	[self setIsFinished: YES];
+	self.isExecuting = NO;
+	self.isFinished = YES;
 	[connection cancel];
 	_receivedData = nil;
 	
@@ -311,7 +311,8 @@
 	}
 	
 	if ([(NSHTTPURLResponse*)response statusCode] != 200) {
-		
+
+		// FIXME : Not responding to selector ???
 		[_delegate performSelectorOnMainThread:@selector(didEndWithUnReachableNetwork)
 									withObject:nil
 								 waitUntilDone:YES];

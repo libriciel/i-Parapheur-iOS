@@ -274,8 +274,9 @@
 		                      NSLog(@"updateAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-		                                         withTitle:@"Erreur à la sauvegarde de l'annotation"];
+		                      [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                           title:@"Erreur à la sauvegarde de l'annotation"
+		                                  viewController:nil];
 	                      }];
 }
 
@@ -288,8 +289,9 @@
 		                      NSLog(@"deleteAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-		                                         withTitle:@"Erreur à la suppression de l'annotation"];
+		                      [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                           title:@"Erreur à la suppression de l'annotation"
+		                                  viewController:nil];
 	                      }];
 }
 
@@ -310,8 +312,9 @@
 		                   }
 	                   }
 	                   failure:^(NSError *error) {
-		                   [DeviceUtils logErrorMessage:[StringUtils getErrorMessage:error]
-		                                      withTitle:@"Erreur à la sauvegarde de l'annotation"];
+		                   [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                                        title:@"Erreur à la sauvegarde de l'annotation"
+		                               viewController:nil];
 	                   }];
 }
 
@@ -752,7 +755,9 @@
 		                      }
 		                      failure:^(NSError *error) {
 			                      HIDE_HUD
-			                      [DeviceUtils logError:error];
+			                      [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+			                                           title:nil
+			                                  viewController:nil];
 		                      }];
 	}
 }

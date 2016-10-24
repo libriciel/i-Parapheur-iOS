@@ -41,7 +41,6 @@ class Account: NSManagedObject {
     static let EntityName: String! = "Account"
 
     static let PreferencesKeySelectedAccount: NSString! = "selected_account"
-    static let PreferencesLegacyAccountId: NSString! = "legacy_account"
 
     static let DemoId: NSString! = "DemoAccountId"
     static let DemoTitle: String! = "iParapheur demo"

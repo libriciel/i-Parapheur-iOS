@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLRestClient.h"
-#import "DeviceUtils.h"
 
 
 @implementation ADLRestClient
@@ -162,8 +161,9 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		 success(versionNumber);
 
 		 if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
-			 [DeviceUtils logWarningMessage:@"Veuillez mettre à jour votre application."
-			                      withTitle:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."];
+			 [ViewUtils logWarningMessage:@"Veuillez mettre à jour votre application."
+			                        title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
+			               viewController:nil];
 	 }
 	                    failure:^(NSError *error) {
 		                    failure(error);
