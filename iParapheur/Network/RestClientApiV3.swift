@@ -32,6 +32,7 @@
 * The fact that you are presently reading this means that you have had
 * knowledge of the CeCILL license and that you accept its terms.
 */
+
 import Foundation
 import AFNetworking
 
@@ -40,15 +41,13 @@ import AFNetworking
     let kCFURLErrorBadServerResponse = -1011
     var manager: AFHTTPSessionManager
 
-    // MARK: Constructor
+    // MARK: - Constructor
 
     init(baseUrl: NSString,
          login: NSString,
          password: NSString) {
 
-        let test = kCFErrorDomainSystemConfiguration;
-
-        manager = AFHTTPSessionManager(baseURL: NSURL(string: baseUrl as String))
+        manager = AFHTTPSessionManager(baseURL: NSURL(string: RestClientApiV3.cleanupServerName(baseUrl) as String))
         manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
         manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
         manager.setSessionDidReceiveAuthenticationChallengeBlock {
@@ -71,7 +70,34 @@ import AFNetworking
 
     }
 
-    // MARK: Static methods
+    // MARK: - Static methods
+
+    class func cleanupServerName(url: NSString) -> NSString {
+
+        // Removing space
+        // TODO Adrien : add special character restrictions tests ?
+
+        var urlFixed = url.mutableCopy()
+        urlFixed = urlFixed.stringByReplacingOccurrencesOfString(" ", withString: "")
+
+        // Getting the server name
+        // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
+        //			- then ignore following "m." (if exists)						(?:m\.)*
+        //			- then catch every char but "/"									([^\/]*)
+        //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
+        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
+                                                                  options: NSRegularExpressionOptions.CaseInsensitive)
+
+        let match: NSTextCheckingResult? = regex.firstMatchInString(urlFixed as! String,
+                                                                   options: NSMatchingOptions.Anchored,
+                                                                   range: NSMakeRange(0, urlFixed.length))
+
+        if (match != nil) {
+			urlFixed = urlFixed.substringWithRange(match!.rangeAtIndex(1))
+		}
+		
+        return NSString(string: "https://m.\(urlFixed)")
+    }
 
     class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
                                           credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
@@ -103,7 +129,7 @@ import AFNetworking
         // takes all certificates from existing trust
         let numCerts = SecTrustGetCertificateCount(trust)
         var certs: [SecCertificateRef] = [SecCertificateRef]()
-        for (var i = 0; i < numCerts; i++) {
+        for i in 0 ..< numCerts {
             // takeUnretainedValue
             let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
             certs.append(c!)
@@ -147,7 +173,7 @@ import AFNetworking
             if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
                 for jsonAnnotation in jsonAnnotations {
 
-                    var annotation = Annotation(json: jsonAnnotation)
+                    let annotation = Annotation(json: jsonAnnotation)
                     annotation!.step = step
                     annotation!.page = Int(page.0)
                     annotation!.documentId = documentId
@@ -160,7 +186,7 @@ import AFNetworking
         return parsedAnnotations
     }
 
-    // MARK: Get methods
+    // MARK: - Get methods
 
     func getApiVersion(onResponse: ((NSNumber) -> Void)?,
                        onError: ((NSError) -> Void)?) {
@@ -182,7 +208,6 @@ import AFNetworking
                         (task: NSURLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
-
     }
 
     func getBureaux(onResponse: ((NSArray) -> Void)?,
@@ -194,12 +219,12 @@ import AFNetworking
                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
 
                         let bureauList = [Bureau].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        if (bureauList.count == 0) {
+                        if (bureauList!.count == 0) {
                             onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
                             return
                         }
 
-                        onResponse!(bureauList)
+                        onResponse!(bureauList!)
                     },
                     failure: {
                         (task: NSURLSessionDataTask!, error: NSError!) in
@@ -236,7 +261,7 @@ import AFNetworking
                     success: {
                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
 						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(dossierList)
+                        onResponse!(dossierList!)
                     },
                     failure: {
                         (task: NSURLSessionDataTask!, error: NSError!) in
