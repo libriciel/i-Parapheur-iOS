@@ -34,7 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import <CustomBadge/CustomBadge.h>
 
 #define kCatchWidth 180
 
@@ -47,7 +46,6 @@
 @property (strong, nonatomic) UILabel *dossierTitleLabel;
 @property (strong, nonatomic) UILabel *typologyLabel;
 @property (strong, nonatomic) UIScrollView *scrollView;
-@property (strong, nonatomic) CustomBadge *retardBadge;
 @property (strong, nonatomic) UIView *retardPlaceHolder;
 @property (strong, nonatomic) UIView *buttonsView;
 @property (strong, nonatomic) UIButton *validateButton;

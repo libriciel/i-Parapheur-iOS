@@ -416,17 +416,17 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hnM-pX-aZ0">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="950"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g2g-aN-rCB">
-                                        <rect key="frame" x="60" y="83" width="480" height="784"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g2g-aN-rCB">
+                                        <rect key="frame" x="137" y="16" width="327" height="627"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="VFR - PDF Reader" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lUV-o4-2eA">
-                                                <rect key="frame" x="8" y="8" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VFR - PDF Reader" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lUV-o4-2eA">
+                                                <rect key="frame" x="8" y="8" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vpD-RO-3sU">
-                                                <rect key="frame" x="8" y="37" width="464" height="51"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vpD-RO-3sU">
+                                                <rect key="frame" x="8" y="33" width="311" height="51"/>
                                                 <string key="text">Version 2.8.6
 https://github.com/vfr/Reader
 Licenced under the MIT Licence</string>
@@ -434,14 +434,14 @@ Licenced under the MIT Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="AFNetworking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFw-EV-xlF">
-                                                <rect key="frame" x="8" y="104" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AFNetworking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFw-EV-xlF">
+                                                <rect key="frame" x="8" y="100" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nwS-xe-Pbv">
-                                                <rect key="frame" x="8" y="133" width="464" height="51"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nwS-xe-Pbv">
+                                                <rect key="frame" x="8" y="125" width="311" height="51"/>
                                                 <string key="text">Version 2.6.0
 https://github.com/AFNetworking/AFNetworking
 Licenced under the MIT Licence</string>
@@ -449,14 +449,14 @@ Licenced under the MIT Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mantle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFf-LK-IHN">
-                                                <rect key="frame" x="8" y="200" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mantle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFf-LK-IHN">
+                                                <rect key="frame" x="8" y="192" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b9O-KB-nTu">
-                                                <rect key="frame" x="8" y="229" width="464" height="51"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b9O-KB-nTu">
+                                                <rect key="frame" x="8" y="217" width="311" height="51"/>
                                                 <string key="text">Version 2.0.7
 https://github.com/Mantle/Mantle
 Licenced under the MIT Licence</string>
@@ -464,14 +464,14 @@ Licenced under the MIT Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SCNetworkReachability" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GrV-PV-DGc">
-                                                <rect key="frame" x="8" y="300" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SCNetworkReachability" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GrV-PV-DGc">
+                                                <rect key="frame" x="8" y="284" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckS-1D-sKr">
-                                                <rect key="frame" x="8" y="329" width="464" height="51"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckS-1D-sKr">
+                                                <rect key="frame" x="8" y="309" width="311" height="51"/>
                                                 <string key="text">Version 2.0.4
 https://github.com/belkevich/reachability-ios
 Licenced under the MIT Licence</string>
@@ -479,14 +479,14 @@ Licenced under the MIT Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TSMessages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDb-eh-yd1">
-                                                <rect key="frame" x="8" y="396" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TSMessages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDb-eh-yd1">
+                                                <rect key="frame" x="8" y="376" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1g-eF-U8V">
-                                                <rect key="frame" x="8" y="425" width="464" height="51"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1g-eF-U8V">
+                                                <rect key="frame" x="8" y="401" width="311" height="51"/>
                                                 <string key="text">Version 0.9.12
 https://github.com/KrauseFx/TSMessages
 Licenced under the MIT Licence</string>
@@ -494,29 +494,14 @@ Licenced under the MIT Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CustomBadge" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W19-SD-gwa">
-                                                <rect key="frame" x="8" y="492" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OpenSSL Universal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNI-xq-3op">
+                                                <rect key="frame" x="8" y="468" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8og-E8-Ht1">
-                                                <rect key="frame" x="8" y="521" width="464" height="51"/>
-                                                <string key="text">Version 3.0.0
-https://github.com/ckteebe/CustomBadge
-Licenced under the MIT Licence</string>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="OpenSSL Universal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNI-xq-3op">
-                                                <rect key="frame" x="8" y="588" width="464" height="21"/>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggl-Y0-KzO">
-                                                <rect key="frame" x="8" y="617" width="464" height="51"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggl-Y0-KzO">
+                                                <rect key="frame" x="8" y="493" width="311" height="51"/>
                                                 <string key="text">Version 1.0.1.19
 https://github.com/krzyzanowskim/OpenSSL
 Licenced under a dual BSD Licence</string>
@@ -524,14 +509,14 @@ Licenced under a dual BSD Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Templarian Material Icons" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5v6-zq-wJY">
-                                                <rect key="frame" x="8" y="684" width="464" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Templarian Material Icons" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5v6-zq-wJY">
+                                                <rect key="frame" x="8" y="560" width="311" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="be9-8q-wDZ">
-                                                <rect key="frame" x="8" y="713" width="464" height="34"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="be9-8q-wDZ">
+                                                <rect key="frame" x="8" y="585" width="311" height="34"/>
                                                 <string key="text">© Austin Andrews @Templarian
 Licensed under the SIL Open Font Licence</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -540,6 +525,51 @@ Licensed under the SIL Open Font Licence</string>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="OFw-EV-xlF" firstAttribute="top" secondItem="vpD-RO-3sU" secondAttribute="bottom" constant="16" id="1kR-Vq-Y53"/>
+                                            <constraint firstAttribute="trailing" secondItem="be9-8q-wDZ" secondAttribute="trailing" constant="8" id="2i7-de-KWV"/>
+                                            <constraint firstItem="b9O-KB-nTu" firstAttribute="top" secondItem="JFf-LK-IHN" secondAttribute="bottom" constant="8" id="6iq-Nr-whd"/>
+                                            <constraint firstAttribute="trailing" secondItem="5v6-zq-wJY" secondAttribute="trailing" constant="8" id="80I-NR-ZWP"/>
+                                            <constraint firstAttribute="trailing" secondItem="sNI-xq-3op" secondAttribute="trailing" constant="8" id="8E6-J6-wzZ"/>
+                                            <constraint firstItem="sNI-xq-3op" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="9dS-Uj-ZKo"/>
+                                            <constraint firstItem="GrV-PV-DGc" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="CQk-WL-rUt"/>
+                                            <constraint firstItem="vpD-RO-3sU" firstAttribute="top" secondItem="lUV-o4-2eA" secondAttribute="bottom" constant="8" id="Cxf-xf-uou"/>
+                                            <constraint firstItem="gDb-eh-yd1" firstAttribute="top" secondItem="ckS-1D-sKr" secondAttribute="bottom" constant="16" id="DdI-xX-tOa"/>
+                                            <constraint firstItem="vpD-RO-3sU" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="Ees-uL-Pta"/>
+                                            <constraint firstItem="gDb-eh-yd1" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="G8M-WL-10P"/>
+                                            <constraint firstItem="be9-8q-wDZ" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="GBf-8k-GRL"/>
+                                            <constraint firstAttribute="trailing" secondItem="gDb-eh-yd1" secondAttribute="trailing" constant="8" id="Gnm-xX-UvS"/>
+                                            <constraint firstItem="OFw-EV-xlF" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="HfA-3a-1pm"/>
+                                            <constraint firstItem="5v6-zq-wJY" firstAttribute="top" secondItem="ggl-Y0-KzO" secondAttribute="bottom" constant="16" id="IQ0-CT-qcR"/>
+                                            <constraint firstAttribute="trailing" secondItem="ggl-Y0-KzO" secondAttribute="trailing" constant="8" id="Irz-4q-YfP"/>
+                                            <constraint firstItem="GrV-PV-DGc" firstAttribute="top" secondItem="b9O-KB-nTu" secondAttribute="bottom" constant="16" id="Ji8-Qt-YqF"/>
+                                            <constraint firstAttribute="trailing" secondItem="ckS-1D-sKr" secondAttribute="trailing" constant="8" id="Jyv-iA-urv"/>
+                                            <constraint firstItem="ggl-Y0-KzO" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="L0P-HY-v35"/>
+                                            <constraint firstAttribute="trailing" secondItem="lUV-o4-2eA" secondAttribute="trailing" constant="8" id="Q1Z-uH-1sD"/>
+                                            <constraint firstAttribute="trailing" secondItem="OFw-EV-xlF" secondAttribute="trailing" constant="8" id="SlW-1Y-XfL"/>
+                                            <constraint firstItem="sNI-xq-3op" firstAttribute="top" secondItem="J1g-eF-U8V" secondAttribute="bottom" constant="16" id="U33-94-tmn"/>
+                                            <constraint firstItem="JFf-LK-IHN" firstAttribute="top" secondItem="nwS-xe-Pbv" secondAttribute="bottom" constant="16" id="VAn-DZ-vlG"/>
+                                            <constraint firstItem="J1g-eF-U8V" firstAttribute="top" secondItem="gDb-eh-yd1" secondAttribute="bottom" constant="8" id="WNa-0C-L9a"/>
+                                            <constraint firstItem="ggl-Y0-KzO" firstAttribute="top" secondItem="sNI-xq-3op" secondAttribute="bottom" constant="8" id="Zh7-ur-lsb"/>
+                                            <constraint firstItem="lUV-o4-2eA" firstAttribute="top" secondItem="g2g-aN-rCB" secondAttribute="top" constant="8" id="b0R-fm-NGn"/>
+                                            <constraint firstAttribute="trailing" secondItem="GrV-PV-DGc" secondAttribute="trailing" constant="8" id="cEq-qC-kKT"/>
+                                            <constraint firstAttribute="bottom" secondItem="be9-8q-wDZ" secondAttribute="bottom" constant="8" id="cc9-2J-Ex5"/>
+                                            <constraint firstItem="5v6-zq-wJY" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="cq3-sz-NxI"/>
+                                            <constraint firstItem="ckS-1D-sKr" firstAttribute="top" secondItem="GrV-PV-DGc" secondAttribute="bottom" constant="8" id="fMh-Jo-YVd"/>
+                                            <constraint firstAttribute="trailing" secondItem="J1g-eF-U8V" secondAttribute="trailing" constant="8" id="gFI-VG-hB3"/>
+                                            <constraint firstItem="b9O-KB-nTu" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="gbU-xc-klD"/>
+                                            <constraint firstAttribute="trailing" secondItem="JFf-LK-IHN" secondAttribute="trailing" constant="8" id="hT8-rc-pEe"/>
+                                            <constraint firstAttribute="trailing" secondItem="b9O-KB-nTu" secondAttribute="trailing" constant="8" id="i2l-Jo-Pjf"/>
+                                            <constraint firstItem="lUV-o4-2eA" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="kEq-IU-X9b"/>
+                                            <constraint firstAttribute="trailing" secondItem="vpD-RO-3sU" secondAttribute="trailing" constant="8" id="lW3-4i-cqm"/>
+                                            <constraint firstItem="ckS-1D-sKr" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="ltG-co-Ypw"/>
+                                            <constraint firstItem="J1g-eF-U8V" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="uZJ-tx-Dg6"/>
+                                            <constraint firstAttribute="trailing" secondItem="nwS-xe-Pbv" secondAttribute="trailing" constant="8" id="wPZ-f5-Z7l"/>
+                                            <constraint firstItem="JFf-LK-IHN" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="wee-fD-veP"/>
+                                            <constraint firstItem="be9-8q-wDZ" firstAttribute="top" secondItem="5v6-zq-wJY" secondAttribute="bottom" constant="8" id="wu0-T6-mph"/>
+                                            <constraint firstItem="nwS-xe-Pbv" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="xbG-Vj-fj3"/>
+                                            <constraint firstItem="nwS-xe-Pbv" firstAttribute="top" secondItem="OFw-EV-xlF" secondAttribute="bottom" constant="8" id="xme-Q8-pC9"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
