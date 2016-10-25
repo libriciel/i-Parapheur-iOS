@@ -162,19 +162,22 @@
                         <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem systemItem="bookmarks" id="e2H-L5-DmJ">
+                        <barButtonItem image="ic_library_books_white_24dp.png" id="e2H-L5-DmJ">
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="XYH-uf-RCC" kind="popover" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                 </segue>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="Details" id="UJR-Wz-2Gr">
+                        <barButtonItem image="ic_info_outline_white_24dp.png" id="UJR-Wz-2Gr">
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="b1B-Q6-eI1" kind="modal" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="action" id="fQA-eM-WHG">
+                        <barButtonItem image="ic_action_white_24dp.png" id="fQA-eM-WHG">
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="KoI-Hd-Qp2" kind="popover" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -921,10 +924,13 @@
     </scenes>
     <resources>
         <image name="ic_account_circle_white.png" width="24" height="24"/>
+        <image name="ic_action_white_24dp.png" width="24" height="24"/>
         <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
         <image name="ic_check_white_18dp.png" width="18" height="18"/>
         <image name="ic_fiber_manual_record_white_18dp.png" width="18" height="18"/>
         <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
+        <image name="ic_info_outline_white_24dp.png" width="24" height="24"/>
+        <image name="ic_library_books_white_24dp.png" width="24" height="24"/>
         <image name="ic_navigate_next_white_24dp.png" width="24" height="24"/>
         <image name="ic_settings_white.png" width="24" height="24"/>
     </resources>

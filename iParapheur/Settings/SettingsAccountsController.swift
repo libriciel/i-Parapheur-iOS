@@ -97,7 +97,6 @@ import Foundation
                                   action: #selector(onEditButtonClicked),
                                   forControlEvents: .TouchUpInside)
 
-
         cell.visibilityButton.hidden = (account.id != Account.DemoId)
         cell.visibilityButton.selected = (account.isVisible!.boolValue || (accountList.count == 1))
 
