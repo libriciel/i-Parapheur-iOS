@@ -444,73 +444,53 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	static NSString *CellIdentifier = @"dossierCell";
-
-	RGFileCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	cell.delegate = self;
-
-	NSString *dossierTitre;
-	NSString *dossierType;
-	NSString *dossierSousType;
-	NSString *dossierActionDemandee;
-	NSDate *dossierDate = nil;
-	bool dossierPossibleSignature;
-	bool dossierPossibleArchive;
-	bool dossierPossibleViser;
-
+	FolderListCell *cell = [tableView dequeueReusableCellWithIdentifier:[FolderListCell CellIdentifier]];
 	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-	dossierTitre = dossier.unwrappedTitle;
-	dossierType = dossier.unwrappedType;
-	dossierSousType = dossier.unwrappedSubType;
-	dossierActionDemandee = dossier.unwrappedActionDemandee;
-	dossierPossibleSignature = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
-	dossierPossibleArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
-	dossierPossibleViser = [dossier.unwrappedActions containsObject:@"VISA"];
 
-	if (dossier.unwrappedLimitDate.longLongValue != 0)
-		dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.unwrappedLimitDate.longLongValue / 1000)];
+	// Action dot
+
+	cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+
+	BOOL canSign = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
+	BOOL canArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
+	BOOL canVisa = [dossier.unwrappedActions containsObject:@"VISA"];
+	BOOL canTdt = [dossier.unwrappedActions containsObject:@"TDT"];
+
+	if (canSign)
+		cell.dot.tintColor = ColorUtils.Salmon;
+	else if (canTdt)
+		cell.dot.tintColor = ColorUtils.Flora;
+	else if (canArchive)
+		cell.dot.tintColor = ColorUtils.Sky;
+	else if (canVisa)
+		cell.dot.tintColor = ColorUtils.Lime;
 	else
-		dossierDate = nil;
+		cell.dot.tintColor = ColorUtils.LightGrey;
 
 	// Adapter
 
-	cell.dossierTitleLabel.text = dossierTitre;
-	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@",
-	                                                     dossierType,
-	                                                     dossierSousType];
+	cell.titleLabel.text = dossier.unwrappedTitle;
+	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", dossier.unwrappedType, dossier.unwrappedSubType];
 
-	if (dossierPossibleSignature || dossierPossibleArchive || dossierPossibleViser) {
-		NSString *actionName = [ADLAPIHelper actionNameForAction:dossierActionDemandee];
-		cell.validateButton.hidden = NO;
-		[cell.validateButton setTitle:actionName
-		                     forState:UIControlStateNormal];
-	}
-	else {
-		cell.validateButton.hidden = YES;
-	}
+	// Date
 
+	NSDate *dossierDate = nil;
+
+	if (dossier.unwrappedLimitDate.longLongValue != 0)
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.unwrappedLimitDate.longLongValue / 1000)];
+
+	cell.limitDateLabel.hidden = (dossierDate == nil);
 
 	if (dossierDate != nil) {
+		BOOL isLate = ([dossierDate compare:[NSDate new]] == NSOrderedAscending);
 
 		NSDateFormatter *outputFormatter = [NSDateFormatter new];
 		outputFormatter.dateStyle = NSDateFormatterShortStyle;
 		outputFormatter.timeStyle = NSDateFormatterNoStyle;
-		//[outputFormatter setDateFormat:@"dd MMM"];
 
-		NSString *fdate = [outputFormatter stringFromDate:dossierDate];
-		// FIXME Adrien
-//		cell.retardBadge.badgeText = fdate;
-//		[cell.retardBadge autoBadgeSizeWithString:fdate];
-//		cell.retardBadge.hidden = NO;
-	}
-//	else {
-		// FIXME Adrien
-//		cell.retardBadge.hidden = YES;
-//	}
-
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-		cell.switchButton.on = [_selectedDossiersArray containsObject:dossier];
+		NSString *datePrint = [outputFormatter stringFromDate:dossierDate];
+		cell.limitDateLabel.text = [NSString stringWithFormat:@"avant le %@", datePrint];
+		cell.limitDateLabel.textColor = isLate ? ColorUtils.Salmon : ColorUtils.BlueGreySeparator;
 	}
 
 	return cell;
