@@ -468,7 +468,9 @@
 	// Adapter
 
 	cell.titleLabel.text = dossier.unwrappedTitle;
-	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@", dossier.unwrappedType, dossier.unwrappedSubType];
+	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@",
+	                                                     dossier.unwrappedType,
+	                                                     dossier.unwrappedSubType];
 
 	// Date
 
@@ -487,7 +489,8 @@
 		outputFormatter.timeStyle = NSDateFormatterNoStyle;
 
 		NSString *datePrint = [outputFormatter stringFromDate:dossierDate];
-		cell.limitDateLabel.text = [NSString stringWithFormat:@"avant le %@", datePrint];
+		cell.limitDateLabel.text = [NSString stringWithFormat:@"avant le %@",
+		                                                      datePrint];
 		cell.limitDateLabel.textColor = isLate ? ColorUtils.Salmon : ColorUtils.BlueGreySeparator;
 	}
 
@@ -542,6 +545,37 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected
 	                                                    object:dossierRef];
+}
+
+- (IBAction)tableViewDidLongPress:(UILongPressGestureRecognizer*) sender {
+
+	NSLog(@"Adrien - handleLongPress");
+
+	if (sender.state != UIGestureRecognizerStateBegan)
+		return;
+
+	CGPoint indexPathPoint = [sender locationInView:self.tableView];
+	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:indexPathPoint];
+
+	//
+
+	if (indexPath == nil) {
+		NSLog(@"long press on table view but not on a row");
+	} else {
+		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+		if (cell.isHighlighted) {
+			NSLog(@"long press on table view at section %d row %d", indexPath.section, indexPath.row);
+
+			// Those two lines are there to release the gesture event.
+			// Otherwise, the long press is always called at every frame.
+			// It looks like a very poor solution, it smells like a very poor solution,
+			// but it's recommended by Apple there : https://developer.apple.com/videos/play/wwdc2014/235/
+			// So... I guess it's the way to do it...
+			sender.enabled = NO;
+			sender.enabled = YES;
+			// End of the gesture release event.
+		}
+	}
 }
 
 
@@ -806,30 +840,6 @@ didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 
 #pragma mark - LGViewHUDDelegate protocol implementation
-
-
-- (IBAction)handleLongPress:(UILongPressGestureRecognizer *)sender {
-
-	NSLog(@"Adrien - handleLongPress");
-
-	if (sender.state != UIGestureRecognizerStateBegan)
-		return;
-	
-	CGPoint indexPathPoint = [sender locationInView:self.tableView];
-	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:indexPathPoint];
-
-	//
-
-	if (indexPath == nil) {
-		NSLog(@"long press on table view but not on a row");
-	}
-	else {
-		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-		if (cell.isHighlighted) {
-			NSLog(@"long press on table view at section %d row %d", indexPath.section, indexPath.row);
-		}
-	}
-}
 
 
 @end

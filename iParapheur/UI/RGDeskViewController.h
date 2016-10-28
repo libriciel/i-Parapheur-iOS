@@ -62,7 +62,6 @@
 @property(nonatomic, strong) IBOutlet UIButton *loadMoreButton;
 @property(nonatomic, strong) ADLRestClient *restClient;
 
-
 - (IBAction)loadNextResultsPage:(id)sender;
 
 

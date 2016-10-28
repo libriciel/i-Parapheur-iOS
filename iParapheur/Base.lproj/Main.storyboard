@@ -328,6 +328,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
                         <color key="separatorColor" red="0.79991227389999997" green="0.80005061629999996" blue="0.79990351199999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="separatorInset" minX="24" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="alS-1c-Ste">
@@ -460,6 +461,7 @@
                         <connections>
                             <outlet property="dataSource" destination="yeg-xR-bYl" id="Qxq-Ja-hb4"/>
                             <outlet property="delegate" destination="yeg-xR-bYl" id="Zv8-s9-dsV"/>
+                            <outletCollection property="gestureRecognizers" destination="YeL-sI-SYw" appends="YES" id="FrZ-Yj-BKy"/>
                         </connections>
                     </tableView>
                     <toolbarItems/>
@@ -482,6 +484,11 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKB-EC-IFP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="YeL-sI-SYw">
+                    <connections>
+                        <action selector="tableViewDidLongPress:" destination="yeg-xR-bYl" id="qNF-Kd-ZK4"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1154" y="175"/>
         </scene>
