@@ -33,12 +33,12 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 #import "RGDeskViewController.h"
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
 #import "ADLRequester.h"
 #import "iParapheur-Swift.h"
-#import "DeviceUtils.h"
 #import "StringUtils.h"
 
 
@@ -67,12 +67,10 @@
 
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDeskViewController");
-	//[[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"TableViewPaperBackground.png"]]];
 
-	[[self.navigationItem backBarButtonItem] setTintColor:[ColorUtils DarkBlue]];
-
+	self.navigationItem.backBarButtonItem.tintColor = ColorUtils.DarkBlue;
 	self.refreshControl = [UIRefreshControl new];
-	[self.refreshControl setTintColor:[ColorUtils SelectedCellGrey]];
+	self.refreshControl.tintColor = ColorUtils.SelectedCellGrey;
 
 	[self.refreshControl addTarget:self
 	                        action:@selector(refresh)
@@ -451,21 +449,21 @@
 
 	cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 
-	BOOL canSign = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
-	BOOL canArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
-	BOOL canVisa = [dossier.unwrappedActions containsObject:@"VISA"];
-	BOOL canTdt = [dossier.unwrappedActions containsObject:@"TDT"];
-
-	if (canSign)
-		cell.dot.tintColor = ColorUtils.Salmon;
-	else if (canTdt)
-		cell.dot.tintColor = ColorUtils.Flora;
-	else if (canArchive)
-		cell.dot.tintColor = ColorUtils.Sky;
-	else if (canVisa)
-		cell.dot.tintColor = ColorUtils.Lime;
-	else
-		cell.dot.tintColor = ColorUtils.LightGrey;
+//	BOOL canSign = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
+//	BOOL canArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
+//	BOOL canVisa = [dossier.unwrappedActions containsObject:@"VISA"];
+//	BOOL canTdt = [dossier.unwrappedActions containsObject:@"TDT"];
+//
+//	if (canSign)
+//		cell.dot.tintColor = ColorUtils.Salmon;
+//	else if (canTdt)
+//		cell.dot.tintColor = ColorUtils.Flora;
+//	else if (canArchive)
+//		cell.dot.tintColor = ColorUtils.Sky;
+//	else if (canVisa)
+//		cell.dot.tintColor = ColorUtils.Lime;
+//	else
+	cell.dot.tintColor = ColorUtils.LightGrey;
 
 	// Adapter
 
@@ -494,6 +492,56 @@
 	}
 
 	return cell;
+}
+
+
+- (void)      tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+	NSLog(@"Adrien - didSelectRowAtIndexPath");
+
+	// Cancel event if reselection of a cell
+
+//	BOOL hasSomeSelected = (cell.tableView.indexPathForSelectedRow != nil);
+//	BOOL areSameCell = (cell.tableView.indexPathForSelectedRow.row == indexPath.row);
+//
+//	if (hasSomeSelected && areSameCell)
+//		return;
+
+	// Cancel event if no internet
+
+//	if (![DeviceUtils isConnectedToInternet]) {
+//
+//		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
+//														 code:kCFURLErrorNotConnectedToInternet
+//													 userInfo:nil]];
+//		[cell flickerSelection];
+//		return;
+//	}
+
+	// Get target Dossier
+
+	NSString *dossierRef;
+
+	if (self.tableView == self.searchDisplayController.searchResultsTableView)
+		dossierRef = ((Dossier *) _filteredDossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
+	else
+		dossierRef = ((Dossier *) _dossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
+
+	//
+//
+//	[cell.tableView deselectRowAtIndexPath:cell.tableView.indexPathForSelectedRow
+//	                              animated:NO];
+//	[cell.tableView selectRowAtIndexPath:indexPath
+//	                            animated:NO
+//	                      scrollPosition:UITableViewScrollPositionNone];
+//	[cell setSelected:YES
+//	         animated:NO];
+
+	[ADLSingletonState sharedSingletonState].dossierCourantReference = dossierRef;
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected
+	                                                    object:dossierRef];
 }
 
 
@@ -663,56 +711,10 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 #pragma mark RGFileCellDelegate protocol implementation
 
 
-- (void)        cell:(RGFileCell *)cell
-didSelectAtIndexPath:(NSIndexPath *)indexPath {
-
-	// Cancel event if reselection of a cell
-
-	BOOL hasSomeSelected = (cell.tableView.indexPathForSelectedRow != nil);
-	BOOL areSameCell = (cell.tableView.indexPathForSelectedRow.row == indexPath.row);
-
-	if (hasSomeSelected && areSameCell)
-		return;
-
-	// Cancel event if no internet
-
-//	if (![DeviceUtils isConnectedToInternet]) {
-//
-//		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
-//														 code:kCFURLErrorNotConnectedToInternet
-//													 userInfo:nil]];
-//		[cell flickerSelection];
-//		return;
-//	}
-
-	// v2/v3 compatibility
-
-	NSString *dossierRef;
-
-	if (cell.tableView == self.searchDisplayController.searchResultsTableView)
-		dossierRef = ((Dossier *) _filteredDossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
-	else
-		dossierRef = ((Dossier *) _dossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
-
-	//
-
-	[cell.tableView deselectRowAtIndexPath:cell.tableView.indexPathForSelectedRow
-	                              animated:NO];
-	[cell.tableView selectRowAtIndexPath:indexPath
-	                            animated:NO
-	                      scrollPosition:UITableViewScrollPositionNone];
-	[cell setSelected:YES
-	         animated:NO];
-
-	[ADLSingletonState sharedSingletonState].dossierCourantReference = dossierRef;
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected
-	                                                    object:dossierRef];
-}
-
-
 - (void)       cell:(RGFileCell *)cell
 didCheckAtIndexPath:(NSIndexPath *)indexPath {
+
+	NSLog(@"Adrien - didCheckAtIndexPath");
 
 	[self.swipedCell hideMenuOptions];
 
@@ -731,6 +733,8 @@ didCheckAtIndexPath:(NSIndexPath *)indexPath {
 - (void)                      cell:(RGFileCell *)cell
 didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
 
+	NSLog(@"Adrien - didTouchSecondaryButtonAtIndexPath");
+
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		// Adrien
 //		Dossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
@@ -745,6 +749,8 @@ didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)                 cell:(RGFileCell *)cell
 didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
+
+	NSLog(@"Adrien - didTouchMainButtonAtIndexPath");
 
 	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		// Adrien
@@ -796,6 +802,33 @@ didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
 - (void)shallDismissHUD:(LGViewHUD *)hud {
 
 	HIDE_HUD
+}
+
+
+#pragma mark - LGViewHUDDelegate protocol implementation
+
+
+- (IBAction)handleLongPress:(UILongPressGestureRecognizer *)sender {
+
+	NSLog(@"Adrien - handleLongPress");
+
+	if (sender.state != UIGestureRecognizerStateBegan)
+		return;
+	
+	CGPoint indexPathPoint = [sender locationInView:self.tableView];
+	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:indexPathPoint];
+
+	//
+
+	if (indexPath == nil) {
+		NSLog(@"long press on table view but not on a row");
+	}
+	else {
+		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+		if (cell.isHighlighted) {
+			NSLog(@"long press on table view at section %d row %d", indexPath.section, indexPath.row);
+		}
+	}
 }
 
 
