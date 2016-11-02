@@ -67,7 +67,7 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDeskViewController");
 
-	self.navigationItem.backBarButtonItem.tintColor = ColorUtils.DarkBlue;
+	self.navigationItem.backBarButtonItem.tintColor = ColorUtils.Aqua;
 	self.refreshControl = [UIRefreshControl new];
 	self.refreshControl.tintColor = ColorUtils.SelectedCellGrey;
 
@@ -146,7 +146,7 @@
 
 			__weak typeof(self) weakSelf = self;
 
-			[_restClient getDossiers:_deskRef
+			[_restClient getDossiers:_desk.unwrappedNodeRef
 			                    page:page
 			                    size:15
 			                  filter:jsonString
@@ -171,13 +171,13 @@
 			                 }];
 		}
 		else {
-			API_GETDOSSIERHEADERS_FILTERED(self.deskRef, @(page), @"15", currentFilter[@"banette"], filtersDictionary);
+			API_GETDOSSIERHEADERS_FILTERED(_desk.unwrappedNodeRef, @(page), @"15", currentFilter[@"banette"], filtersDictionary);
 		}
 	}
 	else {
 		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			__weak typeof(self) weakSelf = self;
-			[_restClient getDossiers:self.deskRef
+			[_restClient getDossiers:_desk.unwrappedNodeRef
 			                    page:page
 			                    size:15
 			                  filter:nil
@@ -202,7 +202,7 @@
 			                 }];
 		}
 		else {
-			API_GETDOSSIERHEADERS(self.deskRef, @(page), @"15");
+			API_GETDOSSIERHEADERS(_desk.unwrappedNodeRef, @(page), @"15");
 		}
 	}
 }
@@ -293,7 +293,7 @@
 }
 
 
-- (void)updateListWithoutFlickering {
+- (void)updateSelectionMode {
 
 	// Fetch cells and toggle dot/check
 
@@ -301,6 +301,13 @@
 		cell.checkboxHandlerView.hidden = (_selectedDossiersArray.count == 0);
 		cell.dot.hidden = (_selectedDossiersArray.count != 0);
 		cell.selectionStyle = (_selectedDossiersArray.count == 0) ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+
+		// Seems useless, but fixes a cell recycle UI problem,
+		// when the selection mode is icon-exited and re-activated.
+		if (_selectedDossiersArray.count == 0) {
+			cell.checkOnImage.hidden = YES;
+			cell.checkOffImage.hidden = NO;
+		}
 	}
 
 	// Re-select previously selected cell
@@ -322,6 +329,37 @@
 			                      scrollPosition:nil];
 		}
 	}
+
+	// Update TopBar
+
+	if (_selectedDossiersArray.count != 0) {
+
+		UIBarButtonItem *exitButton = [UIBarButtonItem new];
+		exitButton.title = @"Exit";
+		exitButton.image = [UIImage imageNamed:@"ic_close_white.png"];
+		exitButton.tintColor = ColorUtils.Aqua;
+		exitButton.style = UIBarButtonItemStylePlain;
+		exitButton.target = self;
+		exitButton.action = @selector(exitSelection);
+
+		self.navigationItem.leftBarButtonItem = exitButton;
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+		self.navigationItem.rightBarButtonItem.tintColor = UIColor.clearColor;
+		self.navigationItem.title = @"1 dossier sélectionné";
+	}
+	else {
+		self.navigationItem.leftBarButtonItem = nil;
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+		self.navigationItem.rightBarButtonItem.tintColor = ColorUtils.Aqua;
+		self.navigationItem.title = _desk.unwrappedName;
+	}
+}
+
+
+- (void)exitSelection {
+	[_selectedDossiersArray removeAllObjects];
+	[self updateSelectionMode];
+	[self updateToolBar];
 }
 
 
@@ -538,6 +576,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	if (_selectedDossiersArray.count != 0) {
 
+		// Update cell
+
 		if ([_selectedDossiersArray containsObject:dossierClicked]) {
 			[_selectedDossiersArray removeObject:dossierClicked];
 			cell.checkOnImage.hidden = YES;
@@ -549,8 +589,15 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 			cell.checkOffImage.hidden = YES;
 		}
 
+		// Update UI
+
+		if (_selectedDossiersArray.count == 1)
+			self.navigationItem.title = @"1 dossier sélectionné";
+		else
+			self.navigationItem.title = [NSString stringWithFormat:@"%d dossiers sélectionnés", _selectedDossiersArray.count];
+
 		if (_selectedDossiersArray.count == 0) {
-			[self updateListWithoutFlickering];
+			[self updateSelectionMode];
 			[self updateToolBar];
 		}
 
@@ -595,9 +642,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	// Default case
 
-	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-	NSLog(@"Long press on table view at section %d row %d", indexPath.section, indexPath.row);
-
 	// Those two lines are there to release the gesture event.
 	// Otherwise, the long press is always called at every frame.
 	// It looks like a very poor solution, it smells like a very poor solution,
@@ -621,7 +665,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[self.tableView reloadRowsAtIndexPaths:@[indexPath]
 	                      withRowAnimation:nil];
 
-	[self updateListWithoutFlickering];
+	[self updateSelectionMode];
 	[self updateToolBar];
 }
 
@@ -683,7 +727,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		for (Dossier *dossier in dossiers)
 			if (dossier && dossier.unwrappedIsLocked)
 				[lockedDossiers addObject:dossier];
-		
+
 		if ([lockedDossiers count] > 0) {
 			dossiers = [NSMutableArray arrayWithArray:dossiers];
 			[(NSMutableArray *) dossiers removeObjectsInArray:lockedDossiers];
@@ -733,7 +777,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	}
 	else {
 		NSMutableArray *selectedArray = [NSMutableArray new];
-		
+
 		for (Dossier *dossier in _selectedDossiersArray)
 			[selectedArray addObject:dossier];
 

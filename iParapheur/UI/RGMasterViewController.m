@@ -484,33 +484,17 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	// Call Desk view
 
-	bool isLoaded = _bureauxArray.count > 0;
-	bool isVersion2 = isLoaded && [_bureauxArray[0] isKindOfClass:[NSDictionary class]];
-
-	NSString *bureauName;
-	NSString *bureauNodeRef;
-
-	if (isLoaded && isVersion2) {
-		NSDictionary *bureau = _bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau[@"name"];
-		bureauNodeRef = bureau[@"nodeRef"];
-	} else {
-		Bureau *bureau = self.bureauxArray[(NSUInteger) indexPath.row];
-		bureauName = bureau.unwrappedName;
-		bureauNodeRef = bureau.unwrappedNodeRef;
-	}
-
-	NSLog(@"Selected Desk = %@", bureauNodeRef);
+	Bureau *bureau = self.bureauxArray[(NSUInteger) indexPath.row];
+	NSLog(@"Selected Desk = %@", bureau.unwrappedNodeRef);
 
 	RGDeskViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"DeskViewController"];
-	controller.deskRef = bureauNodeRef;
 
 	[self.navigationController pushViewController:controller
 	                                     animated:YES];
 
-	controller.navigationItem.title = bureauName;
-
-	[ADLSingletonState sharedSingletonState].bureauCourant = bureauNodeRef;
+	controller.desk = bureau;
+	controller.navigationItem.title = bureau.unwrappedName;
+	[ADLSingletonState sharedSingletonState].bureauCourant = bureau.unwrappedNodeRef;
 }
 
 

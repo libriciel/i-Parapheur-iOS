@@ -67,7 +67,7 @@
 
 	// Build UI
 
-	self.navigationController.navigationBar.tintColor = [ColorUtils DarkBlue];
+	self.navigationController.navigationBar.tintColor = ColorUtils.Aqua;
 	self.navigationItem.rightBarButtonItem = nil;
 
 	if ([UIDevice currentDevice].systemVersion.floatValue > 8.0) {
@@ -526,7 +526,7 @@
        forPopoverController:(UIPopoverController *)popoverController {
 
 	barButtonItem.title = @"Dossiers";
-	barButtonItem.tintColor = [ColorUtils DarkBlue];
+	barButtonItem.tintColor = ColorUtils.Aqua;
 
 //	[self.navigationItem setLeftBarButtonItem:barButtonItem
 //									 animated:YES];

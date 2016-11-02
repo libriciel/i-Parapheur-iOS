@@ -297,7 +297,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Bureaux" id="PxO-wH-GeW">
                         <barButtonItem key="leftBarButtonItem" image="ic_account_circle_white.png" id="Cjo-Ew-HTT">
-                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="tintColor" red="0.26754182577133179" green="0.49623715877532959" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <segue destination="nxB-H0-cxL" kind="modal" identifier="AccountListSegue" modalPresentationStyle="currentContext" id="GrA-mP-kF0"/>
                             </connections>
@@ -500,7 +500,8 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Dossiers" id="KZD-cg-m0R">
-                        <barButtonItem key="rightBarButtonItem" title="Filtrer" id="0nh-nM-mak">
+                        <barButtonItem key="rightBarButtonItem" image="ic_filter_white_24dp.png" id="0nh-nM-mak">
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <segue destination="RAS-1K-jVQ" kind="modal" identifier="filterSegue" modalPresentationStyle="formSheet" id="YcK-eQ-fnd"/>
                             </connections>
@@ -1031,7 +1032,7 @@
                 <navigationController id="42" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="43">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="4cr-16-Nb2">
                         <rect key="frame" x="0.0" y="960" width="768" height="44"/>
@@ -1065,23 +1066,6 @@
             </objects>
             <point key="canvasLocation" x="659" y="937"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="B1b-th-Mgk">
-            <objects>
-                <viewController id="B7f-Yb-9E6" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="mIL-U9-ySL"/>
-                        <viewControllerLayoutGuide type="bottom" id="Tjq-bI-0ff"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ivg-Xq-SW0">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VIe-iz-yQ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-        </scene>
     </scenes>
     <resources>
         <image name="ic_account_circle_white.png" width="24" height="24"/>
@@ -1091,6 +1075,7 @@
         <image name="ic_check_white_18dp.png" width="18" height="18"/>
         <image name="ic_circle_outline_white_18dp.png" width="18" height="18"/>
         <image name="ic_fiber_manual_record_white_18dp.png" width="18" height="18"/>
+        <image name="ic_filter_white_24dp.png" width="24" height="24"/>
         <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
         <image name="ic_info_outline_white_24dp.png" width="24" height="24"/>
         <image name="ic_library_books_white_24dp.png" width="24" height="24"/>

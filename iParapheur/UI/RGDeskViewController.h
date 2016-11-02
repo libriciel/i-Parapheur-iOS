@@ -53,11 +53,10 @@
 		LGViewHUDDelegate>
 
 
-@property(nonatomic, strong) NSString *deskRef;
+@property(nonatomic, strong) Bureau *desk;
 @property(nonatomic, strong) NSMutableArray *dossiersArray;
 @property(nonatomic, strong) NSArray *filteredDossiersArray;
 @property(nonatomic, strong) NSMutableArray *selectedDossiersArray;
-@property(nonatomic, strong) UIView *originalView;
 @property(nonatomic, strong) IBOutlet UISearchBar *searchBar;
 @property(nonatomic, strong) IBOutlet UIButton *loadMoreButton;
 @property(nonatomic, strong) ADLRestClient *restClient;
