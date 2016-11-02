@@ -435,18 +435,18 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="moG-XS-Bma" userLabel="Checkbox handler">
-                                            <rect key="frame" x="0.0" y="0.0" width="18" height="97"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="24" height="97"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ace-Tr-GER" userLabel="Check on">
-                                                    <rect key="frame" x="0.0" y="40" width="18" height="18"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_check_circle_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ace-Tr-GER" userLabel="Check on">
+                                                    <rect key="frame" x="3" y="40" width="18" height="18"/>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="18" id="LV5-0L-74G"/>
                                                         <constraint firstAttribute="width" constant="18" id="RXA-zW-hlT"/>
                                                     </constraints>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zN-LF-ClG" userLabel="Check off">
-                                                    <rect key="frame" x="0.0" y="40" width="18" height="18"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_circle_outline_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="0zN-LF-ClG" userLabel="Check off">
+                                                    <rect key="frame" x="3" y="40" width="18" height="18"/>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="18" id="0Ro-G0-2K3"/>
@@ -454,9 +454,8 @@
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="18" id="7dd-Xx-7Ko"/>
+                                                <constraint firstAttribute="width" constant="24" id="Jnq-aK-35F"/>
                                                 <constraint firstItem="Ace-Tr-GER" firstAttribute="centerX" secondItem="moG-XS-Bma" secondAttribute="centerX" id="LXa-Qj-Err"/>
                                                 <constraint firstItem="Ace-Tr-GER" firstAttribute="centerY" secondItem="moG-XS-Bma" secondAttribute="centerY" id="Qpy-al-tis"/>
                                                 <constraint firstItem="0zN-LF-ClG" firstAttribute="centerY" secondItem="moG-XS-Bma" secondAttribute="centerY" id="lSH-01-mR9"/>
@@ -485,6 +484,7 @@
                                 <connections>
                                     <outlet property="checkOffImage" destination="0zN-LF-ClG" id="Ojt-0e-Adf"/>
                                     <outlet property="checkOnImage" destination="Ace-Tr-GER" id="Iae-X5-KaE"/>
+                                    <outlet property="checkboxHandlerView" destination="moG-XS-Bma" id="1V9-uc-0Hj"/>
                                     <outlet property="dot" destination="qiB-0l-JBh" id="LlK-pH-Ezu"/>
                                     <outlet property="limitDateLabel" destination="3vm-Yp-9IU" id="Bdy-Mj-sWD"/>
                                     <outlet property="titleLabel" destination="2hd-9k-Lp8" id="6wO-Pa-H2C"/>
@@ -1088,7 +1088,9 @@
         <image name="ic_account_circle_white.png" width="24" height="24"/>
         <image name="ic_action_white_24dp.png" width="24" height="24"/>
         <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
+        <image name="ic_check_circle_white_18dp.png" width="18" height="18"/>
         <image name="ic_check_white_18dp.png" width="18" height="18"/>
+        <image name="ic_circle_outline_white_18dp.png" width="18" height="18"/>
         <image name="ic_fiber_manual_record_white_18dp.png" width="18" height="18"/>
         <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
         <image name="ic_info_outline_white_24dp.png" width="24" height="24"/>

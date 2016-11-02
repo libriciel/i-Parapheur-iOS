@@ -48,7 +48,6 @@
 }
 
 @property(nonatomic, weak) RGFileCell *swipedCell;
-@property(nonatomic, assign, getter = isInBatchMode) BOOL inBatchMode;
 @property(nonatomic, retain, readonly) NSArray *possibleMainActions;
 @property(nonatomic, retain, readonly) NSArray *actionsWithoutAnnotation;
 @property(nonatomic, retain) NSString *mainAction;
@@ -84,7 +83,6 @@
 	self.searchDisplayController.searchResultsTableView.rowHeight = self.tableView.rowHeight;
 	[self.searchDisplayController.searchResultsTableView registerClass:[RGFileCell class]
 	                                            forCellReuseIdentifier:@"dossierCell"];
-	self.inBatchMode = NO;
 
 	_restClient = [ADLRestClient sharedManager];
 }
@@ -108,12 +106,6 @@
 
 	SHOW_HUD
 	[self loadDossiersWithPage:_currentPage];
-}
-
-
-- (void)setInBatchMode:(BOOL)value {
-
-	_inBatchMode = value;
 }
 
 
@@ -232,12 +224,12 @@
 }
 
 
-#pragma mark Actions
+#pragma Private methods
 
 
 - (void)updateToolBar {
 
-	if (self.isInBatchMode) {
+	if (_selectedDossiersArray.count != 0) {
 
 		if (self.navigationController.toolbarHidden)
 			[self.navigationController setToolbarHidden:NO
@@ -297,6 +289,15 @@
 		[self.navigationController setToolbarHidden:YES
 		                                   animated:YES];
 		moreBarButtonItem = nil;
+	}
+}
+
+
+- (void)updateListWithoutFlickering {
+
+	for (FolderListCell *cell in self.tableView.visibleCells) {
+		cell.checkboxHandlerView.hidden = (_selectedDossiersArray.count == 0);
+		cell.selectionStyle = (_selectedDossiersArray.count == 0) ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 	}
 }
 
@@ -442,21 +443,27 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	FolderListCell *cell = [tableView dequeueReusableCellWithIdentifier:[FolderListCell CellIdentifier]];
+	FolderListCell *cell = [tableView dequeueReusableCellWithIdentifier:FolderListCell.CellIdentifier];
 	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
+
+	// UI fix
+
+	if (cell.dot.image.renderingMode != UIImageRenderingModeAlwaysTemplate) {
+		cell.checkOffImage.image = [cell.checkOffImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		cell.checkOnImage.image = [cell.checkOnImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	}
 
 	// Selected state
 
-	cell.checkOffImage.image = [cell.checkOffImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	cell.checkOnImage.image = [cell.checkOnImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	cell.selectionStyle = (_selectedDossiersArray.count == 0) ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+	cell.checkboxHandlerView.hidden = (_selectedDossiersArray.count == 0);
 
 	bool isSelected = [_selectedDossiersArray containsObject:dossier];
 	cell.checkOffImage.hidden = isSelected;
 	cell.checkOnImage.hidden = !isSelected;
 
 	// Action dot
-
-	cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 
 //	BOOL canSign = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
 //	BOOL canArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
@@ -512,13 +519,38 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	NSLog(@"Adrien - didSelectRowAtIndexPath");
 
-	// Cancel event if reselection of a cell
+	// Get target Dossier
 
-//	BOOL hasSomeSelected = (cell.tableView.indexPathForSelectedRow != nil);
-//	BOOL areSameCell = (cell.tableView.indexPathForSelectedRow.row == indexPath.row);
-//
-//	if (hasSomeSelected && areSameCell)
-//		return;
+	FolderListCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+	Dossier *dossierClicked;
+
+	if (self.tableView == self.searchDisplayController.searchResultsTableView)
+		dossierClicked = ((Dossier *) _filteredDossiersArray[(NSUInteger) indexPath.row]);
+	else
+		dossierClicked = ((Dossier *) _dossiersArray[(NSUInteger) indexPath.row]);
+
+	// Selection mode
+
+	if (_selectedDossiersArray.count != 0) {
+
+		if ([_selectedDossiersArray containsObject:dossierClicked]) {
+			[_selectedDossiersArray removeObject:dossierClicked];
+			cell.checkOnImage.hidden = YES;
+			cell.checkOffImage.hidden = NO;
+		}
+		else {
+			[_selectedDossiersArray addObject:dossierClicked];
+			cell.checkOnImage.hidden = NO;
+			cell.checkOffImage.hidden = YES;
+		}
+
+		if (_selectedDossiersArray.count == 0) {
+			[self updateListWithoutFlickering];
+			[self updateToolBar];
+		}
+
+		return;
+	}
 
 	// Cancel event if no internet
 
@@ -531,29 +563,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //		return;
 //	}
 
-	// Get target Dossier
-
-	NSString *dossierRef;
-
-	if (self.tableView == self.searchDisplayController.searchResultsTableView)
-		dossierRef = ((Dossier *) _filteredDossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
-	else
-		dossierRef = ((Dossier *) _dossiersArray[(NSUInteger) indexPath.row]).unwrappedId;
-
-	//
-//
-//	[cell.tableView deselectRowAtIndexPath:cell.tableView.indexPathForSelectedRow
-//	                              animated:NO];
-//	[cell.tableView selectRowAtIndexPath:indexPath
-//	                            animated:NO
-//	                      scrollPosition:UITableViewScrollPositionNone];
-//	[cell setSelected:YES
-//	         animated:NO];
-
-	[ADLSingletonState sharedSingletonState].dossierCourantReference = dossierRef;
+	[ADLSingletonState sharedSingletonState].dossierCourantReference = dossierClicked.unwrappedId;
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected
-	                                                    object:dossierRef];
+	                                                    object:dossierClicked.unwrappedId];
 }
 
 
@@ -594,12 +607,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	else
 		[_selectedDossiersArray addObject:dossier];
 
-	_inBatchMode = _selectedDossiersArray.count != 0;
-
 	// Refresh UI
 
-	[self updateToolBar];
+	[self.tableView reloadRowsAtIndexPaths:@[indexPath]
+	                      withRowAnimation:nil];
 
+	[self updateListWithoutFlickering];
+	[self updateToolBar];
 }
 
 
@@ -831,8 +845,7 @@ didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 
 - (BOOL)canSwipeCell:(RGFileCell *)cell {
-
-	return (!self.isInBatchMode && (_swipedCell == cell));
+	return (_selectedDossiersArray.count == 0) && (_swipedCell == cell);
 }
 
 
