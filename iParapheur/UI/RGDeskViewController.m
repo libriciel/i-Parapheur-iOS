@@ -295,9 +295,32 @@
 
 - (void)updateListWithoutFlickering {
 
+	// Fetch cells and toggle dot/check
+
 	for (FolderListCell *cell in self.tableView.visibleCells) {
 		cell.checkboxHandlerView.hidden = (_selectedDossiersArray.count == 0);
+		cell.dot.hidden = (_selectedDossiersArray.count != 0);
 		cell.selectionStyle = (_selectedDossiersArray.count == 0) ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+	}
+
+	// Re-select previously selected cell
+
+	if (_selectedDossiersArray.count == 0) {
+
+		NSIndexPath *index = nil;
+		NSString *selectedId = [ADLSingletonState sharedSingletonState].dossierCourantReference;
+		NSArray *displayedDossierArray = (self.tableView == self.searchDisplayController.searchResultsTableView) ? _filteredDossiersArray : _dossiersArray;
+
+		for (int i = 0; i < displayedDossierArray.count; i++)
+			if ([((Dossier *) displayedDossierArray[(NSUInteger) i]).unwrappedId isEqualToString:selectedId])
+				index = [NSIndexPath indexPathForRow:i
+				                           inSection:0];
+
+		if (index != nil) {
+			[self.tableView selectRowAtIndexPath:index
+			                            animated:NO
+			                      scrollPosition:nil];
+		}
 	}
 }
 
@@ -323,7 +346,7 @@
 
 - (void)showMoreActions:(id)sender {
 
-	if ([UIAlertController class]) { // iOS8
+	if (UIAlertController.class) { // iOS8
 
 		// Create Popup Controller
 
@@ -337,13 +360,14 @@
 
 		for (NSString *action in _secondaryActions) {
 
-			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
-			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
-			                                                 style:UIAlertActionStyleDefault
-			                                               handler:^(UIAlertAction *alertAction) {
-				                                               [self clickOnSecondaryAction:alertAction.title];
-			                                               }];
-			[actionController addAction:action];
+//			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
+			// TODO Adrien
+//			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
+//			                                                 style:UIAlertActionStyleDefault
+//			                                               handler:^(UIAlertAction *alertAction) {
+//				                                               [self clickOnSecondaryAction:alertAction.title];
+//			                                               }];
+//			[actionController addAction:action];
 		}
 
 		UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
@@ -458,28 +482,11 @@
 
 	cell.selectionStyle = (_selectedDossiersArray.count == 0) ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 	cell.checkboxHandlerView.hidden = (_selectedDossiersArray.count == 0);
+	cell.dot.hidden = (_selectedDossiersArray.count != 0);
 
 	bool isSelected = [_selectedDossiersArray containsObject:dossier];
 	cell.checkOffImage.hidden = isSelected;
 	cell.checkOnImage.hidden = !isSelected;
-
-	// Action dot
-
-//	BOOL canSign = [dossier.unwrappedActions containsObject:@"SIGNATURE"];
-//	BOOL canArchive = [dossier.unwrappedActions containsObject:@"ARCHIVAGE"];
-//	BOOL canVisa = [dossier.unwrappedActions containsObject:@"VISA"];
-//	BOOL canTdt = [dossier.unwrappedActions containsObject:@"TDT"];
-//
-//	if (canSign)
-//		cell.dot.tintColor = ColorUtils.Salmon;
-//	else if (canTdt)
-//		cell.dot.tintColor = ColorUtils.Flora;
-//	else if (canArchive)
-//		cell.dot.tintColor = ColorUtils.Sky;
-//	else if (canVisa)
-//		cell.dot.tintColor = ColorUtils.Lime;
-//	else
-	cell.dot.tintColor = ColorUtils.LightGrey;
 
 	// Adapter
 
@@ -517,8 +524,6 @@
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	NSLog(@"Adrien - didSelectRowAtIndexPath");
-
 	// Get target Dossier
 
 	FolderListCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -552,6 +557,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		return;
 	}
 
+	// Re-selection
+
+	if ([ADLSingletonState sharedSingletonState].dossierCourantReference == dossierClicked.unwrappedId)
+		return;
+
 	// Cancel event if no internet
 
 //	if (![DeviceUtils isConnectedToInternet]) {
@@ -571,7 +581,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 - (IBAction)tableViewDidLongPress:(UILongPressGestureRecognizer*) sender {
-	NSLog(@"Adrien - tableViewDidLongPress");
 
 	if (sender.state != UIGestureRecognizerStateBegan)
 		return;
@@ -746,127 +755,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
-#pragma mark UIActionSheetDelegate protocol implementation
-
-
-/**
- * iOS7 response of ActionSheet events.
- * The UIActionSheetDelegate isn't used anymore in iOS8.
- */
-- (void) actionSheet:(UIActionSheet *)actionSheet
-clickedButtonAtIndex:(NSInteger)buttonIndex {
-
-	if (buttonIndex < self.secondaryActions.count) {
-		NSString *action = self.secondaryActions[(NSUInteger) buttonIndex];
-		[self clickOnSecondaryAction:action];
-	}
-}
-
-
-- (void)clickOnSecondaryAction:(NSString *)actionName {
-
-	@try {
-		[self performSegueWithIdentifier:actionName
-		                          sender:self];
-	}
-	@catch (NSException *exception) {
-		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-		                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-		                           delegate:nil
-		                  cancelButtonTitle:@"Fermer"
-		                  otherButtonTitles:nil]
-				show];
-	}
-}
-
-
-#pragma mark RGFileCellDelegate protocol implementation
-
-
-- (void)       cell:(RGFileCell *)cell
-didCheckAtIndexPath:(NSIndexPath *)indexPath {
-
-	NSLog(@"Adrien - didCheckAtIndexPath");
-//
-//	[self.swipedCell hideMenuOptions];
-//
-//	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-//
-//	if ([_selectedDossiersArray containsObject:dossier])
-//		[_selectedDossiersArray removeObject:dossier];
-//	else
-//		[_selectedDossiersArray addObject:dossier];
-//
-//	_inBatchMode = _selectedDossiersArray.count != 0;
-//	[self updateToolBar];
-}
-
-
-- (void)                      cell:(RGFileCell *)cell
-didTouchSecondaryButtonAtIndexPath:(NSIndexPath *)indexPath {
-
-	NSLog(@"Adrien - didTouchSecondaryButtonAtIndexPath");
-
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		// Adrien
-//		Dossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-//		_secondaryActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
-//		                                                                                                                                      _possibleMainActions]];
-//
-//		_selectedDossiersArray = @[dossier].mutableCopy;
-//		[self showMoreActions:cell];
-	}
-}
-
-
-- (void)                 cell:(RGFileCell *)cell
-didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
-
-	NSLog(@"Adrien - didTouchMainButtonAtIndexPath");
-
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		// Adrien
-//		Dossier *dossier = _dossiersArray[(NSUInteger) indexPath.row];
-//		NSArray *mainActions = [[ADLAPIHelper actionsForDossier:dossier] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
-//		                                                                                                                                         _possibleMainActions]];
-//		if (mainActions.count > 0) {
-//			_mainAction = mainActions[0];
-//			_selectedDossiersArray = @[dossier].mutableCopy;
-//			[self mainActionPressed];
-//		}
-	}
-}
-
-
-- (BOOL)canSelectCell:(RGFileCell *)cell {
-
-	return YES;
-}
-
-
-- (BOOL)canSwipeCell:(RGFileCell *)cell {
-	return (_selectedDossiersArray.count == 0) && (_swipedCell == cell);
-}
-
-
-- (void)willSwipeCell:(RGFileCell *)cell {
-
-	if (cell != self.swipedCell) {
-		[self.swipedCell hideMenuOptions];
-	}
-	self.swipedCell = cell;
-}
-
-
-- (void)willSelectCell:(RGFileCell *)cell {
-
-	if (self.swipedCell) {
-		[self.swipedCell hideMenuOptions];
-		self.swipedCell = nil;
-	}
-}
-
-
 #pragma mark - LGViewHUDDelegate protocol implementation
 
 
@@ -874,9 +762,6 @@ didTouchMainButtonAtIndexPath:(NSIndexPath *)indexPath {
 
 	HIDE_HUD
 }
-
-
-#pragma mark - LGViewHUDDelegate protocol implementation
 
 
 @end

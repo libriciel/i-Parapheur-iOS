@@ -45,9 +45,9 @@
 + (BOOL)isConnectedToDemoAccount {
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedId = [preferences objectForKey:Account.PreferencesKeySelectedAccount];
 
-	return [[Account DemoId] isEqualToString:selectedId];
+	return [Account.DemoId isEqualToString:selectedId];
 }
 
 

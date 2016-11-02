@@ -418,7 +418,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_fiber_manual_record_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="qiB-0l-JBh">
-                                            <rect key="frame" x="3" y="7" width="18" height="18"/>
+                                            <rect key="frame" x="4" y="7" width="18" height="18"/>
                                             <color key="tintColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="18" id="Qoc-Be-Hb2"/>
@@ -435,10 +435,10 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="moG-XS-Bma" userLabel="Checkbox handler">
-                                            <rect key="frame" x="0.0" y="0.0" width="24" height="97"/>
+                                            <rect key="frame" x="0.0" y="4" width="24" height="24"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_check_circle_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ace-Tr-GER" userLabel="Check on">
-                                                    <rect key="frame" x="3" y="40" width="18" height="18"/>
+                                                    <rect key="frame" x="3" y="3" width="18" height="18"/>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="18" id="LV5-0L-74G"/>
@@ -446,7 +446,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_circle_outline_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="0zN-LF-ClG" userLabel="Check off">
-                                                    <rect key="frame" x="3" y="40" width="18" height="18"/>
+                                                    <rect key="frame" x="3" y="3" width="18" height="18"/>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="18" id="0Ro-G0-2K3"/>
@@ -460,23 +460,22 @@
                                                 <constraint firstItem="Ace-Tr-GER" firstAttribute="centerY" secondItem="moG-XS-Bma" secondAttribute="centerY" id="Qpy-al-tis"/>
                                                 <constraint firstItem="0zN-LF-ClG" firstAttribute="centerY" secondItem="moG-XS-Bma" secondAttribute="centerY" id="lSH-01-mR9"/>
                                                 <constraint firstItem="0zN-LF-ClG" firstAttribute="centerX" secondItem="moG-XS-Bma" secondAttribute="centerX" id="neG-AM-iNK"/>
+                                                <constraint firstAttribute="height" constant="24" id="tzt-pU-mMs"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="moG-XS-Bma" firstAttribute="centerY" secondItem="aXO-6C-7nh" secondAttribute="centerY" id="3XW-kC-zTo"/>
-                                        <constraint firstItem="qiB-0l-JBh" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="3" id="3iB-Z9-d9V"/>
+                                        <constraint firstItem="qiB-0l-JBh" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="4" id="3iB-Z9-d9V"/>
                                         <constraint firstItem="csM-xd-78I" firstAttribute="top" secondItem="2hd-9k-Lp8" secondAttribute="bottom" constant="6" id="7eF-lH-aqO"/>
                                         <constraint firstAttribute="trailing" secondItem="csM-xd-78I" secondAttribute="trailing" constant="8" id="9QN-Ky-4gw"/>
+                                        <constraint firstItem="moG-XS-Bma" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" id="BLF-nl-Mcv"/>
                                         <constraint firstAttribute="trailing" secondItem="3vm-Yp-9IU" secondAttribute="trailing" constant="8" id="D9Z-he-HSf"/>
-                                        <constraint firstAttribute="bottom" secondItem="moG-XS-Bma" secondAttribute="bottom" id="EBD-DW-0hd"/>
                                         <constraint firstItem="3vm-Yp-9IU" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="24" id="FXk-bB-AZf"/>
                                         <constraint firstAttribute="bottom" secondItem="3vm-Yp-9IU" secondAttribute="bottom" constant="11" id="KaD-aG-hkk"/>
                                         <constraint firstAttribute="trailing" secondItem="2hd-9k-Lp8" secondAttribute="trailing" constant="8" id="KfC-tY-yxP"/>
-                                        <constraint firstItem="moG-XS-Bma" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" id="NqL-Yu-Qc6"/>
                                         <constraint firstItem="qiB-0l-JBh" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" constant="7" id="TRM-ZP-uQk"/>
                                         <constraint firstItem="2hd-9k-Lp8" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="24" id="YZU-E1-BK5"/>
-                                        <constraint firstItem="moG-XS-Bma" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" id="Zm9-Rh-Ble"/>
+                                        <constraint firstItem="moG-XS-Bma" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" constant="4" id="c86-mY-6GL"/>
                                         <constraint firstItem="csM-xd-78I" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="24" id="dgG-r0-R1y"/>
                                         <constraint firstItem="2hd-9k-Lp8" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" constant="8" id="r9H-b1-3Vm"/>
                                     </constraints>
