@@ -55,8 +55,8 @@ import Gloss
     let documents: Array<Document>?
     let acteursVariables: Array<String>?
     let metadatas: Dictionary<String, AnyObject>?
-    let dateEmission: CLong?
-    let dateLimite: CLong?
+    let dateEmission: NSNumber?
+    let dateLimite: NSNumber?
 
     let hasRead: Bool?
     let includeAnnexes: Bool?
@@ -148,7 +148,7 @@ import Gloss
     }
 
     func unwrappedLimitDate() -> NSNumber {
-        return dateLimite as NSNumber!
+        return dateLimite!
     }
 
     func unwrappedIsLocked() -> Bool {

@@ -538,7 +538,7 @@
 	NSDate *dossierDate = nil;
 
 	if (dossier.unwrappedLimitDate.longLongValue != 0)
-		dossierDate = [NSDate dateWithTimeIntervalSince1970:(dossier.unwrappedLimitDate.longLongValue / 1000)];
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.unwrappedLimitDate.longLongValue / 1000];
 
 	cell.limitDateLabel.hidden = (dossierDate == nil);
 
@@ -549,9 +549,8 @@
 		outputFormatter.dateStyle = NSDateFormatterShortStyle;
 		outputFormatter.timeStyle = NSDateFormatterNoStyle;
 
-		NSString *datePrint = [outputFormatter stringFromDate:dossierDate];
-		cell.limitDateLabel.text = [NSString stringWithFormat:@"avant le %@",
-		                                                      datePrint];
+		NSString *datePrint = isLate ? @"en retard depuis le %@" : @"à rendre avant le %@";
+		cell.limitDateLabel.text = [NSString stringWithFormat:datePrint, [outputFormatter stringFromDate:dossierDate]];
 		cell.limitDateLabel.textColor = isLate ? ColorUtils.Salmon : ColorUtils.BlueGreySeparator;
 	}
 
