@@ -434,22 +434,57 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="moG-XS-Bma" userLabel="Checkbox handler">
+                                            <rect key="frame" x="0.0" y="0.0" width="18" height="97"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ace-Tr-GER" userLabel="Check on">
+                                                    <rect key="frame" x="0.0" y="40" width="18" height="18"/>
+                                                    <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="18" id="LV5-0L-74G"/>
+                                                        <constraint firstAttribute="width" constant="18" id="RXA-zW-hlT"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zN-LF-ClG" userLabel="Check off">
+                                                    <rect key="frame" x="0.0" y="40" width="18" height="18"/>
+                                                    <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="18" id="0Ro-G0-2K3"/>
+                                                        <constraint firstAttribute="height" constant="18" id="MG0-7e-bwg"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="18" id="7dd-Xx-7Ko"/>
+                                                <constraint firstItem="Ace-Tr-GER" firstAttribute="centerX" secondItem="moG-XS-Bma" secondAttribute="centerX" id="LXa-Qj-Err"/>
+                                                <constraint firstItem="Ace-Tr-GER" firstAttribute="centerY" secondItem="moG-XS-Bma" secondAttribute="centerY" id="Qpy-al-tis"/>
+                                                <constraint firstItem="0zN-LF-ClG" firstAttribute="centerY" secondItem="moG-XS-Bma" secondAttribute="centerY" id="lSH-01-mR9"/>
+                                                <constraint firstItem="0zN-LF-ClG" firstAttribute="centerX" secondItem="moG-XS-Bma" secondAttribute="centerX" id="neG-AM-iNK"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="moG-XS-Bma" firstAttribute="centerY" secondItem="aXO-6C-7nh" secondAttribute="centerY" id="3XW-kC-zTo"/>
                                         <constraint firstItem="qiB-0l-JBh" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="3" id="3iB-Z9-d9V"/>
                                         <constraint firstItem="csM-xd-78I" firstAttribute="top" secondItem="2hd-9k-Lp8" secondAttribute="bottom" constant="6" id="7eF-lH-aqO"/>
                                         <constraint firstAttribute="trailing" secondItem="csM-xd-78I" secondAttribute="trailing" constant="8" id="9QN-Ky-4gw"/>
                                         <constraint firstAttribute="trailing" secondItem="3vm-Yp-9IU" secondAttribute="trailing" constant="8" id="D9Z-he-HSf"/>
+                                        <constraint firstAttribute="bottom" secondItem="moG-XS-Bma" secondAttribute="bottom" id="EBD-DW-0hd"/>
                                         <constraint firstItem="3vm-Yp-9IU" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="24" id="FXk-bB-AZf"/>
                                         <constraint firstAttribute="bottom" secondItem="3vm-Yp-9IU" secondAttribute="bottom" constant="11" id="KaD-aG-hkk"/>
                                         <constraint firstAttribute="trailing" secondItem="2hd-9k-Lp8" secondAttribute="trailing" constant="8" id="KfC-tY-yxP"/>
+                                        <constraint firstItem="moG-XS-Bma" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" id="NqL-Yu-Qc6"/>
                                         <constraint firstItem="qiB-0l-JBh" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" constant="7" id="TRM-ZP-uQk"/>
                                         <constraint firstItem="2hd-9k-Lp8" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="24" id="YZU-E1-BK5"/>
+                                        <constraint firstItem="moG-XS-Bma" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" id="Zm9-Rh-Ble"/>
                                         <constraint firstItem="csM-xd-78I" firstAttribute="leading" secondItem="aXO-6C-7nh" secondAttribute="leading" constant="24" id="dgG-r0-R1y"/>
                                         <constraint firstItem="2hd-9k-Lp8" firstAttribute="top" secondItem="aXO-6C-7nh" secondAttribute="top" constant="8" id="r9H-b1-3Vm"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="checkOffImage" destination="0zN-LF-ClG" id="Ojt-0e-Adf"/>
+                                    <outlet property="checkOnImage" destination="Ace-Tr-GER" id="Iae-X5-KaE"/>
                                     <outlet property="dot" destination="qiB-0l-JBh" id="LlK-pH-Ezu"/>
                                     <outlet property="limitDateLabel" destination="3vm-Yp-9IU" id="Bdy-Mj-sWD"/>
                                     <outlet property="titleLabel" destination="2hd-9k-Lp8" id="6wO-Pa-H2C"/>
@@ -1030,6 +1065,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="62J-N8-HVF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="659" y="937"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="B1b-th-Mgk">
+            <objects>
+                <viewController id="B7f-Yb-9E6" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mIL-U9-ySL"/>
+                        <viewControllerLayoutGuide type="bottom" id="Tjq-bI-0ff"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ivg-Xq-SW0">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VIe-iz-yQ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>

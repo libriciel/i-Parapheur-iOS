@@ -445,6 +445,15 @@
 	FolderListCell *cell = [tableView dequeueReusableCellWithIdentifier:[FolderListCell CellIdentifier]];
 	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
 
+	// Selected state
+
+	cell.checkOffImage.image = [cell.checkOffImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	cell.checkOnImage.image = [cell.checkOnImage.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+
+	bool isSelected = [_selectedDossiersArray containsObject:dossier];
+	cell.checkOffImage.hidden = isSelected;
+	cell.checkOnImage.hidden = !isSelected;
+
 	// Action dot
 
 	cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -547,9 +556,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	                                                    object:dossierRef];
 }
 
-- (IBAction)tableViewDidLongPress:(UILongPressGestureRecognizer*) sender {
 
-	NSLog(@"Adrien - handleLongPress");
+- (IBAction)tableViewDidLongPress:(UILongPressGestureRecognizer*) sender {
+	NSLog(@"Adrien - tableViewDidLongPress");
 
 	if (sender.state != UIGestureRecognizerStateBegan)
 		return;
@@ -557,25 +566,40 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	CGPoint indexPathPoint = [sender locationInView:self.tableView];
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:indexPathPoint];
 
-	//
+	// Long press on table view but not on a row
 
-	if (indexPath == nil) {
-		NSLog(@"long press on table view but not on a row");
-	} else {
-		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-		if (cell.isHighlighted) {
-			NSLog(@"long press on table view at section %d row %d", indexPath.section, indexPath.row);
+	if (indexPath == nil)
+		return;
 
-			// Those two lines are there to release the gesture event.
-			// Otherwise, the long press is always called at every frame.
-			// It looks like a very poor solution, it smells like a very poor solution,
-			// but it's recommended by Apple there : https://developer.apple.com/videos/play/wwdc2014/235/
-			// So... I guess it's the way to do it...
-			sender.enabled = NO;
-			sender.enabled = YES;
-			// End of the gesture release event.
-		}
-	}
+	// Default case
+
+	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+	NSLog(@"Long press on table view at section %d row %d", indexPath.section, indexPath.row);
+
+	// Those two lines are there to release the gesture event.
+	// Otherwise, the long press is always called at every frame.
+	// It looks like a very poor solution, it smells like a very poor solution,
+	// but it's recommended by Apple there : https://developer.apple.com/videos/play/wwdc2014/235/
+	// So... I guess it's the way to do it...
+	sender.enabled = NO;
+	sender.enabled = YES;
+	// End of the gesture release event.
+
+	// Refresh data
+
+	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
+
+	if ([_selectedDossiersArray containsObject:dossier])
+		[_selectedDossiersArray removeObject:dossier];
+	else
+		[_selectedDossiersArray addObject:dossier];
+
+	_inBatchMode = _selectedDossiersArray.count != 0;
+
+	// Refresh UI
+
+	[self updateToolBar];
+
 }
 
 
@@ -749,18 +773,18 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 didCheckAtIndexPath:(NSIndexPath *)indexPath {
 
 	NSLog(@"Adrien - didCheckAtIndexPath");
-
-	[self.swipedCell hideMenuOptions];
-
-	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
-
-	if ([_selectedDossiersArray containsObject:dossier])
-		[_selectedDossiersArray removeObject:dossier];
-	else
-		[_selectedDossiersArray addObject:dossier];
-
-	_inBatchMode = _selectedDossiersArray.count != 0;
-	[self updateToolBar];
+//
+//	[self.swipedCell hideMenuOptions];
+//
+//	Dossier *dossier = _filteredDossiersArray[(NSUInteger) indexPath.row];
+//
+//	if ([_selectedDossiersArray containsObject:dossier])
+//		[_selectedDossiersArray removeObject:dossier];
+//	else
+//		[_selectedDossiersArray addObject:dossier];
+//
+//	_inBatchMode = _selectedDossiersArray.count != 0;
+//	[self updateToolBar];
 }
 
 

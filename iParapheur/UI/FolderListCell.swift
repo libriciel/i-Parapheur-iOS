@@ -43,5 +43,7 @@ import Foundation
 	@IBOutlet var typologyLabel: UILabel!
 	@IBOutlet var limitDateLabel: UILabel!
 	@IBOutlet var dot: UIImageView!
+	@IBOutlet var checkOnImage: UIImageView!
+	@IBOutlet var checkOffImage: UIImageView!
 		
 }
