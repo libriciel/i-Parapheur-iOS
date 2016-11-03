@@ -93,6 +93,11 @@
            failure:(void (^)(NSError *))failure;
 
 
+- (void)getTypology:(NSString *)bureauId
+			success:(void (^)(NSArray *))success
+            failure:(void (^)(NSError *))failure;
+
+
 - (void)getCircuit:(NSString *)dossier
            success:(void (^)(ADLResponseCircuit *))success
            failure:(void (^)(NSError *))failure;

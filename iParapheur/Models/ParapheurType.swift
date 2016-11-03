@@ -32,55 +32,33 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <UIKit/UIKit.h>
-#import "ADLSingletonState.h"
-#import "ADLParapheurWallDelegateProtocol.h"
 
+import Foundation
+import Gloss
 
-@protocol FilterDelegate;
-@class ADLRestClient;
-//@protocol FilterDataSource;
+@objc class ParapheurType: NSObject, Glossy {
 
-@interface ADLFilterViewController : UIViewController
-		<UITableViewDataSource,
-		UITableViewDelegate,
-		UIPickerViewDataSource,
-		UIPickerViewDelegate,
-		UIPopoverControllerDelegate,
-		ADLParapheurWallDelegateProtocol>
+    let name: String?
+    let subTypes: Array<String>?
 
-@property(weak) id <FilterDelegate> delegate;
+    // MARK: - Glossy
 
-@property(strong, nonatomic) IBOutlet UITextField *titreTextField;
-@property(strong, nonatomic) IBOutlet UITableView *typesTableView;
-@property(strong, nonatomic) IBOutlet UIButton *banetteButton;
-@property(strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property(nonatomic, strong) ADLRestClient *restClient;
+    required init?(json: JSON) {
+        name = ("id" <~~ json) ?? ""
+        subTypes = ("sousTypes" <~~ json) ?? []
+    }
+	
+	func toJSON() -> JSON? {
+		return nil /* Not used */
+	}
 
-// Picker pour le choix des banettes, présent dans le popover en dessous.
-@property(strong, nonatomic) UIPickerView *banettePicker;
-@property(strong, nonatomic) UIPopoverController *pickerPopover;
+    // MARK: - ObjC accessors
 
-@end
+    func unwrappedName() -> NSString {
+        return NSString(string: name!)
+    }
 
-
-// Protocol permettant le traitement de l'application du filtre
-@protocol FilterDelegate <NSObject>
-
-@required
-- (void)shouldReload:(NSDictionary *)filter;
-
-@end
-
-
-// Protocol permettant de récupérer les infos du dossier à afficher
-/*@protocol FilterDataSource <NSObject>
-
-@required
-- (NSInteger *)numberOfTypeForDossier:(NSString *) dossier;
-- (NSInteger *)numberOfsousTypesForDossier:(NSString *)dossier andType:(NSString *)type;
-- (BOOL) isAvenirEnableForDossier:(NSString *)dossier;
-
-
-@end*/
-
+    func unwrappedSubTypes() -> NSArray {
+        return subTypes as NSArray!
+    }
+}

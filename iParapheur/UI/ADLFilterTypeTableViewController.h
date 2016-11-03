@@ -35,16 +35,19 @@
 #import <UIKit/UIKit.h>
 #import "ADLParapheurWallDelegateProtocol.h"
 
+
+@class ADLRestClient;
+
+
 @interface ADLFilterTypeTableViewController : UITableViewController<UITableViewDataSource, UITableViewDelegate, ADLParapheurWallDelegateProtocol>
 
-@property (strong, nonatomic) NSDictionary *typology;
+@property (strong, nonatomic) NSArray *typology;
+@property(nonatomic, strong) ADLRestClient *restClient;
 
 - (IBAction)resetFilters:(id)sender;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer;
 
 @end

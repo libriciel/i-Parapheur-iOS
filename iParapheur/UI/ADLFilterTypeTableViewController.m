@@ -33,10 +33,10 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLFilterTypeTableViewController.h"
-#import "ADLAPIRequests.h"
 #import "ADLSingletonState.h"
 #import "ADLNotifications.h"
 #import "ADLFilterSubTypeTableViewController.h"
+#import "ADLRestClient.h"
 
 
 @interface ADLFilterTypeTableViewController ()
@@ -51,33 +51,26 @@
 	self = [super initWithStyle:style];
 	if (self) {
 		// Custom initialization
-		_typology = [NSDictionary new];
+		_typology = [NSArray new];
 	}
 	return self;
 }
 
 
 - (void)viewDidLoad {
-
 	[super viewDidLoad];
 
-	// Uncomment the following line to preserve selection between presentations.
-	// self.clearsSelectionOnViewWillAppear = NO;
+	_restClient = [ADLRestClient sharedManager];
+	[_restClient getTypology:nil
+	                 success:^(NSArray *array) {
+		                 _typology = array;
 
-	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-	// self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	NSString *bureauRef = [[ADLSingletonState sharedSingletonState] bureauCourant];
-
-	NSDictionary *args = @{@"bureauRef" : bureauRef};
-
-	API_REQUEST(@"getTypologie", args);
-}
-
-
-- (void)didReceiveMemoryWarning {
-
-	[super didReceiveMemoryWarning];
-	// Dispose of any resources that can be recreated.
+		                 [((UITableView *) self.view) reloadData];
+		                 NSLog(@"Adrien - okay");
+	                 }
+	                 failure:^(NSError *error) {
+		                 NSLog(@"Adrien - arf");
+	                 }];
 }
 
 
@@ -94,8 +87,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-	// Return the number of rows in the section.
-	return _typology.allKeys.count;
+	return _typology.count;
 }
 
 
@@ -106,18 +98,9 @@
 	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier
 	                                                             forIndexPath:indexPath];
 
-	[cell.textLabel setText:_typology.allKeys[(NSUInteger) indexPath.row]];
+	cell.textLabel.text = ((ParapheurType *)_typology[(NSUInteger) indexPath.row]).unwrappedName;
 
 	return cell;
-}
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSDictionary *typologie = answer[@"data"][@"typology"];
-	_typology = typologie;
-
-	[((UITableView *) self.view) reloadData];
 }
 
 
@@ -125,11 +108,10 @@
                  sender:(id)sender {
 
 	NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-	NSString *selectedKey = _typology.allKeys[(NSUInteger) indexPath.row];
-	NSArray *subTypes = _typology[selectedKey];
+	ParapheurType *selectedType = _typology[(NSUInteger) indexPath.row];
 
-	((ADLFilterSubTypeTableViewController *) [segue destinationViewController]).subTypes = subTypes;
-	[[ADLSingletonState sharedSingletonState] setCurrentFilter:[@{@"ph:typeMetier" : selectedKey} mutableCopy]];
+	((ADLFilterSubTypeTableViewController *) segue.destinationViewController).subTypes = selectedType.unwrappedSubTypes;
+	[[ADLSingletonState sharedSingletonState] setCurrentFilter:[@{@"ph:typeMetier" : selectedType.unwrappedName} mutableCopy]];
 	[[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged
 	                                                    object:nil];
 

@@ -219,6 +219,20 @@
 }
 
 
+- (void)getTypology:(NSString *)bureauId
+            success:(void (^)(NSArray *))success
+            failure:(void (^)(NSError *))failure {
+
+	[_swiftManager getTypology:bureauId
+	                onResponse:^(NSArray *response) {
+		                success(response);
+	                }
+	                   onError:^(NSError *error) {
+		                   failure(error);
+	                   }];
+}
+
+
 - (void)getDossier:(NSString *)bureau
            dossier:(NSString *)dossier
            success:(void (^)(Dossier *))success

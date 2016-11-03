@@ -34,10 +34,12 @@
  */
 #import "ADLFilterViewController.h"
 #import "ADLAPIRequests.h"
+#import "ADLRestClient.h"
+
 
 @interface ADLFilterViewController ()
 
-@property (nonatomic, strong) NSDictionary* typologie;
+@property (nonatomic, strong) NSArray* typologie;
 @property (nonatomic, strong) NSMutableArray* selectedTypes;
 @property (nonatomic, strong) NSMutableArray* selectedSousTypes;
 
@@ -106,16 +108,24 @@
 	_selectedTypes = [NSMutableArray arrayWithArray:currentFilter[@"types"]];
 	_selectedSousTypes = [NSMutableArray arrayWithArray:currentFilter[@"sousTypes"]];
 
-    NSDictionary *args = @{@"getAll": @"true"};
-
-    API_REQUEST(@"getTypologie", args);
+	_restClient = [ADLRestClient sharedManager];
+	[_restClient getTypology:nil
+	                 success:^(NSArray *array) {
+		                 _typologie = array;
+		                 [_typesTableView reloadData];
+		                 [self reloadTypologyTable];
+		                 NSLog(@"Adrien - okay");
+	                 }
+	                 failure:^(NSError *error) {
+		                 NSLog(@"Adrien - arf");
+	                 }];
 }
 
 
 - (void) reloadTypologyTable {
     for (NSString *selectedType in _selectedTypes) {
-        int typeIndex = (int)[_typologie.allKeys indexOfObject:selectedType];
-        NSArray *sousTypes = _typologie[selectedType];
+        int typeIndex = (int)[_typologie indexOfObject:selectedType];
+        NSArray *sousTypes = ((ParapheurType *)_typologie[(NSUInteger) typeIndex]).unwrappedSubTypes;
         for (NSString *selectedSousType in _selectedSousTypes) {
             NSUInteger sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
             if (sousTypeIndex != NSNotFound) {
@@ -192,37 +202,27 @@
 }
 
 
-#pragma mark - ADLParapheurWallDelegate protocol implementation
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary*)answer {
-    _typologie = [answer[@"data"] objectForKey:@"typology"];
-    [_typesTableView reloadData];
-    [self reloadTypologyTable];
-}
-
-
 #pragma mark - UITableViewDelegate protocol implementation
 
 
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-    NSString* type = _typologie.allKeys[(NSUInteger) indexPath.section];
-    NSString* sousType = [_typologie[type] objectAtIndex:(NSUInteger) indexPath.row];
+    ParapheurType* type = _typologie[(NSUInteger) indexPath.section];
+    NSString* sousType = type.unwrappedSubTypes[(NSUInteger) indexPath.row];
     
-    [_selectedTypes addObject:type];
+    [_selectedTypes addObject:type.unwrappedName];
     [_selectedSousTypes addObject:sousType];
 }
 
 
 - (void)tableView:(UITableView *)tableView
 didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-    NSString* type = _typologie.allKeys[(NSUInteger) indexPath.section];
-    NSString* sousType = [_typologie[type] objectAtIndex:(NSUInteger) indexPath.row];
+
+	ParapheurType* type = _typologie[(NSUInteger) indexPath.section];
+    NSString* sousType = type.unwrappedSubTypes[(NSUInteger) indexPath.row];
     
-    [_selectedTypes removeObject:type];
+    [_selectedTypes removeObject:type.unwrappedName];
     [_selectedSousTypes removeObject:sousType];
 
 }
@@ -233,9 +233,9 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-	
-    NSString * type = _typologie.allKeys[(NSUInteger) section];
-    return [_typologie[type] count];
+
+	ParapheurType * type = _typologie[(NSUInteger) section];
+    return type.unwrappedSubTypes.count;
 }
 
 
@@ -244,9 +244,9 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
     static NSString *CellIdentifier = @"TypeCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    NSString * type = [_typologie allKeys][(NSUInteger) indexPath.section];
-    NSString * sousType = [_typologie[type] objectAtIndex:(NSUInteger) indexPath.row];
+
+	ParapheurType * type = _typologie[(NSUInteger) indexPath.section];
+    NSString * sousType = type.unwrappedSubTypes[(NSUInteger) indexPath.row];
     cell.textLabel.text = sousType;
     return cell;
 }
@@ -260,7 +260,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section {
 	
-    return _typologie.allKeys[(NSUInteger) section];
+    return ((ParapheurType *)_typologie[(NSUInteger) section]).unwrappedName;
 }
 
 

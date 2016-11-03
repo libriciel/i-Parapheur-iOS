@@ -316,6 +316,31 @@ import AFNetworking
                      })
     }
 
+    func getTypology(bureauId: NSString,
+                     onResponse: ((NSArray) -> Void)?,
+                     onError: ((NSError) -> Void)?) {
+
+//        // Parameters
+//
+//        let paramsDict: NSMutableDictionary = NSMutableDictionary()
+//        paramsDict["asc"] = true
+//        paramsDict["bureau"] = bureau
+
+        // Request
+
+        manager.GET("/parapheur/types",
+                    parameters: nil,
+                    success: {
+                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                        let typeList = [ParapheurType].fromJSONArray(responseObject as! [[String: AnyObject]])
+                        onResponse!(typeList!)
+                    },
+                    failure: {
+                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        onError!(error)
+                    })
+    }
+
     func getAnnotations(dossier: NSString,
                         onResponse: (([Annotation]) -> Void)?,
                         onError: ((NSError) -> Void)?) {

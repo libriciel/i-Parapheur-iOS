@@ -219,6 +219,20 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 }
 
 
+- (void)getTypology:(NSString *)bureauId
+			success:(void (^)(NSArray *))success
+            failure:(void (^)(NSError *))failure {
+
+	[_restClientApi getTypology:bureauId
+	                    success:^(NSArray *typeList) {
+		                    success(typeList);
+	                    }
+	                    failure:^(NSError *error) {
+		                    failure(error);
+	                    }];
+}
+
+
 - (void)getCircuit:(NSString *)dossier
            success:(void (^)(ADLResponseCircuit *))success
            failure:(void (^)(NSError *))failure {
