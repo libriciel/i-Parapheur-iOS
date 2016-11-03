@@ -128,8 +128,6 @@
 
 		// Send request
 
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-
 			// Stringify JSON filter
 
 			NSError *error;
@@ -169,13 +167,7 @@
 					                 HIDE_HUD
 				                 }
 			                 }];
-		}
-		else {
-			API_GETDOSSIERHEADERS_FILTERED(_desk.unwrappedNodeRef, @(page), @"15", currentFilter[@"banette"], filtersDictionary);
-		}
-	}
-	else {
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+	} else {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getDossiers:_desk.unwrappedNodeRef
 			                    page:page
@@ -201,10 +193,6 @@
 				                 }
 			                 }];
 		}
-		else {
-			API_GETDOSSIERHEADERS(_desk.unwrappedNodeRef, @(page), @"15");
-		}
-	}
 }
 
 

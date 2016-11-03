@@ -155,7 +155,6 @@
 	if ([_action isEqualToString:@"VISA"] || ([_action isEqualToString:@"SIGNATURE"] && _isPaperSign)) {
 		[self showHud];
 
-		if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 			for (Dossier *dossier in _dossiers) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient actionViserForDossier:dossier.unwrappedId
@@ -177,12 +176,6 @@
 				                           }];
 			}
 		}
-		else {
-			[requester request:@"visa"
-			           andArgs:args
-			          delegate:self];
-		}
-	}
 	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
 		[self showHud];
 
@@ -195,7 +188,6 @@
 		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
 			[self showHud];
 
-			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient actionRejeterForDossier:dossier.unwrappedId
@@ -218,12 +210,6 @@
 				}
 			}
 			else {
-				[requester request:@"reject"
-				           andArgs:args
-				          delegate:self];
-			}
-		}
-		else {
 			[[[UIAlertView alloc] initWithTitle:@"Attention"
 			                            message:@"Veuillez saisir le motif de votre rejet"
 			                           delegate:nil
@@ -663,7 +649,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 			UITextField *passwordTextField = [alertView textFieldAtIndex:0];
 			_p12password = passwordTextField.text;
 
-			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
 					[_restClient getSignInfoForDossier:dossier.unwrappedId
@@ -678,20 +663,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 					                           }];
 				}
 			}
-			else {
-				ADLRequester *requester = [ADLRequester sharedRequester];
-				NSMutableArray *dossierIds = [NSMutableArray new];
-
-				for (Dossier *dossier in _dossiers)
-					[dossierIds addObject:dossier.unwrappedId];
-
-				NSDictionary *signInfoArgs = @{@"dossiers" : dossierIds};
-
-				[requester request:@"getSignInfo"
-				           andArgs:signInfoArgs
-				          delegate:self];
-			}
-		}
 	}
 	else if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE) {
 

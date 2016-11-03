@@ -265,8 +265,6 @@
 				                [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 			                }
 		                }];
-	} else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == 2) {
-		API_GETBUREAUX();
 	} else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == -1) {
 		[self.refreshControl endRefreshing];
 	}

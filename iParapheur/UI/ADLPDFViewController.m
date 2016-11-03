@@ -450,8 +450,7 @@
 	SHOW_HUD
 
 	__weak typeof(self) weakSelf = self;
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
-		[_restClient getDossier:[[ADLSingletonState sharedSingletonState] bureauCourant]
+	[_restClient getDossier:[ADLSingletonState sharedSingletonState].bureauCourant
 		                dossier:_dossierRef
 		                success:^(Dossier *result) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -476,10 +475,6 @@
 		                failure:^(NSError *error) {
 			                NSLog(@"getCircuit fail : %@", error.localizedDescription);
 		                }];
-	} else {
-		API_GETDOSSIER(_dossierRef, [ADLSingletonState sharedSingletonState].bureauCourant);
-		API_GETCIRCUIT(_dossierRef);
-	}
 
 	//[[self navigationController] popToRootViewControllerAnimated:YES];
 }
@@ -616,7 +611,6 @@
 
 - (void)requestAnnotations {
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		NSString *documentId = _document.unwrappedId;
 
 		__weak typeof(self) weakSelf = self;
@@ -637,13 +631,6 @@
 		                    failure:^(NSError *error) {
 			                    NSLog(@"getAnnotations error");
 		                    }];
-	} else {
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		NSDictionary *args = @{@"dossier": _dossierRef};
-		[requester request:GETANNOTATIONS_API
-		           andArgs:args
-		          delegate:self];
-	}
 }
 
 
@@ -651,7 +638,6 @@
 
 	if ([dossier.unwrappedActions containsObject:@"SIGNATURE"]) {
 		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
-			if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 				__weak typeof(self) weakSelf = self;
 				[_restClient getSignInfoForDossier:_dossierRef
 				                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
@@ -665,14 +651,6 @@
 					                           NSLog(@"getSignInfo %@", error.localizedDescription);
 				                           }];
 			} else {
-				SHOW_HUD
-				NSDictionary *signInfoArgs = @{@"dossiers": @[_dossierRef]};
-				ADLRequester *requester = [ADLRequester sharedRequester];
-				[requester request:@"getSignInfo"
-				           andArgs:signInfoArgs
-				          delegate:self];
-			}
-		} else {
 			_visaEnabled = YES;
 			_signatureFormat = nil;
 		}
