@@ -83,8 +83,8 @@
         ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
         ADLCollectivityDef *collectivityDef = [ADLCollectivityDef copyDefaultCollectity];
 				
-        [vault addCredentialForHost:[collectivityDef host]
-						   andLogin:[collectivityDef username]
+        [vault addCredentialForHost:collectivityDef.host
+						   andLogin:collectivityDef.username
 						 withTicket:answer[@"data"][@"ticket"]];
     }
 }
