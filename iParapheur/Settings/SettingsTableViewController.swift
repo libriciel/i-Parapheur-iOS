@@ -61,7 +61,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : SettingsTableViewCoColorntroller")
+        print("View loaded : SettingsTableViewController")
 
         backButton.target = self
         backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
@@ -69,9 +69,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-		menuTableView.registerNib(nib, forHeaderFooterViewReuseIdentifier: "SettingsMenuHeader")
-
-        menuTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		menuTableView.registerNib(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
 	}
 
     // MARK: - Listeners
@@ -88,7 +86,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SettingsMenuHeader") as! SettingsTableViewHeaderFooterView
+        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
         header.upSeparator.hidden = (section == 0)
 
@@ -96,7 +94,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 36
+        return SettingsTableViewHeaderFooterView.PreferredHeight
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -104,17 +102,15 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SettingsMenuCell", forIndexPath: indexPath)
 
-        if let iconView = cell.viewWithTag(101) as? UIImageView {
-            let element = menuElements[indexPath.section].elements[indexPath.row]
-            iconView.image = UIImage(named: element.icon)?.imageWithRenderingMode(.AlwaysTemplate)
-            iconView.highlightedImage = UIImage(named: element.iconHighlight)?.imageWithRenderingMode(.AlwaysTemplate)
-        }
+        let cell: SettingsTableViewCell = tableView.dequeueReusableCellWithIdentifier(SettingsTableViewCell.CellId,
+                                                                                      forIndexPath: indexPath) as! SettingsTableViewCell
 
-        if let textLabel = cell.viewWithTag(102) as? UILabel {
-            textLabel.text = menuElements[indexPath.section].elements[indexPath.row].name
-        }
+        let element = menuElements[indexPath.section].elements[indexPath.row]
+
+        cell.iconImage.image = UIImage(named: element.icon)?.imageWithRenderingMode(.AlwaysTemplate)
+        cell.iconImage.highlightedImage = UIImage(named: element.iconHighlight)?.imageWithRenderingMode(.AlwaysTemplate)
+        cell.label.text = element.name
 
         return cell
     }

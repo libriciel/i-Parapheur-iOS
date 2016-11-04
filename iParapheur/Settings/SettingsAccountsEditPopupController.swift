@@ -43,9 +43,11 @@ protocol SettingsAccountsEditPopupControllerDelegate {
 }
 
 
-
 @objc class SettingsAccountsEditPopupController: UIViewController {
-	
+
+    static let PreferredWidth: CGFloat = 500
+    static let PreferredHeight: CGFloat = 252
+
 	@IBOutlet var cancelButton: UIButton!
     @IBOutlet var testButton: UIButton!
 	@IBOutlet var saveButton: UIButton!	
@@ -63,7 +65,10 @@ protocol SettingsAccountsEditPopupControllerDelegate {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.preferredContentSize = CGSizeMake(500, 252);
+        print("View loaded : SettingsAccountsEditPopupController")
+
+		self.preferredContentSize = CGSizeMake(SettingsAccountsEditPopupController.PreferredWidth,
+                                               SettingsAccountsEditPopupController.PreferredHeight);
 
         // Values
 

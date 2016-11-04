@@ -35,14 +35,11 @@
 
 import Foundation
 
-class SettingsTableViewHeaderFooterView: UITableViewHeaderFooterView {
+class SettingsTableViewCell: UITableViewCell {
 
-	static let PreferredHeight: CGFloat! = 36
-	static let CellId: String! = "SettingsTableViewHeader"
+	static let CellId: String! = "SettingsTableViewCell"
 
 	@IBOutlet var label: UILabel!
-	@IBOutlet var upSeparator: UIView!
-	@IBOutlet var downSeparator: UIView!
-	
-}
+	@IBOutlet var iconImage: UIImageView!
 
+}

@@ -433,7 +433,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	DeskListCell *cell = [tableView dequeueReusableCellWithIdentifier:[DeskListCell CellIdentifier]];
+	DeskListCell *cell = [tableView dequeueReusableCellWithIdentifier:DeskListCell.CellId];
 	Bureau *bureau = (Bureau *) _bureauxArray[(NSUInteger) indexPath.row];
 
 	// Folders to do
