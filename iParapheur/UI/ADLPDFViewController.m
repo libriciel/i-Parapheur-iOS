@@ -58,11 +58,11 @@
 
 
 - (void)viewDidLoad {
-
 	[super viewDidLoad];
 	NSLog(@"View loaded : ADLPDFViewController");
 
 	[self deleteEveryBinFile];
+	self.navigationItem.rightBarButtonItems = @[];
 
 	// Build UI
 
@@ -289,7 +289,25 @@
 
 - (void)addAnnotation:(Annotation *)annotation {
 
-	NSString *login = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation][@"settings_login"];
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+
+	if (selectedAccountId.length == 0)
+		selectedAccountId = [Account DemoId];
+
+	// Fetch Login
+
+	NSString *login = @"";
+	NSArray *accountList = [ModelsDataController fetchAccounts];
+
+	for (Account *account in accountList) {
+		if ([selectedAccountId isEqualToString:account.unwrappedId]) {
+			login = account.unwrappedLogin;
+		}
+	}
+
+	//
+
 	[annotation setUnwrappedAuthor:login];
 	[annotation setUnwrappedDocumentId:_document.unwrappedId];
 

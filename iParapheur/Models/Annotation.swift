@@ -136,11 +136,11 @@ import Gloss
     }
 
     func setUnwrappedText(txt: NSString) {
-        text = txt as String?
+        text = String(txt)
     }
 
     func setUnwrappedAuthor(txt: NSString) {
-        author = txt as String?
+		author = String(txt)
     }
 
     func unwrappedAuthor() -> NSString {
@@ -152,7 +152,7 @@ import Gloss
     }
 
     func setUnwrappedDocumentId(txt: NSString) {
-        documentId = txt as String?
+        documentId = String(txt)
     }
 
     func unwrappedDate() -> NSString {

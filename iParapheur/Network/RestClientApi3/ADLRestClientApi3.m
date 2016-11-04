@@ -49,7 +49,7 @@
 	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
 
 	if (selectedAccountId.length == 0)
-		selectedAccountId = [Account DemoId];
+		selectedAccountId = Account.DemoId;
 
 	// Fetch Account model values
 

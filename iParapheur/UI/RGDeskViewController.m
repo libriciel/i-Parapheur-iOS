@@ -217,8 +217,6 @@
 
 - (void)updateToolBar {
 
-	NSLog(@"Adrien - updateToolBar ");
-
 	if (_selectedDossiersArray.count != 0) {
 
 		NSMutableArray *actions = [Dossier filterActions:_selectedDossiersArray];

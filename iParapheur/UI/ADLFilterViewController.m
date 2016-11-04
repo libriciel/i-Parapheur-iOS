@@ -126,13 +126,10 @@
 		
 		int typeIndex = -1;
 		for (int i=0; i<_typologie.count; i++)
-			if ([((ParapheurType *)_typologie[i]).unwrappedName isEqualToString:selectedType])
+			if ([((ParapheurType *)_typologie[(NSUInteger) i]).unwrappedName isEqualToString:selectedType])
 				typeIndex = i;
-		
-		NSLog(@"Adrien - Typology : %@", _typologie);
-		NSLog(@"Adrien - typeIndex : %d", typeIndex);
-		
-        NSArray *sousTypes = ((ParapheurType *)_typologie[typeIndex]).unwrappedSubTypes;
+
+        NSArray *sousTypes = ((ParapheurType *)_typologie[(NSUInteger) typeIndex]).unwrappedSubTypes;
         for (NSString *selectedSousType in _selectedSousTypes) {
             NSUInteger sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
             if (sousTypeIndex != NSNotFound) {
