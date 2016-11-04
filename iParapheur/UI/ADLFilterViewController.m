@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLFilterViewController.h"
-#import "ADLAPIRequests.h"
 #import "ADLRestClient.h"
 
 
@@ -114,18 +113,26 @@
 		                 _typologie = array;
 		                 [_typesTableView reloadData];
 		                 [self reloadTypologyTable];
-		                 NSLog(@"Adrien - okay");
 	                 }
 	                 failure:^(NSError *error) {
-		                 NSLog(@"Adrien - arf");
+		                 // TODO : Error messages
 	                 }];
 }
 
 
 - (void) reloadTypologyTable {
-    for (NSString *selectedType in _selectedTypes) {
-        int typeIndex = (int)[_typologie indexOfObject:selectedType];
-        NSArray *sousTypes = ((ParapheurType *)_typologie[(NSUInteger) typeIndex]).unwrappedSubTypes;
+
+	for (NSString *selectedType in _selectedTypes) {
+		
+		int typeIndex = -1;
+		for (int i=0; i<_typologie.count; i++)
+			if ([((ParapheurType *)_typologie[i]).unwrappedName isEqualToString:selectedType])
+				typeIndex = i;
+		
+		NSLog(@"Adrien - Typology : %@", _typologie);
+		NSLog(@"Adrien - typeIndex : %d", typeIndex);
+		
+        NSArray *sousTypes = ((ParapheurType *)_typologie[typeIndex]).unwrappedSubTypes;
         for (NSString *selectedSousType in _selectedSousTypes) {
             NSUInteger sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
             if (sousTypeIndex != NSNotFound) {
@@ -270,10 +277,10 @@ titleForHeaderInSection:(NSInteger)section {
 - (void)pickerView:(UIPickerView *)pickerView
 	  didSelectRow:(NSInteger)row
 	   inComponent:(NSInteger)component {
-	
-    _selectedBanette = _banettes[(NSUInteger) row];
-    [_banetteButton setTitle:_banettesNames[_selectedBanette]
-						forState:UIControlStateNormal];
+
+	_selectedBanette = _banettes[(NSUInteger) row];
+	[_banetteButton setTitle:_banettesNames[_selectedBanette]
+	                forState:UIControlStateNormal];
 }
 
 
