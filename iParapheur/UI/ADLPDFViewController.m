@@ -37,7 +37,6 @@
 #import "ReaderContentView.h"
 #import "ReaderContentPage.h"
 #import "RGDossierDetailViewController.h"
-#import "RGDocumentsView.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
@@ -70,8 +69,8 @@
 	self.navigationController.navigationBar.tintColor = ColorUtils.Aqua;
 	self.navigationItem.rightBarButtonItem = nil;
 
-	if ([UIDevice currentDevice].systemVersion.floatValue > 8.0) {
-		UISplitViewController *uiSplitView = (UISplitViewController *) [UIApplication sharedApplication].delegate.window.rootViewController;
+	if (UIDevice.currentDevice.systemVersion.floatValue > 8.0) {
+		UISplitViewController *uiSplitView = (UISplitViewController *) UIApplication.sharedApplication.delegate.window.rootViewController;
 		UIBarButtonItem *backButton = uiSplitView.displayModeButtonItem;
 
 		self.navigationItem.leftBarButtonItem = backButton;
@@ -118,7 +117,7 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	                                         selector:@selector(showDocumentWithIndex:)
-	                                             name:kshowDocumentWithIndex
+	                                             name:DocumentSelectionController.ShowDocumentNotif
 	                                           object:nil];
 
 	//
@@ -163,12 +162,12 @@
 	}
 
 	if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
-		((RGDocumentsView *) segue.destinationViewController).documents = _dossier.unwrappedDocuments;
+		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.unwrappedDocuments;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
 		_documentsPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-		_documentsPopover.delegate = self;
+//		_documentsPopover.delegate = self;
 	}
 
 	if ([segue.identifier isEqualToString:@"showActionPopover"]) {
@@ -187,14 +186,8 @@
 			((ADLActionViewController *) _actionPopover.contentViewController).visaEnabled = YES;
 		}
 
-		[_actionPopover setDelegate:self];
+		_actionPopover.delegate = self;
 	}
-}
-
-
-- (void)didReceiveMemoryWarning {
-
-	[super didReceiveMemoryWarning];
 }
 
 
@@ -219,8 +212,6 @@
 
 
 #pragma mark - ADLDrawingViewDataSource
-#define kActionButtonsWidth 300.0f
-#define kActionButtonsHeight 100.0f
 
 
 - (NSArray *)annotationsForPage:(NSInteger)page {
@@ -337,7 +328,7 @@
 
 	// Determine the first pdf file to display
 
-	for (Document *document in [dossier unwrappedDocuments]) {
+	for (Document *document in dossier.unwrappedDocuments) {
 		if (document.isVisuelPdf) {
 			_document = document;
 			break;

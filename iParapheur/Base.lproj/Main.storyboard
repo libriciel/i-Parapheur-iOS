@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -146,7 +147,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3T3-F7-bWj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2380" y="-1746"/>
+            <point key="canvasLocation" x="1666" y="-1002"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="GAo-lH-CdD">
@@ -161,31 +162,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem image="ic_library_books_white_24dp.png" id="e2H-L5-DmJ">
-                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <segue destination="XYH-uf-RCC" kind="popover" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem image="ic_info_outline_white_24dp.png" id="UJR-Wz-2Gr">
-                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <segue destination="b1B-Q6-eI1" kind="modal" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem image="ic_action_white_24dp.png" id="fQA-eM-WHG">
-                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <segue destination="KoI-Hd-Qp2" kind="popover" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
-                            </connections>
-                        </barButtonItem>
-                    </toolbarItems>
-                    <navigationItem key="navigationItem" id="J5X-aU-lB4"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="J5X-aU-lB4">
+                        <rightBarButtonItems>
+                            <barButtonItem image="ic_action_white_24dp.png" id="fQA-eM-WHG">
+                                <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <segue destination="KoI-Hd-Qp2" kind="popover" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="ic_info_outline_white_24dp.png" id="UJR-Wz-2Gr">
+                                <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <segue destination="b1B-Q6-eI1" kind="modal" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="ic_library_books_white_24dp.png" id="e2H-L5-DmJ">
+                                <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <segue destination="XYH-uf-RCC" kind="popover" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <connections>
                         <outlet property="actionButton" destination="fQA-eM-WHG" id="Xhf-mY-Gcg"/>
                         <outlet property="detailsButton" destination="UJR-Wz-2Gr" id="eG6-bZ-NSg"/>
@@ -318,7 +321,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jCe-hd-WDm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="313" y="176"/>
+            <point key="canvasLocation" x="335" y="-413"/>
         </scene>
         <!--Dossiers-->
         <scene sceneID="tAQ-UO-3Yw">
@@ -525,7 +528,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1154" y="175"/>
+            <point key="canvasLocation" x="1010" y="-413"/>
         </scene>
         <!--Filter View Controller-->
         <scene sceneID="5pr-8w-7p8">
@@ -648,7 +651,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dgq-fJ-O7G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1480" y="1720"/>
+            <point key="canvasLocation" x="1806" y="488"/>
         </scene>
         <!--Workflow Dialog View Controller-->
         <scene sceneID="db0-GM-CCd">
@@ -747,7 +750,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4296" y="1035"/>
+            <point key="canvasLocation" x="2336" y="-289"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="1GW-4K-Vsd">
@@ -766,7 +769,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mcg-OM-EJ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2304" y="-254.29333333333335"/>
+            <point key="canvasLocation" x="1156" y="583"/>
         </scene>
         <!--Action View Controller-->
         <scene sceneID="tzg-xH-QxY">
@@ -817,16 +820,66 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="suM-iA-DAb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3115.52" y="-776.53333333333342"/>
+            <point key="canvasLocation" x="2179" y="-1410"/>
         </scene>
-        <!--Documents View-->
+        <!--Document Selection Controller-->
         <scene sceneID="bnQ-Tj-mel">
             <objects>
-                <tableViewController storyboardIdentifier="documentsView" id="XYH-uf-RCC" customClass="RGDocumentsView" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" id="WDi-Lw-eWx">
+                <tableViewController storyboardIdentifier="documentsView" id="XYH-uf-RCC" customClass="DocumentSelectionController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="WDi-Lw-eWx">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="separatorColor" red="0.75677943229675293" green="0.75691080093383789" blue="0.75677114725112915" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <inset key="separatorInset" minX="56" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DocumentSelectionCell" id="xkZ-90-PTO" customClass="DocumentSelectionCell" customModule="iParapheur" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="22" width="300" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xkZ-90-PTO" id="Hcf-0o-c6Z">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Document name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TfV-AP-4uz">
+                                            <rect key="frame" x="56" y="11" width="236" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_description_white_24dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="Tmj-AH-XgO" userLabel="MainDoc">
+                                            <rect key="frame" x="16" y="10" width="24" height="24"/>
+                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="j4i-Rj-8gL"/>
+                                                <constraint firstAttribute="width" constant="24" id="m85-ji-5jV"/>
+                                            </constraints>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_attachment_white_24dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="PHi-Yp-oXf" userLabel="Annexe">
+                                            <rect key="frame" x="16" y="10" width="24" height="24"/>
+                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="GhN-6l-37b"/>
+                                                <constraint firstAttribute="width" constant="24" id="euE-pI-cTG"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Tmj-AH-XgO" firstAttribute="centerY" secondItem="Hcf-0o-c6Z" secondAttribute="centerY" id="1JY-ov-ZDe"/>
+                                        <constraint firstItem="PHi-Yp-oXf" firstAttribute="leading" secondItem="Hcf-0o-c6Z" secondAttribute="leading" constant="16" id="3AQ-pC-x73"/>
+                                        <constraint firstItem="PHi-Yp-oXf" firstAttribute="centerY" secondItem="Hcf-0o-c6Z" secondAttribute="centerY" id="JVk-SY-DPg"/>
+                                        <constraint firstAttribute="trailing" secondItem="TfV-AP-4uz" secondAttribute="trailing" constant="8" id="YZB-JY-zXd"/>
+                                        <constraint firstItem="TfV-AP-4uz" firstAttribute="leading" secondItem="PHi-Yp-oXf" secondAttribute="trailing" constant="16" id="czr-Fc-off"/>
+                                        <constraint firstItem="TfV-AP-4uz" firstAttribute="centerY" secondItem="Hcf-0o-c6Z" secondAttribute="centerY" id="oXr-lz-lCF"/>
+                                        <constraint firstItem="Tmj-AH-XgO" firstAttribute="leading" secondItem="Hcf-0o-c6Z" secondAttribute="leading" constant="16" id="wDu-Qz-cGu"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="annexeIcon" destination="PHi-Yp-oXf" id="5Jr-Nj-7xB"/>
+                                    <outlet property="mainDocIcon" destination="Tmj-AH-XgO" id="tYk-x5-qEx"/>
+                                    <outlet property="titleLabel" destination="TfV-AP-4uz" id="g18-bf-ZzC"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="XYH-uf-RCC" id="pue-U6-lxB"/>
                             <outlet property="delegate" destination="XYH-uf-RCC" id="aOQ-Be-5zs"/>
@@ -835,7 +888,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xof-oC-o2c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1666.5599999999999" y="-2558.2933333333335"/>
+            <point key="canvasLocation" x="1546" y="-1759"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Th1-vu-pWi">
@@ -934,7 +987,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-o7-ybk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-345" y="957"/>
+            <point key="canvasLocation" x="-81" y="325"/>
         </scene>
         <!--Sélection de compte-->
         <scene sceneID="Tr0-La-JXU">
@@ -1040,7 +1093,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zv2-Ua-lIv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="659" y="1413"/>
+            <point key="canvasLocation" x="559" y="835"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="18">
@@ -1076,7 +1129,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="49" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-569.60000000000002" y="175.78666666666669"/>
+            <point key="canvasLocation" x="-300" y="-413"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="xva-c2-2ks">
@@ -1096,16 +1149,18 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="62J-N8-HVF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="659" y="937"/>
+            <point key="canvasLocation" x="559" y="305"/>
         </scene>
     </scenes>
     <resources>
         <image name="ic_account_circle_white.png" width="24" height="24"/>
         <image name="ic_action_white_24dp.png" width="24" height="24"/>
         <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
+        <image name="ic_attachment_white_24dp.png" width="24" height="24"/>
         <image name="ic_check_circle_white_18dp.png" width="18" height="18"/>
         <image name="ic_check_white_18dp.png" width="18" height="18"/>
         <image name="ic_circle_outline_white_18dp.png" width="18" height="18"/>
+        <image name="ic_description_white_24dp.png" width="24" height="24"/>
         <image name="ic_fiber_manual_record_white_18dp.png" width="18" height="18"/>
         <image name="ic_filter_white_24dp.png" width="24" height="24"/>
         <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
@@ -1115,7 +1170,7 @@
         <image name="ic_settings_white.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="lZY-A3-bSY"/>
+        <segue reference="frU-Qg-PoU"/>
         <segue reference="Les-T2-Xz2"/>
     </inferredMetricsTieBreakers>
 </document>

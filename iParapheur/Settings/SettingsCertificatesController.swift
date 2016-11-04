@@ -56,7 +56,7 @@ import Foundation
         dateFormatter.locale = NSLocale.currentLocale();
     }
 
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableViewDataSource & UITableViewDelegate
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return certificateList.count

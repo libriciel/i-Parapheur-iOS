@@ -37,7 +37,6 @@
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
 		B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316C160A230D00C8C475 /* ADLAnnotationView.m */; };
 		B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316E160A230D00C8C475 /* ADLCloseButton.m */; };
-		B46BCC4315693F7A00A96560 /* RGDocumentsView.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC4215693F7A00A96560 /* RGDocumentsView.m */; };
 		B46BCC47156956E300A96560 /* ADLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC46156956E300A96560 /* ADLDocument.m */; };
 		B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */; };
 		B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */ = {isa = PBXBuildFile; fileRef = B47944D71622BCDE0061E09B /* ADLPostItView.m */; };
@@ -115,6 +114,14 @@
 		C526D8DE1DA7FC5A00EE8BA9 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8D91DA7FC5A00EE8BA9 /* Annotation.swift */; };
 		C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */; };
 		C526D8E01DA7FC5A00EE8BA9 /* Dossier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C526D8DB1DA7FC5A00EE8BA9 /* Dossier.swift */; };
+		C54DB7931DCCA34F00B2CAFA /* DocumentSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */; };
+		C54DB7971DCCC30C00B2CAFA /* ic_description_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DB7941DCCC30C00B2CAFA /* ic_description_white_24dp.png */; };
+		C54DB7981DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DB7951DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png */; };
+		C54DB7991DCCC30C00B2CAFA /* ic_description_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DB7961DCCC30C00B2CAFA /* ic_description_white_24dp@3x.png */; };
+		C54DB79E1DCCC34A00B2CAFA /* ic_attachment_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DB79B1DCCC34A00B2CAFA /* ic_attachment_white_24dp.png */; };
+		C54DB79F1DCCC34A00B2CAFA /* ic_attachment_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DB79C1DCCC34A00B2CAFA /* ic_attachment_white_24dp@2x.png */; };
+		C54DB7A01DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DB79D1DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png */; };
+		C54DB7A51DCCCAE700B2CAFA /* DocumentSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */; };
 		C54DDBEA1DA4EE6D001DEAE8 /* ic_close_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DDBE71DA4EE6D001DEAE8 /* ic_close_white@2x.png */; };
 		C54DDBEB1DA4EE6D001DEAE8 /* ic_close_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DDBE81DA4EE6D001DEAE8 /* ic_close_white@3x.png */; };
 		C54DDBEC1DA4EE6D001DEAE8 /* ic_close_white.png in Resources */ = {isa = PBXBuildFile; fileRef = C54DDBE91DA4EE6D001DEAE8 /* ic_close_white.png */; };
@@ -348,8 +355,6 @@
 		B444316C160A230D00C8C475 /* ADLAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAnnotationView.m; sourceTree = "<group>"; };
 		B444316D160A230D00C8C475 /* ADLCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCloseButton.h; sourceTree = "<group>"; };
 		B444316E160A230D00C8C475 /* ADLCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCloseButton.m; sourceTree = "<group>"; };
-		B46BCC4115693F7A00A96560 /* RGDocumentsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGDocumentsView.h; sourceTree = "<group>"; };
-		B46BCC4215693F7A00A96560 /* RGDocumentsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGDocumentsView.m; sourceTree = "<group>"; };
 		B46BCC45156956E300A96560 /* ADLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLDocument.h; sourceTree = "<group>"; };
 		B46BCC46156956E300A96560 /* ADLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLDocument.m; sourceTree = "<group>"; };
 		B46BCC48156A855900A96560 /* RGWorkflowDialogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGWorkflowDialogViewController.h; sourceTree = "<group>"; };
@@ -490,6 +495,14 @@
 		C526D8D91DA7FC5A00EE8BA9 /* Annotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		C526D8DB1DA7FC5A00EE8BA9 /* Dossier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dossier.swift; sourceTree = "<group>"; };
+		C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentSelectionController.swift; sourceTree = "<group>"; };
+		C54DB7941DCCC30C00B2CAFA /* ic_description_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_description_white_24dp.png; path = ic_description_white_24dp/ic_description_white_24dp.png; sourceTree = "<group>"; };
+		C54DB7951DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_description_white_24dp@2x.png"; path = "ic_description_white_24dp/ic_description_white_24dp@2x.png"; sourceTree = "<group>"; };
+		C54DB7961DCCC30C00B2CAFA /* ic_description_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_description_white_24dp@3x.png"; path = "ic_description_white_24dp/ic_description_white_24dp@3x.png"; sourceTree = "<group>"; };
+		C54DB79B1DCCC34A00B2CAFA /* ic_attachment_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_attachment_white_24dp.png; path = ic_attachment_white_24dp/ic_attachment_white_24dp.png; sourceTree = "<group>"; };
+		C54DB79C1DCCC34A00B2CAFA /* ic_attachment_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_attachment_white_24dp@2x.png"; path = "ic_attachment_white_24dp/ic_attachment_white_24dp@2x.png"; sourceTree = "<group>"; };
+		C54DB79D1DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_attachment_white_24dp@3x.png"; path = "ic_attachment_white_24dp/ic_attachment_white_24dp@3x.png"; sourceTree = "<group>"; };
+		C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentSelectionCell.swift; sourceTree = "<group>"; };
 		C54DDBE71DA4EE6D001DEAE8 /* ic_close_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_close_white@2x.png"; path = "ic_close_white_24dp/ic_close_white@2x.png"; sourceTree = "<group>"; };
 		C54DDBE81DA4EE6D001DEAE8 /* ic_close_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_close_white@3x.png"; path = "ic_close_white_24dp/ic_close_white@3x.png"; sourceTree = "<group>"; };
 		C54DDBE91DA4EE6D001DEAE8 /* ic_close_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_close_white.png; path = ic_close_white_24dp/ic_close_white.png; sourceTree = "<group>"; };
@@ -797,8 +810,8 @@
 				C5D627651DBF5E1900208287 /* FolderListCell.swift */,
 				B41DBD36153D942D004F1AEF /* RGDeskViewController.h */,
 				B41DBD37153D942D004F1AEF /* RGDeskViewController.m */,
-				B46BCC4115693F7A00A96560 /* RGDocumentsView.h */,
-				B46BCC4215693F7A00A96560 /* RGDocumentsView.m */,
+				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
+				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
 				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
 				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
 				C589715E1AA88D420077FC84 /* RGLoginViewController.h */,
@@ -1187,6 +1200,26 @@
 			name = ic_cloud_done_white_24dp;
 			sourceTree = "<group>";
 		};
+		C54DB79A1DCCC31400B2CAFA /* ic_description_white_24dp */ = {
+			isa = PBXGroup;
+			children = (
+				C54DB7941DCCC30C00B2CAFA /* ic_description_white_24dp.png */,
+				C54DB7951DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png */,
+				C54DB7961DCCC30C00B2CAFA /* ic_description_white_24dp@3x.png */,
+			);
+			name = ic_description_white_24dp;
+			sourceTree = "<group>";
+		};
+		C54DB7A11DCCC34E00B2CAFA /* ic_attachment_white_24dp */ = {
+			isa = PBXGroup;
+			children = (
+				C54DB79B1DCCC34A00B2CAFA /* ic_attachment_white_24dp.png */,
+				C54DB79C1DCCC34A00B2CAFA /* ic_attachment_white_24dp@2x.png */,
+				C54DB79D1DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png */,
+			);
+			name = ic_attachment_white_24dp;
+			sourceTree = "<group>";
+		};
 		C54DDBED1DA4EEA6001DEAE8 /* ic_close_white_24dp */ = {
 			isa = PBXGroup;
 			children = (
@@ -1340,6 +1373,7 @@
 				C5D6275D1DBF55E700208287 /* ic_action_white_24dp */,
 				C5978BF31D8C43600097AC55 /* ic_add_circle_outline_white_24dp */,
 				C54EEDD91DB777B100E2E33D /* ic_arrow_back_white_24dp */,
+				C54DB7A11DCCC34E00B2CAFA /* ic_attachment_white_24dp */,
 				C5EABB241DC3AA2E0019328A /* ic_check_circle_white_18dp */,
 				C58DCD1D1DB9154600D81D8E /* ic_check_white_18dp */,
 				C5EABB231DC3AA130019328A /* ic_circle_outline_white_18dp */,
@@ -1349,6 +1383,7 @@
 				C5B874511DA5686400909F80 /* ic_copyright_outline_white_24dp */,
 				C5B874501DA5683600909F80 /* ic_copyright_white_24dp */,
 				C5978BF41D8C43920097AC55 /* ic_delete_white_24dp */,
+				C54DB79A1DCCC31400B2CAFA /* ic_description_white_24dp */,
 				C526D8B81DA7F19F00EE8BA9 /* ic_edit_white_24dp */,
 				C5675ECE1DBE56C9003FA418 /* ic_fiber_manual_record_white_18dp */,
 				C54DDC141DA4F0D4001DEAE8 /* ic_filter_list_white_24dp */,
@@ -1695,8 +1730,11 @@
 				C526D8AB1DA7F17200EE8BA9 /* ic_edit_white_24dp@3x.png in Resources */,
 				C54EEDD81DB777AD00E2E33D /* ic_arrow_back_white_24dp@3x.png in Resources */,
 				C58CB29B1AB71A1C00C79A97 /* iw-tdt@2x.png in Resources */,
+				C54DB79F1DCCC34A00B2CAFA /* ic_attachment_white_24dp@2x.png in Resources */,
 				C5978BF01D8C42D70097AC55 /* ic_settings_white.png in Resources */,
+				C54DB7971DCCC30C00B2CAFA /* ic_description_white_24dp.png in Resources */,
 				C5B8744B1DA567AE00909F80 /* ic_information_white_24dp.png in Resources */,
+				C54DB7A01DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png in Resources */,
 				C5D627621DBF5A2200208287 /* ic_library_books_white_24dp@2x.png in Resources */,
 				C58CB28B1AB719D700C79A97 /* ir-archivage@2x.png in Resources */,
 				C54DDC101DA4F0B2001DEAE8 /* ic_verified_user_white_24dp@3x.png in Resources */,
@@ -1747,11 +1785,13 @@
 				C5B8744D1DA567AE00909F80 /* ic_information_white_24dp@3x.png in Resources */,
 				C5B874641DA67ECD00909F80 /* ic_settings_outline_white@3x.png in Resources */,
 				C5978BEA1D8C42CE0097AC55 /* ic_delete_white.png in Resources */,
+				C54DB79E1DCCC34A00B2CAFA /* ic_attachment_white_24dp.png in Resources */,
 				C58CB28F1AB719E900C79A97 /* ir-tdt@2x.png in Resources */,
 				C5978BEB1D8C42CE0097AC55 /* ic_delete_white@2x.png in Resources */,
 				C526D8CC1DA7F41200EE8BA9 /* ic_cloud_done_white_24dp@3x.png in Resources */,
 				C58CB2931AB719F600C79A97 /* ir-visa@2x.png in Resources */,
 				C5B874351DA5675300909F80 /* ic_account_outline_white_24dp@3x.png in Resources */,
+				C54DB7981DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png in Resources */,
 				C5EABB211DC3AA050019328A /* ic_circle_outline_white_18dp@2x.png in Resources */,
 				C54DDBF11DA4F078001DEAE8 /* ic_account_box_white@2x.png in Resources */,
 				C58CB2971AB71A0A00C79A97 /* iw-archivage@2x.png in Resources */,
@@ -1818,6 +1858,7 @@
 				C54DDC111DA4F0B2001DEAE8 /* ic_verified_user_white_24dp.png in Resources */,
 				C516EDEE1AB6DD3B00216E5F /* ir-signature.png in Resources */,
 				C526D8D01DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp.png in Resources */,
+				C54DB7991DCCC30C00B2CAFA /* ic_description_white_24dp@3x.png in Resources */,
 				C5B874341DA5675300909F80 /* ic_account_outline_white_24dp@2x.png in Resources */,
 				C58CB26F1AB6EE5A00C79A97 /* iw-mailsec@2x.png in Resources */,
 				C5978BE51D8C42BE0097AC55 /* ic_add_circle_outline_white@2x.png in Resources */,
@@ -1926,6 +1967,7 @@
 				C526D8DE1DA7FC5A00EE8BA9 /* Annotation.swift in Sources */,
 				C57B63751DABD36E005776F2 /* Account.swift in Sources */,
 				C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */,
+				C54DB7A51DCCCAE700B2CAFA /* DocumentSelectionCell.swift in Sources */,
 				C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
@@ -1960,6 +2002,7 @@
 				B4FF340E15473B6F006F7BF3 /* ReaderThumbFetch.m in Sources */,
 				C5B8745C1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift in Sources */,
 				B4FF340F15473B6F006F7BF3 /* ReaderThumbRender.m in Sources */,
+				C54DB7931DCCA34F00B2CAFA /* DocumentSelectionController.swift in Sources */,
 				B4FF341015473B6F006F7BF3 /* ReaderThumbsView.m in Sources */,
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,
 				B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */,
@@ -1967,7 +2010,6 @@
 				C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */,
 				B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */,
 				C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */,
-				B46BCC4315693F7A00A96560 /* RGDocumentsView.m in Sources */,
 				B46BCC47156956E300A96560 /* ADLDocument.m in Sources */,
 				B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */,
 				B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */,
