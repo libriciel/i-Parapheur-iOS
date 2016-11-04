@@ -39,8 +39,11 @@ class SettingsAboutController: UIViewController {
 	
 	@IBOutlet var versionLabel: UILabel!
 	
+	// MARK: - Life cycle
+	
     override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
+		print("View loaded : SettingsAboutController")
 		
 		let appVersionString: String = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
 		versionLabel.text = versionLabel.text?.stringByReplacingOccurrencesOfString(":version:", withString: appVersionString)

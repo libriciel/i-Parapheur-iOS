@@ -217,63 +217,38 @@
 
 - (void)updateToolBar {
 
+	NSLog(@"Adrien - updateToolBar ");
+
 	if (_selectedDossiersArray.count != 0) {
 
-		if (self.navigationController.toolbarHidden)
-			[self.navigationController setToolbarHidden:NO
-			                                   animated:YES];
-
 		NSMutableArray *actions = [Dossier filterActions:_selectedDossiersArray];
-		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@", _possibleMainActions]];
-		_secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", _possibleMainActions]];
+		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
+		                                                                                             _possibleMainActions]];
+		_secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
+		                                                                                          _possibleMainActions]];
 
-		NSMutableArray *toolbarItems = [[NSMutableArray alloc] initWithCapacity:3];
-
-		[toolbarItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-		                                                                      target:self
-		                                                                      action:nil]];
-
-		if (self.secondaryActions.count > 0) {
-			UIButton *moreActions = [UIButton buttonWithType:UIButtonTypeCustom];
-			moreActions.backgroundColor = [UIColor darkGrayColor];
-			moreActions.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
-
-			[moreActions setTitle:@"Plus"
-			             forState:UIControlStateNormal];
-
-			[moreActions setTitleColor:[UIColor whiteColor]
-			                  forState:UIControlStateNormal];
-
-			[moreActions addTarget:self
-			                action:@selector(showMoreActions:)
-			      forControlEvents:UIControlEventTouchUpInside];
-
-			moreBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:moreActions];
-			[toolbarItems addObject:moreBarButtonItem];
+		if (_secondaryActions.count > 0) {
+			_bottomBarNegativeButton.target = self;
+			_bottomBarNegativeButton.action = @selector(negativeButtonPressed:);
 		}
 
 		if (mainActions.count > 0) {
 			_mainAction = mainActions[0];
 
-			UIButton *mainAction = [UIButton buttonWithType:UIButtonTypeCustom];
-			mainAction.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-			//mainAction.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-			mainAction.backgroundColor = [ColorUtils DarkGreen];
-			mainAction.frame = CGRectMake(0.0f, 0.0f, 90.0f, CGRectGetHeight(self.navigationController.toolbar.bounds));
-			[mainAction setTitle:[ADLAPIHelper actionNameForAction:_mainAction]
-			            forState:UIControlStateNormal];
-			[mainAction setTitleColor:[UIColor whiteColor]
-			                 forState:UIControlStateNormal];
-			[mainAction addTarget:self
-			               action:@selector(mainActionPressed)
-			     forControlEvents:UIControlEventTouchUpInside];
-
-			[toolbarItems addObject:[[UIBarButtonItem alloc] initWithCustomView:mainAction]];
+			_bottomBarPositiveButton.enabled = YES;
+			_bottomBarPositiveButton.tintColor = ColorUtils.Aqua;
+			_bottomBarPositiveButton.title = [ADLAPIHelper actionNameForAction:_mainAction];
+			_bottomBarPositiveButton.target = self;
+			_bottomBarPositiveButton.action = @selector(positiveButtonPressed:);
+		} else {
+			_bottomBarPositiveButton.enabled = NO;
+			_bottomBarPositiveButton.tintColor = [UIColor clearColor];
 		}
-		[self.navigationController.toolbar setItems:[NSArray arrayWithArray:toolbarItems]
-		                                   animated:YES];
-	}
-	else {
+
+		if (self.navigationController.toolbarHidden)
+			[self.navigationController setToolbarHidden:NO
+			                                   animated:YES];
+	} else {
 		[self.navigationController setToolbarHidden:YES
 		                                   animated:YES];
 		moreBarButtonItem = nil;
@@ -351,9 +326,9 @@
 }
 
 
-- (void)mainActionPressed {
+- (void)positiveButtonPressed:(id)sender {
 
-	if (self.mainAction) {
+	if (_mainAction) {
 		@try {
 			[self performSegueWithIdentifier:_mainAction
 			                          sender:self];
@@ -370,101 +345,27 @@
 }
 
 
-- (void)showMoreActions:(id)sender {
+- (void)negativeButtonPressed:(id)sender {
 
-	if (UIAlertController.class) { // iOS8
+	// Computing the negative action
 
-		// Create Popup Controller
+	NSString *negativeAction = [Dossier getNegativeAction:_secondaryActions];
 
-		UIAlertController *actionController = [UIAlertController alertControllerWithTitle:@"Traitement par lot"
-		                                                                          message:nil
-		                                                                   preferredStyle:UIAlertControllerStyleActionSheet];
+	// Starting popup
 
-		[actionController setModalPresentationStyle:UIModalPresentationPopover];
-
-		// Create Popup actions
-
-		for (NSString *action in _secondaryActions) {
-
-//			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
-			// TODO Adrien
-//			UIAlertAction *action = [UIAlertAction actionWithTitle:actionName
-//			                                                 style:UIAlertActionStyleDefault
-//			                                               handler:^(UIAlertAction *alertAction) {
-//				                                               [self clickOnSecondaryAction:alertAction.title];
-//			                                               }];
-//			[actionController addAction:action];
+	if (negativeAction.length > 0) {
+		@try {
+			[self performSegueWithIdentifier:negativeAction
+			                          sender:self];
 		}
-
-		UIAlertAction *actionAnnuler = [UIAlertAction actionWithTitle:@"Annuler"
-		                                                        style:UIAlertActionStyleDefault
-		                                                      handler:nil];
-		[actionController addAction:actionAnnuler];
-
-		// Find the barButtonItem
-
-		UIBarButtonItem *moreItem = nil;
-
-		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
-			if ([(UIView *) sender isDescendantOfView:item.customView]) {
-				moreItem = item;
-				break;
-			}
+		@catch (NSException *exception) {
+			[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+			                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+			                           delegate:nil
+			                  cancelButtonTitle:@"Fermer"
+			                  otherButtonTitles:nil] show];
 		}
-
-		// Display the popup
-
-		[self presentViewController:actionController
-		                   animated:YES
-		                 completion:nil];
-
-		UIPopoverPresentationController *popPresenter = [actionController popoverPresentationController];
-
-		if (moreItem) {
-			popPresenter.sourceView = moreItem.customView;
-			popPresenter.sourceRect = moreItem.customView.bounds;
-		}
-		else {
-			popPresenter.sourceView = (UIView *) sender;
-			popPresenter.sourceRect = ((UIView *) sender).bounds;
-		}
-	}
-	else { // iOS7
-
-		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Traitement par lot"
-		                                                         delegate:self
-		                                                cancelButtonTitle:nil
-		                                           destructiveButtonTitle:nil
-		                                                otherButtonTitles:nil];
-
-		for (NSString *action in self.secondaryActions) {
-			NSString *actionName = [ADLAPIHelper actionNameForAction:action];
-			[actionSheet addButtonWithTitle:actionName];
-		}
-		[actionSheet addButtonWithTitle:@"Annuler"];
-
-		// Find the barButtonItem
-
-		UIBarButtonItem *moreItem = nil;
-
-		for (UIBarButtonItem *item in self.navigationController.toolbar.items) {
-			if ([(UIView *) sender isDescendantOfView:item.customView]) {
-				moreItem = item;
-				break;
-			}
-		}
-
-		if (moreItem) {
-			[actionSheet showFromBarButtonItem:moreItem
-			                          animated:YES];
-		}
-
-			//[(UIView*) sender convertRect:((UIView*)sender).frame toView:self.view];
-		else {
-			[actionSheet showFromRect:((UIView *) sender).frame
-			                   inView:self.view
-			                 animated:YES];
-		}
+		@finally {}
 	}
 }
 
@@ -583,9 +484,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		else
 			self.navigationItem.title = [NSString stringWithFormat:@"%d dossiers sélectionnés", _selectedDossiersArray.count];
 
+		[self updateToolBar];
+
 		if (_selectedDossiersArray.count == 0) {
 			[self updateSelectionMode];
-			[self updateToolBar];
 		}
 
 		return;

@@ -60,6 +60,8 @@
 @property(nonatomic, strong) IBOutlet UISearchBar *searchBar;
 @property(nonatomic, strong) IBOutlet UIButton *loadMoreButton;
 @property(nonatomic, strong) ADLRestClient *restClient;
+@property(strong, nonatomic) IBOutlet UIBarButtonItem *bottomBarNegativeButton;
+@property(strong, nonatomic) IBOutlet UIBarButtonItem *bottomBarPositiveButton;
 
 - (IBAction)loadNextResultsPage:(id)sender;
 

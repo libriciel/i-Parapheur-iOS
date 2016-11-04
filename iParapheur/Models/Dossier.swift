@@ -157,9 +157,33 @@ import Gloss
 
     // MARK: - Static utils
 
-	class func filterActions(dossierList: NSArray) -> NSMutableArray {
+    /**
+    * Returns the main negative {@link Action} available, by coherent priority.
+    */
+    static func getPositiveAction(actions: NSArray) -> NSString! {
 
-		let result:NSMutableArray = NSMutableArray()
+        if (actions.containsObject(NSString(string: "SIGNATURE"))) {
+            return NSString(string: "SIGNATURE")
+        }
+
+        return NSString(string:"")
+    }
+
+    /**
+     * Returns the main negative {@link Action} available, by coherent priority.
+     */
+    static func getNegativeAction(actions: NSArray) -> NSString! {
+
+        if (actions.containsObject(NSString(string: "REJET"))) {
+            return NSString(string: "REJET")
+        }
+
+        return NSString(string: "")
+    }
+
+    class func filterActions(dossierList: NSArray) -> NSMutableArray {
+
+        let result: NSMutableArray = NSMutableArray()
 
         // Compute values
 
@@ -169,7 +193,7 @@ import Gloss
         var hasRejet: Bool = true
         var hasTDT: Bool = true
 
-		for dossierItem in dossierList {
+        for dossierItem in dossierList {
             if let dossier = dossierItem as? Dossier {
                 hasVisa = hasVisa && dossier.actions!.contains("VISA")
                 hasSignature = hasSignature && (dossier.actions!.contains("SIGNATURE") || dossier.actions!.contains("VISA"))
@@ -183,11 +207,19 @@ import Gloss
 
         // Build result
 
-        if (hasSignature) { result.addObject(NSString(string: "SIGNATURE")) }
-        else if (hasVisa) { result.addObject(NSString(string: "VISA")) }
+        if (hasSignature) {
+            result.addObject(NSString(string: "SIGNATURE"))
+        }
+        else if (hasVisa) {
+            result.addObject(NSString(string: "VISA"))
+        }
 
-        if (hasRejet) { result.addObject(NSString(string: "REJET")) }
-        if (hasTDT) { result.addObject(NSString(string: "TDT")) }
+        if (hasRejet) {
+            result.addObject(NSString(string: "REJET"))
+        }
+        if (hasTDT) {
+            result.addObject(NSString(string: "TDT"))
+        }
 
         return result
     }

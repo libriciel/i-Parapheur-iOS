@@ -36,18 +36,19 @@ import Foundation
 
 /**
  * Those are not used yet, ObjC is really sloppy with Swift enums.
- * TODO : Use real Action when everything would be Swift-ified
  */
-//enum Action: String {
+//@objc class Action: NSObject {
 //
-//    case VISA
-//    case SIGNATURE
-//    case TDT
-//    case TDT_ACTES
-//    case TDT_HELIOS
-//    case ARCHIVAGE
-//    case MAILSEC
-//    case REJET
+// TODO : Use some real Action when everything would be Swift-ified
+//    static let Visa: NSString! = "VISA"
+//    static let Signature: NSString! = "SIGNATURE"
+//    static let Tdt: NSString! = "TDT"
+//    static let TdtActes: NSString! = "TDT_ACTES"
+//    static let TdtHelios: NSString! = "TDT_HELIOS"
+//    static let Archivage: NSString! = "ARCHIVAGE"
+//    static let MailSec: NSString! = "MAILSEC"
+//    static let Rejet: NSString! = "REJET"
+//
 //    case SECRETARIAT
 //    case REMORD
 //    case AVIS_COMPLEMENTAIRE

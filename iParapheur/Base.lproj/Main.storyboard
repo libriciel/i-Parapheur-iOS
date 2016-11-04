@@ -370,11 +370,11 @@
                             <rect key="frame" x="0.0" y="229" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KTY-uu-0cV" userLabel="Separator">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j7j-zb-Pkt" userLabel="Separator">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
-                                    <color key="backgroundColor" red="0.79991227388381958" green="0.80005061626434326" blue="0.7999035120010376" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.75677943229675293" green="0.75691080093383789" blue="0.75677114725112915" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="EQs-uk-EJ1"/>
+                                        <constraint firstAttribute="height" constant="1" id="3bk-Zc-atB"/>
                                     </constraints>
                                 </view>
                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpX-u5-kGi">
@@ -393,10 +393,10 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="tpX-u5-kGi" firstAttribute="leading" secondItem="nJQ-WW-GOX" secondAttribute="leading" id="06c-Gy-wdZ"/>
+                                <constraint firstItem="j7j-zb-Pkt" firstAttribute="leading" secondItem="nJQ-WW-GOX" secondAttribute="leading" id="0uS-Ds-dYt"/>
                                 <constraint firstItem="tpX-u5-kGi" firstAttribute="top" secondItem="nJQ-WW-GOX" secondAttribute="top" id="176-6d-tct"/>
-                                <constraint firstAttribute="trailing" secondItem="KTY-uu-0cV" secondAttribute="trailing" id="DvY-DY-Y3F"/>
-                                <constraint firstItem="KTY-uu-0cV" firstAttribute="leading" secondItem="nJQ-WW-GOX" secondAttribute="leading" id="a7l-dV-ecA"/>
-                                <constraint firstItem="KTY-uu-0cV" firstAttribute="top" secondItem="nJQ-WW-GOX" secondAttribute="top" id="eSg-cA-wHX"/>
+                                <constraint firstAttribute="trailing" secondItem="j7j-zb-Pkt" secondAttribute="trailing" id="4el-Fg-8RD"/>
+                                <constraint firstItem="j7j-zb-Pkt" firstAttribute="top" secondItem="nJQ-WW-GOX" secondAttribute="top" id="5Dh-fv-MV9"/>
                                 <constraint firstAttribute="trailing" secondItem="tpX-u5-kGi" secondAttribute="trailing" id="f2f-Eh-nFW"/>
                             </constraints>
                         </view>
@@ -501,7 +501,17 @@
                             <outletCollection property="gestureRecognizers" destination="YeL-sI-SYw" appends="YES" id="FrZ-Yj-BKy"/>
                         </connections>
                     </tableView>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="o7n-KK-SfS"/>
+                        <barButtonItem title="Annuler" id="hhE-kz-Pgm">
+                            <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="ZQ3-hq-QQR"/>
+                        <barButtonItem title="Signer" id="ll6-Kd-pW9">
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="7Ss-jk-mkJ"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Dossiers" id="KZD-cg-m0R">
                         <barButtonItem key="rightBarButtonItem" image="ic_filter_white_24dp.png" id="0nh-nM-mak">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -510,7 +520,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="bottomBarNegativeButton" destination="hhE-kz-Pgm" id="Z35-8T-cv6"/>
+                        <outlet property="bottomBarPositiveButton" destination="ll6-Kd-pW9" id="8ir-ON-XNp"/>
                         <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="y8S-1e-sKB"/>
                         <outlet property="searchBar" destination="Z1O-cw-X8C" id="wCO-7j-eDV"/>
                         <segue destination="zs0-y1-eAs" kind="modal" identifier="VISA" modalPresentationStyle="formSheet" id="lZY-A3-bSY"/>
@@ -1175,7 +1188,7 @@
         <image name="ic_settings_white.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="frU-Qg-PoU"/>
         <segue reference="Les-T2-Xz2"/>
+        <segue reference="lZY-A3-bSY"/>
     </inferredMetricsTieBreakers>
 </document>
