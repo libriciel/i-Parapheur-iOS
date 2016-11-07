@@ -15,7 +15,6 @@
 		1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF01675D2C20064E8E7 /* ADLRequester.m */; };
 		1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
-		14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BBBD981690EBB9007FFD9F /* ADLActionCell.m */; };
 		64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */; };
 		64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348D17E34A71E2E14D64A /* Bureau.swift */; };
 		64F343754DD86D7E822D4760 /* ParapheurType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F341F438EA838A05990950 /* ParapheurType.swift */; };
@@ -25,7 +24,6 @@
 		64F34FD00654A813D7151026 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348427F7EBCBC0A731851 /* Certificate.swift */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
-		9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9540519B1892BB8100018E80 /* ADLAPIHelper.m */; };
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
@@ -42,7 +40,6 @@
 		B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */ = {isa = PBXBuildFile; fileRef = B47944D71622BCDE0061E09B /* ADLPostItView.m */; };
 		B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B488310E15ECBF6500EC5BB3 /* RGFileCell.m */; };
 		B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */; };
-		B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A221AA16299E9B00474A18 /* ADLActionViewController.m */; };
 		B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B3643C1611A4ED0051420F /* ADLSingletonState.m */; };
 		B4D2F89B162AADF700D8A1DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E5ECB7153AF65F00BD514D /* Main.storyboard */; };
 		B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D79258153FEC5700CEE89C /* TableViewPaperBackground.png */; };
@@ -78,6 +75,11 @@
 		C5018C8C1DA4FFC500D7A97D /* ic_filter_outline_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5018C891DA4FFC500D7A97D /* ic_filter_outline_white_24dp.png */; };
 		C5018C8D1DA4FFC500D7A97D /* ic_filter_outline_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5018C8A1DA4FFC500D7A97D /* ic_filter_outline_white_24dp@2x.png */; };
 		C5018C8E1DA4FFC500D7A97D /* ic_filter_outline_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5018C8B1DA4FFC500D7A97D /* ic_filter_outline_white_24dp@3x.png */; };
+		C503261F1DD08ECC004F00A6 /* ActionSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */; };
+		C50326211DD090D3004F00A6 /* ActionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50326201DD090D3004F00A6 /* ActionSelectionController.swift */; };
+		C50326251DD0DF02004F00A6 /* ic_done_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C50326221DD0DF02004F00A6 /* ic_done_white_24dp.png */; };
+		C50326261DD0DF02004F00A6 /* ic_done_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C50326231DD0DF02004F00A6 /* ic_done_white_24dp@2x.png */; };
+		C50326271DD0DF02004F00A6 /* ic_done_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C50326241DD0DF02004F00A6 /* ic_done_white_24dp@3x.png */; };
 		C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */; };
 		C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */; };
 		C5065EE11D82AB89008FE301 /* SettingsFiltersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */; };
@@ -307,8 +309,6 @@
 		1469DFF31675D8960064E8E7 /* ADLAPIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAPIOperation.h; sourceTree = "<group>"; };
 		1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAPIOperation.m; sourceTree = "<group>"; };
 		1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ca_mobiles_chaine.der; sourceTree = "<group>"; };
-		14BBBD971690EBB9007FFD9F /* ADLActionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLActionCell.h; sourceTree = "<group>"; };
-		14BBBD981690EBB9007FFD9F /* ADLActionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionCell.m; sourceTree = "<group>"; };
 		14F0C8551694B65800C0D720 /* ADLAPIRequests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLAPIRequests.h; sourceTree = "<group>"; };
 		38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iParapheur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64F341F438EA838A05990950 /* ParapheurType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParapheurType.swift; sourceTree = "<group>"; };
@@ -329,8 +329,6 @@
 		9514BFF4187AA76100118B9C /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
 		952E2E531888185E005C8D97 /* ADLFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterViewController.h; sourceTree = "<group>"; };
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
-		9540519A1892BB8100018E80 /* ADLAPIHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAPIHelper.h; sourceTree = "<group>"; };
-		9540519B1892BB8100018E80 /* ADLAPIHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLAPIHelper.m; sourceTree = "<group>"; };
 		954A7389188D371D00A13D1E /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
 		954A738A188D371D00A13D1E /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
 		95719C7D1893CECA00246F7C /* ADLAnnotationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAnnotationButton.h; sourceTree = "<group>"; };
@@ -367,8 +365,6 @@
 		B488312515EE0F2900EC5BB3 /* ADLPDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLPDFViewController.h; sourceTree = "<group>"; };
 		B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLPDFViewController.m; sourceTree = "<group>"; };
 		B4A221A816299B9400474A18 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		B4A221A916299E9B00474A18 /* ADLActionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLActionViewController.h; sourceTree = "<group>"; };
-		B4A221AA16299E9B00474A18 /* ADLActionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLActionViewController.m; sourceTree = "<group>"; };
 		B4A221B0162AA6CF00474A18 /* viser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "viser@2x.png"; sourceTree = "<group>"; };
 		B4A221B1162AA6CF00474A18 /* viser.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = viser.png; sourceTree = "<group>"; };
 		B4A221B8162AA86900474A18 /* rejeter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rejeter.png; sourceTree = "<group>"; };
@@ -458,6 +454,11 @@
 		C5018C8A1DA4FFC500D7A97D /* ic_filter_outline_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_filter_outline_white_24dp@2x.png"; path = "ic_filter_outline_white_24dp/ic_filter_outline_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C5018C8B1DA4FFC500D7A97D /* ic_filter_outline_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_filter_outline_white_24dp@3x.png"; path = "ic_filter_outline_white_24dp/ic_filter_outline_white_24dp@3x.png"; sourceTree = "<group>"; };
 		C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KeyStore 2.xcdatamodel"; sourceTree = "<group>"; };
+		C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSelectionCell.swift; sourceTree = "<group>"; };
+		C50326201DD090D3004F00A6 /* ActionSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSelectionController.swift; sourceTree = "<group>"; };
+		C50326221DD0DF02004F00A6 /* ic_done_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_done_white_24dp.png; path = ic_done_white_24dp/ic_done_white_24dp.png; sourceTree = "<group>"; };
+		C50326231DD0DF02004F00A6 /* ic_done_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_done_white_24dp@2x.png"; path = "ic_done_white_24dp/ic_done_white_24dp@2x.png"; sourceTree = "<group>"; };
+		C50326241DD0DF02004F00A6 /* ic_done_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_done_white_24dp@3x.png"; path = "ic_done_white_24dp/ic_done_white_24dp@3x.png"; sourceTree = "<group>"; };
 		C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsAboutController.swift; sourceTree = "<group>"; };
 		C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsLicencesController.swift; sourceTree = "<group>"; };
 		C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsFiltersController.swift; sourceTree = "<group>"; };
@@ -802,18 +803,18 @@
 				B43C7ACB154162DD00BA43A8 /* CustomCells */,
 				B41B9475156227B3004D57A1 /* HUD */,
 				64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */,
-				B4A221A916299E9B00474A18 /* ADLActionViewController.h */,
-				B4A221AA16299E9B00474A18 /* ADLActionViewController.m */,
+				C50326201DD090D3004F00A6 /* ActionSelectionController.swift */,
+				C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */,
 				952E2E531888185E005C8D97 /* ADLFilterViewController.h */,
 				952E2E541888185E005C8D97 /* ADLFilterViewController.m */,
 				B488312515EE0F2900EC5BB3 /* ADLPDFViewController.h */,
 				B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */,
 				C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */,
+				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
+				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
 				C5D627651DBF5E1900208287 /* FolderListCell.swift */,
 				B41DBD36153D942D004F1AEF /* RGDeskViewController.h */,
 				B41DBD37153D942D004F1AEF /* RGDeskViewController.m */,
-				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
-				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
 				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
 				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
 				C589715E1AA88D420077FC84 /* RGLoginViewController.h */,
@@ -837,8 +838,6 @@
 				B41B609D15F0962100655827 /* ADLCircuitCell.m */,
 				B488310D15ECBF6500EC5BB3 /* RGFileCell.h */,
 				B488310E15ECBF6500EC5BB3 /* RGFileCell.m */,
-				14BBBD971690EBB9007FFD9F /* ADLActionCell.h */,
-				14BBBD981690EBB9007FFD9F /* ADLActionCell.m */,
 			);
 			path = CustomCells;
 			sourceTree = "<group>";
@@ -1125,6 +1124,16 @@
 			name = ic_filter_remove_outline_white_24dp;
 			sourceTree = "<group>";
 		};
+		C50326281DD0DF0E004F00A6 /* ic_done_white_24dp */ = {
+			isa = PBXGroup;
+			children = (
+				C50326221DD0DF02004F00A6 /* ic_done_white_24dp.png */,
+				C50326231DD0DF02004F00A6 /* ic_done_white_24dp@2x.png */,
+				C50326241DD0DF02004F00A6 /* ic_done_white_24dp@3x.png */,
+			);
+			name = ic_done_white_24dp;
+			sourceTree = "<group>";
+		};
 		C50A87411D1AD07A00025074 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1387,6 +1396,7 @@
 				C5B874501DA5683600909F80 /* ic_copyright_white_24dp */,
 				C5978BF41D8C43920097AC55 /* ic_delete_white_24dp */,
 				C54DB79A1DCCC31400B2CAFA /* ic_description_white_24dp */,
+				C50326281DD0DF0E004F00A6 /* ic_done_white_24dp */,
 				C526D8B81DA7F19F00EE8BA9 /* ic_edit_white_24dp */,
 				C5675ECE1DBE56C9003FA418 /* ic_fiber_manual_record_white_18dp */,
 				C54DDC141DA4F0D4001DEAE8 /* ic_filter_list_white_24dp */,
@@ -1555,8 +1565,6 @@
 				1469DFF31675D8960064E8E7 /* ADLAPIOperation.h */,
 				1469DFF41675D8960064E8E7 /* ADLAPIOperation.m */,
 				14F0C8551694B65800C0D720 /* ADLAPIRequests.h */,
-				9540519A1892BB8100018E80 /* ADLAPIHelper.h */,
-				9540519B1892BB8100018E80 /* ADLAPIHelper.m */,
 			);
 			path = RestClientApi2;
 			sourceTree = "<group>";
@@ -1745,6 +1753,7 @@
 				B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */,
 				C54EEDD71DB777AD00E2E33D /* ic_arrow_back_white_24dp@2x.png in Resources */,
 				C58CB2921AB719F600C79A97 /* ir-visa.png in Resources */,
+				C50326261DD0DF02004F00A6 /* ic_done_white_24dp@2x.png in Resources */,
 				C58CB2B21AB72D3500C79A97 /* Icon-72@2x.png in Resources */,
 				C50A87401D1AD07000025074 /* Settings.storyboard in Resources */,
 				C58CB2C21AB72F6E00C79A97 /* Icon-40.png in Resources */,
@@ -1813,6 +1822,7 @@
 				C54DDC0B1DA4F0A7001DEAE8 /* ic_info_outline_white_24dp.png in Resources */,
 				B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */,
 				C5978BF21D8C42D70097AC55 /* ic_settings_white@3x.png in Resources */,
+				C50326251DD0DF02004F00A6 /* ic_done_white_24dp.png in Resources */,
 				1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */,
 				C5B8743F1DA5676C00909F80 /* ic_copyright_white_24dp.png in Resources */,
 				C516EDEF1AB6DD3B00216E5F /* ir-signature@2x.png in Resources */,
@@ -1823,6 +1833,7 @@
 				C526D8AA1DA7F17200EE8BA9 /* ic_edit_white_24dp@2x.png in Resources */,
 				C5B874331DA5675300909F80 /* ic_account_outline_white_24dp.png in Resources */,
 				C58CB26B1AB6EE4000C79A97 /* ir-mailsec@2x.png in Resources */,
+				C50326271DD0DF02004F00A6 /* ic_done_white_24dp@3x.png in Resources */,
 				142B020816D61AF200EF3B8F /* acmobile.der in Resources */,
 				C5675ECC1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@2x.png in Resources */,
 				C5675EC61DBE5414003FA418 /* ic_navigate_next_white_24dp@3x.png in Resources */,
@@ -1965,6 +1976,7 @@
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
 				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
 				C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */,
+				C50326211DD090D3004F00A6 /* ActionSelectionController.swift in Sources */,
 				64F34FD00654A813D7151026 /* Certificate.swift in Sources */,
 				C5675ED21DBE74CC003FA418 /* SettingsAccountsCell.swift in Sources */,
 				C526D8DE1DA7FC5A00EE8BA9 /* Annotation.swift in Sources */,
@@ -1976,7 +1988,6 @@
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
 				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,
-				9540519C1892BB8100018E80 /* ADLAPIHelper.m in Sources */,
 				B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */,
 				B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */,
 				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
@@ -2030,7 +2041,6 @@
 				B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */,
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
-				B4A221AB16299E9B00474A18 /* ADLActionViewController.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
 				C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */,
 				1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */,
@@ -2038,12 +2048,12 @@
 				C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */,
 				95719C821893D50600246F7C /* ADLInfoView.m in Sources */,
 				C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */,
+				C503261F1DD08ECC004F00A6 /* ActionSelectionCell.swift in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
 				C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */,
-				14BBBD991690EBB9007FFD9F /* ADLActionCell.m in Sources */,
 				C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */,
 				C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */,
 				64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */,

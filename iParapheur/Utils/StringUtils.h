@@ -58,4 +58,9 @@
 
 + (NSData *)bytesFromHexString:(NSString *)aString;
 
++ (NSString*) actionNameForAction:(NSString*) action;
+
++ (NSString*) actionNameForAction:(NSString*) action
+					withPaperSign:(BOOL)isPaperSign;
+
 @end

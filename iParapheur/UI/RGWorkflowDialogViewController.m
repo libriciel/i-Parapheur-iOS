@@ -39,7 +39,6 @@
 #import "RGAppDelegate.h"
 #import "ADLCertificateAlertView.h"
 #import "ADLRequester.h"
-#import "ADLAPIHelper.h"
 #import "LGViewHUD.h"
 #import <NSData_Base64/NSData+Base64.h>
 #import "StringUtils.h"
@@ -92,8 +91,8 @@
 - (void)viewWillAppear:(BOOL)animated {
 
 	[super viewWillAppear:animated];
-	_navigationBar.topItem.title = [ADLAPIHelper actionNameForAction:_action
-	                                                   withPaperSign:_isPaperSign];
+	_navigationBar.topItem.title = [StringUtils actionNameForAction:_action
+	                                                  withPaperSign:_isPaperSign];
 
 	if ([_action isEqualToString:@"SIGNATURE" ] && !_isPaperSign) {
 		_navigationBar.topItem.rightBarButtonItem.enabled = NO;

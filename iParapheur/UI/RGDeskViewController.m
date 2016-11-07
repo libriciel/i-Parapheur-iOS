@@ -235,7 +235,7 @@
 
 			_bottomBarPositiveButton.enabled = YES;
 			_bottomBarPositiveButton.tintColor = ColorUtils.Aqua;
-			_bottomBarPositiveButton.title = [ADLAPIHelper actionNameForAction:_mainAction];
+			_bottomBarPositiveButton.title = [StringUtils actionNameForAction:_mainAction];
 			_bottomBarPositiveButton.target = self;
 			_bottomBarPositiveButton.action = @selector(positiveButtonPressed:);
 		} else {

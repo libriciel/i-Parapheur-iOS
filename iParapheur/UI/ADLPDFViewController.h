@@ -38,7 +38,6 @@
 #import "ReaderViewController.h"
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
-#import "ADLAPIHelper.h"
 #import "ADLRestClient.h"
 
 

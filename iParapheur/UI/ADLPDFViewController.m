@@ -40,10 +40,9 @@
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "ADLRequester.h"
-#import "ADLActionViewController.h"
 #import "iParapheur-Swift.h"
-#import "DeviceUtils.h"
 #import "StringUtils.h"
+#import "RGWorkflowDialogViewController.h"
 
 
 @interface ADLPDFViewController () <ReaderViewControllerDelegate>
@@ -117,7 +116,12 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 	                                         selector:@selector(showDocumentWithIndex:)
-	                                             name:DocumentSelectionController.ShowDocumentNotif
+	                                             name:DocumentSelectionController.NotifShowDocument
+	                                           object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+	                                         selector:@selector(showAction:)
+	                                             name:ActionSelectionController.NotifLaunchAction
 	                                           object:nil];
 
 	//
@@ -161,7 +165,7 @@
 		((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 	}
 
-	if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
+	else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
 		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.unwrappedDocuments;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
@@ -170,23 +174,23 @@
 //		_documentsPopover.delegate = self;
 	}
 
-	if ([segue.identifier isEqualToString:@"showActionPopover"]) {
-		if (_actionPopover != nil) {
+	else if ([segue.identifier isEqualToString:@"showActionPopover"]) {
+
+		if (_actionPopover != nil)
 			[_actionPopover dismissPopoverAnimated:NO];
-		}
 
 		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-		((ADLActionViewController *) _actionPopover.contentViewController).actions = _dossier.unwrappedActions.mutableCopy;
-		((ADLActionViewController *) _actionPopover.contentViewController).currentDossier = _dossier;
+		((ActionSelectionController *) _actionPopover.contentViewController).currentDossier = _dossier;
 
-		// do something useful there
-		if ([_signatureFormat isEqualToString:@"CMS"]) {
-			((ADLActionViewController *) _actionPopover.contentViewController).signatureEnabled = YES;
-		} else if (_visaEnabled) {
-			((ADLActionViewController *) _actionPopover.contentViewController).visaEnabled = YES;
-		}
+		if ([_signatureFormat isEqualToString:@"CMS"])
+			((ActionSelectionController *) _actionPopover.contentViewController).signatureEnabled = @1;
+		else if (_visaEnabled)
+			((ActionSelectionController *) _actionPopover.contentViewController).visaEnabled = @1;
+	}
 
-		_actionPopover.delegate = self;
+	else {
+		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiers = @[_dossier];
+		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
 	}
 }
 
@@ -293,7 +297,7 @@
 	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
 
 	if (selectedAccountId.length == 0)
-		selectedAccountId = [Account DemoId];
+		selectedAccountId = Account.DemoId;
 
 	// Fetch Login
 
@@ -362,7 +366,7 @@
 
 	NSArray *buttons;
 
-	if ([dossier unwrappedDocuments].count > 1)
+	if (dossier.unwrappedDocuments.count > 1)
 		buttons = @[_actionButton, _documentsButton, _detailsButton];
 	else
 		buttons = @[_actionButton, _detailsButton];
@@ -486,6 +490,25 @@
 		                }];
 
 	//[[self navigationController] popToRootViewControllerAnimated:YES];
+}
+
+
+- (void)showAction:(NSNotification *) notification {
+
+	NSString *action = [notification object];
+
+	@try {
+		[self performSegueWithIdentifier:action
+		                          sender:self];
+	}
+	@catch (NSException *exception) {
+		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
+		                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
+		                           delegate:nil
+		                  cancelButtonTitle:@"Fermer"
+		                  otherButtonTitles:nil] show];
+	}
+	@finally {}
 }
 
 
