@@ -559,25 +559,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A2R-1g-Vro">
-                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
-                                <items>
-                                    <navigationItem title="Title" id="Y2i-Kb-HxI">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Hf6-QE-hmj">
-                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <action selector="handleCancel:" destination="RAS-1K-jVQ" id="P8L-MD-H1u"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="5wX-p4-KSU">
-                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <connections>
-                                                <action selector="handleSave:" destination="RAS-1K-jVQ" id="NOx-Ik-dxI"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Texte contenu dans le titre du dossier" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bed-Bn-tio">
                                 <rect key="frame" x="9" y="91" width="523" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -650,6 +631,25 @@
                                     <constraint firstItem="xFv-Eh-rFU" firstAttribute="top" secondItem="6mA-Gu-b2O" secondAttribute="top" id="nUC-yR-luT"/>
                                 </constraints>
                             </view>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A2R-1g-Vro">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <items>
+                                    <navigationItem title="Title" id="Y2i-Kb-HxI">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Hf6-QE-hmj">
+                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="handleCancel:" destination="RAS-1K-jVQ" id="P8L-MD-H1u"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="5wX-p4-KSU">
+                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="handleSave:" destination="RAS-1K-jVQ" id="NOx-Ik-dxI"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" red="0.95675891637802124" green="0.95692259073257446" blue="0.95674854516983032" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>

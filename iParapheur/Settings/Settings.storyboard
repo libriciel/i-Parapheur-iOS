@@ -281,7 +281,7 @@
                                                     <state key="normal" image="ic_delete_white.png"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nom_du_certif.p12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="adl-eh-TlW">
-                                                    <rect key="frame" x="8" y="8" width="287" height="49"/>
+                                                    <rect key="frame" x="8" y="22" width="287" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -292,10 +292,8 @@
                                                 <constraint firstItem="Wne-z8-8j1" firstAttribute="centerY" secondItem="R5e-zi-Ahd" secondAttribute="centerY" id="D07-pK-5O9"/>
                                                 <constraint firstItem="BEV-e5-SY3" firstAttribute="leading" secondItem="adl-eh-TlW" secondAttribute="trailing" constant="8" id="Ddo-ij-SW5"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="BEV-e5-SY3" secondAttribute="bottom" constant="8" id="Gr5-Yf-qZ1"/>
-                                                <constraint firstAttribute="bottom" secondItem="adl-eh-TlW" secondAttribute="bottom" constant="8" id="K4B-IA-BNg"/>
-                                                <constraint firstItem="adl-eh-TlW" firstAttribute="top" secondItem="R5e-zi-Ahd" secondAttribute="top" constant="8" id="M8C-wh-Sen"/>
                                                 <constraint firstItem="adl-eh-TlW" firstAttribute="leading" secondItem="R5e-zi-Ahd" secondAttribute="leading" constant="8" id="Ogc-ff-ocJ"/>
-                                                <constraint firstItem="BEV-e5-SY3" firstAttribute="top" secondItem="R5e-zi-Ahd" secondAttribute="topMargin" constant="8" id="kYc-so-UJG"/>
+                                                <constraint firstItem="adl-eh-TlW" firstAttribute="centerY" secondItem="R5e-zi-Ahd" secondAttribute="centerY" id="lCe-D9-Keg"/>
                                                 <constraint firstItem="BEV-e5-SY3" firstAttribute="centerY" secondItem="R5e-zi-Ahd" secondAttribute="centerY" id="mwI-Fv-yFa"/>
                                                 <constraint firstItem="Wne-z8-8j1" firstAttribute="leading" secondItem="BEV-e5-SY3" secondAttribute="trailing" constant="8" id="n54-ve-Yqh"/>
                                                 <constraint firstAttribute="trailing" secondItem="Wne-z8-8j1" secondAttribute="trailing" constant="8" id="vR1-tD-mV7"/>
@@ -598,6 +596,7 @@ Licensed under the SIL Open Font Licence</string>
                                             <constraint firstItem="vpD-RO-3sU" firstAttribute="top" secondItem="lUV-o4-2eA" secondAttribute="bottom" constant="8" id="Cxf-xf-uou"/>
                                             <constraint firstItem="gDb-eh-yd1" firstAttribute="top" secondItem="ckS-1D-sKr" secondAttribute="bottom" constant="16" id="DdI-xX-tOa"/>
                                             <constraint firstItem="vpD-RO-3sU" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="Ees-uL-Pta"/>
+                                            <constraint firstAttribute="width" id="FwY-yK-632"/>
                                             <constraint firstItem="gDb-eh-yd1" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="G8M-WL-10P"/>
                                             <constraint firstItem="be9-8q-wDZ" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="GBf-8k-GRL"/>
                                             <constraint firstAttribute="trailing" secondItem="gDb-eh-yd1" secondAttribute="trailing" constant="8" id="Gnm-xX-UvS"/>
@@ -632,6 +631,11 @@ Licensed under the SIL Open Font Licence</string>
                                             <constraint firstItem="nwS-xe-Pbv" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="xbG-Vj-fj3"/>
                                             <constraint firstItem="nwS-xe-Pbv" firstAttribute="top" secondItem="OFw-EV-xlF" secondAttribute="bottom" constant="8" id="xme-Q8-pC9"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="FwY-yK-632"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <constraints>

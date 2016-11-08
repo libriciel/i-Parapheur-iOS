@@ -159,6 +159,12 @@
 		C5675ECD1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675ECA1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png */; };
 		C5675ED21DBE74CC003FA418 /* SettingsAccountsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */; };
 		C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */; };
+		C5747EAA1DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5747EA91DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib */; };
+		C5747EAC1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5747EAB1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift */; };
+		C5747EB01DD2388500DB6A1F /* ic_vpn_key_white_48dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EAD1DD2388500DB6A1F /* ic_vpn_key_white_48dp.png */; };
+		C5747EB11DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EAE1DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png */; };
+		C5747EB21DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EAF1DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png */; };
+		C5747EB51DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C5747EB41DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf */; };
 		C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */; };
 		C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */; };
 		C57B63751DABD36E005776F2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63731DABD36E005776F2 /* Account.swift */; };
@@ -541,6 +547,12 @@
 		C5675ECA1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_fiber_manual_record_white_18dp@3x.png"; path = "ic_fiber_manual_record_white_18dp/ic_fiber_manual_record_white_18dp@3x.png"; sourceTree = "<group>"; };
 		C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsAccountsCell.swift; sourceTree = "<group>"; };
 		C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
+		C5747EA91DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsCertificatesEmptyView.xib; sourceTree = "<group>"; };
+		C5747EAB1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCertificatesEmptyView.swift; sourceTree = "<group>"; };
+		C5747EAD1DD2388500DB6A1F /* ic_vpn_key_white_48dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_vpn_key_white_48dp.png; path = ic_vpn_key_white_48dp/ic_vpn_key_white_48dp.png; sourceTree = "<group>"; };
+		C5747EAE1DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_vpn_key_white_48dp@2x.png"; path = "ic_vpn_key_white_48dp/ic_vpn_key_white_48dp@2x.png"; sourceTree = "<group>"; };
+		C5747EAF1DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_vpn_key_white_48dp@3x.png"; path = "ic_vpn_key_white_48dp/ic_vpn_key_white_48dp@3x.png"; sourceTree = "<group>"; };
+		C5747EB41DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "i-Parapheur_mobile_import_certificats_v1.pdf"; sourceTree = "<group>"; };
 		C57B636D1DABD00A005776F2 /* Models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Models.xcdatamodel; sourceTree = "<group>"; };
 		C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C57B63731DABD36E005776F2 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
@@ -936,6 +948,7 @@
 				142B020716D61AF200EF3B8F /* acmobile.der */,
 				C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */,
 				1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */,
+				C5747EB41DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf */,
 				B4E5ECAB153AF65F00BD514D /* InfoPlist.strings */,
 				C58CB2801AB719B500C79A97 /* ip-archivage.png */,
 				C58CB2811AB719B500C79A97 /* ip-archivage@2x.png */,
@@ -1143,6 +1156,8 @@
 				C5065EE41D82ABCD008FE301 /* SettingsAccountsController.swift */,
 				C5A03D881DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift */,
 				C5065EE21D82ABB2008FE301 /* SettingsCertificatesController.swift */,
+				C5747EAB1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift */,
+				C5747EA91DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib */,
 				C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */,
 				C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */,
 				C50FC42A1DCCDA7400887B8D /* SettingsTableViewCell.swift */,
@@ -1332,6 +1347,16 @@
 			name = ic_fiber_manual_record_white_18dp;
 			sourceTree = "<group>";
 		};
+		C5747EB31DD2389000DB6A1F /* ic_vpn_key_white_48dp */ = {
+			isa = PBXGroup;
+			children = (
+				C5747EAD1DD2388500DB6A1F /* ic_vpn_key_white_48dp.png */,
+				C5747EAE1DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png */,
+				C5747EAF1DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png */,
+			);
+			name = ic_vpn_key_white_48dp;
+			sourceTree = "<group>";
+		};
 		C57B63761DABDDB6005776F2 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -1377,6 +1402,7 @@
 		C58CB2C41AB7300C00C79A97 /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				C5747EB31DD2389000DB6A1F /* ic_vpn_key_white_48dp */,
 				C54DDC171DA4F0FF001DEAE8 /* ic_account_box_white_24dp */,
 				C54DDC161DA4F0EE001DEAE8 /* ic_account_circle_white_24dp */,
 				C5B874521DA5687600909F80 /* ic_account_outline_white_24dp */,
@@ -1734,6 +1760,7 @@
 				C58DCD1C1DB9153B00D81D8E /* ic_check_white_18dp@3x.png in Resources */,
 				C5978BE41D8C42BE0097AC55 /* ic_add_circle_outline_white.png in Resources */,
 				C5B8743B1DA5676500909F80 /* ic_copyright_outline_white_24dp@3x.png in Resources */,
+				C5747EB21DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png in Resources */,
 				C526D8D11DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@2x.png in Resources */,
 				C526D8CA1DA7F41200EE8BA9 /* ic_cloud_done_white_24dp.png in Resources */,
 				C5065EFE1D88053C008FE301 /* Images.xcassets in Resources */,
@@ -1746,6 +1773,7 @@
 				C54DB7971DCCC30C00B2CAFA /* ic_description_white_24dp.png in Resources */,
 				C5B8744B1DA567AE00909F80 /* ic_information_white_24dp.png in Resources */,
 				C54DB7A01DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png in Resources */,
+				C5747EB51DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf in Resources */,
 				C5D627621DBF5A2200208287 /* ic_library_books_white_24dp@2x.png in Resources */,
 				C58CB28B1AB719D700C79A97 /* ir-archivage@2x.png in Resources */,
 				C54DDC101DA4F0B2001DEAE8 /* ic_verified_user_white_24dp@3x.png in Resources */,
@@ -1803,6 +1831,7 @@
 				C526D8CC1DA7F41200EE8BA9 /* ic_cloud_done_white_24dp@3x.png in Resources */,
 				C58CB2931AB719F600C79A97 /* ir-visa@2x.png in Resources */,
 				C5B874351DA5675300909F80 /* ic_account_outline_white_24dp@3x.png in Resources */,
+				C5747EB11DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png in Resources */,
 				C54DB7981DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png in Resources */,
 				C5EABB211DC3AA050019328A /* ic_circle_outline_white_18dp@2x.png in Resources */,
 				C54DDBF11DA4F078001DEAE8 /* ic_account_box_white@2x.png in Resources */,
@@ -1810,6 +1839,7 @@
 				C5B874581DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@2x.png in Resources */,
 				C58CB28A1AB719D700C79A97 /* ir-archivage.png in Resources */,
 				C5B874471DA5678800909F80 /* ic_filter_white_24dp@3x.png in Resources */,
+				C5747EAA1DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib in Resources */,
 				C5B874591DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@3x.png in Resources */,
 				C54DDBF21DA4F078001DEAE8 /* ic_account_box_white@3x.png in Resources */,
 				B4D2F89B162AADF700D8A1DE /* Main.storyboard in Resources */,
@@ -1871,6 +1901,7 @@
 				C5D627611DBF5A2200208287 /* ic_library_books_white_24dp.png in Resources */,
 				C54DDC111DA4F0B2001DEAE8 /* ic_verified_user_white_24dp.png in Resources */,
 				C516EDEE1AB6DD3B00216E5F /* ir-signature.png in Resources */,
+				C5747EB01DD2388500DB6A1F /* ic_vpn_key_white_48dp.png in Resources */,
 				C526D8D01DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp.png in Resources */,
 				C54DB7991DCCC30C00B2CAFA /* ic_description_white_24dp@3x.png in Resources */,
 				C5B874341DA5675300909F80 /* ic_account_outline_white_24dp@2x.png in Resources */,
@@ -2053,6 +2084,7 @@
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
+				C5747EAC1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift in Sources */,
 				C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */,
 				C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */,
 				C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */,

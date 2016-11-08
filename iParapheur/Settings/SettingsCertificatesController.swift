@@ -39,6 +39,7 @@ import Foundation
 @objc class SettingsCertificatesController: UIViewController, UITableViewDataSource {
 
     @IBOutlet var certificatesTableView: UITableView!
+
     var certificateList: Array<Certificate>!
     var dateFormatter: NSDateFormatter!
 
@@ -46,6 +47,7 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("View loaded : SettingsCertificatesController")
 
         certificateList = loadCertificateList()
         certificatesTableView.dataSource = self
@@ -59,6 +61,18 @@ import Foundation
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        if (certificateList.count == 0) {
+            let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib();
+            emptyView.downloadDocButton.addTarget(self,
+                                                  action: #selector(downloadDocButton),
+                                                  forControlEvents: UIControlEvents.TouchUpInside)
+            tableView.backgroundView = emptyView;
+        }
+        else {
+            tableView.backgroundView = nil;
+        }
+
         return certificateList.count
     }
 
@@ -114,6 +128,16 @@ import Foundation
     }
 
     // MARK: - Listeners
+
+    func downloadDocButton(sender: UIButton) {
+
+		let url: NSURL? = NSBundle.mainBundle().URLForResource("i-Parapheur_mobile_import_certificats_v1", withExtension: "pdf")
+        print("Adrien - \(url)")
+
+        var docController:UIDocumentInteractionController!
+        docController = UIDocumentInteractionController(URL: url!)
+        docController.presentOptionsMenuFromRect(sender.frame, inView:self.view, animated:true)
+    }
 
     func onDeleteButtonClicked(sender: UIButton) {
 
