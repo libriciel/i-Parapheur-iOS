@@ -126,14 +126,12 @@
 	_restClient = [ADLRestClient sharedManager];
 	__weak typeof(self) weakSelf = self;
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
-		 __strong typeof(weakSelf) strongSelf = weakSelf;
-		 if (strongSelf) {
-			 [[ADLRestClient sharedManager] setRestApiVersion:versionNumber];
-			 [strongSelf loadBureaux];
-			 if (versionNumber.intValue == 2)
-				 [self initAlfrescoToken];
-		 }
-	 }
+						 __strong typeof(weakSelf) strongSelf = weakSelf;
+						 if (strongSelf) {
+							 [[ADLRestClient sharedManager] setRestApiVersion:versionNumber];
+							 [strongSelf loadBureaux];
+						 }
+					 }
 	                 failure:^(NSError *error) {
 		                 __strong typeof(weakSelf) strongSelf = weakSelf;
 		                 if (strongSelf) {
@@ -242,30 +240,32 @@
 
 	[self.refreshControl beginRefreshing];
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
+	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue != -1) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getBureaux:^(NSArray *bureaux) {
-			 __strong typeof(weakSelf) strongSelf = weakSelf;
-			 if (strongSelf) {
-				 strongSelf.bureauxArray = bureaux;
-				 strongSelf.loading = NO;
-				 [strongSelf.refreshControl endRefreshing];
-				 [(UITableView *) strongSelf.view reloadData];
-				 [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-			 }
-		 }
+							 __strong typeof(weakSelf) strongSelf = weakSelf;
+							 if (strongSelf) {
+								 NSLog(@"Adrien - getBureaux ok");
+								 strongSelf.bureauxArray = bureaux;
+								 strongSelf.loading = NO;
+								 [strongSelf.refreshControl endRefreshing];
+								 [(UITableView *) strongSelf.view reloadData];
+								 [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
+							 }
+						 }
 		                failure:^(NSError *error) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
+				                NSLog(@"Adrien - error");
 				                [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
 				                                     title:nil
 				                            viewController:nil];
 				                strongSelf.loading = NO;
 				                [strongSelf.refreshControl endRefreshing];
-				                [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
 			                }
 		                }];
-	} else if ([[ADLRestClient sharedManager] getRestApiVersion].intValue == -1) {
+	} else {
 		[self.refreshControl endRefreshing];
 	}
 }

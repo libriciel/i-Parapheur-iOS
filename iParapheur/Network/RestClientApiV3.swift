@@ -217,13 +217,7 @@ import AFNetworking
                     parameters: nil,
                     success: {
                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-
                         let bureauList = [Bureau].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        if (bureauList!.count == 0) {
-                            onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                            return
-                        }
-
                         onResponse!(bureauList!)
                     },
                     failure: {
