@@ -421,6 +421,8 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
+	tableView.backgroundView = (_bureauxArray.count == 0) ? [DeskListEmptyView instanceFromNib] : nil;
+
 	return _bureauxArray.count;
 }
 
