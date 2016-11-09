@@ -36,7 +36,9 @@
 import UIKit
 import Foundation
 
-@objc class SettingsCertificatesController: UIViewController, UITableViewDataSource {
+@objc class SettingsCertificatesController: UIViewController, UITableViewDataSource, UIDocumentInteractionControllerDelegate {
+
+    static let DocumentationPdfName: String! = "i-Parapheur_mobile_import_certificats_v1"
 
     @IBOutlet var certificatesTableView: UITableView!
 
@@ -127,16 +129,21 @@ import Foundation
         return result
     }
 
+    // MARK: - UIDocumentInteractionControllerDelegate
+
+    func documentInteractionControllerViewControllerForPreview(controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+
     // MARK: - Listeners
 
     func downloadDocButton(sender: UIButton) {
 
-		let url: NSURL? = NSBundle.mainBundle().URLForResource("i-Parapheur_mobile_import_certificats_v1", withExtension: "pdf")
-        print("Adrien - \(url)")
+		let url: NSURL? = NSBundle.mainBundle().URLForResource(SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
 
-        var docController:UIDocumentInteractionController!
-        docController = UIDocumentInteractionController(URL: url!)
-        docController.presentOptionsMenuFromRect(sender.frame, inView:self.view, animated:true)
+        var docController:UIDocumentInteractionController! = UIDocumentInteractionController(URL: url!)
+        docController.delegate = self
+        docController.presentPreviewAnimated(true)
     }
 
     func onDeleteButtonClicked(sender: UIButton) {
