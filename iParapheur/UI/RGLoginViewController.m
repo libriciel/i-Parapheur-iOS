@@ -35,7 +35,6 @@
  */
 
 #import "RGLoginViewController.h"
-#import "ADLRestClient.h"
 #import "iParapheur-Swift.h"
 #import "StringUtils.h"
 

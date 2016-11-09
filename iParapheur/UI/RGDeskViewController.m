@@ -85,6 +85,7 @@
 	                                            forCellReuseIdentifier:@"dossierCell"];
 
 	_restClient = [ADLRestClient sharedManager];
+	_selectedDossiersArray = [NSMutableArray new];
 }
 
 
@@ -140,7 +141,7 @@
 				jsonString = [[NSString alloc] initWithData:jsonData
 				                                   encoding:NSUTF8StringEncoding];
 
-			// API3 request
+			// Request
 
 			__weak typeof(self) weakSelf = self;
 
@@ -198,15 +199,15 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter.defaultCenter removeObserver:self];
 	[super viewWillDisappear:animated];
 }
 
 
 - (void)didReceiveMemoryWarning {
 
-	[self setLoadMoreButton:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	_loadMoreButton = nil;
+	[NSNotificationCenter.defaultCenter removeObserver:self];
 
 	[super didReceiveMemoryWarning];
 }
@@ -633,7 +634,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[_dossiersArray addObjectsFromArray:dossiers];
 	_loadMoreButton.hidden = (dossiers.count < 15);
 	_filteredDossiersArray = [NSArray arrayWithArray:_dossiersArray];
-	_selectedDossiersArray = [NSMutableArray arrayWithCapacity:_dossiersArray.count];
 
 	[((UITableView *) self.view) reloadData];
 
