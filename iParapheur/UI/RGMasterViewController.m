@@ -57,12 +57,8 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGMasterViewController");
 
-	// Patch Acounts
-	// FIXME Adrien
-
+	// Patch Accounts
 	[ModelsDataController loadManagedObjectContext];
-
-	//
 
 	[self updateVersionNumberInSettings];
 
@@ -218,24 +214,6 @@
 }
 
 
-- (void)initAlfrescoToken {
-
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *login = [preferences objectForKey:@"settings_login"];
-	NSString *password = [preferences objectForKey:@"settings_password"];
-
-	if (login.length == 0) {
-		login = @"bma";
-		password = @"secret";
-	}
-
-	API_LOGIN(login, password);
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSelectBureauAppeared
-	                                                    object:nil];
-}
-
-
 - (void)loadBureaux {
 
 	[self.refreshControl beginRefreshing];
@@ -341,7 +319,7 @@
 	} else if ([s isEqual:GETBUREAUX_API]) {
 		NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
 
-		self.bureauxArray = array;
+		_bureauxArray = array;
 
 		// add a cast to get rid of the warning since the view is indeed a table view it respons to reloadData
 		[(UITableView *) self.view reloadData];
@@ -419,7 +397,15 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
-	tableView.backgroundView = (_bureauxArray.count == 0) ? [DeskListEmptyView instanceFromNib] : nil;
+	if (_bureauxArray.count == 0) {
+		tableView.backgroundView = [DeskListEmptyView instanceFromNib];
+		tableView.tableFooterView.hidden = true;
+	}
+
+	else {
+		tableView.backgroundView = nil;
+		tableView.tableFooterView.hidden = false;
+	}
 
 	return _bureauxArray.count;
 }

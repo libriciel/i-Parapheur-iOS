@@ -382,13 +382,16 @@
  numberOfRowsInSection:(NSInteger)section {
 
 	if (_filteredDossiersArray.count == 0) {
+
 		FolderListEmptyView *emptyView = [FolderListEmptyView instanceFromNib];
-		emptyView.filterAlertLabel.hidden = (_dossiersArray.count != 0);
+		emptyView.filterAlertLabel.hidden = (_dossiersArray.count > 0);
 
 		tableView.backgroundView = emptyView;
+		tableView.tableFooterView.hidden = true;
 	}
 	else {
 		tableView.backgroundView = nil;
+		tableView.tableFooterView.hidden = false;
 	}
 
 	return _filteredDossiersArray.count;
