@@ -245,7 +245,6 @@
 		[_restClient getBureaux:^(NSArray *bureaux) {
 							 __strong typeof(weakSelf) strongSelf = weakSelf;
 							 if (strongSelf) {
-								 NSLog(@"Adrien - getBureaux ok");
 								 strongSelf.bureauxArray = bureaux;
 								 strongSelf.loading = NO;
 								 [strongSelf.refreshControl endRefreshing];
@@ -256,7 +255,6 @@
 		                failure:^(NSError *error) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
-				                NSLog(@"Adrien - error");
 				                [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
 				                                     title:nil
 				                            viewController:nil];

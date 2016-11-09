@@ -24,10 +24,27 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="416" id="eV1-zQ-lwA"/>
                                 </constraints>
-                                <view key="tableFooterView" contentMode="scaleToFill" id="U2T-ye-sGr">
-                                    <rect key="frame" x="0.0" y="158" width="416" height="0.0"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="U2T-ye-sGr" userLabel="Footer">
+                                    <rect key="frame" x="0.0" y="158" width="416" height="66"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8DL-bo-lkV">
+                                            <rect key="frame" x="249" y="21" width="159" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="xn9-Ee-fXG"/>
+                                            </constraints>
+                                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <state key="normal" title="  Ajouter un compte">
+                                                <color key="titleColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            </state>
+                                        </button>
+                                    </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstItem="8DL-bo-lkV" firstAttribute="centerY" secondItem="U2T-ye-sGr" secondAttribute="centerY" id="9Vm-Mi-5p3"/>
+                                        <constraint firstAttribute="trailing" secondItem="8DL-bo-lkV" secondAttribute="trailing" constant="8" id="tQk-Va-yvH"/>
+                                    </constraints>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsAccountCell" rowHeight="66" id="p24-Vo-LrZ" customClass="SettingsAccountCell" customModule="iParapheur" customModuleProvider="target">
@@ -116,12 +133,10 @@
                             <constraint firstItem="Htu-V6-jRh" firstAttribute="top" secondItem="Bq3-qH-egY" secondAttribute="bottom" id="ncl-ar-WFs"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="igD-JD-tHj">
-                        <barButtonItem key="rightBarButtonItem" image="ic_account_plus_outline_white_24dp.png" id="yCB-3G-2Ze"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="igD-JD-tHj"/>
                     <connections>
                         <outlet property="accountTableView" destination="Bq3-qH-egY" id="ee1-ui-J3j"/>
-                        <outlet property="addAccountButton" destination="yCB-3G-2Ze" id="SAw-nY-h9Z"/>
+                        <outlet property="addAccountUIButton" destination="8DL-bo-lkV" id="3nW-lN-hri"/>
                         <segue destination="795-hK-VLC" kind="presentation" identifier="EditAccountSegue" modalPresentationStyle="formSheet" id="ApU-ti-aab"/>
                     </connections>
                 </viewController>
@@ -823,7 +838,6 @@ Initié et Developpé par ADULLACT-Projet S.A.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="ic_account_plus_outline_white_24dp.png" width="24" height="24"/>
         <image name="ic_close_white.png" width="24" height="24"/>
         <image name="ic_delete_white.png" width="24" height="24"/>
         <image name="ic_edit_white_24dp.png" width="24" height="24"/>

@@ -39,7 +39,7 @@ import Foundation
 
 @objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
-    @IBOutlet var addAccountButton: UIBarButtonItem!
+	@IBOutlet var addAccountUIButton: UIButton!
     @IBOutlet var accountTableView: UITableView!
     let dataController: ModelsDataController = ModelsDataController()
     var accountList: Array<Account> = []
@@ -64,18 +64,18 @@ import Foundation
 
         // Buttons Listeners
 
-        addAccountButton.action = #selector(onAddAccountButtonClicked)
-        addAccountButton.target = self
+        addAccountUIButton.addTarget(self,
+                                     action: #selector(onAddAccountButtonClicked),
+                                     forControlEvents: .TouchUpInside)
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        print("Adrien PrepareForSegue...")
 
         if (segue.identifier == SettingsAccountsEditPopupController.Segue) {
 
             let editViewController: SettingsAccountsEditPopupController = segue.destinationViewController as! SettingsAccountsEditPopupController
 
-            if (sender is UIButton) {
+            if (sender !== addAccountUIButton) {
                 let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
                 let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
                 editViewController.currentAccount = accountList[indexPath.row]
@@ -145,7 +145,6 @@ import Foundation
 
         if (accountIndex == nil) {
 
-            print("Adrien - addToUI \(account)")
             // Add to UI
 
             accountList.append(account)
@@ -156,7 +155,6 @@ import Foundation
 
         } else {
 
-            print("Adrien - RefreshUI \(account)")
             // Refresh UI
 
             let accountIndexPath = NSIndexPath(forRow: accountIndex!, inSection: 0)
