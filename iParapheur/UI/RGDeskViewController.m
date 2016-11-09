@@ -381,11 +381,17 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
-	//if (tableView == self.searchDisplayController.searchResultsTableView) {
-	return [_filteredDossiersArray count];
-	//} else {
-	//    return [self.dossiersArray count];
-	//}
+	if (_filteredDossiersArray.count == 0) {
+		FolderListEmptyView *emptyView = [FolderListEmptyView instanceFromNib];
+		emptyView.filterAlertLabel.hidden = (_dossiersArray.count != 0);
+
+		tableView.backgroundView = emptyView;
+	}
+	else {
+		tableView.backgroundView = nil;
+	}
+
+	return _filteredDossiersArray.count;
 }
 
 

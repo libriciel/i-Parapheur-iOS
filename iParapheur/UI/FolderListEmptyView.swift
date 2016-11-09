@@ -35,17 +35,17 @@
 
 import Foundation
 
-class SettingsCertificatesEmptyView: UIView {
-
-	@IBOutlet var downloadDocButton: UIButton!
-	@IBOutlet var keyImage: UIImageView!
+@objc class FolderListEmptyView: UIView {
 	
-    class func instanceFromNib() -> SettingsCertificatesEmptyView {
-
-        let view: SettingsCertificatesEmptyView = UINib(nibName: "SettingsCertificatesEmptyView",
-                                                        bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! SettingsCertificatesEmptyView
-
-        view.keyImage.image = view.keyImage.image!.imageWithRenderingMode(.AlwaysTemplate)
-        return view
+	@IBOutlet var icon: UIImageView!
+	@IBOutlet var filterAlertLabel: UILabel!
+	
+	class func instanceFromNib() -> FolderListEmptyView {
+		
+		let view: FolderListEmptyView = UINib(nibName: "FolderListEmptyView",
+			bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! FolderListEmptyView
+		
+		view.icon.image = view.icon.image!.imageWithRenderingMode(.AlwaysTemplate)
+		return view
 	}
 }
