@@ -37,7 +37,7 @@ import UIKit
 import CoreData
 import Foundation
 
-@objc class SettingsAccountsController: UIViewController, UITableViewDataSource, SettingsAccountsEditPopupControllerDelegate {
+@objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
     @IBOutlet var addAccountButton: UIBarButtonItem!
     @IBOutlet var accountTableView: UITableView!
@@ -48,27 +48,43 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("View loaded : SettingsAccountsController")
 
         accountTableView.allowsSelection = false
 
         accountList = loadAccountList()
         accountTableView.dataSource = self
 
+        // Registering for popup notifications
+
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(onAccountSaved),
+                                                         name: SettingsAccountsEditPopupController.NotifDocumentSaved,
+                                                         object: nil)
+
+        // Buttons Listeners
+
         addAccountButton.action = #selector(onAddAccountButtonClicked)
         addAccountButton.target = self
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        print("Adrien PrepareForSegue...")
 
-        if (segue.identifier == "EditAccountSegue") {
-
-            let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
-            let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+        if (segue.identifier == SettingsAccountsEditPopupController.Segue) {
 
             let editViewController: SettingsAccountsEditPopupController = segue.destinationViewController as! SettingsAccountsEditPopupController
-            editViewController.currentAccount = accountList[indexPath.row]
-            editViewController.delegate = self
+
+            if (sender is UIButton) {
+                let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView: accountTableView);
+                let indexPath: NSIndexPath = accountTableView.indexPathForRowAtPoint(buttonPosition)!;
+                editViewController.currentAccount = accountList[indexPath.row]
+            }
         }
+    }
+
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     // MARK: - UITableViewDataSource
@@ -120,48 +136,40 @@ import Foundation
         return ModelsDataController.fetchAccounts()
     }
 
-    // MARK: - SettingsAccountsEditPopupControllerDelegate
+    // MARK: - Listeners
 
-    func onAccountSaved(account: Account) {
+    func onAccountSaved(notification: NSNotification) {
 
+        let account: Account! = notification.object as! Account
         let accountIndex = accountList.indexOf(account)
-        if (accountIndex == nil) {
-            return
-        }
 
-        let accountIndexPath = NSIndexPath(forRow: accountIndex!, inSection: 0)
-        accountTableView.beginUpdates()
-        accountTableView.reloadRowsAtIndexPaths([accountIndexPath], withRowAnimation: UITableViewRowAnimation.None)
-        accountTableView.endUpdates()
+        if (accountIndex == nil) {
+
+            print("Adrien - addToUI \(account)")
+            // Add to UI
+
+            accountList.append(account)
+            let newIndexPath = NSIndexPath(forRow: accountList.count - 1, inSection: 0)
+            accountTableView.beginUpdates()
+            accountTableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            accountTableView.endUpdates()
+
+        } else {
+
+            print("Adrien - RefreshUI \(account)")
+            // Refresh UI
+
+            let accountIndexPath = NSIndexPath(forRow: accountIndex!, inSection: 0)
+            accountTableView.beginUpdates()
+            accountTableView.reloadRowsAtIndexPaths([accountIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+            accountTableView.endUpdates()
+        }
 
         ModelsDataController.save()
     }
 
-    // MARK: - Listeners
-
-    func onAddAccountButtonClicked(sender: UIButton) {
-
-        // TODO : Show popup
-
-        let newAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                             inManagedObjectContext:ModelsDataController.Context!) as! Account
-
-        newAccount.id = NSUUID().UUIDString
-        newAccount.title = "iParapheur admin"
-        newAccount.url = "parapheur.test.adullact.org"
-        newAccount.login = "admin"
-        newAccount.password = "admin"
-        newAccount.isVisible = true
-
-        ModelsDataController.save()
-
-        // Add to UI
-
-        accountList.append(newAccount)
-        let newIndexPath = NSIndexPath(forRow: accountList.count - 1, inSection: 0)
-        accountTableView.beginUpdates()
-        accountTableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-        accountTableView.endUpdates()
+    func onAddAccountButtonClicked(sender: UIBarButtonItem) {
+        performSegueWithIdentifier(SettingsAccountsEditPopupController.Segue, sender: sender)
     }
 
     func onDeleteButtonClicked(sender: UIButton) {
@@ -196,7 +204,7 @@ import Foundation
     }
 
     func onEditButtonClicked(sender: UIButton) {
-        performSegueWithIdentifier("EditAccountSegue", sender: sender)
+        performSegueWithIdentifier(SettingsAccountsEditPopupController.Segue, sender: sender)
     }
 
     func onVisibilityButtonClicked(sender: UIButton) {

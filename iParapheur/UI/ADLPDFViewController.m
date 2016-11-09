@@ -94,35 +94,35 @@
 
 	// Notifications register
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(dossierSelected:)
-	                                             name:kDossierSelected
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(dossierSelected:)
+	                                           name:kDossierSelected
+	                                         object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(clearDetail:)
-	                                             name:kSelectBureauAppeared
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(clearDetail:)
+	                                           name:kSelectBureauAppeared
+	                                         object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(clearDetail:)
-	                                             name:kDossierActionComplete
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(clearDetail:)
+	                                           name:kDossierActionComplete
+	                                         object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(clearDetail:)
-	                                             name:kFilterChanged
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(clearDetail:)
+	                                           name:kFilterChanged
+	                                         object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(showDocumentWithIndex:)
-	                                             name:DocumentSelectionController.NotifShowDocument
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(showDocumentWithIndex:)
+	                                           name:DocumentSelectionController.NotifShowDocument
+	                                         object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(showAction:)
-	                                             name:ActionSelectionController.NotifLaunchAction
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(showAction:)
+	                                           name:ActionSelectionController.NotifLaunchAction
+	                                         object:nil];
 
 	//
 

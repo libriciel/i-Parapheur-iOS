@@ -83,7 +83,6 @@ import UIKit
         return cell;
     }
 
-
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.dismissViewControllerAnimated(false, completion: {
             () -> Void in

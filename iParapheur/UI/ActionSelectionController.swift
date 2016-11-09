@@ -38,7 +38,7 @@ import UIKit
 
 @objc class ActionSelectionController: UITableViewController {
 	
-	static let NotifLaunchAction: NSString! = "ActionSelectionControllerNotifLaunchAction"
+	static let NotifLaunchAction: String! = "ActionSelectionControllerNotifLaunchAction"
 	
 	var actions: NSArray! = NSArray()
 	var currentDossier: Dossier?
@@ -60,12 +60,6 @@ import UIKit
 		preferredContentSize = CGSizeMake(ActionSelectionCell.PreferredWidth,
 		                                  ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
 	}
-
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-
-
-    }
 
     // MARK: - TableViewDelegate
 	

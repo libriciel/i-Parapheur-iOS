@@ -38,12 +38,10 @@ import CoreData
 import Foundation
 
 
-protocol SettingsAccountsEditPopupControllerDelegate {
-    func onAccountSaved(account: Account)
-}
-
-
 @objc class SettingsAccountsEditPopupController: UIViewController {
+
+    static let NotifDocumentSaved: String! = "SettingsAccountsEditPopupControllerNotifDocumentSaved"
+    static let Segue: String! = "EditAccountSegue"
 
     static let PreferredWidth: CGFloat = 500
     static let PreferredHeight: CGFloat = 252
@@ -59,7 +57,6 @@ protocol SettingsAccountsEditPopupControllerDelegate {
 
     var currentAccount: Account?
     var currentRestClient: RestClientApiV3?
-    var delegate: SettingsAccountsEditPopupControllerDelegate?
 
 	// MARK: - Life cycle
 	
@@ -97,7 +94,6 @@ protocol SettingsAccountsEditPopupControllerDelegate {
     // MARK: - Listeners
 
     func onCancelButtonClicked(sender: UIButton) {
-        delegate = nil
         dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -129,6 +125,14 @@ protocol SettingsAccountsEditPopupControllerDelegate {
 
         // Update model
 
+        if (currentAccount == nil) {
+            currentAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
+                                                                                 inManagedObjectContext:ModelsDataController.Context!) as! Account
+
+            currentAccount!.id = NSUUID().UUIDString
+            currentAccount!.isVisible = true
+        }
+
         currentAccount!.title = titleTextView.text
         currentAccount!.url = urlTextView.text
         currentAccount!.login = loginTextView.text
@@ -136,8 +140,9 @@ protocol SettingsAccountsEditPopupControllerDelegate {
 
         // Callback and dismiss
 
-        delegate?.onAccountSaved(currentAccount!)
-        delegate = nil
+        NSNotificationCenter.defaultCenter().postNotificationName(SettingsAccountsEditPopupController.NotifDocumentSaved,
+                                                                  object: currentAccount!)
+
         dismissViewControllerAnimated(true, completion: nil)
     }
 
