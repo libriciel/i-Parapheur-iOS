@@ -89,13 +89,6 @@
 }
 
 
-- (void)refresh {
-
-	[self.refreshControl beginRefreshing];
-	[self loadDossiersWithPage:0];
-}
-
-
 - (void)viewWillAppear:(BOOL)animated {
 
 	[super viewWillAppear:YES];
@@ -110,97 +103,33 @@
 }
 
 
-- (void)loadDossiersWithPage:(int)page {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue
+                 sender:(id)sender {
 
-	NSDictionary *currentFilter = [ADLSingletonState sharedSingletonState].currentFilter;
+	if ([segue.identifier isEqualToString:@"filterSegue"]) {
+		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
+	}
+	else {
+		NSMutableArray *selectedArray = [NSMutableArray new];
 
-	if (currentFilter != nil) {
+		for (Dossier *dossier in _selectedDossiersArray)
+			[selectedArray addObject:dossier];
 
-		NSMutableArray *types = [NSMutableArray new];
-		for (NSString *type in currentFilter[@"types"])
-			[types addObject:@{@"ph:typeMetier" : type}];
+		// Paper signature is just a Visa, actually
 
-		NSMutableArray *sousTypes = [NSMutableArray new];
-		for (NSString *sousType in currentFilter[@"sousTypes"])
-			[sousTypes addObject:@{@"ph:soustypeMetier" : sousType}];
+		BOOL isPaperSign = YES;
 
-		NSDictionary *titre = @{@"or" : @[@{@"cm:title" : [NSString stringWithFormat:@"*%@*", currentFilter[@"titre"]]}]};
-		NSDictionary *filtersDictionary = @{@"and" : @[@{@"or" : types}, @{@"or" : sousTypes}, titre]};
+		for (Dossier *dossier in selectedArray)
+			if (!dossier.unwrappedIsSignPapier)
+				isPaperSign = NO;
 
-		// Send request
+		// Launch popup
 
-			// Stringify JSON filter
-
-			NSError *error;
-			NSData *jsonData = [NSJSONSerialization dataWithJSONObject:filtersDictionary
-			                                                   options:0
-			                                                     error:&error];
-
-			NSString *jsonString = nil;
-			if (jsonData)
-				jsonString = [[NSString alloc] initWithData:jsonData
-				                                   encoding:NSUTF8StringEncoding];
-
-			// Request
-
-			__weak typeof(self) weakSelf = self;
-
-			[_restClient getDossiers:_desk.unwrappedNodeRef
-			                    page:page
-			                    size:15
-			                  filter:jsonString
-			                 success:^(NSArray *dossiers) {
-				                 __strong typeof(weakSelf) strongSelf = weakSelf;
-				                 if (strongSelf) {
-					                 NSLog(@"getDossiers success : %lu", (unsigned long) dossiers.count);
-					                 [strongSelf.refreshControl endRefreshing];
-					                 HIDE_HUD
-					                 [strongSelf getDossierDidEndWithSuccess:dossiers];
-				                 }
-			                 }
-			                 failure:^(NSError *getDossiersError) {
-				                 __strong typeof(weakSelf) strongSelf = weakSelf;
-				                 if (strongSelf) {
-					                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
-					                                      title:nil
-					                             viewController:nil];
-					                 [strongSelf.refreshControl endRefreshing];
-					                 HIDE_HUD
-				                 }
-			                 }];
-	} else {
-			__weak typeof(self) weakSelf = self;
-			[_restClient getDossiers:_desk.unwrappedNodeRef
-			                    page:page
-			                    size:15
-			                  filter:nil
-			                 success:^(NSArray *dossiers) {
-				                 __strong typeof(weakSelf) strongSelf = weakSelf;
-				                 if (strongSelf) {
-					                 NSLog(@"getDossiers success : %lu", (unsigned long) dossiers.count);
-					                 [strongSelf.refreshControl endRefreshing];
-					                 HIDE_HUD
-					                 [strongSelf getDossierDidEndWithSuccess:dossiers];
-				                 }
-			                 }
-			                 failure:^(NSError *error) {
-				                 __strong typeof(weakSelf) strongSelf = weakSelf;
-				                 if (strongSelf) {
-					                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
-					                                      title:nil
-					                             viewController:nil];
-					                 [strongSelf.refreshControl endRefreshing];
-					                 HIDE_HUD
-				                 }
-			                 }];
-		}
-}
-
-
-- (void)viewWillDisappear:(BOOL)animated {
-
-	[NSNotificationCenter.defaultCenter removeObserver:self];
-	[super viewWillDisappear:animated];
+		RGWorkflowDialogViewController *workflowDialogViewController = segue.destinationViewController;
+		workflowDialogViewController.dossiers = selectedArray;
+		workflowDialogViewController.action = segue.identifier;
+		workflowDialogViewController.isPaperSign = isPaperSign;
+	}
 }
 
 
@@ -210,6 +139,13 @@
 	[NSNotificationCenter.defaultCenter removeObserver:self];
 
 	[super didReceiveMemoryWarning];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated {
+
+	[NSNotificationCenter.defaultCenter removeObserver:self];
+	[super viewWillDisappear:animated];
 }
 
 
@@ -373,6 +309,101 @@
 
 	_currentPage += 1;
 	[self loadDossiersWithPage:_currentPage];
+}
+
+
+- (void)loadDossiersWithPage:(int)page {
+
+	NSDictionary *currentFilter = [ADLSingletonState sharedSingletonState].currentFilter;
+
+	if (currentFilter != nil) {
+
+		NSMutableArray *types = [NSMutableArray new];
+		for (NSString *type in currentFilter[@"types"])
+			[types addObject:@{@"ph:typeMetier" : type}];
+
+		NSMutableArray *sousTypes = [NSMutableArray new];
+		for (NSString *sousType in currentFilter[@"sousTypes"])
+			[sousTypes addObject:@{@"ph:soustypeMetier" : sousType}];
+
+		NSDictionary *titre = @{@"or" : @[@{@"cm:title" : [NSString stringWithFormat:@"*%@*", currentFilter[@"titre"]]}]};
+		NSDictionary *filtersDictionary = @{@"and" : @[@{@"or" : types}, @{@"or" : sousTypes}, titre]};
+
+		// Send request
+
+		// Stringify JSON filter
+
+		NSError *error;
+		NSData *jsonData = [NSJSONSerialization dataWithJSONObject:filtersDictionary
+		                                                   options:0
+		                                                     error:&error];
+
+		NSString *jsonString = nil;
+		if (jsonData)
+			jsonString = [[NSString alloc] initWithData:jsonData
+			                                   encoding:NSUTF8StringEncoding];
+
+		// Request
+
+		__weak typeof(self) weakSelf = self;
+
+		[_restClient getDossiers:_desk.unwrappedNodeRef
+		                    page:page
+		                    size:15
+		                  filter:jsonString
+		                 success:^(NSArray *dossiers) {
+			                 __strong typeof(weakSelf) strongSelf = weakSelf;
+			                 if (strongSelf) {
+				                 NSLog(@"getDossiers success : %lu", (unsigned long) dossiers.count);
+				                 [strongSelf.refreshControl endRefreshing];
+				                 HIDE_HUD
+				                 [strongSelf getDossierDidEndWithSuccess:dossiers];
+			                 }
+		                 }
+		                 failure:^(NSError *getDossiersError) {
+			                 __strong typeof(weakSelf) strongSelf = weakSelf;
+			                 if (strongSelf) {
+				                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+				                                      title:nil
+				                             viewController:nil];
+				                 [strongSelf.refreshControl endRefreshing];
+				                 HIDE_HUD
+			                 }
+		                 }];
+	} else {
+		__weak typeof(self) weakSelf = self;
+		[_restClient getDossiers:_desk.unwrappedNodeRef
+		                    page:page
+		                    size:15
+		                  filter:nil
+		                 success:^(NSArray *dossiers) {
+			                 __strong typeof(weakSelf) strongSelf = weakSelf;
+			                 if (strongSelf) {
+				                 NSLog(@"getDossiers success : %lu", (unsigned long) dossiers.count);
+				                 [strongSelf.refreshControl endRefreshing];
+				                 HIDE_HUD
+				                 [strongSelf getDossierDidEndWithSuccess:dossiers];
+			                 }
+		                 }
+		                 failure:^(NSError *error) {
+			                 __strong typeof(weakSelf) strongSelf = weakSelf;
+			                 if (strongSelf) {
+				                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+				                                      title:nil
+				                             viewController:nil];
+				                 [strongSelf.refreshControl endRefreshing];
+				                 HIDE_HUD
+			                 }
+		                 }];
+	}
+}
+
+
+- (void)refresh {
+
+	[self.refreshControl beginRefreshing];
+	[self loadDossiersWithPage:0];
+	[self exitSelection];
 }
 
 
@@ -662,36 +693,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	                                                    object:nil];
 
 	[self refresh];
-}
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender {
-
-	if ([segue.identifier isEqualToString:@"filterSegue"]) {
-		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
-	}
-	else {
-		NSMutableArray *selectedArray = [NSMutableArray new];
-
-		for (Dossier *dossier in _selectedDossiersArray)
-			[selectedArray addObject:dossier];
-
-		// Paper signature is just a Visa, actually
-
-		BOOL isPaperSign = YES;
-
-		for (Dossier *dossier in selectedArray)
-			if (!dossier.unwrappedIsSignPapier)
-				isPaperSign = NO;
-
-		// Launch popup
-
-		RGWorkflowDialogViewController *workflowDialogViewController = segue.destinationViewController;
-		workflowDialogViewController.dossiers = selectedArray;
-		workflowDialogViewController.action = segue.identifier;
-		workflowDialogViewController.isPaperSign = isPaperSign;
-	}
 }
 
 
