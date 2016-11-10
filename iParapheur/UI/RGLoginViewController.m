@@ -119,7 +119,7 @@
 
 - (BOOL)validateFieldsForConnnectionEvent:(BOOL)connectionEvent {
 
-	NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
+	NSString *properServerTextFieldValue = [StringUtils cleanupServerName:_serverUrlTextField.text];
 
 	BOOL loginTextFieldValid = (_loginTextField.text.length != 0);
 	BOOL passwordTextFieldValid = (_passwordTextField.text.length != 0);
@@ -163,7 +163,7 @@
 	if (_restClient)
 		[_restClient cancelAllOperations];
 
-	NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
+	NSString *properServerTextFieldValue = [StringUtils cleanupServerName:_serverUrlTextField.text];
 	_restClient = [[ADLRestClientApi3 alloc] initWithLogin:_loginTextField.text
 												  password:_passwordTextField.text
 													   url:properServerTextFieldValue];
@@ -211,7 +211,7 @@
 
 	if (success) {
 		NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-		NSString *properServerTextFieldValue = [self cleanupServerName:_serverUrlTextField.text];
+		NSString *properServerTextFieldValue = [StringUtils cleanupServerName:_serverUrlTextField.text];
 
 		[preferences setObject:_loginTextField.text
 						forKey:@"settings_login"];
@@ -235,41 +235,11 @@
 													  userInfo:userInfo];
 }
 
-
-- (NSString *)cleanupServerName:(NSString *)url {
-
-	// Removing space
-	// TODO Adrien : add special character restrictions tests ?
-
-	url = [url stringByReplacingOccurrencesOfString:@" "
-										 withString:@""];
-
-	// Getting the server name
-	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
-	//			- then ignore following "m." (if exists)						(?:m\.)*
-	//			- then catch every char but "/"									([^\/]*)
-	//			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$"
-																		   options:NSRegularExpressionCaseInsensitive
-																			 error:nil];
-
-	NSTextCheckingResult *match = [regex firstMatchInString:url
-													options:0
-													  range:NSMakeRange(0, [url length])];
-
-	if (match)
-		url = [url substringWithRange:[match rangeAtIndex:1]];
-
-	return url;
-}
-
-
 - (void)enableInterface:(BOOL)enabled {
 
 	_loginTextField.enabled = enabled;
 	_passwordTextField.enabled = enabled;
 	_serverUrlTextField.enabled = enabled;
-
 	_errorTextField.hidden = !enabled;
 
 	if (enabled)

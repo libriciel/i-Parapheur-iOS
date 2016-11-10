@@ -63,4 +63,6 @@
 + (NSString*) actionNameForAction:(NSString*) action
 					withPaperSign:(BOOL)isPaperSign;
 
++ (NSString *)cleanupServerName:(NSString *)url;
+
 @end

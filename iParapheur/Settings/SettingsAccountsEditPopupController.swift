@@ -99,6 +99,12 @@ import Foundation
 
     func onTestButtonClicked(sender: UIButton) {
 
+        // Cleanup
+
+        urlTextView.text = StringUtils.cleanupServerName(urlTextView.text!)
+
+        //
+
         if (currentRestClient != nil) {
             currentRestClient!.manager.invalidateSessionCancelingTasks(true)
         }
@@ -122,6 +128,10 @@ import Foundation
     }
 
     func onSaveButtonClicked(sender: UIButton) {
+
+        // Cleanup
+
+        urlTextView.text = StringUtils.cleanupServerName(urlTextView.text!)
 
         // Update model
 

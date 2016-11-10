@@ -197,4 +197,32 @@
 }
 
 
++ (NSString *)cleanupServerName:(NSString *)url {
+
+	// Removing space
+	// TODO Adrien : add special character restrictions tests ?
+
+	url = [url stringByReplacingOccurrencesOfString:@" "
+	                                     withString:@""];
+
+	// Getting the server name
+	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
+	//			- then ignore following "m." (if exists)						(?:m\.)*
+	//			- then catch every char but "/"									([^\/]*)
+	//			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$"
+	                                                                       options:NSRegularExpressionCaseInsensitive
+	                                                                         error:nil];
+
+	NSTextCheckingResult *match = [regex firstMatchInString:url
+	                                                options:0
+	                                                  range:NSMakeRange(0, [url length])];
+
+	if (match)
+		url = [url substringWithRange:[match rangeAtIndex:1]];
+
+	return url;
+}
+
+
 @end
