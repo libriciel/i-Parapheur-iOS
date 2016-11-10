@@ -90,21 +90,15 @@ import UIKit
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("AccountCell", forIndexPath: indexPath)
+		let cell:AccountSelectionCell = tableView.dequeueReusableCellWithIdentifier(AccountSelectionCell.CellId,
+		                                                                            forIndexPath: indexPath) as! AccountSelectionCell
         let account = accountList[indexPath.row]
 
-        if let titleLabel = cell.viewWithTag(101) as? UILabel {
-            titleLabel.text = account.title
-        }
+		cell.inboxIcon.image = cell.inboxIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
+		cell.nameLabel.text = account.title
 
-        if let inboxIcon = cell.viewWithTag(201) as? UIImageView {
-            inboxIcon.image = inboxIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
-        }
-
-        if let checkIcon = cell.viewWithTag(202) as? UIImageView {
-            checkIcon.image = checkIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
-            checkIcon.hidden = (selectedAccountId != account.id)
-        }
+        cell.checkIcon.image = cell.checkIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
+        cell.checkIcon.hidden = (selectedAccountId != account.id)
 
         return cell
     }

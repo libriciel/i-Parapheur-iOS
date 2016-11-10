@@ -298,6 +298,7 @@
 		C5EABB221DC3AA050019328A /* ic_circle_outline_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB1F1DC3AA050019328A /* ic_circle_outline_white_18dp@3x.png */; };
 		C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */; };
 		C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */; };
+		C5ECE8A81DD4D83C008659DD /* AccountSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ECE8A71DD4D83C008659DD /* AccountSelectionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -703,6 +704,7 @@
 		C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
 		C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
 		C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstLoginPopupController.swift; sourceTree = "<group>"; };
+		C5ECE8A71DD4D83C008659DD /* AccountSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSelectionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -833,9 +835,10 @@
 				1434F67D168E085C000C115D /* AlertPrompt */,
 				B43C7ACB154162DD00BA43A8 /* CustomCells */,
 				B41B9475156227B3004D57A1 /* HUD */,
+				C5ECE8A71DD4D83C008659DD /* AccountSelectionCell.swift */,
 				64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */,
-				C50326201DD090D3004F00A6 /* ActionSelectionController.swift */,
 				C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */,
+				C50326201DD090D3004F00A6 /* ActionSelectionController.swift */,
 				952E2E531888185E005C8D97 /* ADLFilterViewController.h */,
 				952E2E541888185E005C8D97 /* ADLFilterViewController.m */,
 				B488312515EE0F2900EC5BB3 /* ADLPDFViewController.h */,
@@ -2114,6 +2117,7 @@
 				B46BCC47156956E300A96560 /* ADLDocument.m in Sources */,
 				B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */,
 				B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */,
+				C5ECE8A81DD4D83C008659DD /* AccountSelectionCell.swift in Sources */,
 				C526D8E01DA7FC5A00EE8BA9 /* Dossier.swift in Sources */,
 				C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,

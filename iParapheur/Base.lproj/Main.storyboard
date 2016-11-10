@@ -1119,27 +1119,27 @@
                                     <color key="backgroundColor" red="0.78429943323135376" green="0.78014284372329712" blue="0.80134302377700806" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AccountCell" id="Zb7-YR-UUi">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AccountSelectionCell" id="Zb7-YR-UUi" customClass="AccountSelectionCell" customModule="iParapheur" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="120" width="400" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zb7-YR-UUi" id="fsg-T1-gd7">
                                             <rect key="frame" x="0.0" y="0.0" width="400" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="201" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_inbox_white_24dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="UBx-kk-lkc">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_inbox_white_24dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="UBx-kk-lkc">
                                                     <rect key="frame" x="16" y="10" width="24" height="24"/>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="24" id="UK1-q4-9ff"/>
                                                     </constraints>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" tag="202" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_check_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="CYB-am-oLg">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_check_white_18dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="CYB-am-oLg">
                                                     <rect key="frame" x="374" y="13" width="18" height="18"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="18" id="Wct-Di-LiR"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSz-w2-rVG">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSz-w2-rVG">
                                                     <rect key="frame" x="56" y="11" width="310" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1156,6 +1156,11 @@
                                                 <constraint firstItem="sSz-w2-rVG" firstAttribute="leading" secondItem="UBx-kk-lkc" secondAttribute="trailing" constant="16" id="nTY-pV-hS0"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="checkIcon" destination="CYB-am-oLg" id="ue0-bj-qjh"/>
+                                            <outlet property="inboxIcon" destination="UBx-kk-lkc" id="PkE-4H-1AZ"/>
+                                            <outlet property="nameLabel" destination="sSz-w2-rVG" id="HkT-l3-22o"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
