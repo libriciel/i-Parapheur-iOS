@@ -35,7 +35,7 @@
 
 import Foundation
 
-@objc class SettingsAccountCell: UITableViewCell {
+@objc class SettingsAccountsCell: UITableViewCell {
 	
 	static let CellIdentifier: String! = "SettingsAccountCell"
 	

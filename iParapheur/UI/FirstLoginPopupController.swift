@@ -191,7 +191,6 @@ import UIKit
                                       // Warn with orange fields
 
                                       // TODO : find kCFURLErrorUserAuthenticationRequired swift constant
-                                      print("Adrien - error code : \(error.code)")
 
                                       if (error.code == -1011) {
                                           self.setBorderOnTextField(self.loginTextField, alert: true)

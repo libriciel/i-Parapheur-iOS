@@ -47,7 +47,7 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsAccountCell" rowHeight="66" id="p24-Vo-LrZ" customClass="SettingsAccountCell" customModule="iParapheur" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsAccountCell" rowHeight="66" id="p24-Vo-LrZ" customClass="SettingsAccountsCell" customModule="iParapheur" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="92" width="416" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="p24-Vo-LrZ" id="mgc-iT-ZfD">

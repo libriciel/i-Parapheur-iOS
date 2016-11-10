@@ -94,13 +94,21 @@ import Foundation
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell: SettingsAccountCell = tableView.dequeueReusableCellWithIdentifier(SettingsAccountCell.CellIdentifier,
-                                                                                    forIndexPath: indexPath) as! SettingsAccountCell
+        let cell: SettingsAccountsCell = tableView.dequeueReusableCellWithIdentifier(SettingsAccountsCell.CellIdentifier,
+                                                                                     forIndexPath: indexPath) as! SettingsAccountsCell
 
-        let account = accountList[indexPath.row]
+        // Compute data
 
-        cell.titleLabel.text = account.title
-        cell.infoLabel.text = "\(account.login!) @ \(account.url!)"
+        let account:Account = accountList[indexPath.row]
+
+        let titlePrint:String = (account.title!.characters.count != 0) ? account.title! : "(Aucun titre)"
+        let loginPrint:String = (account.login!.characters.count != 0) ? account.login! : "(Aucun login)"
+        let urlPrint:String = (account.url!.characters.count != 0) ? account.url! : "(Aucune URL)"
+
+        // UI set
+
+        cell.titleLabel.text = titlePrint
+        cell.infoLabel.text = "\(loginPrint) @ \(urlPrint)"
 
         cell.deleteButton.hidden = (account.id == Account.DemoId)
         cell.deleteButton.addTarget(self,
