@@ -41,7 +41,6 @@ import Foundation
 
 	@IBOutlet var addAccountUIButton: UIButton!
     @IBOutlet var accountTableView: UITableView!
-    let dataController: ModelsDataController = ModelsDataController()
     var accountList: Array<Account> = []
 
     // MARK: - Life cycle

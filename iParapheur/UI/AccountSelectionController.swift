@@ -38,6 +38,8 @@ import UIKit
 
 @objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    static let NotifSelected: NSString! = "AccountSelectionControllerAccountSelectionController"
+
 	@IBOutlet var backButton: UIBarButtonItem!
 	@IBOutlet var accountTableView: UITableView!
 
@@ -112,7 +114,7 @@ import UIKit
         let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         preferences.setObject(accountSelected.id, forKey: Account.PreferencesKeySelectedAccount as String)
 
-        NSNotificationCenter.defaultCenter().postNotificationName("loginPopupDismiss",
+        NSNotificationCenter.defaultCenter().postNotificationName(String(AccountSelectionController.NotifSelected),
                                                                   object: nil,
                                                                   userInfo: ["success": true])
         onBackButtonClicked()

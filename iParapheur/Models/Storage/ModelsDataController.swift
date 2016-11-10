@@ -132,7 +132,7 @@ import CoreData
         if (preferences.stringForKey("settings_login") != nil) {
             let legacyAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
                                                                                     inManagedObjectContext: ModelsDataController.Context!) as! Account
-            legacyAccount.id = NSUUID().UUIDString
+            legacyAccount.id = Account.FirstAccountId
             legacyAccount.title = preferences.stringForKey("settings_login")
             legacyAccount.url = preferences.stringForKey("settings_server_url")
             legacyAccount.login = preferences.stringForKey("settings_login")

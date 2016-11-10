@@ -42,6 +42,7 @@ class Account: NSManagedObject {
 
     static let PreferencesKeySelectedAccount: NSString! = "selected_account"
 
+    static let FirstAccountId: String! = "FirstAccountId"
     static let DemoId: NSString! = "DemoAccountId"
     static let DemoTitle: String! = "iParapheur demo"
     static let DemoUrl: String! = "parapheur.demonstrations.adullact.org"

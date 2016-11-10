@@ -80,9 +80,11 @@
 + (NSString *)getErrorMessage:(NSError *)error {
 	
 	NSString *message = error.localizedDescription;
-	
+
 	if (error.code == kCFURLErrorNotConnectedToInternet)
 		message = @"La connexion Internet a été perdue.";
+	else if (error.code == -1011) // TODO : static value
+		message = @"Erreur d'authentification";
 	else if ( ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) || (error.code == kCFURLErrorCancelled) )
 		message = @"Le serveur n'est pas valide";
 	else if (error.code == kCFURLErrorUserAuthenticationRequired)
@@ -91,7 +93,7 @@
 		message = @"Le serveur est introuvable";
 	else if (error.code == kCFURLErrorTimedOut)
 		message = @"Le serveur ne répond pas dans le délai imparti";
-	
+
 	return message;
 }
 

@@ -192,7 +192,6 @@
 		C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */; };
 		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
 		C58971531AA751500077FC84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C58971551AA751500077FC84 /* Localizable.strings */; };
-		C58971601AA88D420077FC84 /* RGLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C589715F1AA88D420077FC84 /* RGLoginViewController.m */; };
 		C58CB2661AB6EE1A00C79A97 /* ip-mailsec.png in Resources */ = {isa = PBXBuildFile; fileRef = C58CB2641AB6EE1A00C79A97 /* ip-mailsec.png */; };
 		C58CB2671AB6EE1A00C79A97 /* ip-mailsec@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C58CB2651AB6EE1A00C79A97 /* ip-mailsec@2x.png */; };
 		C58CB26A1AB6EE4000C79A97 /* ir-mailsec.png in Resources */ = {isa = PBXBuildFile; fileRef = C58CB2681AB6EE4000C79A97 /* ir-mailsec.png */; };
@@ -298,6 +297,7 @@
 		C5EABB211DC3AA050019328A /* ic_circle_outline_white_18dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB1E1DC3AA050019328A /* ic_circle_outline_white_18dp@2x.png */; };
 		C5EABB221DC3AA050019328A /* ic_circle_outline_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB1F1DC3AA050019328A /* ic_circle_outline_white_18dp@3x.png */; };
 		C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */; };
+		C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -583,8 +583,6 @@
 		C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseSignInfo.m; sourceTree = "<group>"; };
 		C58971561AA751530077FC84 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C589715A1AA752030077FC84 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		C589715E1AA88D420077FC84 /* RGLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGLoginViewController.h; sourceTree = "<group>"; };
-		C589715F1AA88D420077FC84 /* RGLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGLoginViewController.m; sourceTree = "<group>"; };
 		C58CB2641AB6EE1A00C79A97 /* ip-mailsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-mailsec.png"; sourceTree = "<group>"; };
 		C58CB2651AB6EE1A00C79A97 /* ip-mailsec@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-mailsec@2x.png"; sourceTree = "<group>"; };
 		C58CB2681AB6EE4000C79A97 /* ir-mailsec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ir-mailsec.png"; sourceTree = "<group>"; };
@@ -704,6 +702,7 @@
 		C5EABB1F1DC3AA050019328A /* ic_circle_outline_white_18dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_circle_outline_white_18dp@3x.png"; path = "ic_circle_outline_white_18dp/ic_circle_outline_white_18dp@3x.png"; sourceTree = "<group>"; };
 		C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
 		C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
+		C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstLoginPopupController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -846,6 +845,7 @@
 				C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */,
 				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
 				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
+				C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */,
 				C5D627651DBF5E1900208287 /* FolderListCell.swift */,
 				C5747ECA1DD3269200DB6A1F /* FolderListEmptyView.swift */,
 				C5747EC81DD3264A00DB6A1F /* FolderListEmptyView.xib */,
@@ -853,8 +853,6 @@
 				B41DBD37153D942D004F1AEF /* RGDeskViewController.m */,
 				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
 				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
-				C589715E1AA88D420077FC84 /* RGLoginViewController.h */,
-				C589715F1AA88D420077FC84 /* RGLoginViewController.m */,
 				B4E5ECBD153AF65F00BD514D /* RGMasterViewController.h */,
 				B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */,
 				B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */,
@@ -2069,6 +2067,7 @@
 				C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */,
 				C54DB7A51DCCCAE700B2CAFA /* DocumentSelectionCell.swift in Sources */,
 				C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */,
+				C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
@@ -2116,7 +2115,6 @@
 				B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */,
 				B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */,
 				C526D8E01DA7FC5A00EE8BA9 /* Dossier.swift in Sources */,
-				C58971601AA88D420077FC84 /* RGLoginViewController.m in Sources */,
 				C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,

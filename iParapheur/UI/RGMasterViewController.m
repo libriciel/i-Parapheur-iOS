@@ -36,7 +36,6 @@
 #import <SCNetworkReachability/SCNetworkStatus.h>
 #import "RGMasterViewController.h"
 #import "ADLCredentialVault.h"
-#import "ADLNotifications.h"
 #import "iParapheur-Swift.h"
 #import "ADLRequester.h"
 #import "SCNetworkReachability.h"
@@ -65,15 +64,20 @@
 	_firstLaunch = TRUE;
 	_bureauxArray = [NSMutableArray new];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(onLoginPopupDismissed:)
-	                                             name:@"loginPopupDismiss"
-	                                           object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(onModelsCoreDataLoaded:)
+	                                           name:ModelsDataController.NotificationModelsDataControllerLoaded
+	                                         object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-	                                         selector:@selector(onModelsCoreDataLoaded:)
-	                                             name:[ModelsDataController NotificationModelsDataControllerLoaded]
-		                                       object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(onAccountSelected:)
+	                                           name:AccountSelectionController.NotifSelected
+	                                         object:nil];
+
+	[NSNotificationCenter.defaultCenter addObserver:self
+	                                       selector:@selector(onAccountSelected:)
+	                                           name:FirstLoginPopupController.NotifDismiss
+	                                         object:nil];
 
 	self.refreshControl = [UIRefreshControl new];
 	self.refreshControl.tintColor = [ColorUtils SelectedCellGrey];
@@ -255,11 +259,14 @@
 
 - (void)displayAccountPopup {
 
-	UIViewController *splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
-	[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-	[self presentViewController:splashscreenViewController
-	                   animated:YES
-	                 completion:nil];
+	[self performSegueWithIdentifier:FirstLoginPopupController.Segue
+							  sender:self];
+	
+//	UIViewController *splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
+//	[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//	[self presentViewController:splashscreenViewController
+//	                   animated:YES
+//	                 completion:nil];
 }
 
 
@@ -375,7 +382,7 @@
 	_firstLaunch = FALSE;
 }
 
-- (void)onLoginPopupDismissed:(NSNotification *)notification {
+- (void)onAccountSelected:(NSNotification *)notification {
 
 	// Popup response
 
