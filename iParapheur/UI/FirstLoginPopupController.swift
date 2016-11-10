@@ -171,11 +171,18 @@ import UIKit
         enableInterface(false)
 
         restClient!.getApiVersion({
-            (level: NSNumber) in
+                                      (level: NSNumber) in
 
-            self.enableInterface(true)
-            self.dismissWithSuccess(true)
-        },
+                                      // Register new account as selected
+
+                                      let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+                                      preferences.setObject(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
+
+                                      // UI refresh
+
+                                      self.enableInterface(true)
+                                      self.dismissWithSuccess(true)
+                                  },
                                   onError: {
                                       (error: NSError) in
 
