@@ -39,7 +39,7 @@ class ApiLevel: Glossy {
 
     let level: Int?
 
-    // MARK: Glossy
+    // MARK: - Glossy
 
     required init?(json: JSON) {
         level = "level" <~~ json

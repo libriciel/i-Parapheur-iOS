@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UITableViewHeaderFooterView"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SettingsTableViewHeaderFooterView" customModule="iParapheur" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="36"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pLa-dQ-t2E" userLabel="Content">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="36"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u7S-ra-BYv" userLabel="Up separator">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                            <color key="backgroundColor" red="0.78429943319999995" green="0.78014284369999998" blue="0.8013430238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="Vic-1Y-Ejh"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6HW-h5-xgs">
+                            <rect key="frame" x="16" y="11" width="568" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.61884444952011108" green="0.6033596396446228" blue="0.65418487787246704" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uFi-zb-Owx" userLabel="Down separator">
+                            <rect key="frame" x="0.0" y="35" width="600" height="1"/>
+                            <color key="backgroundColor" red="0.78429943319999995" green="0.78014284369999998" blue="0.8013430238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="ObC-sJ-YHt"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" red="0.92210859060287476" green="0.92123931646347046" blue="0.9425463080406189" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="uFi-zb-Owx" firstAttribute="leading" secondItem="pLa-dQ-t2E" secondAttribute="leading" id="5tw-ry-AuA"/>
+                        <constraint firstAttribute="trailing" secondItem="u7S-ra-BYv" secondAttribute="trailing" id="9ls-uS-kH8"/>
+                        <constraint firstItem="uFi-zb-Owx" firstAttribute="top" secondItem="6HW-h5-xgs" secondAttribute="bottom" constant="3" id="D40-NS-8gn"/>
+                        <constraint firstAttribute="height" constant="36" id="WY9-X4-tQb"/>
+                        <constraint firstItem="u7S-ra-BYv" firstAttribute="top" secondItem="pLa-dQ-t2E" secondAttribute="top" id="d0u-uE-6mC"/>
+                        <constraint firstAttribute="trailing" secondItem="6HW-h5-xgs" secondAttribute="trailing" constant="16" id="gm0-Jq-6Qu"/>
+                        <constraint firstAttribute="trailing" secondItem="uFi-zb-Owx" secondAttribute="trailing" id="ibb-O7-WTl"/>
+                        <constraint firstAttribute="bottom" secondItem="uFi-zb-Owx" secondAttribute="bottom" id="u4R-wg-CwJ"/>
+                        <constraint firstItem="u7S-ra-BYv" firstAttribute="leading" secondItem="pLa-dQ-t2E" secondAttribute="leading" id="y02-fh-KOo"/>
+                        <constraint firstItem="6HW-h5-xgs" firstAttribute="leading" secondItem="pLa-dQ-t2E" secondAttribute="leading" constant="16" id="zjA-pA-VGk"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="pLa-dQ-t2E" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="2Kt-d0-acY"/>
+                <constraint firstAttribute="trailing" secondItem="pLa-dQ-t2E" secondAttribute="trailing" id="4gA-k6-eZs"/>
+                <constraint firstAttribute="bottom" secondItem="pLa-dQ-t2E" secondAttribute="bottom" id="8oI-f4-0h0"/>
+                <constraint firstItem="pLa-dQ-t2E" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="p5R-Ve-XLP"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="downSeparator" destination="uFi-zb-Owx" id="v4d-2c-Xw8"/>
+                <outlet property="label" destination="6HW-h5-xgs" id="LD6-fJ-F7g"/>
+                <outlet property="upSeparator" destination="u7S-ra-BYv" id="yS2-4K-yks"/>
+            </connections>
+            <point key="canvasLocation" x="480" y="377"/>
+        </view>
+    </objects>
+</document>

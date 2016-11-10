@@ -83,10 +83,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSLog(@"certData %@", cert);
 	}
 
-
 	// UI overrode parameters
 
-	[[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil] setTextColor:[UIColor lightGrayColor]];
+	[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class], nil].textColor = [UIColor lightGrayColor];
 
 	//
 
@@ -115,12 +114,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 	//  API_LOGIN([[NSUserDefaults standardUserDefaults] stringForKey:@"settings_login"], [[NSUserDefaults standardUserDefaults] stringForKey:@"settings_password"]);
-
-}
-
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
 
@@ -153,7 +146,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
 	if (coordinator != nil) {
-		_managedObjectContext = [[NSManagedObjectContext alloc] init];
+		_managedObjectContext = [NSManagedObjectContext new];
 		[_managedObjectContext setPersistentStoreCoordinator:coordinator];
 	}
 	return _managedObjectContext;
@@ -167,10 +160,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	if (_managedObjectModel != nil) {
 		return _managedObjectModel;
 	}
+
 	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"KeyStore"
 	                                          withExtension:@"momd"];
 	NSLog(@"%@", modelURL);
+
 	_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+
 	return _managedObjectModel;
 }
 
@@ -183,14 +179,18 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		return _persistentStoreCoordinator;
 	}
 
-	NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"keystore.sqlite"];
+	NSURL *storeURL = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@"keystore.sqlite"];
 
 	NSError *error = nil;
-	_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+	_persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+	NSDictionary *options = @{
+			NSMigratePersistentStoresAutomaticallyOption: @YES,
+			NSInferMappingModelAutomaticallyOption: @YES
+	};
 	if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
 	                                               configuration:nil
 	                                                         URL:storeURL
-	                                                     options:nil
+	                                                     options:options
 	                                                       error:&error]) {
 		/*
 		 Replace this implementation with code to handle the error appropriately.
@@ -201,8 +201,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		 * The persistent store is not accessible;
 		 * The schema for the persistent store is incompatible with current managed object model.
 		 Check the error message to determine what the actual problem was.
-		 
-		 
+
 		 If the persistent store is not accessible, there is typically something wrong with the file path. Often, a file URL is pointing into the application's resources directory instead of a writeable directory.
 		 
 		 If you encounter schema incompatibility errors during development, you can reduce their frequency by:
@@ -216,7 +215,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		 
 		 */
 		NSLog(@"%@", storeURL);
-		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+		NSLog(@"Unresolved error %@, %@", error, error.userInfo);
 		abort();
 	}
 
@@ -247,10 +246,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 			if (certifPwd) {
 				NSArray *p12Docs = [self importableP12Stores];
 
-				for (NSString *p12store in p12Docs)
-					if ([p12store.lastPathComponent isEqualToString:certifUrl.lastPathComponent])
+				for (NSString *p12store in p12Docs) {
+					if ([p12store.lastPathComponent isEqualToString:certifUrl.lastPathComponent]) {
+
 						[self importCertificate:p12store
 						           withPassword:certifPwd];
+					}
+				}
 			}
 			else {
 				[self checkP12FilesInLocalDirectory];
@@ -263,6 +265,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 		return NO;
 	}
+	
+	return YES;
 }
 
 
@@ -388,11 +392,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:publicDocumentsDir
 	                                                                     error:&error];
 	if (files == nil) {
-		NSLog(@"Error reading contents of documents directory: %@", [error localizedDescription]);
+		NSLog(@"Error reading contents of documents directory: %@", error.localizedDescription);
 		return retval;
 	}
 
 	for (NSString *file in files) {
+
 		if (([file.pathExtension compare:@"p12"
 		                         options:NSCaseInsensitiveSearch] == NSOrderedSame) ||
 				([file.pathExtension compare:@"pfx"
@@ -403,7 +408,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	}
 
 	return retval;
-
 }
 
 
@@ -434,8 +438,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		}
 		else if (error.code == P12AlreadyImported) {
 
-			[DeviceUtils logWarningMessage:certificatePath.lastPathComponent
-			                     withTitle:@"Ce fichier de certificat a déjà été importé."];
+			[ViewUtils logWarningMessage:certificatePath.lastPathComponent
+			                       title:@"Ce fichier de certificat a déjà été importé."
+			              viewController:nil];
 
 			[self deleteCertificate:certificatePath];
 		}
@@ -494,7 +499,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (ADLKeyStore *)keyStore {
 
 	if (_keyStore == nil) {
-		_keyStore = [[ADLKeyStore alloc] init];
+		_keyStore = [ADLKeyStore new];
 		_keyStore.managedObjectContext = self.managedObjectContext;
 		[_keyStore checkUpdates];
 	}
