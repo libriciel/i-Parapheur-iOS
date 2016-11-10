@@ -121,9 +121,10 @@
 - (void)initRestClient {
 
 	[self checkDemonstrationServer];
-	[[ADLRestClient sharedManager] resetClient];
+	[ADLRestClient.sharedManager resetClient];
 
-	_restClient = [ADLRestClient sharedManager];
+	_restClient = ADLRestClient.sharedManager;
+
 	__weak typeof(self) weakSelf = self;
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						 __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -137,6 +138,8 @@
 		                 if (strongSelf) {
 			                 [[ADLRestClient sharedManager] setRestApiVersion:@(-1)];
 			                 [strongSelf.refreshControl endRefreshing];
+			                 strongSelf.bureauxArray = @[];
+			                 [(UITableView *) strongSelf.view reloadData];
 
 			                 // New test when network retrieved
 			                 if (error.code == kCFURLErrorNotConnectedToInternet) {
@@ -235,14 +238,17 @@
 							 }
 						 }
 		                failure:^(NSError *error) {
+			                NSLog(@"Adrien - Here !!!!");
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
+				                strongSelf.bureauxArray = @[];
+				                strongSelf.loading = NO;
+				                [strongSelf.refreshControl endRefreshing];
+				                [(UITableView *) strongSelf.view reloadData];
+				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
 				                [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
 				                                     title:nil
 				                            viewController:nil];
-				                strongSelf.loading = NO;
-				                [strongSelf.refreshControl endRefreshing];
-				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
 			                }
 		                }];
 	} else {
@@ -254,19 +260,6 @@
 - (void)refreshAccountIcon:(BOOL)isAccountSet {
 
 	_accountButton.tintColor = isAccountSet ? [ColorUtils Aqua] : [ColorUtils Salmon];
-}
-
-
-- (void)displayAccountPopup {
-
-	[self performSegueWithIdentifier:FirstLoginPopupController.Segue
-							  sender:self];
-	
-//	UIViewController *splashscreenViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"RGSplashscreenViewControllerId"];
-//	[splashscreenViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//	[self presentViewController:splashscreenViewController
-//	                   animated:YES
-//	                 completion:nil];
 }
 
 
@@ -294,13 +287,17 @@
 
 - (void)onAccountButtonClicked:(id)sender {
 
-//	if ([DeviceUtils isConnectedToDemoAccount]) {
-//		[self displayAccountPopup];
-//	} else {
-//		// TODO : account list
-		[self performSegueWithIdentifier:@"AccountListSegue"
+	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	BOOL areSettingsSet = (selectedAccountId.length > 1);
+
+	if (areSettingsSet) {
+		[self performSegueWithIdentifier:AccountSelectionController.Segue
 		                          sender:self];
-//	}
+	} else {
+		[self performSegueWithIdentifier:FirstLoginPopupController.Segue
+		                          sender:self];
+	}
 }
 
 
@@ -375,7 +372,8 @@
 		if (areSettingsSet) {
 			[self initRestClient];
 		} else {
-			[self displayAccountPopup];
+			[self performSegueWithIdentifier:FirstLoginPopupController.Segue
+			                          sender:self];
 		}
 	}
 
