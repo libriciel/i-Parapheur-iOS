@@ -52,7 +52,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     // MARK: - LifeCycle
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
 
         menuTableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0),
                                        animated: false,
@@ -69,13 +69,13 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-		menuTableView.registerNib(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
+		menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
 	}
 
     // MARK: - Listeners
 
     func onBackButtonClicked() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
@@ -86,9 +86,9 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
-        header.upSeparator.hidden = (section == 0)
+        header.upSeparator.isHidden = (section == 0)
 
         return header
     }
@@ -97,26 +97,26 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         return SettingsTableViewHeaderFooterView.PreferredHeight
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuElements[section].elements.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell: SettingsTableViewCell = tableView.dequeueReusableCellWithIdentifier(SettingsTableViewCell.CellId,
-                                                                                      forIndexPath: indexPath) as! SettingsTableViewCell
+		let cell: SettingsTableViewCell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.CellId,
+		                                                                for: indexPath as IndexPath) as! SettingsTableViewCell
 
         let element = menuElements[indexPath.section].elements[indexPath.row]
 
-        cell.iconImage.image = UIImage(named: element.icon)?.imageWithRenderingMode(.AlwaysTemplate)
-        cell.iconImage.highlightedImage = UIImage(named: element.iconHighlight)?.imageWithRenderingMode(.AlwaysTemplate)
+        cell.iconImage.image = UIImage(named: element.icon)?.withRenderingMode(.alwaysTemplate)
+        cell.iconImage.highlightedImage = UIImage(named: element.iconHighlight)?.withRenderingMode(.alwaysTemplate)
         cell.label.text = element.name
 
         return cell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier(menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
+        performSegue(withIdentifier: menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
 
 }

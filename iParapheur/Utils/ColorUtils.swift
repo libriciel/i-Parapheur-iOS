@@ -60,17 +60,17 @@ import Foundation
 
     static func colorForAction(action: NSString) -> UIColor {
 
-        if (action.isEqualToString("VISA") || action.isEqualToString("SIGNATURE")) {
+        if (action.isEqual(to: "VISA") || action.isEqual(to: "SIGNATURE")) {
             return DarkGreen
         }
-        else if (action.isEqualToString("REJET")) {
+        else if (action.isEqual(to: "REJET")) {
             return DarkRed
         }
-        else if action.isEqualToString("ARCHIVER") {
-            return UIKit.UIColor.blackColor()
+        else if action.isEqual(to: "ARCHIVER") {
+            return UIKit.UIColor.black
         }
         else {
-            return UIKit.UIColor.lightGrayColor()
+            return UIKit.UIColor.lightGray
         }
     }
 }

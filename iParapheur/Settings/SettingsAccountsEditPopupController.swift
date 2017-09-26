@@ -64,8 +64,8 @@ import Foundation
 		super.viewDidLoad()
         print("View loaded : SettingsAccountsEditPopupController")
 
-		self.preferredContentSize = CGSizeMake(SettingsAccountsEditPopupController.PreferredWidth,
-                                               SettingsAccountsEditPopupController.PreferredHeight);
+		self.preferredContentSize = CGSize(width: SettingsAccountsEditPopupController.PreferredWidth,
+		                                   height : SettingsAccountsEditPopupController.PreferredHeight);
 
         // Values
 
@@ -78,23 +78,23 @@ import Foundation
 
         // Listeners
 
-        cancelButton.addTarget(self,
-                               action: #selector(onCancelButtonClicked),
-                               forControlEvents: .TouchUpInside)
+		cancelButton.addTarget(self,
+		                       action: #selector(onCancelButtonClicked),
+		                       for: .touchUpInside)
 
-        testButton.addTarget(self,
-                             action: #selector(onTestButtonClicked),
-                             forControlEvents: .TouchUpInside)
+		testButton.addTarget(self,
+		                     action: #selector(onTestButtonClicked),
+		                     for: .touchUpInside)
 
-        saveButton.addTarget(self,
-                             action: #selector(onSaveButtonClicked),
-                             forControlEvents: .TouchUpInside)
+		saveButton.addTarget(self,
+		                     action: #selector(onSaveButtonClicked),
+		                     for: .touchUpInside)
     }
 
     // MARK: - Listeners
 
     func onCancelButtonClicked(sender: UIButton) {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func onTestButtonClicked(sender: UIButton) {
@@ -113,15 +113,15 @@ import Foundation
                                             login: NSString(string: loginTextView.text!),
                                             password: NSString(string: passwordTextView.text!))
 
-		currentRestClient!.getApiVersion({
+		currentRestClient!.getApiVersion(onResponse: {
                                             (result: NSNumber) in
-                                            ViewUtils.logSuccessMessage("Connexion réussie",
+                                            ViewUtils.logSuccessMessage(message: "Connexion réussie",
                                                                         title: nil,
                                                                         viewController: self)
                                          },
                                          onError: {
                                              (error: NSError) in
-                                             ViewUtils.logErrorMessage(StringUtils.getErrorMessage(error),
+                                             ViewUtils.logErrorMessage(message: StringUtils.getErrorMessage(error),
                                                                        title: nil,
                                                                        viewController: self)
                                          })
@@ -136,10 +136,10 @@ import Foundation
         // Update model
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                                 inManagedObjectContext:ModelsDataController.Context!) as! Account
+			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+			                                                     into:ModelsDataController.Context!) as! Account
 
-            currentAccount!.id = NSUUID().UUIDString
+            currentAccount!.id = NSUUID().uuidString
             currentAccount!.isVisible = true
         }
 
@@ -150,10 +150,10 @@ import Foundation
 
         // Callback and dismiss
 
-        NSNotificationCenter.defaultCenter().postNotificationName(SettingsAccountsEditPopupController.NotifDocumentSaved,
+        NotificationCenter.defaultCenter.postNotificationName(SettingsAccountsEditPopupController.NotifDocumentSaved,
                                                                   object: currentAccount!)
 
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
 }

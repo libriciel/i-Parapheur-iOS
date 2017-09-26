@@ -41,25 +41,25 @@ import TSMessages
     class func logErrorMessage(message: NSString,
                                title: NSString?,
                                viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.Error)
+        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.error)
     }
 
     class func logSuccessMessage(message: NSString,
                                  title: NSString?,
                                  viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.Success)
+        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.success)
     }
 
     class func logInfoMessage(message: NSString,
                               title: NSString?,
                               viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.Message)
+        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.message)
     }
 
     class func logWarningMessage(message: NSString,
                                  title: NSString?,
                                  viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.Warning)
+        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.warning)
     }
 
     // MARK: - Private Methods
@@ -69,17 +69,17 @@ import TSMessages
                           viewController: UIKit.UIViewController?,
                           messageType: TSMessageNotificationType) {
 
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             //call back to main queue to update user interface
 
             if (viewController != nil) {
-                TSMessage.showNotificationInViewController(viewController,
+                TSMessage.showNotification(in: viewController,
                                                            title: (title == nil ? subtitle : title!) as String,
                                                            subtitle: (title == nil ? nil : subtitle as String),
                                                            type: messageType)
             }
             else {
-                TSMessage.showNotificationWithTitle((title == nil ? subtitle : title!) as String, type: messageType)
+                TSMessage.showNotification(withTitle: (title == nil ? subtitle : title!) as String, type: messageType)
             }
         })
     }

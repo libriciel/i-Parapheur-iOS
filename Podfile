@@ -8,5 +8,5 @@ target "iParapheur" do
   pod 'TSMessages', :git => 'https://github.com/KrauseFx/TSMessages.git', :branch => 'master'
   pod 'NSData+Base64'
   pod 'OpenSSL-Universal', '1.0.1.19'
-  pod 'Gloss', '~> 0.7'
+  pod 'Gloss', '~> 1.2'
 end

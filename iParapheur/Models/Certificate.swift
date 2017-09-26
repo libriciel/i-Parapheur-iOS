@@ -48,13 +48,13 @@ import Foundation
 
     init(managedObject:NSManagedObject) {
 
-        commonName = managedObject.valueForKey("commonName") as? String
-        caName = managedObject.valueForKey("caName") as? String
-        p12Filename = managedObject.valueForKey("p12Filename") as? String
-        publicKey = managedObject.valueForKey("publicKey") as? String
-        serialNumber = managedObject.valueForKey("serialNumber") as? String
-        notBefore = managedObject.valueForKey("notBefore") as? NSDate
-        notAfter = managedObject.valueForKey("notAfter") as? NSDate
+        commonName = managedObject.value(forKey: "commonName") as? String
+        caName = managedObject.value(forKey: "caName") as? String
+        p12Filename = managedObject.value(forKey: "p12Filename") as? String
+        publicKey = managedObject.value(forKey: "publicKey") as? String
+        serialNumber = managedObject.value(forKey: "serialNumber") as? String
+        notBefore = managedObject.value(forKey: "notBefore") as? NSDate
+        notAfter = managedObject.value(forKey: "notAfter") as? NSDate
     }
 
     // MARK: - ObjC accessors
