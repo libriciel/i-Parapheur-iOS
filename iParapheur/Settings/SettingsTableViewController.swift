@@ -54,9 +54,9 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     override func viewWillAppear(_ animated: Bool) {
 
-        menuTableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0),
-                                       animated: false,
-                                       scrollPosition: UITableViewScrollPosition.None)
+		menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
+                                animated: false,
+                                scrollPosition: UITableViewScrollPosition.none)
     }
 
     override func viewDidLoad() {
@@ -101,7 +101,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         return menuElements[section].elements.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		let cell: SettingsTableViewCell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.CellId,
 		                                                                for: indexPath as IndexPath) as! SettingsTableViewCell

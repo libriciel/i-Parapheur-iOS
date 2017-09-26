@@ -44,9 +44,9 @@ import CoreData
 
     static let NotificationModelsDataControllerLoaded: NSString! = "ModelsDataController_loaded"
     static var Context: NSManagedObjectContext? = nil
-	
-	// MARK: - Public methods
-	
+
+    // MARK: - Public methods
+
     static func loadManagedObjectContext() {
 
         // Default case
@@ -69,35 +69,41 @@ import CoreData
         let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
         ModelsDataController.Context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         ModelsDataController.Context!.persistentStoreCoordinator = psc
-        dispatch_async(DispatchQueue.global(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
 
-            let urls = FileManagerefaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-            let docURL = urls[urls.endIndex - 1]
+        DispatchQueue.global(qos: .background).async {
+            DispatchQueue.main.async {
 
-            // The directory the application uses to store the Core Data store file.
-            // This code uses a file named "DataModel.sqlite" in the application's documents directory.
-            let storeURL = docURL.URLByAppendingPathComponent("DataModel.sqlite")
-            do {
-                try psc.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
-            } catch {
-                fatalError("Error migrating store: \(error)")
-            }
+				let docURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-            // Callback on UI thread
-            dispatch_async(DispatchQueue.global(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                NotificationCenter.defaultCenter().postNotificationName(ModelsDataController.NotificationModelsDataControllerLoaded as String,
-                                                                          object: ["success": true])
+                // The directory the application uses to store the Core Data store file.
+                // This code uses a file named "DataModel.sqlite" in the application's documents directory.
+                let storeURL = docURL.appendingPathComponent("DataModel.sqlite")
+                do {
+					try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+                }
+                catch {
+                    fatalError("Error migrating store: \(error)")
+                }
+
+                // Callback on UI thread
+				DispatchQueue.global(qos: .default).async {
+					DispatchQueue.main.async {
+						NotificationCenter.default.postNotificationName(ModelsDataController.NotificationModelsDataControllerLoaded as String?,
+																		object: ["success": true])
+					}
+                }
             }
         }
     }
 
-    static func fetchAccounts() -> [Account] {
+    func fetchAccounts() -> [Account] {
         var result: [Account] = []
 
         do {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.EntityName)
             result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Account]
-        } catch {
+        }
+        catch {
             print("Could not fetch Accounts")
             return result
         }
@@ -105,7 +111,7 @@ import CoreData
         return result
     }
 
-    static func cleanupAccounts() {
+    func cleanupAccounts() {
 
         var isSaveNeeded = false
 
@@ -114,8 +120,8 @@ import CoreData
         let result: [Account] = fetchAccounts()
         if result.count == 0 {
 
-			let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
-			                                                      into:ModelsDataController.Context!) as! Account
+            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+                                                                  into: ModelsDataController.Context!) as! Account
             demoAccount.id = Account.DemoId as String
             demoAccount.title = Account.DemoTitle
             demoAccount.url = Account.DemoUrl
@@ -130,8 +136,8 @@ import CoreData
 
         let preferences: UserDefaults = UserDefaults.standard
         if (preferences.string(forKey: "settings_login") != nil) {
-			let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
-			                                                        into: ModelsDataController.Context!) as! Account
+            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+                                                                    into: ModelsDataController.Context!) as! Account
             legacyAccount.id = Account.FirstAccountId
             legacyAccount.title = preferences.string(forKey: "settings_login")
             legacyAccount.url = preferences.string(forKey: "settings_server_url")
@@ -155,10 +161,11 @@ import CoreData
         }
     }
 
-    static func save() {
+    func save() {
         do {
             try ModelsDataController.Context!.save()
-        } catch let error as NSError  {
+        }
+        catch let error as NSError {
             print("Could not save \(error), \(error.userInfo)")
         }
     }

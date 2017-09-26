@@ -43,9 +43,9 @@ import Foundation
 	class func instanceFromNib() -> FolderListEmptyView {
 		
 		let view: FolderListEmptyView = UINib(nibName: "FolderListEmptyView",
-			bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! FolderListEmptyView
+			bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! FolderListEmptyView
 		
-		view.icon.image = view.icon.image!.imageWithRenderingMode(.AlwaysTemplate)
+		view.icon.image = view.icon.image!.withRenderingMode(.alwaysTemplate)
 		return view
 	}
 }

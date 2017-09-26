@@ -162,7 +162,7 @@ import Gloss
     */
     static func getPositiveAction(actions: NSArray) -> NSString! {
 
-        if (actions.containsObject(NSString(string: "SIGNATURE"))) {
+        if (actions.contains(NSString(string: "SIGNATURE"))) {
             return NSString(string: "SIGNATURE")
         }
 
@@ -174,7 +174,7 @@ import Gloss
      */
     static func getNegativeAction(actions: NSArray) -> NSString! {
 
-        if (actions.containsObject(NSString(string: "REJET"))) {
+        if (actions.contains(NSString(string: "REJET"))) {
             return NSString(string: "REJET")
         }
 
@@ -208,17 +208,17 @@ import Gloss
         // Build result
 
         if (hasSignature) {
-            result.addObject(NSString(string: "SIGNATURE"))
+            result.add(NSString(string: "SIGNATURE"))
         }
         else if (hasVisa) {
-            result.addObject(NSString(string: "VISA"))
+            result.add(NSString(string: "VISA"))
         }
 
         if (hasRejet) {
-            result.addObject(NSString(string: "REJET"))
+            result.add(NSString(string: "REJET"))
         }
         if (hasTDT) {
-            result.addObject(NSString(string: "TDT"))
+            result.add(NSString(string: "TDT"))
         }
 
         return result

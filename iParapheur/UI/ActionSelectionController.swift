@@ -67,7 +67,7 @@ import UIKit
 		return actions.count
 	}
 	
-	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
 		let cell: ActionSelectionCell = tableView.dequeueReusableCell(withIdentifier: ActionSelectionCell.CellId,
 		                                                              for: indexPath as IndexPath) as! ActionSelectionCell
@@ -87,11 +87,11 @@ import UIKit
 	}
 
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.dismissViewControllerAnimated(false, completion: {
             () -> Void in
-            NotificationCenter.defaultCenter.postNotificationName(String(ActionSelectionController.NotifLaunchAction),
-                                                                      object: self.actions[indexPath.row])
+			NotificationCenter.defaultCenter.postNotification(name: String(ActionSelectionController.NotifLaunchAction),
+                                                              object: self.actions[indexPath.row])
         })
     }
 

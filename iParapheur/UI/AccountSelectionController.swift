@@ -62,7 +62,7 @@ import UIKit
 		backButton.target = self
 		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
-        let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let preferences: UserDefaults = NSUserDefaults.standardUserDefaults()
         selectedAccountId = preferences.stringForKey(Account.PreferencesKeySelectedAccount as String)
 	}
 
@@ -79,16 +79,16 @@ import UIKit
     // MARK: - Button Listeners
 
     func onBackButtonClicked() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		let cell:AccountSelectionCell = tableView.dequeueReusableCellWithIdentifier(AccountSelectionCell.CellId,
 		                                                                            forIndexPath: indexPath) as! AccountSelectionCell

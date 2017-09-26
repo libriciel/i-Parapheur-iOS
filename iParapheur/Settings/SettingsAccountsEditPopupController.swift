@@ -121,7 +121,7 @@ import Foundation
                                          },
                                          onError: {
                                              (error: NSError) in
-                                             ViewUtils.logErrorMessage(message: StringUtils.getErrorMessage(error),
+                                             ViewUtils.logErrorMessage(message: StringUtils.getErrorMessage(error) as! NSString,
                                                                        title: nil,
                                                                        viewController: self)
                                          })

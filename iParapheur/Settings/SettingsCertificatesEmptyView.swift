@@ -43,9 +43,9 @@ class SettingsCertificatesEmptyView: UIView {
     class func instanceFromNib() -> SettingsCertificatesEmptyView {
 
         let view: SettingsCertificatesEmptyView = UINib(nibName: "SettingsCertificatesEmptyView",
-                                                        bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! SettingsCertificatesEmptyView
+                                                        bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! SettingsCertificatesEmptyView
 
-        view.keyImage.image = view.keyImage.image!.imageWithRenderingMode(.AlwaysTemplate)
+        view.keyImage.image = view.keyImage.image!.imageWithRenderingMode(.alwaysTemplate)
         return view
 	}
 }
