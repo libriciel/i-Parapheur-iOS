@@ -42,7 +42,7 @@ import CoreData
  */
 @objc class ModelsDataController: NSObject {
 
-    static let NotificationModelsDataControllerLoaded: NSString! = "ModelsDataController_loaded"
+    static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
     static var Context: NSManagedObjectContext? = nil
 
     // MARK: - Public methods
@@ -88,15 +88,15 @@ import CoreData
                 // Callback on UI thread
 				DispatchQueue.global(qos: .default).async {
 					DispatchQueue.main.async {
-						NotificationCenter.default.postNotificationName(ModelsDataController.NotificationModelsDataControllerLoaded as String?,
-																		object: ["success": true])
+						NotificationCenter.default.post(name: ModelsDataController.NotificationModelsDataControllerLoaded,
+														object: ["success": true])
 					}
                 }
             }
         }
     }
 
-    func fetchAccounts() -> [Account] {
+    static func fetchAccounts() -> [Account] {
         var result: [Account] = []
 
         do {
@@ -111,7 +111,7 @@ import CoreData
         return result
     }
 
-    func cleanupAccounts() {
+    static func cleanupAccounts() {
 
         var isSaveNeeded = false
 
@@ -161,7 +161,7 @@ import CoreData
         }
     }
 
-    func save() {
+    static func save() {
         do {
             try ModelsDataController.Context!.save()
         }

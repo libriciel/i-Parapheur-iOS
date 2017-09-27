@@ -74,9 +74,9 @@ import TSMessages
 
             if (viewController != nil) {
                 TSMessage.showNotification(in: viewController,
-                                                           title: (title == nil ? subtitle : title!) as String,
-                                                           subtitle: (title == nil ? nil : subtitle as String),
-                                                           type: messageType)
+                                           title: (title == nil ? subtitle : title!) as String,
+										   subtitle: (title == nil ? nil : subtitle as String),
+                                           type: messageType)
             }
             else {
                 TSMessage.showNotification(withTitle: (title == nil ? subtitle : title!) as String, type: messageType)

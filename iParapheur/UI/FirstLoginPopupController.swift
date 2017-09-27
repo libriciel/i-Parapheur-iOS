@@ -38,7 +38,7 @@ import UIKit
 @objc class FirstLoginPopupController: UIViewController {
 
 	static let Segue: NSString! = "FirstLoginPopupSegue"
-	static let NotifDismiss: NSString! = "FirstLoginPopupControllerNotifDismiss"
+	static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
 
@@ -234,9 +234,9 @@ import UIKit
 
         let result: NSNumber = NSNumber(value: (success ? 1 : 0))
         let userInfo: [NSObject: AnyObject] = ["success" as NSObject: result]
-        NotificationCenter.defaultCenter.postNotificationName(String(FirstLoginPopupController.NotifDismiss),
-                                                                  object: nil,
-                                                                  userInfo: userInfo)
+		NotificationCenter.default.post(name: FirstLoginPopupController.NotifDismiss,
+                                        object: nil,
+                                        userInfo: userInfo)
     }
 
     // MARK: - TextField listeners

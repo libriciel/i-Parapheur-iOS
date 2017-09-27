@@ -107,7 +107,7 @@ import Gloss
         step = 0
         editable = false
         documentId = ""
-        page = currentPage as Int?
+        page = currentPage.intValue
     }
 
     func toJSON() -> JSON? {
@@ -177,7 +177,7 @@ import Gloss
     }
 
     func setUnwrappedEditable(value: NSNumber) {
-        editable = value as Bool?
+        editable = value.boolValue
     }
 
     func unwrappedType() -> NSString {

@@ -38,7 +38,7 @@ import UIKit
 
 @objc class DocumentSelectionController: UITableViewController {
 
-    static let NotifShowDocument: NSString! = "DocumentSelectionControllerNotifShowDocument"
+    static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
     var documentList: NSArray! = NSArray()
     var docList: [Document]! = []
@@ -84,11 +84,12 @@ import UIKit
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.dismissViewControllerAnimated(false, completion: {
-            () -> Void in
-			NotificationCenter.default.post(name: String(DocumentSelectionController.NotifShowDocument),
-                                            object: indexPath.row as! NSNumber)
-        })
+        dismiss(animated: false,
+                completion: {
+                    () -> Void in
+                    NotificationCenter.default.post(name: DocumentSelectionController.NotifShowDocument,
+                                                    object: indexPath.row as NSNumber)
+                })
     }
 
 }

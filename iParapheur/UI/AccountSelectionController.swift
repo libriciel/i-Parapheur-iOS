@@ -38,7 +38,7 @@ import UIKit
 
 @objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    static let NotifSelected: NSString! = "AccountSelectionControllerAccountSelectionController"
+    static let NotifSelected = Notification.Name("AccountSelectionControllerAccountSelectionController")
     static let Segue: NSString! = "AccountListSegue"
 
 	@IBOutlet var backButton: UIBarButtonItem!
@@ -62,8 +62,8 @@ import UIKit
 		backButton.target = self
 		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
-        let preferences: UserDefaults = NSUserDefaults.standardUserDefaults()
-        selectedAccountId = preferences.stringForKey(Account.PreferencesKeySelectedAccount as String)
+        let preferences: UserDefaults = UserDefaults.standard
+        selectedAccountId = preferences.string(forKey: Account.PreferencesKeySelectedAccount as String)
 	}
 
     // MARK: - Private methods
@@ -90,28 +90,28 @@ import UIKit
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell:AccountSelectionCell = tableView.dequeueReusableCellWithIdentifier(AccountSelectionCell.CellId,
-		                                                                            forIndexPath: indexPath) as! AccountSelectionCell
+		let cell:AccountSelectionCell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.CellId,
+		                                                              for: indexPath) as! AccountSelectionCell
         let account = accountList[indexPath.row]
 
-		cell.inboxIcon.image = cell.inboxIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
+		cell.inboxIcon.image = cell.inboxIcon.image!.withRenderingMode(.alwaysTemplate)
 		cell.nameLabel.text = account.title
 
-        cell.checkIcon.image = cell.checkIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
-        cell.checkIcon.hidden = (selectedAccountId != account.id)
+        cell.checkIcon.image = cell.checkIcon.image!.withRenderingMode(.alwaysTemplate)
+        cell.checkIcon.isHidden = (selectedAccountId != account.id)
 
         return cell
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let accountSelected: Account = accountList[indexPath.row]
-        let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        preferences.setObject(accountSelected.id, forKey: Account.PreferencesKeySelectedAccount as String)
+        let preferences: UserDefaults = UserDefaults.standard
+        preferences.set(accountSelected.id, forKey: Account.PreferencesKeySelectedAccount as String)
 
-        NSNotificationCenter.defaultCenter().postNotificationName(String(AccountSelectionController.NotifSelected),
-                                                                  object: nil,
-                                                                  userInfo: ["success": true])
+		NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
+                                        object: nil,
+                                        userInfo: ["success": true])
         onBackButtonClicked()
     }
 

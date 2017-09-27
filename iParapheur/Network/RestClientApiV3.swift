@@ -47,24 +47,24 @@ import AFNetworking
          login: NSString,
          password: NSString) {
 
-        manager = AFHTTPSessionManager(baseURL: NSURL(string: RestClientApiV3.cleanupServerName(baseUrl) as String))
+        manager = AFHTTPSessionManager(baseURL: NSURL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl))))
         manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
         manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
-        manager.setSessionDidReceiveAuthenticationChallengeBlock {
-            (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
+        manager.setSessionDidReceiveAuthenticationChallenge {
+            (session, challenge, credential) -> URLSession.AuthChallengeDisposition in
 
             // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
-            if RestClientApiV3.shouldTrustProtectionSpace(challenge, credential: credential) {
-                return NSURLSessionAuthChallengeDisposition.UseCredential
+            if RestClientApiV3.shouldTrustProtectionSpace(challenge: challenge, credential: credential!) {
+                return URLSession.AuthChallengeDisposition.useCredential
             }
 
-            return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
+            return URLSession.AuthChallengeDisposition.performDefaultHandling
         }
 
 		// GET needs a JSONResponseSerializer,
 		// POST/PUT/DELETE needs an HTTPResponseSerializer
 
-		let compoundResponseSerializer = AFCompoundResponseSerializer.compoundSerializerWithResponseSerializers([AFJSONResponseSerializer(),
+		let compoundResponseSerializer = AFCompoundResponseSerializer.compoundSerializer(withResponseSerializers: [AFJSONResponseSerializer(),
                                                                                                                  AFHTTPResponseSerializer()])
 		manager.responseSerializer = compoundResponseSerializer
 
@@ -77,8 +77,8 @@ import AFNetworking
         // Removing space
         // TODO Adrien : add special character restrictions tests ?
 
-        var urlFixed = url.mutableCopy()
-        urlFixed = urlFixed.stringByReplacingOccurrencesOfString(" ", withString: "")
+		var urlFixed: NSString = url.mutableCopy() as! NSString
+		urlFixed = urlFixed.replacingOccurrences(of: " ", with: "") as NSString
 
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
@@ -86,36 +86,36 @@ import AFNetworking
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
         let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
-                                                                  options: NSRegularExpressionOptions.CaseInsensitive)
+                                                                  options: NSRegularExpression.Options.caseInsensitive)
 
-        let match: NSTextCheckingResult? = regex.firstMatchInString(urlFixed as! String,
-                                                                   options: NSMatchingOptions.Anchored,
-                                                                   range: NSMakeRange(0, urlFixed.length))
+        let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed as! String,
+                                                            options: NSRegularExpression.MatchingOptions.anchored,
+                                                            range: NSMakeRange(0, urlFixed.length))
 
         if (match != nil) {
-			urlFixed = urlFixed.substringWithRange(match!.rangeAtIndex(1))
+			urlFixed = urlFixed.substring(with: match!.rangeAt(1)) as NSString
 		}
 		
         return NSString(string: "https://m.\(urlFixed)")
     }
 
-    class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
-                                          credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
+    class func shouldTrustProtectionSpace(challenge: URLAuthenticationChallenge,
+                                          credential: AutoreleasingUnsafeMutablePointer<URLCredential?>) -> Bool {
 
         // note: credential is a reference; any created credential should be sent back using credential.memory
 
-        let protectionSpace: NSURLProtectionSpace = challenge.protectionSpace
-        var trust: SecTrustRef = protectionSpace.serverTrust!
+        let protectionSpace: URLProtectionSpace = challenge.protectionSpace
+        var trust: SecTrust = protectionSpace.serverTrust!
 
         // load the root CA bundled with the app
-        let certPath: String? = NSBundle.mainBundle().pathForResource("acmobile", ofType: "der")
+        let certPath: String? = Bundle.main.path(forResource: "acmobile", ofType: "der")
         if (certPath == nil) {
             print("Certificate does not exist!")
             return false
         }
 
         let certData: NSData = NSData(contentsOfFile: certPath!)!
-        let cert: SecCertificateRef? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
+        let cert: SecCertificate? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
 
         if (cert == nil) {
             print("Certificate data could not be loaded. DER format?")
@@ -128,16 +128,16 @@ import AFNetworking
 
         // takes all certificates from existing trust
         let numCerts = SecTrustGetCertificateCount(trust)
-        var certs: [SecCertificateRef] = [SecCertificateRef]()
+        var certs: [SecCertificate] = [SecCertificate]()
         for i in 0 ..< numCerts {
             // takeUnretainedValue
-            let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
+            let c: SecCertificate? = SecTrustGetCertificateAtIndex(trust, i)
             certs.append(c!)
         }
 
         // and adds them to the new policy
         var newTrust: SecTrust? = nil
-        var err: OSStatus = SecTrustCreateWithCertificates(certs, policy, &newTrust)
+        var err: OSStatus = SecTrustCreateWithCertificates(certs as CFTypeRef, policy, &newTrust)
         if (err != noErr) {
             print("Could not create trust")
         }
@@ -155,7 +155,7 @@ import AFNetworking
 
         if (Int(trustResult) == Int(kSecTrustResultProceed) || Int(trustResult) == Int(kSecTrustResultUnspecified)) {
             // create the credential to be used
-            credential.memory = NSURLCredential(trust: trust)
+            credential.memory = URLCredential(trust: trust)
             return true
         }
 
@@ -191,10 +191,10 @@ import AFNetworking
     func getApiVersion(onResponse: ((NSNumber) -> Void)?,
                        onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/api/getApiLevel",
+		manager.get("/parapheur/api/getApiLevel",
                     parameters: nil,
                     success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
 
                         guard let apiLevel = ApiLevel(json: responseObject as! [String: AnyObject])
                         else {
@@ -205,7 +205,7 @@ import AFNetworking
 						onResponse!(NSNumber(integer: apiLevel.level!))
                     },
                     failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        (task: URLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
     }
@@ -213,15 +213,15 @@ import AFNetworking
     func getBureaux(onResponse: ((NSArray) -> Void)?,
                     onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/bureaux",
+        manager.get("/parapheur/bureaux",
                     parameters: nil,
                     success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
                         let bureauList = [Bureau].fromJSONArray(responseObject as! [[String: AnyObject]])
                         onResponse!(bureauList!)
                     },
                     failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        (task: URLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
     }
@@ -250,15 +250,15 @@ import AFNetworking
 
         // Request
 
-        manager.GET("/parapheur/dossiers",
+        manager.get("/parapheur/dossiers",
                     parameters: paramsDict,
                     success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
 						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
                         onResponse!(dossierList!)
                     },
                     failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        (task: URLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
     }
@@ -275,10 +275,10 @@ import AFNetworking
 
         // Request
 
-        manager.GET("/parapheur/dossiers/\(dossier)",
+        manager.get("/parapheur/dossiers/\(dossier)",
                     parameters: paramsDict,
                     success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         (task: URLSessionDataTask!, responseObject: AnyObject!) in
 
                          guard let responseDossier = Dossier(json: responseObject as! [String: AnyObject])
                          else {
@@ -289,7 +289,7 @@ import AFNetworking
                         onResponse!(responseDossier)
                      },
                     failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         (task: URLSessionDataTask!, error: NSError!) in
                          onError!(error)
                      })
     }
@@ -298,14 +298,14 @@ import AFNetworking
                     onResponse: ((AnyObject) -> Void)?,
                     onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/dossiers/\(dossier)/circuit",
+        manager.get("/parapheur/dossiers/\(dossier)/circuit",
                     parameters: nil,
                     success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         (task: URLSessionDataTask!, responseObject: AnyObject!) in
                          onResponse!(responseObject)
                      },
                     failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         (task: URLSessionDataTask!, error: NSError!) in
                          onError!(error)
                      })
     }
@@ -325,12 +325,12 @@ import AFNetworking
         manager.GET("/parapheur/types",
                     parameters: nil,
                     success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
                         let typeList = [ParapheurType].fromJSONArray(responseObject as! [[String: AnyObject]])
                         onResponse!(typeList!)
                     },
                     failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        (task: URLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
     }
@@ -339,10 +339,10 @@ import AFNetworking
                         onResponse: (([Annotation]) -> Void)?,
                         onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/dossiers/\(dossier)/annotations",
+        manager.get("/parapheur/dossiers/\(dossier)/annotations",
                     parameters: nil,
                     success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
 
                         // Parse
 
@@ -371,14 +371,16 @@ import AFNetworking
                             }
                         }
                         else {
-                            onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                            onError!(NSError(domain: self.manager.baseURL!.absoluteString,
+                                             code: self.kCFURLErrorBadServerResponse,
+                                             userInfo: nil))
                             return
                         }
 
                         onResponse!(parsedAnnotations)
                     },
                     failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
+                        (task: URLSessionDataTask!, error: NSError!) in
                         onError!(error)
                     })
     }
@@ -395,14 +397,14 @@ import AFNetworking
 
         // Request
 
-        manager.GET("/parapheur/dossiers/\(dossier)/getSignInfo",
+        manager.get("/parapheur/dossiers/\(dossier)/getSignInfo",
                     parameters: paramsDict,
                     success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                         (task: URLSessionDataTask!, responseObject: AnyObject!) in
                          onResponse!(responseObject)
                      },
                     failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
+                         (task: URLSessionDataTask!, error: NSError!) in
                          onError!(error)
                      })
     }
@@ -415,40 +417,40 @@ import AFNetworking
 
         if (type == 1) {
 
-            manager.POST(url as String,
+            manager.post(url as String,
                          parameters: args,
                          success: {
-                              (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                              (task: URLSessionDataTask!, responseObject: AnyObject!) in
                               onResponse!(1)
                           },
                          failure: {
-                              (task: NSURLSessionDataTask!, error: NSError!) in
+                              (task: URLSessionDataTask!, error: NSError!) in
                               onError!(error)
                          })
         }
         else if (type == 2) {
 
-            manager.PUT(url as String,
+            manager.put(url as String,
                         parameters: args,
                         success: {
-                             (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                             (task: URLSessionDataTask!, responseObject: AnyObject!) in
                              onResponse!(1)
                          },
                         failure: {
-                             (task: NSURLSessionDataTask!, error: NSError!) in
+                             (task: URLSessionDataTask!, error: NSError!) in
                              onError!(error)
                          })
         }
         else if (type == 3) {
 
-            manager.DELETE(url as String,
+            manager.delete(url as String,
                            parameters: args,
                            success: {
-                                (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+                                (task: URLSessionDataTask!, responseObject: AnyObject!) in
                                 onResponse!(1)
                             },
                            failure: {
-                                (task: NSURLSessionDataTask!, error: NSError!) in
+                                (task: URLSessionDataTask!, error: NSError!) in
                                 onError!(error)
                             })
         }

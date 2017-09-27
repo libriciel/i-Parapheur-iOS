@@ -45,7 +45,7 @@ class SettingsCertificatesEmptyView: UIView {
         let view: SettingsCertificatesEmptyView = UINib(nibName: "SettingsCertificatesEmptyView",
                                                         bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! SettingsCertificatesEmptyView
 
-        view.keyImage.image = view.keyImage.image!.imageWithRenderingMode(.alwaysTemplate)
+        view.keyImage.image = view.keyImage.image!.withRenderingMode(.alwaysTemplate)
         return view
 	}
 }

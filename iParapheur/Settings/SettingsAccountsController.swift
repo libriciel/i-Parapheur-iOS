@@ -56,10 +56,10 @@ import Foundation
 
         // Registering for popup notifications
 
-        NotificationCenter.defaultCenter.addObserver(self,
-                                                         selector: #selector(onAccountSaved),
-                                                         name: SettingsAccountsEditPopupController.NotifDocumentSaved,
-                                                         object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onAccountSaved),
+                                               name: SettingsAccountsEditPopupController.NotifDocumentSaved,
+                                               object: nil)
 
         // Buttons Listeners
 
@@ -68,14 +68,13 @@ import Foundation
 		                             for: .touchUpInside)
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if (segue.identifier == SettingsAccountsEditPopupController.Segue) {
-
             let editViewController: SettingsAccountsEditPopupController = segue.destination as! SettingsAccountsEditPopupController
 
             if (sender !== addAccountUIButton) {
-                let buttonPosition: CGPoint = sender.convertPoint(.zero, toView: accountTableView);
+                let buttonPosition: CGPoint = sender.convert(.zero, toView: accountTableView);
                 let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
                 editViewController.currentAccount = accountList[indexPath.row]
             }
@@ -83,7 +82,7 @@ import Foundation
     }
 
     deinit {
-        NotificationCenter.defaultCenter.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - UITableViewDataSource
@@ -92,7 +91,7 @@ import Foundation
         return accountList.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
 		let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.CellIdentifier,
 		                                                               for: indexPath as IndexPath) as! SettingsAccountsCell
@@ -110,17 +109,17 @@ import Foundation
         cell.titleLabel.text = titlePrint
         cell.infoLabel.text = "\(loginPrint) @ \(urlPrint)"
 
-        cell.deleteButton.hidden = (account.id! == Account.DemoId)
+        cell.deleteButton.isHidden = (account.id! == Account.DemoId)
 		cell.deleteButton.addTarget(self,
 		                            action: #selector(onDeleteButtonClicked),
 		                            for: .touchUpInside)
 
-        cell.editButton.hidden = (account.id! == Account.DemoId)
+        cell.editButton.isHidden = (account.id! == Account.DemoId)
 		cell.editButton.addTarget(self,
 		                          action: #selector(onEditButtonClicked),
 		                          for: .touchUpInside)
 
-        cell.visibilityButton.hidden = (account.id != Account.DemoId)
+        cell.visibilityButton.isHidden = (account.id != Account.DemoId)
         cell.visibilityButton.isSelected = (account.isVisible!.boolValue || (accountList.count == 1))
 
         let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.withRenderingMode(.alwaysTemplate)
@@ -155,18 +154,18 @@ import Foundation
             // Add to UI
 
             accountList.append(account)
-            let newIndexPath = NSIndexPath(forRow: accountList.count - 1, inSection: 0)
+            let newIndexPath = IndexPath(row: accountList.count - 1, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            accountTableView.insertRows(at: [newIndexPath], with: UITableViewRowAnimation.fade)
             accountTableView.endUpdates()
 
         } else {
 
             // Refresh UI
 
-            let accountIndexPath = NSIndexPath(forRow: accountIndex!, inSection: 0)
+            let accountIndexPath = IndexPath(row: accountIndex!, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.reloadRowsAtIndexPaths([accountIndexPath], withRowAnimation: UITableViewRowAnimation.None)
+            accountTableView.reloadRows(at: [accountIndexPath], with: UITableViewRowAnimation.none)
             accountTableView.endUpdates()
         }
 
@@ -179,7 +178,7 @@ import Foundation
 
     func onDeleteButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(.Zero, to: accountTableView);
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
         let accountToDelete: Account = accountList[indexPath.row]
 
@@ -190,7 +189,7 @@ import Foundation
         // Delete from UITableView
 
         accountList.remove(at: indexPath.row)
-        accountTableView.deleteRows(at: [indexPath as IndexPath], with: .Fade)
+        accountTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
 
         // Refresh the demo Account, and forces it to visible, if it's the last one
 
@@ -214,7 +213,7 @@ import Foundation
 
     func onVisibilityButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(.Zero, to: accountTableView);
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
 
         // Keeping user from hiding the last Account

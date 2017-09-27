@@ -38,7 +38,7 @@ import UIKit
 
 @objc class ActionSelectionController: UITableViewController {
 	
-	static let NotifLaunchAction: String! = "ActionSelectionControllerNotifLaunchAction"
+	static let NotifLaunchAction = Notification.Name("ActionSelectionControllerNotifLaunchAction")
 	
 	var actions: NSArray! = NSArray()
 	var currentDossier: Dossier?
@@ -88,11 +88,12 @@ import UIKit
 
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.dismissViewControllerAnimated(false, completion: {
-            () -> Void in
-			NotificationCenter.defaultCenter.postNotification(name: String(ActionSelectionController.NotifLaunchAction),
-                                                              object: self.actions[indexPath.row])
-        })
-    }
+
+		dismiss(animated: false,
+				completion: { () -> Void in
+					NotificationCenter.default.post(name: ActionSelectionController.NotifLaunchAction,
+													object: self.actions[indexPath.row])
+				})
+	}
 
 }

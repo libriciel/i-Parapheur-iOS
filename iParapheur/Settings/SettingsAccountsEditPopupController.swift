@@ -40,9 +40,8 @@ import Foundation
 
 @objc class SettingsAccountsEditPopupController: UIViewController {
 
-    static let NotifDocumentSaved: String! = "SettingsAccountsEditPopupControllerNotifDocumentSaved"
+    static let NotifDocumentSaved = Notification.Name("SettingsAccountsEditPopupControllerNotifDocumentSaved")
     static let Segue: String! = "EditAccountSegue"
-
     static let PreferredWidth: CGFloat = 500
     static let PreferredHeight: CGFloat = 252
 
@@ -150,8 +149,8 @@ import Foundation
 
         // Callback and dismiss
 
-        NotificationCenter.defaultCenter.postNotificationName(SettingsAccountsEditPopupController.NotifDocumentSaved,
-                                                                  object: currentAccount!)
+		NotificationCenter.default.post(name: SettingsAccountsEditPopupController.NotifDocumentSaved,
+                                        object: currentAccount!)
 
         dismiss(animated: true, completion: nil)
     }
