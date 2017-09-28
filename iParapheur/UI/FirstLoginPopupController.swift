@@ -249,11 +249,11 @@ import UIKit
 
     // MARK: - Buttons listeners
 
-    @IBAction func onCancelButtonClicked(sender: AnyObject) {
+    @IBAction func onCancelButtonClicked(_ sender: Any) {
         dismissWithSuccess(success: false)
     }
 
-    @IBAction func onSaveButtonClicked(sender: AnyObject) {
+    @IBAction func onSaveButtonClicked(_ sender: Any) {
 
         // Saving data
 
