@@ -153,7 +153,7 @@ import AFNetworking
         var trustResult: SecTrustResultType = SecTrustResultType()
         SecTrustEvaluate(trust, &trustResult)
 
-        if (Int(trustResult) == Int(kSecTrustResultProceed) || Int(trustResult) == Int(kSecTrustResultUnspecified)) {
+        if ((trustResult == SecTrustResultType.proceed) || (trustResult == SecTrustResultType.unspecified)) {
             // create the credential to be used
             credential.memory = URLCredential(trust: trust)
             return true
@@ -194,7 +194,7 @@ import AFNetworking
 		manager.get("/parapheur/api/getApiLevel",
                     parameters: nil,
                     success: {
-                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask, responseObject: Any) in
 
                         guard let apiLevel = ApiLevel(json: responseObject as! [String: AnyObject])
                         else {
@@ -202,11 +202,11 @@ import AFNetworking
                             return
                         }
 
-						onResponse!(NSNumber(integer: apiLevel.level!))
+						onResponse!(NSNumber(value: apiLevel.level!))
                     },
                     failure: {
-                        (task: URLSessionDataTask!, error: NSError!) in
-                        onError!(error)
+                        (task: URLSessionDataTask, error: Error) in
+                        onError!(error as NSError)
                     })
     }
 
@@ -216,13 +216,13 @@ import AFNetworking
         manager.get("/parapheur/bureaux",
                     parameters: nil,
                     success: {
-                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                        let bureauList = [Bureau].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(bureauList!)
+                        (task: URLSessionDataTask, responseObject: Any) in
+                        let bureauList = [Bureau].from(jsonArray: responseObject as! [[String: AnyObject]])
+                        onResponse!(bureauList! as NSArray)
                     },
                     failure: {
-                        (task: URLSessionDataTask!, error: NSError!) in
-                        onError!(error)
+                        (task: URLSessionDataTask, error: Error) in
+                        onError!(error as NSError)
                     })
     }
 
@@ -253,13 +253,13 @@ import AFNetworking
         manager.get("/parapheur/dossiers",
                     parameters: paramsDict,
                     success: {
-                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
-						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(dossierList!)
+                        (task: URLSessionDataTask, responseObject: Any) in
+						let dossierList = [Dossier].from(jsonArray: responseObject as! [[String: AnyObject]])
+                        onResponse!(dossierList! as NSArray)
                     },
                     failure: {
-                        (task: URLSessionDataTask!, error: NSError!) in
-                        onError!(error)
+                        (task: URLSessionDataTask, error: Error) in
+                        onError!(error as NSError)
                     })
     }
 
@@ -278,7 +278,7 @@ import AFNetworking
         manager.get("/parapheur/dossiers/\(dossier)",
                     parameters: paramsDict,
                     success: {
-                         (task: URLSessionDataTask!, responseObject: AnyObject!) in
+                         (task: URLSessionDataTask, responseObject: Any) in
 
                          guard let responseDossier = Dossier(json: responseObject as! [String: AnyObject])
                          else {
@@ -289,8 +289,8 @@ import AFNetworking
                         onResponse!(responseDossier)
                      },
                     failure: {
-                         (task: URLSessionDataTask!, error: NSError!) in
-                         onError!(error)
+                         (task: URLSessionDataTask, error: Error) in
+                         onError!(error as NSError)
                      })
     }
 
@@ -301,12 +301,12 @@ import AFNetworking
         manager.get("/parapheur/dossiers/\(dossier)/circuit",
                     parameters: nil,
                     success: {
-                         (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject)
+                         (task: URLSessionDataTask, responseObject: Any) in
+                         onResponse!(responseObject as AnyObject)
                      },
                     failure: {
-                         (task: URLSessionDataTask!, error: NSError!) in
-                         onError!(error)
+                         (task: URLSessionDataTask, error: Error) in
+                         onError!(error as NSError)
                      })
     }
 
@@ -322,16 +322,16 @@ import AFNetworking
 
         // Request
 
-        manager.GET("/parapheur/types",
+        manager.get("/parapheur/types",
                     parameters: nil,
                     success: {
-                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                        let typeList = [ParapheurType].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(typeList!)
+                        (task: URLSessionDataTask, responseObject: Any) in
+                        let typeList = [ParapheurType].from(jsonArray: responseObject as! [[String: AnyObject]])
+                        onResponse!(typeList! as NSArray)
                     },
                     failure: {
-                        (task: URLSessionDataTask!, error: NSError!) in
-                        onError!(error)
+                        (task: URLSessionDataTask, error: Error) in
+                        onError!(error as NSError)
                     })
     }
 
@@ -342,7 +342,7 @@ import AFNetworking
         manager.get("/parapheur/dossiers/\(dossier)/annotations",
                     parameters: nil,
                     success: {
-                        (task: URLSessionDataTask!, responseObject: AnyObject!) in
+                        (task: URLSessionDataTask, responseObject: Any) in
 
                         // Parse
 
@@ -357,14 +357,14 @@ import AFNetworking
                                         if let pages = documentPage.1 as? [String:AnyObject] {
 
                                             // Parsing API4
-                                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages,
+                                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
                                                                                                       step: etapeIndex,
                                                                                                       documentId: documentPage.0 as String)
                                         }
                                     }
 
                                     // Parsing API3
-                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(documentPages,
+                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
                                                                                               step: etapeIndex,
                                                                                               documentId: "*")
                                 }
@@ -380,8 +380,8 @@ import AFNetworking
                         onResponse!(parsedAnnotations)
                     },
                     failure: {
-                        (task: URLSessionDataTask!, error: NSError!) in
-                        onError!(error)
+                        (task: URLSessionDataTask, error: Error) in
+                        onError!(error as NSError)
                     })
     }
 
@@ -400,12 +400,12 @@ import AFNetworking
         manager.get("/parapheur/dossiers/\(dossier)/getSignInfo",
                     parameters: paramsDict,
                     success: {
-                         (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject)
+                         (task: URLSessionDataTask, responseObject: Any) in
+                         onResponse!(responseObject as AnyObject)
                      },
                     failure: {
-                         (task: URLSessionDataTask!, error: NSError!) in
-                         onError!(error)
+                         (task: URLSessionDataTask, error: Error) in
+                         onError!(error as NSError)
                      })
     }
 
@@ -420,12 +420,12 @@ import AFNetworking
             manager.post(url as String,
                          parameters: args,
                          success: {
-                              (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                              onResponse!(1)
+                              (task: URLSessionDataTask, responseObject: Any) in
+                              onResponse!(1 as AnyObject)
                           },
                          failure: {
-                              (task: URLSessionDataTask!, error: NSError!) in
-                              onError!(error)
+                              (task: URLSessionDataTask, error: Error) in
+                              onError!(error as NSError)
                          })
         }
         else if (type == 2) {
@@ -433,12 +433,12 @@ import AFNetworking
             manager.put(url as String,
                         parameters: args,
                         success: {
-                             (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                             onResponse!(1)
+                             (task: URLSessionDataTask, responseObject: Any) in
+                             onResponse!(1 as AnyObject)
                          },
                         failure: {
-                             (task: URLSessionDataTask!, error: NSError!) in
-                             onError!(error)
+                             (task: URLSessionDataTask, error: Error) in
+                             onError!(error as NSError)
                          })
         }
         else if (type == 3) {
@@ -446,12 +446,12 @@ import AFNetworking
             manager.delete(url as String,
                            parameters: args,
                            success: {
-                                (task: URLSessionDataTask!, responseObject: AnyObject!) in
-                                onResponse!(1)
+                                (task: URLSessionDataTask, responseObject: Any) in
+                                onResponse!(1 as AnyObject)
                             },
                            failure: {
-                                (task: URLSessionDataTask!, error: NSError!) in
-                                onError!(error)
+                                (task: URLSessionDataTask, error: Error) in
+                                onError!(error as NSError)
                             })
         }
     }
