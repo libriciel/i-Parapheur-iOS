@@ -998,7 +998,6 @@
                                         <rect key="frame" x="0.0" y="4" width="147" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="147" id="SVx-hH-syu"/>
-                                            <constraint firstAttribute="width" constant="147" id="vWs-yY-vfl"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1013,7 +1012,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Identifiant" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v03-Sh-9aj">
                                         <rect key="frame" x="0.0" y="42" width="147" height="21"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="147" id="nE0-Fx-R2g"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="147" id="nE0-Fx-R2g"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1022,7 +1021,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mot de passe" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3e8-gi-yQO">
                                         <rect key="frame" x="0.0" y="80" width="147" height="21"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="147" id="g1r-re-WDy"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="147" id="g1r-re-WDy"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
