@@ -1745,7 +1745,6 @@
 				B4E5ECC0153AF65F00BD514D /* Sources */,
 				B4E5ECC1153AF65F00BD514D /* Frameworks */,
 				B4E5ECC2153AF65F00BD514D /* Resources */,
-				B4E5ECC3153AF65F00BD514D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2019,19 +2018,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		B4E5ECC3153AF65F00BD514D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 		B8873AE2EAD8273EBB0820CD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
