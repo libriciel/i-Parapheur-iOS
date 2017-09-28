@@ -156,7 +156,7 @@
 
 	if (_selectedDossiersArray.count != 0) {
 
-		NSMutableArray *actions = [Dossier filterActions:_selectedDossiersArray];
+		NSMutableArray *actions = [Dossier filterActionsWithDossierList:_selectedDossiersArray];
 		NSArray *mainActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF IN %@",
 		                                                                                             _possibleMainActions]];
 		_secondaryActions = [actions filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF IN %@)",
@@ -284,7 +284,7 @@
 
 	// Computing the negative action
 
-	NSString *negativeAction = [Dossier getNegativeAction:_secondaryActions];
+	NSString *negativeAction = [Dossier getNegativeActionWithActions:_secondaryActions];
 
 	// Starting popup
 
@@ -363,7 +363,7 @@
 		                 failure:^(NSError *getDossiersError) {
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
-				                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 				                                      title:nil
 				                             viewController:nil];
 				                 [strongSelf.refreshControl endRefreshing];
@@ -388,7 +388,7 @@
 		                 failure:^(NSError *error) {
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
-				                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 				                                      title:nil
 				                             viewController:nil];
 				                 [strongSelf.refreshControl endRefreshing];

@@ -64,7 +64,7 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
 
-	[_annotationModel setUnwrappedText:textView.text];
+	[_annotationModel setUnwrappedTextWithTxt:textView.text];
 }
 
 

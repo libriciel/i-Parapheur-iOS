@@ -170,7 +170,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_swiftManager getApiVersion:^(NSNumber *level) {
+	[_swiftManager getApiVersionOnResponse:^(NSNumber *level) {
 		 success(level);
 	 }
 	                     onError:^(NSError *error) {
@@ -186,7 +186,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"bureaux"];
 
-	[_swiftManager getBureaux:^(NSArray *response) {
+	[_swiftManager getBureauxOnResponse:^(NSArray *response) {
 		 success(response);
 	 }
 	                  onError:^(NSError *error) {
@@ -206,7 +206,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"dossiers"];
 
-	[_swiftManager getDossiers:bureau
+	[_swiftManager getDossiersWithBureau:bureau
 	                      page:@(page)
 	                      size:@(size)
 	                filterJson:filterJson
@@ -223,7 +223,7 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	[_swiftManager getTypology:bureauId
+	[_swiftManager getTypologyWithBureauId:bureauId
 	                onResponse:^(NSArray *response) {
 		                success(response);
 	                }
@@ -238,7 +238,7 @@
            success:(void (^)(Dossier *))success
            failure:(void (^)(NSError *))failure {
 
-	[_swiftManager getDossier:dossier
+	[_swiftManager getDossierWithDossier:dossier
 	                   bureau:bureau
 	               onResponse:^(Dossier *response) {
 		               success(response);
@@ -256,7 +256,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-	[_swiftManager getSignInfo:dossierId
+	[_swiftManager getSignInfoWithDossier:dossierId
 	                    bureau:bureauId
 	                onResponse:^(id response) {
 
@@ -284,7 +284,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 
-	[_swiftManager getCircuit:dossier
+	[_swiftManager getCircuitWithDossier:dossier
 	               onResponse:^(NSDictionary *response) {
 
 		               NSError *error;
@@ -313,7 +313,7 @@
 	[self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
 	                                                            andDocument:document]];
 
-	[_swiftManager getAnnotations:dossier
+	[_swiftManager getAnnotationsWithDossier:dossier
 	                   onResponse:^(id annotations) {
 		                   success(annotations);
 	                   }
@@ -476,7 +476,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -505,7 +505,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -534,7 +534,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -559,7 +559,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -583,7 +583,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[self getAnnotationsUrlForDossier:dossierId
 	                                                      andDocument:annotation.unwrappedDocumentId]
 	                           args:argumentDictionary
@@ -607,7 +607,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(2)
+	[_swiftManager sendSimpleActionWithType:@(2)
 	                            url:[self getAnnotationUrlForDossier:dossierId
 	                                                     andDocument:annotation.unwrappedDocumentId
 	                                                 andAnnotationId:annotation.unwrappedId]
@@ -632,7 +632,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(3)
+	[_swiftManager sendSimpleActionWithType:@(3)
 	                            url:[self getAnnotationUrlForDossier:dossierId
 	                                                     andDocument:annotation.unwrappedDocumentId
 	                                                 andAnnotationId:annotation.unwrappedId]

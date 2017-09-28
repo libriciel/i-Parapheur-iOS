@@ -243,7 +243,7 @@
 
 	for (Annotation *annotation in _annotations) {
 		bool isEditable = (annotation.unwrappedStep.intValue >= currentStep);
-		[annotation setUnwrappedEditable:(isEditable ? @(1) : @(0))];
+		[annotation setUnwrappedEditableWithValue:(isEditable ? @(1) : @(0))];
 	}
 
 	// Filtering annotations
@@ -269,7 +269,7 @@
 		                      NSLog(@"updateAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 		                                           title:@"Erreur à la sauvegarde de l'annotation"
 		                                  viewController:nil];
 	                      }];
@@ -284,7 +284,7 @@
 		                      NSLog(@"deleteAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 		                                           title:@"Erreur à la suppression de l'annotation"
 		                                  viewController:nil];
 	                      }];
@@ -312,8 +312,8 @@
 
 	//
 
-	[annotation setUnwrappedAuthor:login];
-	[annotation setUnwrappedDocumentId:_document.unwrappedId];
+	[annotation setUnwrappedAuthorWithTxt:login];
+	[annotation setUnwrappedDocumentIdWithTxt:_document.unwrappedId];
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient addAnnotation:annotation
@@ -325,7 +325,7 @@
 		                   }
 	                   }
 	                   failure:^(NSError *error) {
-		                   [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		                   [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 		                                        title:@"Erreur à la sauvegarde de l'annotation"
 		                               viewController:nil];
 	                   }];
@@ -765,7 +765,7 @@
 		                      }
 		                      failure:^(NSError *error) {
 			                      HIDE_HUD
-			                      [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+			                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 			                                           title:nil
 			                                  viewController:nil];
 		                      }];

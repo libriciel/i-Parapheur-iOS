@@ -146,16 +146,19 @@ import AFNetworking
         trust = newTrust! // replace old trust
 
         // set root cert
-        let rootCerts: [AnyObject] = [cert!]
+        let rootCerts = [cert!] as CFArray
         err = SecTrustSetAnchorCertificates(trust, rootCerts)
 
         // evaluate the certificate and product a trustResult
-        var trustResult: SecTrustResultType = SecTrustResultType()
+        // var trustResult: SecTrustResultType = SecTrustResultType()
+        var trustResult: SecTrustResultType = SecTrustResultType.unspecified // FIXME : Adrien, not sure...
         SecTrustEvaluate(trust, &trustResult)
 
         if ((trustResult == SecTrustResultType.proceed) || (trustResult == SecTrustResultType.unspecified)) {
             // create the credential to be used
-            credential.memory = URLCredential(trust: trust)
+
+            // FIXME : Adrien : not sure at all
+            // credential.memory = URLCredential(trust: trust)
             return true
         }
 
