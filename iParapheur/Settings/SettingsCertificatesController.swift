@@ -66,8 +66,8 @@ import Foundation
 
         if (certificateList.count == 0) {
             let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib();
-            emptyView.downloadDocButton.addTarget(self,
-                                                  action: #selector(downloadDocButton),
+			emptyView.downloadDocButton.addTarget(self,
+			                                      action: #selector(downloadDocButton),
 			                                      for: UIControlEvents.touchUpInside)
             tableView.backgroundView = emptyView;
         }
@@ -105,8 +105,8 @@ import Foundation
         }
 
         if let deleteButton = cell.viewWithTag(103) as? UIButton {
-            deleteButton.addTarget(self,
-                                   action: #selector(onDeleteButtonClicked),
+			deleteButton.addTarget(self,
+			                       action: #selector(onDeleteButtonClicked),
 			                       for: .touchUpInside)
         }
 
@@ -117,7 +117,7 @@ import Foundation
 
     func loadCertificateList() -> Array<Certificate> {
 
-        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
+        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
 
         var result = Array<Certificate>()

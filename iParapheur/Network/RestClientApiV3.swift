@@ -47,7 +47,7 @@ import AFNetworking
          login: NSString,
          password: NSString) {
 
-        manager = AFHTTPSessionManager(baseURL: NSURL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl))))
+        manager = AFHTTPSessionManager(baseURL: URL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl))))
         manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
         manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
         manager.setSessionDidReceiveAuthenticationChallenge {
@@ -73,12 +73,11 @@ import AFNetworking
     // MARK: - Static methods
 
     class func cleanupServerName(url: NSString) -> NSString {
+        var urlFixed = url as String
 
         // Removing space
         // TODO Adrien : add special character restrictions tests ?
-
-		var urlFixed: NSString = url.mutableCopy() as! NSString
-		urlFixed = urlFixed.replacingOccurrences(of: " ", with: "") as NSString
+        urlFixed = urlFixed.replacingOccurrences(of: " ", with: "")
 
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
@@ -88,12 +87,13 @@ import AFNetworking
         let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
                                                                   options: NSRegularExpression.Options.caseInsensitive)
 
-        let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed as! String,
+        let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
                                                             options: NSRegularExpression.MatchingOptions.anchored,
-                                                            range: NSMakeRange(0, urlFixed.length))
+                                                            range: NSMakeRange(0, urlFixed.characters.count))
 
         if (match != nil) {
-			urlFixed = urlFixed.substring(with: match!.rangeAt(1)) as NSString
+            let swiftRange = Range(match!.rangeAt(1), in: urlFixed)
+			urlFixed = urlFixed[swiftRange!]
 		}
 		
         return NSString(string: "https://m.\(urlFixed)")
