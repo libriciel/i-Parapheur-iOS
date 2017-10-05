@@ -109,17 +109,11 @@
 	// Initialize AFNetworking HTTPClient
 
 	if (_swiftManager)
-		[self cancelAllOperations];
+		[_swiftManager cancelAllOperations];
 
 	_swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
 	                                                   login:login
 	                                                password:password];
-}
-
-
-- (void)cancelAllOperations {
-
-	[_swiftManager.manager.operationQueue cancelAllOperations];
 }
 
 
@@ -172,12 +166,12 @@
 
 	[_swiftManager getApiVersionOnResponse:^(NSNumber *level) {
 		 success(level);
-	 }
-	                     onError:^(NSError *error) {
-		                     failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
-		                                                 code:kCFURLErrorUserAuthenticationRequired
-		                                             userInfo:nil]);
-	                     }];
+	}
+	                               onError:^(NSError *error) {
+		                                   failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
+		                                                               code:kCFURLErrorUserAuthenticationRequired
+		                                                           userInfo:nil]);
+	                                   }];
 }
 
 
@@ -189,11 +183,11 @@
 	[_swiftManager getBureauxOnResponse:^(NSArray *response) {
 		 success(response);
 	 }
-	                  onError:^(NSError *error) {
-		                  failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
-		                                              code:kCFURLErrorUserAuthenticationRequired
-		                                          userInfo:nil]);
-	                  }];
+	                                onError:^(NSError *error) {
+		                                failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
+		                                                            code:kCFURLErrorUserAuthenticationRequired
+		                                                        userInfo:nil]);
+	                                }];
 }
 
 
@@ -345,7 +339,7 @@
 	                                            forPdf:isPdf];
 
 	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@",
-	                                                         _swiftManager.manager.baseURL,
+	                                                         _swiftManager.serverUrl.absoluteString,
 	                                                         downloadUrlSuffix];
 	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
 	                                                                                URLString:downloadUrlString

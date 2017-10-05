@@ -105,7 +105,7 @@ import Foundation
         //
 
         if (currentRestClient != nil) {
-            currentRestClient!.manager.invalidateSessionCancelingTasks(true)
+            currentRestClient!.cancelAllOperations()
         }
 
         currentRestClient = RestClientApiV3(baseUrl: NSString(string: urlTextView.text!),

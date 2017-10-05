@@ -34,12 +34,14 @@
 */
 
 import Foundation
-import AFNetworking
+import Alamofire
 
 @objc class RestClientApiV3: NSObject {
 
     let kCFURLErrorBadServerResponse = -1011
-    var manager: AFHTTPSessionManager
+    var manager: Alamofire.SessionManager
+    var serverUrl: NSURL
+    var loginHash: String
 
     // MARK: - Constructor
 
@@ -165,7 +167,7 @@ import AFNetworking
         return false
     }
 
-    class func parsePageAnnotations(pages: [String:AnyObject],
+    class func parsePageAnnotations(pages: [String: AnyObject],
                                     step: Int,
                                     documentId: String) -> [Annotation] {
 

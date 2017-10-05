@@ -159,7 +159,7 @@ import UIKit
         // Setup rest client
 
         if (restClient != nil) {
-            restClient!.manager.operationQueue.cancelAllOperations()
+            restClient!.cancelAllOperations()
         }
 
         restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text) as! NSString,
@@ -227,7 +227,7 @@ import UIKit
     func dismissWithSuccess(success: Bool) {
 
         if (restClient != nil) {
-            restClient!.manager.operationQueue.cancelAllOperations()
+            restClient!.cancelAllOperations()
         }
 
         dismiss(animated: true, completion: nil)
