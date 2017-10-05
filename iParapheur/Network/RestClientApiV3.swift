@@ -93,9 +93,9 @@ import AFNetworking
 
         if (match != nil) {
             let swiftRange = Range(match!.rangeAt(1), in: urlFixed)
-			urlFixed = urlFixed[swiftRange!]
-		}
-		
+            urlFixed = urlFixed[swiftRange!]
+        }
+
         return NSString(string: "https://m.\(urlFixed)")
     }
 
@@ -129,7 +129,7 @@ import AFNetworking
         // takes all certificates from existing trust
         let numCerts = SecTrustGetCertificateCount(trust)
         var certs: [SecCertificate] = [SecCertificate]()
-        for i in 0 ..< numCerts {
+        for i in 0..<numCerts {
             // takeUnretainedValue
             let c: SecCertificate? = SecTrustGetCertificateAtIndex(trust, i)
             certs.append(c!)
@@ -173,7 +173,7 @@ import AFNetworking
 
         for page in pages {
 
-            if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
+            if let jsonAnnotations = page.1 as? [[String: AnyObject]] {
                 for jsonAnnotation in jsonAnnotations {
 
                     let annotation = Annotation(json: jsonAnnotation)

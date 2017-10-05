@@ -84,7 +84,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         return menuElements.count
     }
 
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
@@ -93,7 +93,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         return header
     }
 
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return SettingsTableViewHeaderFooterView.PreferredHeight
     }
 
@@ -115,7 +115,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         return cell
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
 
