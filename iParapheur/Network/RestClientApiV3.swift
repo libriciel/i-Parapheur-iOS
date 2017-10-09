@@ -36,6 +36,7 @@
 import Foundation
 import Alamofire
 
+
 @objc class RestClientApiV3: NSObject {
 
     let kCFURLErrorBadServerResponse = -1011
@@ -43,7 +44,9 @@ import Alamofire
     var serverUrl: NSURL
     var loginHash: String
 
-    // MARK: - Constructor
+
+    // <editor-fold desc="Constructor">
+
 
     init(baseUrl: NSString,
          login: NSString,
@@ -100,6 +103,7 @@ import Alamofire
 
         return NSString(string: "https://m.\(urlFixed)")
     }
+
 
 //    class func shouldTrustProtectionSpace(challenge: URLAuthenticationChallenge,
 //                                          credential: AutoreleasingUnsafeMutablePointer<URLCredential?>) -> Bool {
@@ -168,6 +172,7 @@ import Alamofire
 //        return false
 //    }
 
+
     class func parsePageAnnotations(pages: [String: AnyObject],
                                     step: Int,
                                     documentId: String) -> [Annotation] {
@@ -192,25 +197,34 @@ import Alamofire
         return parsedAnnotations
     }
 
-    // MARK: - Utils
+
+    // </editor-fold desc="Static methods">
+
+
+    // <editor-fold desc="Utils">
+
 
     func cancelAllOperations() {
         manager.session.invalidateAndCancel()
     }
 
-    // MARK: - Get methods
+
+    // </editor-fold desc="Utils">
+
+
+    // <editor-fold desc="Get methods">
+
 
     func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
                        onError errorCallback: ((NSError) -> Void)?) {
 
         let apiVersionUrl = "\(serverUrl.absoluteString!)/parapheur/api/getApiLevel"
-        print("Adrien URL: \(apiVersionUrl)")
 
         manager.request(apiVersionUrl, method: .get).validate().responseJSON {
             response in
             switch (response.result) {
+
                 case .success:
-					
                     guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject])
                     else {
                         errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
@@ -400,6 +414,7 @@ import Alamofire
                     })
     }
 
+
     func getSignInfo(dossier: NSString,
                      bureau: NSString,
                      onResponse: ((AnyObject) -> Void)?,
@@ -470,5 +485,8 @@ import Alamofire
                             })
         }
     }
+
+
+    // </editor-fold desc="Get methods">
 }
 
