@@ -101,71 +101,72 @@ import Alamofire
         return NSString(string: "https://m.\(urlFixed)")
     }
 
-    class func shouldTrustProtectionSpace(challenge: URLAuthenticationChallenge,
-                                          credential: AutoreleasingUnsafeMutablePointer<URLCredential?>) -> Bool {
-
-        // note: credential is a reference; any created credential should be sent back using credential.memory
-
-        let protectionSpace: URLProtectionSpace = challenge.protectionSpace
-        var trust: SecTrust = protectionSpace.serverTrust!
-
-        // load the root CA bundled with the app
-        let certPath: String? = Bundle.main.path(forResource: "acmobile", ofType: "der")
-        if (certPath == nil) {
-            print("Certificate does not exist!")
-            return false
-        }
-
-        let certData: NSData = NSData(contentsOfFile: certPath!)!
-        let cert: SecCertificate? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
-
-        if (cert == nil) {
-            print("Certificate data could not be loaded. DER format?")
-            return false
-        }
-
-        // create a policy that ignores hostname
-        let domain: CFString? = nil
-        let policy: SecPolicy = SecPolicyCreateSSL(true, domain)
-
-        // takes all certificates from existing trust
-        let numCerts = SecTrustGetCertificateCount(trust)
-        var certs: [SecCertificate] = [SecCertificate]()
-        for i in 0..<numCerts {
-            // takeUnretainedValue
-            let c: SecCertificate? = SecTrustGetCertificateAtIndex(trust, i)
-            certs.append(c!)
-        }
-
-        // and adds them to the new policy
-        var newTrust: SecTrust? = nil
-        var err: OSStatus = SecTrustCreateWithCertificates(certs as CFTypeRef, policy, &newTrust)
-        if (err != noErr) {
-            print("Could not create trust")
-        }
-
-        // TakeUnretainedValue
-        trust = newTrust! // replace old trust
-
-        // set root cert
-        let rootCerts = [cert!] as CFArray
-        err = SecTrustSetAnchorCertificates(trust, rootCerts)
-
-        // evaluate the certificate and product a trustResult
-        // var trustResult: SecTrustResultType = SecTrustResultType()
-        var trustResult: SecTrustResultType = SecTrustResultType.unspecified // FIXME : Adrien, not sure...
-        SecTrustEvaluate(trust, &trustResult)
-
-        if ((trustResult == SecTrustResultType.proceed) || (trustResult == SecTrustResultType.unspecified)) {
-            // create the credential to be used
-
-            // FIXME : Adrien : not sure at all
-            // credential.memory = URLCredential(trust: trust)
-            return true
-        }
-
-        return false
-    }
+//    class func shouldTrustProtectionSpace(challenge: URLAuthenticationChallenge,
+//                                          credential: AutoreleasingUnsafeMutablePointer<URLCredential?>) -> Bool {
+//
+//        // note: credential is a reference; any created credential should be sent back using credential.memory
+//
+//        let protectionSpace: URLProtectionSpace = challenge.protectionSpace
+//        var trust: SecTrust = protectionSpace.serverTrust!
+//
+//        // load the root CA bundled with the app
+//        let certPath: String? = Bundle.main.path(forResource: "acmobile", ofType: "der")
+//        if (certPath == nil) {
+//            print("Certificate does not exist!")
+//            return false
+//        }
+//
+//        let certData: NSData = NSData(contentsOfFile: certPath!)!
+//        let cert: SecCertificate? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
+//
+//        if (cert == nil) {
+//            print("Certificate data could not be loaded. DER format?")
+//            return false
+//        }
+//
+//        // create a policy that ignores hostname
+//        let domain: CFString? = nil
+//        let policy: SecPolicy = SecPolicyCreateSSL(true, domain)
+//
+//        // takes all certificates from existing trust
+//        let numCerts = SecTrustGetCertificateCount(trust)
+//        var certs: [SecCertificate] = [SecCertificate]()
+//        for i in 0..<numCerts {
+//            // takeUnretainedValue
+//            let c: SecCertificate? = SecTrustGetCertificateAtIndex(trust, i)
+//            certs.append(c!)
+//        }
+//
+//        // and adds them to the new policy
+//        var newTrust: SecTrust? = nil
+//        var err: OSStatus = SecTrustCreateWithCertificates(certs as CFTypeRef, policy, &newTrust)
+//        if (err != noErr) {
+//            print("Could not create trust")
+//        }
+//
+//        // TakeUnretainedValue
+//        trust = newTrust! // replace old trust
+//
+//        // set root cert
+//        let rootCerts = [cert!] as CFArray
+//        err = SecTrustSetAnchorCertificates(trust, rootCerts)
+//
+//        // evaluate the certificate and product a trustResult
+//        // var trustResult: SecTrustResultType = SecTrustResultType()
+//        var trustResult: SecTrustResultType = SecTrustResultType.unspecified // FIXME : Adrien, not sure...
+//        SecTrustEvaluate(trust, &trustResult)
+//
+//        if ((trustResult == SecTrustResultType.proceed) || (trustResult == SecTrustResultType.unspecified)) {
+//            // create the credential to be used
+//
+//            // FIXME : Adrien : not sure at all
+//            // credential.memory = URLCredential(trust: trust)
+//			print("Adrien - HEEEEREEEE")
+//            return true
+//        }
+//
+//        return false
+//    }
 
     class func parsePageAnnotations(pages: [String: AnyObject],
                                     step: Int,
@@ -191,32 +192,41 @@ import Alamofire
         return parsedAnnotations
     }
 
-    // MARK: - Get methods
+    // MARK: - Utils
 
-    func getApiVersion(onResponse: ((NSNumber) -> Void)?,
-                       onError: ((NSError) -> Void)?) {
-
-		manager.get("/parapheur/api/getApiLevel",
-                    parameters: nil,
-                    success: {
-                        (task: URLSessionDataTask, responseObject: Any) in
-
-                        guard let apiLevel = ApiLevel(json: responseObject as! [String: AnyObject])
-                        else {
-                            onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                            return
-                        }
-
-						onResponse!(NSNumber(value: apiLevel.level!))
-                    },
-                    failure: {
-                        (task: URLSessionDataTask, error: Error) in
-                        onError!(error as NSError)
-                    })
+    func cancelAllOperations() {
+        manager.session.invalidateAndCancel()
     }
 
-    func getBureaux(onResponse: ((NSArray) -> Void)?,
-                    onError: ((NSError) -> Void)?) {
+    // MARK: - Get methods
+
+    func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
+                       onError errorCallback: ((NSError) -> Void)?) {
+
+        let apiVersionUrl = "\(serverUrl.absoluteString!)/parapheur/api/getApiLevel"
+        print("Adrien URL: \(apiVersionUrl)")
+
+        manager.request(apiVersionUrl, method: .get).validate().responseJSON {
+            response in
+            switch (response.result) {
+                case .success:
+					
+                    guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject])
+                    else {
+                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                        return
+                    }
+
+					responseCallback!(NSNumber(value: apiLevel.level!))
+                    break
+				
+                case .failure(let error):
+					
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
+    }
 
         manager.get("/parapheur/bureaux",
                     parameters: nil,
