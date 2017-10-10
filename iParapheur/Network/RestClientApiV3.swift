@@ -310,33 +310,35 @@ import Alamofire
 
     func getDossier(dossier: NSString,
                     bureau: NSString,
-                    onResponse: ((Dossier) -> Void)?,
-                    onError: ((NSError) -> Void)?) {
+                    onResponse responseCallback: ((Dossier) -> Void)?,
+                    onError errorCallback: ((NSError) -> Void)?) {
+
+        let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
 
         // Parameters
 
-        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-        paramsDict["bureauCourant"] = bureau
+        var parameters: Parameters = ["bureauCourant": bureau]
 
         // Request
 
-        manager.get("/parapheur/dossiers/\(dossier)",
-                    parameters: paramsDict,
-                    success: {
-                         (task: URLSessionDataTask, responseObject: Any) in
+        manager.request(getDossierUrl, method: .get, parameters: parameters).validate().responseJSON {
+            response in
+            switch (response.result) {
 
-                         guard let responseDossier = Dossier(json: responseObject as! [String: AnyObject])
-                         else {
-                             onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                             return
-                         }
+                case .success:
+                    guard let responseDossier = Dossier(json: response.value as! [String: AnyObject])
+                    else {
+                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                        return
+                    }
+                    responseCallback!(responseDossier)
+                    break
 
-                        onResponse!(responseDossier)
-                     },
-                    failure: {
-                         (task: URLSessionDataTask, error: Error) in
-                         onError!(error as NSError)
-                     })
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
 
