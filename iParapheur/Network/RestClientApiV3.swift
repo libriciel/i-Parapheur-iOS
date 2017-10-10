@@ -42,7 +42,6 @@ import Alamofire
     let kCFURLErrorBadServerResponse = -1011
     var manager: Alamofire.SessionManager
     var serverUrl: NSURL
-    var loginHash: String
 
 
     // <editor-fold desc="Constructor">
@@ -52,30 +51,30 @@ import Alamofire
          login: NSString,
          password: NSString) {
 
-        manager = AFHTTPSessionManager(baseURL: URL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl))))
-        manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
-        manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
-        manager.setSessionDidReceiveAuthenticationChallenge {
-            (session, challenge, credential) -> URLSession.AuthChallengeDisposition in
+        // Process strings
 
-            // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
-            if RestClientApiV3.shouldTrustProtectionSpace(challenge: challenge, credential: credential!) {
-                return URLSession.AuthChallengeDisposition.useCredential
-            }
+		serverUrl = NSURL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl)))!
 
-            return URLSession.AuthChallengeDisposition.performDefaultHandling
-        }
+        // Login
 
-		// GET needs a JSONResponseSerializer,
-		// POST/PUT/DELETE needs an HTTPResponseSerializer
+        let credentialData = "\(login):\(password)".data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
+        let loginHash = credentialData.base64EncodedString()
 
-		let compoundResponseSerializer = AFCompoundResponseSerializer.compoundSerializer(withResponseSerializers: [AFJSONResponseSerializer(),
-                                                                                                                 AFHTTPResponseSerializer()])
-		manager.responseSerializer = compoundResponseSerializer
+        // Create custom manager
 
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders
+        configuration.httpAdditionalHeaders!["Authorization"] = "Basic \(loginHash)"
+
+        manager = Alamofire.SessionManager(configuration: configuration)
     }
 
-    // MARK: - Static methods
+
+    // </editor-fold desc="Constructor">
+
+
+    // <editor-fold desc="Static methods">
+
 
     class func cleanupServerName(url: NSString) -> NSString {
         var urlFixed = url as String
@@ -235,62 +234,79 @@ import Alamofire
                     break
 				
                 case .failure(let error):
-					
                     errorCallback!(error as NSError)
                     break
             }
         }
     }
 
-        manager.get("/parapheur/bureaux",
-                    parameters: nil,
-                    success: {
-                        (task: URLSessionDataTask, responseObject: Any) in
-                        let bureauList = [Bureau].from(jsonArray: responseObject as! [[String: AnyObject]])
-                        onResponse!(bureauList! as NSArray)
-                    },
-                    failure: {
-                        (task: URLSessionDataTask, error: Error) in
-                        onError!(error as NSError)
-                    })
+
+    func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
+                    onError errorCallback: ((NSError) -> Void)?) {
+
+        let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
+
+        manager.request(getBureauxUrl, method: .get).validate().responseJSON {
+            response in
+            switch (response.result) {
+
+                case .success:
+                    let bureauList = [Bureau].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(bureauList! as NSArray)
+                    break
+
+                case .failure(let error):
+					print("Adrien - \(error.localizedDescription)")
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
+
 
     func getDossiers(bureau: NSString,
                      page: NSNumber,
                      size: NSNumber,
                      filterJson: NSString?,
-                     onResponse: ((NSArray) -> Void)?,
-                     onError: ((NSError) -> Void)?) {
+                     onResponse responseCallback: ((NSArray) -> Void)?,
+                     onError errorCallback: ((NSError) -> Void)?) {
+
+        let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
         // Parameters
 
-        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-        paramsDict["asc"] = true
-        paramsDict["bureau"] = bureau
-        paramsDict["page"] = page
-        paramsDict["pageSize"] = size
-        paramsDict["pendingFile"] = 0
-        paramsDict["skipped"] = Double(page) * (Double(size) - 1)
-        paramsDict["sort"] = "cm:create"
+        var parameters: Parameters = [
+            "asc": true,
+            "bureau": bureau,
+            "page": page,
+            "pageSize": size,
+            "pendingFile": 0,
+            "skipped": Double(page) * (Double(size) - 1),
+            "sort": "cm:create"
+        ]
 
         if (filterJson != nil) {
-            paramsDict["filter"] = filterJson
+            parameters["filter"] = filterJson
         }
 
         // Request
 
-        manager.get("/parapheur/dossiers",
-                    parameters: paramsDict,
-                    success: {
-                        (task: URLSessionDataTask, responseObject: Any) in
-						let dossierList = [Dossier].from(jsonArray: responseObject as! [[String: AnyObject]])
-                        onResponse!(dossierList! as NSArray)
-                    },
-                    failure: {
-                        (task: URLSessionDataTask, error: Error) in
-                        onError!(error as NSError)
-                    })
+		manager.request(getDossiersUrl, method: .get, parameters: parameters).validate().responseJSON {
+            response in
+            switch (response.result) {
+
+                case .success:
+                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(dossierList! as NSArray)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
+
 
     func getDossier(dossier: NSString,
                     bureau: NSString,
@@ -323,6 +339,7 @@ import Alamofire
                      })
     }
 
+
     func getCircuit(dossier: NSString,
                     onResponse: ((AnyObject) -> Void)?,
                     onError: ((NSError) -> Void)?) {
@@ -338,6 +355,7 @@ import Alamofire
                          onError!(error as NSError)
                      })
     }
+
 
     func getTypology(bureauId: NSString,
                      onResponse: ((NSArray) -> Void)?,
@@ -363,6 +381,7 @@ import Alamofire
                         onError!(error as NSError)
                     })
     }
+
 
     func getAnnotations(dossier: NSString,
                         onResponse: (([Annotation]) -> Void)?,
@@ -438,6 +457,7 @@ import Alamofire
                          onError!(error as NSError)
                      })
     }
+
 
     func sendSimpleAction(type: NSNumber,
                           url: NSString,

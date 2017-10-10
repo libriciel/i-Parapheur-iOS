@@ -238,7 +238,6 @@
 							 }
 						 }
 		                failure:^(NSError *error) {
-			                NSLog(@"Adrien - Here !!!!");
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                strongSelf.bureauxArray = @[];
