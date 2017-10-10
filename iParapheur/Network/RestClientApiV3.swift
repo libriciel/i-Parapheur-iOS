@@ -53,7 +53,7 @@ import Alamofire
 
         // Process strings
 
-		serverUrl = NSURL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl)))!
+        serverUrl = NSURL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl)))!
 
         // Login
 
@@ -224,15 +224,14 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject])
-                    else {
+                    guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
                         errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
                         return
                     }
 
-					responseCallback!(NSNumber(value: apiLevel.level!))
+                    responseCallback!(NSNumber(value: apiLevel.level!))
                     break
-				
+
                 case .failure(let error):
                     errorCallback!(error as NSError)
                     break
@@ -256,7 +255,7 @@ import Alamofire
                     break
 
                 case .failure(let error):
-					print("Adrien - \(error.localizedDescription)")
+                    print("Adrien - \(error.localizedDescription)")
                     errorCallback!(error as NSError)
                     break
             }
@@ -291,7 +290,7 @@ import Alamofire
 
         // Request
 
-		manager.request(getDossiersUrl, method: .get, parameters: parameters).validate().responseJSON {
+        manager.request(getDossiersUrl, method: .get, parameters: parameters).validate().responseJSON {
             response in
             switch (response.result) {
 
@@ -317,7 +316,7 @@ import Alamofire
 
         // Parameters
 
-        var parameters: Parameters = ["bureauCourant": bureau]
+        let parameters: Parameters = ["bureauCourant": bureau]
 
         // Request
 
@@ -326,8 +325,7 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    guard let responseDossier = Dossier(json: response.value as! [String: AnyObject])
-                    else {
+                    guard let responseDossier = Dossier(json: response.value as! [String: AnyObject]) else {
                         errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
                         return
                     }
@@ -343,58 +341,62 @@ import Alamofire
 
 
     func getCircuit(dossier: NSString,
-                    onResponse: ((AnyObject) -> Void)?,
-                    onError: ((NSError) -> Void)?) {
+                    onResponse responseCallback: ((AnyObject) -> Void)?,
+                    onError errorCallback: ((NSError) -> Void)?) {
 
-        manager.get("/parapheur/dossiers/\(dossier)/circuit",
-                    parameters: nil,
-                    success: {
-                         (task: URLSessionDataTask, responseObject: Any) in
-                         onResponse!(responseObject as AnyObject)
-                     },
-                    failure: {
-                         (task: URLSessionDataTask, error: Error) in
-                         onError!(error as NSError)
-                     })
+        let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
+
+        // Request
+
+        manager.request(getCircuitUrl, method: .get).validate().responseJSON {
+            response in
+            switch (response.result) {
+
+                case .success:
+                    responseCallback!(response.value as AnyObject)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
 
     func getTypology(bureauId: NSString,
-                     onResponse: ((NSArray) -> Void)?,
-                     onError: ((NSError) -> Void)?) {
+                     onResponse responseCallback: ((NSArray) -> Void)?,
+                     onError errorCallback: ((NSError) -> Void)?) {
 
-//        // Parameters
-//
-//        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-//        paramsDict["asc"] = true
-//        paramsDict["bureau"] = bureau
+        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/types"
 
         // Request
 
-        manager.get("/parapheur/types",
-                    parameters: nil,
-                    success: {
-                        (task: URLSessionDataTask, responseObject: Any) in
-                        let typeList = [ParapheurType].from(jsonArray: responseObject as! [[String: AnyObject]])
-                        onResponse!(typeList! as NSArray)
-                    },
-                    failure: {
-                        (task: URLSessionDataTask, error: Error) in
-                        onError!(error as NSError)
-                    })
+        manager.request(getTypologyUrl, method: .get).validate().responseJSON {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    let typeList = [ParapheurType].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(typeList! as NSArray)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
 
     func getAnnotations(dossier: NSString,
-                        onResponse: (([Annotation]) -> Void)?,
-                        onError: ((NSError) -> Void)?) {
+                        onResponse responseCallback: (([Annotation]) -> Void)?,
+                        onError errorCallback: ((NSError) -> Void)?) {
 
-        manager.get("/parapheur/dossiers/\(dossier)/annotations",
-                    parameters: nil,
-                    success: {
-                        (task: URLSessionDataTask, responseObject: Any) in
+        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
 
-                        // Parse
+        // Request
 
                         var parsedAnnotations = [Annotation]()
 
