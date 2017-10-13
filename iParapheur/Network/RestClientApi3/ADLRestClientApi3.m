@@ -582,15 +582,15 @@
 	// Send request
 
 	[_swiftManager sendSimpleActionWithType:@(1)
-	                            url:[self getAnnotationsUrlForDossier:dossierId
-	                                                      andDocument:annotation.unwrappedDocumentId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+	                                    url:[self getAnnotationsUrlForDossier:dossierId
+	                                                              andDocument:annotation.unwrappedDocumentId]
+	                                   args:argumentDictionary
+	                             onResponse:^(NSNumber *result) {
+		                             success(NSArray.new);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 }
 
 
@@ -610,8 +610,8 @@
 	                                                     andDocument:annotation.unwrappedDocumentId
 	                                                 andAnnotationId:annotation.unwrappedId]
 	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
+	                     onResponse:^(NSNumber *result) {
+		                     success(NSArray.new);
 	                     }
 	                        onError:^(NSError *error) {
 		                        failure(error);
@@ -631,16 +631,16 @@
 	// Send request
 
 	[_swiftManager sendSimpleActionWithType:@(3)
-	                            url:[self getAnnotationUrlForDossier:dossierId
-	                                                     andDocument:annotation.unwrappedDocumentId
-	                                                 andAnnotationId:annotation.unwrappedId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+	                                    url:[self getAnnotationUrlForDossier:dossierId
+	                                                             andDocument:annotation.unwrappedDocumentId
+	                                                         andAnnotationId:annotation.unwrappedId]
+	                                   args:argumentDictionary
+	                             onResponse:^(id result) {
+		                             success(NSArray.new);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 }
 
 

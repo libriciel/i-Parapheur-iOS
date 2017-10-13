@@ -464,7 +464,6 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    print("Adrien - YAY SignInfo : \(response.value)")
                     responseCallback!(response.value as AnyObject)
                     break
 
@@ -479,8 +478,19 @@ import Alamofire
     func sendSimpleAction(type: NSNumber,
                           url: NSString,
                           args: NSDictionary,
-                          onResponse: ((AnyObject) -> Void)?,
-                          onError: ((NSError) -> Void)?) {
+                          onResponse responseCallback: ((NSNumber) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
+
+        // Conversions ObjC -> Swift
+
+        let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
+
+        var parameters: Parameters = [:]
+        for arg in args {
+            parameters[arg.key as! String] = arg.value
+        }
+
+        // Request
 
         if (type == 1) {
 
@@ -510,16 +520,20 @@ import Alamofire
         }
         else if (type == 3) {
 
-            manager.delete(url as String,
-                           parameters: args,
-                           success: {
-                                (task: URLSessionDataTask, responseObject: Any) in
-                                onResponse!(1 as AnyObject)
-                            },
-                           failure: {
-                                (task: URLSessionDataTask, error: Error) in
-                                onError!(error as NSError)
-                            })
+            manager.request(annotationUrl, method: .delete, parameters: parameters).validate().responseString {
+                response in
+
+                switch (response.result) {
+
+                    case .success:
+                        responseCallback!(NSNumber(value: 1))
+                        break
+
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        break
+                }
+            }
         }
     }
 
