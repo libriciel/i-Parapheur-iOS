@@ -447,26 +447,32 @@ import Alamofire
 
     func getSignInfo(dossier: NSString,
                      bureau: NSString,
-                     onResponse: ((AnyObject) -> Void)?,
-                     onError: ((NSError) -> Void)?) {
+                     onResponse responseCallback: ((AnyObject) -> Void)?,
+                     onError errorCallback: ((NSError) -> Void)?) {
+
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/getSignInfo"
 
         // Parameters
 
-        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-        paramsDict["bureauCourant"] = bureau
+        let parameters: Parameters = ["bureauCourant": bureau]
 
         // Request
 
-        manager.get("/parapheur/dossiers/\(dossier)/getSignInfo",
-                    parameters: paramsDict,
-                    success: {
-                         (task: URLSessionDataTask, responseObject: Any) in
-                         onResponse!(responseObject as AnyObject)
-                     },
-                    failure: {
-                         (task: URLSessionDataTask, error: Error) in
-                         onError!(error as NSError)
-                     })
+        manager.request(getSignInfoUrl, parameters: parameters).validate().responseJSON {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    print("Adrien - YAY SignInfo : \(response.value)")
+                    responseCallback!(response.value as AnyObject)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
 

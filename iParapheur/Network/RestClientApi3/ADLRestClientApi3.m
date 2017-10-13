@@ -328,39 +328,43 @@
 
 	// Cancel previous download
 
-	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-		for (NSURLSessionTask *task in downloadTasks)
-			[task cancel];
-	}];
+//	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+//		for (NSURLSessionTask *task in downloadTasks)
+//			[task cancel];
+//	}];
 
 	// Define download request
 
-	NSString *downloadUrlSuffix = [self getDownloadUrl:documentId
-	                                            forPdf:isPdf];
+	[_swiftManager downloadFileWithDocument:documentId
+	                                  isPdf:isPdf
+	                                 atPath:filePathUrl
+	                             onResponse:^(NSString *path) {
+		                             success(path);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 
-	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@",
-	                                                         _swiftManager.serverUrl.absoluteString,
-	                                                         downloadUrlSuffix];
-	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
-	                                                                                URLString:downloadUrlString
-	                                                                               parameters:nil
-	                                                                                    error:nil];
-
-	// Start download
-
-	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
-	                                                                               progress:nil
-	                                                                            destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-		                                                                            return filePathUrl;
-	                                                                            }
-	                                                                      completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-		                                                                      if (error == nil)
-			                                                                      success(filePath.path);
-		                                                                      else if (error.code != kCFURLErrorCancelled)
-			                                                                      failure(error);
-	                                                                      }];
-
-	[downloadTask resume];
+//	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
+//	                                                                                URLString:downloadUrlString
+//	                                                                               parameters:nil
+//	                                                                                    error:nil];
+//
+//	// Start download
+//
+//	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
+//	                                                                               progress:nil
+//	                                                                            destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+//		                                                                            return filePathUrl;
+//	                                                                            }
+//	                                                                      completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+//		                                                                      if (error == nil)
+//			                                                                      success(filePath.path);
+//		                                                                      else if (error.code != kCFURLErrorCancelled)
+//			                                                                      failure(error);
+//	                                                                      }];
+//
+//	[downloadTask resume];
 }
 
 
