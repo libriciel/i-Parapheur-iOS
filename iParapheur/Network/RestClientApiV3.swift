@@ -219,7 +219,7 @@ import Alamofire
 
         let apiVersionUrl = "\(serverUrl.absoluteString!)/parapheur/api/getApiLevel"
 
-        manager.request(apiVersionUrl, method: .get).validate().responseJSON {
+        manager.request(apiVersionUrl).validate().responseJSON {
             response in
             switch (response.result) {
 
@@ -245,7 +245,7 @@ import Alamofire
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl, method: .get).validate().responseJSON {
+        manager.request(getBureauxUrl).validate().responseJSON {
             response in
             switch (response.result) {
 
@@ -255,7 +255,6 @@ import Alamofire
                     break
 
                 case .failure(let error):
-                    print("Adrien - \(error.localizedDescription)")
                     errorCallback!(error as NSError)
                     break
             }
@@ -290,7 +289,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getDossiersUrl, method: .get, parameters: parameters).validate().responseJSON {
+        manager.request(getDossiersUrl, parameters: parameters).validate().responseJSON {
             response in
             switch (response.result) {
 
@@ -320,7 +319,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getDossierUrl, method: .get, parameters: parameters).validate().responseJSON {
+        manager.request(getDossierUrl, parameters: parameters).validate().responseJSON {
             response in
             switch (response.result) {
 
@@ -348,7 +347,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getCircuitUrl, method: .get).validate().responseJSON {
+        manager.request(getCircuitUrl).validate().responseJSON {
             response in
             switch (response.result) {
 
@@ -372,7 +371,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getTypologyUrl, method: .get).validate().responseJSON {
+        manager.request(getTypologyUrl).validate().responseJSON {
             response in
 
             switch (response.result) {
@@ -398,43 +397,51 @@ import Alamofire
 
         // Request
 
-                        var parsedAnnotations = [Annotation]()
+        manager.request(getTypologyUrl).validate().responseJSON {
+            response in
 
-                        if let etapes = responseObject as? [AnyObject] {
-                            for etapeIndex in 0 ..< etapes.count {
+            switch (response.result) {
 
-                                if let documentPages = etapes[etapeIndex] as? [String:AnyObject] {
+                case .success:
+                    var parsedAnnotations = [Annotation]()
 
-                                    for documentPage in documentPages {
-                                        if let pages = documentPage.1 as? [String:AnyObject] {
+                    if let etapes = response.value as? [AnyObject] {
+                        for etapeIndex in 0..<etapes.count {
 
-                                            // Parsing API4
-                                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
-                                                                                                      step: etapeIndex,
-                                                                                                      documentId: documentPage.0 as String)
-                                        }
+                            if let documentPages = etapes[etapeIndex] as? [String: AnyObject] {
+
+                                for documentPage in documentPages {
+                                    if let pages = documentPage.1 as? [String: AnyObject] {
+
+                                        // Parsing API4
+                                        parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
+                                                                                                  step: etapeIndex,
+                                                                                                  documentId: documentPage.0 as String)
                                     }
-
-                                    // Parsing API3
-                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
-                                                                                              step: etapeIndex,
-                                                                                              documentId: "*")
                                 }
+
+                                // Parsing API3
+                                parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
+                                                                                          step: etapeIndex,
+                                                                                          documentId: "*")
                             }
                         }
-                        else {
-                            onError!(NSError(domain: self.manager.baseURL!.absoluteString,
-                                             code: self.kCFURLErrorBadServerResponse,
-                                             userInfo: nil))
-                            return
-                        }
+                    }
+                    else {
+                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+                                               code: self.kCFURLErrorBadServerResponse,
+                                               userInfo: nil))
+                        return
+                    }
 
-                        onResponse!(parsedAnnotations)
-                    },
-                    failure: {
-                        (task: URLSessionDataTask, error: Error) in
-                        onError!(error as NSError)
-                    })
+                    responseCallback!(parsedAnnotations)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
 
@@ -512,5 +519,43 @@ import Alamofire
 
 
     // </editor-fold desc="Get methods">
+
+
+    func downloadFile(document: NSString,
+                      isPdf: Bool,
+                      atPath filePath: NSURL,
+                      onResponse responseCallback: ((NSString) -> Void)?,
+                      onError errorCallback: ((NSError) -> Void)?) {
+
+        let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
+        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
+		let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+			return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
+		}
+
+        // Cancel previous download
+
+        //	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        //		for (NSURLSessionTask *task in downloadTasks)
+        //			[task cancel];
+        //	}];
+
+        // Request
+
+        manager.download(downloadFileUrl, to: destination).validate().response {
+            response in
+
+            if (response.error == nil) {
+                responseCallback!(response.destinationURL!.path as NSString)
+            }
+            //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
+            //		errorCallback!(response.error)
+            //	}
+            else {
+                errorCallback!(response.error! as NSError)
+            }
+        }
+    }
+
 }
 

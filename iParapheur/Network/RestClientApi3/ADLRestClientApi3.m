@@ -34,8 +34,8 @@
  */
 #import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
-#import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
+#import "iParapheur-Swift.h"
 
 
 @implementation ADLRestClientApi3
