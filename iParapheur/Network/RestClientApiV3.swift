@@ -480,11 +480,10 @@ import Alamofire
                           args: NSDictionary,
                           onResponse responseCallback: ((NSNumber) -> Void)?,
                           onError errorCallback: ((NSError) -> Void)?) {
-
+	
         // Conversions ObjC -> Swift
 
         let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
-
         var parameters: Parameters = [:]
         for arg in args {
             parameters[arg.key as! String] = arg.value
@@ -493,30 +492,40 @@ import Alamofire
         // Request
 
         if (type == 1) {
+            manager.request(annotationUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseJSON {
+                response in
 
-            manager.post(url as String,
-                         parameters: args,
-                         success: {
-                              (task: URLSessionDataTask, responseObject: Any) in
-                              onResponse!(1 as AnyObject)
-                          },
-                         failure: {
-                              (task: URLSessionDataTask, error: Error) in
-                              onError!(error as NSError)
-                         })
+                switch (response.result) {
+
+                    case .success:
+                        print("Adrien - YAY annot create")
+                        responseCallback!(NSNumber(value: 1))
+                        break
+
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        print(error.localizedDescription)
+                        break
+                }
+            }
         }
         else if (type == 2) {
 
-            manager.put(url as String,
-                        parameters: args,
-                        success: {
-                             (task: URLSessionDataTask, responseObject: Any) in
-                             onResponse!(1 as AnyObject)
-                         },
-                        failure: {
-                             (task: URLSessionDataTask, error: Error) in
-                             onError!(error as NSError)
-                         })
+            manager.request(annotationUrl, method: .put, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
+                response in
+
+                switch (response.result) {
+
+                    case .success:
+                        responseCallback!(NSNumber(value: 1))
+                        break
+
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        print(error.localizedDescription)
+                        break
+                }
+            }
         }
         else if (type == 3) {
 
