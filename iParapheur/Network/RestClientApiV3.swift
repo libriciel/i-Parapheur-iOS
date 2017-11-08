@@ -67,6 +67,9 @@ import Alamofire
         configuration.httpAdditionalHeaders!["Authorization"] = "Basic \(loginHash)"
 
         manager = Alamofire.SessionManager(configuration: configuration)
+
+		super.init()
+        checkCertificate()
     }
 
 
@@ -584,6 +587,25 @@ import Alamofire
                 errorCallback!(response.error! as NSError)
             }
         }
+    }
+
+    func checkCertificate() {
+
+        let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.pem.txt"
+        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
+
+        // Cleanup
+
+        try? FileManager.default.removeItem(at: filePathUrl)
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
+        }
+
+        // Request
+
+        manager.download(downloadFileUrl, to: destination).validate().responseData {
+            response in
+
     }
 
 }
