@@ -39,6 +39,7 @@ import Alamofire
 
 @objc class RestClientApiV3: NSObject {
 
+    let rootAcDerfile = Bundle.main.url(forResource: "acmobile", withExtension: "der")!
     let kCFURLErrorBadServerResponse = -1011
     var manager: Alamofire.SessionManager
     var serverUrl: NSURL
@@ -110,25 +111,6 @@ import Alamofire
 //    class func shouldTrustProtectionSpace(challenge: URLAuthenticationChallenge,
 //                                          credential: AutoreleasingUnsafeMutablePointer<URLCredential?>) -> Bool {
 //
-//        // note: credential is a reference; any created credential should be sent back using credential.memory
-//
-//        let protectionSpace: URLProtectionSpace = challenge.protectionSpace
-//        var trust: SecTrust = protectionSpace.serverTrust!
-//
-//        // load the root CA bundled with the app
-//        let certPath: String? = Bundle.main.path(forResource: "acmobile", ofType: "der")
-//        if (certPath == nil) {
-//            print("Certificate does not exist!")
-//            return false
-//        }
-//
-//        let certData: NSData = NSData(contentsOfFile: certPath!)!
-//        let cert: SecCertificate? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
-//
-//        if (cert == nil) {
-//            print("Certificate data could not be loaded. DER format?")
-//            return false
-//        }
 //
 //        // create a policy that ignores hostname
 //        let domain: CFString? = nil
@@ -149,30 +131,6 @@ import Alamofire
 //        if (err != noErr) {
 //            print("Could not create trust")
 //        }
-//
-//        // TakeUnretainedValue
-//        trust = newTrust! // replace old trust
-//
-//        // set root cert
-//        let rootCerts = [cert!] as CFArray
-//        err = SecTrustSetAnchorCertificates(trust, rootCerts)
-//
-//        // evaluate the certificate and product a trustResult
-//        // var trustResult: SecTrustResultType = SecTrustResultType()
-//        var trustResult: SecTrustResultType = SecTrustResultType.unspecified // FIXME : Adrien, not sure...
-//        SecTrustEvaluate(trust, &trustResult)
-//
-//        if ((trustResult == SecTrustResultType.proceed) || (trustResult == SecTrustResultType.unspecified)) {
-//            // create the credential to be used
-//
-//            // FIXME : Adrien : not sure at all
-//            // credential.memory = URLCredential(trust: trust)
-//			print("Adrien - HEEEEREEEE")
-//            return true
-//        }
-//
-//        return false
-//    }
 
 
     class func parsePageAnnotations(pages: [String: AnyObject],
@@ -589,9 +547,9 @@ import Alamofire
         }
     }
 
-    func checkCertificate() {
+    func checkCertificate(onResonse responseCallback: ((Bool) -> Void)?) {
 
-        let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.pem.txt"
+        let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.der.txt"
         let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
 
         // Cleanup
@@ -606,6 +564,40 @@ import Alamofire
         manager.download(downloadFileUrl, to: destination).validate().responseData {
             response in
 
+            let isAcValid = self.checkCertificate(pendingDerFile: filePathUrl,
+                                                  authorityDerFile: self.rootAcDerfile)
+
+            responseCallback(isAcValid)
+        }
+    }
+
+    func checkCertificate(pendingDerFile: URL!,
+                          authorityDerFile : URL!) -> Bool {
+
+        // Retrieving test certificate
+
+        let pendingCertificateData = NSData(contentsOf: pendingDerFile!)
+        if (pendingCertificateData == nil) { return false }
+
+        let pendingSecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, pendingCertificateData!)
+        if (pendingSecCertificateRef == nil) { return false }
+
+        var pendingSecTrust: SecTrust?
+        let status = SecTrustCreateWithCertificates(pendingSecCertificateRef!, SecPolicyCreateBasicX509(), &pendingSecTrust)
+        if (status != errSecSuccess) { return false }
+
+        // Retrieving root AC certificate
+
+        let authorityCertificateData = NSData(contentsOf: authorityDerFile)
+        let authoritySecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, authorityCertificateData!)
+
+        // Test and result
+
+        SecTrustSetAnchorCertificates(pendingSecTrust!, [authoritySecCertificateRef] as CFArray)
+        SecTrustSetAnchorCertificatesOnly(pendingSecTrust!, true)
+
+        var secResult = SecTrustResultType.invalid
+        return (SecTrustEvaluate(pendingSecTrust!, &secResult) == errSecSuccess)
     }
 
 }
