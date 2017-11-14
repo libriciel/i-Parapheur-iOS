@@ -39,7 +39,6 @@ import Alamofire
 
 @objc class RestClientApiV3: NSObject {
 
-    let rootAcDerfile = Bundle.main.url(forResource: "acmobile", withExtension: "der")!
     let kCFURLErrorBadServerResponse = -1011
     var manager: Alamofire.SessionManager
     var serverUrl: NSURL
@@ -68,9 +67,6 @@ import Alamofire
         configuration.httpAdditionalHeaders!["Authorization"] = "Basic \(loginHash)"
 
         manager = Alamofire.SessionManager(configuration: configuration)
-
-		super.init()
-        checkCertificate()
     }
 
 
@@ -108,10 +104,10 @@ import Alamofire
     }
 
 
-//    class func shouldTrustProtectionSpace(challenge: URLAuthenticationChallenge,
-//                                          credential: AutoreleasingUnsafeMutablePointer<URLCredential?>) -> Bool {
-//
-//
+    class func checkCertificate(pendingDerFile: URL!) -> Bool {
+
+        // TODO : Check this previous version.
+
 //        // create a policy that ignores hostname
 //        let domain: CFString? = nil
 //        let policy: SecPolicy = SecPolicyCreateSSL(true, domain)
@@ -131,6 +127,33 @@ import Alamofire
 //        if (err != noErr) {
 //            print("Could not create trust")
 //        }
+
+        // Retrieving test certificate
+
+        let pendingCertificateData = NSData(contentsOf: pendingDerFile!)
+        if (pendingCertificateData == nil) { return false }
+
+        let pendingSecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, pendingCertificateData!)
+        if (pendingSecCertificateRef == nil) { return false }
+
+        var pendingSecTrust: SecTrust?
+        let status = SecTrustCreateWithCertificates(pendingSecCertificateRef!, SecPolicyCreateBasicX509(), &pendingSecTrust)
+        if (status != errSecSuccess) { return false }
+
+        // Retrieving root AC certificate
+
+        let authorityDerFile = Bundle.main.url(forResource: "acmobile", withExtension: "der")!
+        let authorityCertificateData = NSData(contentsOf: authorityDerFile)
+        let authoritySecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, authorityCertificateData!)
+
+        // Test and result
+
+        SecTrustSetAnchorCertificates(pendingSecTrust!, [authoritySecCertificateRef] as CFArray)
+        SecTrustSetAnchorCertificatesOnly(pendingSecTrust!, true)
+
+        var secResult = SecTrustResultType.invalid
+        return (SecTrustEvaluate(pendingSecTrust!, &secResult) == errSecSuccess)
+    }
 
 
     class func parsePageAnnotations(pages: [String: AnyObject],
@@ -178,25 +201,60 @@ import Alamofire
     func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
                        onError errorCallback: ((NSError) -> Void)?) {
 
-        let apiVersionUrl = "\(serverUrl.absoluteString!)/parapheur/api/getApiLevel"
+        checkCertificate(onResponse: {
+            (result: Bool) in
 
-        manager.request(apiVersionUrl).validate().responseJSON {
-            response in
-            switch (response.result) {
+            if (result) {
+                let apiVersionUrl = "\(self.serverUrl.absoluteString!)/parapheur/api/getApiLevel"
 
-                case .success:
-                    guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
-                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                        return
+                self.manager.request(apiVersionUrl).validate().responseJSON {
+                    response in
+                    switch (response.result) {
+
+                        case .success:
+                            guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
+                                errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                                return
+                            }
+
+                            responseCallback!(NSNumber(value: apiLevel.level!))
+                            break
+
+                        case .failure(let error):
+                            errorCallback!(error as NSError)
+                            break
                     }
-
-                    responseCallback!(NSNumber(value: apiLevel.level!))
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+                }
             }
+            else {
+                print("Adrien - Damn")
+                errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
+                                       code: 400))
+            }
+
+        })
+    }
+
+
+    func checkCertificate(onResponse responseCallback: ((Bool) -> Void)?) {
+
+        let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.der.txt"
+        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
+
+        // Cleanup
+
+        try? FileManager.default.removeItem(at: filePathUrl)
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
+        }
+
+        // Request
+
+        manager.download(downloadFileUrl, to: destination).validate().responseData {
+            response in
+
+            let isAcValid = RestClientApiV3.checkCertificate(pendingDerFile: filePathUrl)
+            responseCallback!(isAcValid)
         }
     }
 
@@ -545,59 +603,6 @@ import Alamofire
                 errorCallback!(response.error! as NSError)
             }
         }
-    }
-
-    func checkCertificate(onResonse responseCallback: ((Bool) -> Void)?) {
-
-        let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.der.txt"
-        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
-
-        // Cleanup
-
-        try? FileManager.default.removeItem(at: filePathUrl)
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-            return (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
-        }
-
-        // Request
-
-        manager.download(downloadFileUrl, to: destination).validate().responseData {
-            response in
-
-            let isAcValid = self.checkCertificate(pendingDerFile: filePathUrl,
-                                                  authorityDerFile: self.rootAcDerfile)
-
-            responseCallback(isAcValid)
-        }
-    }
-
-    func checkCertificate(pendingDerFile: URL!,
-                          authorityDerFile : URL!) -> Bool {
-
-        // Retrieving test certificate
-
-        let pendingCertificateData = NSData(contentsOf: pendingDerFile!)
-        if (pendingCertificateData == nil) { return false }
-
-        let pendingSecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, pendingCertificateData!)
-        if (pendingSecCertificateRef == nil) { return false }
-
-        var pendingSecTrust: SecTrust?
-        let status = SecTrustCreateWithCertificates(pendingSecCertificateRef!, SecPolicyCreateBasicX509(), &pendingSecTrust)
-        if (status != errSecSuccess) { return false }
-
-        // Retrieving root AC certificate
-
-        let authorityCertificateData = NSData(contentsOf: authorityDerFile)
-        let authoritySecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, authorityCertificateData!)
-
-        // Test and result
-
-        SecTrustSetAnchorCertificates(pendingSecTrust!, [authoritySecCertificateRef] as CFArray)
-        SecTrustSetAnchorCertificatesOnly(pendingSecTrust!, true)
-
-        var secResult = SecTrustResultType.invalid
-        return (SecTrustEvaluate(pendingSecTrust!, &secResult) == errSecSuccess)
     }
 
 }
