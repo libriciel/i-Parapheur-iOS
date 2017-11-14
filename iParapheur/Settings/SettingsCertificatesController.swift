@@ -136,7 +136,7 @@ import Foundation
 
     // MARK: - Listeners
 
-    func downloadDocButton(sender: UIButton) {
+    @objc func downloadDocButton(sender: UIButton) {
 
 		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
 
@@ -145,7 +145,7 @@ import Foundation
         docController.presentPreview(animated: true)
     }
 
-    func onDeleteButtonClicked(sender: UIButton) {
+    @objc func onDeleteButtonClicked(sender: UIButton) {
 
         let buttonPosition: CGPoint = sender.convert(.zero, to:certificatesTableView);
         let indexPath: IndexPath = certificatesTableView.indexPathForRow(at: buttonPosition)!;

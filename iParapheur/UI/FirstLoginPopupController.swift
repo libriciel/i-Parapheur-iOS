@@ -241,7 +241,7 @@ import UIKit
 
     // MARK: - TextField listeners
 
-    func onTextFieldValueChanged(sender: AnyObject) {
+    @objc func onTextFieldValueChanged(sender: AnyObject) {
 
         errorLabel.text = ""
         setBorderOnTextField(textField: sender as! UITextField, alert:false)

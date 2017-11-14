@@ -78,7 +78,7 @@ import UIKit
 
     // MARK: - Button Listeners
 
-    func onBackButtonClicked() {
+    @objc func onBackButtonClicked() {
         self.dismiss(animated: true, completion: nil)
     }
 

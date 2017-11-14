@@ -92,11 +92,11 @@ import Foundation
 
     // MARK: - Listeners
 
-    func onCancelButtonClicked(sender: UIButton) {
+    @objc func onCancelButtonClicked(sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
 
-    func onTestButtonClicked(sender: UIButton) {
+    @objc func onTestButtonClicked(sender: UIButton) {
 
         // Cleanup
 
@@ -126,7 +126,7 @@ import Foundation
                                          })
     }
 
-    func onSaveButtonClicked(sender: UIButton) {
+    @objc func onSaveButtonClicked(sender: UIButton) {
 
         // Cleanup
 

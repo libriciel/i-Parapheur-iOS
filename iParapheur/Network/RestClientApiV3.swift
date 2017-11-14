@@ -96,8 +96,8 @@ import Alamofire
                                                             range: NSMakeRange(0, urlFixed.characters.count))
 
         if (match != nil) {
-            let swiftRange = Range(match!.rangeAt(1), in: urlFixed)
-            urlFixed = urlFixed[swiftRange!]
+            let swiftRange = Range(match!.range(at: 1), in: urlFixed)
+            urlFixed = String(urlFixed[swiftRange!])
         }
 
         return NSString(string: "https://m.\(urlFixed)")
@@ -227,7 +227,6 @@ import Alamofire
                 }
             }
             else {
-                print("Adrien - Damn")
                 errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
                                        code: 400))
             }

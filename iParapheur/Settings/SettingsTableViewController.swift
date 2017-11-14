@@ -74,7 +74,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     // MARK: - Listeners
 
-    func onBackButtonClicked() {
+    @objc func onBackButtonClicked() {
         self.dismiss(animated: true, completion: nil)
     }
 

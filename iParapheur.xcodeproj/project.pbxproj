@@ -47,7 +47,6 @@
 		B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECB2153AF65F00BD514D /* RGAppDelegate.m */; };
 		B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */; };
 		B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */; };
-		B4E5ECD4153AF65F00BD514D /* iParapheurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECD3153AF65F00BD514D /* iParapheurTests.m */; };
 		B4E5ED06153AF77600BD514D /* ADLCredentialVault.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF6153AF72200BD514D /* ADLCredentialVault.m */; };
 		B4E5ED08153AF83E00BD514D /* ADLCollectivityDef.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECF8153AF72200BD514D /* ADLCollectivityDef.m */; };
 		B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FF33C215473325006F7BF3 /* ReaderConstants.m */; };
@@ -180,15 +179,7 @@
 		C57B63751DABD36E005776F2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63731DABD36E005776F2 /* Account.swift */; };
 		C57E67C81A5DF21400BC4A3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803551A5D90AF00D54F7D /* CoreData.framework */; };
 		C57E67C91A5DF23A00BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
-		C57E67D81A5DF6F800BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
-		C57E67D91A5DF6F800BC4A3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803551A5D90AF00D54F7D /* CoreData.framework */; };
-		C57E67DA1A5DF6F800BC4A3A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803631A5D90F200D54F7D /* Foundation.framework */; };
-		C57E67DB1A5DF6F800BC4A3A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803611A5D90E600D54F7D /* UIKit.framework */; };
-		C57E67DC1A5DF6F800BC4A3A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035F1A5D90DA00D54F7D /* SystemConfiguration.framework */; };
-		C57E67DD1A5DF6F800BC4A3A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035D1A5D90D200D54F7D /* ImageIO.framework */; };
-		C57E67DE1A5DF6F800BC4A3A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
-		C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
-		C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
+		C58203BE1FBB466300B6606F /* iParapheurTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58203BD1FBB466300B6606F /* iParapheurTests.swift */; };
 		C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */; };
 		C58888421A6D1CEC00E159CB /* ADLResponseSignInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C58888411A6D1CEC00E159CB /* ADLResponseSignInfo.m */; };
 		C58971531AA751500077FC84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C58971551AA751500077FC84 /* Localizable.strings */; };
@@ -301,7 +292,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B4E5ECCA153AF65F00BD514D /* PBXContainerItemProxy */ = {
+		C58203C01FBB466300B6606F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B4E5EC95153AF65E00BD514D /* Project object */;
 			proxyType = 1;
@@ -413,7 +404,6 @@
 		B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGDossierDetailViewController.m; sourceTree = "<group>"; };
 		B4E5ECBD153AF65F00BD514D /* RGMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGMasterViewController.h; sourceTree = "<group>"; };
 		B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGMasterViewController.m; sourceTree = "<group>"; };
-		B4E5ECC5153AF65F00BD514D /* iParapheurTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iParapheurTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4E5ECCE153AF65F00BD514D /* iParapheurTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iParapheurTests-Info.plist"; sourceTree = "<group>"; };
 		B4E5ECD2153AF65F00BD514D /* iParapheurTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iParapheurTests.h; sourceTree = "<group>"; };
 		B4E5ECD3153AF65F00BD514D /* iParapheurTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iParapheurTests.m; sourceTree = "<group>"; };
@@ -577,6 +567,9 @@
 		C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C57B63731DABD36E005776F2 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		C57E67E21A5DF76500BC4A3A /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		C58203BB1FBB466300B6606F /* iParapheurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iParapheurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C58203BD1FBB466300B6606F /* iParapheurTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iParapheurTests.swift; sourceTree = "<group>"; };
+		C58203BF1FBB466300B6606F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C587BFDE1AD53743009AE6C3 /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocumentOutline.h; sourceTree = "<group>"; };
 		C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocumentOutline.m; sourceTree = "<group>"; };
 		C58888401A6D1CEC00E159CB /* ADLResponseSignInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseSignInfo.h; sourceTree = "<group>"; };
@@ -723,19 +716,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B4E5ECC1153AF65F00BD514D /* Frameworks */ = {
+		C58203B81FBB466300B6606F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C57E67D81A5DF6F800BC4A3A /* CoreGraphics.framework in Frameworks */,
-				C57E67D91A5DF6F800BC4A3A /* CoreData.framework in Frameworks */,
-				C57E67DA1A5DF6F800BC4A3A /* Foundation.framework in Frameworks */,
-				C57E67DB1A5DF6F800BC4A3A /* UIKit.framework in Frameworks */,
-				C57E67DC1A5DF6F800BC4A3A /* SystemConfiguration.framework in Frameworks */,
-				C57E67DD1A5DF6F800BC4A3A /* ImageIO.framework in Frameworks */,
-				C57E67DE1A5DF6F800BC4A3A /* MessageUI.framework in Frameworks */,
-				C57E67DF1A5DF6F800BC4A3A /* QuartzCore.framework in Frameworks */,
-				C57E67E01A5DF6F800BC4A3A /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -909,6 +893,7 @@
 				B4E5ECA8153AF65F00BD514D /* iParapheur */,
 				B4E5ECCC153AF65F00BD514D /* iParapheurTests */,
 				B4FF33FB15473378006F7BF3 /* Resources */,
+				C58203BC1FBB466300B6606F /* iParapheurTests */,
 				B4E5ECA1153AF65F00BD514D /* Frameworks */,
 				B4E5EC9F153AF65F00BD514D /* Products */,
 				95168E39403D0D99E2243D04 /* Pods */,
@@ -919,7 +904,7 @@
 			isa = PBXGroup;
 			children = (
 				B4E5EC9E153AF65F00BD514D /* iParapheur.app */,
-				B4E5ECC5153AF65F00BD514D /* iParapheurTests.octest */,
+				C58203BB1FBB466300B6606F /* iParapheurTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1408,6 +1393,15 @@
 			path = Storage;
 			sourceTree = "<group>";
 		};
+		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
+			isa = PBXGroup;
+			children = (
+				C58203BD1FBB466300B6606F /* iParapheurTests.swift */,
+				C58203BF1FBB466300B6606F /* Info.plist */,
+			);
+			path = iParapheurTests;
+			sourceTree = "<group>";
+		};
 		C58CB2BE1AB72DB400C79A97 /* App icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1738,23 +1732,23 @@
 			productReference = B4E5EC9E153AF65F00BD514D /* iParapheur.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B4E5ECC4153AF65F00BD514D /* iParapheurTests */ = {
+		C58203BA1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B4E5ECDA153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheurTests" */;
+			buildConfigurationList = C58203C21FBB466300B6606F /* Build configuration list for PBXNativeTarget "iParapheurTests" */;
 			buildPhases = (
-				B4E5ECC0153AF65F00BD514D /* Sources */,
-				B4E5ECC1153AF65F00BD514D /* Frameworks */,
-				B4E5ECC2153AF65F00BD514D /* Resources */,
+				C58203B71FBB466300B6606F /* Sources */,
+				C58203B81FBB466300B6606F /* Frameworks */,
+				C58203B91FBB466300B6606F /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				B4E5ECCB153AF65F00BD514D /* PBXTargetDependency */,
+				C58203C11FBB466300B6606F /* PBXTargetDependency */,
 			);
 			name = iParapheurTests;
 			productName = iParapheurTests;
-			productReference = B4E5ECC5153AF65F00BD514D /* iParapheurTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = C58203BB1FBB466300B6606F /* iParapheurTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -1763,12 +1757,17 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = RG;
-				LastSwiftUpdateCheck = 0730;
+				LastSwiftUpdateCheck = 0910;
 				LastUpgradeCheck = 0900;
 				TargetAttributes = {
 					B4E5EC9D153AF65F00BD514D = {
 						DevelopmentTeam = WG6RXYLAQX;
 						LastSwiftMigration = 0910;
+					};
+					C58203BA1FBB466300B6606F = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = B4E5EC9D153AF65F00BD514D;
 					};
 				};
 			};
@@ -1786,7 +1785,7 @@
 			projectRoot = "";
 			targets = (
 				B4E5EC9D153AF65F00BD514D /* iParapheur */,
-				B4E5ECC4153AF65F00BD514D /* iParapheurTests */,
+				C58203BA1FBB466300B6606F /* iParapheurTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1977,7 +1976,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B4E5ECC2153AF65F00BD514D /* Resources */ = {
+		C58203B91FBB466300B6606F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2155,21 +2154,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B4E5ECC0153AF65F00BD514D /* Sources */ = {
+		C58203B71FBB466300B6606F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4E5ECD4153AF65F00BD514D /* iParapheurTests.m in Sources */,
+				C58203BE1FBB466300B6606F /* iParapheurTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B4E5ECCB153AF65F00BD514D /* PBXTargetDependency */ = {
+		C58203C11FBB466300B6606F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B4E5EC9D153AF65F00BD514D /* iParapheur */;
-			targetProxy = B4E5ECCA153AF65F00BD514D /* PBXContainerItemProxy */;
+			targetProxy = C58203C01FBB466300B6606F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2328,7 +2327,8 @@
 				SWIFT_DISABLE_SAFETY_CHECKS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "iParapheur/iParapheur-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2364,47 +2364,74 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SWIFT_DISABLE_SAFETY_CHECKS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "iParapheur/iParapheur-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
-		B4E5ECDB153AF65F00BD514D /* Debug */ = {
+		C58203C31FBB466300B6606F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iParapheur/iParapheur-Prefix.pch";
-				INFOPLIST_FILE = "iParapheurTests/iParapheurTests-Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.ringum.${PRODUCT_NAME:rfc1034identifier}";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = iParapheurTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ADL.iParapheurTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
 			};
 			name = Debug;
 		};
-		B4E5ECDC153AF65F00BD514D /* Release */ = {
+		C58203C41FBB466300B6606F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "iParapheur/iParapheur-Prefix.pch";
-				INFOPLIST_FILE = "iParapheurTests/iParapheurTests-Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.ringum.${PRODUCT_NAME:rfc1034identifier}";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = iParapheurTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = ADL.iParapheurTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iParapheur.app/iParapheur";
 			};
 			name = Release;
 		};
@@ -2429,11 +2456,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		B4E5ECDA153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheurTests" */ = {
+		C58203C21FBB466300B6606F /* Build configuration list for PBXNativeTarget "iParapheurTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B4E5ECDB153AF65F00BD514D /* Debug */,
-				B4E5ECDC153AF65F00BD514D /* Release */,
+				C58203C31FBB466300B6606F /* Debug */,
+				C58203C41FBB466300B6606F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

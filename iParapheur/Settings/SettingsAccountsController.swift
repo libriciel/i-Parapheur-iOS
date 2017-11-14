@@ -145,7 +145,7 @@ import Foundation
 
     // MARK: - Listeners
 
-    func onAccountSaved(notification: NSNotification) {
+    @objc func onAccountSaved(notification: NSNotification) {
 
         let account: Account! = notification.object as! Account
         let accountIndex = accountList.index(of: account)
@@ -173,11 +173,11 @@ import Foundation
         ModelsDataController.save()
     }
 
-    func onAddAccountButtonClicked(sender: UIBarButtonItem) {
+    @objc func onAddAccountButtonClicked(sender: UIBarButtonItem) {
         performSegue(withIdentifier: SettingsAccountsEditPopupController.Segue, sender: sender)
     }
 
-    func onDeleteButtonClicked(sender: UIButton) {
+    @objc func onDeleteButtonClicked(sender: UIButton) {
 
         let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
@@ -208,11 +208,11 @@ import Foundation
         ModelsDataController.save()
     }
 
-    func onEditButtonClicked(sender: UIButton) {
+    @objc func onEditButtonClicked(sender: UIButton) {
         performSegue(withIdentifier: SettingsAccountsEditPopupController.Segue, sender: sender)
     }
 
-    func onVisibilityButtonClicked(sender: UIButton) {
+    @objc func onVisibilityButtonClicked(sender: UIButton) {
 
         let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
         let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;

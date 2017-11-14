@@ -201,15 +201,15 @@
 	[self cancelAllHTTPOperationsWithPath:@"dossiers"];
 
 	[_swiftManager getDossiersWithBureau:bureau
-	                      page:@(page)
-	                      size:@(size)
-	                filterJson:filterJson
-	                onResponse:^(NSArray *response) {
-		               success(response);
-	                }
-					   onError:^(NSError *error) {
-						   failure(error);
-	                   }];
+	                                page:@(page)
+	                                size:@(size)
+	                          filterJson:filterJson
+	                          onResponse:^(NSArray *response) {
+		                          success(response);
+	                          }
+	                             onError:^(NSError *error) {
+		                             failure(error);
+	                             }];
 }
 
 

@@ -108,8 +108,7 @@
 
 	if ([segue.identifier isEqualToString:@"filterSegue"]) {
 		((ADLFilterViewController *) segue.destinationViewController).delegate = self;
-	}
-	else {
+	} else {
 		NSMutableArray *selectedArray = [NSMutableArray new];
 
 		for (Dossier *dossier in _selectedDossiersArray)
@@ -244,8 +243,7 @@
 		self.navigationItem.rightBarButtonItem.enabled = NO;
 		self.navigationItem.rightBarButtonItem.tintColor = UIColor.clearColor;
 		self.navigationItem.title = @"1 dossier sélectionné";
-	}
-	else {
+	} else {
 		self.navigationItem.leftBarButtonItem = nil;
 		self.navigationItem.rightBarButtonItem.enabled = YES;
 		self.navigationItem.rightBarButtonItem.tintColor = ColorUtils.Aqua;
@@ -255,6 +253,7 @@
 
 
 - (void)exitSelection {
+
 	[_selectedDossiersArray removeAllObjects];
 	[self updateSelectionMode];
 	[self updateToolBar];
@@ -314,20 +313,21 @@
 
 - (void)loadDossiersWithPage:(int)page {
 
-	NSDictionary *currentFilter = [ADLSingletonState sharedSingletonState].currentFilter;
+	NSDictionary *currentFilter = ADLSingletonState.sharedSingletonState.currentFilter;
 
 	if (currentFilter != nil) {
 
-		NSMutableArray *types = [NSMutableArray new];
+		NSMutableArray *types = NSMutableArray.new;
 		for (NSString *type in currentFilter[@"types"])
-			[types addObject:@{@"ph:typeMetier" : type}];
+			[types addObject:@{@"ph:typeMetier": type}];
 
-		NSMutableArray *sousTypes = [NSMutableArray new];
+		NSMutableArray *sousTypes = NSMutableArray.new;
 		for (NSString *sousType in currentFilter[@"sousTypes"])
-			[sousTypes addObject:@{@"ph:soustypeMetier" : sousType}];
+			[sousTypes addObject:@{@"ph:soustypeMetier": sousType}];
 
-		NSDictionary *titre = @{@"or" : @[@{@"cm:title" : [NSString stringWithFormat:@"*%@*", currentFilter[@"titre"]]}]};
-		NSDictionary *filtersDictionary = @{@"and" : @[@{@"or" : types}, @{@"or" : sousTypes}, titre]};
+		NSDictionary *titre = @{@"or": @[@{@"cm:title": [NSString stringWithFormat:@"*%@*",
+		                                                                           currentFilter[@"titre"]]}]};
+		NSDictionary *filtersDictionary = @{@"and": @[@{@"or": types}, @{@"or": sousTypes}, titre]};
 
 		// Send request
 
@@ -364,8 +364,8 @@
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
 				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                      title:nil
-				                             viewController:nil];
+				                                                 title:nil
+				                                        viewController:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
 			                 }
@@ -389,8 +389,8 @@
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
 				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                      title:nil
-				                             viewController:nil];
+				                                                 title:nil
+				                                        viewController:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
 			                 }
@@ -420,8 +420,7 @@
 
 		tableView.backgroundView = emptyView;
 		tableView.tableFooterView.hidden = true;
-	}
-	else {
+	} else {
 		tableView.backgroundView = nil;
 		tableView.tableFooterView.hidden = false;
 	}
@@ -478,7 +477,8 @@
 		outputFormatter.timeStyle = NSDateFormatterNoStyle;
 
 		NSString *datePrint = isLate ? @"en retard depuis le %@" : @"à rendre avant le %@";
-		cell.limitDateLabel.text = [NSString stringWithFormat:datePrint, [outputFormatter stringFromDate:dossierDate]];
+		cell.limitDateLabel.text = [NSString stringWithFormat:datePrint,
+		                                                      [outputFormatter stringFromDate:dossierDate]];
 		cell.limitDateLabel.textColor = isLate ? ColorUtils.Salmon : ColorUtils.BlueGreySeparator;
 	}
 
@@ -509,8 +509,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 			[_selectedDossiersArray removeObject:dossierClicked];
 			cell.checkOnImage.hidden = YES;
 			cell.checkOffImage.hidden = NO;
-		}
-		else {
+		} else {
 			[_selectedDossiersArray addObject:dossierClicked];
 			cell.checkOnImage.hidden = NO;
 			cell.checkOffImage.hidden = YES;
@@ -521,7 +520,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		if (_selectedDossiersArray.count == 1)
 			self.navigationItem.title = @"1 dossier sélectionné";
 		else
-			self.navigationItem.title = [NSString stringWithFormat:@"%d dossiers sélectionnés", _selectedDossiersArray.count];
+			self.navigationItem.title = [NSString stringWithFormat:@"%d dossiers sélectionnés",
+			                                                       _selectedDossiersArray.count];
 
 		[self updateToolBar];
 
@@ -555,7 +555,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
-- (IBAction)tableViewDidLongPress:(UILongPressGestureRecognizer*) sender {
+- (IBAction)tableViewDidLongPress:(UILongPressGestureRecognizer *)sender {
 
 	if (sender.state != UIGestureRecognizerStateBegan)
 		return;
@@ -633,8 +633,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 		NSArray *array = [_dossiersArray filteredArrayUsingPredicate:predicate];
 		_filteredDossiersArray = array;
-	}
-	else {
+	} else {
 		_filteredDossiersArray = [NSArray arrayWithArray:_dossiersArray];
 	}
 
