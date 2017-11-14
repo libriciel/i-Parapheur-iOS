@@ -385,7 +385,7 @@
 
 - (void)refreshModel {
 
-	[self.annotationModel setUnwrappedRect:[NSValue valueWithCGRect:self.frame]];
+	[self.annotationModel setUnwrappedRectWithRct:[NSValue valueWithCGRect:self.frame]];
 }
 
 

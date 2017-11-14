@@ -38,7 +38,7 @@ import UIKit
 
 @objc class DocumentSelectionController: UITableViewController {
 
-    static let NotifShowDocument: NSString! = "DocumentSelectionControllerNotifShowDocument"
+    static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
     var documentList: NSArray! = NSArray()
     var docList: [Document]! = []
@@ -57,38 +57,39 @@ import UIKit
 
         //
 
-        preferredContentSize = CGSizeMake(DocumentSelectionCell.PreferredWidth,
-                                          DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
+		preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
+		                              height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
     }
 
     // MARK: - TableViewDelegate
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return docList.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: DocumentSelectionCell = tableView.dequeueReusableCellWithIdentifier(DocumentSelectionCell.CellId,
-                                                                                      forIndexPath: indexPath) as! DocumentSelectionCell
+		let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
+		                                                                for: indexPath as IndexPath) as! DocumentSelectionCell
 
         let document: Document = docList[indexPath.row]
 
-        cell.annexeIcon.image = cell.annexeIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
-        cell.annexeIcon.hidden = (indexPath.row == 0) || document.isMainDocument
-        cell.mainDocIcon.image = cell.mainDocIcon.image!.imageWithRenderingMode(.AlwaysTemplate)
-        cell.mainDocIcon.hidden = (indexPath.row != 0) || !document.isMainDocument
+        cell.annexeIcon.image = cell.annexeIcon.image!.withRenderingMode(.alwaysTemplate)
+        cell.annexeIcon.isHidden = (indexPath.row == 0) || document.isMainDocument
+        cell.mainDocIcon.image = cell.mainDocIcon.image!.withRenderingMode(.alwaysTemplate)
+        cell.mainDocIcon.isHidden = (indexPath.row != 0) || !document.isMainDocument
         cell.titleLabel.text = document.name
 
         return cell;
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.dismissViewControllerAnimated(false, completion: {
-            () -> Void in
-            NSNotificationCenter.defaultCenter().postNotificationName(String(DocumentSelectionController.NotifShowDocument),
-                                                                      object: indexPath.row as! NSNumber)
-        })
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: false,
+                completion: {
+                    () -> Void in
+                    NotificationCenter.default.post(name: DocumentSelectionController.NotifShowDocument,
+                                                    object: indexPath.row as NSNumber)
+                })
     }
 
 }

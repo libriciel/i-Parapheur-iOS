@@ -438,9 +438,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		}
 		else if (error.code == P12AlreadyImported) {
 
-			[ViewUtils logWarningMessage:certificatePath.lastPathComponent
-			                       title:@"Ce fichier de certificat a déjà été importé."
-			              viewController:nil];
+			[ViewUtils logWarningMessageWithMessage:certificatePath.lastPathComponent
+			                                  title:@"Ce fichier de certificat a déjà été importé."
+			                         viewController:nil];
 
 			[self deleteCertificate:certificatePath];
 		}

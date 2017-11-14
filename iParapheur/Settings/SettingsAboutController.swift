@@ -45,7 +45,7 @@ class SettingsAboutController: UIViewController {
 		super.viewDidLoad()
 		print("View loaded : SettingsAboutController")
 		
-		let appVersionString: String = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
-		versionLabel.text = versionLabel.text?.stringByReplacingOccurrencesOfString(":version:", withString: appVersionString)
+		let appVersionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+		versionLabel.text = versionLabel.text?.replacingOccurrences(of: ":version:", with: appVersionString)
     }
 }

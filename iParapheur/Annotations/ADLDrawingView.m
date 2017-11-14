@@ -238,7 +238,7 @@
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 
 	if ([DeviceUtils isConnectedToDemoAccount]) {
-		[ViewUtils logInfoMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
+		[ViewUtils logInfoMessageWithMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
 		                    title:@"Action indisponible"
 		           viewController:nil];
 		return;
@@ -542,14 +542,14 @@
 
 - (void)updateAnnotation:(Annotation *)annotation {
 
-	[annotation setUnwrappedPage:@(_pageNumber)];
+	[annotation setUnwrappedPageWithI:@(_pageNumber)];
 	[_masterViewController.dataSource updateAnnotation:annotation];
 }
 
 
 - (void)addAnnotation:(Annotation *)annotation {
 
-	[annotation setUnwrappedPage:@(_pageNumber)];
+	[annotation setUnwrappedPageWithI:@(_pageNumber)];
 	[_masterViewController.dataSource addAnnotation:annotation];
 }
 

@@ -34,8 +34,8 @@
  */
 #import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
-#import "iParapheur-Swift.h"
 #import "DeviceUtils.h"
+#import "iParapheur-Swift.h"
 
 
 @implementation ADLRestClientApi3
@@ -109,17 +109,11 @@
 	// Initialize AFNetworking HTTPClient
 
 	if (_swiftManager)
-		[self cancelAllOperations];
+		[_swiftManager cancelAllOperations];
 
 	_swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
 	                                                   login:login
 	                                                password:password];
-}
-
-
-- (void)cancelAllOperations {
-
-	[_swiftManager.manager.operationQueue cancelAllOperations];
 }
 
 
@@ -170,14 +164,14 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_swiftManager getApiVersion:^(NSNumber *level) {
+	[_swiftManager getApiVersionOnResponse:^(NSNumber *level) {
 		 success(level);
-	 }
-	                     onError:^(NSError *error) {
-		                     failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
-		                                                 code:kCFURLErrorUserAuthenticationRequired
-		                                             userInfo:nil]);
-	                     }];
+	}
+	                               onError:^(NSError *error) {
+		                                   failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
+		                                                               code:kCFURLErrorUserAuthenticationRequired
+		                                                           userInfo:nil]);
+	                                   }];
 }
 
 
@@ -186,14 +180,14 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"bureaux"];
 
-	[_swiftManager getBureaux:^(NSArray *response) {
+	[_swiftManager getBureauxOnResponse:^(NSArray *response) {
 		 success(response);
 	 }
-	                  onError:^(NSError *error) {
-		                  failure([NSError errorWithDomain:_swiftManager.manager.baseURL.absoluteString
-		                                              code:kCFURLErrorUserAuthenticationRequired
-		                                          userInfo:nil]);
-	                  }];
+	                                onError:^(NSError *error) {
+		                                failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
+		                                                            code:kCFURLErrorUserAuthenticationRequired
+		                                                        userInfo:nil]);
+	                                }];
 }
 
 
@@ -206,7 +200,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"dossiers"];
 
-	[_swiftManager getDossiers:bureau
+	[_swiftManager getDossiersWithBureau:bureau
 	                      page:@(page)
 	                      size:@(size)
 	                filterJson:filterJson
@@ -223,7 +217,7 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	[_swiftManager getTypology:bureauId
+	[_swiftManager getTypologyWithBureauId:bureauId
 	                onResponse:^(NSArray *response) {
 		                success(response);
 	                }
@@ -238,7 +232,7 @@
            success:(void (^)(Dossier *))success
            failure:(void (^)(NSError *))failure {
 
-	[_swiftManager getDossier:dossier
+	[_swiftManager getDossierWithDossier:dossier
 	                   bureau:bureau
 	               onResponse:^(Dossier *response) {
 		               success(response);
@@ -256,7 +250,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-	[_swiftManager getSignInfo:dossierId
+	[_swiftManager getSignInfoWithDossier:dossierId
 	                    bureau:bureauId
 	                onResponse:^(id response) {
 
@@ -284,7 +278,7 @@
 
 	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 
-	[_swiftManager getCircuit:dossier
+	[_swiftManager getCircuitWithDossier:dossier
 	               onResponse:^(NSDictionary *response) {
 
 		               NSError *error;
@@ -313,7 +307,7 @@
 	[self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
 	                                                            andDocument:document]];
 
-	[_swiftManager getAnnotations:dossier
+	[_swiftManager getAnnotationsWithDossier:dossier
 	                   onResponse:^(id annotations) {
 		                   success(annotations);
 	                   }
@@ -334,39 +328,43 @@
 
 	// Cancel previous download
 
-	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-		for (NSURLSessionTask *task in downloadTasks)
-			[task cancel];
-	}];
+//	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+//		for (NSURLSessionTask *task in downloadTasks)
+//			[task cancel];
+//	}];
 
 	// Define download request
 
-	NSString *downloadUrlSuffix = [self getDownloadUrl:documentId
-	                                            forPdf:isPdf];
+	[_swiftManager downloadFileWithDocument:documentId
+	                                  isPdf:isPdf
+	                                 atPath:filePathUrl
+	                             onResponse:^(NSString *path) {
+		                             success(path);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 
-	NSString *downloadUrlString = [NSString stringWithFormat:@"%@%@",
-	                                                         _swiftManager.manager.baseURL,
-	                                                         downloadUrlSuffix];
-	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
-	                                                                                URLString:downloadUrlString
-	                                                                               parameters:nil
-	                                                                                    error:nil];
-
-	// Start download
-
-	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
-	                                                                               progress:nil
-	                                                                            destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-		                                                                            return filePathUrl;
-	                                                                            }
-	                                                                      completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-		                                                                      if (error == nil)
-			                                                                      success(filePath.path);
-		                                                                      else if (error.code != kCFURLErrorCancelled)
-			                                                                      failure(error);
-	                                                                      }];
-
-	[downloadTask resume];
+//	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
+//	                                                                                URLString:downloadUrlString
+//	                                                                               parameters:nil
+//	                                                                                    error:nil];
+//
+//	// Start download
+//
+//	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
+//	                                                                               progress:nil
+//	                                                                            destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+//		                                                                            return filePathUrl;
+//	                                                                            }
+//	                                                                      completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+//		                                                                      if (error == nil)
+//			                                                                      success(filePath.path);
+//		                                                                      else if (error.code != kCFURLErrorCancelled)
+//			                                                                      failure(error);
+//	                                                                      }];
+//
+//	[downloadTask resume];
 }
 
 
@@ -476,7 +474,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -505,7 +503,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -534,7 +532,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -559,7 +557,7 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
+	[_swiftManager sendSimpleActionWithType:@(1)
 	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
 	                                                           dossierId]
 	                           args:argumentDictionary
@@ -583,16 +581,16 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(1)
-	                            url:[self getAnnotationsUrlForDossier:dossierId
-	                                                      andDocument:annotation.unwrappedDocumentId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+	[_swiftManager sendSimpleActionWithType:@(1)
+	                                    url:[self getAnnotationsUrlForDossier:dossierId
+	                                                              andDocument:annotation.unwrappedDocumentId]
+	                                   args:argumentDictionary
+	                             onResponse:^(NSNumber *result) {
+		                             success(NSArray.new);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 }
 
 
@@ -607,13 +605,13 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(2)
+	[_swiftManager sendSimpleActionWithType:@(2)
 	                            url:[self getAnnotationUrlForDossier:dossierId
 	                                                     andDocument:annotation.unwrappedDocumentId
 	                                                 andAnnotationId:annotation.unwrappedId]
 	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
+	                     onResponse:^(NSNumber *result) {
+		                     success(NSArray.new);
 	                     }
 	                        onError:^(NSError *error) {
 		                        failure(error);
@@ -632,17 +630,17 @@
 
 	// Send request
 
-	[_swiftManager sendSimpleAction:@(3)
-	                            url:[self getAnnotationUrlForDossier:dossierId
-	                                                     andDocument:annotation.unwrappedDocumentId
-	                                                 andAnnotationId:annotation.unwrappedId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+	[_swiftManager sendSimpleActionWithType:@(3)
+	                                    url:[self getAnnotationUrlForDossier:dossierId
+	                                                             andDocument:annotation.unwrappedDocumentId
+	                                                         andAnnotationId:annotation.unwrappedId]
+	                                   args:argumentDictionary
+	                             onResponse:^(id result) {
+		                             success(NSArray.new);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 }
 
 

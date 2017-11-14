@@ -42,9 +42,9 @@ import Foundation
 	class func instanceFromNib() -> DeskListEmptyView {
 		
 		let view: DeskListEmptyView = UINib(nibName: "DeskListEmptyView",
-			bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! DeskListEmptyView
+			bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! DeskListEmptyView
 		
-		view.icon.image = view.icon.image!.imageWithRenderingMode(.AlwaysTemplate)
+		view.icon.image = view.icon.image!.withRenderingMode(.alwaysTemplate)
 		return view
 	}
 }

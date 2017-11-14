@@ -38,7 +38,7 @@ import UIKit
 
 @objc class ActionSelectionController: UITableViewController {
 	
-	static let NotifLaunchAction: String! = "ActionSelectionControllerNotifLaunchAction"
+	static let NotifLaunchAction = Notification.Name("ActionSelectionControllerNotifLaunchAction")
 	
 	var actions: NSArray! = NSArray()
 	var currentDossier: Dossier?
@@ -53,46 +53,47 @@ import UIKit
 		
 		// Parse ObjC array
 
-		actions = Dossier.filterActions([currentDossier!])
+		actions = Dossier.filterActions(dossierList: [currentDossier!])
 
 		//
 		
-		preferredContentSize = CGSizeMake(ActionSelectionCell.PreferredWidth,
-		                                  ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
+		preferredContentSize = CGSize(width: ActionSelectionCell.PreferredWidth,
+		                              height: ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
 	}
 
     // MARK: - TableViewDelegate
 	
-	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return actions.count
 	}
 	
-	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
-		let cell: ActionSelectionCell = tableView.dequeueReusableCellWithIdentifier(ActionSelectionCell.CellId,
-		                                                                            forIndexPath: indexPath) as! ActionSelectionCell
+		let cell: ActionSelectionCell = tableView.dequeueReusableCell(withIdentifier: ActionSelectionCell.CellId,
+		                                                              for: indexPath as IndexPath) as! ActionSelectionCell
 
         let action : NSString = actions[indexPath.row] as! NSString
 
-        cell.actionLabel.text = StringUtils.actionNameForAction(action as String,
+        cell.actionLabel.text = StringUtils.actionName(forAction: action as String,
                                                                 withPaperSign: currentDossier!.isSignPapier!)
 
-        if (action.isEqualToString("REJET")) {
-            cell.icon.image = UIImage(named: "ic_close_white")?.imageWithRenderingMode(.AlwaysTemplate)
+        if (action.isEqual(to: "REJET")) {
+            cell.icon.image = UIImage(named: "ic_close_white")?.withRenderingMode(.alwaysTemplate)
         } else {
-            cell.icon.image = UIImage(named: "ic_done_white_24dp")?.imageWithRenderingMode(.AlwaysTemplate)
+            cell.icon.image = UIImage(named: "ic_done_white_24dp")?.withRenderingMode(.alwaysTemplate)
         }
 
 		return cell;
 	}
 
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.dismissViewControllerAnimated(false, completion: {
-            () -> Void in
-            NSNotificationCenter.defaultCenter().postNotificationName(String(ActionSelectionController.NotifLaunchAction),
-                                                                      object: self.actions[indexPath.row])
-        })
-    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+		dismiss(animated: false,
+				completion: { () -> Void in
+					NotificationCenter.default.post(name: ActionSelectionController.NotifLaunchAction,
+													object: self.actions[indexPath.row])
+				})
+	}
 
 }

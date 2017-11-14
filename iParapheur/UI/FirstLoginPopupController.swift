@@ -38,7 +38,7 @@ import UIKit
 @objc class FirstLoginPopupController: UIViewController {
 
 	static let Segue: NSString! = "FirstLoginPopupSegue"
-	static let NotifDismiss: NSString! = "FirstLoginPopupControllerNotifDismiss"
+	static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
 
@@ -58,22 +58,22 @@ import UIKit
 		super.viewDidLoad()
 		print("View loaded : FirstLoginPopupController")
 
-        self.preferredContentSize = CGSizeMake(FirstLoginPopupController.PreferredWidth,
-                                               FirstLoginPopupController.PreferredHeight);
+		self.preferredContentSize = CGSize(width: FirstLoginPopupController.PreferredWidth,
+		                                   height: FirstLoginPopupController.PreferredHeight);
 
         // Change value events
 
-        serverUrlTextField.addTarget(self,
-                                     action: #selector(onTextFieldValueChanged),
-                                     forControlEvents: UIControlEvents.EditingChanged)
+		serverUrlTextField.addTarget(self,
+		                             action: #selector(onTextFieldValueChanged),
+		                             for: UIControlEvents.editingChanged)
 
-        loginTextField.addTarget(self,
-                                 action: #selector(onTextFieldValueChanged),
-                                 forControlEvents: UIControlEvents.EditingChanged)
+		loginTextField.addTarget(self,
+		                         action: #selector(onTextFieldValueChanged),
+		                         for: UIControlEvents.editingChanged)
 
-        passwordTextField.addTarget(self,
-                                    action: #selector(onTextFieldValueChanged),
-                                    forControlEvents: UIControlEvents.EditingChanged)
+		passwordTextField.addTarget(self,
+		                            action: #selector(onTextFieldValueChanged),
+		                            for: UIControlEvents.editingChanged)
 
         // Load existing account (if any)
 
@@ -94,17 +94,17 @@ import UIKit
     }
 
     deinit {
-        serverUrlTextField.removeTarget(self,
-                                        action: #selector(onTextFieldValueChanged),
-                                        forControlEvents: UIControlEvents.EditingChanged)
+		serverUrlTextField.removeTarget(self,
+		                                action: #selector(onTextFieldValueChanged),
+		                                for: UIControlEvents.editingChanged)
 
-        loginTextField.removeTarget(self,
-                                    action: #selector(onTextFieldValueChanged),
-                                    forControlEvents: UIControlEvents.EditingChanged)
+		loginTextField.removeTarget(self,
+		                            action: #selector(onTextFieldValueChanged),
+		                            for: UIControlEvents.editingChanged)
 
-        passwordTextField.removeTarget(self,
-                                       action: #selector(onTextFieldValueChanged),
-                                       forControlEvents: UIControlEvents.EditingChanged)
+		passwordTextField.removeTarget(self,
+		                               action: #selector(onTextFieldValueChanged),
+		                               for: UIControlEvents.editingChanged)
     }
 
     // MARK: - Private methods
@@ -125,13 +125,13 @@ import UIKit
         // Set orange background on text fields.
         // only on connection event, not on change value events
 
-        setBorderOnTextField(serverUrlTextField,
+        setBorderOnTextField(textField: serverUrlTextField,
                              alert:(!isServerTextFieldValid))
 
-        setBorderOnTextField(loginTextField,
+        setBorderOnTextField(textField: loginTextField,
                              alert:(!isLoginTextFieldValid))
 
-        setBorderOnTextField(passwordTextField,
+        setBorderOnTextField(textField: passwordTextField,
                              alert:(!isPasswordTextFieldValid))
 
         //
@@ -145,12 +145,12 @@ import UIKit
             textField.layer.cornerRadius = 6.0;
             textField.layer.masksToBounds = true;
             textField.layer.borderWidth = 1.0;
-            textField.layer.borderColor = ColorUtils.DarkOrange.CGColor
-            textField.backgroundColor = ColorUtils.DarkOrange.colorWithAlphaComponent(0.1)
+            textField.layer.borderColor = ColorUtils.DarkOrange.cgColor
+            textField.backgroundColor = ColorUtils.DarkOrange.withAlphaComponent(0.1)
         }
         else {
-            textField.layer.borderColor = UIColor.clearColor().CGColor
-            textField.backgroundColor = UIColor.clearColor()
+            textField.layer.borderColor = UIColor.clear.cgColor
+            textField.backgroundColor = UIColor.clear
         }
     }
 
@@ -159,52 +159,52 @@ import UIKit
         // Setup rest client
 
         if (restClient != nil) {
-            restClient!.manager.operationQueue.cancelAllOperations()
+            restClient!.cancelAllOperations()
         }
 
-        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text),
-                                     login: loginTextField.text!,
-                                     password: passwordTextField.text!)
+        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text) as! NSString,
+                                     login: loginTextField.text! as NSString,
+                                     password: passwordTextField.text! as NSString)
 
         // Test request
 
-        enableInterface(false)
+        enableInterface(enabled: false)
 
-        restClient!.getApiVersion({
+        restClient!.getApiVersion(onResponse: {
                                       (level: NSNumber) in
 
                                       // Register new account as selected
 
-                                      let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-                                      preferences.setObject(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
+                                      let preferences: UserDefaults = UserDefaults.standard
+                                      preferences.set(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
 
                                       // UI refresh
 
-                                      self.enableInterface(true)
-                                      self.dismissWithSuccess(true)
+                                      self.enableInterface(enabled: true)
+                                      self.dismissWithSuccess(success: true)
                                   },
                                   onError: {
                                       (error: NSError) in
 
-                                      self.enableInterface(true)
+                                      self.enableInterface(enabled: true)
 
                                       // Warn with orange fields
 
                                       // TODO : find kCFURLErrorUserAuthenticationRequired swift constant
 
                                       if (error.code == -1011) {
-                                          self.setBorderOnTextField(self.loginTextField, alert: true)
-                                          self.setBorderOnTextField(self.passwordTextField, alert: true)
+                                          self.setBorderOnTextField(textField: self.loginTextField, alert: true)
+                                          self.setBorderOnTextField(textField: self.passwordTextField, alert: true)
                                       }
                                       else {
-                                          self.setBorderOnTextField(self.serverUrlTextField, alert: true)
+                                          self.setBorderOnTextField(textField: self.serverUrlTextField, alert: true)
                                       }
 
                                       // Setup error message
 
-                                      let localizedDescription: NSString = StringUtils.getErrorMessage(error)
+                                      let localizedDescription: NSString = StringUtils.getErrorMessage(error) as! NSString
 
-                                      if (error.localizedDescription == localizedDescription) {
+                                      if (error.localizedDescription == localizedDescription as String) {
                                           self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code)"
                                       }
                                       else {
@@ -216,10 +216,10 @@ import UIKit
 
     func enableInterface(enabled: Bool) {
 
-        loginTextField.enabled = enabled
-        passwordTextField.enabled = enabled
-        serverUrlTextField.enabled = enabled
-        errorLabel.hidden = !enabled
+        loginTextField.isEnabled = enabled
+        passwordTextField.isEnabled = enabled
+        serverUrlTextField.isEnabled = enabled
+        errorLabel.isHidden = !enabled
 
         enabled ? spinnerView.stopAnimating() : spinnerView.startAnimating()
     }
@@ -227,16 +227,16 @@ import UIKit
     func dismissWithSuccess(success: Bool) {
 
         if (restClient != nil) {
-            restClient!.manager.operationQueue.cancelAllOperations()
+            restClient!.cancelAllOperations()
         }
 
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
 
-        let result: NSNumber = NSNumber(integer: (success ? 1 : 0))
-        let userInfo: [NSObject: AnyObject] = ["success": result]
-        NSNotificationCenter.defaultCenter().postNotificationName(String(FirstLoginPopupController.NotifDismiss),
-                                                                  object: nil,
-                                                                  userInfo: userInfo)
+        let result: NSNumber = NSNumber(value: (success ? 1 : 0))
+        let userInfo: [NSObject: AnyObject] = ["success" as NSObject: result]
+		NotificationCenter.default.post(name: FirstLoginPopupController.NotifDismiss,
+                                        object: nil,
+                                        userInfo: userInfo)
     }
 
     // MARK: - TextField listeners
@@ -244,22 +244,22 @@ import UIKit
     func onTextFieldValueChanged(sender: AnyObject) {
 
         errorLabel.text = ""
-        setBorderOnTextField(sender as! UITextField, alert:false)
+        setBorderOnTextField(textField: sender as! UITextField, alert:false)
     }
 
     // MARK: - Buttons listeners
 
-    @IBAction func onCancelButtonClicked(sender: AnyObject) {
-        dismissWithSuccess(false)
+    @IBAction func onCancelButtonClicked(_ sender: Any) {
+        dismissWithSuccess(success: false)
     }
 
-    @IBAction func onSaveButtonClicked(sender: AnyObject) {
+    @IBAction func onSaveButtonClicked(_ sender: Any) {
 
         // Saving data
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                                 inManagedObjectContext:ModelsDataController.Context!) as! Account
+			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+			                                                     into:ModelsDataController.Context!) as! Account
 
             currentAccount!.id = Account.FirstAccountId
             currentAccount!.isVisible = true

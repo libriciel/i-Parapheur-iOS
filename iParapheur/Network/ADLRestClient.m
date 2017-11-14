@@ -142,9 +142,9 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		NSLog(@"Downloaded - file : %@ (%llu)", filePath, fileSize);
 	}
 	else {
-		[[NSError alloc] initWithDomain:AFURLRequestSerializationErrorDomain
-		                           code:NSURLErrorBadURL
-		                       userInfo:nil];
+		error = [[NSError alloc] initWithDomain:AFURLRequestSerializationErrorDomain
+		                                   code:NSURLErrorBadURL
+		                               userInfo:nil];
 	}
 
 	return error;
@@ -161,9 +161,9 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		 success(versionNumber);
 
 		 if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
-			 [ViewUtils logWarningMessage:@"Veuillez mettre à jour votre application."
-			                        title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
-			               viewController:nil];
+			 [ViewUtils logWarningMessageWithMessage:@"Veuillez mettre à jour votre application."
+			                                   title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
+			                          viewController:nil];
 	 }
 	                    failure:^(NSError *error) {
 		                    failure(error);

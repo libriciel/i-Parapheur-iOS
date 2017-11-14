@@ -73,12 +73,15 @@ import Gloss
             let jsonRectTopLeft: Dictionary<String, AnyObject>? = jsonRect!["topLeft"] as! Dictionary<String, AnyObject>?
             let jsonRectBottomRight: Dictionary<String, AnyObject>? = jsonRect!["bottomRight"] as! Dictionary<String, AnyObject>?
 
-            rect = NSValue(CGRect: DeviceUtils.translateDpiRect(CGRectMake(jsonRectTopLeft!["x"] as! CGFloat,
-                                                                           jsonRectTopLeft!["y"] as! CGFloat,
-                                                                           (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
-                                                                           (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)),
-                                                                oldDpi: 150,
-                                                                newDpi: 72))
+
+            let tempRect = CGRect(origin: CGPoint(x: jsonRectTopLeft!["x"] as! CGFloat,
+                                                  y: jsonRectTopLeft!["y"] as! CGFloat),
+                                  size: CGSize(width: (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
+                                               height: (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)))
+			
+			rect = NSValue(cgRect: DeviceUtils.translateDpiRect(tempRect,
+				                                                oldDpi: 150,
+				                                                newDpi: 72))
         }
 		
         step = 0
@@ -96,13 +99,15 @@ import Gloss
 
         date = NSDate()
         secretaire = 0
-        rect = NSValue(CGRect: DeviceUtils.translateDpiRect(CGRectMake(0, 0, 150, 150),
+		rect = NSValue(cgRect: DeviceUtils.translateDpiRect(CGRect(origin: .zero,
+		                                                           size: CGSize(width: 150,
+                                                                                height: 150)),
                                                             oldDpi:150,
                                                             newDpi:72))
         step = 0
         editable = false
         documentId = ""
-        page = currentPage as Int?
+        page = currentPage.intValue
     }
 
     func toJSON() -> JSON? {
@@ -157,10 +162,10 @@ import Gloss
 
     func unwrappedDate() -> NSString {
 
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
 
-        return dateFormatter.stringFromDate(date!)
+        return dateFormatter.string(from: date! as Date) as NSString
     }
 
     func unwrappedStep() -> NSNumber {
@@ -172,7 +177,7 @@ import Gloss
     }
 
     func setUnwrappedEditable(value: NSNumber) {
-        editable = value as Bool?
+        editable = value.boolValue
     }
 
     func unwrappedType() -> NSString {

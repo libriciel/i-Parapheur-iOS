@@ -43,7 +43,7 @@ import Foundation
     @IBOutlet var certificatesTableView: UITableView!
 
     var certificateList: Array<Certificate>!
-    var dateFormatter: NSDateFormatter!
+    var dateFormatter: DateFormatter!
 
     // MARK: - Life cycle
 
@@ -54,21 +54,21 @@ import Foundation
         certificateList = loadCertificateList()
         certificatesTableView.dataSource = self
 
-        dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-        dateFormatter.locale = NSLocale.currentLocale();
+        dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.short
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        dateFormatter.locale = NSLocale.current;
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         if (certificateList.count == 0) {
             let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib();
-            emptyView.downloadDocButton.addTarget(self,
-                                                  action: #selector(downloadDocButton),
-                                                  forControlEvents: UIControlEvents.TouchUpInside)
+			emptyView.downloadDocButton.addTarget(self,
+			                                      action: #selector(downloadDocButton),
+			                                      for: UIControlEvents.touchUpInside)
             tableView.backgroundView = emptyView;
         }
         else {
@@ -78,9 +78,9 @@ import Foundation
         return certificateList.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("CertificateCell", forIndexPath: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: "CertificateCell", for: indexPath)
         let certificate = certificateList[indexPath.row] 
 
         if let nameLabel = cell.viewWithTag(101) as? UILabel {
@@ -91,24 +91,23 @@ import Foundation
 
             // For Keystore CoreDataModel v2
             if (certificate.notAfter != nil) {
-                expirationDateLabel.hidden = false
-                let notAfterString: String = dateFormatter.stringFromDate(certificate.notAfter!)
-                expirationDateLabel.text = expirationDateLabel.text?.stringByReplacingOccurrencesOfString(":date:",
-                                                                                                          withString: notAfterString)
+                expirationDateLabel.isHidden = false
+                let notAfterString: String = dateFormatter.string(from: certificate.notAfter! as Date)
+				expirationDateLabel.text = expirationDateLabel.text?.replacingOccurrences(of: ":date:", with: notAfterString)
 
-                let notAfterCompare: NSComparisonResult = certificate.notAfter!.compare(NSDate())
-                expirationDateLabel.textColor = notAfterCompare == NSComparisonResult.OrderedAscending ? UIColor.redColor() : UIColor.lightGrayColor()
+                let notAfterCompare: ComparisonResult = certificate.notAfter!.compare(Date())
+                expirationDateLabel.textColor = notAfterCompare == ComparisonResult.orderedAscending ? UIColor.red : UIColor.lightGray
             }
             // For Keystore CoreDataModel v1
             else {
-                expirationDateLabel.hidden = true
+                expirationDateLabel.isHidden = true
             }
         }
 
         if let deleteButton = cell.viewWithTag(103) as? UIButton {
-            deleteButton.addTarget(self,
-                                   action: #selector(onDeleteButtonClicked),
-                                   forControlEvents: .TouchUpInside)
+			deleteButton.addTarget(self,
+			                       action: #selector(onDeleteButtonClicked),
+			                       for: .touchUpInside)
         }
 
         return cell
@@ -118,7 +117,7 @@ import Foundation
 
     func loadCertificateList() -> Array<Certificate> {
 
-        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
+        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
 
         var result = Array<Certificate>()
@@ -139,26 +138,26 @@ import Foundation
 
     func downloadDocButton(sender: UIButton) {
 
-		let url: NSURL? = NSBundle.mainBundle().URLForResource(SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
+		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
 
-        var docController:UIDocumentInteractionController! = UIDocumentInteractionController(URL: url!)
+        let docController:UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
         docController.delegate = self
-        docController.presentPreviewAnimated(true)
+        docController.presentPreview(animated: true)
     }
 
     func onDeleteButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convertPoint(CGPointZero, toView:certificatesTableView);
-        let indexPath: NSIndexPath = certificatesTableView.indexPathForRowAtPoint(buttonPosition)!;
+        let buttonPosition: CGPoint = sender.convert(.zero, to:certificatesTableView);
+        let indexPath: IndexPath = certificatesTableView.indexPathForRow(at: buttonPosition)!;
 
         // Find from NSManagedObjectContext
 
         var privateKeyToDelete: NSManagedObject? = nil
 
-        let appDelegate: RGAppDelegate = (UIApplication.sharedApplication().delegate as! RGAppDelegate)
+        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
         for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-            if (pkeyManagedObject.valueForKey("serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
+            if (pkeyManagedObject.value(forKey: "serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
                 privateKeyToDelete = pkeyManagedObject
             }
         }
@@ -172,13 +171,13 @@ import Foundation
         // Delete from NSManagedObjectContext
 
         let context:NSManagedObjectContext = appDelegate.managedObjectContext!
-        context.deleteObject(privateKeyToDelete!)
-        certificateList.removeAtIndex(indexPath.row)
+        context.delete(privateKeyToDelete!)
+        certificateList.remove(at: indexPath.row)
         try! context.save()
 
         // Delete from UITableView
 
-        certificatesTableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        certificatesTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
     }
 
 }

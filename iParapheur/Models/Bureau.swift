@@ -96,11 +96,11 @@ import Gloss
     }
 
     func unwrappedEnRetard() -> NSNumber {
-        return enRetard as! NSNumber
+        return enRetard! as NSNumber
     }
 
     func unwrappedATraiter() -> NSNumber {
-        return aTraiter as! NSNumber
+        return aTraiter! as NSNumber
     }
 
 }
