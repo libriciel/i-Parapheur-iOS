@@ -37,8 +37,8 @@ import UIKit
 
 @objc class FirstLoginPopupController: UIViewController {
 
-	static let Segue: NSString! = "FirstLoginPopupSegue"
-	static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
+    @objc static let Segue: NSString! = "FirstLoginPopupSegue"
+    @objc static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
 
@@ -118,9 +118,9 @@ import UIKit
 
         // Check fields
 
-        let isServerTextFieldValid: Bool = (serverUrlTextField.text!.characters.count != 0);
-        let isLoginTextFieldValid: Bool = (loginTextField.text!.characters.count != 0)
-        let isPasswordTextFieldValid: Bool = (passwordTextField.text!.characters.count != 0);
+        let isServerTextFieldValid: Bool = (serverUrlTextField.text!.count != 0);
+        let isLoginTextFieldValid: Bool = (loginTextField.text!.count != 0)
+        let isPasswordTextFieldValid: Bool = (passwordTextField.text!.count != 0);
 
         // Set orange background on text fields.
         // only on connection event, not on change value events

@@ -44,8 +44,8 @@ import Gloss
     let pageCount: Int
     let attestState: Int
 
-    let isMainDocument: Bool
-    let isVisuelPdf: Bool
+    @objc let isMainDocument: Bool
+    @objc let isVisuelPdf: Bool
     let isLocked: Bool
     let isDeletable: Bool
 
@@ -71,11 +71,11 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedId() -> NSString {
+    @objc func unwrappedId() -> NSString {
         return NSString(string: id!)
     }
 
-    func unwrappedName() -> NSString {
+    @objc func unwrappedName() -> NSString {
         return NSString(string: name!)
     }
 

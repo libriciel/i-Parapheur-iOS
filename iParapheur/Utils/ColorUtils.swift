@@ -37,28 +37,28 @@ import Foundation
 
 @objc class ColorUtils: NSObject {
 
-    static let Teal: UIColor = UIColor(red: 50 / 255, green: 128 / 255, blue: 127 / 255, alpha: 1)                  // #32807F
-    static let Aqua: UIColor = UIColor(red: 67 / 255, green: 122 / 255, blue: 255 / 255, alpha: 1)                  // #437AFF
-    static let Steel: UIColor = UIColor(red: 121 / 255, green: 121 / 255,blue: 121 / 255, alpha: 1)                 // #797979
-    static let DarkGreen: UIColor = UIColor(red: 11 / 255, green: 211 / 255, blue: 24 / 255, alpha: 1)              // #0BD318
-    static let DarkRed: UIColor = UIColor(red: 255 / 255, green: 56 / 255, blue: 36 / 255, alpha: 1)                // #FF3824
-    static let DarkOrange: UIColor = UIColor(red: 255 / 255, green: 150 / 255, blue: 0 / 255, alpha: 1)             // #FF9600
-    static let DarkYellow: UIColor = UIColor(red: 255 / 255, green: 205 / 255, blue: 0 / 255, alpha: 1)             // #FFCD00
-    static let DarkPurple: UIColor = UIColor(red: 198 / 255, green: 68 / 255, blue: 252 / 255, alpha: 1)            // #C644FC
-    static let DarkBlue: UIColor = UIColor(red: 0 / 255, green: 118 / 255, blue: 255 / 255, alpha: 1)               // #0076FF
-    static let SelectedCellGrey: UIColor = UIColor(red: 217 / 255, green: 217 / 255, blue: 217 / 255, alpha: 1)     // #D9D9D9
-    static let BlueGreySeparator: UIColor = UIColor(red: 200 / 255, green: 199 / 255, blue: 204 / 255, alpha: 1)    // #C8C7CC
-    static let Salmon: UIColor = UIColor(red: 241 / 255, green: 124 / 255, blue: 121 / 255, alpha: 1)               // #F17C79
-    static let Lime: UIColor = UIColor(red: 142 / 255, green: 250 / 255, blue: 0 / 255, alpha: 1)                   // #8EFA00
-    static let Sky: UIColor = UIColor(red: 118 / 255, green: 213 / 255, blue: 255 / 255, alpha: 1)                  // #76D5FF
-    static let Flora: UIColor = UIColor(red: 115 / 255, green: 250 / 255, blue: 121 / 255, alpha: 1)                // #73FA79
-    static let LightGrey: UIColor = UIColor(red: 204 / 255, green: 204 / 255, blue: 204 / 255, alpha: 1)            // #CCCCCC
+    @objc static let Teal: UIColor = UIColor(red: 50 / 255, green: 128 / 255, blue: 127 / 255, alpha: 1)                  // #32807F
+    @objc static let Aqua: UIColor = UIColor(red: 67 / 255, green: 122 / 255, blue: 255 / 255, alpha: 1)                  // #437AFF
+    @objc static let Steel: UIColor = UIColor(red: 121 / 255, green: 121 / 255,blue: 121 / 255, alpha: 1)                 // #797979
+    @objc static let DarkGreen: UIColor = UIColor(red: 11 / 255, green: 211 / 255, blue: 24 / 255, alpha: 1)              // #0BD318
+    @objc static let DarkRed: UIColor = UIColor(red: 255 / 255, green: 56 / 255, blue: 36 / 255, alpha: 1)                // #FF3824
+    @objc static let DarkOrange: UIColor = UIColor(red: 255 / 255, green: 150 / 255, blue: 0 / 255, alpha: 1)             // #FF9600
+    @objc static let DarkYellow: UIColor = UIColor(red: 255 / 255, green: 205 / 255, blue: 0 / 255, alpha: 1)             // #FFCD00
+    @objc static let DarkPurple: UIColor = UIColor(red: 198 / 255, green: 68 / 255, blue: 252 / 255, alpha: 1)            // #C644FC
+    @objc static let DarkBlue: UIColor = UIColor(red: 0 / 255, green: 118 / 255, blue: 255 / 255, alpha: 1)               // #0076FF
+    @objc static let SelectedCellGrey: UIColor = UIColor(red: 217 / 255, green: 217 / 255, blue: 217 / 255, alpha: 1)     // #D9D9D9
+    @objc static let BlueGreySeparator: UIColor = UIColor(red: 200 / 255, green: 199 / 255, blue: 204 / 255, alpha: 1)    // #C8C7CC
+    @objc static let Salmon: UIColor = UIColor(red: 241 / 255, green: 124 / 255, blue: 121 / 255, alpha: 1)               // #F17C79
+    @objc static let Lime: UIColor = UIColor(red: 142 / 255, green: 250 / 255, blue: 0 / 255, alpha: 1)                   // #8EFA00
+    @objc static let Sky: UIColor = UIColor(red: 118 / 255, green: 213 / 255, blue: 255 / 255, alpha: 1)                  // #76D5FF
+    @objc static let Flora: UIColor = UIColor(red: 115 / 255, green: 250 / 255, blue: 121 / 255, alpha: 1)                // #73FA79
+    @objc static let LightGrey: UIColor = UIColor(red: 204 / 255, green: 204 / 255, blue: 204 / 255, alpha: 1)            // #CCCCCC
 
-    static let DefaultTintColor = Aqua
+    @objc static let DefaultTintColor = Aqua
 
     // MARK: - Static methods
 
-    static func colorForAction(action: NSString) -> UIColor {
+    @objc static func colorForAction(action: NSString) -> UIColor {
 
         if (action.isEqual(to: "VISA") || action.isEqual(to: "SIGNATURE")) {
             return DarkGreen

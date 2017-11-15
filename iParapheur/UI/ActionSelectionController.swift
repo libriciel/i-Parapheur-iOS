@@ -37,13 +37,13 @@ import Foundation
 import UIKit
 
 @objc class ActionSelectionController: UITableViewController {
-	
-	static let NotifLaunchAction = Notification.Name("ActionSelectionControllerNotifLaunchAction")
+
+	@objc static let NotifLaunchAction = Notification.Name("ActionSelectionControllerNotifLaunchAction")
 	
 	var actions: NSArray! = NSArray()
-	var currentDossier: Dossier?
-	var signatureEnabled: NSNumber! = 0
-	var visaEnabled: NSNumber! = 0
+	@objc var currentDossier: Dossier?
+	@objc var signatureEnabled: NSNumber! = 0
+	@objc var visaEnabled: NSNumber! = 0
 
 	// MARK: - LifeCycle
 	

@@ -38,8 +38,8 @@ import Foundation
 @objc class DeskListEmptyView: UIView {
 	
 	@IBOutlet var icon: UIImageView!
-	
-	class func instanceFromNib() -> DeskListEmptyView {
+
+	@objc class func instanceFromNib() -> DeskListEmptyView {
 		
 		let view: DeskListEmptyView = UINib(nibName: "DeskListEmptyView",
 			bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! DeskListEmptyView

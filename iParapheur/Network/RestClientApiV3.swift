@@ -41,15 +41,15 @@ import Alamofire
 
     let kCFURLErrorBadServerResponse = -1011
     var manager: Alamofire.SessionManager
-    var serverUrl: NSURL
+    @objc var serverUrl: NSURL
 
 
     // <editor-fold desc="Constructor">
 
 
-    init(baseUrl: NSString,
-         login: NSString,
-         password: NSString) {
+    @objc init(baseUrl: NSString,
+               login: NSString,
+               password: NSString) {
 
         // Process strings
 
@@ -131,14 +131,20 @@ import Alamofire
         // Retrieving test certificate
 
         let pendingCertificateData = NSData(contentsOf: pendingDerFile!)
-        if (pendingCertificateData == nil) { return false }
+        if (pendingCertificateData == nil) {
+            return false
+        }
 
         let pendingSecCertificateRef = SecCertificateCreateWithData(kCFAllocatorDefault, pendingCertificateData!)
-        if (pendingSecCertificateRef == nil) { return false }
+        if (pendingSecCertificateRef == nil) {
+            return false
+        }
 
         var pendingSecTrust: SecTrust?
         let status = SecTrustCreateWithCertificates(pendingSecCertificateRef!, SecPolicyCreateBasicX509(), &pendingSecTrust)
-        if (status != errSecSuccess) { return false }
+        if (status != errSecSuccess) {
+            return false
+        }
 
         // Retrieving root AC certificate
 
@@ -187,7 +193,7 @@ import Alamofire
     // <editor-fold desc="Utils">
 
 
-    func cancelAllOperations() {
+    @objc func cancelAllOperations() {
         manager.session.invalidateAndCancel()
     }
 
@@ -198,8 +204,8 @@ import Alamofire
     // <editor-fold desc="Get methods">
 
 
-    func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
-                       onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
+                             onError errorCallback: ((NSError) -> Void)?) {
 
         checkCertificate(onResponse: {
             (result: Bool) in
@@ -258,8 +264,8 @@ import Alamofire
     }
 
 
-    func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
-                    onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
@@ -280,12 +286,12 @@ import Alamofire
     }
 
 
-    func getDossiers(bureau: NSString,
-                     page: NSNumber,
-                     size: NSNumber,
-                     filterJson: NSString?,
-                     onResponse responseCallback: ((NSArray) -> Void)?,
-                     onError errorCallback: ((NSError) -> Void)?) {
+    @objc  func getDossiers(bureau: NSString,
+                            page: NSNumber,
+                            size: NSNumber,
+                            filterJson: NSString?,
+                            onResponse responseCallback: ((NSArray) -> Void)?,
+                            onError errorCallback: ((NSError) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -297,7 +303,7 @@ import Alamofire
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-            "skipped": Double(page) * (Double(size) - 1),
+			"skipped": Double(truncating: page) * (Double(truncating: size) - 1),
             "sort": "cm:create"
         ]
 
@@ -324,10 +330,10 @@ import Alamofire
     }
 
 
-    func getDossier(dossier: NSString,
-                    bureau: NSString,
-                    onResponse responseCallback: ((Dossier) -> Void)?,
-                    onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getDossier(dossier: NSString,
+                          bureau: NSString,
+                          onResponse responseCallback: ((Dossier) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
 
         let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
 
@@ -357,9 +363,9 @@ import Alamofire
     }
 
 
-    func getCircuit(dossier: NSString,
-                    onResponse responseCallback: ((AnyObject) -> Void)?,
-                    onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getCircuit(dossier: NSString,
+                          onResponse responseCallback: ((AnyObject) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
 
         let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
 
@@ -381,9 +387,9 @@ import Alamofire
     }
 
 
-    func getTypology(bureauId: NSString,
-                     onResponse responseCallback: ((NSArray) -> Void)?,
-                     onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getTypology(bureauId: NSString,
+                           onResponse responseCallback: ((NSArray) -> Void)?,
+                           onError errorCallback: ((NSError) -> Void)?) {
 
         let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/types"
 
@@ -407,9 +413,9 @@ import Alamofire
     }
 
 
-    func getAnnotations(dossier: NSString,
-                        onResponse responseCallback: (([Annotation]) -> Void)?,
-                        onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getAnnotations(dossier: NSString,
+                              onResponse responseCallback: (([Annotation]) -> Void)?,
+                              onError errorCallback: ((NSError) -> Void)?) {
 
         let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
 
@@ -463,10 +469,10 @@ import Alamofire
     }
 
 
-    func getSignInfo(dossier: NSString,
-                     bureau: NSString,
-                     onResponse responseCallback: ((AnyObject) -> Void)?,
-                     onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getSignInfo(dossier: NSString,
+                           bureau: NSString,
+                           onResponse responseCallback: ((AnyObject) -> Void)?,
+                           onError errorCallback: ((NSError) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/getSignInfo"
 
@@ -493,12 +499,12 @@ import Alamofire
     }
 
 
-    func sendSimpleAction(type: NSNumber,
-                          url: NSString,
-                          args: NSDictionary,
-                          onResponse responseCallback: ((NSNumber) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
-	
+    @objc func sendSimpleAction(type: NSNumber,
+                                url: NSString,
+                                args: NSDictionary,
+                                onResponse responseCallback: ((NSNumber) -> Void)?,
+                                onError errorCallback: ((NSError) -> Void)?) {
+
         // Conversions ObjC -> Swift
 
         let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
@@ -568,17 +574,17 @@ import Alamofire
     // </editor-fold desc="Get methods">
 
 
-    func downloadFile(document: NSString,
-                      isPdf: Bool,
-                      atPath filePath: NSURL,
-                      onResponse responseCallback: ((NSString) -> Void)?,
-                      onError errorCallback: ((NSError) -> Void)?) {
+    @objc func downloadFile(document: NSString,
+                            isPdf: Bool,
+                            atPath filePath: NSURL,
+                            onResponse responseCallback: ((NSString) -> Void)?,
+                            onError errorCallback: ((NSError) -> Void)?) {
 
         let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
         let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
-		let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-			return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
-		}
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
+        }
 
         // Cancel previous download
 

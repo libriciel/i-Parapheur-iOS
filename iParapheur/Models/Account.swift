@@ -36,34 +36,37 @@ import Foundation
 import CoreData
 
 
-class Account: NSManagedObject {
+@objc class Account: NSManagedObject {
 
     static let EntityName: String! = "Account"
 
-    static let PreferencesKeySelectedAccount: NSString! = "selected_account"
+    @objc static let PreferencesKeySelectedAccount: NSString! = "selected_account"
 
     static let FirstAccountId: String! = "FirstAccountId"
-    static let DemoId: String! = "DemoAccountId"
+    @objc static let DemoId: String! = "DemoAccountId"
     static let DemoTitle: String! = "iParapheur demo"
-    static let DemoUrl: String! = "parapheur.demonstrations.adullact.org"
-    static let DemoLogin: String! = "bma"
-    static let DemoPassword: String! = "secret"
+//    static let DemoUrl: String! = "parapheur.demonstrations.adullact.org"
+//    static let DemoLogin: String! = "bma"
+//    static let DemoPassword: String! = "secret"
+    static let DemoUrl: String! = "iparapheur-partenaires.libriciel.fr"
+    static let DemoLogin: String! = "admin@demo"
+    static let DemoPassword: String! = "admin"
 
     // MARK: - ObjC accessors
 
-    func unwrappedId() -> NSString {
+    @objc func unwrappedId() -> NSString {
         return NSString(string: id!)
     }
 
-    func unwrappedUrl() -> NSString {
+    @objc func unwrappedUrl() -> NSString {
         return NSString(string: url!)
     }
 
-    func unwrappedPassword() -> NSString {
+    @objc func unwrappedPassword() -> NSString {
         return NSString(string: password!)
     }
 
-    func unwrappedLogin() -> NSString {
+    @objc func unwrappedLogin() -> NSString {
         return NSString(string: login!)
     }
 }

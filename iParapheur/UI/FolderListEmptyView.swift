@@ -39,8 +39,8 @@ import Foundation
 	
 	@IBOutlet var icon: UIImageView!
 	@IBOutlet var filterAlertLabel: UILabel!
-	
-	class func instanceFromNib() -> FolderListEmptyView {
+
+	@objc class func instanceFromNib() -> FolderListEmptyView {
 		
 		let view: FolderListEmptyView = UINib(nibName: "FolderListEmptyView",
 			bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! FolderListEmptyView

@@ -59,7 +59,7 @@ import Foundation
 
     // MARK: - ObjC accessors
 
-    func unwrappedP12File() -> NSString {
+    @objc func unwrappedP12File() -> NSString {
         return NSString(string: p12Filename!)
     }
 

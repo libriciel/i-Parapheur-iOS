@@ -38,8 +38,8 @@ import UIKit
 
 @objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    static let NotifSelected = Notification.Name("AccountSelectionControllerAccountSelectionController")
-    static let Segue: NSString! = "AccountListSegue"
+    @objc static let NotifSelected = Notification.Name("AccountSelectionControllerAccountSelectionController")
+    @objc static let Segue: NSString! = "AccountListSegue"
 
 	@IBOutlet var backButton: UIBarButtonItem!
 	@IBOutlet var accountTableView: UITableView!

@@ -38,9 +38,9 @@ import UIKit
 
 @objc class DocumentSelectionController: UITableViewController {
 
-    static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
+    @objc static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
-    var documentList: NSArray! = NSArray()
+    @objc var documentList: NSArray! = NSArray()
     var docList: [Document]! = []
 
     // MARK: - LifeCycle

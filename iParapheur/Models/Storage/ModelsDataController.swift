@@ -42,12 +42,12 @@ import CoreData
  */
 @objc class ModelsDataController: NSObject {
 
-    static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
+    @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
     static var Context: NSManagedObjectContext? = nil
 
     // MARK: - Public methods
 
-    static func loadManagedObjectContext() {
+    @objc static func loadManagedObjectContext() {
 
         // Default case
 
@@ -96,7 +96,7 @@ import CoreData
         }
     }
 
-    static func fetchAccounts() -> [Account] {
+    @objc static func fetchAccounts() -> [Account] {
         var result: [Account] = []
 
         do {
@@ -111,7 +111,7 @@ import CoreData
         return result
     }
 
-    static func cleanupAccounts() {
+    @objc static func cleanupAccounts() {
 
         var isSaveNeeded = false
 
@@ -161,7 +161,7 @@ import CoreData
         }
     }
 
-    static func save() {
+    @objc static func save() {
         do {
             try ModelsDataController.Context!.save()
         }

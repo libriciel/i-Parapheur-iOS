@@ -39,7 +39,7 @@ import Gloss
 
     var author: String?
     var id: String?
-    var text: String?
+    @objc var text: String?
     let date: NSDate?
     let secretaire: Int?
     var rect: NSValue?
@@ -87,7 +87,7 @@ import Gloss
         step = 0
     }
 
-    init?(currentPage: NSNumber) {
+    @objc init?(currentPage: NSNumber) {
 
         author = ""
         id = "_new"
@@ -100,8 +100,7 @@ import Gloss
         date = NSDate()
         secretaire = 0
 		rect = NSValue(cgRect: DeviceUtils.translateDpiRect(CGRect(origin: .zero,
-		                                                           size: CGSize(width: 150,
-                                                                                height: 150)),
+		                                                           size: CGSize(width: 150, height: 150)),
                                                             oldDpi:150,
                                                             newDpi:72))
         step = 0
@@ -116,51 +115,51 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedId() -> NSString {
+    @objc func unwrappedId() -> NSString {
         return NSString(string: id!)
     }
 
-    func unwrappedPage() -> NSNumber {
+    @objc func unwrappedPage() -> NSNumber {
         return page as NSNumber!
     }
 
-    func setUnwrappedPage(i: NSNumber) {
-		page = Int(i)
+    @objc func setUnwrappedPage(i: NSNumber) {
+		page = Int(truncating: i)
     }
 
-    func unwrappedRect() -> NSValue {
+    @objc func unwrappedRect() -> NSValue {
         return rect!
     }
 
-    func setUnwrappedRect(rct: NSValue) {
+    @objc func setUnwrappedRect(rct: NSValue) {
         rect = rct
     }
 
-    func unwrappedText() -> NSString {
+    @objc func unwrappedText() -> NSString {
         return NSString(string: text!)
     }
 
-    func setUnwrappedText(txt: NSString) {
+    @objc func setUnwrappedText(txt: NSString) {
         text = String(txt)
     }
 
-    func setUnwrappedAuthor(txt: NSString) {
+    @objc func setUnwrappedAuthor(txt: NSString) {
 		author = String(txt)
     }
 
-    func unwrappedAuthor() -> NSString {
+    @objc func unwrappedAuthor() -> NSString {
         return NSString(string: author!)
     }
 
-    func unwrappedDocumentId() -> NSString {
+    @objc func unwrappedDocumentId() -> NSString {
         return NSString(string: documentId!)
     }
 
-    func setUnwrappedDocumentId(txt: NSString) {
+    @objc func setUnwrappedDocumentId(txt: NSString) {
         documentId = String(txt)
     }
 
-    func unwrappedDate() -> NSString {
+    @objc func unwrappedDate() -> NSString {
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
@@ -168,19 +167,19 @@ import Gloss
         return dateFormatter.string(from: date! as Date) as NSString
     }
 
-    func unwrappedStep() -> NSNumber {
+    @objc func unwrappedStep() -> NSNumber {
         return step! as NSNumber
     }
 
-    func unwrappedEditable() -> NSNumber {
+    @objc func unwrappedEditable() -> NSNumber {
         return editable as NSNumber!
     }
 
-    func setUnwrappedEditable(value: NSNumber) {
+    @objc func setUnwrappedEditable(value: NSNumber) {
         editable = value.boolValue
     }
 
-    func unwrappedType() -> NSString {
+    @objc func unwrappedType() -> NSString {
         return NSString(string: type!)
     }
 	

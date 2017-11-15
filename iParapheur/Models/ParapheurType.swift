@@ -54,11 +54,11 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedName() -> NSString {
+    @objc func unwrappedName() -> NSString {
         return NSString(string: name!)
     }
 
-    func unwrappedSubTypes() -> NSArray {
+    @objc func unwrappedSubTypes() -> NSArray {
         return subTypes as NSArray!
     }
 }

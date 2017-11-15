@@ -99,11 +99,11 @@ import Foundation
 
         // Compute data
 
-        let account:Account = accountList[indexPath.row]
+        let account: Account = accountList[indexPath.row]
 
-        let titlePrint:String = (account.title!.characters.count != 0) ? account.title! : "(Aucun titre)"
-        let loginPrint:String = (account.login!.characters.count != 0) ? account.login! : "(Aucun login)"
-        let urlPrint:String = (account.url!.characters.count != 0) ? account.url! : "(Aucune URL)"
+        let titlePrint: String = (account.title!.count != 0) ? account.title! : "(Aucun titre)"
+        let loginPrint: String = (account.login!.count != 0) ? account.login! : "(Aucun login)"
+        let urlPrint: String = (account.url!.count != 0) ? account.url! : "(Aucune URL)"
 
         // UI set
 

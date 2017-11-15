@@ -38,36 +38,36 @@ import TSMessages
 
 @objc class ViewUtils: NSObject {
 
-    class func logErrorMessage(message: NSString,
-                               title: NSString?,
-                               viewController: UIKit.UIViewController?) {
+    @objc class func logErrorMessage(message: NSString,
+                                     title: NSString?,
+                                     viewController: UIKit.UIViewController?) {
         ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.error)
     }
 
-    class func logSuccessMessage(message: NSString,
-                                 title: NSString?,
-                                 viewController: UIKit.UIViewController?) {
+    @objc class func logSuccessMessage(message: NSString,
+                                       title: NSString?,
+                                       viewController: UIKit.UIViewController?) {
         ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.success)
     }
 
-    class func logInfoMessage(message: NSString,
-                              title: NSString?,
-                              viewController: UIKit.UIViewController?) {
+    @objc class func logInfoMessage(message: NSString,
+                                    title: NSString?,
+                                    viewController: UIKit.UIViewController?) {
         ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.message)
     }
 
-    class func logWarningMessage(message: NSString,
-                                 title: NSString?,
-                                 viewController: UIKit.UIViewController?) {
+    @objc class func logWarningMessage(message: NSString,
+                                       title: NSString?,
+                                       viewController: UIKit.UIViewController?) {
         ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.warning)
     }
 
     // MARK: - Private Methods
 
-    class func logMessage(title: NSString?,
-                          subtitle: NSString,
-                          viewController: UIKit.UIViewController?,
-                          messageType: TSMessageNotificationType) {
+    @objc class func logMessage(title: NSString?,
+                                subtitle: NSString,
+                                viewController: UIKit.UIViewController?,
+                                messageType: TSMessageNotificationType) {
 
         DispatchQueue.main.async(execute: {
             //call back to main queue to update user interface
@@ -75,7 +75,7 @@ import TSMessages
             if (viewController != nil) {
                 TSMessage.showNotification(in: viewController,
                                            title: (title == nil ? subtitle : title!) as String,
-										   subtitle: (title == nil ? nil : subtitle as String),
+                                           subtitle: (title == nil ? nil : subtitle as String),
                                            type: messageType)
             }
             else {
