@@ -36,7 +36,9 @@
 import Foundation
 import UIKit
 
+
 @objc class ActionSelectionController: UITableViewController {
+
 
 	@objc static let NotifLaunchAction = Notification.Name("ActionSelectionControllerNotifLaunchAction")
 	
@@ -45,8 +47,10 @@ import UIKit
 	@objc var signatureEnabled: NSNumber! = 0
 	@objc var visaEnabled: NSNumber! = 0
 
+
 	// MARK: - LifeCycle
-	
+
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		print("View loaded : ActionSelectionController")
@@ -61,12 +65,15 @@ import UIKit
 		                              height: ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
 	}
 
+
     // MARK: - TableViewDelegate
-	
+
+
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return actions.count
 	}
-	
+
+
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
 		let cell: ActionSelectionCell = tableView.dequeueReusableCell(withIdentifier: ActionSelectionCell.CellId,
