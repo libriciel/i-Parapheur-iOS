@@ -34,6 +34,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #include <openssl/cms.h>
 
 
@@ -102,4 +103,3 @@ enum {
 
 
 @end
-

@@ -34,10 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-//
-//  Use this file to import your target's public headers that you would like to expose to Swift.
-//
-#include <AFNetworking/AFNetworking.h>
 #include "DeviceUtils.h"
 #include "StringUtils.h"
 #include "ADLKeyStore.h"

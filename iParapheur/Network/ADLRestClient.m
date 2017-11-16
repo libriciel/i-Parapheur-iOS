@@ -142,7 +142,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		NSLog(@"Downloaded - file : %@ (%llu)", filePath, fileSize);
 	}
 	else {
-		error = [[NSError alloc] initWithDomain:AFURLRequestSerializationErrorDomain
+		error = [[NSError alloc] initWithDomain:url //AFURLRequestSerializationErrorDomain
 		                                   code:NSURLErrorBadURL
 		                               userInfo:nil];
 	}

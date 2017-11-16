@@ -33,6 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
+#include <CoreGraphics/CGGeometry.h>
+
 
 @interface DeviceUtils : NSObject
 
