@@ -36,35 +36,42 @@ import XCTest
 @testable import iParapheur
 
 
-class ColorUtilsTests: XCTestCase {
-
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
-    }
-
-
-//    func testPerformanceExample() {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
+class FilterTests: XCTestCase {
 	
+	
+	func testGloss() {
+
+		var inputJson: Dictionary<String, Any> = [:]
+
+		// Empty case
+		
+		let emptyFilter = Filter(json: inputJson)
+		XCTAssertEqual(emptyFilter!.state, State.A_TRAITER)
+
+		// Full case
+
+		inputJson["id"] = "test_id"
+		inputJson["name"] = "test_name"
+		inputJson["title"] = "test_title"
+		inputJson["typeList"] = ["test_type_list_1", "test_type_list_2"]
+		inputJson["subTypeList"] = ["test_subtype_list_1", "test_subtype_list_2"]
+		inputJson["state"] = State.EN_COURS.rawValue
+		inputJson["beginDate"] = Date(timeIntervalSince1970: 200)
+		inputJson["endDate"] = Date(timeIntervalSince1970: 400)
+
+        let fullFilter = Filter(json: inputJson)
+		print("fullFilter \(fullFilter?.state)")
+        let fullFilterDeserialized = fullFilter!.toJSON()
+		print("fullFilterDeserialized \(fullFilterDeserialized!["state"])")
+
+        XCTAssertEqual(fullFilterDeserialized!["id"] as! String, "test_id")
+        XCTAssertEqual(fullFilterDeserialized!["name"] as! String, "test_name")
+        XCTAssertEqual(fullFilterDeserialized!["title"] as! String, "test_title")
+        XCTAssertEqual(fullFilterDeserialized!["typeList"] as! [String], ["test_type_list_1", "test_type_list_2"])
+        XCTAssertEqual(fullFilterDeserialized!["subTypeList"] as! [String], ["test_subtype_list_1", "test_subtype_list_2"])
+		XCTAssertEqual(fullFilterDeserialized!["state"] as! String, State.EN_COURS.rawValue)
+        XCTAssertEqual(fullFilterDeserialized!["beginDate"] as! Date, Date(timeIntervalSince1970: 200))
+        XCTAssertEqual(fullFilterDeserialized!["endDate"] as! Date, Date(timeIntervalSince1970: 400))
+    }
+    
 }

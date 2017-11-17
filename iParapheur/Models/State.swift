@@ -32,39 +32,21 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import XCTest
-@testable import iParapheur
+import Foundation
 
+enum State: String {
 
-class ColorUtilsTests: XCTestCase {
+    case EN_PREPARATION = "en-preparation"
+    case A_TRAITER = "a-traiter"
+    case EN_FIN_DE_CIRCUIT = "a-archiver"
+    case RETOURNES = "retournes"
+    case EN_COURS = "en-cours"
+    case A_VENIR = "a-venir"
+    case RECUPERABLE = "recuperables"
+    case EN_RETARD = "en-retard"
+    case TRAITES = "traites"
+    case DOSSIERS_DELEGUES = "dossiers-delegues"
+    case TOUTES_LES_BANETTES = "no-corbeille"
+    case TOUT_IPARAPHEUR = "no-bureau"
 
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
-    }
-
-
-//    func testPerformanceExample() {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
-	
 }
