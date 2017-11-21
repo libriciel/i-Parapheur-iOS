@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -37,41 +37,38 @@ import XCTest
 
 
 class FilterTests: XCTestCase {
-	
-	
-//	func testGloss() {
-//
-//		var inputJson: Dictionary<String, Any> = [:]
-//
-//		// Empty case
-//
-//		let emptyFilter = Filter(json: inputJson)
-//		XCTAssertEqual(emptyFilter!.state, State.A_TRAITER)
-//
-//		// Full case
-//
-//		inputJson["id"] = "test_id"
-//		inputJson["name"] = "test_name"
-//		inputJson["title"] = "test_title"
-//		inputJson["typeList"] = ["test_type_list_1", "test_type_list_2"]
-//		inputJson["subTypeList"] = ["test_subtype_list_1", "test_subtype_list_2"]
-//		inputJson["state"] = State.EN_COURS
-//		inputJson["beginDate"] = Date(timeIntervalSince1970: 200)
-//		inputJson["endDate"] = Date(timeIntervalSince1970: 400)
-//
-//        let fullFilter = Filter(json: inputJson)
-//		print("fullFilter \(fullFilter?.state)")
-//        let fullFilterDeserialized = fullFilter!.toJSON()
-//		print("fullFilterDeserialized \(fullFilterDeserialized!["state"])")
-//
-//        XCTAssertEqual(fullFilterDeserialized!["id"] as! String, "test_id")
-//        XCTAssertEqual(fullFilterDeserialized!["name"] as! String, "test_name")
-//        XCTAssertEqual(fullFilterDeserialized!["title"] as! String, "test_title")
-//        XCTAssertEqual(fullFilterDeserialized!["typeList"] as! [String], ["test_type_list_1", "test_type_list_2"])
-//        XCTAssertEqual(fullFilterDeserialized!["subTypeList"] as! [String], ["test_subtype_list_1", "test_subtype_list_2"])
-//		XCTAssertEqual(fullFilterDeserialized!["state"] as! String, State.EN_COURS.rawValue)
-//        XCTAssertEqual(fullFilterDeserialized!["beginDate"] as! Date, Date(timeIntervalSince1970: 200))
-//        XCTAssertEqual(fullFilterDeserialized!["endDate"] as! Date, Date(timeIntervalSince1970: 400))
-//    }
-	
+
+
+    func testToJson() {
+
+        // Prepare
+
+        let filter = NSEntityDescription.insertNewObject(forEntityName: Filter.EntityName,
+                                                         into: ModelsDataController.Context!) as! Filter
+        filter.id = "test_id"
+        filter.name = "test_name"
+        filter.title = "test_title"
+        filter.typeList = ["test_type_list_1", "test_type_list_2"] as [String]
+        filter.subTypeList = ["test_subtype_list_1", "test_subtype_list_2"] as [String]
+        filter.state = State.EN_COURS.rawValue
+        filter.beginDate = Date(timeIntervalSince1970: 200) as NSDate
+        filter.endDate = Date(timeIntervalSince1970: 400) as NSDate
+
+        // Test
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.dateEncodingStrategy = .iso8601
+
+        let jsonData = try! jsonEncoder.encode(filter)
+        let jsonString = String(data: jsonData, encoding: .utf8)
+
+        // TODO : Proper tests
+        XCTAssertNotNil(jsonString)
+        XCTAssertTrue(jsonString!.count > 50)
+
+        // Cleanup
+
+        ModelsDataController.Context!.delete(filter)
+    }
+
 }

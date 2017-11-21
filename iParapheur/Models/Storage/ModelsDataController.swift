@@ -35,17 +35,21 @@
 import UIKit
 import CoreData
 
+
 /**
- * Took from
+ * Taken from
  * https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/
  *     -> InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
  */
 @objc class ModelsDataController: NSObject {
 
+
     @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
     static var Context: NSManagedObjectContext? = nil
 
-    // MARK: - Public methods
+
+    // MARK: - Utils
+
 
     @objc static func loadManagedObjectContext() {
 
@@ -96,6 +100,20 @@ import CoreData
         }
     }
 
+
+    @objc static func save() {
+        do {
+            try ModelsDataController.Context!.save()
+        }
+        catch let error as NSError {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+    }
+
+
+    // MARK: - Accounts methods
+
+
     @objc static func fetchAccounts() -> [Account] {
         var result: [Account] = []
 
@@ -110,6 +128,7 @@ import CoreData
 
         return result
     }
+
 
     @objc static func cleanupAccounts() {
 
@@ -161,13 +180,33 @@ import CoreData
         }
     }
 
-    @objc static func save() {
+
+    // MARK: - Filters methods
+
+
+    @objc static func fetchFilter(id: String) -> Filter? {
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+		let results = try! ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
+
+		return (results.count > 0) ? results[0] : nil
+    }
+
+
+    @objc static func fetchFilters() -> [Filter] {
+        var result: [Filter] = []
+
         do {
-            try ModelsDataController.Context!.save()
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
+            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
         }
-        catch let error as NSError {
-            print("Could not save \(error), \(error.userInfo)")
+        catch {
+            print("Could not fetch Filters")
+            return result
         }
+
+        return result
     }
 
 }
