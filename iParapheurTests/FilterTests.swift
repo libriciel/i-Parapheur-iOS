@@ -39,39 +39,39 @@ import XCTest
 class FilterTests: XCTestCase {
 	
 	
-	func testGloss() {
-
-		var inputJson: Dictionary<String, Any> = [:]
-
-		// Empty case
-		
-		let emptyFilter = Filter(json: inputJson)
-		XCTAssertEqual(emptyFilter!.state, State.A_TRAITER)
-
-		// Full case
-
-		inputJson["id"] = "test_id"
-		inputJson["name"] = "test_name"
-		inputJson["title"] = "test_title"
-		inputJson["typeList"] = ["test_type_list_1", "test_type_list_2"]
-		inputJson["subTypeList"] = ["test_subtype_list_1", "test_subtype_list_2"]
-		inputJson["state"] = State.EN_COURS.rawValue
-		inputJson["beginDate"] = Date(timeIntervalSince1970: 200)
-		inputJson["endDate"] = Date(timeIntervalSince1970: 400)
-
-        let fullFilter = Filter(json: inputJson)
-		print("fullFilter \(fullFilter?.state)")
-        let fullFilterDeserialized = fullFilter!.toJSON()
-		print("fullFilterDeserialized \(fullFilterDeserialized!["state"])")
-
-        XCTAssertEqual(fullFilterDeserialized!["id"] as! String, "test_id")
-        XCTAssertEqual(fullFilterDeserialized!["name"] as! String, "test_name")
-        XCTAssertEqual(fullFilterDeserialized!["title"] as! String, "test_title")
-        XCTAssertEqual(fullFilterDeserialized!["typeList"] as! [String], ["test_type_list_1", "test_type_list_2"])
-        XCTAssertEqual(fullFilterDeserialized!["subTypeList"] as! [String], ["test_subtype_list_1", "test_subtype_list_2"])
-		XCTAssertEqual(fullFilterDeserialized!["state"] as! String, State.EN_COURS.rawValue)
-        XCTAssertEqual(fullFilterDeserialized!["beginDate"] as! Date, Date(timeIntervalSince1970: 200))
-        XCTAssertEqual(fullFilterDeserialized!["endDate"] as! Date, Date(timeIntervalSince1970: 400))
-    }
-    
+//	func testGloss() {
+//
+//		var inputJson: Dictionary<String, Any> = [:]
+//
+//		// Empty case
+//
+//		let emptyFilter = Filter(json: inputJson)
+//		XCTAssertEqual(emptyFilter!.state, State.A_TRAITER)
+//
+//		// Full case
+//
+//		inputJson["id"] = "test_id"
+//		inputJson["name"] = "test_name"
+//		inputJson["title"] = "test_title"
+//		inputJson["typeList"] = ["test_type_list_1", "test_type_list_2"]
+//		inputJson["subTypeList"] = ["test_subtype_list_1", "test_subtype_list_2"]
+//		inputJson["state"] = State.EN_COURS
+//		inputJson["beginDate"] = Date(timeIntervalSince1970: 200)
+//		inputJson["endDate"] = Date(timeIntervalSince1970: 400)
+//
+//        let fullFilter = Filter(json: inputJson)
+//		print("fullFilter \(fullFilter?.state)")
+//        let fullFilterDeserialized = fullFilter!.toJSON()
+//		print("fullFilterDeserialized \(fullFilterDeserialized!["state"])")
+//
+//        XCTAssertEqual(fullFilterDeserialized!["id"] as! String, "test_id")
+//        XCTAssertEqual(fullFilterDeserialized!["name"] as! String, "test_name")
+//        XCTAssertEqual(fullFilterDeserialized!["title"] as! String, "test_title")
+//        XCTAssertEqual(fullFilterDeserialized!["typeList"] as! [String], ["test_type_list_1", "test_type_list_2"])
+//        XCTAssertEqual(fullFilterDeserialized!["subTypeList"] as! [String], ["test_subtype_list_1", "test_subtype_list_2"])
+//		XCTAssertEqual(fullFilterDeserialized!["state"] as! String, State.EN_COURS.rawValue)
+//        XCTAssertEqual(fullFilterDeserialized!["beginDate"] as! Date, Date(timeIntervalSince1970: 200))
+//        XCTAssertEqual(fullFilterDeserialized!["endDate"] as! Date, Date(timeIntervalSince1970: 400))
+//    }
+	
 }

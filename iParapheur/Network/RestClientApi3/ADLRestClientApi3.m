@@ -119,14 +119,14 @@
 
 - (void)cancelAllHTTPOperationsWithPath:(NSString *)path {
 
-	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-		[self cancelTasksInArray:dataTasks
-		                withPath:path];
-		[self cancelTasksInArray:uploadTasks
-		                withPath:path];
-		[self cancelTasksInArray:downloadTasks
-		                withPath:path];
-	}];
+//	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+//		[self cancelTasksInArray:dataTasks
+//		                withPath:path];
+//		[self cancelTasksInArray:uploadTasks
+//		                withPath:path];
+//		[self cancelTasksInArray:downloadTasks
+//		                withPath:path];
+//	}];
 }
 
 
