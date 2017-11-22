@@ -33,50 +33,20 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import Foundation
-import Gloss
 
-@objc class Document : NSObject, Glossy {
 
-    let id: String?
-    let name: String?
+class SettingsFilterEmptyView: UIView {
 
-    let size: CLong
-    let pageCount: Int
-    let attestState: Int
 
-    @objc let isMainDocument: Bool
-    @objc let isVisuelPdf: Bool
-    let isLocked: Bool
-    let isDeletable: Bool
+    @IBOutlet var keyImage: UIImageView!
 
-    // MARK: - Glossy
 
-    required init?(json: JSON) {
-        id = ("id" <~~ json) ?? ""
-        name = ("name" <~~ json) ?? "(vide)"
+    class func instanceFromNib() -> SettingsFilterEmptyView {
 
-        size = ("size" <~~ json) ?? -1
-        pageCount = ("pageCount" <~~ json) ?? -1
-        attestState = ("attestState" <~~ json) ?? 0
+        let view: SettingsFilterEmptyView = UINib(nibName: "SettingsFilterEmptyView",
+                                                  bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! SettingsFilterEmptyView
 
-        isMainDocument = "isMainDocument" <~~ json ?? false
-        isVisuelPdf = "visuelPdf" <~~ json ?? false
-        isLocked = "isLocked" <~~ json ?? false
-        isDeletable = "canDelete" <~~ json ?? false
+        view.keyImage.image = view.keyImage.image!.withRenderingMode(.alwaysTemplate)
+        return view
     }
-
-    func toJSON() -> JSON? {
-        return nil /* Not used */
-    }
-
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedId() -> NSString {
-        return NSString(string: id!)
-    }
-
-    @objc func unwrappedName() -> NSString {
-        return NSString(string: name!)
-    }
-
 }
