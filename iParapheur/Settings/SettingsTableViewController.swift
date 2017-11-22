@@ -41,11 +41,10 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet var backButton: UIBarButtonItem!
 	@IBOutlet var menuTableView: UITableView!
 
-    // TODO : Add filters
-    // ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png"),
     let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String, iconHighlight:String)])] = [
             ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png", "ic_account_white_24dp.png"),
-                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png", "ic_verified_user_white_24dp.png")]),
+                         ("Certificats", "certificatesSegue", "ic_verified_user_outline_white_24dp.png", "ic_verified_user_white_24dp.png"),
+                         ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
             ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png", "ic_information_white_24dp.png"),
                           ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]
@@ -80,11 +79,11 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return menuElements.count
     }
 
-	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
