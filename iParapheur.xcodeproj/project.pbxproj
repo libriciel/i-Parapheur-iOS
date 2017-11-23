@@ -21,6 +21,7 @@
 		64F3475A8C8C052791313956 /* AccountSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */; };
 		64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */; };
 		64F348D02CB574C17FAAFAFE /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F342B900CD2EE0E4AA64DD /* State.swift */; };
+		64F34C7DE0EEAF5125C6D9AE /* CryptoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */; };
 		64F34C95A073619B7586D894 /* ModelsDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F344871EECF705F8C071C3 /* ModelsDataController.swift */; };
 		64F34FD00654A813D7151026 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348427F7EBCBC0A731851 /* Certificate.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
@@ -337,6 +338,7 @@
 		64F348427F7EBCBC0A731851 /* Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		64F348D17E34A71E2E14D64A /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bureau.swift; sourceTree = "<group>"; };
 		64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestClientApiV3.swift; sourceTree = "<group>"; };
+		64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CryptoUtils.swift; sourceTree = "<group>"; };
 		64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiLevel.swift; sourceTree = "<group>"; };
 		65B90403B5F0C32837C3AA55 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
 		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
@@ -1730,6 +1732,7 @@
 				C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */,
 				C5978BCD1D8C1E7F0097AC55 /* ColorUtils.swift */,
 				C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */,
+				64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -2112,6 +2115,7 @@
 				"${BUILT_PRODUCTS_DIR}/Mantle/Mantle.framework",
 				"${BUILT_PRODUCTS_DIR}/NSData+Base64/NSData_Base64.framework",
 				"${BUILT_PRODUCTS_DIR}/SCNetworkReachability/SCNetworkReachability.framework",
+				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/TSMessages/TSMessages.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2122,6 +2126,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mantle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NSData_Base64.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCNetworkReachability.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TSMessages.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2233,6 +2238,7 @@
 				64F3475A8C8C052791313956 /* AccountSelectionController.swift in Sources */,
 				64F343754DD86D7E822D4760 /* ParapheurType.swift in Sources */,
 				64F348D02CB574C17FAAFAFE /* State.swift in Sources */,
+				64F34C7DE0EEAF5125C6D9AE /* CryptoUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

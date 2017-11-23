@@ -37,10 +37,10 @@
 #import "ADLCredentialVault.h"
 #import "iParapheur-Swift.h"
 #import "ADLRequester.h"
-#import "SCNetworkReachability.h"
-#import "DeviceUtils.h"
-#import "iParapheur-Swift.h"
 #import "StringUtils.h"
+#import "DeviceUtils.h"
+#import "SCNetworkReachability.h"
+#import "iParapheur-Swift.h"
 
 
 @interface RGMasterViewController ()
@@ -128,14 +128,14 @@
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						 __strong typeof(weakSelf) strongSelf = weakSelf;
 						 if (strongSelf) {
-							 [[ADLRestClient sharedManager] setRestApiVersion:versionNumber];
+							 [ADLRestClient.sharedManager setRestApiVersion:versionNumber];
 							 [strongSelf loadBureaux];
 						 }
 					 }
 	                 failure:^(NSError *error) {
 		                 __strong typeof(weakSelf) strongSelf = weakSelf;
 		                 if (strongSelf) {
-			                 [[ADLRestClient sharedManager] setRestApiVersion:@(-1)];
+			                 [ADLRestClient.sharedManager setRestApiVersion:@(-1)];
 			                 [strongSelf.refreshControl endRefreshing];
 			                 strongSelf.bureauxArray = @[];
 			                 [(UITableView *) strongSelf.view reloadData];
@@ -377,6 +377,7 @@
 
 	_firstLaunch = FALSE;
 }
+
 
 - (void)onAccountSelected:(NSNotification *)notification {
 
