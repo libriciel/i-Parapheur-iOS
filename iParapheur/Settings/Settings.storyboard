@@ -505,16 +505,16 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="886"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g2g-aN-rCB">
-                                        <rect key="frame" x="148" y="16" width="305" height="627"/>
+                                        <rect key="frame" x="148" y="16" width="305" height="735"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VFR - PDF Reader" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lUV-o4-2eA">
-                                                <rect key="frame" x="8" y="8" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="16" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vpD-RO-3sU">
-                                                <rect key="frame" x="8" y="33" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="41" width="289" height="51"/>
                                                 <string key="text">Version 2.8.6
 https://github.com/vfr/Reader
 Licenced under the MIT Licence</string>
@@ -523,13 +523,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AlamoFire" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFw-EV-xlF">
-                                                <rect key="frame" x="8" y="100" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="108" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nwS-xe-Pbv">
-                                                <rect key="frame" x="8" y="125" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="133" width="289" height="51"/>
                                                 <string key="text">Version 4.5.1
 https://github.com/Alamofire/Alamofire
 Licenced under the MIT Licence</string>
@@ -538,13 +538,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gloss" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFf-LK-IHN">
-                                                <rect key="frame" x="8" y="192" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="200" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b9O-KB-nTu">
-                                                <rect key="frame" x="8" y="217" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="225" width="289" height="51"/>
                                                 <string key="text">Version 2.0.0-beta2
 https://github.com/hkellaway/Gloss
 Licenced under the MIT Licence</string>
@@ -553,13 +553,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SCNetworkReachability" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GrV-PV-DGc">
-                                                <rect key="frame" x="8" y="284" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="292" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckS-1D-sKr">
-                                                <rect key="frame" x="8" y="309" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="317" width="289" height="51"/>
                                                 <string key="text">Version 2.0.5
 https://github.com/belkevich/reachability-ios
 Licenced under the MIT Licence</string>
@@ -568,13 +568,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TSMessages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDb-eh-yd1">
-                                                <rect key="frame" x="8" y="376" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="384" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1g-eF-U8V">
-                                                <rect key="frame" x="8" y="401" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="409" width="289" height="51"/>
                                                 <string key="text">Version 0.9.13
 https://github.com/KrauseFx/TSMessages
 Licenced under the MIT Licence</string>
@@ -583,13 +583,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OpenSSL Universal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNI-xq-3op">
-                                                <rect key="frame" x="8" y="468" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="476" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggl-Y0-KzO">
-                                                <rect key="frame" x="8" y="493" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="501" width="289" height="51"/>
                                                 <string key="text">Version 1.0.2.10
 https://github.com/krzyzanowskim/OpenSSL
 Licenced under a dual BSD Licence</string>
@@ -597,14 +597,29 @@ Licenced under a dual BSD Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SSZipArchive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8DG-kf-Pkg" userLabel="SSZipArchive">
+                                                <rect key="frame" x="8" y="568" width="289" height="17"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S50-19-vBM">
+                                                <rect key="frame" x="8" y="593" width="289" height="51"/>
+                                                <string key="text">Version 2.0.7
+https://github.com/ZipArchive/ZipArchive
+Licenced under the MIT License</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Templarian Material Icons" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5v6-zq-wJY">
-                                                <rect key="frame" x="8" y="560" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="660" width="289" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="be9-8q-wDZ">
-                                                <rect key="frame" x="8" y="585" width="289" height="34"/>
+                                                <rect key="frame" x="8" y="685" width="289" height="34"/>
                                                 <string key="text">© Austin Andrews @Templarian
 Licensed under the SIL Open Font Licence</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -614,8 +629,10 @@ Licensed under the SIL Open Font Licence</string>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstItem="5v6-zq-wJY" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="19h-oQ-UNK"/>
                                             <constraint firstItem="OFw-EV-xlF" firstAttribute="top" secondItem="vpD-RO-3sU" secondAttribute="bottom" constant="16" id="1kR-Vq-Y53"/>
-                                            <constraint firstAttribute="trailing" secondItem="be9-8q-wDZ" secondAttribute="trailing" constant="8" id="2i7-de-KWV"/>
+                                            <constraint firstItem="lUV-o4-2eA" firstAttribute="top" secondItem="g2g-aN-rCB" secondAttribute="top" constant="16" id="6Ne-A6-Hy6"/>
+                                            <constraint firstItem="8DG-kf-Pkg" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="6hp-NP-kDK"/>
                                             <constraint firstItem="b9O-KB-nTu" firstAttribute="top" secondItem="JFf-LK-IHN" secondAttribute="bottom" constant="8" id="6iq-Nr-whd"/>
                                             <constraint firstAttribute="trailing" secondItem="5v6-zq-wJY" secondAttribute="trailing" constant="8" id="80I-NR-ZWP"/>
                                             <constraint firstAttribute="trailing" secondItem="sNI-xq-3op" secondAttribute="trailing" constant="8" id="8E6-J6-wzZ"/>
@@ -624,40 +641,48 @@ Licensed under the SIL Open Font Licence</string>
                                             <constraint firstItem="vpD-RO-3sU" firstAttribute="top" secondItem="lUV-o4-2eA" secondAttribute="bottom" constant="8" id="Cxf-xf-uou"/>
                                             <constraint firstItem="gDb-eh-yd1" firstAttribute="top" secondItem="ckS-1D-sKr" secondAttribute="bottom" constant="16" id="DdI-xX-tOa"/>
                                             <constraint firstItem="vpD-RO-3sU" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="Ees-uL-Pta"/>
+                                            <constraint firstAttribute="bottom" secondItem="be9-8q-wDZ" secondAttribute="bottom" constant="16" id="FIS-en-JaG"/>
                                             <constraint firstAttribute="width" id="FwY-yK-632"/>
                                             <constraint firstItem="gDb-eh-yd1" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="G8M-WL-10P"/>
-                                            <constraint firstItem="be9-8q-wDZ" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="GBf-8k-GRL"/>
                                             <constraint firstAttribute="trailing" secondItem="gDb-eh-yd1" secondAttribute="trailing" constant="8" id="Gnm-xX-UvS"/>
                                             <constraint firstItem="OFw-EV-xlF" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="HfA-3a-1pm"/>
-                                            <constraint firstItem="5v6-zq-wJY" firstAttribute="top" secondItem="ggl-Y0-KzO" secondAttribute="bottom" constant="16" id="IQ0-CT-qcR"/>
                                             <constraint firstAttribute="trailing" secondItem="ggl-Y0-KzO" secondAttribute="trailing" constant="8" id="Irz-4q-YfP"/>
+                                            <constraint firstAttribute="trailing" secondItem="be9-8q-wDZ" secondAttribute="trailing" constant="8" id="Jfm-jF-JCK"/>
                                             <constraint firstItem="GrV-PV-DGc" firstAttribute="top" secondItem="b9O-KB-nTu" secondAttribute="bottom" constant="16" id="Ji8-Qt-YqF"/>
                                             <constraint firstAttribute="trailing" secondItem="ckS-1D-sKr" secondAttribute="trailing" constant="8" id="Jyv-iA-urv"/>
                                             <constraint firstItem="ggl-Y0-KzO" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="L0P-HY-v35"/>
+                                            <constraint firstItem="8DG-kf-Pkg" firstAttribute="top" secondItem="ggl-Y0-KzO" secondAttribute="bottom" constant="16" id="Miv-R9-lnj"/>
+                                            <constraint firstAttribute="trailing" secondItem="S50-19-vBM" secondAttribute="trailing" constant="8" id="N1y-IU-gHM"/>
                                             <constraint firstAttribute="trailing" secondItem="lUV-o4-2eA" secondAttribute="trailing" constant="8" id="Q1Z-uH-1sD"/>
                                             <constraint firstAttribute="trailing" secondItem="OFw-EV-xlF" secondAttribute="trailing" constant="8" id="SlW-1Y-XfL"/>
                                             <constraint firstItem="sNI-xq-3op" firstAttribute="top" secondItem="J1g-eF-U8V" secondAttribute="bottom" constant="16" id="U33-94-tmn"/>
                                             <constraint firstItem="JFf-LK-IHN" firstAttribute="top" secondItem="nwS-xe-Pbv" secondAttribute="bottom" constant="16" id="VAn-DZ-vlG"/>
                                             <constraint firstItem="J1g-eF-U8V" firstAttribute="top" secondItem="gDb-eh-yd1" secondAttribute="bottom" constant="8" id="WNa-0C-L9a"/>
                                             <constraint firstItem="ggl-Y0-KzO" firstAttribute="top" secondItem="sNI-xq-3op" secondAttribute="bottom" constant="8" id="Zh7-ur-lsb"/>
-                                            <constraint firstItem="lUV-o4-2eA" firstAttribute="top" secondItem="g2g-aN-rCB" secondAttribute="top" constant="8" id="b0R-fm-NGn"/>
+                                            <constraint firstItem="5v6-zq-wJY" firstAttribute="top" secondItem="S50-19-vBM" secondAttribute="bottom" constant="16" id="bpZ-0L-q23"/>
                                             <constraint firstAttribute="trailing" secondItem="GrV-PV-DGc" secondAttribute="trailing" constant="8" id="cEq-qC-kKT"/>
-                                            <constraint firstAttribute="bottom" secondItem="be9-8q-wDZ" secondAttribute="bottom" constant="8" id="cc9-2J-Ex5"/>
                                             <constraint firstItem="5v6-zq-wJY" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="cq3-sz-NxI"/>
+                                            <constraint firstItem="8DG-kf-Pkg" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="e1f-JF-yYM"/>
                                             <constraint firstItem="ckS-1D-sKr" firstAttribute="top" secondItem="GrV-PV-DGc" secondAttribute="bottom" constant="8" id="fMh-Jo-YVd"/>
+                                            <constraint firstAttribute="trailing" secondItem="8DG-kf-Pkg" secondAttribute="trailing" constant="8" id="fXo-D9-dhI"/>
                                             <constraint firstAttribute="trailing" secondItem="J1g-eF-U8V" secondAttribute="trailing" constant="8" id="gFI-VG-hB3"/>
+                                            <constraint firstAttribute="trailing" secondItem="8DG-kf-Pkg" secondAttribute="trailing" constant="8" id="gOP-rh-CwC"/>
                                             <constraint firstItem="b9O-KB-nTu" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="gbU-xc-klD"/>
+                                            <constraint firstItem="be9-8q-wDZ" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="gob-ep-PBs"/>
                                             <constraint firstAttribute="trailing" secondItem="JFf-LK-IHN" secondAttribute="trailing" constant="8" id="hT8-rc-pEe"/>
                                             <constraint firstAttribute="trailing" secondItem="b9O-KB-nTu" secondAttribute="trailing" constant="8" id="i2l-Jo-Pjf"/>
+                                            <constraint firstItem="be9-8q-wDZ" firstAttribute="top" secondItem="5v6-zq-wJY" secondAttribute="bottom" constant="8" id="jH3-Wi-JLj"/>
                                             <constraint firstItem="lUV-o4-2eA" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="kEq-IU-X9b"/>
+                                            <constraint firstItem="S50-19-vBM" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="lHg-9T-TNQ"/>
                                             <constraint firstAttribute="trailing" secondItem="vpD-RO-3sU" secondAttribute="trailing" constant="8" id="lW3-4i-cqm"/>
                                             <constraint firstItem="ckS-1D-sKr" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="ltG-co-Ypw"/>
+                                            <constraint firstItem="S50-19-vBM" firstAttribute="top" secondItem="8DG-kf-Pkg" secondAttribute="bottom" constant="8" id="tm1-X4-CiY"/>
                                             <constraint firstItem="J1g-eF-U8V" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="uZJ-tx-Dg6"/>
                                             <constraint firstAttribute="trailing" secondItem="nwS-xe-Pbv" secondAttribute="trailing" constant="8" id="wPZ-f5-Z7l"/>
                                             <constraint firstItem="JFf-LK-IHN" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="wee-fD-veP"/>
-                                            <constraint firstItem="be9-8q-wDZ" firstAttribute="top" secondItem="5v6-zq-wJY" secondAttribute="bottom" constant="8" id="wu0-T6-mph"/>
                                             <constraint firstItem="nwS-xe-Pbv" firstAttribute="leading" secondItem="g2g-aN-rCB" secondAttribute="leading" constant="8" id="xbG-Vj-fj3"/>
                                             <constraint firstItem="nwS-xe-Pbv" firstAttribute="top" secondItem="OFw-EV-xlF" secondAttribute="bottom" constant="8" id="xme-Q8-pC9"/>
+                                            <constraint firstAttribute="trailing" secondItem="5v6-zq-wJY" secondAttribute="trailing" constant="8" id="yXX-Tj-Wxx"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -688,7 +713,7 @@ Licensed under the SIL Open Font Licence</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gnb-BG-yVH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2620" y="1592"/>
+            <point key="canvasLocation" x="2619.53125" y="1591.9921875"/>
         </scene>
         <!--Settings About Controller-->
         <scene sceneID="Cfo-49-3an">

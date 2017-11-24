@@ -27,7 +27,7 @@
                             <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_vpn_key_white_48dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="JuV-T6-XM7">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_certificate_outline_white_48dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="JuV-T6-XM7">
                             <rect key="frame" x="176" y="16" width="48" height="48"/>
                             <color key="tintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
@@ -75,6 +75,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_vpn_key_white_48dp.png" width="48" height="48"/>
+        <image name="ic_certificate_outline_white_48dp.png" width="48" height="48"/>
     </resources>
 </document>

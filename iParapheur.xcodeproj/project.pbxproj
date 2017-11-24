@@ -151,6 +151,15 @@
 		C54EEDDD1DB7AC9400E2E33D /* ic_inbox_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54EEDDA1DB7AC9400E2E33D /* ic_inbox_white_24dp.png */; };
 		C54EEDDE1DB7AC9400E2E33D /* ic_inbox_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54EEDDB1DB7AC9400E2E33D /* ic_inbox_white_24dp@2x.png */; };
 		C54EEDDF1DB7AC9400E2E33D /* ic_inbox_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54EEDDC1DB7AC9400E2E33D /* ic_inbox_white_24dp@3x.png */; };
+		C54FA1D51FC78D7100ED2D08 /* ic_certificate_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1D21FC78D7000ED2D08 /* ic_certificate_white_24dp@2x.png */; };
+		C54FA1D61FC78D7100ED2D08 /* ic_certificate_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1D31FC78D7000ED2D08 /* ic_certificate_white_24dp.png */; };
+		C54FA1D71FC78D7100ED2D08 /* ic_certificate_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1D41FC78D7100ED2D08 /* ic_certificate_white_24dp@3x.png */; };
+		C54FA1E21FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1DF1FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@3x.png */; };
+		C54FA1E31FC78DD000ED2D08 /* ic_certificate_outline_white_48dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E01FC78DD000ED2D08 /* ic_certificate_outline_white_48dp.png */; };
+		C54FA1E41FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E11FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@2x.png */; };
+		C54FA1E91FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E61FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp.png */; };
+		C54FA1EA1FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E71FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png */; };
+		C54FA1EB1FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E81FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png */; };
 		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
 		C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */; };
 		C5675EC41DBE5414003FA418 /* ic_navigate_next_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675EC11DBE5414003FA418 /* ic_navigate_next_white_24dp.png */; };
@@ -549,6 +558,15 @@
 		C54EEDDA1DB7AC9400E2E33D /* ic_inbox_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_inbox_white_24dp.png; path = ic_inbox_white_24dp/ic_inbox_white_24dp.png; sourceTree = "<group>"; };
 		C54EEDDB1DB7AC9400E2E33D /* ic_inbox_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_inbox_white_24dp@2x.png"; path = "ic_inbox_white_24dp/ic_inbox_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C54EEDDC1DB7AC9400E2E33D /* ic_inbox_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_inbox_white_24dp@3x.png"; path = "ic_inbox_white_24dp/ic_inbox_white_24dp@3x.png"; sourceTree = "<group>"; };
+		C54FA1D21FC78D7000ED2D08 /* ic_certificate_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_white_24dp@2x.png"; path = "ic_certificate_white_24dp/ic_certificate_white_24dp@2x.png"; sourceTree = "<group>"; };
+		C54FA1D31FC78D7000ED2D08 /* ic_certificate_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_certificate_white_24dp.png; path = ic_certificate_white_24dp/ic_certificate_white_24dp.png; sourceTree = "<group>"; };
+		C54FA1D41FC78D7100ED2D08 /* ic_certificate_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_white_24dp@3x.png"; path = "ic_certificate_white_24dp/ic_certificate_white_24dp@3x.png"; sourceTree = "<group>"; };
+		C54FA1DF1FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_outline_white_48dp@3x.png"; path = "ic_certificate_outline_white_48dp/ic_certificate_outline_white_48dp@3x.png"; sourceTree = "<group>"; };
+		C54FA1E01FC78DD000ED2D08 /* ic_certificate_outline_white_48dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_certificate_outline_white_48dp.png; path = ic_certificate_outline_white_48dp/ic_certificate_outline_white_48dp.png; sourceTree = "<group>"; };
+		C54FA1E11FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_outline_white_48dp@2x.png"; path = "ic_certificate_outline_white_48dp/ic_certificate_outline_white_48dp@2x.png"; sourceTree = "<group>"; };
+		C54FA1E61FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_certificate_outline_white_24dp.png; path = ic_certificate_outline_white_24dp/ic_certificate_outline_white_24dp.png; sourceTree = "<group>"; };
+		C54FA1E71FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_outline_white_24dp@2x.png"; path = "ic_certificate_outline_white_24dp/ic_certificate_outline_white_24dp@2x.png"; sourceTree = "<group>"; };
+		C54FA1E81FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_outline_white_24dp@3x.png"; path = "ic_certificate_outline_white_24dp/ic_certificate_outline_white_24dp@3x.png"; sourceTree = "<group>"; };
 		C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseCircuit.h; sourceTree = "<group>"; };
 		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListCell.swift; sourceTree = "<group>"; };
@@ -1347,6 +1365,36 @@
 			name = ic_inbox_white_24dp;
 			sourceTree = "<group>";
 		};
+		C54FA1D11FC78D3500ED2D08 /* ic_certficate_white_24dp */ = {
+			isa = PBXGroup;
+			children = (
+				C54FA1D31FC78D7000ED2D08 /* ic_certificate_white_24dp.png */,
+				C54FA1D21FC78D7000ED2D08 /* ic_certificate_white_24dp@2x.png */,
+				C54FA1D41FC78D7100ED2D08 /* ic_certificate_white_24dp@3x.png */,
+			);
+			name = ic_certficate_white_24dp;
+			sourceTree = "<group>";
+		};
+		C54FA1DE1FC78D8E00ED2D08 /* ic_certificate_outline_white_48dp */ = {
+			isa = PBXGroup;
+			children = (
+				C54FA1E01FC78DD000ED2D08 /* ic_certificate_outline_white_48dp.png */,
+				C54FA1E11FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@2x.png */,
+				C54FA1DF1FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@3x.png */,
+			);
+			name = ic_certificate_outline_white_48dp;
+			sourceTree = "<group>";
+		};
+		C54FA1E51FC78DE200ED2D08 /* ic_certificate_outline_white_24dp */ = {
+			isa = PBXGroup;
+			children = (
+				C54FA1E61FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp.png */,
+				C54FA1E71FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png */,
+				C54FA1E81FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png */,
+			);
+			name = ic_certificate_outline_white_24dp;
+			sourceTree = "<group>";
+		};
 		C5675EC71DBE5419003FA418 /* ic_navigate_next_white_24dp */ = {
 			isa = PBXGroup;
 			children = (
@@ -1462,6 +1510,9 @@
 				C5978BF31D8C43600097AC55 /* ic_add_circle_outline_white_24dp */,
 				C54EEDD91DB777B100E2E33D /* ic_arrow_back_white_24dp */,
 				C54DB7A11DCCC34E00B2CAFA /* ic_attachment_white_24dp */,
+				C54FA1D11FC78D3500ED2D08 /* ic_certficate_white_24dp */,
+				C54FA1E51FC78DE200ED2D08 /* ic_certificate_outline_white_24dp */,
+				C54FA1DE1FC78D8E00ED2D08 /* ic_certificate_outline_white_48dp */,
 				C5EABB241DC3AA2E0019328A /* ic_check_circle_white_18dp */,
 				C58DCD1D1DB9154600D81D8E /* ic_check_white_18dp */,
 				C5EABB231DC3AA130019328A /* ic_circle_outline_white_18dp */,
@@ -1865,11 +1916,14 @@
 				C58CB2B41AB72D3500C79A97 /* Icon-76@2x.png in Resources */,
 				C58CB2B31AB72D3500C79A97 /* Icon-76.png in Resources */,
 				C58CB27F1AB7198B00C79A97 /* ip-tdt@2x.png in Resources */,
+				C54FA1D61FC78D7100ED2D08 /* ic_certificate_white_24dp.png in Resources */,
 				C5675ECD1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp@3x.png in Resources */,
 				C5B8742D1DA5674900909F80 /* ic_account_white_24dp.png in Resources */,
 				C5CED42B1FC58FAF00FC15DD /* ic_filter_outline_white_48dp.png in Resources */,
+				C54FA1D51FC78D7100ED2D08 /* ic_certificate_white_24dp@2x.png in Resources */,
 				C5B8742E1DA5674900909F80 /* ic_account_white_24dp@2x.png in Resources */,
 				C5B8745E1DA6482900909F80 /* SettingsTableViewHeaderFooterView.xib in Resources */,
+				C54FA1E21FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@3x.png in Resources */,
 				C54DDBEB1DA4EE6D001DEAE8 /* ic_close_white@3x.png in Resources */,
 				C516EDE51AB6D94400216E5F /* iw-signature@2x.png in Resources */,
 				C54DDBF81DA4F080001DEAE8 /* ic_account_circle_white@3x.png in Resources */,
@@ -1899,6 +1953,7 @@
 				C5747EBE1DD3237600DB6A1F /* ic_desktop_windows_white_48dp@2x.png in Resources */,
 				C526D8B61DA7F19600EE8BA9 /* ic_visibility_white_24dp@2x.png in Resources */,
 				C59445F91AAE41B900DD4473 /* Default-Landscape.png in Resources */,
+				C54FA1E31FC78DD000ED2D08 /* ic_certificate_outline_white_48dp.png in Resources */,
 				C516EDE71AB6D94E00216E5F /* ip-signature@2x.png in Resources */,
 				C54EEDD61DB777AD00E2E33D /* ic_arrow_back_white_24dp.png in Resources */,
 				C5018C8C1DA4FFC500D7A97D /* ic_filter_outline_white_24dp.png in Resources */,
@@ -1923,6 +1978,7 @@
 				C5747EAA1DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib in Resources */,
 				C5B874591DA56EAC00909F80 /* ic_verified_user_outline_white_24dp@3x.png in Resources */,
 				C54DDBF21DA4F078001DEAE8 /* ic_account_box_white@3x.png in Resources */,
+				C54FA1EA1FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png in Resources */,
 				B4D2F89B162AADF700D8A1DE /* Main.storyboard in Resources */,
 				C5B874391DA5676500909F80 /* ic_copyright_outline_white_24dp.png in Resources */,
 				C526D8D21DA7F41D00EE8BA9 /* ic_cloud_queue_white_24dp@3x.png in Resources */,
@@ -1932,6 +1988,7 @@
 				C5B874631DA67ECD00909F80 /* ic_settings_outline_white@2x.png in Resources */,
 				C54DDC0B1DA4F0A7001DEAE8 /* ic_info_outline_white_24dp.png in Resources */,
 				B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */,
+				C54FA1EB1FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png in Resources */,
 				C5978BF21D8C42D70097AC55 /* ic_settings_white@3x.png in Resources */,
 				C50326251DD0DF02004F00A6 /* ic_done_white_24dp.png in Resources */,
 				1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */,
@@ -1963,6 +2020,8 @@
 				C5B874451DA5678800909F80 /* ic_filter_white_24dp.png in Resources */,
 				C5D6275B1DBF55E100208287 /* ic_action_white_24dp@2x.png in Resources */,
 				C54EEDDF1DB7AC9400E2E33D /* ic_inbox_white_24dp@3x.png in Resources */,
+				C54FA1E41FC78DD000ED2D08 /* ic_certificate_outline_white_48dp@2x.png in Resources */,
+				C54FA1D71FC78D7100ED2D08 /* ic_certificate_white_24dp@3x.png in Resources */,
 				C5B874621DA67ECD00909F80 /* ic_settings_outline_white.png in Resources */,
 				C526D8A91DA7F17200EE8BA9 /* ic_edit_white_24dp.png in Resources */,
 				C58DCD1B1DB9153B00D81D8E /* ic_check_white_18dp@2x.png in Resources */,
@@ -2000,6 +2059,7 @@
 				C58CB2B81AB72D3500C79A97 /* Icon-Small-50@2x.png in Resources */,
 				C58CB2BD1AB72D3500C79A97 /* icone_ipad.png in Resources */,
 				C5B8746B1DA6947600909F80 /* ic_account_plus_outline_white_24dp@3x.png in Resources */,
+				C54FA1E91FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp.png in Resources */,
 				C54EEDDD1DB7AC9400E2E33D /* ic_inbox_white_24dp.png in Resources */,
 				C58CB29E1AB71A2900C79A97 /* iw-visa.png in Resources */,
 				C58CB27E1AB7198B00C79A97 /* ip-tdt.png in Resources */,
