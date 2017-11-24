@@ -318,12 +318,12 @@
 
 			if (signature == nil && error != nil) {
 				[ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                     title:@"Une erreur s'est produite lors de la signature"
-				            viewController:self];
+				                                title:@"Une erreur s'est produite lors de la signature"
+				                       viewController:self];
 				break;
 			}
 			else {
-				NSString *b64EncodedSignature = signature.base64EncodedString;
+				NSString *b64EncodedSignature = [CryptoUtils dataToBase64StringWithData:signature];
 				[signatures addObject:b64EncodedSignature];
 			}
 
@@ -386,12 +386,12 @@
 		}
 	}
 
-	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
+	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 	PrivateKey *pkey = _currentPKey;
 
 	// Retrieving signature certificate
 
-	NSFileManager *fileManager = [NSFileManager new];
+	NSFileManager *fileManager = NSFileManager.new;
 	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
 	                                     inDomain:NSUserDomainMask
 	                            appropriateForURL:nil
@@ -570,7 +570,7 @@
 		return nil;
 	}
 	else {
-		return [signature base64EncodedString];
+		return [CryptoUtils dataToBase64StringWithData:signature];
 	}
 }
 

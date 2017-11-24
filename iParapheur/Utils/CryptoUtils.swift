@@ -129,4 +129,12 @@ import SSZipArchive
         try? FileManager.default.removeItem(at: destZipPath)
     }
 
+
+    @objc class func dataToBase64String(data: NSData) -> NSString {
+        print("Adrien data   : \(data)")
+        let result = (data as Data).base64EncodedString(options : .endLineWithLineFeed)
+        print("Adrien result : \(result)")
+        return result as NSString;
+    }
+
 }

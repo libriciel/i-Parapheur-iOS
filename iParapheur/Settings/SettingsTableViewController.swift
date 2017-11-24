@@ -42,8 +42,8 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String, iconHighlight:String)])] = [
             ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png", "ic_account_white_24dp.png"),
-                         ("Certificats", "certificatesSegue", "ic_certificate_outline_white_24dp.png", "ic_certificate_white_24dp.png"),
-                         ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
+                         ("Certificats", "certificatesSegue", "ic_certificate_outline_white_24dp.png", "ic_certificate_white_24dp.png")]),
+                         // ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
             ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png", "ic_information_white_24dp.png"),
                           ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]

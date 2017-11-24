@@ -504,15 +504,15 @@
 	// Send request
 
 	[_swiftManager sendSimpleActionWithType:@(1)
-	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
-	                                                           dossierId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+	                                    url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
+	                                                                   dossierId]
+	                                   args:argumentDictionary
+	                             onResponse:^(id result) {
+		                             success(nil);
+	                             }
+	                                onError:^(NSError *error) {
+		                                failure(error);
+	                                }];
 };
 
 

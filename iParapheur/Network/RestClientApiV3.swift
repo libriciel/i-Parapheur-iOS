@@ -92,7 +92,7 @@ import Alamofire
 
         let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
                                                             options: NSRegularExpression.MatchingOptions.anchored,
-                                                            range: NSMakeRange(0, urlFixed.characters.count))
+                                                            range: NSMakeRange(0, urlFixed.count))
 
         if (match != nil) {
             let swiftRange = Range(match!.range(at: 1), in: urlFixed)
