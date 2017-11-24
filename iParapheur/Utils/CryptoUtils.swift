@@ -121,12 +121,12 @@ import SSZipArchive
         try? FileManager.default.moveItem(at: url as URL,
                                           to: destZipPath as URL)
 
-        try? SSZipArchive.unzipFile(atPath: url!.path!,
+        try? SSZipArchive.unzipFile(atPath: destZipPath.path,
                                     toDestination: getCertificateTempDirectory().path!,
                                     overwrite: true,
                                     password: nil)
 
-        try? FileManager.default.removeItem(at: url as URL)
+        try? FileManager.default.removeItem(at: destZipPath)
     }
 
 }
