@@ -34,6 +34,8 @@
  */
 import Foundation
 import SSZipArchive
+import UIKit
+import AEXML
 
 
 @objc class CryptoUtils: NSObject {
@@ -135,6 +137,55 @@ import SSZipArchive
         let result = (data as Data).base64EncodedString(options : .endLineWithLineFeed)
         print("Adrien result : \(result)")
         return result as NSString;
+    }
+
+
+    @objc class func buildXadesSignWrapper() -> String {
+
+        // create XML Document
+        let rootDocument = AEXMLDocument()
+        let documentDetachedExternalSignature = rootDocument.addChild(name: "DocumentDetachedExternalSignature")
+
+        let signature = documentDetachedExternalSignature.addChild(name: "ds:Signature",
+                                                                   attributes: [
+                                                                       "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
+                                                                       "Id": "IDF2017-05-17T08-29-45.35_SIG_1"
+                                                                   ])
+
+        let signedInfo = signature.addChild(name: "ds:SignedInfo")
+        signedInfo.addChild(name: "ds:CanonicalizationMethod",
+                            attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
+        signedInfo.addChild(name: "ds:SignatureMethod",
+                            attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"])
+
+        let reference1 = signedInfo.addChild(name: "ds:Reference",
+                                             attributes: ["URI": "#IDF2017-05-17T08-29-45.35"])
+
+        let transforms1 = reference1.addChild(name: "ds:Transforms")
+        transforms1.addChild(name: "ds:Transform",
+                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#enveloped-signature"])
+        transforms1.addChild(name: "ds:Transform",
+                             attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
+
+        reference1.addChild(name: "ds:DigestMethod",
+                            attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
+        reference1.addChild(name: "ds:DigestValue",
+                            value: "IoD02noHfnPPyW32kLXkqjs67pg=")
+
+        let reference2 = signedInfo.addChild(name: "ds:Reference",
+                                             attributes: ["Type": "http://uri.etsi.org/01903/v1.1.1#SignedProperties",
+                                                          "URI": "#IDF2017-05-17T08-29-45.35_SIG_1_SP"])
+
+        let transforms2 = reference2.addChild(name: "ds:Transforms")
+        transforms2.addChild(name: "ds:Transform",
+                             attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
+        reference2.addChild(name: "ds:DigestMethod",
+                            attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
+        reference2.addChild(name: "ds:DigestValue",
+                            value: "ompiAGv4kR9H6fLtUMios2m0Eok=")
+
+        // prints the same XML structure as original
+        return rootDocument.xml
     }
 
 }
