@@ -238,7 +238,7 @@
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 
 	if ([DeviceUtils isConnectedToDemoAccount]) {
-		[ViewUtils logInfoMessageWithMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
+		[ViewUtils logInfoWithMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
 		                    title:@"Action indisponible"
 		           viewController:nil];
 		return;

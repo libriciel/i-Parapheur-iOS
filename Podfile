@@ -6,7 +6,7 @@ target "iParapheur" do
   pod 'SCNetworkReachability'
   pod 'Alamofire', '~> 4.5'
   pod 'Mantle', '2.1.0'
-  pod 'TSMessages', :git => 'https://github.com/KrauseFx/TSMessages.git', :branch => 'master'
+  pod 'SwiftMessages'
   pod 'NSData+Base64'
   pod 'OpenSSL-Universal', '1.0.2.10'
   pod 'Gloss', '~> 2.0.0-beta.1'

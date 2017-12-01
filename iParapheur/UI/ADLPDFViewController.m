@@ -264,7 +264,7 @@
 		                      NSLog(@"updateAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
 		                                                      title:@"Erreur à la sauvegarde de l'annotation"
 		                                             viewController:nil];
 	                      }];
@@ -279,7 +279,7 @@
 		                      NSLog(@"deleteAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
 		                                                      title:@"Erreur à la suppression de l'annotation"
 		                                             viewController:nil];
 	                      }];
@@ -320,7 +320,7 @@
 		                   }
 	                   }
 	                   failure:^(NSError *error) {
-		                   [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+		                   [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
 		                                                   title:@"Erreur à la sauvegarde de l'annotation"
 		                                          viewController:nil];
 	                   }];
@@ -772,7 +772,7 @@
 		                      }
 		                      failure:^(NSError *error) {
 			                      HIDE_HUD
-			                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+			                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
 			                                                      title:nil
 			                                             viewController:nil];
 		                      }];

@@ -161,7 +161,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		 success(versionNumber);
 
 		 if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
-			 [ViewUtils logWarningMessageWithMessage:@"Veuillez mettre à jour votre application."
+			 [ViewUtils logWarningWithMessage:@"Veuillez mettre à jour votre application."
 			                                   title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
 			                          viewController:nil];
 	 }

@@ -35,7 +35,6 @@
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 #import "iParapheur-Swift.h"
-#import <TSMessages/TSMessage.h>
 
 
 @implementation DeviceUtils
@@ -47,58 +46,6 @@
 	NSString *selectedId = [preferences objectForKey:Account.PreferencesKeySelectedAccount];
 
 	return [Account.DemoId isEqualToString:selectedId];
-}
-
-
-+ (void)logError:(NSError *)error {
-
-	[self logErrorMessage:[StringUtils getErrorMessage:error]];
-}
-
-
-+ (void)logErrorMessage:(NSString *)message {
-
-	dispatch_async(dispatch_get_main_queue(), ^{
-		//call back to main queue to update user interface
-		[TSMessage showNotificationWithTitle:message
-		                                type:TSMessageNotificationTypeError];
-	});
-}
-
-
-+ (void)logErrorMessage:(NSString *)message
-              withTitle:(NSString *)title {
-
-	dispatch_async(dispatch_get_main_queue(), ^{
-		//call back to main queue to update user interface
-		[TSMessage showNotificationWithTitle:title
-		                            subtitle:message
-		                                type:TSMessageNotificationTypeError];
-	});
-}
-
-
-+ (void)logSuccessMessage:(NSString *)message
-                withTitle:(NSString *)title {
-
-	dispatch_async(dispatch_get_main_queue(), ^{
-		//call back to main queue to update user interface
-		[TSMessage showNotificationWithTitle:title
-		                            subtitle:message
-		                                type:TSMessageNotificationTypeSuccess];
-	});
-}
-
-
-+ (void)logInfoMessage:(NSString *)message
-             withTitle:(NSString *)title {
-
-	dispatch_async(dispatch_get_main_queue(), ^{
-		//call back to main queue to update user interface
-		[TSMessage showNotificationWithTitle:title
-		                            subtitle:message
-		                                type:TSMessageNotificationTypeMessage];
-	});
 }
 
 

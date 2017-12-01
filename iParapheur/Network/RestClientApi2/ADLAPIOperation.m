@@ -35,7 +35,7 @@
 #import "ADLAPIOperation.h"
 #import "SCNetworkReachability/SCNetworkReachability.h"
 #import "ADLCredentialVault.h"
-#import "DeviceUtils.h"
+#import "iParapheur-Swift.h"
 
 
 @interface ADLAPIOperation ()
@@ -54,7 +54,7 @@
 + (void)networkRequestThreadEntryPoint:(id)object {
 
 	do {
-		[[NSRunLoop currentRunLoop] run];
+		[NSRunLoop.currentRunLoop run];
 	} while (YES);
 }
 
@@ -159,7 +159,7 @@
 				         case SCNetworkStatusReachableViaWiFi:
 				         case SCNetworkStatusReachableViaCellular: {
 
-					         ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
+					         ADLCredentialVault *vault = ADLCredentialVault.sharedCredentialVault;
 					         NSString *alf_ticket = [vault getTicketForHost:_collectivityDef.host
 					                                            andUsername:_collectivityDef.username];
 					         NSURL *requestURL = nil;
@@ -167,25 +167,25 @@
 					         if (alf_ticket != nil) {
 
 						         if (downloadingDocument)
-							         requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN,
-							                                                                               _collectivityDef.host,
-							                                                                               _documentPath,
-							                                                                               alf_ticket]];
+							         requestURL = [NSURL.alloc initWithString:[NSString stringWithFormat:DOWNLOAD_DOCUMENT_URL_PATTERN,
+							                                                                             _collectivityDef.host,
+							                                                                             _documentPath,
+							                                                                             alf_ticket]];
 						         else
-							         requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN,
-							                                                                               _collectivityDef.host,
-							                                                                               _request,
-							                                                                               alf_ticket]];
+							         requestURL = [NSURL.alloc initWithString:[NSString stringWithFormat:AUTH_API_URL_PATTERN,
+							                                                                             _collectivityDef.host,
+							                                                                             _request,
+							                                                                             alf_ticket]];
 					         } else {
 						         //login or programming error
-						         requestURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:API_URL_PATTERN,
-						                                                                               _collectivityDef.host,
-						                                                                               _request]];
+						         requestURL = [NSURL.alloc initWithString:[NSString stringWithFormat:API_URL_PATTERN,
+						                                                                             _collectivityDef.host,
+						                                                                             _request]];
 					         }
 
 					         NSLog(@"%@", requestURL);
 
-					         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestURL];
+					         NSMutableURLRequest *request = [NSMutableURLRequest.alloc initWithURL:requestURL];
 
 					         if (downloadingDocument) {
 						         [request setHTTPMethod:@"GET"];
@@ -209,14 +209,14 @@
 						        forHTTPHeaderField:@"Accept-Encoding"];
 					         }
 
-					         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
-					                                                                       delegate:strongSelf
-					                                                               startImmediately:NO];
+					         NSURLConnection *connection = [NSURLConnection.alloc initWithRequest:request
+					                                                                     delegate:strongSelf
+					                                                             startImmediately:NO];
 
-					         [connection scheduleInRunLoop:[NSRunLoop currentRunLoop]
+					         [connection scheduleInRunLoop:NSRunLoop.currentRunLoop
 					                               forMode:NSDefaultRunLoopMode];
 
-					         _receivedData = [NSMutableData data];
+					         _receivedData = NSMutableData.data;
 					         [connection start];
 					         break;
 				         }
@@ -243,7 +243,9 @@
 			                            withObject:nil
 			                         waitUntilDone:YES];
 		} else {
-			[DeviceUtils logError:error];
+			[ViewUtils logErrorWithMessage:error.localizedDescription
+			                         title:nil
+			                viewController:nil];
 		}
 	}
 
@@ -257,7 +259,7 @@
 
 - (SecCertificateRef)certificateFromFile:(NSString *)file {
 
-	CFDataRef adullact_g3_ca_data = (__bridge CFDataRef) [[NSFileManager defaultManager] contentsAtPath:file];
+	CFDataRef adullact_g3_ca_data = (__bridge CFDataRef) [NSFileManager.defaultManager contentsAtPath:file];
 
 	return SecCertificateCreateWithData(kCFAllocatorDefault, adullact_g3_ca_data);
 }
@@ -268,8 +270,8 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
 
 #ifndef DEBUG_NO_SERVER_TRUST
 	SecTrustRef trust = challenge.protectionSpace.serverTrust;
-	NSString *adullact_mobile_path = [[NSBundle mainBundle] pathForResource:@"acmobile"
-	                                                                 ofType:@"der"];
+	NSString *adullact_mobile_path = [NSBundle.mainBundle pathForResource:@"acmobile"
+	                                                               ofType:@"der"];
 
 	SecCertificateRef adullact_mobile = [self certificateFromFile:adullact_mobile_path];
 
@@ -298,10 +300,10 @@ willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challe
 			(res == kSecTrustResultProceed || res == kSecTrustResultUnspecified)) {
 
 		newCredential = [NSURLCredential credentialForTrust:trust];
-		[[challenge sender] useCredential:newCredential
-		       forAuthenticationChallenge:challenge];
+		[challenge.sender useCredential:newCredential
+		     forAuthenticationChallenge:challenge];
 	} else {
-		[[challenge sender] cancelAuthenticationChallenge:challenge];
+		[challenge.sender cancelAuthenticationChallenge:challenge];
 	}
 #else
 	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
