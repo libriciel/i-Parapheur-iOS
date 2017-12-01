@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -35,19 +35,23 @@
 import UIKit
 import CoreData
 
+
 /**
- * Took from
+ * Taken from
  * https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/
  *     -> InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
  */
 @objc class ModelsDataController: NSObject {
 
-    static let NotificationModelsDataControllerLoaded: NSString! = "ModelsDataController_loaded"
+
+    @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
     static var Context: NSManagedObjectContext? = nil
-	
-	// MARK: - Public methods
-	
-    static func loadManagedObjectContext() {
+
+
+    // MARK: - Utils
+
+
+    @objc static func loadManagedObjectContext() {
 
         // Default case
 
@@ -56,48 +60,68 @@ import CoreData
         }
 
         // This resource is the same name as your xcdatamodeld contained in your project.
-        guard let modelURL = NSBundle.mainBundle().URLForResource("Models", withExtension: "momd") else {
+        guard let modelURL = Bundle.main.url(forResource: "Models", withExtension: "momd") else {
             fatalError("Error loading model from bundle")
         }
 
         // The managed object model for the application.
         // It is a fatal error for the application not to be able to find and load its model.
-        guard let mom = NSManagedObjectModel(contentsOfURL: modelURL) else {
+        guard let mom = NSManagedObjectModel(contentsOf: modelURL) else {
             fatalError("Error initializing mom from: \(modelURL)")
         }
 
         let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
-        ModelsDataController.Context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        ModelsDataController.Context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         ModelsDataController.Context!.persistentStoreCoordinator = psc
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
 
-            let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-            let docURL = urls[urls.endIndex - 1]
+        DispatchQueue.global(qos: .background).async {
+            DispatchQueue.main.async {
 
-            // The directory the application uses to store the Core Data store file.
-            // This code uses a file named "DataModel.sqlite" in the application's documents directory.
-            let storeURL = docURL.URLByAppendingPathComponent("DataModel.sqlite")
-            do {
-                try psc.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: nil)
-            } catch {
-                fatalError("Error migrating store: \(error)")
-            }
+				let docURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-            // Callback on UI thread
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                NSNotificationCenter.defaultCenter().postNotificationName(ModelsDataController.NotificationModelsDataControllerLoaded as String,
-                                                                          object: ["success": true])
+                // The directory the application uses to store the Core Data store file.
+                // This code uses a file named "DataModel.sqlite" in the application's documents directory.
+                let storeURL = docURL.appendingPathComponent("DataModel.sqlite")
+                do {
+					try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+                }
+                catch {
+                    fatalError("Error migrating store: \(error)")
+                }
+
+                // Callback on UI thread
+				DispatchQueue.global(qos: .default).async {
+					DispatchQueue.main.async {
+						NotificationCenter.default.post(name: ModelsDataController.NotificationModelsDataControllerLoaded,
+														object: ["success": true])
+					}
+                }
             }
         }
     }
 
-    static func fetchAccounts() -> [Account] {
+
+    @objc static func save() {
+        do {
+            try ModelsDataController.Context!.save()
+        }
+        catch let error as NSError {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+    }
+
+
+    // MARK: - Accounts methods
+
+
+    @objc static func fetchAccounts() -> [Account] {
         var result: [Account] = []
 
         do {
-            let fetchRequest = NSFetchRequest(entityName: Account.EntityName)
-            result = try ModelsDataController.Context!.executeFetchRequest(fetchRequest) as! [Account]
-        } catch {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.EntityName)
+            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Account]
+        }
+        catch {
             print("Could not fetch Accounts")
             return result
         }
@@ -105,7 +129,8 @@ import CoreData
         return result
     }
 
-    static func cleanupAccounts() {
+
+    @objc static func cleanupAccounts() {
 
         var isSaveNeeded = false
 
@@ -114,8 +139,8 @@ import CoreData
         let result: [Account] = fetchAccounts()
         if result.count == 0 {
 
-            let demoAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                                  inManagedObjectContext:ModelsDataController.Context!) as! Account
+            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+                                                                  into: ModelsDataController.Context!) as! Account
             demoAccount.id = Account.DemoId as String
             demoAccount.title = Account.DemoTitle
             demoAccount.url = Account.DemoUrl
@@ -128,21 +153,21 @@ import CoreData
 
         // Backup legacy settings
 
-        let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        if (preferences.stringForKey("settings_login") != nil) {
-            let legacyAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                                    inManagedObjectContext: ModelsDataController.Context!) as! Account
+        let preferences: UserDefaults = UserDefaults.standard
+        if (preferences.string(forKey: "settings_login") != nil) {
+            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+                                                                    into: ModelsDataController.Context!) as! Account
             legacyAccount.id = Account.FirstAccountId
-            legacyAccount.title = preferences.stringForKey("settings_login")
-            legacyAccount.url = preferences.stringForKey("settings_server_url")
-            legacyAccount.login = preferences.stringForKey("settings_login")
-            legacyAccount.password = preferences.stringForKey("settings_password")
+            legacyAccount.title = preferences.string(forKey: "settings_login")
+            legacyAccount.url = preferences.string(forKey: "settings_server_url")
+            legacyAccount.login = preferences.string(forKey: "settings_login")
+            legacyAccount.password = preferences.string(forKey: "settings_password")
             legacyAccount.isVisible = true
 
-            preferences.setObject(legacyAccount.id, forKey: Account.PreferencesKeySelectedAccount as String)
-            preferences.removeObjectForKey("settings_login")
-            preferences.removeObjectForKey("settings_password")
-            preferences.removeObjectForKey("settings_server_url")
+            preferences.set(legacyAccount.id, forKey: Account.PreferencesKeySelectedAccount as String)
+            preferences.removeObject(forKey: "settings_login")
+            preferences.removeObject(forKey: "settings_password")
+            preferences.removeObject(forKey: "settings_server_url")
 
             isSaveNeeded = true
         }
@@ -155,12 +180,33 @@ import CoreData
         }
     }
 
-    static func save() {
+
+    // MARK: - Filters methods
+
+
+    @objc static func fetchFilter(id: String) -> Filter? {
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+		let results = try! ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
+
+		return (results.count > 0) ? results[0] : nil
+    }
+
+
+    @objc static func fetchFilters() -> [Filter] {
+        var result: [Filter] = []
+
         do {
-            try ModelsDataController.Context!.save()
-        } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
+            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
         }
+        catch {
+            print("Could not fetch Filters")
+            return result
+        }
+
+        return result
     }
 
 }

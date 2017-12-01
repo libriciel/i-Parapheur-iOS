@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -32,7 +32,6 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-
 import Foundation
 import Gloss
 
@@ -54,11 +53,11 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedName() -> NSString {
+    @objc func unwrappedName() -> NSString {
         return NSString(string: name!)
     }
 
-    func unwrappedSubTypes() -> NSArray {
+    @objc func unwrappedSubTypes() -> NSArray {
         return subTypes as NSArray!
     }
 }

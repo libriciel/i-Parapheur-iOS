@@ -1,8 +1,8 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
  * Contributors : SKROBS (2012)
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -238,7 +238,7 @@
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 
 	if ([DeviceUtils isConnectedToDemoAccount]) {
-		[ViewUtils logInfoMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
+		[ViewUtils logInfoMessageWithMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
 		                    title:@"Action indisponible"
 		           viewController:nil];
 		return;
@@ -542,14 +542,14 @@
 
 - (void)updateAnnotation:(Annotation *)annotation {
 
-	[annotation setUnwrappedPage:@(_pageNumber)];
+	[annotation setUnwrappedPageWithI:@(_pageNumber)];
 	[_masterViewController.dataSource updateAnnotation:annotation];
 }
 
 
 - (void)addAnnotation:(Annotation *)annotation {
 
-	[annotation setUnwrappedPage:@(_pageNumber)];
+	[annotation setUnwrappedPageWithI:@(_pageNumber)];
 	[_masterViewController.dataSource addAnnotation:annotation];
 }
 

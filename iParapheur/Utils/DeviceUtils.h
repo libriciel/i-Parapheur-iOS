@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -33,6 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
+#include <CoreGraphics/CGGeometry.h>
+
 
 @interface DeviceUtils : NSObject
 

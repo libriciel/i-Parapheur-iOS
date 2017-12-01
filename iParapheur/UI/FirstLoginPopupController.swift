@@ -1,44 +1,43 @@
 /*
-* Copyright 2012-2016, Adullact-Projet.
-*
-* contact@adullact-projet.coop
-*
-* This software is a computer program whose purpose is to manage and sign
-* digital documents on an authorized iParapheur.
-*
-* This software is governed by the CeCILL license under French law and
-* abiding by the rules of distribution of free software.  You can  use,
-* modify and/ or redistribute the software under the terms of the CeCILL
-* license as circulated by CEA, CNRS and INRIA at the following URL
-* "http://www.cecill.info".
-*
-* As a counterpart to the access to the source code and  rights to copy,
-* modify and redistribute granted by the license, users are provided only
-* with a limited warranty  and the software's author,  the holder of the
-* economic rights,  and the successive licensors  have only  limited
-* liability.
-*
-* In this respect, the user's attention is drawn to the risks associated
-* with loading,  using,  modifying and/or developing or reproducing the
-* software by the user in light of its specific status of free software,
-* that may mean  that it is complicated to manipulate,  and  that  also
-* therefore means  that it is reserved for developers  and  experienced
-* professionals having in-depth computer knowledge. Users are therefore
-* encouraged to load and test the software's suitability as regards their
-* requirements in conditions enabling the security of their systems and/or
-* data to be ensured and,  more generally, to use and operate it in the
-* same conditions as regards security.
-*
-* The fact that you are presently reading this means that you have had
-* knowledge of the CeCILL license and that you accept its terms.
-*/
-
+ * Copyright 2012-2017, Libriciel SCOP.
+ *
+ * contact@libriciel.coop
+ *
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
+ *
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
 import UIKit
 
 @objc class FirstLoginPopupController: UIViewController {
 
-	static let Segue: NSString! = "FirstLoginPopupSegue"
-	static let NotifDismiss: NSString! = "FirstLoginPopupControllerNotifDismiss"
+    @objc static let Segue: NSString! = "FirstLoginPopupSegue"
+    @objc static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
 
@@ -58,22 +57,22 @@ import UIKit
 		super.viewDidLoad()
 		print("View loaded : FirstLoginPopupController")
 
-        self.preferredContentSize = CGSizeMake(FirstLoginPopupController.PreferredWidth,
-                                               FirstLoginPopupController.PreferredHeight);
+		self.preferredContentSize = CGSize(width: FirstLoginPopupController.PreferredWidth,
+		                                   height: FirstLoginPopupController.PreferredHeight);
 
         // Change value events
 
-        serverUrlTextField.addTarget(self,
-                                     action: #selector(onTextFieldValueChanged),
-                                     forControlEvents: UIControlEvents.EditingChanged)
+		serverUrlTextField.addTarget(self,
+		                             action: #selector(onTextFieldValueChanged),
+		                             for: UIControlEvents.editingChanged)
 
-        loginTextField.addTarget(self,
-                                 action: #selector(onTextFieldValueChanged),
-                                 forControlEvents: UIControlEvents.EditingChanged)
+		loginTextField.addTarget(self,
+		                         action: #selector(onTextFieldValueChanged),
+		                         for: UIControlEvents.editingChanged)
 
-        passwordTextField.addTarget(self,
-                                    action: #selector(onTextFieldValueChanged),
-                                    forControlEvents: UIControlEvents.EditingChanged)
+		passwordTextField.addTarget(self,
+		                            action: #selector(onTextFieldValueChanged),
+		                            for: UIControlEvents.editingChanged)
 
         // Load existing account (if any)
 
@@ -94,17 +93,17 @@ import UIKit
     }
 
     deinit {
-        serverUrlTextField.removeTarget(self,
-                                        action: #selector(onTextFieldValueChanged),
-                                        forControlEvents: UIControlEvents.EditingChanged)
+		serverUrlTextField.removeTarget(self,
+		                                action: #selector(onTextFieldValueChanged),
+		                                for: UIControlEvents.editingChanged)
 
-        loginTextField.removeTarget(self,
-                                    action: #selector(onTextFieldValueChanged),
-                                    forControlEvents: UIControlEvents.EditingChanged)
+		loginTextField.removeTarget(self,
+		                            action: #selector(onTextFieldValueChanged),
+		                            for: UIControlEvents.editingChanged)
 
-        passwordTextField.removeTarget(self,
-                                       action: #selector(onTextFieldValueChanged),
-                                       forControlEvents: UIControlEvents.EditingChanged)
+		passwordTextField.removeTarget(self,
+		                               action: #selector(onTextFieldValueChanged),
+		                               for: UIControlEvents.editingChanged)
     }
 
     // MARK: - Private methods
@@ -118,20 +117,20 @@ import UIKit
 
         // Check fields
 
-        let isServerTextFieldValid: Bool = (serverUrlTextField.text!.characters.count != 0);
-        let isLoginTextFieldValid: Bool = (loginTextField.text!.characters.count != 0)
-        let isPasswordTextFieldValid: Bool = (passwordTextField.text!.characters.count != 0);
+        let isServerTextFieldValid: Bool = (serverUrlTextField.text!.count != 0);
+        let isLoginTextFieldValid: Bool = (loginTextField.text!.count != 0)
+        let isPasswordTextFieldValid: Bool = (passwordTextField.text!.count != 0);
 
         // Set orange background on text fields.
         // only on connection event, not on change value events
 
-        setBorderOnTextField(serverUrlTextField,
+        setBorderOnTextField(textField: serverUrlTextField,
                              alert:(!isServerTextFieldValid))
 
-        setBorderOnTextField(loginTextField,
+        setBorderOnTextField(textField: loginTextField,
                              alert:(!isLoginTextFieldValid))
 
-        setBorderOnTextField(passwordTextField,
+        setBorderOnTextField(textField: passwordTextField,
                              alert:(!isPasswordTextFieldValid))
 
         //
@@ -145,12 +144,12 @@ import UIKit
             textField.layer.cornerRadius = 6.0;
             textField.layer.masksToBounds = true;
             textField.layer.borderWidth = 1.0;
-            textField.layer.borderColor = ColorUtils.DarkOrange.CGColor
-            textField.backgroundColor = ColorUtils.DarkOrange.colorWithAlphaComponent(0.1)
+            textField.layer.borderColor = ColorUtils.DarkOrange.cgColor
+            textField.backgroundColor = ColorUtils.DarkOrange.withAlphaComponent(0.1)
         }
         else {
-            textField.layer.borderColor = UIColor.clearColor().CGColor
-            textField.backgroundColor = UIColor.clearColor()
+            textField.layer.borderColor = UIColor.clear.cgColor
+            textField.backgroundColor = UIColor.clear
         }
     }
 
@@ -159,52 +158,52 @@ import UIKit
         // Setup rest client
 
         if (restClient != nil) {
-            restClient!.manager.operationQueue.cancelAllOperations()
+            restClient!.cancelAllOperations()
         }
 
-        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text),
-                                     login: loginTextField.text!,
-                                     password: passwordTextField.text!)
+        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text) as! NSString,
+                                     login: loginTextField.text! as NSString,
+                                     password: passwordTextField.text! as NSString)
 
         // Test request
 
-        enableInterface(false)
+        enableInterface(enabled: false)
 
-        restClient!.getApiVersion({
+        restClient!.getApiVersion(onResponse: {
                                       (level: NSNumber) in
 
                                       // Register new account as selected
 
-                                      let preferences: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-                                      preferences.setObject(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
+                                      let preferences: UserDefaults = UserDefaults.standard
+                                      preferences.set(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
 
                                       // UI refresh
 
-                                      self.enableInterface(true)
-                                      self.dismissWithSuccess(true)
+                                      self.enableInterface(enabled: true)
+                                      self.dismissWithSuccess(success: true)
                                   },
                                   onError: {
                                       (error: NSError) in
 
-                                      self.enableInterface(true)
+                                      self.enableInterface(enabled: true)
 
                                       // Warn with orange fields
 
                                       // TODO : find kCFURLErrorUserAuthenticationRequired swift constant
 
                                       if (error.code == -1011) {
-                                          self.setBorderOnTextField(self.loginTextField, alert: true)
-                                          self.setBorderOnTextField(self.passwordTextField, alert: true)
+                                          self.setBorderOnTextField(textField: self.loginTextField, alert: true)
+                                          self.setBorderOnTextField(textField: self.passwordTextField, alert: true)
                                       }
                                       else {
-                                          self.setBorderOnTextField(self.serverUrlTextField, alert: true)
+                                          self.setBorderOnTextField(textField: self.serverUrlTextField, alert: true)
                                       }
 
                                       // Setup error message
 
-                                      let localizedDescription: NSString = StringUtils.getErrorMessage(error)
+                                      let localizedDescription: NSString = StringUtils.getErrorMessage(error) as! NSString
 
-                                      if (error.localizedDescription == localizedDescription) {
+                                      if (error.localizedDescription == localizedDescription as String) {
                                           self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code)"
                                       }
                                       else {
@@ -216,10 +215,10 @@ import UIKit
 
     func enableInterface(enabled: Bool) {
 
-        loginTextField.enabled = enabled
-        passwordTextField.enabled = enabled
-        serverUrlTextField.enabled = enabled
-        errorLabel.hidden = !enabled
+        loginTextField.isEnabled = enabled
+        passwordTextField.isEnabled = enabled
+        serverUrlTextField.isEnabled = enabled
+        errorLabel.isHidden = !enabled
 
         enabled ? spinnerView.stopAnimating() : spinnerView.startAnimating()
     }
@@ -227,39 +226,39 @@ import UIKit
     func dismissWithSuccess(success: Bool) {
 
         if (restClient != nil) {
-            restClient!.manager.operationQueue.cancelAllOperations()
+            restClient!.cancelAllOperations()
         }
 
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
 
-        let result: NSNumber = NSNumber(integer: (success ? 1 : 0))
-        let userInfo: [NSObject: AnyObject] = ["success": result]
-        NSNotificationCenter.defaultCenter().postNotificationName(String(FirstLoginPopupController.NotifDismiss),
-                                                                  object: nil,
-                                                                  userInfo: userInfo)
+        let result: NSNumber = NSNumber(value: (success ? 1 : 0))
+        let userInfo: [NSObject: AnyObject] = ["success" as NSObject: result]
+		NotificationCenter.default.post(name: FirstLoginPopupController.NotifDismiss,
+                                        object: nil,
+                                        userInfo: userInfo)
     }
 
     // MARK: - TextField listeners
 
-    func onTextFieldValueChanged(sender: AnyObject) {
+    @objc func onTextFieldValueChanged(sender: AnyObject) {
 
         errorLabel.text = ""
-        setBorderOnTextField(sender as! UITextField, alert:false)
+        setBorderOnTextField(textField: sender as! UITextField, alert:false)
     }
 
     // MARK: - Buttons listeners
 
-    @IBAction func onCancelButtonClicked(sender: AnyObject) {
-        dismissWithSuccess(false)
+    @IBAction func onCancelButtonClicked(_ sender: Any) {
+        dismissWithSuccess(success: false)
     }
 
-    @IBAction func onSaveButtonClicked(sender: AnyObject) {
+    @IBAction func onSaveButtonClicked(_ sender: Any) {
 
         // Saving data
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObjectForEntityForName(Account.EntityName,
-                                                                                 inManagedObjectContext:ModelsDataController.Context!) as! Account
+			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+			                                                     into:ModelsDataController.Context!) as! Account
 
             currentAccount!.id = Account.FirstAccountId
             currentAccount!.isVisible = true

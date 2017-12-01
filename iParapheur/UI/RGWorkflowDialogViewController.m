@@ -1,8 +1,8 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
  * Contributors : SKROBS (2012)
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -317,13 +317,13 @@
 			                                  error:&error];
 
 			if (signature == nil && error != nil) {
-				[ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
-				                     title:@"Une erreur s'est produite lors de la signature"
-				            viewController:self];
+				[ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+				                                title:@"Une erreur s'est produite lors de la signature"
+				                       viewController:self];
 				break;
 			}
 			else {
-				NSString *b64EncodedSignature = signature.base64EncodedString;
+				NSString *b64EncodedSignature = [CryptoUtils dataToBase64StringWithData:signature];
 				[signatures addObject:b64EncodedSignature];
 			}
 
@@ -380,18 +380,18 @@
 			[dossiers addObject:dossier.unwrappedId];
 			[hashes addObject:signInfo[@"hash"]];
 		} else {
-			[ViewUtils logWarningMessage:@"Seules les signatures PKCS#7 sont supportées"
+			[ViewUtils logWarningMessageWithMessage:@"Seules les signatures PKCS#7 sont supportées"
 			                       title:@"Signature impossible"
 			              viewController:nil];
 		}
 	}
 
-	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
+	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 	PrivateKey *pkey = _currentPKey;
 
 	// Retrieving signature certificate
 
-	NSFileManager *fileManager = [NSFileManager new];
+	NSFileManager *fileManager = NSFileManager.new;
 	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
 	                                     inDomain:NSUserDomainMask
 	                            appropriateForURL:nil
@@ -563,14 +563,14 @@
 
 	if (signature == nil && error != nil) {
 
-		[ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
+		[ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
 		                     title:@"Une erreur s'est produite lors de la signature"
 		            viewController:self];
 
 		return nil;
 	}
 	else {
-		return [signature base64EncodedString];
+		return [CryptoUtils dataToBase64StringWithData:signature];
 	}
 }
 

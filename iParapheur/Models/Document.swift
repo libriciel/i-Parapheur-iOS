@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -44,8 +44,8 @@ import Gloss
     let pageCount: Int
     let attestState: Int
 
-    let isMainDocument: Bool
-    let isVisuelPdf: Bool
+    @objc let isMainDocument: Bool
+    @objc let isVisuelPdf: Bool
     let isLocked: Bool
     let isDeletable: Bool
 
@@ -71,11 +71,11 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedId() -> NSString {
+    @objc func unwrappedId() -> NSString {
         return NSString(string: id!)
     }
 
-    func unwrappedName() -> NSString {
+    @objc func unwrappedName() -> NSString {
         return NSString(string: name!)
     }
 

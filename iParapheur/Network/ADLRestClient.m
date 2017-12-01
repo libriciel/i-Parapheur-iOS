@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -142,9 +142,9 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		NSLog(@"Downloaded - file : %@ (%llu)", filePath, fileSize);
 	}
 	else {
-		[[NSError alloc] initWithDomain:AFURLRequestSerializationErrorDomain
-		                           code:NSURLErrorBadURL
-		                       userInfo:nil];
+		error = [[NSError alloc] initWithDomain:url //AFURLRequestSerializationErrorDomain
+		                                   code:NSURLErrorBadURL
+		                               userInfo:nil];
 	}
 
 	return error;
@@ -161,9 +161,9 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		 success(versionNumber);
 
 		 if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
-			 [ViewUtils logWarningMessage:@"Veuillez mettre à jour votre application."
-			                        title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
-			               viewController:nil];
+			 [ViewUtils logWarningMessageWithMessage:@"Veuillez mettre à jour votre application."
+			                                   title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
+			                          viewController:nil];
 	 }
 	                    failure:^(NSError *error) {
 		                    failure(error);

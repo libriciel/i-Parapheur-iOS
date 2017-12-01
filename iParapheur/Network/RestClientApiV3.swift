@@ -1,84 +1,86 @@
 /*
-* Copyright 2012-2016, Adullact-Projet.
-*
-* contact@adullact-projet.coop
-*
-* This software is a computer program whose purpose is to manage and sign
-* digital documents on an authorized iParapheur.
-*
-* This software is governed by the CeCILL license under French law and
-* abiding by the rules of distribution of free software.  You can  use,
-* modify and/ or redistribute the software under the terms of the CeCILL
-* license as circulated by CEA, CNRS and INRIA at the following URL
-* "http://www.cecill.info".
-*
-* As a counterpart to the access to the source code and  rights to copy,
-* modify and redistribute granted by the license, users are provided only
-* with a limited warranty  and the software's author,  the holder of the
-* economic rights,  and the successive licensors  have only  limited
-* liability.
-*
-* In this respect, the user's attention is drawn to the risks associated
-* with loading,  using,  modifying and/or developing or reproducing the
-* software by the user in light of its specific status of free software,
-* that may mean  that it is complicated to manipulate,  and  that  also
-* therefore means  that it is reserved for developers  and  experienced
-* professionals having in-depth computer knowledge. Users are therefore
-* encouraged to load and test the software's suitability as regards their
-* requirements in conditions enabling the security of their systems and/or
-* data to be ensured and,  more generally, to use and operate it in the
-* same conditions as regards security.
-*
-* The fact that you are presently reading this means that you have had
-* knowledge of the CeCILL license and that you accept its terms.
-*/
-
+ * Copyright 2012-2017, Libriciel SCOP.
+ *
+ * contact@libriciel.coop
+ *
+ * This software is a computer program whose purpose is to manage and sign
+ * digital documents on an authorized iParapheur.
+ *
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ *
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ *
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ *
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ */
 import Foundation
-import AFNetworking
+import Alamofire
+
 
 @objc class RestClientApiV3: NSObject {
 
     let kCFURLErrorBadServerResponse = -1011
-    var manager: AFHTTPSessionManager
+    var manager: Alamofire.SessionManager
+    @objc var serverUrl: NSURL
 
-    // MARK: - Constructor
 
-    init(baseUrl: NSString,
-         login: NSString,
-         password: NSString) {
+    // <editor-fold desc="Constructor">
 
-        manager = AFHTTPSessionManager(baseURL: NSURL(string: RestClientApiV3.cleanupServerName(baseUrl) as String))
-        manager.requestSerializer = AFJSONRequestSerializer() // force serializer to use JSON encoding
-        manager.requestSerializer.setAuthorizationHeaderFieldWithUsername(login as String, password: password as String);
-        manager.setSessionDidReceiveAuthenticationChallengeBlock {
-            (session, challenge, credential) -> NSURLSessionAuthChallengeDisposition in
 
-            // shouldTrustProtectionSpace will evaluate the challenge using bundled certificates, and set a value into credential if it succeeds
-            if RestClientApiV3.shouldTrustProtectionSpace(challenge, credential: credential) {
-                return NSURLSessionAuthChallengeDisposition.UseCredential
-            }
+    @objc init(baseUrl: NSString,
+               login: NSString,
+               password: NSString) {
 
-            return NSURLSessionAuthChallengeDisposition.PerformDefaultHandling
-        }
+        // Process strings
 
-		// GET needs a JSONResponseSerializer,
-		// POST/PUT/DELETE needs an HTTPResponseSerializer
+        serverUrl = NSURL(string: String(RestClientApiV3.cleanupServerName(url: baseUrl)))!
 
-		let compoundResponseSerializer = AFCompoundResponseSerializer.compoundSerializerWithResponseSerializers([AFJSONResponseSerializer(),
-                                                                                                                 AFHTTPResponseSerializer()])
-		manager.responseSerializer = compoundResponseSerializer
+        // Login
 
+        let credentialData = "\(login):\(password)".data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!
+        let loginHash = credentialData.base64EncodedString()
+
+        // Create custom manager
+
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders
+        configuration.httpAdditionalHeaders!["Authorization"] = "Basic \(loginHash)"
+
+        manager = Alamofire.SessionManager(configuration: configuration)
     }
 
-    // MARK: - Static methods
+
+    // </editor-fold desc="Constructor">
+
+
+    // <editor-fold desc="Static methods">
+
 
     class func cleanupServerName(url: NSString) -> NSString {
+        var urlFixed = url as String
 
         // Removing space
         // TODO Adrien : add special character restrictions tests ?
-
-        var urlFixed = url.mutableCopy()
-        urlFixed = urlFixed.stringByReplacingOccurrencesOfString(" ", withString: "")
+        urlFixed = urlFixed.replacingOccurrences(of: " ", with: "")
 
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
@@ -86,83 +88,22 @@ import AFNetworking
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
         let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
-                                                                  options: NSRegularExpressionOptions.CaseInsensitive)
+                                                                  options: NSRegularExpression.Options.caseInsensitive)
 
-        let match: NSTextCheckingResult? = regex.firstMatchInString(urlFixed as! String,
-                                                                   options: NSMatchingOptions.Anchored,
-                                                                   range: NSMakeRange(0, urlFixed.length))
+        let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
+                                                            options: NSRegularExpression.MatchingOptions.anchored,
+                                                            range: NSMakeRange(0, urlFixed.count))
 
         if (match != nil) {
-			urlFixed = urlFixed.substringWithRange(match!.rangeAtIndex(1))
-		}
-		
+            let swiftRange = Range(match!.range(at: 1), in: urlFixed)
+            urlFixed = String(urlFixed[swiftRange!])
+        }
+
         return NSString(string: "https://m.\(urlFixed)")
     }
 
-    class func shouldTrustProtectionSpace(challenge: NSURLAuthenticationChallenge,
-                                          credential: AutoreleasingUnsafeMutablePointer<NSURLCredential?>) -> Bool {
 
-        // note: credential is a reference; any created credential should be sent back using credential.memory
-
-        let protectionSpace: NSURLProtectionSpace = challenge.protectionSpace
-        var trust: SecTrustRef = protectionSpace.serverTrust!
-
-        // load the root CA bundled with the app
-        let certPath: String? = NSBundle.mainBundle().pathForResource("acmobile", ofType: "der")
-        if (certPath == nil) {
-            print("Certificate does not exist!")
-            return false
-        }
-
-        let certData: NSData = NSData(contentsOfFile: certPath!)!
-        let cert: SecCertificateRef? = SecCertificateCreateWithData(kCFAllocatorDefault, certData)
-
-        if (cert == nil) {
-            print("Certificate data could not be loaded. DER format?")
-            return false
-        }
-
-        // create a policy that ignores hostname
-        let domain: CFString? = nil
-        let policy: SecPolicy = SecPolicyCreateSSL(true, domain)
-
-        // takes all certificates from existing trust
-        let numCerts = SecTrustGetCertificateCount(trust)
-        var certs: [SecCertificateRef] = [SecCertificateRef]()
-        for i in 0 ..< numCerts {
-            // takeUnretainedValue
-            let c: SecCertificateRef? = SecTrustGetCertificateAtIndex(trust, i)
-            certs.append(c!)
-        }
-
-        // and adds them to the new policy
-        var newTrust: SecTrust? = nil
-        var err: OSStatus = SecTrustCreateWithCertificates(certs, policy, &newTrust)
-        if (err != noErr) {
-            print("Could not create trust")
-        }
-
-        // TakeUnretainedValue
-        trust = newTrust! // replace old trust
-
-        // set root cert
-        let rootCerts: [AnyObject] = [cert!]
-        err = SecTrustSetAnchorCertificates(trust, rootCerts)
-
-        // evaluate the certificate and product a trustResult
-        var trustResult: SecTrustResultType = SecTrustResultType()
-        SecTrustEvaluate(trust, &trustResult)
-
-        if (Int(trustResult) == Int(kSecTrustResultProceed) || Int(trustResult) == Int(kSecTrustResultUnspecified)) {
-            // create the credential to be used
-            credential.memory = NSURLCredential(trust: trust)
-            return true
-        }
-
-        return false
-    }
-
-    class func parsePageAnnotations(pages: [String:AnyObject],
+    class func parsePageAnnotations(pages: [String: AnyObject],
                                     step: Int,
                                     documentId: String) -> [Annotation] {
 
@@ -170,7 +111,7 @@ import AFNetworking
 
         for page in pages {
 
-            if let jsonAnnotations = page.1 as? [[String:AnyObject]] {
+            if let jsonAnnotations = page.1 as? [[String: AnyObject]] {
                 for jsonAnnotation in jsonAnnotations {
 
                     let annotation = Annotation(json: jsonAnnotation)
@@ -186,272 +127,429 @@ import AFNetworking
         return parsedAnnotations
     }
 
-    // MARK: - Get methods
 
-    func getApiVersion(onResponse: ((NSNumber) -> Void)?,
-                       onError: ((NSError) -> Void)?) {
+    // </editor-fold desc="Static methods">
 
-        manager.GET("/parapheur/api/getApiLevel",
-                    parameters: nil,
-                    success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
 
-                        guard let apiLevel = ApiLevel(json: responseObject as! [String: AnyObject])
-                        else {
-                            onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                            return
-                        }
+    // <editor-fold desc="Utils">
 
-						onResponse!(NSNumber(integer: apiLevel.level!))
-                    },
-                    failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
-                        onError!(error)
-                    })
+
+    @objc func cancelAllOperations() {
+        manager.session.invalidateAndCancel()
     }
 
-    func getBureaux(onResponse: ((NSArray) -> Void)?,
-                    onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/bureaux",
-                    parameters: nil,
-                    success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                        let bureauList = [Bureau].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(bureauList!)
-                    },
-                    failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
-                        onError!(error)
-                    })
+    // </editor-fold desc="Utils">
+
+
+    // <editor-fold desc="Get methods">
+
+
+    @objc func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
+                             onError errorCallback: ((NSError) -> Void)?) {
+
+        checkCertificate(onResponse: {
+            (result: Bool) in
+
+            if (result) {
+                let apiVersionUrl = "\(self.serverUrl.absoluteString!)/parapheur/api/getApiLevel"
+
+                self.manager.request(apiVersionUrl).validate().responseJSON {
+                    response in
+                    switch (response.result) {
+
+                        case .success:
+                            guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
+                                errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                                return
+                            }
+
+                            responseCallback!(NSNumber(value: apiLevel.level!))
+                            break
+
+                        case .failure(let error):
+                            errorCallback!(error as NSError)
+                            break
+                    }
+                }
+            }
+            else {
+                errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
+                                       code: 400))
+            }
+
+        })
     }
 
-    func getDossiers(bureau: NSString,
-                     page: NSNumber,
-                     size: NSNumber,
-                     filterJson: NSString?,
-                     onResponse: ((NSArray) -> Void)?,
-                     onError: ((NSError) -> Void)?) {
 
-        // Parameters
+    func checkCertificate(onResponse responseCallback: ((Bool) -> Void)?) {
 
-        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-        paramsDict["asc"] = true
-        paramsDict["bureau"] = bureau
-        paramsDict["page"] = page
-        paramsDict["pageSize"] = size
-        paramsDict["pendingFile"] = 0
-        paramsDict["skipped"] = Double(page) * (Double(size) - 1)
-        paramsDict["sort"] = "cm:create"
+        let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.der.txt"
+        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
 
-        if (filterJson != nil) {
-            paramsDict["filter"] = filterJson
+        // Cleanup
+
+        try? FileManager.default.removeItem(at: filePathUrl)
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
         }
 
         // Request
 
-        manager.GET("/parapheur/dossiers",
-                    parameters: paramsDict,
-                    success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-						let dossierList = [Dossier].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(dossierList!)
-                    },
-                    failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
-                        onError!(error)
-                    })
+        manager.download(downloadFileUrl, to: destination).validate().responseData {
+            response in
+
+            let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
+            responseCallback!(isAcValid)
+        }
     }
 
-    func getDossier(dossier: NSString,
-                    bureau: NSString,
-                    onResponse: ((Dossier) -> Void)?,
-                    onError: ((NSError) -> Void)?) {
+
+    @objc func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
+
+        let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
+
+        manager.request(getBureauxUrl).validate().responseJSON {
+            response in
+            switch (response.result) {
+
+                case .success:
+                    let bureauList = [Bureau].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(bureauList! as NSArray)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
+    }
+
+
+    @objc  func getDossiers(bureau: NSString,
+                            page: NSNumber,
+                            size: NSNumber,
+                            filterJson: NSString?,
+                            onResponse responseCallback: ((NSArray) -> Void)?,
+                            onError errorCallback: ((NSError) -> Void)?) {
+
+        let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
         // Parameters
 
-        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-        paramsDict["bureauCourant"] = bureau
+        var parameters: Parameters = [
+            "asc": true,
+            "bureau": bureau,
+            "page": page,
+            "pageSize": size,
+            "pendingFile": 0,
+			"skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "sort": "cm:create"
+        ]
+
+        if (filterJson != nil) {
+            parameters["filter"] = filterJson
+        }
 
         // Request
 
-        manager.GET("/parapheur/dossiers/\(dossier)",
-                    parameters: paramsDict,
-                    success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+        manager.request(getDossiersUrl, parameters: parameters).validate().responseJSON {
+            response in
+            switch (response.result) {
 
-                         guard let responseDossier = Dossier(json: responseObject as! [String: AnyObject])
-                         else {
-                             onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                             return
-                         }
+                case .success:
+                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(dossierList! as NSArray)
+                    break
 
-                        onResponse!(responseDossier)
-                     },
-                    failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
-                         onError!(error)
-                     })
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
-    func getCircuit(dossier: NSString,
-                    onResponse: ((AnyObject) -> Void)?,
-                    onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/dossiers/\(dossier)/circuit",
-                    parameters: nil,
-                    success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject)
-                     },
-                    failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
-                         onError!(error)
-                     })
-    }
+    @objc func getDossier(dossier: NSString,
+                          bureau: NSString,
+                          onResponse responseCallback: ((Dossier) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
 
-    func getTypology(bureauId: NSString,
-                     onResponse: ((NSArray) -> Void)?,
-                     onError: ((NSError) -> Void)?) {
+        let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
 
-//        // Parameters
-//
-//        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-//        paramsDict["asc"] = true
-//        paramsDict["bureau"] = bureau
+        // Parameters
+
+        let parameters: Parameters = ["bureauCourant": bureau]
 
         // Request
 
-        manager.GET("/parapheur/types",
-                    parameters: nil,
-                    success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                        let typeList = [ParapheurType].fromJSONArray(responseObject as! [[String: AnyObject]])
-                        onResponse!(typeList!)
-                    },
-                    failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
-                        onError!(error)
-                    })
+        manager.request(getDossierUrl, parameters: parameters).validate().responseJSON {
+            response in
+            switch (response.result) {
+
+                case .success:
+                    guard let responseDossier = Dossier(json: response.value as! [String: AnyObject]) else {
+                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                        return
+                    }
+                    responseCallback!(responseDossier)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
-    func getAnnotations(dossier: NSString,
-                        onResponse: (([Annotation]) -> Void)?,
-                        onError: ((NSError) -> Void)?) {
 
-        manager.GET("/parapheur/dossiers/\(dossier)/annotations",
-                    parameters: nil,
-                    success: {
-                        (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
+    @objc func getCircuit(dossier: NSString,
+                          onResponse responseCallback: ((AnyObject) -> Void)?,
+                          onError errorCallback: ((NSError) -> Void)?) {
 
-                        // Parse
+        let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
 
-                        var parsedAnnotations = [Annotation]()
+        // Request
 
-                        if let etapes = responseObject as? [AnyObject] {
-                            for etapeIndex in 0 ..< etapes.count {
+        manager.request(getCircuitUrl).validate().responseJSON {
+            response in
+            switch (response.result) {
 
-                                if let documentPages = etapes[etapeIndex] as? [String:AnyObject] {
+                case .success:
+                    responseCallback!(response.value as AnyObject)
+                    break
 
-                                    for documentPage in documentPages {
-                                        if let pages = documentPage.1 as? [String:AnyObject] {
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
+    }
 
-                                            // Parsing API4
-                                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages,
-                                                                                                      step: etapeIndex,
-                                                                                                      documentId: documentPage.0 as String)
-                                        }
+
+    @objc func getTypology(bureauId: NSString,
+                           onResponse responseCallback: ((NSArray) -> Void)?,
+                           onError errorCallback: ((NSError) -> Void)?) {
+
+        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/types"
+
+        // Request
+
+        manager.request(getTypologyUrl).validate().responseJSON {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    let typeList = [ParapheurType].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(typeList! as NSArray)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
+    }
+
+
+    @objc func getAnnotations(dossier: NSString,
+                              onResponse responseCallback: (([Annotation]) -> Void)?,
+                              onError errorCallback: ((NSError) -> Void)?) {
+
+        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
+
+        // Request
+
+        manager.request(getTypologyUrl).validate().responseJSON {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    var parsedAnnotations = [Annotation]()
+
+                    if let etapes = response.value as? [AnyObject] {
+                        for etapeIndex in 0..<etapes.count {
+
+                            if let documentPages = etapes[etapeIndex] as? [String: AnyObject] {
+
+                                for documentPage in documentPages {
+                                    if let pages = documentPage.1 as? [String: AnyObject] {
+
+                                        // Parsing API4
+                                        parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
+                                                                                                  step: etapeIndex,
+                                                                                                  documentId: documentPage.0 as String)
                                     }
-
-                                    // Parsing API3
-                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(documentPages,
-                                                                                              step: etapeIndex,
-                                                                                              documentId: "*")
                                 }
+
+                                // Parsing API3
+                                parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
+                                                                                          step: etapeIndex,
+                                                                                          documentId: "*")
                             }
                         }
-                        else {
-                            onError!(NSError(domain: self.manager.baseURL!.absoluteString, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
-                            return
-                        }
+                    }
+                    else {
+                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+                                               code: self.kCFURLErrorBadServerResponse,
+                                               userInfo: nil))
+                        return
+                    }
 
-                        onResponse!(parsedAnnotations)
-                    },
-                    failure: {
-                        (task: NSURLSessionDataTask!, error: NSError!) in
-                        onError!(error)
-                    })
+                    responseCallback!(parsedAnnotations)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
-    func getSignInfo(dossier: NSString,
-                     bureau: NSString,
-                     onResponse: ((AnyObject) -> Void)?,
-                     onError: ((NSError) -> Void)?) {
+
+    @objc func getSignInfo(dossier: NSString,
+                           bureau: NSString,
+                           onResponse responseCallback: ((AnyObject) -> Void)?,
+                           onError errorCallback: ((NSError) -> Void)?) {
+
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/getSignInfo"
 
         // Parameters
 
-        let paramsDict: NSMutableDictionary = NSMutableDictionary()
-        paramsDict["bureauCourant"] = bureau
+        let parameters: Parameters = ["bureauCourant": bureau]
 
         // Request
 
-        manager.GET("/parapheur/dossiers/\(dossier)/getSignInfo",
-                    parameters: paramsDict,
-                    success: {
-                         (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                         onResponse!(responseObject)
-                     },
-                    failure: {
-                         (task: NSURLSessionDataTask!, error: NSError!) in
-                         onError!(error)
-                     })
+        manager.request(getSignInfoUrl, parameters: parameters).validate().responseJSON {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    responseCallback!(response.value as AnyObject)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
     }
 
-    func sendSimpleAction(type: NSNumber,
-                          url: NSString,
-                          args: NSDictionary,
-                          onResponse: ((AnyObject) -> Void)?,
-                          onError: ((NSError) -> Void)?) {
+
+    @objc func sendSimpleAction(type: NSNumber,
+                                url: NSString,
+                                args: NSDictionary,
+                                onResponse responseCallback: ((NSNumber) -> Void)?,
+                                onError errorCallback: ((NSError) -> Void)?) {
+
+        // Conversions ObjC -> Swift
+
+        let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
+        var parameters: Parameters = [:]
+        for arg in args {
+            parameters[arg.key as! String] = arg.value
+        }
+
+        // Request
 
         if (type == 1) {
+            manager.request(annotationUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseJSON {
+                response in
 
-            manager.POST(url as String,
-                         parameters: args,
-                         success: {
-                              (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                              onResponse!(1)
-                          },
-                         failure: {
-                              (task: NSURLSessionDataTask!, error: NSError!) in
-                              onError!(error)
-                         })
+                switch (response.result) {
+
+                    case .success:
+                        print("Adrien - YAY annot create")
+                        responseCallback!(NSNumber(value: 1))
+                        break
+
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        print(error.localizedDescription)
+                        break
+                }
+            }
         }
         else if (type == 2) {
 
-            manager.PUT(url as String,
-                        parameters: args,
-                        success: {
-                             (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                             onResponse!(1)
-                         },
-                        failure: {
-                             (task: NSURLSessionDataTask!, error: NSError!) in
-                             onError!(error)
-                         })
+            manager.request(annotationUrl, method: .put, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
+                response in
+
+                switch (response.result) {
+
+                    case .success:
+                        responseCallback!(NSNumber(value: 1))
+                        break
+
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        print(error.localizedDescription)
+                        break
+                }
+            }
         }
         else if (type == 3) {
 
-            manager.DELETE(url as String,
-                           parameters: args,
-                           success: {
-                                (task: NSURLSessionDataTask!, responseObject: AnyObject!) in
-                                onResponse!(1)
-                            },
-                           failure: {
-                                (task: NSURLSessionDataTask!, error: NSError!) in
-                                onError!(error)
-                            })
+            manager.request(annotationUrl, method: .delete, parameters: parameters).validate().responseString {
+                response in
+
+                switch (response.result) {
+
+                    case .success:
+                        responseCallback!(NSNumber(value: 1))
+                        break
+
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        break
+                }
+            }
         }
     }
+
+
+    // </editor-fold desc="Get methods">
+
+
+    @objc func downloadFile(document: NSString,
+                            isPdf: Bool,
+                            atPath filePath: NSURL,
+                            onResponse responseCallback: ((NSString) -> Void)?,
+                            onError errorCallback: ((NSError) -> Void)?) {
+
+        let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
+        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+            return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
+        }
+
+        // Cancel previous download
+
+        //	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        //		for (NSURLSessionTask *task in downloadTasks)
+        //			[task cancel];
+        //	}];
+
+        // Request
+
+        manager.download(downloadFileUrl, to: destination).validate().response {
+            response in
+
+            if (response.error == nil) {
+                responseCallback!(response.destinationURL!.path as NSString)
+            }
+            //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
+            //		errorCallback!(response.error)
+            //	}
+            else {
+                errorCallback!(response.error! as NSError)
+            }
+        }
+    }
+
 }
 

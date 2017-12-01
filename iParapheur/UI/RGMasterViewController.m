@@ -1,8 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -38,10 +37,10 @@
 #import "ADLCredentialVault.h"
 #import "iParapheur-Swift.h"
 #import "ADLRequester.h"
-#import "SCNetworkReachability.h"
-#import "DeviceUtils.h"
-#import "iParapheur-Swift.h"
 #import "StringUtils.h"
+#import "DeviceUtils.h"
+#import "SCNetworkReachability.h"
+#import "iParapheur-Swift.h"
 
 
 @interface RGMasterViewController ()
@@ -129,14 +128,14 @@
 	[_restClient getApiLevel:^(NSNumber *versionNumber) {
 						 __strong typeof(weakSelf) strongSelf = weakSelf;
 						 if (strongSelf) {
-							 [[ADLRestClient sharedManager] setRestApiVersion:versionNumber];
+							 [ADLRestClient.sharedManager setRestApiVersion:versionNumber];
 							 [strongSelf loadBureaux];
 						 }
 					 }
 	                 failure:^(NSError *error) {
 		                 __strong typeof(weakSelf) strongSelf = weakSelf;
 		                 if (strongSelf) {
-			                 [[ADLRestClient sharedManager] setRestApiVersion:@(-1)];
+			                 [ADLRestClient.sharedManager setRestApiVersion:@(-1)];
 			                 [strongSelf.refreshControl endRefreshing];
 			                 strongSelf.bureauxArray = @[];
 			                 [(UITableView *) strongSelf.view reloadData];
@@ -144,13 +143,13 @@
 			                 // New test when network retrieved
 			                 if (error.code == kCFURLErrorNotConnectedToInternet) {
 				                 [strongSelf setNewConnectionTryOnNetworkRetrieved];
-				                 [ViewUtils logInfoMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
-				                                     title:nil
-				                            viewController:nil];
+				                 [ViewUtils logInfoMessageWithMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
+				                                                title:nil
+													   viewController:nil];
 			                 } else {
-				                 [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
-				                                      title:nil
-				                             viewController:nil];
+				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+				                                                 title:nil
+														viewController:nil];
 			                 }
 		                 }
 	                 }];
@@ -175,14 +174,14 @@
 		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
 		NSNumber *hour = [numberFormatter numberFromString:[dateFormatter stringFromDate:currentDate]];
 
-		[ViewUtils logInfoMessage:@"L'application est actuellement liée au parapheur de démonstration."
-		                    title:nil
-		           viewController:nil];
+		[ViewUtils logInfoMessageWithMessage:@"L'application est actuellement liée au parapheur de démonstration."
+		                               title:nil
+		                      viewController:nil];
 
 		if ((hour.integerValue > 23) || (hour.integerValue < 7))
-			[ViewUtils logWarningMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."
-			                       title:nil
-			              viewController:nil];
+			[ViewUtils logWarningMessageWithMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."
+			                                  title:nil
+								     viewController:nil];
 	}
 	@catch (NSException *e) {}
 }
@@ -238,7 +237,6 @@
 							 }
 						 }
 		                failure:^(NSError *error) {
-			                NSLog(@"Adrien - Here !!!!");
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
 				                strongSelf.bureauxArray = @[];
@@ -246,9 +244,9 @@
 				                [strongSelf.refreshControl endRefreshing];
 				                [(UITableView *) strongSelf.view reloadData];
 				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
-				                [ViewUtils logErrorMessage:[StringUtils getErrorMessage:error]
-				                                     title:nil
-				                            viewController:nil];
+				                [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
+				                                                title:nil
+				                                       viewController:nil];
 			                }
 		                }];
 	} else {
@@ -379,6 +377,7 @@
 
 	_firstLaunch = FALSE;
 }
+
 
 - (void)onAccountSelected:(NSNotification *)notification {
 

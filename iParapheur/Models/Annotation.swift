@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -39,7 +39,7 @@ import Gloss
 
     var author: String?
     var id: String?
-    var text: String?
+    @objc var text: String?
     let date: NSDate?
     let secretaire: Int?
     var rect: NSValue?
@@ -73,18 +73,21 @@ import Gloss
             let jsonRectTopLeft: Dictionary<String, AnyObject>? = jsonRect!["topLeft"] as! Dictionary<String, AnyObject>?
             let jsonRectBottomRight: Dictionary<String, AnyObject>? = jsonRect!["bottomRight"] as! Dictionary<String, AnyObject>?
 
-            rect = NSValue(CGRect: DeviceUtils.translateDpiRect(CGRectMake(jsonRectTopLeft!["x"] as! CGFloat,
-                                                                           jsonRectTopLeft!["y"] as! CGFloat,
-                                                                           (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
-                                                                           (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)),
-                                                                oldDpi: 150,
-                                                                newDpi: 72))
+
+            let tempRect = CGRect(origin: CGPoint(x: jsonRectTopLeft!["x"] as! CGFloat,
+                                                  y: jsonRectTopLeft!["y"] as! CGFloat),
+                                  size: CGSize(width: (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
+                                               height: (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)))
+			
+			rect = NSValue(cgRect: DeviceUtils.translateDpiRect(tempRect,
+				                                                oldDpi: 150,
+				                                                newDpi: 72))
         }
 		
         step = 0
     }
 
-    init?(currentPage: NSNumber) {
+    @objc init?(currentPage: NSNumber) {
 
         author = ""
         id = "_new"
@@ -96,13 +99,14 @@ import Gloss
 
         date = NSDate()
         secretaire = 0
-        rect = NSValue(CGRect: DeviceUtils.translateDpiRect(CGRectMake(0, 0, 150, 150),
+		rect = NSValue(cgRect: DeviceUtils.translateDpiRect(CGRect(origin: .zero,
+		                                                           size: CGSize(width: 150, height: 150)),
                                                             oldDpi:150,
                                                             newDpi:72))
         step = 0
         editable = false
         documentId = ""
-        page = currentPage as Int?
+        page = currentPage.intValue
     }
 
     func toJSON() -> JSON? {
@@ -111,71 +115,71 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedId() -> NSString {
+    @objc func unwrappedId() -> NSString {
         return NSString(string: id!)
     }
 
-    func unwrappedPage() -> NSNumber {
+    @objc func unwrappedPage() -> NSNumber {
         return page as NSNumber!
     }
 
-    func setUnwrappedPage(i: NSNumber) {
-		page = Int(i)
+    @objc func setUnwrappedPage(i: NSNumber) {
+		page = Int(truncating: i)
     }
 
-    func unwrappedRect() -> NSValue {
+    @objc func unwrappedRect() -> NSValue {
         return rect!
     }
 
-    func setUnwrappedRect(rct: NSValue) {
+    @objc func setUnwrappedRect(rct: NSValue) {
         rect = rct
     }
 
-    func unwrappedText() -> NSString {
+    @objc func unwrappedText() -> NSString {
         return NSString(string: text!)
     }
 
-    func setUnwrappedText(txt: NSString) {
+    @objc func setUnwrappedText(txt: NSString) {
         text = String(txt)
     }
 
-    func setUnwrappedAuthor(txt: NSString) {
+    @objc func setUnwrappedAuthor(txt: NSString) {
 		author = String(txt)
     }
 
-    func unwrappedAuthor() -> NSString {
+    @objc func unwrappedAuthor() -> NSString {
         return NSString(string: author!)
     }
 
-    func unwrappedDocumentId() -> NSString {
+    @objc func unwrappedDocumentId() -> NSString {
         return NSString(string: documentId!)
     }
 
-    func setUnwrappedDocumentId(txt: NSString) {
+    @objc func setUnwrappedDocumentId(txt: NSString) {
         documentId = String(txt)
     }
 
-    func unwrappedDate() -> NSString {
+    @objc func unwrappedDate() -> NSString {
 
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
 
-        return dateFormatter.stringFromDate(date!)
+        return dateFormatter.string(from: date! as Date) as NSString
     }
 
-    func unwrappedStep() -> NSNumber {
+    @objc func unwrappedStep() -> NSNumber {
         return step! as NSNumber
     }
 
-    func unwrappedEditable() -> NSNumber {
+    @objc func unwrappedEditable() -> NSNumber {
         return editable as NSNumber!
     }
 
-    func setUnwrappedEditable(value: NSNumber) {
-        editable = value as Bool?
+    @objc func setUnwrappedEditable(value: NSNumber) {
+        editable = value.boolValue
     }
 
-    func unwrappedType() -> NSString {
+    @objc func unwrappedType() -> NSString {
         return NSString(string: type!)
     }
 	

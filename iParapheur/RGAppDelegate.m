@@ -1,8 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
- * Contributors : SKROBS (2012)
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -41,6 +40,7 @@
 #import "ADLRestClient.h"
 #import "DeviceUtils.h"
 #import "StringUtils.h"
+#import "iParapheur-Swift.h"
 
 
 #define RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT 1
@@ -63,6 +63,7 @@
 - (BOOL)          application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+	NSLog(@"Adrien = Application did launch");
 	[self checkP12FilesInLocalDirectory];
 
 	// Override point for customization after application launch.
@@ -231,14 +232,24 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
 
+	// Open With
+
+	if ([url.scheme isEqualToString:@"file"]) {
+		NSLog(@"Adrien given file : %@", url);
+		[CryptoUtils moveCertificateWithUrl:url];
+		[self checkP12FilesInLocalDirectory];
+		return YES;
+	}
+
+	// Scheme
+
 	NSDictionary *importCertifArguments = [self parseImportCertificateArgumentsFromUrl:url];
 	if (importCertifArguments) {
 
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		ADLRestClient *restClient = [ADLRestClient sharedManager];
+		ADLRestClient *restClient = ADLRestClient.sharedManager;
 		NSString *certifUrl = importCertifArguments[@"iOsUrl"];
 		NSString *certifPwd = importCertifArguments[@"iOsPwd"];
-
 		NSError *downloadError = [restClient downloadCertificateUrlWithUrl:certifUrl
 		                                                            onPath:paths[0]];
 
@@ -335,7 +346,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	// Build result
 
-	NSMutableDictionary *result = [NSMutableDictionary new];
+	NSMutableDictionary *result = NSMutableDictionary.new;
 
 	if (certificateUrl)
 		result[@"iOsUrl"] = certificateUrl;
@@ -363,6 +374,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)checkP12FilesInLocalDirectory {
 
 	NSArray *p12Docs = [self importableP12Stores];
+	NSLog(@"Adrien importables p12 : %@", p12Docs);
 
 	for (NSString *p12Path in p12Docs) {
 		NSLog(@"p12Path :%@", p12Docs);
@@ -383,26 +395,30 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 - (NSMutableArray *)importableP12Stores {
 
-	NSMutableArray *retval = [NSMutableArray array];
-
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *publicDocumentsDir = paths[0];
+	NSMutableArray *retval = NSMutableArray.array;
+	NSURL *certificateFolder = [CryptoUtils getCertificateTempDirectory];
+	NSString *certificateFolderPath = certificateFolder.path;
 
 	NSError *error;
-	NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:publicDocumentsDir
-	                                                                     error:&error];
+	NSArray *files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:certificateFolderPath
+	                                                                   error:&error];
+
+	NSLog(@"Adrien certificateFolderPath -- %@", certificateFolderPath);
+	NSLog(@"Adrien    -> %@", files);
+
 	if (files == nil) {
 		NSLog(@"Error reading contents of documents directory: %@", error.localizedDescription);
 		return retval;
 	}
 
 	for (NSString *file in files) {
-
+		NSLog(@"Adrien -- %@", file);
+		
 		if (([file.pathExtension compare:@"p12"
 		                         options:NSCaseInsensitiveSearch] == NSOrderedSame) ||
 				([file.pathExtension compare:@"pfx"
 				                     options:NSCaseInsensitiveSearch] == NSOrderedSame)) {
-			NSString *fullPath = [publicDocumentsDir stringByAppendingPathComponent:file];
+			NSString *fullPath = [certificateFolderPath stringByAppendingPathComponent:file];
 			[retval addObject:fullPath];
 		}
 	}
@@ -438,9 +454,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		}
 		else if (error.code == P12AlreadyImported) {
 
-			[ViewUtils logWarningMessage:certificatePath.lastPathComponent
-			                       title:@"Ce fichier de certificat a déjà été importé."
-			              viewController:nil];
+			[ViewUtils logWarningMessageWithMessage:certificatePath.lastPathComponent
+			                                  title:@"Ce fichier de certificat a déjà été importé."
+			                         viewController:nil];
 
 			[self deleteCertificate:certificatePath];
 		}

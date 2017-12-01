@@ -1,7 +1,7 @@
 /*
- * Copyright 2012-2016, Adullact-Projet.
+ * Copyright 2012-2017, Libriciel SCOP.
  *
- * contact@adullact-projet.coop
+ * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
  * digital documents on an authorized iParapheur.
@@ -115,43 +115,43 @@ import Gloss
 
     // MARK: - ObjC accessors
 
-    func unwrappedId() -> NSString {
+    @objc func unwrappedId() -> NSString {
         return NSString(string: id!)
     }
 
-    func unwrappedDocuments() -> NSArray {
+    @objc func unwrappedDocuments() -> NSArray {
         return documents as NSArray!
     }
 
-    func unwrappedTitle() -> NSString {
+    @objc func unwrappedTitle() -> NSString {
         return title as NSString!
     }
 
-    func unwrappedActions() -> NSArray {
+    @objc func unwrappedActions() -> NSArray {
         return actions as NSArray!
     }
 
-    func unwrappedActionDemandee() -> NSString {
+    @objc func unwrappedActionDemandee() -> NSString {
         return NSString(string: actionDemandee!)
     }
 
-    func unwrappedIsSignPapier() -> Bool {
+    @objc func unwrappedIsSignPapier() -> Bool {
         return isSignPapier!
     }
 
-    func unwrappedType() -> NSString {
+    @objc func unwrappedType() -> NSString {
         return NSString(string: type!)
     }
 
-    func unwrappedSubType() -> NSString {
+    @objc func unwrappedSubType() -> NSString {
         return NSString(string: sousType!)
     }
 
-    func unwrappedLimitDate() -> NSNumber {
+    @objc func unwrappedLimitDate() -> NSNumber {
         return dateLimite!
     }
 
-    func unwrappedIsLocked() -> Bool {
+    @objc func unwrappedIsLocked() -> Bool {
         return isLocked!
     }
 
@@ -162,7 +162,7 @@ import Gloss
     */
     static func getPositiveAction(actions: NSArray) -> NSString! {
 
-        if (actions.containsObject(NSString(string: "SIGNATURE"))) {
+        if (actions.contains(NSString(string: "SIGNATURE"))) {
             return NSString(string: "SIGNATURE")
         }
 
@@ -172,16 +172,16 @@ import Gloss
     /**
      * Returns the main negative {@link Action} available, by coherent priority.
      */
-    static func getNegativeAction(actions: NSArray) -> NSString! {
+    @objc static func getNegativeAction(actions: NSArray) -> NSString! {
 
-        if (actions.containsObject(NSString(string: "REJET"))) {
+        if (actions.contains(NSString(string: "REJET"))) {
             return NSString(string: "REJET")
         }
 
         return NSString(string: "")
     }
 
-    class func filterActions(dossierList: NSArray) -> NSMutableArray {
+    @objc class func filterActions(dossierList: NSArray) -> NSMutableArray {
 
         let result: NSMutableArray = NSMutableArray()
 
@@ -208,17 +208,17 @@ import Gloss
         // Build result
 
         if (hasSignature) {
-            result.addObject(NSString(string: "SIGNATURE"))
+            result.add(NSString(string: "SIGNATURE"))
         }
         else if (hasVisa) {
-            result.addObject(NSString(string: "VISA"))
+            result.add(NSString(string: "VISA"))
         }
 
         if (hasRejet) {
-            result.addObject(NSString(string: "REJET"))
+            result.add(NSString(string: "REJET"))
         }
         if (hasTDT) {
-            result.addObject(NSString(string: "TDT"))
+            result.add(NSString(string: "TDT"))
         }
 
         return result
