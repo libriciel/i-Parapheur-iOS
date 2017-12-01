@@ -114,14 +114,12 @@ import Foundation
 		currentRestClient!.getApiVersion(onResponse: {
                                             (result: NSNumber) in
                                             ViewUtils.logSuccess(message: "Connexion réussie",
-                                                                 title: nil,
-                                                                 viewController: self)
+                                                                 title: nil)
                                          },
                                          onError: {
                                              (error: NSError) in
                                              ViewUtils.logError(message: StringUtils.getErrorMessage(error) as! NSString,
-                                                                title: nil,
-                                                                viewController: self)
+                                                                title: nil)
                                          })
     }
 

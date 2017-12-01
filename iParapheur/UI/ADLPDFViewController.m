@@ -265,8 +265,7 @@
 	                      }
 	                      failure:^(NSError *error) {
 		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-		                                                      title:@"Erreur à la sauvegarde de l'annotation"
-		                                             viewController:nil];
+		                                               title:@"Erreur à la sauvegarde de l'annotation"];
 	                      }];
 }
 
@@ -280,8 +279,7 @@
 	                      }
 	                      failure:^(NSError *error) {
 		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-		                                                      title:@"Erreur à la suppression de l'annotation"
-		                                             viewController:nil];
+		                                               title:@"Erreur à la suppression de l'annotation"];
 	                      }];
 }
 
@@ -321,8 +319,7 @@
 	                   }
 	                   failure:^(NSError *error) {
 		                   [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-		                                                   title:@"Erreur à la sauvegarde de l'annotation"
-		                                          viewController:nil];
+		                                            title:@"Erreur à la sauvegarde de l'annotation"];
 	                   }];
 }
 
@@ -773,8 +770,7 @@
 		                      failure:^(NSError *error) {
 			                      HIDE_HUD
 			                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-			                                                      title:nil
-			                                             viewController:nil];
+														   title:nil];
 		                      }];
 	}
 }

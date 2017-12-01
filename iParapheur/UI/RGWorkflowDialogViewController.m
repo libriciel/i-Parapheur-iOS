@@ -318,8 +318,7 @@
 
 			if (signature == nil && error != nil) {
 				[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-				                                title:@"Une erreur s'est produite lors de la signature"
-				                       viewController:self];
+				                         title:@"Une erreur s'est produite lors de la signature"];
 				break;
 			}
 			else {
@@ -381,8 +380,7 @@
 			[hashes addObject:signInfo[@"hash"]];
 		} else {
 			[ViewUtils logWarningWithMessage:@"Seules les signatures PKCS#7 sont supportées"
-			                       title:@"Signature impossible"
-			              viewController:nil];
+			                           title:@"Signature impossible"];
 		}
 	}
 
@@ -564,8 +562,7 @@
 	if (signature == nil && error != nil) {
 
 		[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-		                     title:@"Une erreur s'est produite lors de la signature"
-		            viewController:self];
+		                         title:@"Une erreur s'est produite lors de la signature"];
 
 		return nil;
 	}

@@ -144,12 +144,10 @@
 			                 if (error.code == kCFURLErrorNotConnectedToInternet) {
 				                 [strongSelf setNewConnectionTryOnNetworkRetrieved];
 				                 [ViewUtils logInfoWithMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
-				                                                title:nil
-													   viewController:nil];
+														 title:nil];
 			                 } else {
 				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-				                                                 title:nil
-														viewController:nil];
+				                                          title:nil];
 			                 }
 		                 }
 	                 }];
@@ -175,13 +173,11 @@
 		NSNumber *hour = [numberFormatter numberFromString:[dateFormatter stringFromDate:currentDate]];
 
 		[ViewUtils logInfoWithMessage:@"L'application est actuellement liée au parapheur de démonstration."
-		                               title:nil
-		                      viewController:nil];
+								title:nil];
 
 		if ((hour.integerValue > 23) || (hour.integerValue < 7))
 			[ViewUtils logWarningWithMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."
-			                                  title:nil
-								     viewController:nil];
+									   title:nil];
 	}
 	@catch (NSException *e) {}
 }
@@ -245,8 +241,7 @@
 				                [(UITableView *) strongSelf.view reloadData];
 				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
 				                [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-				                                                title:nil
-				                                       viewController:nil];
+				                                         title:nil];
 			                }
 		                }];
 	} else {

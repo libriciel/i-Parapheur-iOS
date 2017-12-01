@@ -363,8 +363,7 @@
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
 				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-				                                                 title:nil
-				                                        viewController:nil];
+														  title:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
 			                 }
@@ -388,8 +387,7 @@
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
 				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-				                                                 title:nil
-				                                        viewController:nil];
+				                                          title:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
 			                 }

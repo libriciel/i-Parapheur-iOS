@@ -244,8 +244,7 @@
 			                         waitUntilDone:YES];
 		} else {
 			[ViewUtils logErrorWithMessage:error.localizedDescription
-			                         title:nil
-			                viewController:nil];
+			                         title:nil];
 		}
 	}
 

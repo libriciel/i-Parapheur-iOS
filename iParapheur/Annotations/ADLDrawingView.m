@@ -239,8 +239,7 @@
 
 	if ([DeviceUtils isConnectedToDemoAccount]) {
 		[ViewUtils logInfoWithMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
-		                    title:@"Action indisponible"
-		           viewController:nil];
+		                        title:@"Action indisponible"];
 		return;
 	}
 	

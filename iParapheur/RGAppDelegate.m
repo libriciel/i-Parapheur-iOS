@@ -270,8 +270,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 			}
 		} else {
 			[ViewUtils logErrorWithMessage:downloadError.localizedDescription
-			                                title:@"Erreur au téléchargement du certificat"
-			                       viewController:nil];
+									 title:@"Erreur au téléchargement du certificat"];
 		}
 
 		return NO;
@@ -455,8 +454,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		else if (error.code == P12AlreadyImported) {
 
 			[ViewUtils logWarningWithMessage:certificatePath.lastPathComponent
-			                                  title:@"Ce fichier de certificat a déjà été importé."
-			                         viewController:nil];
+									   title:@"Ce fichier de certificat a déjà été importé."];
 
 			[self deleteCertificate:certificatePath];
 		}
@@ -465,8 +463,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	}
 	else {
 		[ViewUtils logSuccessWithMessage:@"Ce certificat a bien été importé."
-		                                  title:certificatePath.lastPathComponent
-		                         viewController:nil];
+		                                  title:certificatePath.lastPathComponent];
 	}
 }
 
@@ -481,12 +478,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	if (!error) {
 		[ViewUtils logInfoWithMessage:certificatePath.lastPathComponent
-		                               title:@"Ce fichier de certificat a été supprimé."
-		                      viewController:nil];
+		                               title:@"Ce fichier de certificat a été supprimé."];
 	} else {
 		[ViewUtils logErrorWithMessage:error.localizedDescription
-		                                title:@"Erreur à la suppression du fichier"
-		                       viewController:nil];
+		                                title:@"Erreur à la suppression du fichier"];
 	}
 }
 
