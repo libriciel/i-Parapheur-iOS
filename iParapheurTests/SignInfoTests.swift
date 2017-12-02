@@ -4,7 +4,7 @@
  * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
- * digital documents on an authorized iParapheur.
+ * digital documxents on an authorized iParapheur.
  *
  * This software is governed by the CeCILL license under French law and
  * abiding by the rules of distribution of free software.  You can  use,
@@ -36,27 +36,20 @@ import XCTest
 @testable import iParapheur
 
 
-class ColorUtilsTests: XCTestCase {
-
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+class SignInfoTests: XCTestCase {
+    
+    func testDecodeFull() {
+		
+        getSignInfoJsonString = "{\"signatureInformations\":{\"pesid\":\"test\",\"hash\":\"3a922b5c63bd40021439dcbfe432e87cb4ee9d25\",\"pespolicydesc\":\"Politique de Signature de l'Agent\",\"pescountryname\":\"France\",\"pespostalcode\":\"34000\",\"format\":\"XADES-env\",\"pesspuri\":\"http://www.s2low.org/PolitiqueSignature-Agent\",\"pesencoding\":\"UTF-8\",\"pesclaimedrole\":\"Pastell\",\"pespolicyid\":\"urn:oid:1.2.250.1.5.3.1.1.10\",\"pespolicyhash\":\"G4CqRa9R5c9Yg+dzMH3gbEc4Kqo=\",\"p7s\":null,\"pescity\":\"Montpellier\"}}"
+		
+		/*let jsonDecoder = JSONDecoder()
+		let signInfoDict = try jsonDecoder.decode(Dictionary<String, SignInfo>.self, from: getSignInfoJsonString)
+		
+		XCTAssertEqual(signInfoDict.keys.length, 1)
+		let signInfo = signInfoDict[0]
+		XCTAssertNotNil(signInfo)
+		
+		XCTAssertEqual(signInfo.pedId, "test") */
     }
-
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
-    }
-
+    
 }
