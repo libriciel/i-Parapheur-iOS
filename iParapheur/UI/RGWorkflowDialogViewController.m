@@ -368,9 +368,9 @@
 */
 - (void)getSignInfoDidEndWithSuccess:(ADLResponseSignInfo *)responseSignInfo {
 
-	NSMutableArray *hashes = [NSMutableArray new];
-	NSMutableArray *dossiers = [NSMutableArray new];
-	NSMutableArray *signatures = [NSMutableArray new];
+	NSMutableArray *hashes = NSMutableArray.new;
+	NSMutableArray *dossiers = NSMutableArray.new;
+	NSMutableArray *signatures = NSMutableArray.new;
 
 	for (Dossier *dossier in _dossiers) {
 		NSDictionary *signInfo = responseSignInfo.signatureInformations;
