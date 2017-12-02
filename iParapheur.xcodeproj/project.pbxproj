@@ -18,7 +18,6 @@
 		64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */; };
 		64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348D17E34A71E2E14D64A /* Bureau.swift */; };
 		64F343754DD86D7E822D4760 /* ParapheurType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F341F438EA838A05990950 /* ParapheurType.swift */; };
-		64F343EEA211A09227F2433F /* SignInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34471F02B6448181BD1C2 /* SignInfo.swift */; };
 		64F3475A8C8C052791313956 /* AccountSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */; };
 		64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */; };
 		64F348D02CB574C17FAAFAFE /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F342B900CD2EE0E4AA64DD /* State.swift */; };
@@ -251,7 +250,6 @@
 		C5978BF11D8C42D70097AC55 /* ic_settings_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BEE1D8C42D70097AC55 /* ic_settings_white@2x.png */; };
 		C5978BF21D8C42D70097AC55 /* ic_settings_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BEF1D8C42D70097AC55 /* ic_settings_white@3x.png */; };
 		C5A03D891DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A03D881DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift */; };
-		C5B723191FD3247B00FC890D /* SignInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B723181FD3247B00FC890D /* SignInfoTests.swift */; };
 		C5B8742D1DA5674900909F80 /* ic_account_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B8742A1DA5674900909F80 /* ic_account_white_24dp.png */; };
 		C5B8742E1DA5674900909F80 /* ic_account_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B8742B1DA5674900909F80 /* ic_account_white_24dp@2x.png */; };
 		C5B8742F1DA5674900909F80 /* ic_account_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B8742C1DA5674900909F80 /* ic_account_white_24dp@3x.png */; };
@@ -346,7 +344,6 @@
 		64F341F438EA838A05990950 /* ParapheurType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParapheurType.swift; sourceTree = "<group>"; };
 		64F342B900CD2EE0E4AA64DD /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSelectionController.swift; sourceTree = "<group>"; };
-		64F34471F02B6448181BD1C2 /* SignInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInfo.swift; sourceTree = "<group>"; };
 		64F344871EECF705F8C071C3 /* ModelsDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelsDataController.swift; path = iParapheur/Models/Storage/ModelsDataController.swift; sourceTree = SOURCE_ROOT; };
 		64F348427F7EBCBC0A731851 /* Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		64F348D17E34A71E2E14D64A /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bureau.swift; sourceTree = "<group>"; };
@@ -354,9 +351,14 @@
 		64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CryptoUtils.swift; sourceTree = "<group>"; };
 		64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiLevel.swift; sourceTree = "<group>"; };
 		65B90403B5F0C32837C3AA55 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
+		9514BFDD187AA73800118B9C /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
+		9514BFDE187AA73800118B9C /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		9514BFE0187AA73800118B9C /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		9514BFE1187AA73800118B9C /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		9514BFE2187AA73800118B9C /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
+		9514BFF3187AA76100118B9C /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
+		9514BFF4187AA76100118B9C /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
 		952E2E531888185E005C8D97 /* ADLFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterViewController.h; sourceTree = "<group>"; };
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
 		954A7389188D371D00A13D1E /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
@@ -668,7 +670,8 @@
 		C5978BEE1D8C42D70097AC55 /* ic_settings_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_settings_white@2x.png"; path = "ic_settings_white_24dp/ic_settings_white@2x.png"; sourceTree = "<group>"; };
 		C5978BEF1D8C42D70097AC55 /* ic_settings_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_settings_white@3x.png"; path = "ic_settings_white_24dp/ic_settings_white@3x.png"; sourceTree = "<group>"; };
 		C5A03D881DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsAccountsEditPopupController.swift; sourceTree = "<group>"; };
-		C5B723181FD3247B00FC890D /* SignInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInfoTests.swift; sourceTree = "<group>"; };
+		C5A6AB971AAEE68000053B9F /* Icon-Small-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-40.png"; sourceTree = "<group>"; };
+		C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-40@2x.png"; sourceTree = "<group>"; };
 		C5B8742A1DA5674900909F80 /* ic_account_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_account_white_24dp.png; path = ic_account_white_24dp/ic_account_white_24dp.png; sourceTree = "<group>"; };
 		C5B8742B1DA5674900909F80 /* ic_account_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_account_white_24dp@2x.png"; path = "ic_account_white_24dp/ic_account_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C5B8742C1DA5674900909F80 /* ic_account_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_account_white_24dp@3x.png"; path = "ic_account_white_24dp/ic_account_white_24dp@3x.png"; sourceTree = "<group>"; };
@@ -805,7 +808,6 @@
 				C5833FC11FC4247900C5E692 /* Filter+CoreDataClass.swift */,
 				C5833FC01FC4247900C5E692 /* Filter+CoreDataProperties.swift */,
 				64F342B900CD2EE0E4AA64DD /* State.swift */,
-				64F34471F02B6448181BD1C2 /* SignInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -813,7 +815,14 @@
 		9514BFDA187AA4CF00118B9C /* app-icons */ = {
 			isa = PBXGroup;
 			children = (
+				9514BFF3187AA76100118B9C /* Icon-76.png */,
+				9514BFF4187AA76100118B9C /* Icon-76@2x.png */,
+				C5A6AB971AAEE68000053B9F /* Icon-Small-40.png */,
+				C5A6AB981AAEE68000053B9F /* Icon-Small-40@2x.png */,
+				9514BFDD187AA73800118B9C /* Icon-Small.png */,
+				9514BFDE187AA73800118B9C /* Icon-Small@2x.png */,
 				9514BFDF187AA73800118B9C /* Icon.png */,
+				9514BFE0187AA73800118B9C /* Icon@2x.png */,
 				9514BFE1187AA73800118B9C /* iTunesArtwork.png */,
 				9514BFE2187AA73800118B9C /* iTunesArtwork@2x.png */,
 			);
@@ -1450,7 +1459,6 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
-				C5B723181FD3247B00FC890D /* SignInfoTests.swift */,
 				C54FA1EC1FCCE82100ED2D08 /* CryptoUtilsTests.swift */,
 				C5CED41D1FC474CE00FC15DD /* FilterTests.swift */,
 				C585C8D41FBEF05D005A0544 /* ModelsDataControllerTests.swift */,
@@ -2294,7 +2302,6 @@
 				64F343754DD86D7E822D4760 /* ParapheurType.swift in Sources */,
 				64F348D02CB574C17FAAFAFE /* State.swift in Sources */,
 				64F34C7DE0EEAF5125C6D9AE /* CryptoUtils.swift in Sources */,
-				64F343EEA211A09227F2433F /* SignInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2305,7 +2312,6 @@
 				C585C8D51FBEF05D005A0544 /* ModelsDataControllerTests.swift in Sources */,
 				C5CED41E1FC474CE00FC15DD /* FilterTests.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* CryptoUtilsTests.swift in Sources */,
-				C5B723191FD3247B00FC890D /* SignInfoTests.swift in Sources */,
 				C58203C61FBCAAE700B6606F /* ColorUtilsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

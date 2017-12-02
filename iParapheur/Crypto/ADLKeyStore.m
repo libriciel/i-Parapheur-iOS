@@ -368,10 +368,10 @@ NSData *X509_to_NSData(X509 *cert) {
 
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"PrivateKey"
 	                                          inManagedObjectContext:self.managedObjectContext];
-	NSFetchRequest *request = NSFetchRequest.new;
+	NSFetchRequest *request = [NSFetchRequest new];
 	request.entity = entity;
-	NSSortDescriptor *sortDescriptor = [NSSortDescriptor.alloc initWithKey:@"commonName"
-	                                                             ascending:YES];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"commonName"
+	                                                               ascending:YES];
 	request.sortDescriptors = @[sortDescriptor];
 
 	// Fetch the records and handle an error
@@ -547,15 +547,16 @@ localizedDescription:(NSString *)localizedDescription
 	NSDictionary *x509Values = [ADLKeyStore getX509ValuesforP12:p12Path
 	                                               withPassword:password];
 
-	if (!x509Values)    // TODO : error message
+	if (!x509Values)  	// TODO : error message
 		return NO;
 
 	// prepare data for the PrivateKey Entity
 
-	NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"PrivateKey"
-	                                                     inManagedObjectContext:self.managedObjectContext];
+	NSEntityDescription *entityDescription = [NSEntityDescription
+			entityForName:@"PrivateKey"
+   inManagedObjectContext:self.managedObjectContext];
 
-	NSFetchRequest *request = NSFetchRequest.new;
+	NSFetchRequest *request = [NSFetchRequest new];
 	request.entity = entityDescription;
 
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:
@@ -574,20 +575,21 @@ localizedDescription:(NSString *)localizedDescription
 
 	if (array.count == 0) {
 
-		NSString *newPath = [self.applicationDataDirectory.path stringByAppendingPathComponent:self.UUID];
+		NSString *newPath = [self.applicationDataDirectory.path
+				stringByAppendingPathComponent:self.UUID];
 
 		// move the file to applicationDataDirectory
-		[NSFileManager.defaultManager moveItemAtPath:p12Path
-		                                      toPath:newPath
-		                                       error:error];
+		[[NSFileManager defaultManager] moveItemAtPath:p12Path
+		                                        toPath:newPath
+		                                         error:error];
 
 		// generate an entry for the new Key
 
 		PrivateKey *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
 		                                                          inManagedObjectContext:self.managedObjectContext];
 
-		NSDateFormatter *formatter = NSDateFormatter.new;
-		formatter.dateFormat = ISO_8601_FORMAT;
+		NSDateFormatter *formatter = [NSDateFormatter new];
+		[formatter setDateFormat:ISO_8601_FORMAT];
 
 		newPrivateKey.p12Filename = newPath;
 		newPrivateKey.publicKey = [x509Values[@"publicKey"] dataUsingEncoding:NSUTF8StringEncoding];
@@ -664,12 +666,6 @@ localizedDescription:(NSString *)localizedDescription
 		return nil;
 	}
 
-	return [self parseX509Values:certX509];
-}
-
-
-+ (NSDictionary *)parseX509Values:(X509 *)certX509 {
-
 	// Fetch values from p12, with OpenSSL
 
 	int len = 0;
@@ -693,28 +689,25 @@ localizedDescription:(NSString *)localizedDescription
 	NSString *aliasString = [NSString stringWithCString:(const char *) aliasChar encoding:NSUTF8StringEncoding];
 	NSString *issuerString = [NSString stringWithCString:(const char *) issuerChar encoding:NSUTF8StringEncoding];
 	NSString *serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
-	NSString *certString = [NSString.alloc initWithData:certNsData
-	                                           encoding:NSUTF8StringEncoding];
+	NSString *certString = [[NSString alloc] initWithData:certNsData encoding:NSUTF8StringEncoding];
 
 	NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNsDate:notBeforeAsn1Time];
 	NSDate *notAfterDate = [ADLKeyStore asn1TimeToNsDate:notAfterAsn1Time];
 
-	NSDateFormatter *formatter = NSDateFormatter.new;
-	formatter.dateFormat = ISO_8601_FORMAT;
+	NSDateFormatter *formatter = [NSDateFormatter new];
+	[formatter setDateFormat:ISO_8601_FORMAT];
 
 	NSString *notBeforeString = [formatter stringFromDate:notBeforeDate];
 	NSString *notAfterString = [formatter stringFromDate:notAfterDate];
 
 	// Result
 
-	return @{
-			@"commonName": aliasString,
+	return @{@"commonName": aliasString,
 			@"issuerName": issuerString,
 			@"notBefore": notBeforeString,
 			@"notAfter": notAfterString,
-			@"serialNumber": serialString,
-			@"publicKey": certString
-	};
+			@"serialNumber" : serialString,
+			@"publicKey" : certString};
 }
 
 
@@ -737,7 +730,7 @@ localizedDescription:(NSString *)localizedDescription
 		// (Source: http://www.obj-sys.com/asn1tutorial/node14.html)
 
 		NSString *timeStr = [NSString stringWithUTF8String:(char *) generalizedTimeData];
-		NSDateComponents *dateComponents = NSDateComponents.new;
+		NSDateComponents *dateComponents = [NSDateComponents new];
 
 		dateComponents.year = [timeStr substringWithRange:NSMakeRange(0, 4)].intValue;
 		dateComponents.month = [timeStr substringWithRange:NSMakeRange(4, 2)].intValue;
@@ -746,7 +739,7 @@ localizedDescription:(NSString *)localizedDescription
 		dateComponents.minute = [timeStr substringWithRange:NSMakeRange(10, 2)].intValue;
 		dateComponents.second = [timeStr substringWithRange:NSMakeRange(12, 2)].intValue;
 
-		NSCalendar *calendar = NSCalendar.currentCalendar;
+		NSCalendar *calendar = [NSCalendar currentCalendar];
 		resultDate = [calendar dateFromComponents:dateComponents];
 	}
 
