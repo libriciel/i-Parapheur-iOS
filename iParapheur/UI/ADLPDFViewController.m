@@ -676,11 +676,11 @@
 		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getSignInfoForDossier:_dossierRef
-			                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-			                           success:^(ADLResponseSignInfo *signInfo) {
+			                         andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
+			                           success:^(SignInfo *signInfo) {
 				                           __strong typeof(weakSelf) strongSelf = weakSelf;
 				                           if (strongSelf) {
-					                           strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
+					                           strongSelf.signatureFormat = signInfo.format;
 				                           }
 			                           }
 			                           failure:^(NSError *error) {

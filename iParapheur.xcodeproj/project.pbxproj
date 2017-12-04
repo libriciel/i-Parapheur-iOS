@@ -281,6 +281,8 @@
 		C5B8746B1DA6947600909F80 /* ic_account_plus_outline_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B874681DA6947600909F80 /* ic_account_plus_outline_white_24dp@3x.png */; };
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
+		C5C0DA381FD38CAB00A993DB /* SignUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C0DA371FD38CAB00A993DB /* SignUtilsTests.swift */; };
+		C5C0DA3A1FD390BD00A993DB /* SignInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C0DA391FD390BD00A993DB /* SignInfo.swift */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
@@ -698,6 +700,8 @@
 		C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClientApi3.m; sourceTree = "<group>"; };
 		C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClient.h; sourceTree = "<group>"; };
 		C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClient.m; sourceTree = "<group>"; };
+		C5C0DA371FD38CAB00A993DB /* SignUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUtilsTests.swift; sourceTree = "<group>"; };
+		C5C0DA391FD390BD00A993DB /* SignInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInfo.swift; sourceTree = "<group>"; };
 		C5C803551A5D90AF00D54F7D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C5C803571A5D90BA00D54F7D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C5C803591A5D90C200D54F7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -801,6 +805,7 @@
 				C5833FC11FC4247900C5E692 /* Filter+CoreDataClass.swift */,
 				C5833FC01FC4247900C5E692 /* Filter+CoreDataProperties.swift */,
 				64F342B900CD2EE0E4AA64DD /* State.swift */,
+				C5C0DA391FD390BD00A993DB /* SignInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1445,6 +1450,7 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				C5C0DA371FD38CAB00A993DB /* SignUtilsTests.swift */,
 				C54FA1EC1FCCE82100ED2D08 /* CryptoUtilsTests.swift */,
 				C5CED41D1FC474CE00FC15DD /* FilterTests.swift */,
 				C585C8D41FBEF05D005A0544 /* ModelsDataControllerTests.swift */,
@@ -2235,6 +2241,7 @@
 				B4FF340A15473B60006F7BF3 /* ThumbsMainToolbar.m in Sources */,
 				B4FF340B15473B6F006F7BF3 /* ReaderThumbCache.m in Sources */,
 				C5CED42F1FC5C67700FC15DD /* SettingsFiltersEmptyView.swift in Sources */,
+				C5C0DA3A1FD390BD00A993DB /* SignInfo.swift in Sources */,
 				B4FF340C15473B6F006F7BF3 /* ReaderThumbRequest.m in Sources */,
 				C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */,
 				B4FF340D15473B6F006F7BF3 /* ReaderThumbQueue.m in Sources */,
@@ -2295,6 +2302,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5C0DA381FD38CAB00A993DB /* SignUtilsTests.swift in Sources */,
 				C585C8D51FBEF05D005A0544 /* ModelsDataControllerTests.swift in Sources */,
 				C5CED41E1FC474CE00FC15DD /* FilterTests.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* CryptoUtilsTests.swift in Sources */,

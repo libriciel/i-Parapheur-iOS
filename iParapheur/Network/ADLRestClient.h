@@ -129,7 +129,7 @@
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(ADLResponseSignInfo *))success
+                      success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure;
 
 

@@ -412,7 +412,7 @@ import Alamofire
 
     @objc func getSignInfo(dossier: NSString,
                            bureau: NSString,
-                           onResponse responseCallback: ((AnyObject) -> Void)?,
+                           onResponse responseCallback: ((SignInfo) -> Void)?,
                            onError errorCallback: ((NSError) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/getSignInfo"
@@ -423,13 +423,24 @@ import Alamofire
 
         // Request
 
-        manager.request(getSignInfoUrl, parameters: parameters).validate().responseJSON {
+        manager.request(getSignInfoUrl, parameters: parameters).validate().responseString {
             response in
 
             switch (response.result) {
 
                 case .success:
-                    responseCallback!(response.value as AnyObject)
+                    do {
+                        let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
+                        let jsonDecoder = JSONDecoder()
+                        let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,
+                                                                   from: getSignInfoJsonData)
+
+                        let signInfo = signInfoDict!["signatureInformations"]
+                        responseCallback!(signInfo!)
+                    }
+                    catch let error {
+                        errorCallback!(error as NSError)
+                    }
                     break
 
                 case .failure(let error):

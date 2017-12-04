@@ -312,12 +312,12 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(ADLResponseSignInfo *))success
+                      success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
 	[_restClientApi getSignInfoForDossier:dossierId
 	                            andBureau:[self fixBureauId:bureauId]
-	                              success:^(ADLResponseSignInfo *signInfo) {
+	                              success:^(SignInfo *signInfo) {
 		                              success(signInfo);
 	                              }
 	                              failure:^(NSError *error) {

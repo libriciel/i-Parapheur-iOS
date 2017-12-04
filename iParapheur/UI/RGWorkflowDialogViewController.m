@@ -366,20 +366,19 @@
 /**
 * APIv3 response
 */
-- (void)getSignInfoDidEndWithSuccess:(ADLResponseSignInfo *)responseSignInfo {
+- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo {
 
 	NSMutableArray *hashes = NSMutableArray.new;
 	NSMutableArray *dossiers = NSMutableArray.new;
 	NSMutableArray *signatures = NSMutableArray.new;
 
 	for (Dossier *dossier in _dossiers) {
-		NSDictionary *signInfo = responseSignInfo.signatureInformations;
 
-		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
+		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format isEqualToString:@"XADES-env"]) {
 			[dossiers addObject:dossier.unwrappedId];
-			[hashes addObject:signInfo[@"hash"]];
+			[hashes addObject:signInfo.hashToSign];
 		} else {
-			[ViewUtils logWarningWithMessage:@"Seules les signatures PKCS#7 sont supportées"
+			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
 			                           title:@"Signature impossible"];
 		}
 	}
@@ -649,7 +648,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 					__weak typeof(self) weakSelf = self;
 					[_restClient getSignInfoForDossier:dossier.unwrappedId
 					                         andBureau:_bureauCourant
-					                           success:^(ADLResponseSignInfo *signInfo) {
+					                           success:^(SignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
 						                           if (strongSelf)
 							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];
