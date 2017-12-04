@@ -233,42 +233,31 @@
            failure:(void (^)(NSError *))failure {
 
 	[_swiftManager getDossierWithDossier:dossier
-	                   bureau:bureau
-	               onResponse:^(Dossier *response) {
-		               success(response);
-	               }
-	                  onError:^(NSError *error) {
-		                  failure(error);
-	                  }];
+	                              bureau:bureau
+	                          onResponse:^(Dossier *response) {
+		                          success(response);
+	                          }
+	                             onError:^(NSError *error) {
+		                             failure(error);
+	                             }];
 }
 
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(ADLResponseSignInfo *))success
+                      success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
 	[_swiftManager getSignInfoWithDossier:dossierId
-	                    bureau:bureauId
-	                onResponse:^(id response) {
-
-		                NSError *error;
-		                ADLResponseSignInfo *responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
-		                                                                  fromJSONDictionary:response
-		                                                                               error:&error];
-
-		                // Parse check and callback
-
-		                if (error)
-			                failure(error);
-		                else
-			                success(responseSignInfo);
-	                }
-	                   onError:^(NSError *error) {
-		                   failure(error);
-	                   }];
+	                               bureau:bureauId
+	                           onResponse:^(SignInfo *response) {
+		                           success(response);
+	                           }
+	                              onError:^(NSError *error) {
+		                              failure(error);
+	                              }];
 }
 
 
