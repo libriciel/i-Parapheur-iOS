@@ -233,13 +233,13 @@
            failure:(void (^)(NSError *))failure {
 
 	[_swiftManager getDossierWithDossier:dossier
-	                   bureau:bureau
-	               onResponse:^(Dossier *response) {
-		               success(response);
-	               }
-	                  onError:^(NSError *error) {
-		                  failure(error);
-	                  }];
+	                              bureau:bureau
+	                          onResponse:^(Dossier *response) {
+		                          success(response);
+	                          }
+	                             onError:^(NSError *error) {
+		                             failure(error);
+	                             }];
 }
 
 
@@ -251,13 +251,13 @@
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
 	[_swiftManager getSignInfoWithDossier:dossierId
-	                    bureau:bureauId
-	                onResponse:^(SignInfo *response) {
-		                success(response);
-	                }
-	                    onError:^(NSError *error) {
-		                    failure(error);
-	                    }];
+	                               bureau:bureauId
+	                           onResponse:^(SignInfo *response) {
+		                           success(response);
+	                           }
+	                              onError:^(NSError *error) {
+		                              failure(error);
+	                              }];
 }
 
 

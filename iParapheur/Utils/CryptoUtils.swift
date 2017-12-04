@@ -142,7 +142,7 @@ import AEXML
 
     @objc class func buildXadesEnveloppedSignWrapper(privateKey: PrivateKey,
                                                      signatureValue: String,
-                                                     pesId: String) -> String {
+                                                     signInfo: SignInfo) -> String {
 
         // create XML Document
         let rootDocument = AEXMLDocument()
@@ -163,7 +163,7 @@ import AEXML
                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"])
 
         let reference1 = signedInfo.addChild(name: "ds:Reference",
-                                             attributes: ["URI": "#\(pesId)"])
+                                             attributes: ["URI": "#\(signInfo.pesId)"])
 
         let transforms1 = reference1.addChild(name: "ds:Transforms")
         transforms1.addChild(name: "ds:Transform",
@@ -178,7 +178,7 @@ import AEXML
 
         let reference2 = signedInfo.addChild(name: "ds:Reference",
                                              attributes: ["Type": "http://uri.etsi.org/01903/v1.1.1#SignedProperties",
-                                                          "URI": "#\(pesId)_SIG_1_SP"])
+                                                          "URI": "#\(signInfo.pesId)_SIG_1_SP"])
 
         let transforms2 = reference2.addChild(name: "ds:Transforms")
         transforms2.addChild(name: "ds:Transform",
@@ -192,7 +192,7 @@ import AEXML
 
         let xmlSignatureValue = signature.addChild(name: "ds:SignatureValue",
                                                    value: signatureValue,
-                                                   attributes: ["Id": "\(pesId)_SIG_1_SV",])
+                                                   attributes: ["Id": "\(signInfo.pesId)_SIG_1_SV",])
 
         // ds:KeyInfo
 
@@ -207,10 +207,10 @@ import AEXML
         let qualifyingProperties = object.addChild(name: "xad:QualifyingProperties",
                                                    attributes: ["xmlns:xad": "http://uri.etsi.org/01903/v1.1.1#",
                                                                 "xmlns": "http://uri.etsi.org/01903/v1.1.1#",
-                                                                "Target": "#\(pesId)_SIG_1"])
+                                                                "Target": "#\(signInfo.pesId)_SIG_1"])
 
         let signedProperties = qualifyingProperties.addChild(name: "xad:SignedProperties",
-                                                             attributes: ["Id": "\(pesId)_SIG_1_SP"])
+                                                             attributes: ["Id": "\(signInfo.pesId)_SIG_1_SP"])
 
         let signedSignatureProperties = signedProperties.addChild(name: "xad:SignedSignatureProperties")
         signedSignatureProperties.addChild(name: "xad:SigningTime", value: "2017-11-24T16:26:26Z") //TODO
@@ -230,8 +230,8 @@ import AEXML
         let signaturePolicyId = signaturePolicyIdentifier.addChild(name: "xad:SignaturePolicyId")
 
         let sigPolicyId = signaturePolicyId.addChild(name: "xad:SigPolicyId")
-        sigPolicyId.addChild(name: "xad:Identifier", value: "urn:oid:1.2.250.1.5.3.1.1.10") //TODO
-        sigPolicyId.addChild(name: "xad:Description", value: "Politique de Signature de l'Agent") //TODO
+        sigPolicyId.addChild(name: "xad:Identifier", value: signInfo.pesPolicyId)
+        sigPolicyId.addChild(name: "xad:Description", value: signInfo.pesPolicyDesc)
 
         let sigPolicyHash = signaturePolicyId.addChild(name: "xad:SigPolicyHash")
         sigPolicyHash.addChild(name: "xad:DigestMethod", attributes:["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
@@ -242,13 +242,13 @@ import AEXML
         sigPolicyQualifier.addChild(name: "xad:SPURI", value: "http://www.s2low.org/PolitiqueSignature-Agent")
 
         let signatureProductionPlace = signedSignatureProperties.addChild(name: "xad:SignatureProductionPlace")
-        signatureProductionPlace.addChild(name: "xad:City", value: "Montpellier")
-        signatureProductionPlace.addChild(name: "xad:PostalCode", value: "34000")
-        signatureProductionPlace.addChild(name: "xad:CountryName", value: "France")
+        signatureProductionPlace.addChild(name: "xad:City", value: signInfo.pesCity)
+        signatureProductionPlace.addChild(name: "xad:PostalCode", value: signInfo.pesPostalCode)
+        signatureProductionPlace.addChild(name: "xad:CountryName", value: signInfo.pesCountryName)
 
         let signerRole = signedSignatureProperties.addChild(name: "xad:SignerRole")
         let claimedRoles = signerRole.addChild(name: "xad:ClaimedRoles")
-        claimedRoles.addChild(name: "xad:ClaimedRole", value: "Maire")
+        claimedRoles.addChild(name: "xad:ClaimedRole", value: signInfo.pesClaimedRole)
 
         // Prints the same XML structure as original
         return rootDocument.xmlCompact

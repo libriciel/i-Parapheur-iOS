@@ -474,7 +474,6 @@ import Alamofire
                 switch (response.result) {
 
                     case .success:
-                        print("Adrien - YAY annot create")
                         responseCallback!(NSNumber(value: 1))
                         break
 

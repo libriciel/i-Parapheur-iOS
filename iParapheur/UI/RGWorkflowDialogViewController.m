@@ -374,7 +374,9 @@
 
 	for (Dossier *dossier in _dossiers) {
 
-		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format isEqualToString:@"XADES-env"]) {
+		NSLog(@"Adrien -- %@", signInfo.format);
+
+		if ([signInfo.format isEqualToString:@"CMS"]) { // || [signInfo.format containsString:@"PADES"]) { // || [signInfo.format isEqualToString:@"XADES-env"]) {
 			[dossiers addObject:dossier.unwrappedId];
 			[hashes addObject:signInfo.hashToSign];
 		} else {
@@ -399,6 +401,7 @@
 
 	// Building signature response
 
+	NSLog(@"Adrien hashes : %@", hashes);
 	for (NSString *hash in hashes) {
 		NSMutableString *signedHash;
 
@@ -450,6 +453,7 @@
 			[self showHud];
 
 			__weak typeof(self) weakSelf = self;
+
 			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
 			                          forBureau:_bureauCourant
 			               withPublicAnnotation:_annotationPublique.text
