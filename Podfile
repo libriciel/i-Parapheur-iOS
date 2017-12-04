@@ -3,6 +3,8 @@ target "iParapheur" do
   platform :ios, '8.0'
   use_frameworks!
 
+  pod 'Fabric'
+  pod 'Crashlytics'
   pod 'SCNetworkReachability'
   pod 'Alamofire', '~> 4.5'
   pod 'Mantle', '2.1.0'

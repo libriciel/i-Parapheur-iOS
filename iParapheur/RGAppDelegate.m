@@ -41,6 +41,8 @@
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 #import "iParapheur-Swift.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 #define RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT 1
@@ -63,6 +65,8 @@
 - (BOOL)          application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+	[Fabric with:@[Crashlytics.class]];
+
 	NSLog(@"Adrien = Application did launch");
 	[self checkP12FilesInLocalDirectory];
 
@@ -79,8 +83,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSLog(@"commonName %@", pkey.commonName);
 		NSLog(@"caName %@", pkey.caName);
 		NSLog(@"p12Filename %@", pkey.p12Filename);
-		NSString *cert = [[NSString alloc] initWithData:pkey.publicKey
-		                                       encoding:NSUTF8StringEncoding];
+		NSString *cert = [NSString.alloc initWithData:pkey.publicKey
+		                                     encoding:NSUTF8StringEncoding];
 		NSLog(@"certData %@", cert);
 	}
 

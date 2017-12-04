@@ -62,7 +62,7 @@ class CryptoUtilsTests: XCTestCase {
         let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
         let jsonDecoder = JSONDecoder()
         let signInfo = try? jsonDecoder.decode(SignInfo.self,
-                F                               from: getSignInfoJsonData)
+                                               from: getSignInfoJsonData)
 
         print("")
         print(CryptoUtils.buildXadesEnveloppedSignWrapper(privateKey: "MIIHGjCCBQKgAwIBAgIUStb/+TKiIUj2TDZgq+uVGtUbRZQwDQYJKoZIhvcNAQELBQAwga8xCzAJ\n" +
