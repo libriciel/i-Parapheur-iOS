@@ -98,37 +98,6 @@
 }
 
 
-+ (MTLValueTransformer *)getNullToFalseValueTransformer {
-
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == nil || inObj == [NSNull null])
-			return @0;
-		else
-			return inObj;
-	}];
-}
-
-
-+ (MTLValueTransformer *)getNullToNilValueTransformer {
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == [NSNull null])
-			return nil;
-		else
-			return inObj;
-	}];
-}
-
-
-+ (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer {
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == nil || inObj == [NSNull null])
-			return [NSDictionary new];
-		else
-			return inObj;
-	}];
-}
-
-
 + (NSString *)decodeUrlString:(NSString *)encodedString {
 
 	NSString *result = [encodedString stringByReplacingOccurrencesOfString:@"+" withString:@" "];

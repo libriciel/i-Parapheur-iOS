@@ -39,7 +39,7 @@
 #import "ADLRequester.h"
 #import "StringUtils.h"
 #import "DeviceUtils.h"
-#import "SCNetworkReachability.h"
+#import <SCNetworkReachability/SCNetworkReachability.h>
 #import "iParapheur-Swift.h"
 
 

@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import <Mantle/MTLValueTransformer.h>
 
 
 @interface StringUtils : NSObject
@@ -47,12 +46,6 @@
    containsString:(NSString *)string;
 
 + (NSString *)getErrorMessage:(NSError *)error;
-
-+ (MTLValueTransformer *)getNullToFalseValueTransformer;
-
-+ (MTLValueTransformer *)getNullToNilValueTransformer;
-
-+ (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer;
 
 + (NSString *)decodeUrlString:(NSString *)encodedString;
 

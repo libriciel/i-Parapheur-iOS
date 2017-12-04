@@ -32,7 +32,6 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
 #import "DeviceUtils.h"
 #import "iParapheur-Swift.h"
@@ -271,9 +270,10 @@
 	               onResponse:^(NSDictionary *response) {
 
 		               NSError *error;
-		               ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-		                                                               fromJSONDictionary:response[@"circuit"]
-		                                                                            error:&error];
+					   ADLResponseCircuit *responseCircuit;
+//		               ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
+//		                                                               fromJSONDictionary:response[@"circuit"]
+//		                                                                            error:&error];
 
 		               // Parse check and callback
 

@@ -468,7 +468,10 @@ import Alamofire
         // Request
 
         if (type == 1) {
-            manager.request(annotationUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseJSON {
+            manager.request(annotationUrl,
+                            method: .post,
+                            parameters: parameters,
+                            encoding: JSONEncoding.default).validate().responseString {
                 response in
 
                 switch (response.result) {
@@ -486,7 +489,10 @@ import Alamofire
         }
         else if (type == 2) {
 
-            manager.request(annotationUrl, method: .put, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
+            manager.request(annotationUrl,
+                            method: .put,
+                            parameters: parameters,
+                            encoding: JSONEncoding.default).validate().responseString {
                 response in
 
                 switch (response.result) {
@@ -504,7 +510,9 @@ import Alamofire
         }
         else if (type == 3) {
 
-            manager.request(annotationUrl, method: .delete, parameters: parameters).validate().responseString {
+            manager.request(annotationUrl,
+                            method: .delete,
+                            parameters: parameters).validate().responseString {
                 response in
 
                 switch (response.result) {
