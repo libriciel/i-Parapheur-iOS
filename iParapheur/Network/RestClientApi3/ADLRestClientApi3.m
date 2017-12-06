@@ -103,7 +103,7 @@
 	// Fix values
 
 	if (![url hasPrefix:@"https://m."])
-		url = [NSString stringWithFormat:@"https://m.%@", url];
+		url = [NSString stringWithFormat:@"https://m-%@", url];
 
 	// Initialize AFNetworking HTTPClient
 

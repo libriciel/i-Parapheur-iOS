@@ -84,10 +84,10 @@ import Alamofire
 
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
-        //			- then ignore following "m." (if exists)						(?:m\.)*
+        //			- then ignore following "m-" (if exists)						(?:m-)*
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
+        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m-)*([^\\/]*)(?:\\/.*)*$",
                                                                   options: NSRegularExpression.Options.caseInsensitive)
 
         let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
@@ -99,7 +99,7 @@ import Alamofire
             urlFixed = String(urlFixed[swiftRange!])
         }
 
-        return NSString(string: "https://m.\(urlFixed)")
+        return NSString(string: "https://m-\(urlFixed)")
     }
 
 
@@ -185,7 +185,7 @@ import Alamofire
     func checkCertificate(onResponse responseCallback: ((Bool) -> Void)?) {
 
         let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.der.txt"
-        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
+        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.der")
 
         // Cleanup
 
@@ -199,6 +199,8 @@ import Alamofire
         manager.download(downloadFileUrl, to: destination).validate().responseData {
             response in
 
+            print("Adrien - url     : \(downloadFileUrl)")
+            print("Adrien - reponse : \(response)")
             let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
             responseCallback!(isAcValid)
         }
