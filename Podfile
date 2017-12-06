@@ -7,7 +7,6 @@ target "iParapheur" do
   pod 'Crashlytics'
   pod 'SCNetworkReachability'
   pod 'Alamofire', '~> 4.5'
-  pod 'Mantle', '2.1.0'
   pod 'SwiftMessages'
   pod 'NSData+Base64'
   pod 'OpenSSL-Universal', '1.0.2.10'

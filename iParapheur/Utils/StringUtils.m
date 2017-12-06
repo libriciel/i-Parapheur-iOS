@@ -98,37 +98,6 @@
 }
 
 
-+ (MTLValueTransformer *)getNullToFalseValueTransformer {
-
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == nil || inObj == [NSNull null])
-			return @0;
-		else
-			return inObj;
-	}];
-}
-
-
-+ (MTLValueTransformer *)getNullToNilValueTransformer {
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == [NSNull null])
-			return nil;
-		else
-			return inObj;
-	}];
-}
-
-
-+ (MTLValueTransformer *)getNullToEmptyDictionaryValueTransformer {
-	return [MTLValueTransformer transformerUsingForwardBlock:^id(id inObj, BOOL *success, NSError *__autoreleasing *error) {
-		if (inObj == nil || inObj == [NSNull null])
-			return [NSDictionary new];
-		else
-			return inObj;
-	}];
-}
-
-
 + (NSString *)decodeUrlString:(NSString *)encodedString {
 
 	NSString *result = [encodedString stringByReplacingOccurrencesOfString:@"+" withString:@" "];
@@ -209,16 +178,16 @@
 
 	// Getting the server name
 	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
-	//			- then ignore following "m." (if exists)						(?:m\.)*
+	//			- then ignore following "m-" (if exists)						(?:m-)*
 	//			- then catch every char but "/"									([^\/]*)
 	//			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$"
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m-)*([^\\/]*)(?:\\/.*)*$"
 	                                                                       options:NSRegularExpressionCaseInsensitive
 	                                                                         error:nil];
 
 	NSTextCheckingResult *match = [regex firstMatchInString:url
 	                                                options:0
-	                                                  range:NSMakeRange(0, [url length])];
+	                                                  range:NSMakeRange(0, url.length)];
 
 	if (match)
 		url = [url substringWithRange:[match rangeAtIndex:1]];

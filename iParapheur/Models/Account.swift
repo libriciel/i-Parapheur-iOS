@@ -48,9 +48,14 @@ import CoreData
 //    static let DemoUrl: String! = "parapheur.demonstrations.adullact.org"
 //    static let DemoLogin: String! = "bma"
 //    static let DemoPassword: String! = "secret"
-    static let DemoUrl: String! = "iparapheur-partenaires.libriciel.fr"
-    static let DemoLogin: String! = "admin@demo"
-    static let DemoPassword: String! = "admin"
+
+//    static let DemoUrl: String! = "iparapheur-partenaires.libriciel.fr"
+//    static let DemoLogin: String! = "admin@demo"
+//    static let DemoPassword: String! = "admin"
+
+    static let DemoUrl: String! = "libriciel.iparapheur-api.fr"
+    static let DemoLogin: String! = "rigautjl@i-pes-sign"
+    static let DemoPassword: String! = "annecy74"
 
     // MARK: - ObjC accessors
 

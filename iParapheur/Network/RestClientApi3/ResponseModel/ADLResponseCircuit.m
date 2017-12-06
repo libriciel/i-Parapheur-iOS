@@ -76,12 +76,12 @@
 
 	// Return proper Transformer
 
-	if (isStringKey)
-		return [StringUtils getNullToNilValueTransformer];
-	else if (isBooleanKey)
-		return [StringUtils getNullToFalseValueTransformer];
-	else if (isDictionaryKey)
-		return [StringUtils getNullToEmptyDictionaryValueTransformer];
+//	if (isStringKey)
+//		return [StringUtils getNullToNilValueTransformer];
+//	else if (isBooleanKey)
+//		return [StringUtils getNullToFalseValueTransformer];
+//	else if (isDictionaryKey)
+//		return [StringUtils getNullToEmptyDictionaryValueTransformer];
 
 	NSLog(@"ADLResponseCircuit, unknown parameter : %@", key);
 	return nil;
