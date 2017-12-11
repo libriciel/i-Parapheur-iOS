@@ -473,7 +473,7 @@
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
 			                HIDE_HUD
-			                strongSelf.circuit = [@[circuit] mutableCopy];
+			                strongSelf.circuit = @[circuit].mutableCopy;
 			                //[strongSelf requestAnnotations];
 		                }
 	                }

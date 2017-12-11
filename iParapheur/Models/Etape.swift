@@ -82,7 +82,7 @@ struct Etape: Decodable {
 		} else {
 			dateValidation = nil
 		}
-			
+		
 
         annotPub = try values.decodeIfPresent(String.self, forKey: .annotPub)
         parapheurName = try values.decodeIfPresent(String.self, forKey: .parapheurName) ?? ""
