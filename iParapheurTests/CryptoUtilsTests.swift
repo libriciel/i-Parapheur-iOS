@@ -56,7 +56,6 @@ class CryptoUtilsTests: XCTestCase {
                 "pespolicyhash":"G4CqRa9R5c9Yg+dzMH3gbEc4Kqo=",
                 "p7s":null,
                 "pescity":"Montpellier" 
-                
             }
         """
         let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
