@@ -82,12 +82,14 @@ import Alamofire
         // TODO Adrien : add special character restrictions tests ?
         urlFixed = urlFixed.replacingOccurrences(of: " ", with: "")
 
+        print("Adrien - \(url)")
+
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
-        //			- then ignore following "m." (if exists)						(?:m\.)*
+        //			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m\\.)*([^\\/]*)(?:\\/.*)*$",
+        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
                                                                   options: NSRegularExpression.Options.caseInsensitive)
 
         let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
@@ -99,7 +101,10 @@ import Alamofire
             urlFixed = String(urlFixed[swiftRange!])
         }
 
-        return NSString(string: "https://m.\(urlFixed)")
+
+        print("Adrien - https://m-\(urlFixed)")
+
+        return NSString(string: "https://m-\(urlFixed)")
     }
 
 
@@ -185,7 +190,7 @@ import Alamofire
     func checkCertificate(onResponse responseCallback: ((Bool) -> Void)?) {
 
         let downloadFileUrl = "\(serverUrl)/certificates/g3mobile.der.txt"
-        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.pem")
+        let filePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent("temp.der")
 
         // Cleanup
 
@@ -199,6 +204,8 @@ import Alamofire
         manager.download(downloadFileUrl, to: destination).validate().responseData {
             response in
 
+            print("Adrien - url     : \(downloadFileUrl)")
+            print("Adrien - reponse : \(response)")
             let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
             responseCallback!(isAcValid)
         }
@@ -244,7 +251,7 @@ import Alamofire
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-			"skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
             "sort": "cm:create"
         ]
 
@@ -305,19 +312,40 @@ import Alamofire
 
 
     @objc func getCircuit(dossier: NSString,
-                          onResponse responseCallback: ((AnyObject) -> Void)?,
+                          onResponse responseCallback: ((Circuit) -> Void)?,
                           onError errorCallback: ((NSError) -> Void)?) {
 
         let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
 
         // Request
 
-        manager.request(getCircuitUrl).validate().responseJSON {
+        manager.request(getCircuitUrl).validate().responseString {
             response in
+
             switch (response.result) {
 
                 case .success:
-                    responseCallback!(response.value as AnyObject)
+
+                    // Prepare
+
+                    let getCircuitJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+                    let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
+                                                                 from: getCircuitJsonData)
+
+                    // Parsing and callback
+
+                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
+                    if (hasSomeData) {
+                        responseCallback!(circuitWrapper!["circuit"]!)
+                    }
+                    else {
+                        errorCallback!(NSError(domain: "Invalid response",
+                                               code: 999))
+                    }
+
                     break
 
                 case .failure(let error):
@@ -412,7 +440,7 @@ import Alamofire
 
     @objc func getSignInfo(dossier: NSString,
                            bureau: NSString,
-                           onResponse responseCallback: ((AnyObject) -> Void)?,
+                           onResponse responseCallback: ((SignInfo) -> Void)?,
                            onError errorCallback: ((NSError) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/getSignInfo"
@@ -423,13 +451,32 @@ import Alamofire
 
         // Request
 
-        manager.request(getSignInfoUrl, parameters: parameters).validate().responseJSON {
+        manager.request(getSignInfoUrl, parameters: parameters).validate().responseString {
             response in
 
             switch (response.result) {
 
                 case .success:
-                    responseCallback!(response.value as AnyObject)
+
+                    // Prepare
+
+                    let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
+                                                                  from: getSignInfoJsonData)
+
+                    // Parsing and callback
+
+                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
+                    if (hasSomeData) {
+                        responseCallback!(signInfoWrapper!["signatureInformations"]!)
+                    }
+                    else {
+                        errorCallback!(NSError(domain: "Invalid response",
+                                               code: 999))
+                    }
+
                     break
 
                 case .failure(let error):
@@ -457,13 +504,15 @@ import Alamofire
         // Request
 
         if (type == 1) {
-            manager.request(annotationUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseJSON {
+            manager.request(annotationUrl,
+                            method: .post,
+                            parameters: parameters,
+                            encoding: JSONEncoding.default).validate().responseString {
                 response in
 
                 switch (response.result) {
 
                     case .success:
-                        print("Adrien - YAY annot create")
                         responseCallback!(NSNumber(value: 1))
                         break
 
@@ -476,7 +525,10 @@ import Alamofire
         }
         else if (type == 2) {
 
-            manager.request(annotationUrl, method: .put, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
+            manager.request(annotationUrl,
+                            method: .put,
+                            parameters: parameters,
+                            encoding: JSONEncoding.default).validate().responseString {
                 response in
 
                 switch (response.result) {
@@ -494,7 +546,9 @@ import Alamofire
         }
         else if (type == 3) {
 
-            manager.request(annotationUrl, method: .delete, parameters: parameters).validate().responseString {
+            manager.request(annotationUrl,
+                            method: .delete,
+                            parameters: parameters).validate().responseString {
                 response in
 
                 switch (response.result) {

@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "ADLResponseSignInfo.h"
 #import "ADLResponseCircuit.h"
 #import "iParapheur-Swift.h"
 
@@ -86,7 +85,7 @@
 
 
 - (void)getCircuit:(NSString *)dossier
-           success:(void (^)(ADLResponseCircuit *))success
+           success:(void (^)(Circuit *))circuit
            failure:(void (^)(NSError *))failure;
 
 
@@ -98,7 +97,7 @@
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(ADLResponseSignInfo *))success
+                      success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure;
 
 

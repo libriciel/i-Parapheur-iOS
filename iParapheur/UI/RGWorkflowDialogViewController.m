@@ -82,9 +82,9 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
-	_restClient = [ADLRestClient sharedManager];
-	circuits = [NSMutableDictionary new];
-	_bureauCourant = [ADLSingletonState sharedSingletonState].bureauCourant;
+	_restClient = ADLRestClient.sharedManager;
+	circuits = NSMutableDictionary.new;
+	_bureauCourant = ADLSingletonState.sharedSingletonState.bureauCourant;
 }
 
 
@@ -117,7 +117,7 @@
 
 	//
 
-	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
+	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 	_pkeys = keystore.listPrivateKeys;
 }
 
@@ -139,9 +139,9 @@
 
 - (IBAction)finish:(id)sender {
 
-	ADLRequester *requester = [ADLRequester sharedRequester];
+	ADLRequester *requester = ADLRequester.sharedRequester;
 
-	NSMutableArray *dossierIds = [NSMutableArray new];
+	NSMutableArray *dossierIds = NSMutableArray.new;
 	for (Dossier *dossier in _dossiers)
 		[dossierIds addObject:dossier.unwrappedId];
 
@@ -259,7 +259,7 @@
 
 - (void)hideHud {
 
-	LGViewHUD *hud = [LGViewHUD defaultHUD];
+	LGViewHUD *hud = LGViewHUD.defaultHUD;
 	[hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
 
@@ -281,9 +281,9 @@
 	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
 		// get selected dossiers for some sign info action :)
 
-		NSMutableArray *hashes = [NSMutableArray new];
-		NSMutableArray *dossiers = [NSMutableArray new];
-		NSMutableArray *signatures = [NSMutableArray new];
+		NSMutableArray *hashes = NSMutableArray.new;
+		NSMutableArray *dossiers = NSMutableArray.new;
+		NSMutableArray *signatures = NSMutableArray.new;
 
 		for (Dossier *dossier in _dossiers) {
 			NSDictionary *signInfo = answer[dossier.unwrappedId];
@@ -295,14 +295,14 @@
 
 		}
 
-		ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
+		ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 		PrivateKey *pkey = _currentPKey;
 		NSError *error = nil;
 
 		for (NSString *hash in hashes) {
 			NSData *hash_data = [StringUtils bytesFromHexString:hash];
 
-			NSFileManager *fileManager = [NSFileManager new];
+			NSFileManager *fileManager = NSFileManager.new;
 			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
 			                                     inDomain:NSUserDomainMask
 			                            appropriateForURL:nil
@@ -317,9 +317,8 @@
 			                                  error:&error];
 
 			if (signature == nil && error != nil) {
-				[ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                title:@"Une erreur s'est produite lors de la signature"
-				                       viewController:self];
+				[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                         title:@"Une erreur s'est produite lors de la signature"];
 				break;
 			}
 			else {
@@ -338,7 +337,7 @@
 					@"signatures" : signatures}.mutableCopy;
 
 			NSLog(@"%@", args);
-			ADLRequester *requester = [ADLRequester sharedRequester];
+			ADLRequester *requester = ADLRequester.sharedRequester;
 
 			[self showHud];
 
@@ -367,22 +366,22 @@
 /**
 * APIv3 response
 */
-- (void)getSignInfoDidEndWithSuccess:(ADLResponseSignInfo *)responseSignInfo {
+- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo {
 
-	NSMutableArray *hashes = [NSMutableArray new];
-	NSMutableArray *dossiers = [NSMutableArray new];
-	NSMutableArray *signatures = [NSMutableArray new];
+	NSMutableArray *hashes = NSMutableArray.new;
+	NSMutableArray *dossiers = NSMutableArray.new;
+	NSMutableArray *signatures = NSMutableArray.new;
 
 	for (Dossier *dossier in _dossiers) {
-		NSDictionary *signInfo = responseSignInfo.signatureInformations;
 
-		if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
+		NSLog(@"Adrien -- %@", signInfo.format);
+
+		if ([signInfo.format isEqualToString:@"CMS"]) { // || [signInfo.format containsString:@"PADES"]) { // || [signInfo.format isEqualToString:@"XADES-env"]) {
 			[dossiers addObject:dossier.unwrappedId];
-			[hashes addObject:signInfo[@"hash"]];
+			[hashes addObject:signInfo.hashToSign];
 		} else {
-			[ViewUtils logWarningMessageWithMessage:@"Seules les signatures PKCS#7 sont supportées"
-			                       title:@"Signature impossible"
-			              viewController:nil];
+			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
+			                           title:@"Signature impossible"];
 		}
 	}
 
@@ -402,6 +401,7 @@
 
 	// Building signature response
 
+	NSLog(@"Adrien hashes : %@", hashes);
 	for (NSString *hash in hashes) {
 		NSMutableString *signedHash;
 
@@ -453,6 +453,7 @@
 			[self showHud];
 
 			__weak typeof(self) weakSelf = self;
+
 			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
 			                          forBureau:_bureauCourant
 			               withPublicAnnotation:_annotationPublique.text
@@ -489,7 +490,7 @@
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
-	                success:^(ADLResponseCircuit *circuit) {
+	                success:^(Circuit *circuit) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
 			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
@@ -563,9 +564,8 @@
 
 	if (signature == nil && error != nil) {
 
-		[ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-		                     title:@"Une erreur s'est produite lors de la signature"
-		            viewController:self];
+		[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                         title:@"Une erreur s'est produite lors de la signature"];
 
 		return nil;
 	}
@@ -614,7 +614,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
 
 	if (cell == nil)
-		cell = [UITableViewCell new];
+		cell = UITableViewCell.new;
 
 	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
 	cell.textLabel.text = pkey.commonName;
@@ -652,7 +652,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 					__weak typeof(self) weakSelf = self;
 					[_restClient getSignInfoForDossier:dossier.unwrappedId
 					                         andBureau:_bureauCourant
-					                           success:^(ADLResponseSignInfo *signInfo) {
+					                           success:^(SignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
 						                           if (strongSelf)
 							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];

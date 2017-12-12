@@ -32,7 +32,6 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Mantle/MTLJSONAdapter.h>
 #import "ADLRestClientApi3.h"
 #import "DeviceUtils.h"
 #import "iParapheur-Swift.h"
@@ -104,7 +103,7 @@
 	// Fix values
 
 	if (![url hasPrefix:@"https://m."])
-		url = [NSString stringWithFormat:@"https://m.%@", url];
+		url = [NSString stringWithFormat:@"https://m-%@", url];
 
 	// Initialize AFNetworking HTTPClient
 
@@ -233,69 +232,47 @@
            failure:(void (^)(NSError *))failure {
 
 	[_swiftManager getDossierWithDossier:dossier
-	                   bureau:bureau
-	               onResponse:^(Dossier *response) {
-		               success(response);
-	               }
-	                  onError:^(NSError *error) {
-		                  failure(error);
-	                  }];
+	                              bureau:bureau
+	                          onResponse:^(Dossier *response) {
+		                          success(response);
+	                          }
+	                             onError:^(NSError *error) {
+		                             failure(error);
+	                             }];
 }
 
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(ADLResponseSignInfo *))success
+                      success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
 	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
 	[_swiftManager getSignInfoWithDossier:dossierId
-	                    bureau:bureauId
-	                onResponse:^(id response) {
-
-		                NSError *error;
-		                ADLResponseSignInfo *responseSignInfo = [MTLJSONAdapter modelOfClass:[ADLResponseSignInfo class]
-		                                                                  fromJSONDictionary:response
-		                                                                               error:&error];
-
-		                // Parse check and callback
-
-		                if (error)
-			                failure(error);
-		                else
-			                success(responseSignInfo);
-	                }
-	                   onError:^(NSError *error) {
-		                   failure(error);
-	                   }];
+	                               bureau:bureauId
+	                           onResponse:^(SignInfo *response) {
+		                           success(response);
+	                           }
+	                              onError:^(NSError *error) {
+		                              failure(error);
+	                              }];
 }
 
 
 - (void)getCircuit:(NSString *)dossier
-           success:(void (^)(ADLResponseCircuit *))success
+           success:(void (^)(Circuit *))success
            failure:(void (^)(NSError *))failure {
 
 	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 
 	[_swiftManager getCircuitWithDossier:dossier
-	               onResponse:^(NSDictionary *response) {
-
-		               NSError *error;
-		               ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-		                                                               fromJSONDictionary:response[@"circuit"]
-		                                                                            error:&error];
-
-		               // Parse check and callback
-
-		               if (error)
-			               failure(error);
-		               else
-			               success(responseCircuit);
-	               }
-	                  onError:^(NSError *error) {
-		                  failure(error);
-	                  }];
+	                          onResponse:^(Circuit *circuit) {
+		                          success(circuit);
+	                          }
+	                             onError:^(NSError *error) {
+		                             failure(error);
+	                             }];
 }
 
 

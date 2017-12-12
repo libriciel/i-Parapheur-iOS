@@ -33,54 +33,61 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import Foundation
-import TSMessages
+import SwiftMessages
 
 @objc class ViewUtils: NSObject {
 
-    @objc class func logErrorMessage(message: NSString,
-                                     title: NSString?,
-                                     viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.error)
+    @objc class func logError(message: NSString,
+                              title: NSString?) {
+
+        ViewUtils.logMessage(title: title,
+                             subtitle: message,
+                             messageType: .error)
     }
 
-    @objc class func logSuccessMessage(message: NSString,
-                                       title: NSString?,
-                                       viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.success)
+    @objc class func logSuccess(message: NSString,
+                                title: NSString?) {
+
+        ViewUtils.logMessage(title: title,
+                             subtitle: message,
+                             messageType: .success)
     }
 
-    @objc class func logInfoMessage(message: NSString,
-                                    title: NSString?,
-                                    viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.message)
+    @objc class func logInfo(message: NSString,
+                             title: NSString?) {
+
+        ViewUtils.logMessage(title: title,
+                             subtitle: message,
+                             messageType: .info)
     }
 
-    @objc class func logWarningMessage(message: NSString,
-                                       title: NSString?,
-                                       viewController: UIKit.UIViewController?) {
-        ViewUtils.logMessage(title: title, subtitle: message, viewController: viewController, messageType: TSMessageNotificationType.warning)
+    @objc class func logWarning(message: NSString,
+                                title: NSString?) {
+
+        ViewUtils.logMessage(title: title,
+                             subtitle: message,
+                             messageType: .warning)
     }
 
     // MARK: - Private Methods
 
-    @objc class func logMessage(title: NSString?,
-                                subtitle: NSString,
-                                viewController: UIKit.UIViewController?,
-                                messageType: TSMessageNotificationType) {
+    class func logMessage(title: NSString?,
+                          subtitle: NSString,
+                          messageType: Theme) {
 
-        DispatchQueue.main.async(execute: {
-            //call back to main queue to update user interface
+        // Call back to main queue
+        SwiftMessages.show {
 
-            if (viewController != nil) {
-                TSMessage.showNotification(in: viewController,
-                                           title: (title == nil ? subtitle : title!) as String,
-                                           subtitle: (title == nil ? nil : subtitle as String),
-                                           type: messageType)
-            }
-            else {
-                TSMessage.showNotification(withTitle: (title == nil ? subtitle : title!) as String, type: messageType)
-            }
-        })
+            let view = MessageView.viewFromNib(layout: .cardView)
+            view.button!.isHidden = true
+
+            view.configureTheme(messageType)
+            view.configureDropShadow()
+            view.configureContent(title: (title == nil ? subtitle : title!) as String,
+                                  body: (title == nil ? "" : subtitle as String))
+
+            return view
+        }
     }
 
 }

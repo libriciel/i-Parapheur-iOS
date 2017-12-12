@@ -222,11 +222,12 @@
 	if (_circuit && (_circuit.count > 0)) {
 		for (NSUInteger i = 0; i < _circuit.count; i++) {
 
-			NSArray *steps = ((ADLResponseCircuit *) _circuit[i]).etapes;
+			Circuit *circuit = _circuit[i];
+			NSArray *steps = circuit.etapes;
 			for (NSUInteger j = 0; j < steps.count; j++) {
 
-				NSDictionary *stepDict = ((NSDictionary *) steps[j]);
-				if ([stepDict[@"approved"] boolValue]) {
+				Etape *step = steps[j];
+				if (step.approved) {
 					// If this step was approved, the current step might be the next one
 					currentStep = j + 1;
 				}
@@ -264,9 +265,8 @@
 		                      NSLog(@"updateAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-		                                                      title:@"Erreur à la sauvegarde de l'annotation"
-		                                             viewController:nil];
+		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                                               title:@"Erreur à la sauvegarde de l'annotation"];
 	                      }];
 }
 
@@ -279,9 +279,8 @@
 		                      NSLog(@"deleteAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-		                                                      title:@"Erreur à la suppression de l'annotation"
-		                                             viewController:nil];
+		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                                               title:@"Erreur à la suppression de l'annotation"];
 	                      }];
 }
 
@@ -320,9 +319,8 @@
 		                   }
 	                   }
 	                   failure:^(NSError *error) {
-		                   [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-		                                                   title:@"Erreur à la sauvegarde de l'annotation"
-		                                          viewController:nil];
+		                   [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                                            title:@"Erreur à la sauvegarde de l'annotation"];
 	                   }];
 }
 
@@ -472,11 +470,11 @@
 	                }];
 
 	[_restClient getCircuit:_dossierRef
-	                success:^(ADLResponseCircuit *circuit) {
+	                success:^(Circuit *circuit) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
 			                HIDE_HUD
-			                strongSelf.circuit = [@[circuit] mutableCopy];
+			                strongSelf.circuit = @[circuit].mutableCopy;
 			                //[strongSelf requestAnnotations];
 		                }
 	                }
@@ -679,11 +677,11 @@
 		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getSignInfoForDossier:_dossierRef
-			                         andBureau:[ADLSingletonState sharedSingletonState].bureauCourant
-			                           success:^(ADLResponseSignInfo *signInfo) {
+			                         andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
+			                           success:^(SignInfo *signInfo) {
 				                           __strong typeof(weakSelf) strongSelf = weakSelf;
 				                           if (strongSelf) {
-					                           strongSelf.signatureFormat = signInfo.signatureInformations[@"format"];
+					                           strongSelf.signatureFormat = signInfo.format;
 				                           }
 			                           }
 			                           failure:^(NSError *error) {
@@ -772,9 +770,8 @@
 		                      }
 		                      failure:^(NSError *error) {
 			                      HIDE_HUD
-			                      [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-			                                                      title:nil
-			                                             viewController:nil];
+			                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+														   title:nil];
 		                      }];
 	}
 }

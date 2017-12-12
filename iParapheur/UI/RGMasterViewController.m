@@ -39,7 +39,7 @@
 #import "ADLRequester.h"
 #import "StringUtils.h"
 #import "DeviceUtils.h"
-#import "SCNetworkReachability.h"
+#import <SCNetworkReachability/SCNetworkReachability.h>
 #import "iParapheur-Swift.h"
 
 
@@ -143,13 +143,11 @@
 			                 // New test when network retrieved
 			                 if (error.code == kCFURLErrorNotConnectedToInternet) {
 				                 [strongSelf setNewConnectionTryOnNetworkRetrieved];
-				                 [ViewUtils logInfoMessageWithMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
-				                                                title:nil
-													   viewController:nil];
+				                 [ViewUtils logInfoWithMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
+														 title:nil];
 			                 } else {
-				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                                 title:nil
-														viewController:nil];
+				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                                          title:nil];
 			                 }
 		                 }
 	                 }];
@@ -174,14 +172,12 @@
 		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
 		NSNumber *hour = [numberFormatter numberFromString:[dateFormatter stringFromDate:currentDate]];
 
-		[ViewUtils logInfoMessageWithMessage:@"L'application est actuellement liée au parapheur de démonstration."
-		                               title:nil
-		                      viewController:nil];
+		[ViewUtils logInfoWithMessage:@"L'application est actuellement liée au parapheur de démonstration."
+								title:nil];
 
 		if ((hour.integerValue > 23) || (hour.integerValue < 7))
-			[ViewUtils logWarningMessageWithMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."
-			                                  title:nil
-								     viewController:nil];
+			[ViewUtils logWarningWithMessage:@"Le parapheur de démonstration peut être soumis à des déconnexions, entre minuit et 7h du matin (heure de Paris)."
+									   title:nil];
 	}
 	@catch (NSException *e) {}
 }
@@ -244,9 +240,8 @@
 				                [strongSelf.refreshControl endRefreshing];
 				                [(UITableView *) strongSelf.view reloadData];
 				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
-				                [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                                title:nil
-				                                       viewController:nil];
+				                [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                                         title:nil];
 			                }
 		                }];
 	} else {

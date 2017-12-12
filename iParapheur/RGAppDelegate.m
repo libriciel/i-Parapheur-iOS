@@ -41,6 +41,8 @@
 #import "DeviceUtils.h"
 #import "StringUtils.h"
 #import "iParapheur-Swift.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 #define RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT 1
@@ -63,6 +65,8 @@
 - (BOOL)          application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+	[Fabric with:@[Crashlytics.class]];
+
 	NSLog(@"Adrien = Application did launch");
 	[self checkP12FilesInLocalDirectory];
 
@@ -79,8 +83,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSLog(@"commonName %@", pkey.commonName);
 		NSLog(@"caName %@", pkey.caName);
 		NSLog(@"p12Filename %@", pkey.p12Filename);
-		NSString *cert = [[NSString alloc] initWithData:pkey.publicKey
-		                                       encoding:NSUTF8StringEncoding];
+		NSString *cert = [NSString.alloc initWithData:pkey.publicKey
+		                                     encoding:NSUTF8StringEncoding];
 		NSLog(@"certData %@", cert);
 	}
 
@@ -268,10 +272,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 			else {
 				[self checkP12FilesInLocalDirectory];
 			}
-		}
-		else {
-			[DeviceUtils logErrorMessage:downloadError.localizedDescription
-			                   withTitle:@"Erreur au téléchargement du certificat"];
+		} else {
+			[ViewUtils logErrorWithMessage:downloadError.localizedDescription
+									 title:@"Erreur au téléchargement du certificat"];
 		}
 
 		return NO;
@@ -454,9 +457,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		}
 		else if (error.code == P12AlreadyImported) {
 
-			[ViewUtils logWarningMessageWithMessage:certificatePath.lastPathComponent
-			                                  title:@"Ce fichier de certificat a déjà été importé."
-			                         viewController:nil];
+			[ViewUtils logWarningWithMessage:certificatePath.lastPathComponent
+									   title:@"Ce fichier de certificat a déjà été importé."];
 
 			[self deleteCertificate:certificatePath];
 		}
@@ -464,8 +466,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSLog(@"error %@", error.localizedDescription);
 	}
 	else {
-		[DeviceUtils logSuccessMessage:@"Ce certificat a bien été importé."
-		                     withTitle:certificatePath.lastPathComponent];
+		[ViewUtils logSuccessWithMessage:@"Ce certificat a bien été importé."
+		                                  title:certificatePath.lastPathComponent];
 	}
 }
 
@@ -479,12 +481,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	                        error:&error];
 
 	if (!error) {
-		[DeviceUtils logInfoMessage:certificatePath.lastPathComponent
-		                  withTitle:@"Ce fichier de certificat a été supprimé."];
-	}
-	else {
-		[DeviceUtils logErrorMessage:error.localizedDescription
-		                   withTitle:@"Erreur à la suppression du fichier"];
+		[ViewUtils logInfoWithMessage:certificatePath.lastPathComponent
+		                               title:@"Ce fichier de certificat a été supprimé."];
+	} else {
+		[ViewUtils logErrorWithMessage:error.localizedDescription
+		                                title:@"Erreur à la suppression du fichier"];
 	}
 }
 

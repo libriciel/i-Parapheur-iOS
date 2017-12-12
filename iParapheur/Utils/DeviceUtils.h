@@ -42,24 +42,6 @@
 + (BOOL)isConnectedToDemoAccount;
 
 
-+ (void)logError:(NSError *)error;
-
-
-+ (void)logErrorMessage:(NSString *)message;
-
-
-+ (void)logErrorMessage:(NSString *)message
-			  withTitle:(NSString *)title;
-
-
-+ (void)logSuccessMessage:(NSString *)message
-                withTitle:(NSString *)title;
-
-
-+ (void)logInfoMessage:(NSString *)message
-			 withTitle:(NSString *)title;
-
-
 + (CGRect)translateDpiRect:(CGRect) rect
                     oldDpi:(int) oldDpi
                     newDpi:(int) newDpi;

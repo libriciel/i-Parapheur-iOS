@@ -161,9 +161,8 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 		 success(versionNumber);
 
 		 if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
-			 [ViewUtils logWarningMessageWithMessage:@"Veuillez mettre à jour votre application."
-			                                   title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."
-			                          viewController:nil];
+			 [ViewUtils logWarningWithMessage:@"Veuillez mettre à jour votre application."
+			                            title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."];
 	 }
 	                    failure:^(NSError *error) {
 		                    failure(error);
@@ -238,8 +237,8 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
            failure:(void (^)(NSError *))failure {
 
 	[_restClientApi getCircuit:dossier
-	                   success:^(ADLResponseCircuit *circuits) {
-		                   success(circuits);
+	                   success:^(Circuit *circuit) {
+		                   success(circuit);
 	                   }
 	                   failure:^(NSError *error) {
 		                   failure(error);
@@ -313,12 +312,12 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(ADLResponseSignInfo *))success
+                      success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
 	[_restClientApi getSignInfoForDossier:dossierId
 	                            andBureau:[self fixBureauId:bureauId]
-	                              success:^(ADLResponseSignInfo *signInfo) {
+	                              success:^(SignInfo *signInfo) {
 		                              success(signInfo);
 	                              }
 	                              failure:^(NSError *error) {

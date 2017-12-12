@@ -362,9 +362,8 @@
 		                 failure:^(NSError *getDossiersError) {
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
-				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                                 title:nil
-				                                        viewController:nil];
+				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+														  title:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
 			                 }
@@ -387,9 +386,8 @@
 		                 failure:^(NSError *error) {
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
-				                 [ViewUtils logErrorMessageWithMessage:[StringUtils getErrorMessage:error]
-				                                                 title:nil
-				                                        viewController:nil];
+				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                                          title:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
 			                 }

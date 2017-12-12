@@ -505,16 +505,16 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="886"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g2g-aN-rCB">
-                                        <rect key="frame" x="148" y="16" width="305" height="735"/>
+                                        <rect key="frame" x="127.5" y="16" width="346" height="735"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VFR - PDF Reader" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lUV-o4-2eA">
-                                                <rect key="frame" x="8" y="16" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="16" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vpD-RO-3sU">
-                                                <rect key="frame" x="8" y="41" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="41" width="330" height="51"/>
                                                 <string key="text">Version 2.8.6
 https://github.com/vfr/Reader
 Licenced under the MIT Licence</string>
@@ -523,13 +523,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AlamoFire" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFw-EV-xlF">
-                                                <rect key="frame" x="8" y="108" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="108" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nwS-xe-Pbv">
-                                                <rect key="frame" x="8" y="133" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="133" width="330" height="51"/>
                                                 <string key="text">Version 4.5.1
 https://github.com/Alamofire/Alamofire
 Licenced under the MIT Licence</string>
@@ -538,13 +538,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gloss" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFf-LK-IHN">
-                                                <rect key="frame" x="8" y="200" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="200" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b9O-KB-nTu">
-                                                <rect key="frame" x="8" y="225" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="225" width="330" height="51"/>
                                                 <string key="text">Version 2.0.0-beta2
 https://github.com/hkellaway/Gloss
 Licenced under the MIT Licence</string>
@@ -553,13 +553,13 @@ Licenced under the MIT Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SCNetworkReachability" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GrV-PV-DGc">
-                                                <rect key="frame" x="8" y="292" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="292" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckS-1D-sKr">
-                                                <rect key="frame" x="8" y="317" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="317" width="330" height="51"/>
                                                 <string key="text">Version 2.0.5
 https://github.com/belkevich/reachability-ios
 Licenced under the MIT Licence</string>
@@ -567,29 +567,29 @@ Licenced under the MIT Licence</string>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TSMessages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDb-eh-yd1">
-                                                <rect key="frame" x="8" y="384" width="289" height="17"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SwiftMessages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDb-eh-yd1">
+                                                <rect key="frame" x="8" y="384" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1g-eF-U8V">
-                                                <rect key="frame" x="8" y="409" width="289" height="51"/>
-                                                <string key="text">Version 0.9.13
-https://github.com/KrauseFx/TSMessages
+                                                <rect key="frame" x="8" y="409" width="330" height="51"/>
+                                                <string key="text">Version 4.0.0
+https://github.com/SwiftKickMobile/SwiftMessages
 Licenced under the MIT Licence</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OpenSSL Universal" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNI-xq-3op">
-                                                <rect key="frame" x="8" y="476" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="476" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggl-Y0-KzO">
-                                                <rect key="frame" x="8" y="501" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="501" width="330" height="51"/>
                                                 <string key="text">Version 1.0.2.10
 https://github.com/krzyzanowskim/OpenSSL
 Licenced under a dual BSD Licence</string>
@@ -598,13 +598,13 @@ Licenced under a dual BSD Licence</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SSZipArchive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8DG-kf-Pkg" userLabel="SSZipArchive">
-                                                <rect key="frame" x="8" y="568" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="568" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S50-19-vBM">
-                                                <rect key="frame" x="8" y="593" width="289" height="51"/>
+                                                <rect key="frame" x="8" y="593" width="330" height="51"/>
                                                 <string key="text">Version 2.0.7
 https://github.com/ZipArchive/ZipArchive
 Licenced under the MIT License</string>
@@ -613,13 +613,13 @@ Licenced under the MIT License</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Templarian Material Icons" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5v6-zq-wJY">
-                                                <rect key="frame" x="8" y="660" width="289" height="17"/>
+                                                <rect key="frame" x="8" y="660" width="330" height="17"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="be9-8q-wDZ">
-                                                <rect key="frame" x="8" y="685" width="289" height="34"/>
+                                                <rect key="frame" x="8" y="685" width="330" height="34"/>
                                                 <string key="text">© Austin Andrews @Templarian
 Licensed under the SIL Open Font Licence</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>

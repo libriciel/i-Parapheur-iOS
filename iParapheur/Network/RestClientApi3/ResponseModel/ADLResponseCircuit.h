@@ -33,8 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "Mantle/MTLModel.h"
-#import "Mantle/MTLJSONAdapter.h"
+//#import "Mantle/MTLModel.h"
+//#import "Mantle/MTLJSONAdapter.h"
 
 
 static NSString *const kRCEtapes = @"etapes";
@@ -44,7 +44,7 @@ static NSString *const kRCHasSelectionScript = @"hasSelectionScript";
 static NSString *const kRCSigFormat = @"sigFormat";
 
 
-@interface ADLResponseCircuit : MTLModel<MTLJSONSerializing>
+@interface ADLResponseCircuit
 
 @property (nonatomic, strong) NSArray *etapes;
 @property (nonatomic, strong) NSString *annotPriv;
