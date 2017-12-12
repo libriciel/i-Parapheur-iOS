@@ -85,7 +85,7 @@
 
 
 - (void)getCircuit:(NSString *)dossier
-           success:(void (^)(ADLResponseCircuit *))success
+           success:(void (^)(Circuit *))circuit
            failure:(void (^)(NSError *))failure;
 
 

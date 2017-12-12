@@ -39,7 +39,7 @@ import XCTest
 class EtapeTests: XCTestCase {
 
 
-	func testDecodeFull() {
+    func testDecodeFull() {
 
         let etapeJsonString = """
             {
@@ -71,7 +71,7 @@ class EtapeTests: XCTestCase {
 
         XCTAssertEqual(etape!.approved, true)
         XCTAssertEqual(etape!.signataire, "Administrator Admin")
-		XCTAssertEqual(etape!.rejected, false)
+        XCTAssertEqual(etape!.rejected, false)
         XCTAssertEqual(etape!.dateValidation?.description, "2017-11-30 10:50:50 +0000")
         XCTAssertEqual(etape!.annotPub, "")
         XCTAssertEqual(etape!.parapheurName, "Administrateur titre")
@@ -83,35 +83,52 @@ class EtapeTests: XCTestCase {
         XCTAssertEqual(etape!.isCurrent, false)
         // XCTAssertEqual(etape?.signatureEtape, false)
     }
-	
-	
-	func testDecodeEmpty() {
-		
-		let etapeJsonString = "{}"
-		let etapeJsonData = etapeJsonString.data(using: .utf8)!
 
-		let jsonDecoder = JSONDecoder()
+
+    func testDecodeEmpty() {
+
+        let etapeJsonString = "{}"
+        let etapeJsonData = etapeJsonString.data(using: .utf8)!
+
+        let jsonDecoder = JSONDecoder()
         jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
-		let etape = try? jsonDecoder.decode(Etape.self,
-											from: etapeJsonData)
+        let etape = try? jsonDecoder.decode(Etape.self,
+                                            from: etapeJsonData)
 
         // Checks
 
-		XCTAssertNotNil(etape)
-		
-		XCTAssertEqual(etape!.approved, false)
-		XCTAssertEqual(etape!.signataire, nil)
-		XCTAssertEqual(etape!.rejected, false)
-		XCTAssertNil(etape!.dateValidation)
-		XCTAssertEqual(etape!.annotPub, nil)
-		XCTAssertEqual(etape!.parapheurName, "")
-		XCTAssertNil(etape!.delegueName)
-		// XCTAssertEqual(etape?.signatureInfo, "")
-		XCTAssertNil(etape!.delegateur)
-		XCTAssertEqual(etape!.actionDemandee, "VISA")
-		XCTAssertEqual(etape!.id, "")
-		XCTAssertEqual(etape!.isCurrent, false)
-		// XCTAssertEqual(etape?.signatureEtape, false)
-	}
+        XCTAssertNotNil(etape)
+
+        XCTAssertEqual(etape!.approved, false)
+        XCTAssertEqual(etape!.signataire, nil)
+        XCTAssertEqual(etape!.rejected, false)
+        XCTAssertNil(etape!.dateValidation)
+        XCTAssertEqual(etape!.annotPub, nil)
+        XCTAssertEqual(etape!.parapheurName, "")
+        XCTAssertNil(etape!.delegueName)
+        // XCTAssertEqual(etape?.signatureInfo, "")
+        XCTAssertNil(etape!.delegateur)
+        XCTAssertEqual(etape!.actionDemandee, "VISA")
+        XCTAssertEqual(etape!.id, "")
+        XCTAssertEqual(etape!.isCurrent, false)
+        // XCTAssertEqual(etape?.signatureEtape, false)
+    }
+
+
+    func testFail() {
+
+        let etapeJsonString = "{{{"
+        let etapeJsonData = etapeJsonString.data(using: .utf8)!
+
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+        let etape = try? jsonDecoder.decode(Etape.self,
+                                            from: etapeJsonData)
+
+        // Checks
+
+        XCTAssertNil(etape)
+    }
 
 }
+

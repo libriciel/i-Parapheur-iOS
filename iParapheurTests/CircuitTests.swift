@@ -134,4 +134,19 @@ class CircuitTests: XCTestCase {
         XCTAssertEqual(circuit!.sigFormat, nil)
     }
 
+
+    func testFail() {
+
+        let getCircuitJsonString = "{{{"
+        let getCircuitJsonData = getCircuitJsonString.data(using: .utf8)!
+
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+        let circuitWrapper = try? jsonDecoder.decode(Circuit.self,
+                                                     from: getCircuitJsonData)
+
+        // Checks
+
+        XCTAssertNil(circuitWrapper)
+    }
 }

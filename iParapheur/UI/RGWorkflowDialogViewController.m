@@ -82,9 +82,9 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
-	_restClient = [ADLRestClient sharedManager];
-	circuits = [NSMutableDictionary new];
-	_bureauCourant = [ADLSingletonState sharedSingletonState].bureauCourant;
+	_restClient = ADLRestClient.sharedManager;
+	circuits = NSMutableDictionary.new;
+	_bureauCourant = ADLSingletonState.sharedSingletonState.bureauCourant;
 }
 
 
@@ -117,7 +117,7 @@
 
 	//
 
-	ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
+	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 	_pkeys = keystore.listPrivateKeys;
 }
 
@@ -139,9 +139,9 @@
 
 - (IBAction)finish:(id)sender {
 
-	ADLRequester *requester = [ADLRequester sharedRequester];
+	ADLRequester *requester = ADLRequester.sharedRequester;
 
-	NSMutableArray *dossierIds = [NSMutableArray new];
+	NSMutableArray *dossierIds = NSMutableArray.new;
 	for (Dossier *dossier in _dossiers)
 		[dossierIds addObject:dossier.unwrappedId];
 
@@ -259,7 +259,7 @@
 
 - (void)hideHud {
 
-	LGViewHUD *hud = [LGViewHUD defaultHUD];
+	LGViewHUD *hud = LGViewHUD.defaultHUD;
 	[hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
 
@@ -281,9 +281,9 @@
 	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
 		// get selected dossiers for some sign info action :)
 
-		NSMutableArray *hashes = [NSMutableArray new];
-		NSMutableArray *dossiers = [NSMutableArray new];
-		NSMutableArray *signatures = [NSMutableArray new];
+		NSMutableArray *hashes = NSMutableArray.new;
+		NSMutableArray *dossiers = NSMutableArray.new;
+		NSMutableArray *signatures = NSMutableArray.new;
 
 		for (Dossier *dossier in _dossiers) {
 			NSDictionary *signInfo = answer[dossier.unwrappedId];
@@ -295,14 +295,14 @@
 
 		}
 
-		ADLKeyStore *keystore = ((RGAppDelegate *) [UIApplication sharedApplication].delegate).keyStore;
+		ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 		PrivateKey *pkey = _currentPKey;
 		NSError *error = nil;
 
 		for (NSString *hash in hashes) {
 			NSData *hash_data = [StringUtils bytesFromHexString:hash];
 
-			NSFileManager *fileManager = [NSFileManager new];
+			NSFileManager *fileManager = NSFileManager.new;
 			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
 			                                     inDomain:NSUserDomainMask
 			                            appropriateForURL:nil
@@ -337,7 +337,7 @@
 					@"signatures" : signatures}.mutableCopy;
 
 			NSLog(@"%@", args);
-			ADLRequester *requester = [ADLRequester sharedRequester];
+			ADLRequester *requester = ADLRequester.sharedRequester;
 
 			[self showHud];
 
@@ -490,7 +490,7 @@
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
-	                success:^(ADLResponseCircuit *circuit) {
+	                success:^(Circuit *circuit) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
 			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
@@ -614,7 +614,7 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
 
 	if (cell == nil)
-		cell = [UITableViewCell new];
+		cell = UITableViewCell.new;
 
 	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
 	cell.textLabel.text = pkey.commonName;

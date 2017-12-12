@@ -35,19 +35,19 @@
 import Foundation
 
 
-struct Etape: Decodable {
+@objc public class Etape: NSObject, Decodable {
 
 
-	let approved: Bool
-	let signataire: String?
-	let rejected: Bool
-	let dateValidation:Date?
-	let annotPub:String?
-	let parapheurName:String
+    @objc let approved: Bool
+    @objc let signataire: String?
+    @objc let rejected: Bool
+    @objc let dateValidation:Date?
+    @objc let annotPub:String?
+	@objc let parapheurName:String
 	let delegueName:String?
     // let signatureInfo:String?,
 	let delegateur:String?
-	let actionDemandee:String
+    @objc let actionDemandee:String
 	let id:String
 	let isCurrent:Bool
     // let signatureEtape:Bool
@@ -69,7 +69,7 @@ struct Etape: Decodable {
         // case signatureEtape
 	}
 	
-	init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
 		approved = try values.decodeIfPresent(Bool.self, forKey: .approved) ?? false

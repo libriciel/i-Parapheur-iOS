@@ -222,11 +222,12 @@
 	if (_circuit && (_circuit.count > 0)) {
 		for (NSUInteger i = 0; i < _circuit.count; i++) {
 
-			NSArray *steps = ((ADLResponseCircuit *) _circuit[i]).etapes;
+			Circuit *circuit = _circuit[i];
+			NSArray *steps = circuit.etapes;
 			for (NSUInteger j = 0; j < steps.count; j++) {
 
-				NSDictionary *stepDict = ((NSDictionary *) steps[j]);
-				if ([stepDict[@"approved"] boolValue]) {
+				Etape *step = steps[j];
+				if (step.approved) {
 					// If this step was approved, the current step might be the next one
 					currentStep = j + 1;
 				}
@@ -469,7 +470,7 @@
 	                }];
 
 	[_restClient getCircuit:_dossierRef
-	                success:^(ADLResponseCircuit *circuit) {
+	                success:^(Circuit *circuit) {
 		                __strong typeof(weakSelf) strongSelf = weakSelf;
 		                if (strongSelf) {
 			                HIDE_HUD

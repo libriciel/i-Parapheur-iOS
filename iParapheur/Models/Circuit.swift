@@ -35,10 +35,10 @@
 import Foundation
 
 
-public class Circuit: NSObject, Decodable {
+@objc public class Circuit: NSObject, Decodable {
 
 
-    let etapes: [Etape]
+    @objc let etapes: [Etape]
     let annotPriv: String?
     let isDigitalSignatureMandatory: Bool
     let isMultiDocument: Bool
