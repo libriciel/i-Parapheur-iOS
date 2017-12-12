@@ -75,15 +75,7 @@ struct Etape: Decodable {
 		approved = try values.decodeIfPresent(Bool.self, forKey: .approved) ?? false
 		signataire = try values.decodeIfPresent(String.self, forKey: .signataire)
 		rejected = try values.decodeIfPresent(Bool.self, forKey: .rejected) ?? false
-
-        let dateValidationInt = try values.decodeIfPresent(Double.self, forKey: .dateValidation)
-        if (dateValidationInt != nil) {
-			dateValidation = Date(timeIntervalSince1970: TimeInterval(dateValidationInt! / 1000.0))
-		} else {
-			dateValidation = nil
-		}
-		
-
+        dateValidation = try values.decodeIfPresent(Date.self, forKey: .dateValidation)
         annotPub = try values.decodeIfPresent(String.self, forKey: .annotPub)
         parapheurName = try values.decodeIfPresent(String.self, forKey: .parapheurName) ?? ""
 		delegueName = try values.decodeIfPresent(String.self, forKey: .delegueName)

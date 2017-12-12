@@ -59,9 +59,13 @@ class EtapeTests: XCTestCase {
             }
         """
         let etapeJsonData = etapeJsonString.data(using: .utf8)!
+
         let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
         let etape = try? jsonDecoder.decode(Etape.self,
                                             from: etapeJsonData)
+
+        // Checks
 
         XCTAssertNotNil(etape)
 
@@ -85,10 +89,14 @@ class EtapeTests: XCTestCase {
 		
 		let etapeJsonString = "{}"
 		let etapeJsonData = etapeJsonString.data(using: .utf8)!
+
 		let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
 		let etape = try? jsonDecoder.decode(Etape.self,
 											from: etapeJsonData)
-		
+
+        // Checks
+
 		XCTAssertNotNil(etape)
 		
 		XCTAssertEqual(etape!.approved, false)

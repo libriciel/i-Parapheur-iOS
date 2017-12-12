@@ -84,9 +84,13 @@ class CircuitTests: XCTestCase {
         }
         """
         let getCircuitJsonData = getCircuitJsonString.data(using: .utf8)!
+
         let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
         let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
                                                      from: getCircuitJsonData)
+
+        // Checks
 
         XCTAssertNotNil(circuitWrapper)
         let circuit = circuitWrapper!["circuit"]
@@ -108,11 +112,14 @@ class CircuitTests: XCTestCase {
     func testDecodeEmpty() {
 
         let getCircuitJsonString = "{\"circuit\":{}}"
-
         let getCircuitJsonData = getCircuitJsonString.data(using: .utf8)!
+
         let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
         let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
                                                      from: getCircuitJsonData)
+
+        // Checks
 
         XCTAssertNotNil(circuitWrapper)
         let circuit = circuitWrapper!["circuit"]
