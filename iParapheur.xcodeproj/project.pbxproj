@@ -249,6 +249,10 @@
 		C5978BF11D8C42D70097AC55 /* ic_settings_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BEE1D8C42D70097AC55 /* ic_settings_white@2x.png */; };
 		C5978BF21D8C42D70097AC55 /* ic_settings_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5978BEF1D8C42D70097AC55 /* ic_settings_white@3x.png */; };
 		C5A03D891DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A03D881DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift */; };
+		C5A7DAE51FDE89F60022A813 /* CircuitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A7DAE41FDE89F50022A813 /* CircuitTests.swift */; };
+		C5A7DAE71FDE96F50022A813 /* Circuit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A7DAE61FDE96F50022A813 /* Circuit.swift */; };
+		C5A7DAE91FDECCD30022A813 /* Etape.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A7DAE81FDECCD30022A813 /* Etape.swift */; };
+		C5A7DAEB1FDECDC70022A813 /* EtapeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A7DAEA1FDECDC70022A813 /* EtapeTests.swift */; };
 		C5B8742D1DA5674900909F80 /* ic_account_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B8742A1DA5674900909F80 /* ic_account_white_24dp.png */; };
 		C5B8742E1DA5674900909F80 /* ic_account_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B8742B1DA5674900909F80 /* ic_account_white_24dp@2x.png */; };
 		C5B8742F1DA5674900909F80 /* ic_account_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5B8742C1DA5674900909F80 /* ic_account_white_24dp@3x.png */; };
@@ -663,6 +667,10 @@
 		C5978BEE1D8C42D70097AC55 /* ic_settings_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_settings_white@2x.png"; path = "ic_settings_white_24dp/ic_settings_white@2x.png"; sourceTree = "<group>"; };
 		C5978BEF1D8C42D70097AC55 /* ic_settings_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_settings_white@3x.png"; path = "ic_settings_white_24dp/ic_settings_white@3x.png"; sourceTree = "<group>"; };
 		C5A03D881DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsAccountsEditPopupController.swift; sourceTree = "<group>"; };
+		C5A7DAE41FDE89F50022A813 /* CircuitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitTests.swift; sourceTree = "<group>"; };
+		C5A7DAE61FDE96F50022A813 /* Circuit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circuit.swift; sourceTree = "<group>"; };
+		C5A7DAE81FDECCD30022A813 /* Etape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Etape.swift; sourceTree = "<group>"; };
+		C5A7DAEA1FDECDC70022A813 /* EtapeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EtapeTests.swift; sourceTree = "<group>"; };
 		C5B8742A1DA5674900909F80 /* ic_account_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_account_white_24dp.png; path = ic_account_white_24dp/ic_account_white_24dp.png; sourceTree = "<group>"; };
 		C5B8742B1DA5674900909F80 /* ic_account_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_account_white_24dp@2x.png"; path = "ic_account_white_24dp/ic_account_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C5B8742C1DA5674900909F80 /* ic_account_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_account_white_24dp@3x.png"; path = "ic_account_white_24dp/ic_account_white_24dp@3x.png"; sourceTree = "<group>"; };
@@ -795,8 +803,10 @@
 				64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */,
 				64F348D17E34A71E2E14D64A /* Bureau.swift */,
 				64F348427F7EBCBC0A731851 /* Certificate.swift */,
+				C5A7DAE61FDE96F50022A813 /* Circuit.swift */,
 				C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */,
 				C526D8DB1DA7FC5A00EE8BA9 /* Dossier.swift */,
+				C5A7DAE81FDECCD30022A813 /* Etape.swift */,
 				64F341F438EA838A05990950 /* ParapheurType.swift */,
 				C5833FC11FC4247900C5E692 /* Filter+CoreDataClass.swift */,
 				C5833FC01FC4247900C5E692 /* Filter+CoreDataProperties.swift */,
@@ -1445,6 +1455,8 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				C5A7DAEA1FDECDC70022A813 /* EtapeTests.swift */,
+				C5A7DAE41FDE89F50022A813 /* CircuitTests.swift */,
 				C5C0DA371FD38CAB00A993DB /* SignUtilsTests.swift */,
 				C54FA1EC1FCCE82100ED2D08 /* CryptoUtilsTests.swift */,
 				C5CED41D1FC474CE00FC15DD /* FilterTests.swift */,
@@ -2207,6 +2219,7 @@
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
 				C5833FC21FC4247900C5E692 /* Filter+CoreDataProperties.swift in Sources */,
 				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
+				C5A7DAE71FDE96F50022A813 /* Circuit.swift in Sources */,
 				C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */,
 				C50326211DD090D3004F00A6 /* ActionSelectionController.swift in Sources */,
 				64F34FD00654A813D7151026 /* Certificate.swift in Sources */,
@@ -2273,6 +2286,7 @@
 				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
 				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,
 				C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */,
+				C5A7DAE91FDECCD30022A813 /* Etape.swift in Sources */,
 				B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */,
 				B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */,
 				B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */,
@@ -2310,7 +2324,9 @@
 				C585C8D51FBEF05D005A0544 /* ModelsDataControllerTests.swift in Sources */,
 				C5CED41E1FC474CE00FC15DD /* FilterTests.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* CryptoUtilsTests.swift in Sources */,
+				C5A7DAEB1FDECDC70022A813 /* EtapeTests.swift in Sources */,
 				C58203C61FBCAAE700B6606F /* ColorUtilsTests.swift in Sources */,
+				C5A7DAE51FDE89F60022A813 /* CircuitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

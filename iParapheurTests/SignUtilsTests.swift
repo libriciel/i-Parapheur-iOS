@@ -87,11 +87,7 @@ class SignInfoTests: XCTestCase {
 
 	func testDecodeEmpty() {
 		
-		let getSignInfoJsonString = """
-            {
-        	    "signatureInformations" : {}
-        	}
-        """
+		let getSignInfoJsonString = "{\"signatureInformations\" : {} }"
 		let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
 		let jsonDecoder = JSONDecoder()
 		let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,

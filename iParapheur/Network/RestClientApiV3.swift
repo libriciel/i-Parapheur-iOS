@@ -82,12 +82,14 @@ import Alamofire
         // TODO Adrien : add special character restrictions tests ?
         urlFixed = urlFixed.replacingOccurrences(of: " ", with: "")
 
+        print("Adrien - \(url)")
+
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
-        //			- then ignore following "m-" (if exists)						(?:m-)*
+        //			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m-)*([^\\/]*)(?:\\/.*)*$",
+        let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
                                                                   options: NSRegularExpression.Options.caseInsensitive)
 
         let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
@@ -98,6 +100,9 @@ import Alamofire
             let swiftRange = Range(match!.range(at: 1), in: urlFixed)
             urlFixed = String(urlFixed[swiftRange!])
         }
+
+
+        print("Adrien - https://m-\(urlFixed)")
 
         return NSString(string: "https://m-\(urlFixed)")
     }
@@ -246,7 +251,7 @@ import Alamofire
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-			"skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
             "sort": "cm:create"
         ]
 
@@ -307,19 +312,40 @@ import Alamofire
 
 
     @objc func getCircuit(dossier: NSString,
-                          onResponse responseCallback: ((AnyObject) -> Void)?,
+                          onResponse responseCallback: ((Circuit) -> Void)?,
                           onError errorCallback: ((NSError) -> Void)?) {
 
         let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
 
         // Request
 
-        manager.request(getCircuitUrl).validate().responseJSON {
+        manager.request(getCircuitUrl).validate().responseString {
             response in
+
             switch (response.result) {
 
                 case .success:
-                    responseCallback!(response.value as AnyObject)
+
+                    // Prepare
+
+                    let getCircuitJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+                    let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
+                                                                 from: getCircuitJsonData)
+
+                    // Parsing and callback
+
+                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
+                    if (hasSomeData) {
+                        responseCallback!(circuitWrapper!["circuit"]!)
+                    }
+                    else {
+                        errorCallback!(NSError(domain: "Invalid response",
+                                               code: 999))
+                    }
+
                     break
 
                 case .failure(let error):
@@ -431,18 +457,26 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    do {
-                        let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
-                        let jsonDecoder = JSONDecoder()
-                        let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,
-                                                                   from: getSignInfoJsonData)
 
-                        let signInfo = signInfoDict!["signatureInformations"]
-                        responseCallback!(signInfo!)
+                    // Prepare
+
+                    let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
+                                                                  from: getSignInfoJsonData)
+
+                    // Parsing and callback
+
+                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
+                    if (hasSomeData) {
+                        responseCallback!(signInfoWrapper!["signatureInformations"]!)
                     }
-                    catch let error {
-                        errorCallback!(error as NSError)
+                    else {
+                        errorCallback!(NSError(domain: "Invalid response",
+                                               code: 999))
                     }
+
                     break
 
                 case .failure(let error):

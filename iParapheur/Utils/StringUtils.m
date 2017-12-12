@@ -178,10 +178,10 @@
 
 	// Getting the server name
 	// Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
-	//			- then ignore following "m-" (if exists)						(?:m-)*
+	//			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
 	//			- then catch every char but "/"									([^\/]*)
 	//			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m-)*([^\\/]*)(?:\\/.*)*$"
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$"
 	                                                                       options:NSRegularExpressionCaseInsensitive
 	                                                                         error:nil];
 

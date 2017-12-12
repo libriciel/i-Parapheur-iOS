@@ -261,30 +261,18 @@
 
 
 - (void)getCircuit:(NSString *)dossier
-           success:(void (^)(ADLResponseCircuit *))success
+           success:(void (^)(Circuit *))success
            failure:(void (^)(NSError *))failure {
 
 	[self cancelAllHTTPOperationsWithPath:@"circuit"];
 
 	[_swiftManager getCircuitWithDossier:dossier
-	               onResponse:^(NSDictionary *response) {
-
-		               NSError *error;
-					   ADLResponseCircuit *responseCircuit;
-//		               ADLResponseCircuit *responseCircuit = [MTLJSONAdapter modelOfClass:[ADLResponseCircuit class]
-//		                                                               fromJSONDictionary:response[@"circuit"]
-//		                                                                            error:&error];
-
-		               // Parse check and callback
-
-		               if (error)
-			               failure(error);
-		               else
-			               success(responseCircuit);
-	               }
-	                  onError:^(NSError *error) {
-		                  failure(error);
-	                  }];
+	                          onResponse:^(Circuit *circuit) {
+		                          success(circuit);
+	                          }
+	                             onError:^(NSError *error) {
+		                             failure(error);
+	                             }];
 }
 
 

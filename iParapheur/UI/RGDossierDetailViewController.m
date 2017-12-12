@@ -37,6 +37,7 @@
 #import "ADLNotifications.h"
 #import "ADLRequester.h"
 #import "ADLCircuitCell.h"
+#import "iParapheur-Swift.h"
 
 
 @interface RGDossierDetailViewController () {
@@ -71,7 +72,7 @@
 	_restClient = [ADLRestClient sharedManager];
 
 	self.navigationItem.rightBarButtonItem = nil;
-	_objects = [NSMutableArray new];
+	_objects = NSMutableArray.new;
 
 	[self hidesEveryThing];
 	self.navigationBar.topItem.title = _dossier[@"titre"];
@@ -82,13 +83,10 @@
 	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getCircuit:dossierRef
-		                success:^(ADLResponseCircuit *responseCircuit) {
+		                success:^(Circuit *retrievedCircuit) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
-				                NSMutableArray *responseArray = [[NSMutableArray alloc] init];
-				                [responseArray addObjectsFromArray:responseCircuit.etapes];
-
-				                [strongSelf refreshCircuits:responseArray];
+				                [strongSelf refreshCircuits:retrievedCircuit.etapes];
 			                }
 		                }
 		                failure:^(NSError *error) {
@@ -234,32 +232,24 @@
 		cell = [ADLCircuitCell new];
 	}
 
-	NSDictionary *object = _objects[(NSUInteger) indexPath.row];
-	// cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [object objectForKey:@"parapheurName"], [object objectForKey:@"actionDemandee"]];
+	Etape *etape = (Etape *) _objects[(NSUInteger) indexPath.row];
+	// cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [etape objectForKey:@"parapheurName"], [etape objectForKey:@"actionDemandee"]];
 
-	cell.parapheurName.text = object[@"parapheurName"];
-	if ([object[@"approved"] intValue] == 1) {
-		cell.validateurName.text = object[@"signataire"];
-		cell.annotation.text = object[@"annotPub"];
+	cell.parapheurName.text = etape.parapheurName;
+	if (etape.approved) {
+		cell.validateurName.text = etape.signataire;
+		cell.annotation.text = etape.annotPub;
 	}
 	else {
 		cell.validateurName.text = @"";
 		cell.annotation.text = @"";
 	}
 
-	if (object[@"dateValidation"]) {
+	if (etape.dateValidation) {
 
-		NSDate *validationDate;
-
-		if ([object[@"dateValidation"] isKindOfClass:[NSNumber class]]) {
-			NSNumber *dateMs = object[@"dateValidation"];
-			validationDate = [NSDate dateWithTimeIntervalSince1970:dateMs.doubleValue / 1000];
-		}
-
-		NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+		NSDateFormatter *outputFormatter = NSDateFormatter.new;
 		outputFormatter.dateFormat = @"'le' dd/MM/yyyy 'à' HH:mm";
-
-		NSString *validationDateStr = [outputFormatter stringFromDate:validationDate];
+		NSString *validationDateStr = [outputFormatter stringFromDate:etape.dateValidation];
 
 		cell.validationDate.text = validationDateStr;
 	}
@@ -269,14 +259,14 @@
 
 
 	NSString *imagePrefix = @"iw";
-	if ([object[@"rejected"] intValue] == 1) {
+	if (etape.rejected) {
 		imagePrefix = @"ir";
 	}
-	else if ([object[@"approved"] intValue] == 1) {
+	else if (etape.approved) {
 		imagePrefix = @"ip";
 	}
 
-	NSString *action = [object[@"actionDemandee"] lowercaseString];
+	NSString *action = [etape.actionDemandee lowercaseString];
 
 	cell.etapeTypeIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png",
 	                                                                          imagePrefix,
