@@ -235,6 +235,7 @@
 		C58DCD1A1DB9153B00D81D8E /* ic_check_white_18dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C58DCD171DB9153B00D81D8E /* ic_check_white_18dp.png */; };
 		C58DCD1B1DB9153B00D81D8E /* ic_check_white_18dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C58DCD181DB9153B00D81D8E /* ic_check_white_18dp@2x.png */; };
 		C58DCD1C1DB9153B00D81D8E /* ic_check_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C58DCD191DB9153B00D81D8E /* ic_check_white_18dp@3x.png */; };
+		C5903CFF1FD7EAF2007BF0F8 /* BureauTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5903CFE1FD7EAF2007BF0F8 /* BureauTests.swift */; };
 		C59445F91AAE41B900DD4473 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F51AAE41B900DD4473 /* Default-Landscape.png */; };
 		C59445FA1AAE41B900DD4473 /* Default-Landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F61AAE41B900DD4473 /* Default-Landscape@2x.png */; };
 		C59445FC1AAE41B900DD4473 /* Default-Portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C59445F81AAE41B900DD4473 /* Default-Portrait@2x.png */; };
@@ -652,6 +653,7 @@
 		C58DCD181DB9153B00D81D8E /* ic_check_white_18dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_check_white_18dp@2x.png"; path = "ic_check_white_18dp/ic_check_white_18dp@2x.png"; sourceTree = "<group>"; };
 		C58DCD191DB9153B00D81D8E /* ic_check_white_18dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_check_white_18dp@3x.png"; path = "ic_check_white_18dp/ic_check_white_18dp@3x.png"; sourceTree = "<group>"; };
 		C5901F121AAA0CF300E4F264 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		C5903CFE1FD7EAF2007BF0F8 /* BureauTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BureauTests.swift; sourceTree = "<group>"; };
 		C59445F51AAE41B900DD4473 /* Default-Landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape.png"; sourceTree = "<group>"; };
 		C59445F61AAE41B900DD4473 /* Default-Landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x.png"; sourceTree = "<group>"; };
 		C59445F71AAE41B900DD4473 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait.png"; sourceTree = "<group>"; };
@@ -1455,6 +1457,7 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				C5903CFE1FD7EAF2007BF0F8 /* BureauTests.swift */,
 				C5A7DAEA1FDECDC70022A813 /* EtapeTests.swift */,
 				C5A7DAE41FDE89F50022A813 /* CircuitTests.swift */,
 				C5C0DA371FD38CAB00A993DB /* SignUtilsTests.swift */,
@@ -2323,6 +2326,7 @@
 				C5C0DA381FD38CAB00A993DB /* SignUtilsTests.swift in Sources */,
 				C585C8D51FBEF05D005A0544 /* ModelsDataControllerTests.swift in Sources */,
 				C5CED41E1FC474CE00FC15DD /* FilterTests.swift in Sources */,
+				C5903CFF1FD7EAF2007BF0F8 /* BureauTests.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* CryptoUtilsTests.swift in Sources */,
 				C5A7DAEB1FDECDC70022A813 /* EtapeTests.swift in Sources */,
 				C58203C61FBCAAE700B6606F /* ColorUtilsTests.swift in Sources */,

@@ -135,7 +135,7 @@ class CircuitTests: XCTestCase {
     }
 
 
-    func testFail() {
+    func testDecodeFail() {
 
         let getCircuitJsonString = "{{{"
         let getCircuitJsonData = getCircuitJsonString.data(using: .utf8)!

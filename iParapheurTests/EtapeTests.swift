@@ -115,7 +115,7 @@ class EtapeTests: XCTestCase {
     }
 
 
-    func testFail() {
+    func testDecodeFail() {
 
         let etapeJsonString = "{{{"
         let etapeJsonData = etapeJsonString.data(using: .utf8)!

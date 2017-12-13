@@ -38,7 +38,7 @@ import XCTest
 
 class SignInfoTests: XCTestCase {
 
-    func testDecodeFull() {
+    func testDecodeFromJsonFull() {
 
         let getSignInfoJsonString = """
             {
@@ -85,7 +85,7 @@ class SignInfoTests: XCTestCase {
         XCTAssertEqual(signInfo!.pesCity, "Montpellier")
     }
 
-	func testDecodeEmpty() {
+	func testDecodeFromJsonEmpty() {
 		
 		let getSignInfoJsonString = "{\"signatureInformations\" : {} }"
 		let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!

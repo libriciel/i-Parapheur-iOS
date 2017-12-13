@@ -217,13 +217,31 @@ import Alamofire
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl).validate().responseJSON {
+        manager.request(getBureauxUrl).validate().responseString {
             response in
             switch (response.result) {
 
                 case .success:
-                    let bureauList = [Bureau].from(jsonArray: response.value as! [[String: AnyObject]])
-                    responseCallback!(bureauList! as NSArray)
+
+                    // Prepare
+
+                    let getBureauxJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let bureaux = try? jsonDecoder.decode([Bureau].self,
+                                                          from: getBureauxJsonData)
+
+                    // Parsing and callback
+
+                    let hasSomeData = (bureaux != nil)
+                    if (hasSomeData) {
+                        responseCallback!(bureaux! as NSArray)
+                    }
+                    else {
+                        errorCallback!(NSError(domain: "Invalid response",
+                                               code: 999))
+                    }
+
                     break
 
                 case .failure(let error):

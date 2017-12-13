@@ -246,7 +246,7 @@
 		self.navigationItem.leftBarButtonItem = nil;
 		self.navigationItem.rightBarButtonItem.enabled = YES;
 		self.navigationItem.rightBarButtonItem.tintColor = ColorUtils.Aqua;
-		self.navigationItem.title = _desk.unwrappedName;
+		self.navigationItem.title = _desk.name;
 	}
 }
 
@@ -346,7 +346,7 @@
 
 		__weak typeof(self) weakSelf = self;
 
-		[_restClient getDossiers:_desk.unwrappedNodeRef
+		[_restClient getDossiers:_desk.nodeRef
 		                    page:page
 		                    size:15
 		                  filter:jsonString
@@ -370,7 +370,7 @@
 		                 }];
 	} else {
 		__weak typeof(self) weakSelf = self;
-		[_restClient getDossiers:_desk.unwrappedNodeRef
+		[_restClient getDossiers:_desk.nodeRef
 		                    page:page
 		                    size:15
 		                  filter:nil
