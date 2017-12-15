@@ -369,30 +369,33 @@
 */
 - (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo {
 
-	NSMutableArray *hashes = NSMutableArray.new;
+	NSMutableArray *signers = NSMutableArray.new;
 	NSMutableArray *dossiers = NSMutableArray.new;
 	NSMutableArray *signatures = NSMutableArray.new;
 
+	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
+	PrivateKey *pkey = _currentPKey;
+
 	for (Dossier *dossier in _dossiers) {
 
-		NSLog(@"Adrien -- %@", signInfo.format);
+		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format containsString:@"PADES"]) {
 
-		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format isEqualToString:@"XADES-env"]) { // || [signInfo.format containsString:@"PADES"]) {
 			[dossiers addObject:dossier.unwrappedId];
-			[hashes addObject:signInfo.hashToSign];
+			CmsSigner *cmsSigner = [CmsSigner.alloc initWithSignInfo:signInfo
+			                                              privateKey:pkey];
+			[signers addObject:cmsSigner];
+
+		} else if ([signInfo.format isEqualToString:@"XADES-env"]) {
+
+			[dossiers addObject:dossier.unwrappedId];
+			XadesEnvSigner *xadesEnvSigner = [XadesEnvSigner.alloc initWithSignInfo:signInfo
+			                                                             privateKey:pkey];
+			[signers addObject:xadesEnvSigner];
 		} else {
 			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
 			                           title:@"Signature impossible"];
 		}
 	}
-
-	// Checking useful data
-
-	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
-	PrivateKey *pkey = _currentPKey;
-    NSString *publicKey = [NSString.alloc initWithData:pkey.publicKey
-                                              encoding:NSUTF8StringEncoding];
-
 
 	// Retrieving signature certificate
 
@@ -407,8 +410,9 @@
 
 	// Building signature response
 
-	for (NSString *hash in hashes) {
+	for (SignerProtocol *signer in signers) {
 		NSMutableString *signedHash;
+		NSString *hash = [signer generateHashToSign];
 
 		// Signing hashes, multi-doc way if needed
 
@@ -445,12 +449,14 @@
 		signedHash = [signedHash stringByReplacingOccurrencesOfString:@"\n"
 		                                                   withString:@""].mutableCopy;
 
+		NSString *finalSignature = [signer buildBase64DataToReturnWithSignedHash:signedHash];
+
 		[signatures addObject:signedHash];
 	}
 
 	// Checking and sending back result
 
-	if ((signatures.count > 0) && (signatures.count == hashes.count) && (dossiers.count == hashes.count)) {
+	if ((signatures.count > 0) && (signatures.count == signers.count) && (dossiers.count == signers.count)) {
 
 		for (int i = 0; i < signatures.count; i++) {
 

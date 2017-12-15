@@ -308,6 +308,9 @@
 		C5D627631DBF5A2200208287 /* ic_library_books_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5D627601DBF5A2200208287 /* ic_library_books_white_24dp@3x.png */; };
 		C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D627651DBF5E1900208287 /* FolderListCell.swift */; };
 		C5DF831F1DB518FD00BA14BB /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */; };
+		C5E28D6C1FE3DC7B006890C1 /* XadesEnvSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */; };
+		C5E28D6E1FE40FCE006890C1 /* CmsSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */; };
+		C5E28D701FE4114B006890C1 /* SignerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6F1FE4114B006890C1 /* SignerProtocol.swift */; };
 		C5EABB1A1DC3A9F50019328A /* ic_check_circle_white_18dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB171DC3A9F50019328A /* ic_check_circle_white_18dp.png */; };
 		C5EABB1B1DC3A9F50019328A /* ic_check_circle_white_18dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB181DC3A9F50019328A /* ic_check_circle_white_18dp@2x.png */; };
 		C5EABB1C1DC3A9F50019328A /* ic_check_circle_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB191DC3A9F50019328A /* ic_check_circle_white_18dp@3x.png */; };
@@ -731,6 +734,9 @@
 		C5D627601DBF5A2200208287 /* ic_library_books_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_library_books_white_24dp@3x.png"; path = "ic_library_books_white_24dp/ic_library_books_white_24dp@3x.png"; sourceTree = "<group>"; };
 		C5D627651DBF5E1900208287 /* FolderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtils.swift; sourceTree = "<group>"; };
+		C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSigner.swift; sourceTree = "<group>"; };
+		C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmsSigner.swift; sourceTree = "<group>"; };
+		C5E28D6F1FE4114B006890C1 /* SignerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignerProtocol.swift; sourceTree = "<group>"; };
 		C5EABB171DC3A9F50019328A /* ic_check_circle_white_18dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_check_circle_white_18dp.png; path = ic_check_circle_white_18dp/ic_check_circle_white_18dp.png; sourceTree = "<group>"; };
 		C5EABB181DC3A9F50019328A /* ic_check_circle_white_18dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_check_circle_white_18dp@2x.png"; path = "ic_check_circle_white_18dp/ic_check_circle_white_18dp@2x.png"; sourceTree = "<group>"; };
 		C5EABB191DC3A9F50019328A /* ic_check_circle_white_18dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_check_circle_white_18dp@3x.png"; path = "ic_check_circle_white_18dp/ic_check_circle_white_18dp@3x.png"; sourceTree = "<group>"; };
@@ -779,8 +785,11 @@
 				1434F670168DFF98000C115D /* KeyStore.xcdatamodeld */,
 				1434F669168DFDD2000C115D /* ADLKeyStore.h */,
 				1434F66A168DFDD2000C115D /* ADLKeyStore.m */,
+				C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */,
 				1434F66B168DFDD2000C115D /* PrivateKey.h */,
 				1434F66C168DFDD2000C115D /* PrivateKey.m */,
+				C5E28D6F1FE4114B006890C1 /* SignerProtocol.swift */,
+				C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -2219,6 +2228,7 @@
 				64F34C95A073619B7586D894 /* ModelsDataController.swift in Sources */,
 				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
 				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
+				C5E28D6E1FE40FCE006890C1 /* CmsSigner.swift in Sources */,
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
 				C5833FC21FC4247900C5E692 /* Filter+CoreDataProperties.swift in Sources */,
 				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
@@ -2234,6 +2244,7 @@
 				C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */,
 				C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
+				C5E28D701FE4114B006890C1 /* SignerProtocol.swift in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
 				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,
@@ -2296,6 +2307,7 @@
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
 				1469DFF11675D2C20064E8E7 /* ADLRequester.m in Sources */,
+				C5E28D6C1FE3DC7B006890C1 /* XadesEnvSigner.swift in Sources */,
 				C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */,
 				1469DFF51675D8960064E8E7 /* ADLAPIOperation.m in Sources */,
 				1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */,
