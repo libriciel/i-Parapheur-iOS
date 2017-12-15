@@ -310,7 +310,7 @@
 		C5DF831F1DB518FD00BA14BB /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */; };
 		C5E28D6C1FE3DC7B006890C1 /* XadesEnvSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */; };
 		C5E28D6E1FE40FCE006890C1 /* CmsSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */; };
-		C5E28D701FE4114B006890C1 /* SignerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6F1FE4114B006890C1 /* SignerProtocol.swift */; };
+		C5E28D701FE4114B006890C1 /* Signer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6F1FE4114B006890C1 /* Signer.swift */; };
 		C5EABB1A1DC3A9F50019328A /* ic_check_circle_white_18dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB171DC3A9F50019328A /* ic_check_circle_white_18dp.png */; };
 		C5EABB1B1DC3A9F50019328A /* ic_check_circle_white_18dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB181DC3A9F50019328A /* ic_check_circle_white_18dp@2x.png */; };
 		C5EABB1C1DC3A9F50019328A /* ic_check_circle_white_18dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EABB191DC3A9F50019328A /* ic_check_circle_white_18dp@3x.png */; };
@@ -736,7 +736,7 @@
 		C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtils.swift; sourceTree = "<group>"; };
 		C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSigner.swift; sourceTree = "<group>"; };
 		C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmsSigner.swift; sourceTree = "<group>"; };
-		C5E28D6F1FE4114B006890C1 /* SignerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignerProtocol.swift; sourceTree = "<group>"; };
+		C5E28D6F1FE4114B006890C1 /* Signer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signer.swift; sourceTree = "<group>"; };
 		C5EABB171DC3A9F50019328A /* ic_check_circle_white_18dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_check_circle_white_18dp.png; path = ic_check_circle_white_18dp/ic_check_circle_white_18dp.png; sourceTree = "<group>"; };
 		C5EABB181DC3A9F50019328A /* ic_check_circle_white_18dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_check_circle_white_18dp@2x.png"; path = "ic_check_circle_white_18dp/ic_check_circle_white_18dp@2x.png"; sourceTree = "<group>"; };
 		C5EABB191DC3A9F50019328A /* ic_check_circle_white_18dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_check_circle_white_18dp@3x.png"; path = "ic_check_circle_white_18dp/ic_check_circle_white_18dp@3x.png"; sourceTree = "<group>"; };
@@ -788,7 +788,7 @@
 				C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */,
 				1434F66B168DFDD2000C115D /* PrivateKey.h */,
 				1434F66C168DFDD2000C115D /* PrivateKey.m */,
-				C5E28D6F1FE4114B006890C1 /* SignerProtocol.swift */,
+				C5E28D6F1FE4114B006890C1 /* Signer.swift */,
 				C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */,
 			);
 			path = Crypto;
@@ -2244,7 +2244,7 @@
 				C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */,
 				C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */,
 				B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */,
-				C5E28D701FE4114B006890C1 /* SignerProtocol.swift in Sources */,
+				C5E28D701FE4114B006890C1 /* Signer.swift in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
 				B4E5ECB3153AF65F00BD514D /* RGAppDelegate.m in Sources */,
 				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,

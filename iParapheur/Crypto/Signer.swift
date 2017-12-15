@@ -35,10 +35,10 @@
 import Foundation
 
 
-@objc protocol SignerProtocol {
+@objc class Signer: NSObject {
 
-    func generateHashToSign() -> String
+    @objc func generateHashToSign() -> String { return "Generic signer" }
 
-    func buildBase64DataToReturn(signedHash: String) -> String
+    @objc func buildDataToReturn(signedHash: String) -> String { return "Generic signer" }
 
 }

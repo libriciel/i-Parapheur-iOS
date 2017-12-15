@@ -36,7 +36,7 @@ import Foundation
 import AEXML
 
 
-@objc class XadesEnvSigner: NSObject, SignerProtocol {
+@objc class XadesEnvSigner: Signer {
 
     let mSignInfo: SignInfo
     let mPrivateKey: PrivateKey
@@ -214,17 +214,18 @@ import AEXML
     // </editor-fold desc="Builders">
 
 
-    func generateHashToSign() -> String {
+    override func generateHashToSign() -> String {
 
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
 
-        let result = CryptoUtils.hashInSHA1(string: mSignedInfoNode!.xmlCompact)
-        return result
+        let hashToSign = CryptoUtils.hashInSHA1(string: mSignedInfoNode!.xmlCompact)
+        print("Adrien - hashToSign = \(hashToSign)")
+        return hashToSign
     }
 
 
-    func buildBase64DataToReturn(signedHash: String) throws -> String {
+    override func buildDataToReturn(signedHash: String) -> String {
 
         // Compute the rest of the XML wrapper
 

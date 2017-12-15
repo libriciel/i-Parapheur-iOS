@@ -35,7 +35,7 @@
 import Foundation
 
 
-@objc class CmsSigner: NSObject, SignerProtocol {
+@objc class CmsSigner: Signer {
 
     let mSignInfo: SignInfo
     let mPrivateKey: PrivateKey
@@ -49,12 +49,12 @@ import Foundation
     }
 
 
-    func generateHashToSign() -> String {
+    @objc override func generateHashToSign() -> String {
         return mSignInfo.hashToSign!
     }
 
 
-    func buildBase64DataToReturn(signedHash: String) throws -> String {
+    @objc override func buildBase64DataToReturn(signedHash: String) -> String {
         return signedHash
     }
 }

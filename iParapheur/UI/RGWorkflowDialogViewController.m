@@ -410,7 +410,7 @@
 
 	// Building signature response
 
-	for (SignerProtocol *signer in signers) {
+	for (Signer *signer in signers) {
 		NSMutableString *signedHash;
 		NSString *hash = [signer generateHashToSign];
 
@@ -449,9 +449,9 @@
 		signedHash = [signedHash stringByReplacingOccurrencesOfString:@"\n"
 		                                                   withString:@""].mutableCopy;
 
-		NSString *finalSignature = [signer buildBase64DataToReturnWithSignedHash:signedHash];
+		NSString *finalSignature = [signer buildDataToReturnWithSignedHash:signedHash];
 
-		[signatures addObject:signedHash];
+		[signatures addObject:finalSignature];
 	}
 
 	// Checking and sending back result
@@ -465,25 +465,25 @@
 
 			__weak typeof(self) weakSelf = self;
 
-			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
-			                          forBureau:_bureauCourant
-			               withPublicAnnotation:_annotationPublique.text
-			              withPrivateAnnotation:_annotationPrivee.text
-			                      withSignature:signatures[(NSUInteger) i]
-			                            success:^(NSArray *array) {
-				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-				                            if (strongSelf) {
-					                            NSLog(@"Signature success");
-					                            [strongSelf dismissDialogView];
-				                            }
-			                            }
-			                            failure:^(NSError *restError) {
-				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-				                            if (strongSelf) {
-					                            NSLog(@"Signature fail");
-					                            [strongSelf didEndWithUnReachableNetwork];
-				                            }
-			                            }];
+//			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
+//			                          forBureau:_bureauCourant
+//			               withPublicAnnotation:_annotationPublique.text
+//			              withPrivateAnnotation:_annotationPrivee.text
+//			                      withSignature:signatures[(NSUInteger) i]
+//			                            success:^(NSArray *array) {
+//				                            __strong typeof(weakSelf) strongSelf = weakSelf;
+//				                            if (strongSelf) {
+//					                            NSLog(@"Signature success");
+//					                            [strongSelf dismissDialogView];
+//				                            }
+//			                            }
+//			                            failure:^(NSError *restError) {
+//				                            __strong typeof(weakSelf) strongSelf = weakSelf;
+//				                            if (strongSelf) {
+//					                            NSLog(@"Signature fail");
+//					                            [strongSelf didEndWithUnReachableNetwork];
+//				                            }
+//			                            }];
 		}
 	}
 }
