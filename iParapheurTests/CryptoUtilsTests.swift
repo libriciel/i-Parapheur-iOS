@@ -105,4 +105,37 @@ class CryptoUtilsTests: XCTestCase {
         print("")
     }
 
+
+    func testCleanupPublicKey() {
+
+        let pollutedCertificate = """
+          Plop -----BEGIN CERTIFICATE-----
+          MIIEvDCCA6SgAwIBAgIJAMXb2wwwEe7bMA0GCSqGSIb3DQEBBQUAMIGYMQswCQYD
+          VQQGEwJGUjEQMA4GA1UECBMHSGVyYXVsdDEYMBYGA1UEChMPQURVTExBQ1QtUHJv
+          aI4sMpE2XfSFX2lfQgT4zJMqLYj21aUDFY5GC/6+y/Q0DvrTnG6Zga2YT+k+ADX2
+          zQTAPlHkAUt5Kwtlp9xk7w==
+          -----END CERTIFICATE----- Plop
+          """
+		
+		let cleanCertificate = """
+          MIIEvDCCA6SgAwIBAgIJAMXb2wwwEe7bMA0GCSqGSIb3DQEBBQUAMIGYMQswCQYD
+          VQQGEwJGUjEQMA4GA1UECBMHSGVyYXVsdDEYMBYGA1UEChMPQURVTExBQ1QtUHJv
+          aI4sMpE2XfSFX2lfQgT4zJMqLYj21aUDFY5GC/6+y/Q0DvrTnG6Zga2YT+k+ADX2
+          zQTAPlHkAUt5Kwtlp9xk7w==
+          """
+
+        var expectedResult = "MIIEvDCCA6SgAwIBAgIJAMXb2wwwEe7bMA0GCSqGSIb3DQEBBQUAMIGYMQswCQYD"
+        expectedResult = "\(expectedResult)VQQGEwJGUjEQMA4GA1UECBMHSGVyYXVsdDEYMBYGA1UEChMPQURVTExBQ1QtUHJv"
+        expectedResult = "\(expectedResult)aI4sMpE2XfSFX2lfQgT4zJMqLYj21aUDFY5GC/6+y/Q0DvrTnG6Zga2YT+k+ADX2"
+        expectedResult = "\(expectedResult)zQTAPlHkAUt5Kwtlp9xk7w=="
+
+		let cleanedPollutedCertificate = CryptoUtils.cleanupPublicKey(publicKey: pollutedCertificate)
+		let cleanedCleanCertificate = CryptoUtils.cleanupPublicKey(publicKey: cleanCertificate)
+		
+		print("Adrien - \(cleanedPollutedCertificate)")
+		
+        XCTAssertEqual(cleanedPollutedCertificate, expectedResult)
+		XCTAssertEqual(cleanedCleanCertificate, expectedResult)
+    }
+
 }

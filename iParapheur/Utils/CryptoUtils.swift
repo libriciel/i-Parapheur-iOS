@@ -40,7 +40,10 @@ import AEXML
 
 @objc class CryptoUtils: NSObject {
 
+
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
+    static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
+    static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
 
 
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
@@ -144,26 +147,83 @@ import AEXML
                                                      signatureValue: String,
                                                      signInfo: SignInfo) -> String {
 
-        // create XML Document
+        // Build up some data
+
+        let pollutedPublicKey = String(data: privateKey.publicKey, encoding: String.Encoding.utf8)
+        let cleanedPublicKey = CryptoUtils.cleanupPublicKey(publicKey: pollutedPublicKey!)
+        let cleanedPublicKeySha1 = CryptoUtils.hashInSHA1(string: cleanedPublicKey)
+
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-ddTHH:mm:ssZ"
+        let currentDateIso8601 = dateFormatter.string(from: Date())
+
+        print("Adrien - pollutedPublicKey    \(pollutedPublicKey)")
+        print("Adrien - cleanedPublicKey     \(cleanedPublicKey)")
+        print("Adrien - cleanedPublicKeySha1 \(cleanedPublicKeySha1)")
+        print("Adrien - currentDateIso8601   \(currentDateIso8601)")
+
+        // Build-up - First round
+
+        let keyInfoNode = CryptoUtils.buildXadesEnvKeyInfo(publicKey: cleanedPublicKey)
+
+        let signedSignaturePropertiesNode = CryptoUtils.buildXadesEnvSignedSignatureProperties(signInfo: signInfo,
+                                                                                               currentDateIso8601: currentDateIso8601,
+                                                                                               privateKey: privateKey,
+                                                                                               publicKeySha1: cleanedPublicKeySha1)
+
+        // Compute
+
+        let signaturePropertiesString = signedSignaturePropertiesNode.xmlCompact
+        let signaturePropertiesHash = CryptoUtils.hashInSHA1(string: signaturePropertiesString)
+
+        print("Adrien signedPropertiesHash - \(signaturePropertiesHash)")
+        let actualSignature = "oooOOOooo"
+
+        // Build-up - Second phase
+
+        let signedInfoNode = CryptoUtils.buildXadesEnvSignedInfo(signInfo: signInfo,
+                                                                 signedPropertiesHash: signaturePropertiesHash)
+
+        let signatureValueNode = CryptoUtils.buildXadesSignatureValue(signInfo: signInfo,
+                                                                      signature: actualSignature)
+
+        let objectNode = CryptoUtils.buildXadesEnvObject(signInfo: signInfo,
+                                                         signedSignaturePropertiesNode: signedSignaturePropertiesNode)
+
+        // Wrap-up everything
+
         let rootDocument = AEXMLDocument()
         let documentDetachedExternalSignature = rootDocument.addChild(name: "DocumentDetachedExternalSignature")
-
         let signature = documentDetachedExternalSignature.addChild(name: "ds:Signature",
                                                                    attributes: [
                                                                        "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
                                                                        "Id": "IDF2017-05-17T08-29-45.35_SIG_1"
                                                                    ])
 
-        // ds:SignedInfo
+        signature.addChild(signedInfoNode)
+        signature.addChild(signatureValueNode)
+        signature.addChild(keyInfoNode)
+        signature.addChild(objectNode)
 
-        let signedInfo = signature.addChild(name: "ds:SignedInfo")
+        print("rootDocument.xmlCompact :: \(rootDocument.xmlCompact)")
+        return rootDocument.xmlCompact
+    }
+
+
+    class func buildXadesEnvSignedInfo(signInfo: SignInfo,
+                                       signedPropertiesHash: String) -> AEXMLElement {
+
+        let rootDocument = AEXMLDocument()
+
+        let signedInfo = rootDocument.addChild(name: "ds:SignedInfo")
         signedInfo.addChild(name: "ds:CanonicalizationMethod",
                             attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
         signedInfo.addChild(name: "ds:SignatureMethod",
                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"])
 
         let reference1 = signedInfo.addChild(name: "ds:Reference",
-                                             attributes: ["URI": "#\(signInfo.pesId)"])
+                                             attributes: ["URI": "#\(signInfo.pesId!)"])
 
         let transforms1 = reference1.addChild(name: "ds:Transforms")
         transforms1.addChild(name: "ds:Transform",
@@ -174,11 +234,11 @@ import AEXML
         reference1.addChild(name: "ds:DigestMethod",
                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
         reference1.addChild(name: "ds:DigestValue",
-                            value: "IoD02noHfnPPyW32kLXkqjs67pg=") //TODO
+                            value: signInfo.hashToSign)
 
         let reference2 = signedInfo.addChild(name: "ds:Reference",
                                              attributes: ["Type": "http://uri.etsi.org/01903/v1.1.1#SignedProperties",
-                                                          "URI": "#\(signInfo.pesId)_SIG_1_SP"])
+                                                          "URI": "#\(signInfo.pesId!)_SIG_1_SP"])
 
         let transforms2 = reference2.addChild(name: "ds:Transforms")
         transforms2.addChild(name: "ds:Transform",
@@ -186,45 +246,60 @@ import AEXML
         reference2.addChild(name: "ds:DigestMethod",
                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
         reference2.addChild(name: "ds:DigestValue",
-                            value: "ompiAGv4kR9H6fLtUMios2m0Eok=")
+                            value: signedPropertiesHash)
 
-        // ds:SignatureValue
+        return rootDocument.root
+    }
 
-        let xmlSignatureValue = signature.addChild(name: "ds:SignatureValue",
-                                                   value: signatureValue,
-                                                   attributes: ["Id": "\(signInfo.pesId)_SIG_1_SV",])
 
-        // ds:KeyInfo
+    class func buildXadesSignatureValue(signInfo: SignInfo,
+                                        signature: String) -> AEXMLElement {
 
-        let keyInfo = signature.addChild(name: "ds:KeyInfo")
+        let rootDocument = AEXMLDocument()
+
+        let xmlSignatureValueNode = rootDocument.addChild(name: "ds:SignatureValue",
+                                                          value: signature,
+                                                          attributes: ["Id": "\(signInfo.pesId!)_SIG_1_SV", ])
+
+        return rootDocument.root
+    }
+
+
+    class func buildXadesEnvKeyInfo(publicKey: String) -> AEXMLElement {
+
+        let rootDocument = AEXMLDocument()
+
+        let keyInfo = rootDocument.addChild(name: "ds:KeyInfo")
         let x509data = keyInfo.addChild(name: "ds:X509Data")
-        let x509value = privateKey.publicKey as? String
-        x509data.addChild(name: "ds:X509Certificate", value: x509value) // TODO
+        x509data.addChild(name: "ds:X509Certificate", value: publicKey)
 
-        // ds:Object
+        return rootDocument.root
+    }
 
-        let object = signature.addChild(name: "ds:Object")
-        let qualifyingProperties = object.addChild(name: "xad:QualifyingProperties",
-                                                   attributes: ["xmlns:xad": "http://uri.etsi.org/01903/v1.1.1#",
-                                                                "xmlns": "http://uri.etsi.org/01903/v1.1.1#",
-                                                                "Target": "#\(signInfo.pesId)_SIG_1"])
 
-        let signedProperties = qualifyingProperties.addChild(name: "xad:SignedProperties",
-                                                             attributes: ["Id": "\(signInfo.pesId)_SIG_1_SP"])
+    class func buildXadesEnvSignedSignatureProperties(signInfo: SignInfo,
+                                                      currentDateIso8601: String,
+                                                      privateKey: PrivateKey,
+                                                      publicKeySha1: String) -> AEXMLElement {
+
+        let rootDocument = AEXMLDocument()
+
+        let signedProperties = rootDocument.addChild(name: "xad:SignedProperties",
+                                                     attributes: ["Id": "\(signInfo.pesId!)_SIG_1_SP"])
 
         let signedSignatureProperties = signedProperties.addChild(name: "xad:SignedSignatureProperties")
-        signedSignatureProperties.addChild(name: "xad:SigningTime", value: "2017-11-24T16:26:26Z") //TODO
+        signedSignatureProperties.addChild(name: "xad:SigningTime", value: currentDateIso8601)
 
         let signingCertificate = signedSignatureProperties.addChild(name: "xad:SigningCertificate")
         let cert = signingCertificate.addChild(name: "xad:Cert")
 
         let certDigest = cert.addChild(name: "xad:CertDigest")
         certDigest.addChild(name: "xad:DigestMethod", attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        certDigest.addChild(name: "xad:DigestValue", value: "YrYa/XnH7hswQF3F3r9YamGNz9Q=") //TODO
+        certDigest.addChild(name: "xad:DigestValue", value: publicKeySha1)
 
         let issuerSerial = cert.addChild(name: "xad:IssuerSerial")
-        issuerSerial.addChild(name: "ds:X509IssuerName", value: "1.2.840.113549.1.9.1=#161473797374656d65406164756c6c6163742e6f7267,CN=AC_ADULLACT_Utilisateurs_G3,OU=AC_ADULLACT_Utilisateurs_G3,O=Association ADULLACT,ST=Herault,C=FR") //TODO
-        issuerSerial.addChild(name: "ds:X509SerialNumber", value: "427259974943974867302612086964623560387531064724") //TODO
+        issuerSerial.addChild(name: "ds:X509IssuerName", value: privateKey.caName)
+        issuerSerial.addChild(name: "ds:X509SerialNumber", value: privateKey.serialNumber)
 
         let signaturePolicyIdentifier = signedSignatureProperties.addChild(name: "xad:SignaturePolicyIdentifier")
         let signaturePolicyId = signaturePolicyIdentifier.addChild(name: "xad:SignaturePolicyId")
@@ -235,7 +310,7 @@ import AEXML
 
         let sigPolicyHash = signaturePolicyId.addChild(name: "xad:SigPolicyHash")
         sigPolicyHash.addChild(name: "xad:DigestMethod", attributes:["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        sigPolicyHash.addChild(name: "xad:DigestValue", value:"G4CqRa9R5c9Yg+dzMH3gbEc4Kqo=") //TODO
+        sigPolicyHash.addChild(name: "xad:DigestValue", value:signInfo.pesPolicyHash)
 
         let sigPolicyQualifiers = signaturePolicyId.addChild(name: "xad:SigPolicyQualifiers")
         let sigPolicyQualifier = sigPolicyQualifiers.addChild(name: "xad:SigPolicyQualifier")
@@ -250,8 +325,55 @@ import AEXML
         let claimedRoles = signerRole.addChild(name: "xad:ClaimedRoles")
         claimedRoles.addChild(name: "xad:ClaimedRole", value: signInfo.pesClaimedRole)
 
-        // Prints the same XML structure as original
-        return rootDocument.xmlCompact
+        return rootDocument.root
+    }
+
+
+    class func buildXadesEnvObject(signInfo: SignInfo,
+                                   signedSignaturePropertiesNode: AEXMLElement) -> AEXMLElement {
+
+        let rootDocument = AEXMLDocument()
+
+        let objectNode = rootDocument.addChild(name: "ds:Object")
+        let qualifyingProperties = objectNode.addChild(name: "xad:QualifyingProperties",
+                                                       attributes: ["xmlns:xad": "http://uri.etsi.org/01903/v1.1.1#",
+                                                                    "xmlns": "http://uri.etsi.org/01903/v1.1.1#",
+                                                                    "Target": "#\(signInfo.pesId!)_SIG_1"])
+
+        qualifyingProperties.addChild(signedSignaturePropertiesNode)
+
+        return rootDocument.root
+    }
+
+
+    @objc class func cleanupPublicKey(publicKey: String) -> String {
+
+        var result = publicKey.trimmingCharacters(in: CharacterSet.whitespaces)
+        result = result.trimmingCharacters(in: CharacterSet.newlines)
+        result = result.replacingOccurrences(of: "\n", with: "")
+
+        if let index = result.range(of: PUBLIC_KEY_BEGIN_CERTIFICATE)?.upperBound {
+			result = String(result.suffix(from: index))
+        }
+
+        if let index = result.range(of: PUBLIC_KEY_END_CERTIFICATE)?.lowerBound {
+            result = String(result.prefix(upTo: index))
+        }
+
+        return result
+    }
+
+
+    class func hashInSHA1(string: String) -> String {
+
+        let data = string.data(using: String.Encoding.utf8)!
+        var digest = [UInt8](repeating: 0, count:Int(CC_SHA1_DIGEST_LENGTH))
+
+        data.withUnsafeBytes {
+            _ = CC_SHA1($0, CC_LONG(data.count), &digest)
+        }
+
+        return Data(bytes: digest).base64EncodedString()
     }
 
 }

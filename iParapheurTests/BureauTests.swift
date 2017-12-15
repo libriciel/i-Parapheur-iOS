@@ -104,6 +104,7 @@ class BureauTests: XCTestCase {
         XCTAssertNotNil(bureaux![1])
 
         XCTAssertEqual(bureaux![0].hasSecretaire, false)
+        XCTAssertEqual(bureaux![0].hasSecretaire, false)
         XCTAssertEqual(bureaux![0].nodeRef, "workspace://SpacesStore/44abe93c-16d7-4e00-b561-f6d1b8b6c1d3")
         XCTAssertEqual(bureaux![0].identifier, "id_01")
         XCTAssertEqual(bureaux![0].name, "Name 01 \"/%@&éè")
@@ -140,6 +141,7 @@ class BureauTests: XCTestCase {
 
 	
     func testDecodeEmpty() {
+		
 		let bureauJsonString = "{}"
 		let bureauJsonData = bureauJsonString.data(using: .utf8)!
 		
@@ -152,6 +154,7 @@ class BureauTests: XCTestCase {
 		XCTAssertNotNil(bureau)
 
         XCTAssertEqual(bureau!.hasSecretaire, false)
+		XCTAssertEqual(bureau!.isSecretaire, false)
 		XCTAssertNil(bureau!.identifier)
 		XCTAssertNil(bureau!.nodeRef)
 		XCTAssertEqual(bureau!.name, "(aucun nom)")

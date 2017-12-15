@@ -42,6 +42,7 @@
 #import "LGViewHUD.h"
 #import <NSData_Base64/NSData+Base64.h>
 #import "StringUtils.h"
+#import "iParapheur-Swift.h"
 
 
 #define RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE 1
@@ -209,11 +210,11 @@
 				}
 			}
 			else {
-			[[[UIAlertView alloc] initWithTitle:@"Attention"
-			                            message:@"Veuillez saisir le motif de votre rejet"
-			                           delegate:nil
-			                  cancelButtonTitle:@"Fermer"
-			                  otherButtonTitles:nil] show];
+			[[UIAlertView.alloc initWithTitle:@"Attention"
+			                          message:@"Veuillez saisir le motif de votre rejet"
+			                         delegate:nil
+			                cancelButtonTitle:@"Fermer"
+			                otherButtonTitles:nil] show];
 		}
 
 	}
@@ -376,7 +377,7 @@
 
 		NSLog(@"Adrien -- %@", signInfo.format);
 
-		if ([signInfo.format isEqualToString:@"CMS"]) { // || [signInfo.format containsString:@"PADES"]) { // || [signInfo.format isEqualToString:@"XADES-env"]) {
+		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format isEqualToString:@"XADES-env"]) { // || [signInfo.format containsString:@"PADES"]) {
 			[dossiers addObject:dossier.unwrappedId];
 			[hashes addObject:signInfo.hashToSign];
 		} else {
@@ -385,8 +386,13 @@
 		}
 	}
 
+	// Checking useful data
+
 	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 	PrivateKey *pkey = _currentPKey;
+    NSString *publicKey = [NSString.alloc initWithData:pkey.publicKey
+                                              encoding:NSUTF8StringEncoding];
+
 
 	// Retrieving signature certificate
 
@@ -401,7 +407,6 @@
 
 	// Building signature response
 
-	NSLog(@"Adrien hashes : %@", hashes);
 	for (NSString *hash in hashes) {
 		NSMutableString *signedHash;
 
@@ -542,7 +547,7 @@
 	BOOL isSignMandatory = false;
 
 	for (Dossier *dossier in _dossiers)
-		if ((circuits[dossier.unwrappedId] == nil) || (((ADLResponseCircuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
+		if ((circuits[dossier.unwrappedId] == nil) || (((Circuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
 			isSignMandatory = true;
 
 	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))

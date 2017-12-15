@@ -53,9 +53,9 @@ import Foundation
     let dossiersDelegues: Int
     let retournes: Int
 
-    let hasSecretaire: Bool?
+    let hasSecretaire: Bool
     // let showAVenir: Bool?
-    let isSecretaire: Bool?
+    let isSecretaire: Bool
 
 
     // MARK: - JSON
@@ -99,9 +99,9 @@ import Foundation
         dossiersDelegues = try values.decodeIfPresent(Int.self, forKey: .dossiersDelegues) ?? 0
         retournes = try values.decodeIfPresent(Int.self, forKey: .retournes) ?? 0
 
-        hasSecretaire = try values.decodeIfPresent(Bool.self, forKey: .hasSecretaire) // ?? false
+        hasSecretaire = try values.decodeIfPresent(Bool.self, forKey: .hasSecretaire) ?? false
         // showAVenir = try values.decodeIfPresent(Bool.self, forKey: .showAVenir) // ?? false
-        isSecretaire = try values.decodeIfPresent(Bool.self, forKey: .isSecretaire) // ?? false
+        isSecretaire = try values.decodeIfPresent(Bool.self, forKey: .isSecretaire) ?? false
     }
 
 }

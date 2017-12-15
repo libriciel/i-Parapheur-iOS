@@ -40,7 +40,7 @@ import Foundation
 
     @objc let etapes: [Etape]
     let annotPriv: String?
-    let isDigitalSignatureMandatory: Bool
+    @objc let isDigitalSignatureMandatory: Bool
     let isMultiDocument: Bool
     let hasSelectionScript: Bool
     let sigFormat: String?
