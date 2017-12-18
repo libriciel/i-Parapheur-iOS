@@ -391,9 +391,12 @@
 			XadesEnvSigner *xadesEnvSigner = [XadesEnvSigner.alloc initWithSignInfo:signInfo
 			                                                             privateKey:pkey];
 			[signers addObject:xadesEnvSigner];
+
 		} else {
+
 			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
 			                           title:@"Signature impossible"];
+
 		}
 	}
 
@@ -411,6 +414,7 @@
 	// Building signature response
 
 	for (Signer *signer in signers) {
+
 		NSMutableString *signedHash;
 		NSString *hash = [signer generateHashToSign];
 

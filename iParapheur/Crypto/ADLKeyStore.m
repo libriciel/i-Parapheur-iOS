@@ -473,20 +473,17 @@ localizedDescription:(NSString *)localizedDescription
                 cert:(X509 *)cert {
 
 	BIO *bio_data = BIO_new(BIO_s_mem());
-
 	BIO_write(bio_data, data.bytes, data.length);
-
 
 	PKCS7 *p7 = PKCS7_new();
 	PKCS7_set_type(p7, NID_pkcs7_signed);
-
 	PKCS7_SIGNER_INFO *si = PKCS7_add_signature(p7, cert, pkey, EVP_sha1());
 
-	if (si == NULL) return nil;
+	if (si == NULL)
+		return nil;
 
 	/* If you do this then you get signing time automatically added */
-	PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT,
-			OBJ_nid2obj(NID_pkcs7_data));
+	PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT, OBJ_nid2obj(NID_pkcs7_data));
 
 	/* we may want to add more */
 	PKCS7_add_certificate(p7, cert);
@@ -497,27 +494,26 @@ localizedDescription:(NSString *)localizedDescription
 	PKCS7_set_detached(p7, 1);
 	BIO *p7bio;
 
-	if ((p7bio = PKCS7_dataInit(p7, NULL)) == NULL) {
+	if ((p7bio = PKCS7_dataInit(p7, NULL)) == NULL)
 		return nil;
-	}
 
 	int i = 0;
 	char buf[255];
 	for (;;) {
 		i = BIO_read(bio_data, buf, sizeof(buf));
-		if (i <= 0) break;
+
+		if (i <= 0)
+			break;
+
 		BIO_write(p7bio, buf, i);
 	}
 
-	if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) [data bytes], [data length])) {
+	if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) data.bytes, data.length))
 		return nil;
-	}
+
 	BIO_free(p7bio);
-
 	BIO *signature_bio = BIO_new(BIO_s_mem());
-
 	PEM_write_bio_PKCS7(signature_bio, p7);
-
 	(void) BIO_flush(signature_bio);
 
 	char *outputBuffer;
@@ -525,7 +521,6 @@ localizedDescription:(NSString *)localizedDescription
 
 	NSData *retVal = [NSData dataWithBytes:outputBuffer
 	                                length:(NSUInteger) outputLength];
-
 
 #ifdef DEBUG
 	PEM_write_PKCS7(stdout, p7);

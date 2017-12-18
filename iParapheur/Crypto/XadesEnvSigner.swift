@@ -35,8 +35,15 @@
 import Foundation
 import AEXML
 
-
+/**
+ * https://en.wikipedia.org/wiki/XML_Signature
+ *
+ * TL;DR : We have to build an XML, hashing a part of it and sign the result.
+ * In the XML tree, we have to build the Object/SignedInfo/SignatureValue nodes, in that order.
+ * Each elements are hashed, and the hash is used in the next one. KeyInfo is order-free.
+ */
 @objc class XadesEnvSigner: Signer {
+
 
     let mSignInfo: SignInfo
     let mPrivateKey: PrivateKey
@@ -60,7 +67,7 @@ import AEXML
     }
 
 
-    // <editor-fold desc="Utils">
+    // <editor-fold desc="Builders">
 
 
     private func buildSignedInfo() {
@@ -213,6 +220,8 @@ import AEXML
 
     // </editor-fold desc="Builders">
 
+    // <editor-fold desc="Signer">
+
 
     override func generateHashToSign() -> String {
 
@@ -220,7 +229,6 @@ import AEXML
         buildSignedInfo()
 
         let hashToSign = CryptoUtils.hashInSHA1(string: mSignedInfoNode!.xmlCompact)
-        print("Adrien - hashToSign = \(hashToSign)")
         return hashToSign
     }
 
@@ -256,5 +264,8 @@ import AEXML
         print("Adrien - finalXmlB64 = \(finalXmlData!.base64EncodedString())")
         return finalXmlData!.base64EncodedString()
     }
+
+
+    // </editor-fold desc="Signer">
 
 }

@@ -34,8 +34,12 @@
  */
 import Foundation
 
-
+/**
+ * Yes, this class seems kind of useless, it's the easiest signature.
+ * But this wrapper eases the code factorization with other signature methods.
+ */
 @objc class CmsSigner: Signer {
+
 
     let mSignInfo: SignInfo
     let mPrivateKey: PrivateKey
@@ -49,12 +53,19 @@ import Foundation
     }
 
 
-    @objc override func generateHashToSign() -> String {
+    // <editor-fold desc="Signer">
+
+
+    override func generateHashToSign() -> String {
         return mSignInfo.hashToSign!
     }
 
 
-    @objc override func buildBase64DataToReturn(signedHash: String) -> String {
+    override func buildDataToReturn(signedHash: String) -> String {
         return signedHash
     }
+
+
+    // </editor-fold desc="Signer">
+
 }
