@@ -36,6 +36,7 @@ import Foundation
 import SSZipArchive
 import UIKit
 import AEXML
+import Security
 
 
 @objc class CryptoUtils: NSObject {
@@ -44,6 +45,8 @@ import AEXML
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
     static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
     static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
+    static private let PKCS7_BEGIN = "-----PKCS7 BEGIN-----"
+    static private let PKCS7_END = "-----PKCS7 BEGIN-----"
 
 
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
@@ -136,8 +139,16 @@ import AEXML
 
 
     @objc class func dataToBase64String(data: NSData) -> NSString {
-        let result = (data as Data).base64EncodedString(options: .endLineWithLineFeed)
-        return result as NSString;
+
+        // let result = (data as Data).base64EncodedString()
+
+        let pollutedSignature = String(data: data as Data, encoding: .utf8)
+        let cleanedSignature = cleanupSignature(publicKey: pollutedSignature!)
+
+        print("dataToBase64String << \(pollutedSignature!)")
+        print("dataToBase64String >> \(cleanedSignature)")
+
+        return cleanedSignature as NSString;
     }
 
 
@@ -159,6 +170,72 @@ import AEXML
     }
 
 
+    @objc class func cleanupSignature(publicKey: String) -> String {
+
+        print("Adrien :::: \(publicKey)")
+
+        var result = publicKey.trimmingCharacters(in: CharacterSet.whitespaces)
+        result = result.trimmingCharacters(in: CharacterSet.newlines)
+        result = result.replacingOccurrences(of: "\n", with: "")
+
+        if let index = result.range(of: PKCS7_BEGIN)?.upperBound {
+            result = String(result.suffix(from: index))
+        }
+
+        if let index = result.range(of: PKCS7_END)?.lowerBound {
+            result = String(result.prefix(upTo: index))
+        }
+
+        print("Adrien :::: \(result)")
+        return result
+    }
+
+
+//    class func loadSecKey(p12path: String,
+//                          password: String) -> SecKey? {
+//
+//        let fileManager = FileManager.default
+//        if fileManager.fileExists(atPath: p12path){
+//
+//            let p12Data: NSData = NSData(contentsOfFile: p12path)!
+//            let key : NSString = kSecImportExportPassphrase as NSString
+//            let options : NSDictionary = [key : password]
+//
+//            var privateKeyRef: SecKey? = nil
+//            var items : CFArray?
+//            var securityError: OSStatus = SecPKCS12Import(p12Data, options, &items)
+//            let identityDict: CFDictionary = CFArrayGetValueAtIndex(items, 0) as! CFDictionary
+//            let identityApp: SecIdentity = CFDictionaryGetValue(identityDict, kSecImportItemIdentity) as! SecIdentity;
+//            var securityError2 = SecIdentityCopyPrivateKey(identityApp, &privateKeyRef);
+//        }
+//
+//        return nil
+//    }
+//
+//    @objc class func pkcs1Sign(data: Data,
+//                               privateKeyPath: String,
+//                               password: String) -> String? {
+//
+//        let privateSecKey = ADLKeyStore.loadPrivateKeySecRef(withPath: privateKeyPath,
+//                                                             andPassword: password) as! SecKey
+//
+//        var error: Unmanaged<CFError>?
+//        let algorithm: SecKeyAlgorithm = .rsaSignatureMessagePKCS1v15SHA1
+//        guard let signature = SecKeyCreateSignature(privateSecKey,
+//                                                    algorithm,
+//                                                    data as CFData,
+//                                                    &error) as Data? else {
+//
+//            print("Signature Adrien PKCS#1 : Something went wrong, bro")
+//            return nil
+//        }
+//
+//        let result = String(data: signature, encoding: .utf8)
+//        print("Signature Adrien PKCS#1 : \(result)")
+//        return result;
+//    }
+
+
     class func hashInSHA1(string: String) -> String {
 
         let data = string.data(using: String.Encoding.utf8)!
@@ -169,6 +246,91 @@ import AEXML
         }
 
         return Data(bytes: digest).base64EncodedString()
+    }
+
+
+    @objc class func rsaSign(data: NSData,
+                             keyFilePath: String,
+                             password: String?) -> String? {
+
+        let secKey = CryptoUtils.pkcs12ReadKey(path: keyFilePath,
+                                               password: password)
+
+        let result = CryptoUtils.rsaSign(data: data,
+                                         privateKey: secKey!)
+
+        print("Adrien ::: Sign : \(secKey!) //||// \(result)")
+        return result
+    }
+
+
+    @objc class func rsaSign(data plainData: NSData,
+                             privateKey: SecKey!) -> String? {
+
+        // Hash the data
+
+        let digest = NSMutableData(length: Int(CC_SHA1_DIGEST_LENGTH))!
+        CC_SHA1(plainData.bytes, CC_LONG(plainData.length), digest.mutableBytes.assumingMemoryBound(to: UInt8.self))
+
+        // Then sign it
+
+        let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
+        var signedDataLength = signedData.length
+
+        let err: OSStatus = SecKeyRawSign(privateKey,
+                                          SecPadding.PKCS1SHA1,
+                                          digest.bytes.assumingMemoryBound(to: UInt8.self),
+                                          digest.length,
+                                          signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),
+                                          &signedDataLength)
+
+        // Result
+
+        if (err == errSecSuccess) {
+            return signedData.base64EncodedString()
+        }
+
+        return nil
+    }
+
+    @objc class func pkcs12ReadKey(path keyFilePath: String,
+                                   password: String?) -> SecKey? {
+
+        var p12KeyFileContent: CFData?
+        do {
+            p12KeyFileContent = try Data(contentsOf: URL(fileURLWithPath: keyFilePath),
+                                         options: .alwaysMapped) as CFData
+        }
+        catch {
+            NSLog("Cannot read PKCS12 file from \(keyFilePath)")
+            return nil
+        }
+
+        let options: CFDictionary = [kSecImportExportPassphrase: password ?? ""] as CFDictionary
+        let citems = UnsafeMutablePointer<CFArray?>.allocate(capacity: 1)
+
+        let resultPKCS12Import = SecPKCS12Import(p12KeyFileContent!, options, citems)
+        if (resultPKCS12Import != errSecSuccess) {
+            return nil
+        }
+
+        let items = citems.pointee as NSArray?
+        let myIdentityAndTrust = items!.object(at: 0) as! NSDictionary
+        let identityKey = String(kSecImportItemIdentity)
+        let identity = myIdentityAndTrust[identityKey] as! SecIdentity
+
+        let trustKey = String(kSecImportItemTrust)
+        _ = myIdentityAndTrust[trustKey] as! SecTrust
+
+        let privateKey = UnsafeMutablePointer<SecKey?>.allocate(capacity: 1)
+        let resultCopyPrivateKey = SecIdentityCopyPrivateKey(identity, privateKey)
+        if (resultCopyPrivateKey != errSecSuccess) {
+            print("SecIdentityCopyPrivateKey fail")
+            return nil
+        }
+
+        print("SecIdentityCopyPrivateKey success : \(privateKey.pointee)")
+        return privateKey.pointee
     }
 
 }

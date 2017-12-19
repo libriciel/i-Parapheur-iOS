@@ -532,6 +532,38 @@ localizedDescription:(NSString *)localizedDescription
 	return retVal;
 }
 
+//
+//- (NSData *)signRsaData:(NSData *)data
+//                   pkey:(EVP_PKEY *)pkey
+//                   cert:(X509 *)cert {
+//
+//    // these are structs and arrays used by the evp message digest functions
+//	EVP_MD_CTX mdctx;
+//	const EVP_MD *md;
+//	char mess1[] = "fu\n";
+//	char mess2[] = "bar\n";
+//	char seedStr[7];
+//	unsigned char md_value[EVP_MAX_MD_SIZE];
+//	int md_len, seed, i;
+//
+//    // this NSString I'm going to use for comparing later on
+//	NSMutableString *curKey = [NSMutableString stringWithCapacity:40];
+//
+//	OpenSSL_add_all_digests();
+//
+//    // create a SHA digest
+//	md = EVP_get_digestbyname("sha1");
+//	EVP_DigestInit(&mdctx, md);
+//	EVP_DigestUpdate(&mdctx, mess1, strlen(mess1));
+//	EVP_DigestUpdate(&mdctx, mess2, strlen(mess2));
+//	EVP_DigestUpdate(&mdctx, seedStr, strlen(seedStr));
+//	EVP_DigestFinal(&mdctx, md_value, &md_len);
+//
+//    // inspect md_value[] and do stuff with it
+//	for(i = 0; i < md_len; i++)
+//		[curKey appendFormat:@"%02x",  md_value[i]];
+//}
+
 
 - (BOOL)addKey:(NSString *)p12Path
   withPassword:(NSString *)password

@@ -101,5 +101,4 @@ enum {
 
 + (NSDate *)asn1TimeToNsDate:(ASN1_TIME *)time;
 
-
 @end

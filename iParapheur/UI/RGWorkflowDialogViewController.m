@@ -356,11 +356,11 @@
 
 - (void)didEndWithUnReachableNetwork {
 
-	[[[UIAlertView alloc] initWithTitle:@"Erreur"
-	                            message:@"Une erreur est survenue lors de l'envoi de la requête"
-	                           delegate:nil
-	                  cancelButtonTitle:@"Fermer"
-	                  otherButtonTitles:nil] show];
+	[[UIAlertView.alloc initWithTitle:@"Erreur"
+	                          message:@"Une erreur est survenue lors de l'envoi de la requête"
+	                         delegate:nil
+	                cancelButtonTitle:@"Fermer"
+	                otherButtonTitles:nil] show];
 }
 
 
@@ -440,9 +440,19 @@
 
 		} else {
 
-			signedHash = [self signData:hash
-			               withKeystore:keystore
-			                    withP12:p12AbsolutePath].mutableCopy;
+//			SecKeyRef *secKey = (SecKeyRef *) [CryptoUtils pkcs12ReadKeyWithPath:p12AbsolutePath
+//			                                                            password:_p12password];
+//
+//
+//
+//			signedHash = [CryptoUtils rsaSignWithData:[StringUtils bytesFromHexString:hash]
+//			                               privateKey:secKey].mutableCopy;
+
+			signedHash = [CryptoUtils rsaSignWithData:[StringUtils bytesFromHexString:hash]
+			                              keyFilePath:p12AbsolutePath
+			                                 password:_p12password].mutableCopy;
+
+			NSLog(@"Adrien - signedHash = %@", signedHash);
 		}
 
 		// Add result, or cancel on error
