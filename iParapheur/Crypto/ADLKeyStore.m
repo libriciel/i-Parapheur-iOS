@@ -702,9 +702,17 @@ localizedDescription:(NSString *)localizedDescription
 	int len = 0;
 	unsigned char *aliasChar = X509_alias_get0(certX509, &len);
 
-	char issuerChar[256];
+	// Issuer in RFC2253
+
 	X509_NAME *issuerX509Name = X509_get_issuer_name(certX509);
-	X509_NAME_oneline(issuerX509Name, issuerChar, 256);
+	BIO *issuerBio = BIO_new(BIO_s_mem());
+	X509_NAME_print_ex(issuerBio, issuerX509Name, 0, XN_FLAG_RFC2253);
+	BUF_MEM *issuerBuffer = NULL;
+	BIO_get_mem_ptr(issuerBio, &issuerBuffer);
+	NSData *data = [NSData.alloc initWithBytes:issuerBuffer->data
+	                                    length:issuerBuffer->length];
+
+	// Other fields
 
 	ASN1_TIME *notBeforeAsn1Time = X509_get_notBefore(certX509);
 	ASN1_TIME *notAfterAsn1Time = X509_get_notAfter(certX509);
@@ -718,10 +726,10 @@ localizedDescription:(NSString *)localizedDescription
 	// Convert values into Foundation classes
 
 	NSString *aliasString = [NSString stringWithCString:(const char *) aliasChar encoding:NSUTF8StringEncoding];
-	NSString *issuerString = [NSString stringWithCString:(const char *) issuerChar encoding:NSUTF8StringEncoding];
 	NSString *serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
-	NSString *certString = [NSString.alloc initWithData:certNsData
-	                                           encoding:NSUTF8StringEncoding];
+
+	NSString *issuerString = [NSString.alloc initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *certString = [NSString.alloc initWithData:certNsData encoding:NSUTF8StringEncoding];
 
 	NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNsDate:notBeforeAsn1Time];
 	NSDate *notAfterDate = [ADLKeyStore asn1TimeToNsDate:notAfterAsn1Time];

@@ -479,25 +479,25 @@
 
 			__weak typeof(self) weakSelf = self;
 
-//			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
-//			                          forBureau:_bureauCourant
-//			               withPublicAnnotation:_annotationPublique.text
-//			              withPrivateAnnotation:_annotationPrivee.text
-//			                      withSignature:signatures[(NSUInteger) i]
-//			                            success:^(NSArray *array) {
-//				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-//				                            if (strongSelf) {
-//					                            NSLog(@"Signature success");
-//					                            [strongSelf dismissDialogView];
-//				                            }
-//			                            }
-//			                            failure:^(NSError *restError) {
-//				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-//				                            if (strongSelf) {
-//					                            NSLog(@"Signature fail");
-//					                            [strongSelf didEndWithUnReachableNetwork];
-//				                            }
-//			                            }];
+			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
+			                          forBureau:_bureauCourant
+			               withPublicAnnotation:_annotationPublique.text
+			              withPrivateAnnotation:_annotationPrivee.text
+			                      withSignature:signatures[(NSUInteger) i]
+			                            success:^(NSArray *array) {
+				                            __strong typeof(weakSelf) strongSelf = weakSelf;
+				                            if (strongSelf) {
+					                            NSLog(@"Signature success");
+					                            [strongSelf dismissDialogView];
+				                            }
+			                            }
+			                            failure:^(NSError *restError) {
+				                            __strong typeof(weakSelf) strongSelf = weakSelf;
+				                            if (strongSelf) {
+					                            NSLog(@"Signature fail");
+					                            [strongSelf didEndWithUnReachableNetwork];
+				                            }
+			                            }];
 		}
 	}
 }
