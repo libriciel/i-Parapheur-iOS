@@ -35,6 +35,7 @@
 import Foundation
 import AEXML
 
+
 /**
  * https://en.wikipedia.org/wiki/XML_Signature
  *
@@ -75,7 +76,12 @@ import AEXML
         // Compute values
 
         let signaturePropertiesString = mObjectSignedPropertiesNode!.xmlCompact
-        let signaturePropertiesHash = CryptoUtils.hashInSHA1(string: signaturePropertiesString)
+        print("Adrien :: signaturePropertiesString :: \(signaturePropertiesString)")
+        let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesString)
+        print("Adrien :: signaturePropertiesHash   :: \(signaturePropertiesHash)")
+
+        let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashToSign!)
+        let base64Hash = base64hashData.base64EncodedString()
 
         // Build XML
 
@@ -99,7 +105,7 @@ import AEXML
         reference1.addChild(name: "ds:DigestMethod",
                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
         reference1.addChild(name: "ds:DigestValue",
-                            value: mSignInfo.hashToSign)
+                            value: base64Hash)
 
         let reference2 = currentSignedInfo.addChild(name: "ds:Reference",
                                                     attributes: ["Type": "http://uri.etsi.org/01903/v1.1.1#SignedProperties",
@@ -163,7 +169,10 @@ import AEXML
 
         // Compute values
 
-        let cleanedPublicKeySha1 = CryptoUtils.hashInSHA1(string: mPublicKey)
+        print("Adrien :: publicKey                 :: \(mPublicKey)")
+        let cleanedPublicKeySha1 = CryptoUtils.sha1Base64(string: mPublicKey)
+
+        print("Adrien :: publicKeySha1             :: \(cleanedPublicKeySha1)")
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -172,7 +181,6 @@ import AEXML
         // Build XML
 
         let currentRootDocument = AEXMLDocument()
-
         let currentSignedProperties = currentRootDocument.addChild(name: "xad:SignedProperties",
                                                                    attributes: ["Id": "\(mSignInfo.pesId!)_SIG_1_SP"])
 
@@ -228,7 +236,9 @@ import AEXML
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
 
-        let hashToSign = CryptoUtils.hashInSHA1(string: mSignedInfoNode!.xmlCompact)
+        let hashToSign = CryptoUtils.sha1Base64(string: mSignedInfoNode!.xmlCompact)
+        print("Adrien :: hashToSign                :: \(hashToSign)")
+
         return hashToSign
     }
 

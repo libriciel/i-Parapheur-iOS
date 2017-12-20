@@ -448,7 +448,7 @@
 //			signedHash = [CryptoUtils rsaSignWithData:[StringUtils bytesFromHexString:hash]
 //			                               privateKey:secKey].mutableCopy;
 
-			signedHash = [CryptoUtils rsaSignWithData:[StringUtils bytesFromHexString:hash]
+			signedHash = [CryptoUtils rsaSignWithData:[NSData dataFromBase64String:hash]
 			                              keyFilePath:p12AbsolutePath
 			                                 password:_p12password].mutableCopy;
 

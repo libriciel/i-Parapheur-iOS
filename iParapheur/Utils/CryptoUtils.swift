@@ -37,6 +37,7 @@ import SSZipArchive
 import UIKit
 import AEXML
 import Security
+import CryptoSwift
 
 
 @objc class CryptoUtils: NSObject {
@@ -236,19 +237,6 @@ import Security
 //    }
 
 
-    class func hashInSHA1(string: String) -> String {
-
-        let data = string.data(using: String.Encoding.utf8)!
-        var digest = [UInt8](repeating: 0, count:Int(CC_SHA1_DIGEST_LENGTH))
-
-        data.withUnsafeBytes {
-            _ = CC_SHA1($0, CC_LONG(data.count), &digest)
-        }
-
-        return Data(bytes: digest).base64EncodedString()
-    }
-
-
     @objc class func rsaSign(data: NSData,
                              keyFilePath: String,
                              password: String?) -> String? {
@@ -259,28 +247,20 @@ import Security
         let result = CryptoUtils.rsaSign(data: data,
                                          privateKey: secKey!)
 
-        print("Adrien ::: Sign : \(secKey!) //||// \(result)")
         return result
     }
 
 
-    @objc class func rsaSign(data plainData: NSData,
-                             privateKey: SecKey!) -> String? {
-
-        // Hash the data
-
-        let digest = NSMutableData(length: Int(CC_SHA1_DIGEST_LENGTH))!
-        CC_SHA1(plainData.bytes, CC_LONG(plainData.length), digest.mutableBytes.assumingMemoryBound(to: UInt8.self))
-
-        // Then sign it
+    class func rsaSign(data: NSData,
+                       privateKey: SecKey!) -> String? {
 
         let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
         var signedDataLength = signedData.length
 
         let err: OSStatus = SecKeyRawSign(privateKey,
                                           SecPadding.PKCS1SHA1,
-                                          digest.bytes.assumingMemoryBound(to: UInt8.self),
-                                          digest.length,
+                                          data.bytes.assumingMemoryBound(to: UInt8.self),
+                                          data.length,
                                           signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),
                                           &signedDataLength)
 
@@ -293,8 +273,9 @@ import Security
         return nil
     }
 
-    @objc class func pkcs12ReadKey(path keyFilePath: String,
-                                   password: String?) -> SecKey? {
+
+    class func pkcs12ReadKey(path keyFilePath: String,
+                             password: String?) -> SecKey? {
 
         var p12KeyFileContent: CFData?
         do {
@@ -333,4 +314,24 @@ import Security
         return privateKey.pointee
     }
 
+
+    class func sha1Base64(string:String) -> String {
+        let hexSha1 = string.sha1()
+        let sha1Data = CryptoUtils.dataWithHexString(hex: hexSha1)
+        return sha1Data.base64EncodedString()
+    }
+
+    class func dataWithHexString(hex: String) -> Data {
+        var hex = hex
+        var data = Data()
+        while (hex.count > 0) {
+            let c: String = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))
+            hex = hex.substring(from: hex.index(hex.startIndex, offsetBy: 2))
+            var ch: UInt32 = 0
+            Scanner(string: c).scanHexInt32(&ch)
+            var char = UInt8(ch)
+            data.append(&char, count: 1)
+        }
+        return data
+    }
 }
