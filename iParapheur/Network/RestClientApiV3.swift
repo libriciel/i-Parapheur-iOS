@@ -234,12 +234,12 @@ import Alamofire
     }
 
 
-    @objc  func getDossiers(bureau: NSString,
-                            page: NSNumber,
-                            size: NSNumber,
-                            filterJson: NSString?,
-                            onResponse responseCallback: ((NSArray) -> Void)?,
-                            onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getDossiers(bureau: NSString,
+                           page: NSNumber,
+                           size: NSNumber,
+                           filterJson: NSString?,
+                           onResponse responseCallback: ((NSArray) -> Void)?,
+                           onError errorCallback: ((NSError) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -267,7 +267,70 @@ import Alamofire
 
                 case .success:
                     let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
-                    responseCallback!(dossierList! as NSArray)
+
+                    // Retrieve deleguated
+
+                    self.getDossiersDelegues(bureau: bureau,
+                                             page: 0, size: 100,
+                                             filterJson: nil,
+                                             onResponse: {
+                                                 (delegueList: [Dossier]) in
+
+                                                 for dossierDelegue in delegueList {
+                                                     dossierDelegue.isDelegue = true;
+                                                 }
+
+                                                 responseCallback!((dossierList! + delegueList) as NSArray)
+                                             },
+                                             onError: {
+                                                 (error: Error) in
+                                                 errorCallback!(error as NSError)
+                                             })
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
+            }
+        }
+    }
+
+
+    @objc func getDossiersDelegues(bureau: NSString,
+                                   page: NSNumber,
+                                   size: NSNumber,
+                                   filterJson: NSString?,
+                                   onResponse responseCallback: (([Dossier]) -> Void)?,
+                                   onError errorCallback: ((NSError) -> Void)?) {
+
+        let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
+
+        // Parameters
+
+        var parameters: Parameters = [
+            "asc": true,
+            "bureau": bureau,
+            "page": page,
+            "pageSize": size,
+            "corbeilleName": "dossiers-delegues",
+            "pendingFile": 0,
+            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "sort": "cm:create"
+        ]
+
+        if (filterJson != nil) {
+            parameters["filter"] = filterJson
+        }
+
+        // Request
+
+        manager.request(getDossiersUrl, parameters: parameters).validate().responseJSON {
+            response in
+            switch (response.result) {
+
+                case .success:
+                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+                    responseCallback!(dossierList!)
                     break
 
                 case .failure(let error):

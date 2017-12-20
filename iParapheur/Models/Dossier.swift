@@ -68,6 +68,8 @@ import Gloss
     let isXemEnabled: Bool?
     let isReadingMandatory: Bool?
 
+    @objc var isDelegue : Bool
+
     // MARK: - Glossy
 
     required init?(json: JSON) {
@@ -102,6 +104,8 @@ import Gloss
         isSignPapier = ("isSignPapier" <~~ json) ?? false
         isXemEnabled = ("isXemEnabled" <~~ json) ?? false
         isReadingMandatory = ("readingMandatory" <~~ json) ?? false
+
+        isDelegue = false
 
 		// Sometimes it happens
 		if (!(actions!.contains(actionDemandee!))) {

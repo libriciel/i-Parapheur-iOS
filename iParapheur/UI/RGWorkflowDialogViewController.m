@@ -489,23 +489,25 @@
 		return;
 
 	__weak typeof(self) weakSelf = self;
-	[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
-	                success:^(Circuit *circuit) {
-		                __strong typeof(weakSelf) strongSelf = weakSelf;
-		                if (strongSelf) {
-			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
-			                [strongSelf checkSignPapierButtonVisibility];
-			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+	if ([_dossiers[index] isDelegue] == false) {
+		[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
+		                success:^(Circuit *circuit) {
+			                __strong typeof(weakSelf) strongSelf = weakSelf;
+			                if (strongSelf) {
+				                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
+				                [strongSelf checkSignPapierButtonVisibility];
+				                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+			                }
 		                }
-	                }
-	                failure:^(NSError *error) {
-		                __strong typeof(weakSelf) strongSelf = weakSelf;
-		                if (strongSelf) {
-			                circuits[((Dossier *) _dossiers[index]).unwrappedId] = nil;
-			                [strongSelf checkSignPapierButtonVisibility];
-			                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
-		                }
-	                }];
+		                failure:^(NSError *error) {
+			                __strong typeof(weakSelf) strongSelf = weakSelf;
+			                if (strongSelf) {
+				                circuits[((Dossier *) _dossiers[index]).unwrappedId] = nil;
+				                [strongSelf checkSignPapierButtonVisibility];
+				                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+			                }
+		                }];
+	}
 }
 
 
@@ -539,14 +541,16 @@
 
 - (void)checkSignPapierButtonVisibility {
 
-	BOOL isSignMandatory = false;
-
-	for (Dossier *dossier in _dossiers)
-		if ((circuits[dossier.unwrappedId] == nil) || (((ADLResponseCircuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
-			isSignMandatory = true;
-
-	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
-		_paperSignatureButton.hidden = isSignMandatory;
+//	BOOL isSignMandatory = false;
+//
+//	for (Dossier *dossier in _dossiers)
+//		if (dossier.isDelegue == false) // TODO Adrien : Fix this
+//			if ((circuits[dossier.unwrappedId] == nil) || (((ADLResponseCircuit *) circuits[dossier.unwrappedId]).isDigitalSignatureMandatory))
+//				isSignMandatory = true;
+//
+//	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
+//		_paperSignatureButton.hidden = isSignMandatory;
+	_paperSignatureButton.hidden = true; // TODO Adrien : Fix this
 }
 
 
