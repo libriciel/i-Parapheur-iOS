@@ -707,11 +707,11 @@ localizedDescription:(NSString *)localizedDescription
 	X509_NAME_oneline(issuerX509Name, issuerChar, 256);
 
 	ASN1_TIME *notBeforeAsn1Time = X509_get_notBefore(certX509);
-	ASN1_TIME *notAfterAsn1Time = X509_get_notAfter(certX509);;
+	ASN1_TIME *notAfterAsn1Time = X509_get_notAfter(certX509);
 
 	ASN1_INTEGER *serialAsn1 = X509_get_serialNumber(certX509);
 	BIGNUM *serialBigNumber = ASN1_INTEGER_to_BN(serialAsn1, NULL);
-	char *serialChar = BN_bn2hex(serialBigNumber);
+	char *serialChar = BN_bn2dec(serialBigNumber);
 
 	NSData *certNsData = X509_to_NSData(certX509);
 

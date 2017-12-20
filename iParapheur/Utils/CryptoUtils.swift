@@ -290,8 +290,7 @@ import CryptoSwift
         let options: CFDictionary = [kSecImportExportPassphrase: password ?? ""] as CFDictionary
         let citems = UnsafeMutablePointer<CFArray?>.allocate(capacity: 1)
 
-        let resultPKCS12Import = SecPKCS12Import(p12KeyFileContent!, options, citems)
-        if (resultPKCS12Import != errSecSuccess) {
+        if (SecPKCS12Import(p12KeyFileContent!, options, citems) != errSecSuccess) {
             return nil
         }
 
@@ -304,8 +303,7 @@ import CryptoSwift
         _ = myIdentityAndTrust[trustKey] as! SecTrust
 
         let privateKey = UnsafeMutablePointer<SecKey?>.allocate(capacity: 1)
-        let resultCopyPrivateKey = SecIdentityCopyPrivateKey(identity, privateKey)
-        if (resultCopyPrivateKey != errSecSuccess) {
+        if (SecIdentityCopyPrivateKey(identity, privateKey) != errSecSuccess) {
             print("SecIdentityCopyPrivateKey fail")
             return nil
         }
