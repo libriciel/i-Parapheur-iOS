@@ -742,7 +742,7 @@ localizedDescription:(NSString *)localizedDescription
 
 	// Result
 
-	return @{
+	NSDictionary *result = @{
 			@"commonName": aliasString,
 			@"issuerName": issuerString,
 			@"notBefore": notBeforeString,
@@ -750,6 +750,8 @@ localizedDescription:(NSString *)localizedDescription
 			@"serialNumber": serialString,
 			@"publicKey": certString
 	};
+
+	return result;
 }
 
 

@@ -195,7 +195,7 @@ import AEXML
         currentCertDigest.addChild(name: "xad:DigestValue", value: cleanedPublicKeySha1)
 
         let currentIssuerSerial = curretCert.addChild(name: "xad:IssuerSerial")
-        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: mPrivateKey.caName)
+        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mPrivateKey.caName))
         currentIssuerSerial.addChild(name: "ds:X509SerialNumber", value: mPrivateKey.serialNumber)
 
         let currentSignaturePolicyIdentifier = currentSignedSignatureProperties.addChild(name: "xad:SignaturePolicyIdentifier")
@@ -277,5 +277,14 @@ import AEXML
 
 
     // </editor-fold desc="Signer">
+
+    /**
+     * Xemelios/PES is not compliant with RFC2253 given by OpenSSL.
+     * We have to tweak it...
+     */
+    class func issuerHardcodedFixes(issuer: String) -> String {
+        let fixedIssuer = issuer.replacingOccurrences(of: "emailAddress=", with: "EMAILADDRESS=")
+        return fixedIssuer
+    }
 
 }
