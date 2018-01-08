@@ -169,10 +169,11 @@ import AEXML
 
         // Compute values
 
-        print("Adrien :: publicKey                 :: \(mPublicKey)")
-        let cleanedPublicKeySha1 = CryptoUtils.sha1Base64(string: mPublicKey)
-
-        print("Adrien :: publicKeySha1             :: \(cleanedPublicKeySha1)")
+        let cleanedPublicKey = CryptoUtils.cleanupPublicKey(publicKey: mPublicKey)
+        print("Adrien :: publicKey                 :: \(cleanedPublicKey)")
+        let publicKeyData = Data(base64Encoded: cleanedPublicKey)
+        let publicKeyHashBase64 = CryptoUtils.sha1Base64(data: publicKeyData!)
+        print("Adrien :: publicKeyHash             :: \(publicKeyHashBase64)")
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -192,7 +193,7 @@ import AEXML
 
         let currentCertDigest = curretCert.addChild(name: "xad:CertDigest")
         currentCertDigest.addChild(name: "xad:DigestMethod", attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        currentCertDigest.addChild(name: "xad:DigestValue", value: cleanedPublicKeySha1)
+        currentCertDigest.addChild(name: "xad:DigestValue", value: publicKeyHashBase64)
 
         let currentIssuerSerial = curretCert.addChild(name: "xad:IssuerSerial")
         currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mPrivateKey.caName))

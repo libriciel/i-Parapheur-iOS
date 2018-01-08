@@ -315,11 +315,18 @@ import CryptoSwift
     }
 
 
-    class func sha1Base64(string:String) -> String {
+    class func sha1Base64(string: String) -> String {
         let hexSha1 = string.sha1()
         let sha1Data = CryptoUtils.dataWithHexString(hex: hexSha1)
         return sha1Data.base64EncodedString()
     }
+
+
+    class func sha1Base64(data: Data) -> String {
+        let sha1Data = data.sha1()
+        return sha1Data.base64EncodedString()
+    }
+
 
     class func dataWithHexString(hex: String) -> Data {
         var hex = hex
