@@ -349,21 +349,10 @@ import CryptoSwift
 
         // Closing DigestMethod tags
 
-        let regex = try! NSRegularExpression(pattern: "<xad:DigestMethod Algorithm=\".*?\"\\/>")
-		
-        let results = regex.matches(in: xmlCompactString,
-                                    range: NSMakeRange(0, xmlCompactString.count))
-		
-        for result in results.reversed() {
-			let swiftRange = Range(result.range, in: cleanedString)!
-            let indexEndOfText = cleanedString.index(swiftRange.upperBound, offsetBy: -2)
-            let match = cleanedString[swiftRange.lowerBound..<indexEndOfText]
-            let replacement = "\(match)></xad:DigestMethod>"
-            cleanedString.replaceSubrange(swiftRange,
-                                          with: replacement)
-        }
-		
-		//
+        cleanedString = cleanedString.replacingOccurrences(of: "/><xad:DigestValue>",
+														   with: "></xad:DigestMethod><xad:DigestValue>")
+
+        //
 
         return cleanedString
     }

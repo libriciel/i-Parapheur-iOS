@@ -81,4 +81,17 @@ class CryptoUtilsTests: XCTestCase {
         XCTAssertEqual(after, validC14n)
     }
 
+
+    func testSha1Base64() {
+
+        let validC14nString = "<xad:SignedProperties xmlns:xad=\"http://uri.etsi.org/01903/v1.1.1#\" Id=\"test_SIG_1_SP\"><xad:SignedSignatureProperties><xad:SigningTime>2018-01-08T14:39:20Z</xad:SigningTime><xad:SigningCertificate><xad:Cert><xad:CertDigest><xad:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></xad:DigestMethod><xad:DigestValue>fi49F7OjBlkGaYPzSxAB3iBbII4=</xad:DigestValue></xad:CertDigest><xad:IssuerSerial><ds:X509IssuerName xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">1.2.840.113549.1.9.1=#161473797374656d65406164756c6c6163742e6f7267,CN=AC ADULLACT Projet g2,OU=ADULLACT-Projet,O=ADULLACT-Projet,ST=Herault,C=FR</ds:X509IssuerName><ds:X509SerialNumber xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">14257229890764009179</ds:X509SerialNumber></xad:IssuerSerial></xad:Cert></xad:SigningCertificate><xad:SignaturePolicyIdentifier><xad:SignaturePolicyId><xad:SigPolicyId><xad:Identifier>urn:oid:1.2.250.1.131.1.5.18.21.1.4</xad:Identifier><xad:Description>Politique de signature Helios de la DGFiP</xad:Description></xad:SigPolicyId><xad:SigPolicyHash><xad:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></xad:DigestMethod><xad:DigestValue>Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=</xad:DigestValue></xad:SigPolicyHash><xad:SigPolicyQualifiers><xad:SigPolicyQualifier><xad:SPURI>https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf</xad:SPURI></xad:SigPolicyQualifier></xad:SigPolicyQualifiers></xad:SignaturePolicyId></xad:SignaturePolicyIdentifier><xad:SignatureProductionPlace><xad:City>Montpellier</xad:City><xad:PostalCode>34000</xad:PostalCode><xad:CountryName>France</xad:CountryName></xad:SignatureProductionPlace><xad:SignerRole><xad:ClaimedRoles><xad:ClaimedRole>Administrateur titre</xad:ClaimedRole></xad:ClaimedRoles></xad:SignerRole></xad:SignedSignatureProperties></xad:SignedProperties>"
+        let sha1Base64fromString = CryptoUtils.sha1Base64(string: validC14nString)
+
+        let validC14nData = validC14nString.data(using: .utf8)
+        let sha1Base64fromData = CryptoUtils.sha1Base64(data: validC14nData!)
+		
+		XCTAssertEqual(sha1Base64fromString, "tTHoWxazhE1HwGzRsTygY8purRw=")
+		XCTAssertEqual(sha1Base64fromData, "tTHoWxazhE1HwGzRsTygY8purRw=")
+    }
+
 }
