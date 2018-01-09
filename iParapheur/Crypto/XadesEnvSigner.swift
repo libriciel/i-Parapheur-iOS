@@ -75,10 +75,8 @@ import AEXML
 
         // Compute values
 
-        let signaturePropertiesString = mObjectSignedPropertiesNode!.xmlCompact
-        print("Adrien :: signaturePropertiesString :: \(signaturePropertiesString)")
-        let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesString)
-        print("Adrien :: signaturePropertiesHash   :: \(signaturePropertiesHash)")
+        let signaturePropertiesCanonicalString = CryptoUtils.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact)
+        let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
 
         let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashToSign!)
         let base64Hash = base64hashData.base64EncodedString()
@@ -170,10 +168,8 @@ import AEXML
         // Compute values
 
         let cleanedPublicKey = CryptoUtils.cleanupPublicKey(publicKey: mPublicKey)
-        print("Adrien :: publicKey                 :: \(cleanedPublicKey)")
         let publicKeyData = Data(base64Encoded: cleanedPublicKey)
         let publicKeyHashBase64 = CryptoUtils.sha1Base64(data: publicKeyData!)
-        print("Adrien :: publicKeyHash             :: \(publicKeyHashBase64)")
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"

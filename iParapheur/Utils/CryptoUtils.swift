@@ -342,4 +342,30 @@ import CryptoSwift
         return data
     }
 
+
+    class func canonicalizeXml(xmlCompactString: String) -> String {
+
+        var cleanedString: String = xmlCompactString
+
+        // Closing DigestMethod tags
+
+        let regex = try! NSRegularExpression(pattern: "<xad:DigestMethod Algorithm=\".*?\"\\/>")
+		
+        let results = regex.matches(in: xmlCompactString,
+                                    range: NSMakeRange(0, xmlCompactString.count))
+		
+        for result in results.reversed() {
+			let swiftRange = Range(result.range, in: cleanedString)!
+            let indexEndOfText = cleanedString.index(swiftRange.upperBound, offsetBy: -2)
+            let match = cleanedString[swiftRange.lowerBound..<indexEndOfText]
+            let replacement = "\(match)></xad:DigestMethod>"
+            cleanedString.replaceSubrange(swiftRange,
+                                          with: replacement)
+        }
+		
+		//
+
+        return cleanedString
+    }
+
 }
