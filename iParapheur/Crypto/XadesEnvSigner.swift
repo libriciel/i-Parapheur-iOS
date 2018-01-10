@@ -75,8 +75,10 @@ import AEXML
 
         // Compute values
 
-        let signaturePropertiesCanonicalString = CryptoUtils.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact)
+        let signaturePropertiesCanonicalString = CryptoUtils.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact,
+                                                                             forceXmlns: true)
         let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
+        print("Adrien :: signaturePropertiesHash   :: \(signaturePropertiesHash)")
 
         let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashToSign!)
         let base64Hash = base64hashData.base64EncodedString()
@@ -233,7 +235,9 @@ import AEXML
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
 
-        let hashToSign = CryptoUtils.sha1Base64(string: mSignedInfoNode!.xmlCompact)
+		let canonicalizedXml = CryptoUtils.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
+                                                           forceXmlns: false)
+        let hashToSign = CryptoUtils.sha1Base64(string: canonicalizedXml)
         print("Adrien :: hashToSign                :: \(hashToSign)")
 
         return hashToSign
