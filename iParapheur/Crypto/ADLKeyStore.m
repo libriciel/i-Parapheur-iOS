@@ -473,20 +473,17 @@ localizedDescription:(NSString *)localizedDescription
                 cert:(X509 *)cert {
 
 	BIO *bio_data = BIO_new(BIO_s_mem());
-
 	BIO_write(bio_data, data.bytes, data.length);
-
 
 	PKCS7 *p7 = PKCS7_new();
 	PKCS7_set_type(p7, NID_pkcs7_signed);
-
 	PKCS7_SIGNER_INFO *si = PKCS7_add_signature(p7, cert, pkey, EVP_sha1());
 
-	if (si == NULL) return nil;
+	if (si == NULL)
+		return nil;
 
 	/* If you do this then you get signing time automatically added */
-	PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT,
-			OBJ_nid2obj(NID_pkcs7_data));
+	PKCS7_add_signed_attribute(si, NID_pkcs9_contentType, V_ASN1_OBJECT, OBJ_nid2obj(NID_pkcs7_data));
 
 	/* we may want to add more */
 	PKCS7_add_certificate(p7, cert);
@@ -497,27 +494,26 @@ localizedDescription:(NSString *)localizedDescription
 	PKCS7_set_detached(p7, 1);
 	BIO *p7bio;
 
-	if ((p7bio = PKCS7_dataInit(p7, NULL)) == NULL) {
+	if ((p7bio = PKCS7_dataInit(p7, NULL)) == NULL)
 		return nil;
-	}
 
 	int i = 0;
 	char buf[255];
 	for (;;) {
 		i = BIO_read(bio_data, buf, sizeof(buf));
-		if (i <= 0) break;
+
+		if (i <= 0)
+			break;
+
 		BIO_write(p7bio, buf, i);
 	}
 
-	if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) [data bytes], [data length])) {
+	if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) data.bytes, data.length))
 		return nil;
-	}
+
 	BIO_free(p7bio);
-
 	BIO *signature_bio = BIO_new(BIO_s_mem());
-
 	PEM_write_bio_PKCS7(signature_bio, p7);
-
 	(void) BIO_flush(signature_bio);
 
 	char *outputBuffer;
@@ -525,7 +521,6 @@ localizedDescription:(NSString *)localizedDescription
 
 	NSData *retVal = [NSData dataWithBytes:outputBuffer
 	                                length:(NSUInteger) outputLength];
-
 
 #ifdef DEBUG
 	PEM_write_PKCS7(stdout, p7);
@@ -536,6 +531,38 @@ localizedDescription:(NSString *)localizedDescription
 
 	return retVal;
 }
+
+//
+//- (NSData *)signRsaData:(NSData *)data
+//                   pkey:(EVP_PKEY *)pkey
+//                   cert:(X509 *)cert {
+//
+//    // these are structs and arrays used by the evp message digest functions
+//	EVP_MD_CTX mdctx;
+//	const EVP_MD *md;
+//	char mess1[] = "fu\n";
+//	char mess2[] = "bar\n";
+//	char seedStr[7];
+//	unsigned char md_value[EVP_MAX_MD_SIZE];
+//	int md_len, seed, i;
+//
+//    // this NSString I'm going to use for comparing later on
+//	NSMutableString *curKey = [NSMutableString stringWithCapacity:40];
+//
+//	OpenSSL_add_all_digests();
+//
+//    // create a SHA digest
+//	md = EVP_get_digestbyname("sha1");
+//	EVP_DigestInit(&mdctx, md);
+//	EVP_DigestUpdate(&mdctx, mess1, strlen(mess1));
+//	EVP_DigestUpdate(&mdctx, mess2, strlen(mess2));
+//	EVP_DigestUpdate(&mdctx, seedStr, strlen(seedStr));
+//	EVP_DigestFinal(&mdctx, md_value, &md_len);
+//
+//    // inspect md_value[] and do stuff with it
+//	for(i = 0; i < md_len; i++)
+//		[curKey appendFormat:@"%02x",  md_value[i]];
+//}
 
 
 - (BOOL)addKey:(NSString *)p12Path
@@ -675,26 +702,34 @@ localizedDescription:(NSString *)localizedDescription
 	int len = 0;
 	unsigned char *aliasChar = X509_alias_get0(certX509, &len);
 
-	char issuerChar[256];
+	// Issuer in RFC2253
+
 	X509_NAME *issuerX509Name = X509_get_issuer_name(certX509);
-	X509_NAME_oneline(issuerX509Name, issuerChar, 256);
+	BIO *issuerBio = BIO_new(BIO_s_mem());
+	X509_NAME_print_ex(issuerBio, issuerX509Name, 0, XN_FLAG_RFC2253);
+	BUF_MEM *issuerBuffer = NULL;
+	BIO_get_mem_ptr(issuerBio, &issuerBuffer);
+	NSData *data = [NSData.alloc initWithBytes:issuerBuffer->data
+	                                    length:issuerBuffer->length];
+
+	// Other fields
 
 	ASN1_TIME *notBeforeAsn1Time = X509_get_notBefore(certX509);
-	ASN1_TIME *notAfterAsn1Time = X509_get_notAfter(certX509);;
+	ASN1_TIME *notAfterAsn1Time = X509_get_notAfter(certX509);
 
 	ASN1_INTEGER *serialAsn1 = X509_get_serialNumber(certX509);
 	BIGNUM *serialBigNumber = ASN1_INTEGER_to_BN(serialAsn1, NULL);
-	char *serialChar = BN_bn2hex(serialBigNumber);
+	char *serialChar = BN_bn2dec(serialBigNumber);
 
 	NSData *certNsData = X509_to_NSData(certX509);
 
 	// Convert values into Foundation classes
 
 	NSString *aliasString = [NSString stringWithCString:(const char *) aliasChar encoding:NSUTF8StringEncoding];
-	NSString *issuerString = [NSString stringWithCString:(const char *) issuerChar encoding:NSUTF8StringEncoding];
 	NSString *serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
-	NSString *certString = [NSString.alloc initWithData:certNsData
-	                                           encoding:NSUTF8StringEncoding];
+
+	NSString *issuerString = [NSString.alloc initWithData:data encoding:NSUTF8StringEncoding];
+	NSString *certString = [NSString.alloc initWithData:certNsData encoding:NSUTF8StringEncoding];
 
 	NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNsDate:notBeforeAsn1Time];
 	NSDate *notAfterDate = [ADLKeyStore asn1TimeToNsDate:notAfterAsn1Time];
@@ -707,7 +742,7 @@ localizedDescription:(NSString *)localizedDescription
 
 	// Result
 
-	return @{
+	NSDictionary *result = @{
 			@"commonName": aliasString,
 			@"issuerName": issuerString,
 			@"notBefore": notBeforeString,
@@ -715,6 +750,8 @@ localizedDescription:(NSString *)localizedDescription
 			@"serialNumber": serialString,
 			@"publicKey": certString
 	};
+
+	return result;
 }
 
 

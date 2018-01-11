@@ -423,25 +423,25 @@
 
 	// Folders to do
 	
-	if (bureau.unwrappedATraiter.intValue == 0)
+	if (bureau.aTraiter == 0)
 		cell.foldersToDo.text = @"Aucun dossier à traiter";
-	else if (bureau.unwrappedATraiter.intValue == 1)
+	else if (bureau.aTraiter == 1)
 		cell.foldersToDo.text = @"1 dossier à traiter";
 	else
-		cell.foldersToDo.text = [NSString stringWithFormat:@"%d dossiers à traiter", bureau.unwrappedATraiter.intValue];
+		cell.foldersToDo.text = [NSString stringWithFormat:@"%ld dossiers à traiter", (long) bureau.aTraiter];
 	
 	// Late Folders
 	
-	cell.lateFolders.hidden = (bureau.unwrappedEnRetard.intValue == 0);
+	cell.lateFolders.hidden = (bureau.enRetard == 0);
 	
-	if (bureau.unwrappedATraiter.intValue == 1)
+	if (bureau.aTraiter == 1)
 		cell.lateFolders.text = @"1 dossier en retard";
 	else
-		cell.lateFolders.text = [NSString stringWithFormat:@"%d dossiers en retard", bureau.unwrappedEnRetard.intValue];
+		cell.lateFolders.text = [NSString stringWithFormat:@"%ld dossiers en retard", (long) bureau.enRetard];
 	
 	//
 
-	cell.title.text = bureau.unwrappedName;
+	cell.title.text = bureau.name;
 	cell.disclosureIndicator.image = [cell.disclosureIndicator.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	cell.dot.image = [cell.dot.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	
@@ -468,7 +468,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	// Call Desk view
 
 	Bureau *bureau = self.bureauxArray[(NSUInteger) indexPath.row];
-	NSLog(@"Selected Desk = %@", bureau.unwrappedNodeRef);
+	NSLog(@"Selected Desk = %@", bureau.nodeRef);
 
 	RGDeskViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"DeskViewController"];
 
@@ -476,8 +476,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	                                     animated:YES];
 
 	controller.desk = bureau;
-	controller.navigationItem.title = bureau.unwrappedName;
-	[ADLSingletonState sharedSingletonState].bureauCourant = bureau.unwrappedNodeRef;
+	controller.navigationItem.title = bureau.name;
+	[ADLSingletonState sharedSingletonState].bureauCourant = bureau.nodeRef;
 }
 
 

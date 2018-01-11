@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class FilterTests: XCTestCase {
+class Models_Filter_Tests: XCTestCase {
 
 
     func testToJson() {

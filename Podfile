@@ -13,6 +13,7 @@ target "iParapheur" do
   pod 'Gloss', '~> 2.0.0-beta.1'
   pod 'AEXML'
   pod 'SSZipArchive'
+  pod 'CryptoSwift'
 
   target 'iParapheurTests' do
     inherit! :search_paths

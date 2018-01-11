@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class ModelsDataControllerTests: XCTestCase {
+class Models_ModelsDataController_Tests: XCTestCase {
 	
 	
 	func testFetchFilter() {

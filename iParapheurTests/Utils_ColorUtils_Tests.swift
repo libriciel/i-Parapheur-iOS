@@ -32,46 +32,18 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import Foundation
+import XCTest
+@testable import iParapheur
 
 
-@objc public class Circuit: NSObject, Decodable {
+class Utils_ColorUtils_Tests: XCTestCase {
 
-
-    @objc let etapes: [Etape]
-    let annotPriv: String?
-    @objc let isDigitalSignatureMandatory: Bool
-    let isMultiDocument: Bool
-    let hasSelectionScript: Bool
-    let sigFormat: String?
-    let signatureProtocol: String?
-
-
-    // MARK: - JSON
-
-    enum CodingKeys: String, CodingKey {
-        case etapes
-        case annotPriv
-        case isDigitalSignatureMandatory
-        case isMultiDocument
-        case hasSelectionScript
-        case sigFormat
-        case signatureProtocol = "protocol"
-    }
-
-    public required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-
-        etapes = try values.decodeIfPresent([Etape].self, forKey: .etapes) ?? []
-        annotPriv = try values.decodeIfPresent(String.self, forKey: .annotPriv)
-        isDigitalSignatureMandatory = try values.decodeIfPresent(Bool.self, forKey: .isDigitalSignatureMandatory) ?? false
-        isMultiDocument = try values.decodeIfPresent(Bool.self, forKey: .isMultiDocument) ?? false
-        hasSelectionScript = try values.decodeIfPresent(Bool.self, forKey: .hasSelectionScript) ?? false
-        sigFormat = try values.decodeIfPresent(String.self, forKey: .sigFormat)
-        signatureProtocol = try values.decodeIfPresent(String.self, forKey: .signatureProtocol)
+    func testColorForAction() {
+		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
     }
 
 }
-
-
-

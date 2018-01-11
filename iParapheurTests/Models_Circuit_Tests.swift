@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class CircuitTests: XCTestCase {
+class Models_Circuit_Tests: XCTestCase {
 
 
     func testDecodeFull() {
@@ -135,7 +135,7 @@ class CircuitTests: XCTestCase {
     }
 
 
-    func testFail() {
+    func testDecodeFail() {
 
         let getCircuitJsonString = "{{{"
         let getCircuitJsonData = getCircuitJsonString.data(using: .utf8)!

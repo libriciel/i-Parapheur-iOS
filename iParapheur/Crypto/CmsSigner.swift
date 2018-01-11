@@ -34,44 +34,38 @@
  */
 import Foundation
 
-
-@objc public class Circuit: NSObject, Decodable {
-
-
-    @objc let etapes: [Etape]
-    let annotPriv: String?
-    @objc let isDigitalSignatureMandatory: Bool
-    let isMultiDocument: Bool
-    let hasSelectionScript: Bool
-    let sigFormat: String?
-    let signatureProtocol: String?
+/**
+ * Yes, this class seems kind of useless, it's the easiest signature.
+ * But this wrapper eases the code factorization with other signature methods.
+ */
+@objc class CmsSigner: Signer {
 
 
-    // MARK: - JSON
+    let mSignInfo: SignInfo
+    let mPrivateKey: PrivateKey
 
-    enum CodingKeys: String, CodingKey {
-        case etapes
-        case annotPriv
-        case isDigitalSignatureMandatory
-        case isMultiDocument
-        case hasSelectionScript
-        case sigFormat
-        case signatureProtocol = "protocol"
+
+    @objc init(signInfo: SignInfo,
+               privateKey: PrivateKey) {
+
+        mSignInfo = signInfo
+        mPrivateKey = privateKey
     }
 
-    public required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        etapes = try values.decodeIfPresent([Etape].self, forKey: .etapes) ?? []
-        annotPriv = try values.decodeIfPresent(String.self, forKey: .annotPriv)
-        isDigitalSignatureMandatory = try values.decodeIfPresent(Bool.self, forKey: .isDigitalSignatureMandatory) ?? false
-        isMultiDocument = try values.decodeIfPresent(Bool.self, forKey: .isMultiDocument) ?? false
-        hasSelectionScript = try values.decodeIfPresent(Bool.self, forKey: .hasSelectionScript) ?? false
-        sigFormat = try values.decodeIfPresent(String.self, forKey: .sigFormat)
-        signatureProtocol = try values.decodeIfPresent(String.self, forKey: .signatureProtocol)
+    // <editor-fold desc="Signer">
+
+
+    override func generateHashToSign() -> String {
+        return mSignInfo.hashesToSign[0]
     }
+
+
+    override func buildDataToReturn(signedHash: String) -> String {
+        return signedHash
+    }
+
+
+    // </editor-fold desc="Signer">
 
 }
-
-
-
