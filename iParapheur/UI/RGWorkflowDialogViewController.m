@@ -388,7 +388,8 @@
 		} else if ([signInfo.format isEqualToString:@"XADES-env"]) {
 
 			[dossiers addObject:dossier.unwrappedId];
-			XadesEnvSigner *xadesEnvSigner = [XadesEnvSigner.alloc initWithSignInfo:signInfo
+			XadesEnvSigner *xadesEnvSigner = [XadesEnvSigner.alloc initWithSignInfo:signInfo,
+			                                                                  index:0,
 			                                                             privateKey:pkey];
 			[signers addObject:xadesEnvSigner];
 

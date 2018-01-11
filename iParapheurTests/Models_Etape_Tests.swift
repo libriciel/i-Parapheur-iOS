@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class EtapeTests: XCTestCase {
+class Models_Etape_Tests: XCTestCase {
 
 
     func testDecodeFull() {

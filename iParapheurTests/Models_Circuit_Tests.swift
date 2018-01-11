@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class CircuitTests: XCTestCase {
+class Models_Circuit_Tests: XCTestCase {
 
 
     func testDecodeFull() {

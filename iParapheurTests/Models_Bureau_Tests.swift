@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class BureauTests: XCTestCase {
+class Models_Bureau_Tests: XCTestCase {
 
     func testDecodeFull() {
 

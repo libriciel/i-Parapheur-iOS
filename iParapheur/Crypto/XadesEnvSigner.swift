@@ -47,6 +47,7 @@ import AEXML
 
 
     let mSignInfo: SignInfo
+    let mIndex: Int
     let mPrivateKey: PrivateKey
     let mPublicKey: String
 
@@ -58,10 +59,12 @@ import AEXML
 
 
     @objc init(signInfo: SignInfo,
+               index: Int,
                privateKey: PrivateKey) {
 
         mSignInfo = signInfo
         mPrivateKey = privateKey
+        mIndex = index
 
         let pollutedPublicKey = String(data: mPrivateKey.publicKey, encoding: String.Encoding.utf8)
         mPublicKey = CryptoUtils.cleanupPublicKey(publicKey: pollutedPublicKey!)
@@ -80,7 +83,7 @@ import AEXML
         let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
         print("Adrien :: signaturePropertiesHash   :: \(signaturePropertiesHash)")
 
-        let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashToSign!)
+        let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashesToSign[mIndex])
         let base64Hash = base64hashData.base64EncodedString()
 
         // Build XML
@@ -94,7 +97,7 @@ import AEXML
                                    attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"])
 
         let reference1 = currentSignedInfo.addChild(name: "ds:Reference",
-                                                    attributes: ["URI": "#\(mSignInfo.pesId!)"])
+                                                    attributes: ["URI": "#\(mSignInfo.pesIds[mIndex])"])
 
         let transforms1 = reference1.addChild(name: "ds:Transforms")
         transforms1.addChild(name: "ds:Transform",
@@ -109,7 +112,7 @@ import AEXML
 
         let reference2 = currentSignedInfo.addChild(name: "ds:Reference",
                                                     attributes: ["Type": "http://uri.etsi.org/01903/v1.1.1#SignedProperties",
-                                                                 "URI": "#\(mSignInfo.pesId!)_SIG_1_SP"])
+                                                                 "URI": "#\(mSignInfo.pesIds[mIndex])_SIG_1_SP"])
 
         let transforms2 = reference2.addChild(name: "ds:Transforms")
         transforms2.addChild(name: "ds:Transform",
@@ -129,7 +132,7 @@ import AEXML
 
         currentRootDocument.addChild(name: "ds:SignatureValue",
                                      value: signedHash,
-                                     attributes: ["Id": "\(mSignInfo.pesId!)_SIG_1_SV"])
+                                     attributes: ["Id": "\(mSignInfo.pesIds[mIndex])_SIG_1_SV"])
 
         mSignatureValueNode = currentRootDocument.root
     }
@@ -157,7 +160,7 @@ import AEXML
         let currentQualifyingProperties = currentObjectNode.addChild(name: "xad:QualifyingProperties",
                                                                      attributes: ["xmlns:xad": "http://uri.etsi.org/01903/v1.1.1#",
                                                                                   "xmlns": "http://uri.etsi.org/01903/v1.1.1#",
-                                                                                  "Target": "#\(mSignInfo.pesId!)_SIG_1"])
+                                                                                  "Target": "#\(mSignInfo.pesIds[mIndex])_SIG_1"])
 
         currentQualifyingProperties.addChild(mObjectSignedPropertiesNode!)
 
@@ -181,7 +184,7 @@ import AEXML
 
         let currentRootDocument = AEXMLDocument()
         let currentSignedProperties = currentRootDocument.addChild(name: "xad:SignedProperties",
-                                                                   attributes: ["Id": "\(mSignInfo.pesId!)_SIG_1_SP"])
+                                                                   attributes: ["Id": "\(mSignInfo.pesIds[mIndex])_SIG_1_SP"])
 
         let currentSignedSignatureProperties = currentSignedProperties.addChild(name: "xad:SignedSignatureProperties")
         currentSignedSignatureProperties.addChild(name: "xad:SigningTime", value: currentDateIso8601)

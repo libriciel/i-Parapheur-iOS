@@ -36,45 +36,14 @@ import XCTest
 @testable import iParapheur
 
 
-class ModelsDataControllerTests: XCTestCase {
-	
-	
-	func testFetchFilter() {
+class Utils_ColorUtils_Tests: XCTestCase {
 
-		// Check emptiness
-		
-		let before = ModelsDataController.fetchFilter(id: "test_id")
-		XCTAssertNil(before)
-		
-		// Load object
-		
-		let filter = NSEntityDescription.insertNewObject(forEntityName: Filter.EntityName,
-														 into: ModelsDataController.Context!) as! Filter
-		filter.id = "test_id"
-		filter.name = "test_name"
-		filter.title = "test_title"
-		filter.typeList = ["test_type_list_1", "test_type_list_2"] as [String]
-		filter.subTypeList = ["test_subtype_list_1", "test_subtype_list_2"] as [String]
-		filter.state = State.EN_COURS.rawValue
-		filter.beginDate = Date(timeIntervalSince1970: 200) as NSDate
-		filter.endDate = Date(timeIntervalSince1970: 400) as NSDate
+    func testColorForAction() {
+		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
+		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
+    }
 
-		// Check data
-		
-		let after = ModelsDataController.fetchFilter(id: "test_id")!
-    	XCTAssertNotNil(after)
-    	XCTAssertEqual(after.id, "test_id")
-    	XCTAssertEqual(after.name, "test_name")
-    	XCTAssertEqual(after.title, "test_title")
-    	XCTAssertEqual(after.typeList!, ["test_type_list_1", "test_type_list_2"])
-    	XCTAssertEqual(after.subTypeList!, ["test_subtype_list_1", "test_subtype_list_2"])
-    	XCTAssertEqual(after.state, State.EN_COURS.rawValue)
-    	XCTAssertEqual(after.beginDate, Date(timeIntervalSince1970: 200) as NSDate)
-    	XCTAssertEqual(after.endDate, Date(timeIntervalSince1970: 400) as NSDate)
-
-		// Cleanup
-
-		ModelsDataController.Context!.delete(filter)
-	}
-	
 }
