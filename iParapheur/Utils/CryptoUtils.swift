@@ -173,8 +173,6 @@ import CryptoSwift
 
     @objc class func cleanupSignature(publicKey: String) -> String {
 
-        print("Adrien :::: \(publicKey)")
-
         var result = publicKey.trimmingCharacters(in: CharacterSet.whitespaces)
         result = result.trimmingCharacters(in: CharacterSet.newlines)
         result = result.replacingOccurrences(of: "\n", with: "")
@@ -187,7 +185,6 @@ import CryptoSwift
             result = String(result.prefix(upTo: index))
         }
 
-        print("Adrien :::: \(result)")
         return result
     }
 

@@ -59,12 +59,12 @@ import AEXML
 
 
     @objc init(signInfo: SignInfo,
-               index: Int,
+               hashIndex: NSNumber,
                privateKey: PrivateKey) {
 
         mSignInfo = signInfo
         mPrivateKey = privateKey
-        mIndex = index
+        mIndex = hashIndex.intValue
 
         let pollutedPublicKey = String(data: mPrivateKey.publicKey, encoding: String.Encoding.utf8)
         mPublicKey = CryptoUtils.cleanupPublicKey(publicKey: pollutedPublicKey!)
@@ -81,7 +81,6 @@ import AEXML
         let signaturePropertiesCanonicalString = CryptoUtils.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact,
                                                                              forceXmlns: true)
         let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
-        print("Adrien :: signaturePropertiesHash   :: \(signaturePropertiesHash)")
 
         let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashesToSign[mIndex])
         let base64Hash = base64hashData.base64EncodedString()
@@ -273,7 +272,6 @@ import AEXML
         // Return value
 
         let finalXml = rootDocument.xmlCompact
-        print("Adrien - finalXml    = \(finalXml)")
         let finalXmlData = finalXml.data(using: .utf8)
         print("Adrien - finalXmlB64 = \(finalXmlData!.base64EncodedString())")
         return finalXmlData!.base64EncodedString()

@@ -82,8 +82,6 @@ import Alamofire
         // TODO Adrien : add special character restrictions tests ?
         urlFixed = urlFixed.replacingOccurrences(of: " ", with: "")
 
-        print("Adrien - \(url)")
-
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
         //			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
@@ -100,9 +98,6 @@ import Alamofire
             let swiftRange = Range(match!.range(at: 1), in: urlFixed)
             urlFixed = String(urlFixed[swiftRange!])
         }
-
-
-        print("Adrien - https://m-\(urlFixed)")
 
         return NSString(string: "https://m-\(urlFixed)")
     }

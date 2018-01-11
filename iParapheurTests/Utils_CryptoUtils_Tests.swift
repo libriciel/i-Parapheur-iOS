@@ -64,9 +64,7 @@ class Utils_CryptoUtils_Tests: XCTestCase {
 
 		let cleanedPollutedCertificate = CryptoUtils.cleanupPublicKey(publicKey: pollutedCertificate)
 		let cleanedCleanCertificate = CryptoUtils.cleanupPublicKey(publicKey: cleanCertificate)
-		
-		print("Adrien - \(cleanedPollutedCertificate)")
-		
+
         XCTAssertEqual(cleanedPollutedCertificate, expectedResult)
 		XCTAssertEqual(cleanedCleanCertificate, expectedResult)
     }

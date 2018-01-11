@@ -367,37 +367,29 @@
 /**
 * APIv3 response
 */
-- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo {
+- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo
+							 dossier:(NSString *)dossierId {
 
 	NSMutableArray *signers = NSMutableArray.new;
-	NSMutableArray *dossiers = NSMutableArray.new;
 	NSMutableArray *signatures = NSMutableArray.new;
-
-	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
 	PrivateKey *pkey = _currentPKey;
 
-	for (Dossier *dossier in _dossiers) {
+	for (int hashIndex = 0; hashIndex < signInfo.hashesToSign.count; hashIndex++) {
 
 		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format containsString:@"PADES"]) {
 
-			[dossiers addObject:dossier.unwrappedId];
-			CmsSigner *cmsSigner = [CmsSigner.alloc initWithSignInfo:signInfo
-			                                              privateKey:pkey];
-			[signers addObject:cmsSigner];
+			[signers addObject:[CmsSigner.alloc initWithSignInfo:signInfo
+			                                          privateKey:pkey]];
 
 		} else if ([signInfo.format isEqualToString:@"XADES-env"]) {
 
-			[dossiers addObject:dossier.unwrappedId];
-			XadesEnvSigner *xadesEnvSigner = [XadesEnvSigner.alloc initWithSignInfo:signInfo,
-			                                                                  index:0,
-			                                                             privateKey:pkey];
-			[signers addObject:xadesEnvSigner];
+			[signers addObject:[XadesEnvSigner.alloc initWithSignInfo:signInfo
+			                                                hashIndex:@(hashIndex)
+			                                               privateKey:pkey]];
 
 		} else {
-
 			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
 			                           title:@"Signature impossible"];
-
 		}
 	}
 
@@ -416,45 +408,12 @@
 
 	for (Signer *signer in signers) {
 
-		NSMutableString *signedHash;
 		NSString *hash = [signer generateHashToSign];
+		NSString *signedHash = [CryptoUtils rsaSignWithData:[NSData dataFromBase64String:hash]
+		                                        keyFilePath:p12AbsolutePath
+		                                           password:_p12password];
 
-		// Signing hashes, multi-doc way if needed
-
-		if ([StringUtils doesString:hash
-		          containsSubString:@","]) {
-
-			NSArray *subHashes = [hash componentsSeparatedByString:@","];
-			for (NSString *subHash in subHashes) {
-
-				NSString *subSignedHash = [self signData:subHash
-				                            withKeystore:keystore
-				                                 withP12:p12AbsolutePath];
-
-				if (subHash == subHashes.firstObject) {
-					signedHash = subSignedHash.mutableCopy;
-				} else {
-					[signedHash appendString:@","];
-					[signedHash appendString:subSignedHash];
-				}
-			}
-
-		} else {
-
-//			SecKeyRef *secKey = (SecKeyRef *) [CryptoUtils pkcs12ReadKeyWithPath:p12AbsolutePath
-//			                                                            password:_p12password];
-//
-//
-//
-//			signedHash = [CryptoUtils rsaSignWithData:[StringUtils bytesFromHexString:hash]
-//			                               privateKey:secKey].mutableCopy;
-
-			signedHash = [CryptoUtils rsaSignWithData:[NSData dataFromBase64String:hash]
-			                              keyFilePath:p12AbsolutePath
-			                                 password:_p12password].mutableCopy;
-
-			NSLog(@"Adrien - signedHash = %@", signedHash);
-		}
+		NSLog(@"Adrien - signedHash = %@", signedHash);
 
 		// Add result, or cancel on error
 
@@ -465,42 +424,36 @@
 		                                                   withString:@""].mutableCopy;
 
 		NSString *finalSignature = [signer buildDataToReturnWithSignedHash:signedHash];
-
 		[signatures addObject:finalSignature];
 	}
 
-	// Checking and sending back result
+	NSString *finalSignature = [signatures componentsJoinedByString:@","];
 
-	if ((signatures.count > 0) && (signatures.count == signers.count) && (dossiers.count == signers.count)) {
+	// Sending back result
 
-		for (int i = 0; i < signatures.count; i++) {
+	[self showHud];
+	NSLog(@"Adrien, finalSignature : %@", finalSignature);
 
-			NSLog(@"Send signature dossier=%@, signSize=%lu", dossiers[(NSUInteger) i], sizeof(signatures[(NSUInteger) i]));
-			[self showHud];
-
-			__weak typeof(self) weakSelf = self;
-
-			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
-			                          forBureau:_bureauCourant
-			               withPublicAnnotation:_annotationPublique.text
-			              withPrivateAnnotation:_annotationPrivee.text
-			                      withSignature:signatures[(NSUInteger) i]
-			                            success:^(NSArray *array) {
-				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-				                            if (strongSelf) {
-					                            NSLog(@"Signature success");
-					                            [strongSelf dismissDialogView];
-				                            }
-			                            }
-			                            failure:^(NSError *restError) {
-				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-				                            if (strongSelf) {
-					                            NSLog(@"Signature fail");
-					                            [strongSelf didEndWithUnReachableNetwork];
-				                            }
-			                            }];
-		}
-	}
+	__weak typeof(self) weakSelf = self;
+	[_restClient actionSignerForDossier:dossierId
+	                          forBureau:_bureauCourant
+	               withPublicAnnotation:_annotationPublique.text
+	              withPrivateAnnotation:_annotationPrivee.text
+	                      withSignature:finalSignature
+	                            success:^(NSArray *array) {
+		                            __strong typeof(weakSelf) strongSelf = weakSelf;
+		                            if (strongSelf) {
+			                            NSLog(@"Signature success");
+			                            [strongSelf dismissDialogView];
+		                            }
+	                            }
+	                            failure:^(NSError *restError) {
+		                            __strong typeof(weakSelf) strongSelf = weakSelf;
+		                            if (strongSelf) {
+			                            NSLog(@"Signature fail");
+			                            [strongSelf didEndWithUnReachableNetwork];
+		                            }
+	                            }];
 }
 
 
@@ -681,7 +634,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 					                           success:^(SignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
 						                           if (strongSelf)
-							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];
+							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo
+							                                                            dossier:dossier.unwrappedId];
 					                           }
 					                           failure:^(NSError *error) {
 						                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);
