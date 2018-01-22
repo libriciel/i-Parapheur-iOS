@@ -184,29 +184,29 @@ import CoreData
     // MARK: - Filters methods
 
 
-    @objc static func fetchFilter(id: String) -> Filter? {
-
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
-		let results = try! ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
-
-		return (results.count > 0) ? results[0] : nil
-    }
-
-
-    @objc static func fetchFilters() -> [Filter] {
-        var result: [Filter] = []
-
-        do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
-            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
-        }
-        catch {
-            print("Could not fetch Filters")
-            return result
-        }
-
-        return result
-    }
+//    @objc static func fetchFilter(id: String) -> Filter? {
+//
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
+//        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
+//        let results = try! ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
+//
+//        return (results.count > 0) ? results[0] : nil
+//    }
+//
+//
+//    @objc static func fetchFilters() -> [Filter] {
+//        var result: [Filter] = []
+//
+//        do {
+//            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
+//            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
+//        }
+//        catch {
+//            print("Could not fetch Filters")
+//            return result
+//        }
+//
+//        return result
+//    }
 
 }

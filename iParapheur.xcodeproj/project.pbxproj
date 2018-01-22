@@ -193,8 +193,6 @@
 		C57E67C81A5DF21400BC4A3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803551A5D90AF00D54F7D /* CoreData.framework */; };
 		C57E67C91A5DF23A00BC4A3A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803651A5D90FC00D54F7D /* CoreGraphics.framework */; };
 		C58203C61FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58203C51FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift */; };
-		C5833FC21FC4247900C5E692 /* Filter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5833FC01FC4247900C5E692 /* Filter+CoreDataProperties.swift */; };
-		C5833FC31FC4247900C5E692 /* Filter+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5833FC11FC4247900C5E692 /* Filter+CoreDataClass.swift */; };
 		C585C8D51FBEF05D005A0544 /* Models_ModelsDataController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585C8D41FBEF05D005A0544 /* Models_ModelsDataController_Tests.swift */; };
 		C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */; };
 		C58971531AA751500077FC84 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C58971551AA751500077FC84 /* Localizable.strings */; };
@@ -606,8 +604,6 @@
 		C58203BB1FBB466300B6606F /* iParapheurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iParapheurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C58203BF1FBB466300B6606F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C58203C51FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_ColorUtils_Tests.swift; sourceTree = "<group>"; };
-		C5833FC01FC4247900C5E692 /* Filter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Filter+CoreDataProperties.swift"; path = "/Users/abricchi/workspace-xcode/iParapheur-ios/iParapheur/Models/Filter+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
-		C5833FC11FC4247900C5E692 /* Filter+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Filter+CoreDataClass.swift"; path = "/Users/abricchi/workspace-xcode/iParapheur-ios/iParapheur/Models/Filter+CoreDataClass.swift"; sourceTree = "<absolute>"; };
 		C585C8D41FBEF05D005A0544 /* Models_ModelsDataController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_ModelsDataController_Tests.swift; sourceTree = "<group>"; };
 		C587BFDE1AD53743009AE6C3 /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDocumentOutline.h; sourceTree = "<group>"; };
 		C587BFDF1AD53743009AE6C3 /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDocumentOutline.m; sourceTree = "<group>"; };
@@ -819,8 +815,6 @@
 				C526D8DB1DA7FC5A00EE8BA9 /* Dossier.swift */,
 				C5A7DAE81FDECCD30022A813 /* Etape.swift */,
 				64F341F438EA838A05990950 /* ParapheurType.swift */,
-				C5833FC11FC4247900C5E692 /* Filter+CoreDataClass.swift */,
-				C5833FC01FC4247900C5E692 /* Filter+CoreDataProperties.swift */,
 				64F342B900CD2EE0E4AA64DD /* State.swift */,
 				C5C0DA391FD390BD00A993DB /* SignInfo.swift */,
 			);
@@ -2232,7 +2226,6 @@
 				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
 				C5E28D6E1FE40FCE006890C1 /* CmsSigner.swift in Sources */,
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
-				C5833FC21FC4247900C5E692 /* Filter+CoreDataProperties.swift in Sources */,
 				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
 				C5A7DAE71FDE96F50022A813 /* Circuit.swift in Sources */,
 				C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */,
@@ -2294,7 +2287,6 @@
 				B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */,
 				B488310F15ECBF6500EC5BB3 /* RGFileCell.m in Sources */,
 				C5ECE8A81DD4D83C008659DD /* AccountSelectionCell.swift in Sources */,
-				C5833FC31FC4247900C5E692 /* Filter+CoreDataClass.swift in Sources */,
 				C526D8E01DA7FC5A00EE8BA9 /* Dossier.swift in Sources */,
 				C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
