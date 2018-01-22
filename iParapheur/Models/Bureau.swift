@@ -50,7 +50,7 @@ import Foundation
     @objc let enRetard: Int
     let aArchiver: Int
     @objc let aTraiter: Int
-    let dossiersDelegues: Int
+    @objc let dossiersDelegues: Int
     let retournes: Int
 
     let hasSecretaire: Bool

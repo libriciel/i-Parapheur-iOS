@@ -452,6 +452,7 @@
 
 	// Adapter
 
+    cell.dot.tintColor = dossier.isDelegue ? ColorUtils.DarkPurple : ColorUtils.LightGrey;
 	cell.titleLabel.text = dossier.unwrappedTitle;
 	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@",
 	                                                     dossier.unwrappedType,
@@ -476,6 +477,7 @@
 		NSString *datePrint = isLate ? @"en retard depuis le %@" : @"à rendre avant le %@";
 		cell.limitDateLabel.text = [NSString stringWithFormat:datePrint,
 		                                                      [outputFormatter stringFromDate:dossierDate]];
+
 		cell.limitDateLabel.textColor = isLate ? ColorUtils.Salmon : ColorUtils.BlueGreySeparator;
 	}
 

@@ -429,7 +429,12 @@
 		cell.foldersToDo.text = @"1 dossier à traiter";
 	else
 		cell.foldersToDo.text = [NSString stringWithFormat:@"%ld dossiers à traiter", (long) bureau.aTraiter];
-	
+
+	// Delegations
+
+    if (bureau.dossiersDelegues > 0)
+        cell.foldersToDo.text = [NSString stringWithFormat:@"%@, %d en délégation", cell.foldersToDo.text, bureau.dossiersDelegues];
+
 	// Late Folders
 	
 	cell.lateFolders.hidden = (bureau.enRetard == 0);
