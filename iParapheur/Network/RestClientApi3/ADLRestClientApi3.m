@@ -59,10 +59,10 @@
 	NSArray *accountList = [ModelsDataController fetchAccounts];
 
 	for (Account *account in accountList) {
-		if ([selectedAccountId isEqualToString:account.unwrappedId]) {
-			urlSettings = account.unwrappedUrl;
-			loginSettings = account.unwrappedLogin;
-			passwordSettings =  account.unwrappedPassword;
+		if ([selectedAccountId isEqualToString:account.id]) {
+			urlSettings = account.url;
+			loginSettings = account.login;
+			passwordSettings =  account.password;
 		}
 	}
 

@@ -14,11 +14,11 @@ import CoreData
 
 extension Account {
 
-    @NSManaged var id: String?
+    @objc @NSManaged var id: String?
     @NSManaged var isVisible: NSNumber?
-    @NSManaged var login: String?
-    @NSManaged var password: String?
+    @objc @NSManaged var login: String?
+    @objc @NSManaged var password: String?
     @NSManaged var title: String?
-    @NSManaged var url: String?
+    @objc @NSManaged var url: String?
 
 }
