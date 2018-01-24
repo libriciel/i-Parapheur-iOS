@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import AEXML
 
@@ -237,7 +238,7 @@ import AEXML
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
 
-		let canonicalizedXml = CryptoUtils.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
+        let canonicalizedXml = CryptoUtils.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
                                                            forceXmlns: false)
         let hashToSign = CryptoUtils.sha1Base64(string: canonicalizedXml)
         print("Adrien :: hashToSign                :: \(hashToSign)")
@@ -261,7 +262,7 @@ import AEXML
         let signature = documentDetachedExternalSignature.addChild(name: "ds:Signature",
                                                                    attributes: [
                                                                        "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
-                                                                       "Id": "IDF2017-05-17T08-29-45.35_SIG_1"
+                                                                       "Id": "\(mSignInfo.pesIds[mIndex])_SIG_1"
                                                                    ])
 
         signature.addChild(mSignedInfoNode!)
