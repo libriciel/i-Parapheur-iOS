@@ -42,45 +42,45 @@
 
 - (id)init {
 
-	// Fetch selected Account Id
+    // Fetch selected Account Id
 
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
 
-	if (selectedAccountId.length == 0)
-		selectedAccountId = Account.DemoId;
+    if (selectedAccountId.length == 0)
+        selectedAccountId = Account.DemoId;
 
-	// Fetch Account model values
+    // Fetch Account model values
 
-	NSString *urlSettings = nil;
-	NSString *loginSettings = nil;
-	NSString *passwordSettings = nil;
+    NSString *urlSettings = nil;
+    NSString *loginSettings = nil;
+    NSString *passwordSettings = nil;
 
-	NSArray *accountList = [ModelsDataController fetchAccounts];
+    NSArray *accountList = [ModelsDataController fetchAccounts];
 
-	for (Account *account in accountList) {
-		if ([selectedAccountId isEqualToString:account.id]) {
-			urlSettings = account.url;
-			loginSettings = account.login;
-			passwordSettings =  account.password;
-		}
-	}
+    for (Account *account in accountList) {
+        if ([selectedAccountId isEqualToString:account.id]) {
+            urlSettings = account.url;
+            loginSettings = account.login;
+            passwordSettings = account.password;
+        }
+    }
 
-	// Demo values
+    // Demo values
 
-	if ((urlSettings == nil) || (urlSettings.length == 0)) {
-		urlSettings = @"parapheur.demonstrations.adullact.org";
-		loginSettings = @"bma";
-		passwordSettings = @"secret";
-	}
+    if ((urlSettings == nil) || (urlSettings.length == 0)) {
+        urlSettings = @"parapheur.demonstrations.adullact.org";
+        loginSettings = @"bma";
+        passwordSettings = @"secret";
+    }
 
-	// Init
+    // Init
 
-	[self initRestClientWithLogin:loginSettings
-	                     password:passwordSettings
-	                          url:urlSettings];
+    [self initRestClientWithLogin:loginSettings
+                         password:passwordSettings
+                              url:urlSettings];
 
-	return self;
+    return self;
 }
 
 
@@ -88,11 +88,11 @@
            password:(NSString *)password
                 url:(NSString *)url {
 
-	[self initRestClientWithLogin:login
-	                     password:password
-	                          url:url];
+    [self initRestClientWithLogin:login
+                         password:password
+                              url:url];
 
-	return self;
+    return self;
 }
 
 
@@ -100,19 +100,19 @@
                        password:(NSString *)password
                             url:(NSString *)url {
 
-	// Fix values
+    // Fix values
 
-	if (![url hasPrefix:@"https://m."])
-		url = [NSString stringWithFormat:@"https://m-%@", url];
+    if (![url hasPrefix:@"https://m."])
+        url = [NSString stringWithFormat:@"https://m-%@", url];
 
-	// Initialize AFNetworking HTTPClient
+    // Initialize AFNetworking HTTPClient
 
-	if (_swiftManager)
-		[_swiftManager cancelAllOperations];
+    if (_swiftManager)
+        [_swiftManager cancelAllOperations];
 
-	_swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
-	                                                   login:login
-	                                                password:password];
+    _swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
+                                                       login:login
+                                                    password:password];
 }
 
 
@@ -132,26 +132,26 @@
 - (void)cancelTasksInArray:(NSArray *)tasksArray
                   withPath:(NSString *)path {
 
-	for (NSURLSessionTask *task in tasksArray) {
-		NSRange range = [[[[task currentRequest] URL] absoluteString] rangeOfString:path];
-		if (range.location != NSNotFound) {
-			[task cancel];
-		}
-	}
+    for (NSURLSessionTask *task in tasksArray) {
+        NSRange range = [[[[task currentRequest] URL] absoluteString] rangeOfString:path];
+        if (range.location != NSNotFound) {
+            [task cancel];
+        }
+    }
 }
 
 
 - (NSString *)getDownloadUrl:(NSString *)dossierId
                       forPdf:(bool)isPdf {
 
-	NSString *result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content",
-	                                              dossierId];
+    NSString *result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content",
+                                                  dossierId];
 
-	if (isPdf)
-		result = [NSString stringWithFormat:@"%@;ph:visuel-pdf",
-		                                    result];
+    if (isPdf)
+        result = [NSString stringWithFormat:@"%@;ph:visuel-pdf",
+                                            result];
 
-	return result;
+    return result;
 }
 
 
@@ -161,32 +161,32 @@
 - (void)getApiLevel:(void (^)(NSNumber *))success
             failure:(void (^)(NSError *))failure {
 
-	[self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
+    [self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
 
-	[_swiftManager getApiVersionOnResponse:^(NSNumber *level) {
-		 success(level);
-	}
-	                               onError:^(NSError *error) {
-		                                   failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
-		                                                               code:kCFURLErrorUserAuthenticationRequired
-		                                                           userInfo:nil]);
-	                                   }];
+    [_swiftManager getApiVersionOnResponse:^(NSNumber *level) {
+         success(level);
+     }
+                                   onError:^(NSError *error) {
+                                       failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
+                                                                   code:kCFURLErrorUserAuthenticationRequired
+                                                               userInfo:nil]);
+                                   }];
 }
 
 
 - (void)getBureaux:(void (^)(NSArray *))success
            failure:(void (^)(NSError *))failure {
 
-	[self cancelAllHTTPOperationsWithPath:@"bureaux"];
+    [self cancelAllHTTPOperationsWithPath:@"bureaux"];
 
-	[_swiftManager getBureauxOnResponse:^(NSArray *response) {
-		 success(response);
-	 }
-	                                onError:^(NSError *error) {
-		                                failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
-		                                                            code:kCFURLErrorUserAuthenticationRequired
-		                                                        userInfo:nil]);
-	                                }];
+    [_swiftManager getBureauxOnResponse:^(NSArray *response) {
+         success(response);
+     }
+                                onError:^(NSError *error) {
+                                    failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
+                                                                code:kCFURLErrorUserAuthenticationRequired
+                                                            userInfo:nil]);
+                                }];
 }
 
 
@@ -197,18 +197,18 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	[self cancelAllHTTPOperationsWithPath:@"dossiers"];
+    [self cancelAllHTTPOperationsWithPath:@"dossiers"];
 
-	[_swiftManager getDossiersWithBureau:bureau
-	                                page:@(page)
-	                                size:@(size)
-	                          filterJson:filterJson
-	                          onResponse:^(NSArray *response) {
-		                          success(response);
-	                          }
-	                             onError:^(NSError *error) {
-		                             failure(error);
-	                             }];
+    [_swiftManager getDossiersWithBureau:bureau
+                                    page:@(page)
+                                    size:@(size)
+                              filterJson:filterJson
+                              onResponse:^(NSArray *response) {
+                                  success(response);
+                              }
+                                 onError:^(NSError *error) {
+                                     failure(error);
+                                 }];
 }
 
 
@@ -216,13 +216,13 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	[_swiftManager getTypologyWithBureauId:bureauId
-	                onResponse:^(NSArray *response) {
-		                success(response);
-	                }
-	                   onError:^(NSError *error) {
-		                   failure(error);
-	                   }];
+    [_swiftManager getTypologyWithBureauId:bureauId
+                                onResponse:^(NSArray *response) {
+                                    success(response);
+                                }
+                                   onError:^(NSError *error) {
+                                       failure(error);
+                                   }];
 }
 
 
@@ -231,14 +231,14 @@
            success:(void (^)(Dossier *))success
            failure:(void (^)(NSError *))failure {
 
-	[_swiftManager getDossierWithDossier:dossier
-	                              bureau:bureau
-	                          onResponse:^(Dossier *response) {
-		                          success(response);
-	                          }
-	                             onError:^(NSError *error) {
-		                             failure(error);
-	                             }];
+    [_swiftManager getDossierWithDossier:dossier
+                                  bureau:bureau
+                              onResponse:^(Dossier *response) {
+                                  success(response);
+                              }
+                                 onError:^(NSError *error) {
+                                     failure(error);
+                                 }];
 }
 
 
@@ -247,16 +247,16 @@
                       success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
-	[self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
+    [self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-	[_swiftManager getSignInfoWithDossier:dossierId
-	                               bureau:bureauId
-	                           onResponse:^(SignInfo *response) {
-		                           success(response);
-	                           }
-	                              onError:^(NSError *error) {
-		                              failure(error);
-	                              }];
+    [_swiftManager getSignInfoWithDossier:dossierId
+                                   bureau:bureauId
+                               onResponse:^(SignInfo *response) {
+                                   success(response);
+                               }
+                                  onError:^(NSError *error) {
+                                      failure(error);
+                                  }];
 }
 
 
@@ -264,15 +264,15 @@
            success:(void (^)(Circuit *))success
            failure:(void (^)(NSError *))failure {
 
-	[self cancelAllHTTPOperationsWithPath:@"circuit"];
+    [self cancelAllHTTPOperationsWithPath:@"circuit"];
 
-	[_swiftManager getCircuitWithDossier:dossier
-	                          onResponse:^(Circuit *circuit) {
-		                          success(circuit);
-	                          }
-	                             onError:^(NSError *error) {
-		                             failure(error);
-	                             }];
+    [_swiftManager getCircuitWithDossier:dossier
+                              onResponse:^(Circuit *circuit) {
+                                  success(circuit);
+                              }
+                                 onError:^(NSError *error) {
+                                     failure(error);
+                                 }];
 }
 
 
@@ -281,16 +281,16 @@
                success:(void (^)(NSArray *))success
                failure:(void (^)(NSError *))failure {
 
-	[self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
-	                                                            andDocument:document]];
+    [self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
+                                                                andDocument:document]];
 
-	[_swiftManager getAnnotationsWithDossier:dossier
-	                   onResponse:^(id annotations) {
-		                   success(annotations);
-	                   }
-	                      onError:^(NSError *error) {
-		                      failure(error);
-	                      }];
+    [_swiftManager getAnnotationsWithDossier:dossier
+                                  onResponse:^(id annotations) {
+                                      success(annotations);
+                                  }
+                                     onError:^(NSError *error) {
+                                         failure(error);
+                                     }];
 }
 
 
@@ -303,24 +303,24 @@
                  success:(void (^)(NSString *))success
                  failure:(void (^)(NSError *))failure {
 
-	// Cancel previous download
+    // Cancel previous download
 
 //	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 //		for (NSURLSessionTask *task in downloadTasks)
 //			[task cancel];
 //	}];
 
-	// Define download request
+    // Define download request
 
-	[_swiftManager downloadFileWithDocument:documentId
-	                                  isPdf:isPdf
-	                                 atPath:filePathUrl
-	                             onResponse:^(NSString *path) {
-		                             success(path);
-	                             }
-	                                onError:^(NSError *error) {
-		                                failure(error);
-	                                }];
+    [_swiftManager downloadFileWithDocument:documentId
+                                      isPdf:isPdf
+                                     atPath:filePathUrl
+                                 onResponse:^(NSString *path) {
+                                     success(path);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 
 //	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
 //	                                                                                URLString:downloadUrlString
@@ -350,74 +350,74 @@
 
 - (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
 
-	NSMutableDictionary *result = [NSMutableDictionary new];
+    NSMutableDictionary *result = [NSMutableDictionary new];
 
 //	result[@"author"] = annotation.unwrappedAuthor;
-	result[@"text"] = annotation.unwrappedText;
-	result[@"type"] = annotation.unwrappedType;
-	result[@"page"] = annotation.unwrappedPage;
+    result[@"text"] = annotation.unwrappedText;
+    result[@"type"] = annotation.unwrappedType;
+    result[@"page"] = annotation.unwrappedPage;
 //	result[@"uuid"] = annotation.unwrappedId;
 
-	CGRect rect = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
-	                                     oldDpi:72
-	                                     newDpi:150];
-	NSDictionary *annotationRectTopLeft = @{
-			@"x" : @(rect.origin.x),
-			@"y" : @(rect.origin.y)
-	};
-	NSDictionary *annotationRectBottomRight = @{
-			@"x" : @(rect.origin.x + rect.size.width),
-			@"y" : @(rect.origin.y + rect.size.height)
-	};
+    CGRect rect = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
+                                         oldDpi:72
+                                         newDpi:150];
+    NSDictionary *annotationRectTopLeft = @{
+            @"x": @(rect.origin.x),
+            @"y": @(rect.origin.y)
+    };
+    NSDictionary *annotationRectBottomRight = @{
+            @"x": @(rect.origin.x + rect.size.width),
+            @"y": @(rect.origin.y + rect.size.height)
+    };
 
-	result[@"rect"] = @{
-			@"topLeft" : annotationRectTopLeft,
-			@"bottomRight" : annotationRectBottomRight
-	};
+    result[@"rect"] = @{
+            @"topLeft": annotationRectTopLeft,
+            @"bottomRight": annotationRectBottomRight
+    };
 
-	return result;
+    return result;
 }
 
 
 - (NSMutableDictionary *)createAnnotationDictionary:(Annotation *)annotation {
 
-	NSMutableDictionary *result = [NSMutableDictionary new];
+    NSMutableDictionary *result = [NSMutableDictionary new];
 
-	// Fixme : send every other data form annotation
+    // Fixme : send every other data form annotation
 
-	result[@"page"] = annotation.unwrappedPage;
-	result[@"text"] = annotation.unwrappedText;
-	result[@"type"] = annotation.unwrappedType;
-	result[@"uuid"] = annotation.unwrappedId;
-	result[@"id"] = annotation.unwrappedId;
+    result[@"page"] = annotation.unwrappedPage;
+    result[@"text"] = annotation.unwrappedText;
+    result[@"type"] = annotation.unwrappedType;
+    result[@"uuid"] = annotation.unwrappedId;
+    result[@"id"] = annotation.unwrappedId;
 
-	CGRect rectData = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
-	                                         oldDpi:72
-	                                         newDpi:150];
+    CGRect rectData = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
+                                             oldDpi:72
+                                             newDpi:150];
 
-	NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-	resultTopLeft[@"x"] = @(rectData.origin.x);
-	resultTopLeft[@"y"] = @(rectData.origin.y);
+    NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
+    resultTopLeft[@"x"] = @(rectData.origin.x);
+    resultTopLeft[@"y"] = @(rectData.origin.y);
 
-	NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-	resultBottomRight[@"x"] = @(rectData.origin.x + rectData.size.width);
-	resultBottomRight[@"y"] = @(rectData.origin.y + rectData.size.height);
+    NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
+    resultBottomRight[@"x"] = @(rectData.origin.x + rectData.size.width);
+    resultBottomRight[@"y"] = @(rectData.origin.y + rectData.size.height);
 
-	NSMutableDictionary *rect = [NSMutableDictionary new];
-	rect[@"bottomRight"] = resultBottomRight;
-	rect[@"topLeft"] = resultTopLeft;
+    NSMutableDictionary *rect = [NSMutableDictionary new];
+    rect[@"bottomRight"] = resultBottomRight;
+    rect[@"topLeft"] = resultTopLeft;
 
-	result[@"rect"] = rect;
+    result[@"rect"] = rect;
 
-	return result;
+    return result;
 }
 
 
 - (NSString *)getAnnotationsUrlForDossier:(NSString *)dossier
                               andDocument:(NSString *)document {
 
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations",
-	                                  dossier];
+    return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations",
+                                      dossier];
 }
 
 
@@ -425,9 +425,9 @@
                              andDocument:(NSString *)document
                          andAnnotationId:(NSString *)annotationId {
 
-	return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@",
-	                                  dossier,
-	                                  annotationId];
+    return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@",
+                                      dossier,
+                                      annotationId];
 }
 
 
@@ -442,25 +442,25 @@
                       success:(void (^)(NSArray *))success
                       failure:(void (^)(NSError *))failure {
 
-	// Create arguments dictionary
+    // Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
-	argumentDictionary[@"bureauCourant"] = bureauId;
-	argumentDictionary[@"annotPriv"] = privateAnnotation;
-	argumentDictionary[@"annotPub"] = publicAnnotation;
+    NSMutableDictionary *argumentDictionary = NSMutableDictionary.new;
+    argumentDictionary[@"bureauCourant"] = bureauId;
+    argumentDictionary[@"annotPriv"] = privateAnnotation;
+    argumentDictionary[@"annotPub"] = publicAnnotation;
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(1)
-	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa",
-	                                                           dossierId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+    [_swiftManager sendSimpleActionWithType:@(1)
+                                        url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/visa",
+                                                                       dossierId]
+                                       args:argumentDictionary
+                                 onResponse:^(id result) {
+                                     success(nil);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 }
 
 
@@ -472,24 +472,24 @@
                        success:(void (^)(NSArray *))success
                        failure:(void (^)(NSError *))failure {
 
-	NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
-	argumentDictionary[@"bureauCourant"] = bureauId;
-	argumentDictionary[@"annotPriv"] = privateAnnotation;
-	argumentDictionary[@"annotPub"] = publicAnnotation;
-	argumentDictionary[@"signature"] = signature;
+    NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
+    argumentDictionary[@"bureauCourant"] = bureauId;
+    argumentDictionary[@"annotPriv"] = privateAnnotation;
+    argumentDictionary[@"annotPub"] = publicAnnotation;
+    argumentDictionary[@"signature"] = signature;
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(1)
-	                                    url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
-	                                                                   dossierId]
-	                                   args:argumentDictionary
-	                             onResponse:^(id result) {
-		                             success(nil);
-	                             }
-	                                onError:^(NSError *error) {
-		                                failure(error);
-	                                }];
+    [_swiftManager sendSimpleActionWithType:@(1)
+                                        url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signature",
+                                                                       dossierId]
+                                       args:argumentDictionary
+                                 onResponse:^(id result) {
+                                     success(nil);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 };
 
 
@@ -500,25 +500,25 @@
                         success:(void (^)(NSArray *))success
                         failure:(void (^)(NSError *))failure {
 
-	// Create arguments dictionary
+    // Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
-	argumentDictionary[@"bureauCourant"] = bureauId;
-	argumentDictionary[@"annotPriv"] = privateAnnotation;
-	argumentDictionary[@"annotPub"] = publicAnnotation;
+    NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
+    argumentDictionary[@"bureauCourant"] = bureauId;
+    argumentDictionary[@"annotPriv"] = privateAnnotation;
+    argumentDictionary[@"annotPub"] = publicAnnotation;
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(1)
-	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet",
-	                                                           dossierId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+    [_swiftManager sendSimpleActionWithType:@(1)
+                                        url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/rejet",
+                                                                       dossierId]
+                                       args:argumentDictionary
+                                 onResponse:^(id result) {
+                                     success(nil);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 };
 
 
@@ -527,23 +527,23 @@
                                        success:(void (^)(NSArray *))success
                                        failure:(void (^)(NSError *))failure {
 
-	// Create arguments dictionary
+    // Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
-	argumentDictionary[@"bureauCourant"] = bureauId;
+    NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
+    argumentDictionary[@"bureauCourant"] = bureauId;
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(1)
-	                            url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
-	                                                           dossierId]
-	                           args:argumentDictionary
-	                     onResponse:^(id result) {
-		                     success(nil);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+    [_swiftManager sendSimpleActionWithType:@(1)
+                                        url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
+                                                                       dossierId]
+                                       args:argumentDictionary
+                                 onResponse:^(id result) {
+                                     success(nil);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 }
 
 
@@ -552,22 +552,22 @@
                     success:(void (^)(NSArray *))success
                     failure:(void (^)(NSError *))failure {
 
-	// Create arguments dictionary
+    // Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
+    NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(1)
-	                                    url:[self getAnnotationsUrlForDossier:dossierId
-	                                                              andDocument:annotation.unwrappedDocumentId]
-	                                   args:argumentDictionary
-	                             onResponse:^(NSNumber *result) {
-		                             success(NSArray.new);
-	                             }
-	                                onError:^(NSError *error) {
-		                                failure(error);
-	                                }];
+    [_swiftManager sendSimpleActionWithType:@(1)
+                                        url:[self getAnnotationsUrlForDossier:dossierId
+                                                                  andDocument:annotation.unwrappedDocumentId]
+                                       args:argumentDictionary
+                                 onResponse:^(NSNumber *result) {
+                                     success(NSArray.new);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 }
 
 
@@ -576,23 +576,23 @@
                        success:(void (^)(NSArray *))success
                        failure:(void (^)(NSError *))failure {
 
-	// Create arguments dictionary
+    // Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
+    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(2)
-	                            url:[self getAnnotationUrlForDossier:dossierId
-	                                                     andDocument:annotation.unwrappedDocumentId
-	                                                 andAnnotationId:annotation.unwrappedId]
-	                           args:argumentDictionary
-	                     onResponse:^(NSNumber *result) {
-		                     success(NSArray.new);
-	                     }
-	                        onError:^(NSError *error) {
-		                        failure(error);
-	                        }];
+    [_swiftManager sendSimpleActionWithType:@(2)
+                                        url:[self getAnnotationUrlForDossier:dossierId
+                                                                 andDocument:annotation.unwrappedDocumentId
+                                                             andAnnotationId:annotation.unwrappedId]
+                                       args:argumentDictionary
+                                 onResponse:^(NSNumber *result) {
+                                     success(NSArray.new);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 }
 
 
@@ -601,23 +601,23 @@
                        success:(void (^)(NSArray *))success
                        failure:(void (^)(NSError *))failure {
 
-	// Create arguments dictionary
+    // Create arguments dictionary
 
-	NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
+    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
 
-	// Send request
+    // Send request
 
-	[_swiftManager sendSimpleActionWithType:@(3)
-	                                    url:[self getAnnotationUrlForDossier:dossierId
-	                                                             andDocument:annotation.unwrappedDocumentId
-	                                                         andAnnotationId:annotation.unwrappedId]
-	                                   args:argumentDictionary
-	                             onResponse:^(id result) {
-		                             success(NSArray.new);
-	                             }
-	                                onError:^(NSError *error) {
-		                                failure(error);
-	                                }];
+    [_swiftManager sendSimpleActionWithType:@(3)
+                                        url:[self getAnnotationUrlForDossier:dossierId
+                                                                 andDocument:annotation.unwrappedDocumentId
+                                                             andAnnotationId:annotation.unwrappedId]
+                                       args:argumentDictionary
+                                 onResponse:^(id result) {
+                                     success(NSArray.new);
+                                 }
+                                    onError:^(NSError *error) {
+                                        failure(error);
+                                    }];
 }
 
 

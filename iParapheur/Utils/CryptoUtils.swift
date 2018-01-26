@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import SSZipArchive
 import UIKit
@@ -160,7 +161,7 @@ import CryptoSwift
         result = result.replacingOccurrences(of: "\n", with: "")
 
         if let index = result.range(of: PUBLIC_KEY_BEGIN_CERTIFICATE)?.upperBound {
-			result = String(result.suffix(from: index))
+            result = String(result.suffix(from: index))
         }
 
         if let index = result.range(of: PUBLIC_KEY_END_CERTIFICATE)?.lowerBound {
@@ -189,49 +190,65 @@ import CryptoSwift
     }
 
 
-//    class func loadSecKey(p12path: String,
-//                          password: String) -> SecKey? {
-//
-//        let fileManager = FileManager.default
-//        if fileManager.fileExists(atPath: p12path){
-//
-//            let p12Data: NSData = NSData(contentsOfFile: p12path)!
-//            let key : NSString = kSecImportExportPassphrase as NSString
-//            let options : NSDictionary = [key : password]
-//
-//            var privateKeyRef: SecKey? = nil
-//            var items : CFArray?
-//            var securityError: OSStatus = SecPKCS12Import(p12Data, options, &items)
-//            let identityDict: CFDictionary = CFArrayGetValueAtIndex(items, 0) as! CFDictionary
-//            let identityApp: SecIdentity = CFDictionaryGetValue(identityDict, kSecImportItemIdentity) as! SecIdentity;
-//            var securityError2 = SecIdentityCopyPrivateKey(identityApp, &privateKeyRef);
-//        }
-//
-//        return nil
-//    }
-//
-//    @objc class func pkcs1Sign(data: Data,
-//                               privateKeyPath: String,
-//                               password: String) -> String? {
-//
-//        let privateSecKey = ADLKeyStore.loadPrivateKeySecRef(withPath: privateKeyPath,
-//                                                             andPassword: password) as! SecKey
-//
-//        var error: Unmanaged<CFError>?
-//        let algorithm: SecKeyAlgorithm = .rsaSignatureMessagePKCS1v15SHA1
-//        guard let signature = SecKeyCreateSignature(privateSecKey,
-//                                                    algorithm,
-//                                                    data as CFData,
-//                                                    &error) as Data? else {
-//
-//            print("Signature Adrien PKCS#1 : Something went wrong, bro")
-//            return nil
-//        }
-//
-//        let result = String(data: signature, encoding: .utf8)
-//        print("Signature Adrien PKCS#1 : \(result)")
-//        return result;
-//    }
+    @objc class func sign(signInfo: SignInfo,
+                          dossierId: String,
+                          privateKey: PrivateKey,
+                          password: String) throws -> String {
+
+        var signers: [Signer] = []
+        var signatures: [String] = []
+
+        for hashIndex in 0..<signInfo.hashesToSign.count {
+            switch signInfo.format {
+
+            case "CMS",
+                 "PADES":
+                signers.append(CmsSigner(signInfo: signInfo,
+                                         privateKey: privateKey))
+
+            case "XADES-env":
+                signers.append(XadesEnvSigner(signInfo: signInfo,
+                                              hashIndex: hashIndex,
+                                              privateKey: privateKey))
+
+            default:
+                throw NSError(domain: "Ce format n'est pas supporté", code: 0, userInfo: nil)
+            }
+        }
+
+        // Retrieving signature certificate
+
+        let fileManager = FileManager()
+        guard let pathURL = try? fileManager.url(for: .applicationSupportDirectory,
+                                                 in: .userDomainMask,
+                                                 appropriateFor: nil,
+                                                 create: true) else {
+            throw NSError(domain: "Erreur à la récupération du certificat", code: 0, userInfo: nil)
+        }
+
+        let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename)
+
+        // Building signature response
+
+        for signer in signers {
+
+            let hash = signer.generateHashToSign();
+            guard var signedHash = CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
+                                                       keyFilePath: p12AbsolutePath.path,
+                                                       password: password) else {
+                throw NSError(domain: "Erreur inconnue lors de la signature", code: 0, userInfo: nil)
+            }
+
+            print("Adrien - signedHash = \(signedHash)");
+
+            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
+            let finalSignature = signer.buildDataToReturn(signedHash: signedHash)
+            signatures.append(finalSignature)
+        }
+
+        let finalSignature = signatures.joined(separator: ",")
+        return finalSignature
+    }
 
 
     @objc class func rsaSign(data: NSData,
@@ -278,8 +295,7 @@ import CryptoSwift
         do {
             p12KeyFileContent = try Data(contentsOf: URL(fileURLWithPath: keyFilePath),
                                          options: .alwaysMapped) as CFData
-        }
-        catch {
+        } catch {
             NSLog("Cannot read PKCS12 file from \(keyFilePath)")
             return nil
         }

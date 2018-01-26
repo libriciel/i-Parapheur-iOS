@@ -233,7 +233,7 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 
 - (void)getCircuit:(NSString *)dossier
-           success:(void (^)(ADLResponseCircuit *))success
+           success:(void (^)(Circuit *))success
            failure:(void (^)(NSError *))failure {
 
 	[_restClientApi getCircuit:dossier

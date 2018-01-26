@@ -370,90 +370,44 @@
 - (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo
 							 dossier:(NSString *)dossierId {
 
-	NSMutableArray *signers = NSMutableArray.new;
-	NSMutableArray *signatures = NSMutableArray.new;
-	PrivateKey *pkey = _currentPKey;
+    // Compute signature(s)
 
-	for (int hashIndex = 0; hashIndex < signInfo.hashesToSign.count; hashIndex++) {
+    NSError *error = nil;
+    NSString *signatureResult = [CryptoUtils signWithSignInfo:signInfo
+                                                        dossierId:dossierId
+                                                             privateKey:_currentPKey
+                                                         password:_p12password
+                                                            error:&error];
 
-		if ([signInfo.format isEqualToString:@"CMS"] || [signInfo.format containsString:@"PADES"]) {
+    if (error != nil) {
+        [ViewUtils logErrorWithMessage:error.domain
+                                 title:@"Signature impossible"];
+        return;
+    }
 
-			[signers addObject:[CmsSigner.alloc initWithSignInfo:signInfo
-			                                          privateKey:pkey]];
+    // Sending back result
 
-		} else if ([signInfo.format isEqualToString:@"XADES-env"]) {
+    __weak typeof(self) weakSelf = self;
+    [_restClient actionSignerForDossier:dossierId
+                              forBureau:_bureauCourant
+                   withPublicAnnotation:_annotationPublique.text
+                  withPrivateAnnotation:_annotationPrivee.text
+                          withSignature:signatureResult
+                                success:^(NSArray *array) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                    if (strongSelf) {
+                                        NSLog(@"Signature success");
+                                        [strongSelf dismissDialogView];
+                                    }
+                                }
+                                failure:^(NSError *restError) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                    if (strongSelf) {
+                                        NSLog(@"Signature fail");
+                                        [strongSelf didEndWithUnReachableNetwork];
+                                    }
+                                }];
 
-			[signers addObject:[XadesEnvSigner.alloc initWithSignInfo:signInfo
-			                                                hashIndex:@(hashIndex)
-			                                               privateKey:pkey]];
-
-		} else {
-			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
-			                           title:@"Signature impossible"];
-		}
-	}
-
-	// Retrieving signature certificate
-
-	NSFileManager *fileManager = NSFileManager.new;
-	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-	                                     inDomain:NSUserDomainMask
-	                            appropriateForURL:nil
-	                                       create:YES
-	                                        error:NULL];
-
-	NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
-
-	// Building signature response
-
-	for (Signer *signer in signers) {
-
-		NSString *hash = [signer generateHashToSign];
-		NSString *signedHash = [CryptoUtils rsaSignWithData:[NSData dataFromBase64String:hash]
-		                                        keyFilePath:p12AbsolutePath
-		                                           password:_p12password];
-
-		NSLog(@"Adrien - signedHash = %@", signedHash);
-
-		// Add result, or cancel on error
-
-		if (signedHash == nil)
-			break;
-
-		signedHash = [signedHash stringByReplacingOccurrencesOfString:@"\n"
-		                                                   withString:@""].mutableCopy;
-
-		NSString *finalSignature = [signer buildDataToReturnWithSignedHash:signedHash];
-		[signatures addObject:finalSignature];
-	}
-
-	NSString *finalSignature = [signatures componentsJoinedByString:@","];
-
-	// Sending back result
-
-	[self showHud];
-	NSLog(@"Adrien, finalSignature : %@", finalSignature);
-
-	__weak typeof(self) weakSelf = self;
-	[_restClient actionSignerForDossier:dossierId
-	                          forBureau:_bureauCourant
-	               withPublicAnnotation:_annotationPublique.text
-	              withPrivateAnnotation:_annotationPrivee.text
-	                      withSignature:finalSignature
-	                            success:^(NSArray *array) {
-		                            __strong typeof(weakSelf) strongSelf = weakSelf;
-		                            if (strongSelf) {
-			                            NSLog(@"Signature success");
-			                            [strongSelf dismissDialogView];
-		                            }
-	                            }
-	                            failure:^(NSError *restError) {
-		                            __strong typeof(weakSelf) strongSelf = weakSelf;
-		                            if (strongSelf) {
-			                            NSLog(@"Signature fail");
-			                            [strongSelf didEndWithUnReachableNetwork];
-		                            }
-	                            }];
 }
 
 

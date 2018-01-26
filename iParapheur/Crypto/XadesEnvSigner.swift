@@ -60,12 +60,12 @@ import AEXML
 
 
     @objc init(signInfo: SignInfo,
-               hashIndex: NSNumber,
+               hashIndex: Int,
                privateKey: PrivateKey) {
 
         mSignInfo = signInfo
         mPrivateKey = privateKey
-        mIndex = hashIndex.intValue
+        mIndex = hashIndex
 
         let pollutedPublicKey = String(data: mPrivateKey.publicKey, encoding: String.Encoding.utf8)
         mPublicKey = CryptoUtils.cleanupPublicKey(publicKey: pollutedPublicKey!)
