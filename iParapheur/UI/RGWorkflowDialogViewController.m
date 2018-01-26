@@ -363,7 +363,6 @@
 	                otherButtonTitles:nil] show];
 }
 
-
 /**
 * APIv3 response
 */
@@ -387,6 +386,8 @@
 
     // Sending back result
 
+    [self showHud];
+
     __weak typeof(self) weakSelf = self;
     [_restClient actionSignerForDossier:dossierId
                               forBureau:_bureauCourant
@@ -407,9 +408,7 @@
                                         [strongSelf didEndWithUnReachableNetwork];
                                     }
                                 }];
-
 }
-
 
 /**
  * Retrieve every circuit, to fetch isDigitalSignatureMandatory value.
@@ -442,7 +441,6 @@
 		                }];
 	}
 }
-
 
 /**
  * Switch every Dossier to paper signature.
@@ -484,31 +482,6 @@
 //	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
 //		_paperSignatureButton.hidden = isSignMandatory;
 	_paperSignatureButton.hidden = true; // TODO Adrien : Fix this
-}
-
-
-- (NSString *)signData:(NSString *)hash
-          withKeystore:(ADLKeyStore *)keystore
-               withP12:(NSString *)p12AbsolutePath {
-
-	NSData *hash_data = [StringUtils bytesFromHexString:hash];
-
-	NSError *error = nil;
-	NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-	                           withPassword:_p12password
-	                                andData:hash_data
-	                                  error:&error];
-
-	if (signature == nil && error != nil) {
-
-		[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-		                         title:@"Une erreur s'est produite lors de la signature"];
-
-		return nil;
-	}
-	else {
-		return [CryptoUtils dataToBase64StringWithData:signature];
-	}
 }
 
 
