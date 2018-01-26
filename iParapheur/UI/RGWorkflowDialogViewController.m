@@ -374,14 +374,14 @@
 
     NSError *error = nil;
     NSString *signatureResult = [CryptoUtils signWithSignInfo:signInfo
-                                                        dossierId:dossierId
-                                                             privateKey:_currentPKey
-                                                         password:_p12password
-                                                            error:&error];
+                                                    dossierId:dossierId
+                                                   privateKey:_currentPKey
+                                                     password:_p12password
+                                                        error:&error];
 
     if (error != nil) {
         [ViewUtils logErrorWithMessage:error.domain
-                                 title:@"Signature impossible"];
+                                 title:@"Erreur à la signature"];
         return;
     }
 

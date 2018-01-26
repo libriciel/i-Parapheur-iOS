@@ -212,7 +212,7 @@ import CryptoSwift
                                               privateKey: privateKey))
 
             default:
-                throw NSError(domain: "Ce format n'est pas supporté", code: 0, userInfo: nil)
+                throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
             }
         }
 
@@ -223,7 +223,7 @@ import CryptoSwift
                                                  in: .userDomainMask,
                                                  appropriateFor: nil,
                                                  create: true) else {
-            throw NSError(domain: "Erreur à la récupération du certificat", code: 0, userInfo: nil)
+            throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
         }
 
         let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename)
@@ -233,13 +233,9 @@ import CryptoSwift
         for signer in signers {
 
             let hash = signer.generateHashToSign();
-            guard var signedHash = CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
-                                                       keyFilePath: p12AbsolutePath.path,
-                                                       password: password) else {
-                throw NSError(domain: "Erreur inconnue lors de la signature", code: 0, userInfo: nil)
-            }
-
-            print("Adrien - signedHash = \(signedHash)");
+            var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
+                                                     keyFilePath: p12AbsolutePath.path,
+                                                     password: password)
 
             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
             let finalSignature = signer.buildDataToReturn(signedHash: signedHash)
@@ -253,13 +249,17 @@ import CryptoSwift
 
     @objc class func rsaSign(data: NSData,
                              keyFilePath: String,
-                             password: String?) -> String? {
+                             password: String?) throws -> String {
 
-        let secKey = CryptoUtils.pkcs12ReadKey(path: keyFilePath,
-                                               password: password)
+        guard let secKey = CryptoUtils.pkcs12ReadKey(path: keyFilePath,
+                                                     password: password) else {
+            throw NSError(domain: "Mot de passe invalide ?", code: 0, userInfo: nil)
+        }
 
-        let result = CryptoUtils.rsaSign(data: data,
-                                         privateKey: secKey!)
+        guard let result = CryptoUtils.rsaSign(data: data,
+                                         privateKey: secKey) else {
+            throw NSError(domain: "Erreur inconnue", code: 0, userInfo: nil)
+        }
 
         return result
     }
