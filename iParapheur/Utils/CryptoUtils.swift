@@ -32,15 +32,23 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import SSZipArchive
 import UIKit
 import AEXML
+import Security
+import CryptoSwift
 
 
 @objc class CryptoUtils: NSObject {
 
+
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
+    static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
+    static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
+    static private let PKCS7_BEGIN = "-----PKCS7 BEGIN-----"
+    static private let PKCS7_END = "-----PKCS7 BEGIN-----"
 
 
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
@@ -133,125 +141,218 @@ import AEXML
 
 
     @objc class func dataToBase64String(data: NSData) -> NSString {
-        print("Adrien data   : \(data)")
-        let result = (data as Data).base64EncodedString(options: .endLineWithLineFeed)
-        print("Adrien result : \(result)")
-        return result as NSString;
+
+        // let result = (data as Data).base64EncodedString()
+
+        let pollutedSignature = String(data: data as Data, encoding: .utf8)
+        let cleanedSignature = cleanupSignature(publicKey: pollutedSignature!)
+
+        print("dataToBase64String << \(pollutedSignature!)")
+        print("dataToBase64String >> \(cleanedSignature)")
+
+        return cleanedSignature as NSString;
     }
 
 
-    @objc class func buildXadesEnveloppedSignWrapper(privateKey: PrivateKey,
-                                                     signatureValue: String,
-                                                     signInfo: SignInfo) -> String {
+    @objc class func cleanupPublicKey(publicKey: String) -> String {
 
-        // create XML Document
-        let rootDocument = AEXMLDocument()
-        let documentDetachedExternalSignature = rootDocument.addChild(name: "DocumentDetachedExternalSignature")
+        var result = publicKey.trimmingCharacters(in: CharacterSet.whitespaces)
+        result = result.trimmingCharacters(in: CharacterSet.newlines)
+        result = result.replacingOccurrences(of: "\n", with: "")
 
-        let signature = documentDetachedExternalSignature.addChild(name: "ds:Signature",
-                                                                   attributes: [
-                                                                       "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
-                                                                       "Id": "IDF2017-05-17T08-29-45.35_SIG_1"
-                                                                   ])
+        if let index = result.range(of: PUBLIC_KEY_BEGIN_CERTIFICATE)?.upperBound {
+            result = String(result.suffix(from: index))
+        }
 
-        // ds:SignedInfo
+        if let index = result.range(of: PUBLIC_KEY_END_CERTIFICATE)?.lowerBound {
+            result = String(result.prefix(upTo: index))
+        }
 
-        let signedInfo = signature.addChild(name: "ds:SignedInfo")
-        signedInfo.addChild(name: "ds:CanonicalizationMethod",
-                            attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
-        signedInfo.addChild(name: "ds:SignatureMethod",
-                            attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"])
+        return result
+    }
 
-        let reference1 = signedInfo.addChild(name: "ds:Reference",
-                                             attributes: ["URI": "#\(signInfo.pesId)"])
 
-        let transforms1 = reference1.addChild(name: "ds:Transforms")
-        transforms1.addChild(name: "ds:Transform",
-                             attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#enveloped-signature"])
-        transforms1.addChild(name: "ds:Transform",
-                             attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
+    @objc class func cleanupSignature(publicKey: String) -> String {
 
-        reference1.addChild(name: "ds:DigestMethod",
-                            attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        reference1.addChild(name: "ds:DigestValue",
-                            value: "IoD02noHfnPPyW32kLXkqjs67pg=") //TODO
+        var result = publicKey.trimmingCharacters(in: CharacterSet.whitespaces)
+        result = result.trimmingCharacters(in: CharacterSet.newlines)
+        result = result.replacingOccurrences(of: "\n", with: "")
 
-        let reference2 = signedInfo.addChild(name: "ds:Reference",
-                                             attributes: ["Type": "http://uri.etsi.org/01903/v1.1.1#SignedProperties",
-                                                          "URI": "#\(signInfo.pesId)_SIG_1_SP"])
+        if let index = result.range(of: PKCS7_BEGIN)?.upperBound {
+            result = String(result.suffix(from: index))
+        }
 
-        let transforms2 = reference2.addChild(name: "ds:Transforms")
-        transforms2.addChild(name: "ds:Transform",
-                             attributes: ["Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"])
-        reference2.addChild(name: "ds:DigestMethod",
-                            attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        reference2.addChild(name: "ds:DigestValue",
-                            value: "ompiAGv4kR9H6fLtUMios2m0Eok=")
+        if let index = result.range(of: PKCS7_END)?.lowerBound {
+            result = String(result.prefix(upTo: index))
+        }
 
-        // ds:SignatureValue
+        return result
+    }
 
-        let xmlSignatureValue = signature.addChild(name: "ds:SignatureValue",
-                                                   value: signatureValue,
-                                                   attributes: ["Id": "\(signInfo.pesId)_SIG_1_SV",])
 
-        // ds:KeyInfo
+    @objc class func sign(signInfo: SignInfo,
+                          dossierId: String,
+                          privateKey: PrivateKey,
+                          password: String) throws -> String {
 
-        let keyInfo = signature.addChild(name: "ds:KeyInfo")
-        let x509data = keyInfo.addChild(name: "ds:X509Data")
-        let x509value = privateKey.publicKey as? String
-        x509data.addChild(name: "ds:X509Certificate", value: x509value) // TODO
+        var signers: [Signer] = []
+        var signatures: [String] = []
 
-        // ds:Object
+        for hashIndex in 0..<signInfo.hashesToSign.count {
+            switch signInfo.format {
 
-        let object = signature.addChild(name: "ds:Object")
-        let qualifyingProperties = object.addChild(name: "xad:QualifyingProperties",
-                                                   attributes: ["xmlns:xad": "http://uri.etsi.org/01903/v1.1.1#",
-                                                                "xmlns": "http://uri.etsi.org/01903/v1.1.1#",
-                                                                "Target": "#\(signInfo.pesId)_SIG_1"])
+            case "CMS",
+                 "PADES":
+                signers.append(CmsSigner(signInfo: signInfo,
+                                         privateKey: privateKey))
 
-        let signedProperties = qualifyingProperties.addChild(name: "xad:SignedProperties",
-                                                             attributes: ["Id": "\(signInfo.pesId)_SIG_1_SP"])
+            case "XADES-env":
+                signers.append(XadesEnvSigner(signInfo: signInfo,
+                                              hashIndex: hashIndex,
+                                              privateKey: privateKey))
 
-        let signedSignatureProperties = signedProperties.addChild(name: "xad:SignedSignatureProperties")
-        signedSignatureProperties.addChild(name: "xad:SigningTime", value: "2017-11-24T16:26:26Z") //TODO
+            default:
+                throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
+            }
+        }
 
-        let signingCertificate = signedSignatureProperties.addChild(name: "xad:SigningCertificate")
-        let cert = signingCertificate.addChild(name: "xad:Cert")
+        // Retrieving signature certificate
 
-        let certDigest = cert.addChild(name: "xad:CertDigest")
-        certDigest.addChild(name: "xad:DigestMethod", attributes: ["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        certDigest.addChild(name: "xad:DigestValue", value: "YrYa/XnH7hswQF3F3r9YamGNz9Q=") //TODO
+        let fileManager = FileManager()
+        guard let pathURL = try? fileManager.url(for: .applicationSupportDirectory,
+                                                 in: .userDomainMask,
+                                                 appropriateFor: nil,
+                                                 create: true) else {
+            throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
+        }
 
-        let issuerSerial = cert.addChild(name: "xad:IssuerSerial")
-        issuerSerial.addChild(name: "ds:X509IssuerName", value: "1.2.840.113549.1.9.1=#161473797374656d65406164756c6c6163742e6f7267,CN=AC_ADULLACT_Utilisateurs_G3,OU=AC_ADULLACT_Utilisateurs_G3,O=Association ADULLACT,ST=Herault,C=FR") //TODO
-        issuerSerial.addChild(name: "ds:X509SerialNumber", value: "427259974943974867302612086964623560387531064724") //TODO
+        let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename)
 
-        let signaturePolicyIdentifier = signedSignatureProperties.addChild(name: "xad:SignaturePolicyIdentifier")
-        let signaturePolicyId = signaturePolicyIdentifier.addChild(name: "xad:SignaturePolicyId")
+        // Building signature response
 
-        let sigPolicyId = signaturePolicyId.addChild(name: "xad:SigPolicyId")
-        sigPolicyId.addChild(name: "xad:Identifier", value: signInfo.pesPolicyId)
-        sigPolicyId.addChild(name: "xad:Description", value: signInfo.pesPolicyDesc)
+        for signer in signers {
 
-        let sigPolicyHash = signaturePolicyId.addChild(name: "xad:SigPolicyHash")
-        sigPolicyHash.addChild(name: "xad:DigestMethod", attributes:["Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"])
-        sigPolicyHash.addChild(name: "xad:DigestValue", value:"G4CqRa9R5c9Yg+dzMH3gbEc4Kqo=") //TODO
+            let hash = signer.generateHashToSign();
+            var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
+                                                     keyFilePath: p12AbsolutePath.path,
+                                                     password: password)
 
-        let sigPolicyQualifiers = signaturePolicyId.addChild(name: "xad:SigPolicyQualifiers")
-        let sigPolicyQualifier = sigPolicyQualifiers.addChild(name: "xad:SigPolicyQualifier")
-        sigPolicyQualifier.addChild(name: "xad:SPURI", value: "http://www.s2low.org/PolitiqueSignature-Agent")
+            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
+            let finalSignature = signer.buildDataToReturn(signedHash: signedHash)
+            signatures.append(finalSignature)
+        }
 
-        let signatureProductionPlace = signedSignatureProperties.addChild(name: "xad:SignatureProductionPlace")
-        signatureProductionPlace.addChild(name: "xad:City", value: signInfo.pesCity)
-        signatureProductionPlace.addChild(name: "xad:PostalCode", value: signInfo.pesPostalCode)
-        signatureProductionPlace.addChild(name: "xad:CountryName", value: signInfo.pesCountryName)
+        let finalSignature = signatures.joined(separator: ",")
+        return finalSignature
+    }
 
-        let signerRole = signedSignatureProperties.addChild(name: "xad:SignerRole")
-        let claimedRoles = signerRole.addChild(name: "xad:ClaimedRoles")
-        claimedRoles.addChild(name: "xad:ClaimedRole", value: signInfo.pesClaimedRole)
 
-        // Prints the same XML structure as original
-        return rootDocument.xmlCompact
+    @objc class func rsaSign(data: NSData,
+                             keyFilePath: String,
+                             password: String?) throws -> String {
+
+        guard let secKey = CryptoUtils.pkcs12ReadKey(path: keyFilePath,
+                                                     password: password) else {
+            throw NSError(domain: "Mot de passe invalide ?", code: 0, userInfo: nil)
+        }
+
+        guard let result = CryptoUtils.rsaSign(data: data,
+                                         privateKey: secKey) else {
+            throw NSError(domain: "Erreur inconnue", code: 0, userInfo: nil)
+        }
+
+        return result
+    }
+
+
+    class func rsaSign(data: NSData,
+                       privateKey: SecKey!) -> String? {
+
+        let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
+        var signedDataLength = signedData.length
+
+        let err: OSStatus = SecKeyRawSign(privateKey,
+                                          SecPadding.PKCS1SHA1,
+                                          data.bytes.assumingMemoryBound(to: UInt8.self),
+                                          data.length,
+                                          signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),
+                                          &signedDataLength)
+
+        // Result
+
+        if (err == errSecSuccess) {
+            return signedData.base64EncodedString()
+        }
+
+        return nil
+    }
+
+
+    class func pkcs12ReadKey(path keyFilePath: String,
+                             password: String?) -> SecKey? {
+
+        var p12KeyFileContent: CFData?
+        do {
+            p12KeyFileContent = try Data(contentsOf: URL(fileURLWithPath: keyFilePath),
+                                         options: .alwaysMapped) as CFData
+        } catch {
+            NSLog("Cannot read PKCS12 file from \(keyFilePath)")
+            return nil
+        }
+
+        let options: CFDictionary = [kSecImportExportPassphrase: password ?? ""] as CFDictionary
+        let citems = UnsafeMutablePointer<CFArray?>.allocate(capacity: 1)
+
+        let resultPKCS12Import = SecPKCS12Import(p12KeyFileContent!, options, citems)
+        if (resultPKCS12Import != errSecSuccess) {
+            return nil
+        }
+
+        let items = citems.pointee as NSArray?
+        let myIdentityAndTrust = items!.object(at: 0) as! NSDictionary
+        let identityKey = String(kSecImportItemIdentity)
+        let identity = myIdentityAndTrust[identityKey] as! SecIdentity
+
+        let trustKey = String(kSecImportItemTrust)
+        _ = myIdentityAndTrust[trustKey] as! SecTrust
+
+        let privateKey = UnsafeMutablePointer<SecKey?>.allocate(capacity: 1)
+        let resultCopyPrivateKey = SecIdentityCopyPrivateKey(identity, privateKey)
+        if (resultCopyPrivateKey != errSecSuccess) {
+            print("SecIdentityCopyPrivateKey fail")
+            return nil
+        }
+
+        print("SecIdentityCopyPrivateKey success : \(privateKey.pointee)")
+        return privateKey.pointee
+    }
+
+
+    class func sha1Base64(string: String) -> String {
+        let hexSha1 = string.sha1()
+        let sha1Data = CryptoUtils.dataWithHexString(hex: hexSha1)
+        return sha1Data.base64EncodedString()
+    }
+
+
+    class func sha1Base64(data: Data) -> String {
+        let sha1Data = data.sha1()
+        return sha1Data.base64EncodedString()
+    }
+
+
+    class func dataWithHexString(hex: String) -> Data {
+        var hex = hex
+        var data = Data()
+        while (hex.count > 0) {
+            let c: String = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))
+            hex = hex.substring(from: hex.index(hex.startIndex, offsetBy: 2))
+            var ch: UInt32 = 0
+            Scanner(string: c).scanHexInt32(&ch)
+            var char = UInt8(ch)
+            data.append(&char, count: 1)
+        }
+        return data
     }
 
 }

@@ -299,8 +299,8 @@
 	NSArray *accountList = [ModelsDataController fetchAccounts];
 
 	for (Account *account in accountList) {
-		if ([selectedAccountId isEqualToString:account.unwrappedId]) {
-			login = account.unwrappedLogin;
+		if ([selectedAccountId isEqualToString:account.id]) {
+			login = account.login;
 		}
 	}
 

@@ -39,6 +39,7 @@ import Foundation
 
 @objc class SettingsAccountsEditPopupController: UIViewController {
 
+
     static let NotifDocumentSaved = Notification.Name("SettingsAccountsEditPopupControllerNotifDocumentSaved")
     static let Segue: String! = "EditAccountSegue"
     static let PreferredWidth: CGFloat = 500
@@ -55,6 +56,7 @@ import Foundation
 
     var currentAccount: Account?
     var currentRestClient: RestClientApiV3?
+
 
 	// MARK: - Life cycle
 	

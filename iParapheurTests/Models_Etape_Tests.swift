@@ -36,7 +36,7 @@ import XCTest
 @testable import iParapheur
 
 
-class EtapeTests: XCTestCase {
+class Models_Etape_Tests: XCTestCase {
 
 
     func testDecodeFull() {
@@ -115,7 +115,7 @@ class EtapeTests: XCTestCase {
     }
 
 
-    func testFail() {
+    func testDecodeFail() {
 
         let etapeJsonString = "{{{"
         let etapeJsonData = etapeJsonString.data(using: .utf8)!

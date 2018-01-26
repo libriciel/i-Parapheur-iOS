@@ -32,31 +32,17 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import XCTest
-@testable import iParapheur
+import Foundation
 
+/**
+  * A Protocol would have been more elegant,
+  * But I had some issues with Swift/ObjC crossed calls.
+  * It was made in a rush, so... NSObject it is.
+  */
+@objc class Signer: NSObject {
 
-class ColorUtilsTests: XCTestCase {
+    @objc func generateHashToSign() -> String { return "Generic signer" }
 
-
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-
-
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
-    }
+    @objc func buildDataToReturn(signedHash: String) -> String { return "Generic signer" }
 
 }

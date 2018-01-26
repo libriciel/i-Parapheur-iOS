@@ -42,6 +42,7 @@
 #import "LGViewHUD.h"
 #import <NSData_Base64/NSData+Base64.h>
 #import "StringUtils.h"
+#import "iParapheur-Swift.h"
 
 
 #define RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE 1
@@ -209,11 +210,11 @@
 				}
 			}
 			else {
-			[[[UIAlertView alloc] initWithTitle:@"Attention"
-			                            message:@"Veuillez saisir le motif de votre rejet"
-			                           delegate:nil
-			                  cancelButtonTitle:@"Fermer"
-			                  otherButtonTitles:nil] show];
+			[[UIAlertView.alloc initWithTitle:@"Attention"
+			                          message:@"Veuillez saisir le motif de votre rejet"
+			                         delegate:nil
+			                cancelButtonTitle:@"Fermer"
+			                otherButtonTitles:nil] show];
 		}
 
 	}
@@ -355,128 +356,59 @@
 
 - (void)didEndWithUnReachableNetwork {
 
-	[[[UIAlertView alloc] initWithTitle:@"Erreur"
-	                            message:@"Une erreur est survenue lors de l'envoi de la requête"
-	                           delegate:nil
-	                  cancelButtonTitle:@"Fermer"
-	                  otherButtonTitles:nil] show];
+	[[UIAlertView.alloc initWithTitle:@"Erreur"
+	                          message:@"Une erreur est survenue lors de l'envoi de la requête"
+	                         delegate:nil
+	                cancelButtonTitle:@"Fermer"
+	                otherButtonTitles:nil] show];
 }
-
 
 /**
 * APIv3 response
 */
-- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo {
+- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo
+							 dossier:(NSString *)dossierId {
 
-	NSMutableArray *hashes = NSMutableArray.new;
-	NSMutableArray *dossiers = NSMutableArray.new;
-	NSMutableArray *signatures = NSMutableArray.new;
+    // Compute signature(s)
 
-	for (Dossier *dossier in _dossiers) {
+    NSError *error = nil;
+    NSString *signatureResult = [CryptoUtils signWithSignInfo:signInfo
+                                                    dossierId:dossierId
+                                                   privateKey:_currentPKey
+                                                     password:_p12password
+                                                        error:&error];
 
-		NSLog(@"Adrien -- %@", signInfo.format);
+    if (error != nil) {
+        [ViewUtils logErrorWithMessage:error.domain
+                                 title:@"Erreur à la signature"];
+        return;
+    }
 
-		if ([signInfo.format isEqualToString:@"CMS"]) { // || [signInfo.format containsString:@"PADES"]) { // || [signInfo.format isEqualToString:@"XADES-env"]) {
-			[dossiers addObject:dossier.unwrappedId];
-			[hashes addObject:signInfo.hashToSign];
-		} else {
-			[ViewUtils logWarningWithMessage:@"Ce format n'est pas supporté"
-			                           title:@"Signature impossible"];
-		}
-	}
+    // Sending back result
 
-	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
-	PrivateKey *pkey = _currentPKey;
+    [self showHud];
 
-	// Retrieving signature certificate
-
-	NSFileManager *fileManager = NSFileManager.new;
-	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-	                                     inDomain:NSUserDomainMask
-	                            appropriateForURL:nil
-	                                       create:YES
-	                                        error:NULL];
-
-	NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
-
-	// Building signature response
-
-	NSLog(@"Adrien hashes : %@", hashes);
-	for (NSString *hash in hashes) {
-		NSMutableString *signedHash;
-
-		// Signing hashes, multi-doc way if needed
-
-		if ([StringUtils doesString:hash
-		          containsSubString:@","]) {
-
-			NSArray *subHashes = [hash componentsSeparatedByString:@","];
-			for (NSString *subHash in subHashes) {
-
-				NSString *subSignedHash = [self signData:subHash
-				                            withKeystore:keystore
-				                                 withP12:p12AbsolutePath];
-
-				if (subHash == subHashes.firstObject) {
-					signedHash = subSignedHash.mutableCopy;
-				} else {
-					[signedHash appendString:@","];
-					[signedHash appendString:subSignedHash];
-				}
-			}
-
-		} else {
-
-			signedHash = [self signData:hash
-			               withKeystore:keystore
-			                    withP12:p12AbsolutePath].mutableCopy;
-		}
-
-		// Add result, or cancel on error
-
-		if (signedHash == nil)
-			break;
-
-		signedHash = [signedHash stringByReplacingOccurrencesOfString:@"\n"
-		                                                   withString:@""].mutableCopy;
-
-		[signatures addObject:signedHash];
-	}
-
-	// Checking and sending back result
-
-	if ((signatures.count > 0) && (signatures.count == hashes.count) && (dossiers.count == hashes.count)) {
-
-		for (int i = 0; i < signatures.count; i++) {
-
-			NSLog(@"Send signature dossier=%@, signSize=%lu", dossiers[(NSUInteger) i], sizeof(signatures[(NSUInteger) i]));
-			[self showHud];
-
-			__weak typeof(self) weakSelf = self;
-
-			[_restClient actionSignerForDossier:dossiers[(NSUInteger) i]
-			                          forBureau:_bureauCourant
-			               withPublicAnnotation:_annotationPublique.text
-			              withPrivateAnnotation:_annotationPrivee.text
-			                      withSignature:signatures[(NSUInteger) i]
-			                            success:^(NSArray *array) {
-				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-				                            if (strongSelf) {
-					                            NSLog(@"Signature success");
-					                            [strongSelf dismissDialogView];
-				                            }
-			                            }
-			                            failure:^(NSError *restError) {
-				                            __strong typeof(weakSelf) strongSelf = weakSelf;
-				                            if (strongSelf) {
-					                            NSLog(@"Signature fail");
-					                            [strongSelf didEndWithUnReachableNetwork];
-				                            }
-			                            }];
-		}
-	}
+    __weak typeof(self) weakSelf = self;
+    [_restClient actionSignerForDossier:dossierId
+                              forBureau:_bureauCourant
+                   withPublicAnnotation:_annotationPublique.text
+                  withPrivateAnnotation:_annotationPrivee.text
+                          withSignature:signatureResult
+                                success:^(NSArray *array) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                    if (strongSelf) {
+                                        NSLog(@"Signature success");
+                                        [strongSelf dismissDialogView];
+                                    }
+                                }
+                                failure:^(NSError *restError) {
+                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                    if (strongSelf) {
+                                        NSLog(@"Signature fail");
+                                        [strongSelf didEndWithUnReachableNetwork];
+                                    }
+                                }];
 }
-
 
 /**
  * Retrieve every circuit, to fetch isDigitalSignatureMandatory value.
@@ -509,7 +441,6 @@
 		                }];
 	}
 }
-
 
 /**
  * Switch every Dossier to paper signature.
@@ -551,31 +482,6 @@
 //	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
 //		_paperSignatureButton.hidden = isSignMandatory;
 	_paperSignatureButton.hidden = true; // TODO Adrien : Fix this
-}
-
-
-- (NSString *)signData:(NSString *)hash
-          withKeystore:(ADLKeyStore *)keystore
-               withP12:(NSString *)p12AbsolutePath {
-
-	NSData *hash_data = [StringUtils bytesFromHexString:hash];
-
-	NSError *error = nil;
-	NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-	                           withPassword:_p12password
-	                                andData:hash_data
-	                                  error:&error];
-
-	if (signature == nil && error != nil) {
-
-		[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-		                         title:@"Une erreur s'est produite lors de la signature"];
-
-		return nil;
-	}
-	else {
-		return [CryptoUtils dataToBase64StringWithData:signature];
-	}
 }
 
 
@@ -659,7 +565,8 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 					                           success:^(SignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
 						                           if (strongSelf)
-							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo];
+							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo
+							                                                            dossier:dossier.unwrappedId];
 					                           }
 					                           failure:^(NSError *error) {
 						                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);

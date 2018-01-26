@@ -33,74 +33,75 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import Foundation
-import Gloss
 
-@objc class Bureau : NSObject, Glossy {
 
-    let name: String?
+@objc class Bureau: NSObject, Decodable {
+
+    let identifier: String?
+    @objc let name: String
     let collectivite: String?
     let desc: String?
-    let nodeRef: String?
+    @objc let nodeRef: String?
     let shortName: String?
-    let image: String?
-    let identifier: String?
-    let habilitation: Dictionary<String, AnyObject>?
+    // let image: String?
+    // let habilitation: [String: Bool?]
 
-    let enPreparation: Int?
-    let enRetard: Int?
-    let aArchiver: Int?
-    let aTraiter: Int?
+    let enPreparation: Int
+    @objc let enRetard: Int
+    let aArchiver: Int
+    @objc let aTraiter: Int
+    @objc let dossiersDelegues: Int
+    let retournes: Int
 
-    let hasSecretaire: Bool?
-    let showAVenir: Bool?
-    let isSecretaire: Bool?
-    let retournes: Bool?
-    let dossiersDelegues: Bool?
+    let hasSecretaire: Bool
+    // let showAVenir: Bool?
+    let isSecretaire: Bool
 
-    // MARK: - Glossy
 
-    required init?(json: JSON) {
-        name = ("name" <~~ json) ?? "(vide)"
-        collectivite = "collectivite" <~~ json
-        desc = "description" <~~ json
-        nodeRef = ("nodeRef" <~~ json) ?? ""
-        shortName = "shortName" <~~ json
-        image = "image" <~~ json
-        identifier = "id" <~~ json
-        habilitation = ("habilitation" <~~ json) ?? [:]
+    // MARK: - JSON
 
-        enPreparation = "en-preparation" <~~ json
-        enRetard = ("en-retard" <~~ json) ?? 0
-        aArchiver = ("a-archiver" <~~ json) ?? 0
-        aTraiter = ("a-traiter" <~~ json) ?? 0
-
-        hasSecretaire = ("hasSecretaire" <~~ json) ?? false
-        showAVenir = ("show_a_venir" <~~ json) ?? false
-        isSecretaire = ("isSecretaire" <~~ json) ?? false
-        retournes = ("retournes" <~~ json) ?? false
-        dossiersDelegues = ("dossiers-delegues" <~~ json) ?? false
+    enum CodingKeys: String, CodingKey {
+        case name
+        case collectivite
+        case desc = "description"
+        case nodeRef
+        case shortName
+        // case image
+        case identifier = "id"
+        // case habilitation
+        case enPreparation = "en-preparation"
+        case enRetard = "en-retard"
+        case aArchiver = "a-archiver"
+        case aTraiter = "a-traiter"
+        case hasSecretaire
+        // case showAVenir = "show_a_venir"
+        case isSecretaire = "isSecretaire"
+        case retournes
+        case dossiersDelegues = "dossiers-delegues"
     }
 
-    func toJSON() -> JSON? {
-        return nil /* Not used */
-    }
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
 
-    // MARK: - ObjC accessors
+        name = try values.decodeIfPresent(String.self, forKey: .name) ?? "(aucun nom)"
+        collectivite = try values.decodeIfPresent(String.self, forKey: .collectivite)
+        desc = try values.decodeIfPresent(String.self, forKey: .desc)
+        nodeRef = try values.decodeIfPresent(String.self, forKey: .nodeRef)
+        shortName = try values.decodeIfPresent(String.self, forKey: .shortName)
+        // image = try values.decodeIfPresent(String.self, forKey: .image)
+        identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
+        // habilitation = try values.decodeIfPresent([String: Bool?].self, forKey: .habilitation) ?? [:]
 
-    @objc func unwrappedName() -> NSString {
-		return NSString(string:name!)
-    }
+        enPreparation = try values.decodeIfPresent(Int.self, forKey: .enPreparation) ?? 0
+        enRetard = try values.decodeIfPresent(Int.self, forKey: .enRetard) ?? 0
+        aArchiver = try values.decodeIfPresent(Int.self, forKey: .aArchiver) ?? 0
+        aTraiter = try values.decodeIfPresent(Int.self, forKey: .aTraiter) ?? 0
+        dossiersDelegues = try values.decodeIfPresent(Int.self, forKey: .dossiersDelegues) ?? 0
+        retournes = try values.decodeIfPresent(Int.self, forKey: .retournes) ?? 0
 
-    @objc func unwrappedNodeRef() -> NSString {
-		return NSString(string:nodeRef!)
-    }
-
-    @objc func unwrappedEnRetard() -> NSNumber {
-        return enRetard! as NSNumber
-    }
-
-    @objc func unwrappedATraiter() -> NSNumber {
-        return aTraiter! as NSNumber
+        hasSecretaire = try values.decodeIfPresent(Bool.self, forKey: .hasSecretaire) ?? false
+        // showAVenir = try values.decodeIfPresent(Bool.self, forKey: .showAVenir) // ?? false
+        isSecretaire = try values.decodeIfPresent(Bool.self, forKey: .isSecretaire) ?? false
     }
 
 }

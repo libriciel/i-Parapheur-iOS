@@ -58,21 +58,4 @@ import CoreData
 //    static let DemoLogin: String! = "rigautjl@i-pes-sign"
 //    static let DemoPassword: String! = "annecy74"
 
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedId() -> NSString {
-        return NSString(string: id!)
-    }
-
-    @objc func unwrappedUrl() -> NSString {
-        return NSString(string: url!)
-    }
-
-    @objc func unwrappedPassword() -> NSString {
-        return NSString(string: password!)
-    }
-
-    @objc func unwrappedLogin() -> NSString {
-        return NSString(string: login!)
-    }
 }

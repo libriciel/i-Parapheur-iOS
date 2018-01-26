@@ -39,7 +39,7 @@ import Foundation
 @objc class SettingsCertificatesController: UIViewController, UITableViewDataSource, UIDocumentInteractionControllerDelegate {
 
 
-    static let DocumentationPdfName: String! = "i-Parapheur_mobile_import_certificats_v1"
+    static let DocumentationPdfName: String = "i-Parapheur_mobile_import_certificats_v2"
 
     @IBOutlet var certificatesTableView: UITableView!
 

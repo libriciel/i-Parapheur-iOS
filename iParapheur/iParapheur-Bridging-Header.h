@@ -37,3 +37,4 @@
 #include "ADLKeyStore.h"
 #include "RGAppDelegate.h"
 #include "PrivateKey.h"
+#import <CommonCrypto/CommonCrypto.h>

@@ -38,14 +38,14 @@ import CoreData
 
 @objc public class SignInfo: NSObject, Decodable {
 
-    @objc let format: String?
-    @objc let hashToSign: String?
+    @objc let format: String!
+    @objc let hashesToSign: [String]
     let p7s: String?
     let pesCity: String?
     let pesClaimedRole: String?
     let pesCountryName: String?
     let pesEncoding: String?
-    let pesId: String?
+    let pesIds: [String]
     let pesPolicyDesc: String?
     let pesPolicyHash: String?
     let pesPolicyId: String?
@@ -74,19 +74,34 @@ import CoreData
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        format = try values.decodeIfPresent(String.self, forKey: .format)
-        hashToSign = try values.decodeIfPresent(String.self, forKey: .hashToSign)
+        // Simple values
+
+        format = try values.decodeIfPresent(String.self, forKey: .format) ?? "unknown"
         p7s = try values.decodeIfPresent(String.self, forKey: .p7s)
         pesCity = try values.decodeIfPresent(String.self, forKey: .pesCity)
         pesClaimedRole = try values.decodeIfPresent(String.self, forKey: .pesClaimedRole)
         pesCountryName = try values.decodeIfPresent(String.self, forKey: .pesCountryName)
         pesEncoding = try values.decodeIfPresent(String.self, forKey: .pesEncoding)
-        pesId = try values.decodeIfPresent(String.self, forKey: .pesId)
         pesPolicyDesc = try values.decodeIfPresent(String.self, forKey: .pesPolicyDesc)
         pesPolicyHash = try values.decodeIfPresent(String.self, forKey: .pesPolicyHash)
         pesPolicyId = try values.decodeIfPresent(String.self, forKey: .pesPolicyId)
         pesPostalCode = try values.decodeIfPresent(String.self, forKey: .pesPostalCode)
         pesSpuri = try values.decodeIfPresent(String.self, forKey: .pesSpuri)
+
+        // Comma-separated values
+
+		if let hashesString = try values.decodeIfPresent(String.self, forKey: .hashToSign) {
+        	hashesToSign = hashesString.components(separatedBy: ",")
+		} else {
+			hashesToSign = []
+		}
+
+
+        if let pesIdsString = try values.decodeIfPresent(String.self, forKey: .pesId) {
+            pesIds = pesIdsString.components(separatedBy: ",")
+        } else {
+            pesIds = []
+        }
     }
 
 }

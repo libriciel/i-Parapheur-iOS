@@ -32,43 +32,40 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import XCTest
-@testable import iParapheur
+import Foundation
+
+/**
+ * Yes, this class seems kind of useless, it's the easiest signature.
+ * But this wrapper eases the code factorization with other signature methods.
+ */
+@objc class CmsSigner: Signer {
 
 
-class FilterTests: XCTestCase {
+    let mSignInfo: SignInfo
+    let mPrivateKey: PrivateKey
 
 
-    func testToJson() {
+    @objc init(signInfo: SignInfo,
+               privateKey: PrivateKey) {
 
-        // Prepare
-
-        let filter = NSEntityDescription.insertNewObject(forEntityName: Filter.EntityName,
-                                                         into: ModelsDataController.Context!) as! Filter
-        filter.id = "test_id"
-        filter.name = "test_name"
-        filter.title = "test_title"
-        filter.typeList = ["test_type_list_1", "test_type_list_2"] as [String]
-        filter.subTypeList = ["test_subtype_list_1", "test_subtype_list_2"] as [String]
-        filter.state = State.EN_COURS.rawValue
-        filter.beginDate = Date(timeIntervalSince1970: 200) as NSDate
-        filter.endDate = Date(timeIntervalSince1970: 400) as NSDate
-
-        // Test
-
-        let jsonEncoder = JSONEncoder()
-        jsonEncoder.dateEncodingStrategy = .iso8601
-
-        let jsonData = try! jsonEncoder.encode(filter)
-        let jsonString = String(data: jsonData, encoding: .utf8)
-
-        // TODO : Proper tests
-        XCTAssertNotNil(jsonString)
-        XCTAssertTrue(jsonString!.count > 50)
-
-        // Cleanup
-
-        ModelsDataController.Context!.delete(filter)
+        mSignInfo = signInfo
+        mPrivateKey = privateKey
     }
+
+
+    // <editor-fold desc="Signer">
+
+
+    override func generateHashToSign() -> String {
+        return mSignInfo.hashesToSign[0]
+    }
+
+
+    override func buildDataToReturn(signedHash: String) -> String {
+        return signedHash
+    }
+
+
+    // </editor-fold desc="Signer">
 
 }

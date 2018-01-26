@@ -122,27 +122,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 
-- (void)saveContext {
-
-	NSError *error = nil;
-	NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-	if (managedObjectContext != nil) {
-		if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-			// Replace this implementation with code to handle the error appropriately.
-			// abort() causes the application to generate a crash log and terminate.
-			// You should not use this function in a shipping application, although it may be useful during development.
-			NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			abort();
-		}
-	}
-}
-
-
 #pragma mark - Core Data stack
 
-
-// Returns the managed object context for the application.
-// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+/**
+ * Returns the managed object context for the application.
+ * If the context doesn't already exist,
+ * it is created and bound to the persistent store coordinator for the application.
+ */
 - (NSManagedObjectContext *)managedObjectContext {
 
 	if (_managedObjectContext != nil) {
@@ -157,9 +143,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	return _managedObjectContext;
 }
 
-
-// Returns the managed object model for the application.
-// If the model doesn't already exist, it is created from the application's model.
+/**
+ * Returns the managed object model for the application.
+ * If the model doesn't already exist, it is created from the application's model.
+ */
 - (NSManagedObjectModel *)managedObjectModel {
 
 	if (_managedObjectModel != nil) {
@@ -175,9 +162,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	return _managedObjectModel;
 }
 
-
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
+/**
+ * Returns the persistent store coordinator for the application.
+ * If the coordinator doesn't already exist, it is created and the application's store added to it.
+ */
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
 
 	if (_persistentStoreCoordinator != nil) {
@@ -226,7 +214,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	return _persistentStoreCoordinator;
 }
-
 
 #pragma mark - Scheme link
 
@@ -282,7 +269,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
 	return YES;
 }
-
 
 /**
  * Parsing the given parameters.
@@ -359,17 +345,16 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	return result;
 }
 
+#pragma mark - Application Documents directory
 
-#pragma mark - Application's Documents directory
-
-
-// Returns the URL to the application's Documents directory.
+/**
+ * Returns the URL to the application's Documents directory.
+ */
 - (NSURL *)applicationDocumentsDirectory {
 
 	return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
 	                                               inDomains:NSUserDomainMask] lastObject];
 }
-
 
 #pragma mark - Private methods
 
@@ -383,11 +368,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSLog(@"p12Path :%@", p12Docs);
 
 		NSString *message = [NSString stringWithFormat:@"Entrez le mot de passe pour %@", p12Path.lastPathComponent];
-		ADLCertificateAlertView *alertView = [[ADLCertificateAlertView alloc] initWithTitle:@"Importer le certificat"
-		                                                                            message:message
-		                                                                           delegate:self
-		                                                                  cancelButtonTitle:@"Annuler"
-		                                                                  otherButtonTitles:@"Confirmer", nil];
+		ADLCertificateAlertView *alertView = [ADLCertificateAlertView.alloc initWithTitle:@"Importer le certificat"
+																				  message:message
+																				 delegate:self
+																		cancelButtonTitle:@"Annuler"
+																		otherButtonTitles:@"Confirmer", nil];
 
 		alertView.p12Path = p12Path;
 		alertView.tag = RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT;
@@ -439,17 +424,17 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	                    withPassword:password
 	                           error:&error];
 
-	if (!success && error != nil) {
+	if ((!success) || (error != nil)) {
 
 		// Retry on error
 		if (error.code == P12OpenErrorCode) {
 			NSString *message = [NSString stringWithFormat:@"Entrez le mot de passe pour %@", certificatePath.lastPathComponent];
 
-			ADLCertificateAlertView *realert = [[ADLCertificateAlertView alloc] initWithTitle:@"Erreur de mot de passe"
-			                                                                          message:message
-			                                                                         delegate:self
-			                                                                cancelButtonTitle:@"Annuler"
-			                                                                otherButtonTitles:@"Confirmer", nil];
+			ADLCertificateAlertView *realert = [ADLCertificateAlertView.alloc initWithTitle:@"Erreur de mot de passe"
+                                                                                    message:message
+                                                                                   delegate:self
+                                                                          cancelButtonTitle:@"Annuler"
+                                                                          otherButtonTitles:@"Confirmer", nil];
 
 			realert.p12Path = certificatePath;
 			realert.tag = RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_IMPORT;

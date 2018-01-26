@@ -120,7 +120,7 @@
 - (void)didReceiveMemoryWarning {
 
 	[self setCircuitTable:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter.defaultCenter removeObserver:self];
 
 	[super didReceiveMemoryWarning];
 }

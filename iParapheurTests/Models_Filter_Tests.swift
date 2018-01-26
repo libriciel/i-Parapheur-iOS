@@ -32,46 +32,43 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import Foundation
+import XCTest
+@testable import iParapheur
 
 
-@objc public class Circuit: NSObject, Decodable {
+class Models_Filter_Tests: XCTestCase {
 
 
-    @objc let etapes: [Etape]
-    let annotPriv: String?
-    @objc let isDigitalSignatureMandatory: Bool
-    let isMultiDocument: Bool
-    let hasSelectionScript: Bool
-    let sigFormat: String?
-    let signatureProtocol: String?
+    func testToJson() {
 
+        // Prepare
 
-    // MARK: - JSON
-
-    enum CodingKeys: String, CodingKey {
-        case etapes
-        case annotPriv
-        case isDigitalSignatureMandatory
-        case isMultiDocument
-        case hasSelectionScript
-        case sigFormat
-        case signatureProtocol = "protocol"
-    }
-
-    public required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-
-        etapes = try values.decodeIfPresent([Etape].self, forKey: .etapes) ?? []
-        annotPriv = try values.decodeIfPresent(String.self, forKey: .annotPriv)
-        isDigitalSignatureMandatory = try values.decodeIfPresent(Bool.self, forKey: .isDigitalSignatureMandatory) ?? false
-        isMultiDocument = try values.decodeIfPresent(Bool.self, forKey: .isMultiDocument) ?? false
-        hasSelectionScript = try values.decodeIfPresent(Bool.self, forKey: .hasSelectionScript) ?? false
-        sigFormat = try values.decodeIfPresent(String.self, forKey: .sigFormat)
-        signatureProtocol = try values.decodeIfPresent(String.self, forKey: .signatureProtocol)
+//        let filter = NSEntityDescription.insertNewObject(forEntityName: Filter.EntityName,
+//                                                         into: ModelsDataController.Context!) as! Filter
+//        filter.id = "test_id"
+//        filter.name = "test_name"
+//        filter.title = "test_title"
+//        filter.typeList = ["test_type_list_1", "test_type_list_2"] as [String]
+//        filter.subTypeList = ["test_subtype_list_1", "test_subtype_list_2"] as [String]
+//        filter.state = State.EN_COURS.rawValue
+//        filter.beginDate = Date(timeIntervalSince1970: 200) as NSDate
+//        filter.endDate = Date(timeIntervalSince1970: 400) as NSDate
+//
+//        // Test
+//
+//        let jsonEncoder = JSONEncoder()
+//        jsonEncoder.dateEncodingStrategy = .iso8601
+//
+//        let jsonData = try! jsonEncoder.encode(filter)
+//        let jsonString = String(data: jsonData, encoding: .utf8)
+//
+//        // TODO : Proper tests
+//        XCTAssertNotNil(jsonString)
+//        XCTAssertTrue(jsonString!.count > 50)
+//
+//        // Cleanup
+//
+//        ModelsDataController.Context!.delete(filter)
     }
 
 }
-
-
-

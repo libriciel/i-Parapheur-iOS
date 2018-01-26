@@ -36,9 +36,9 @@ import XCTest
 @testable import iParapheur
 
 
-class SignInfoTests: XCTestCase {
+class Models_SignInfo_Tests: XCTestCase {
 
-    func testDecodeFull() {
+    func testDecodeFromJsonFull() {
 
         let getSignInfoJsonString = """
             {
@@ -69,12 +69,13 @@ class SignInfoTests: XCTestCase {
         let signInfo = signInfoDict!["signatureInformations"]
         XCTAssertNotNil(signInfo)
 		
-        XCTAssertEqual(signInfo!.pesId, "test")
-        XCTAssertEqual(signInfo!.hashToSign, "3a922b5c63bd40021439dcbfe432e87cb4ee9d25")
+        XCTAssertEqual(signInfo!.pesIds.count, 1)
+        XCTAssertEqual(signInfo!.pesIds[0], "test")
+        XCTAssertEqual(signInfo!.hashesToSign.count, 1)
+        XCTAssertEqual(signInfo!.hashesToSign[0], "3a922b5c63bd40021439dcbfe432e87cb4ee9d25")
         XCTAssertEqual(signInfo!.pesPolicyDesc, "Politique de Signature de l'Agent")
         XCTAssertEqual(signInfo!.pesCountryName, "France")
         XCTAssertEqual(signInfo!.pesPostalCode, "34000")
-        XCTAssertEqual(signInfo!.hashToSign, "3a922b5c63bd40021439dcbfe432e87cb4ee9d25")
         XCTAssertEqual(signInfo!.format, "XADES-env")
         XCTAssertEqual(signInfo!.pesSpuri, "http://www.s2low.org/PolitiqueSignature-Agent")
         XCTAssertEqual(signInfo!.pesEncoding, "UTF-8")
@@ -85,7 +86,67 @@ class SignInfoTests: XCTestCase {
         XCTAssertEqual(signInfo!.pesCity, "Montpellier")
     }
 
-	func testDecodeEmpty() {
+
+    func testDecodeFromJsonMulti() {
+
+        let getSignInfoJsonString = """
+            {
+                "signatureInformations": {
+                    "pesid":"ID20081042008-04-2901,ID20081052008-05-0501,ID20081062008-05-0501,ID20081072008-05-0501,ID20081082008-05-0501,ID20081092008-05-0501",
+                    "pespolicydesc":"Politique de Signature de l'Agent",
+                    "hash":"dffc6fc6cc0fcc4c4a148feeaf733d12e56b87eb,b347ef7371f145501db54ec01f77bd99cf97e5fd,218cb5a0284e92f8cf314b9984bfb7251031ff8f,68ae1ace827b73f5a0fab468fe2899309e97adab,1078bd1d2dec63416ec6077ebe300e5003960ba4,bc14c8e63c6bf76a9085bd4b994e64915408b77c",
+                    "pescountryname":"France",
+                    "format":"XADES-env",
+                    "pespostalcode":"34000",
+                    "pesencoding":"ISO-8859-1",
+                    "pesspuri":"http://www.s2low.org/PolitiqueSignature-Agent",
+                    "pesclaimedrole":"Maire",
+                    "pespolicyhash":"G4CqRa9R5c9Yg+dzMH3gbEc4Kqo=",
+                    "pespolicyid":"urn:oid:1.2.250.1.5.3.1.1.10",
+                    "p7s":null,
+                    "pescity":"Montpellier" 
+                }
+            }
+        """
+        let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
+        let jsonDecoder = JSONDecoder()
+		let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,
+                                                   from: getSignInfoJsonData)
+
+        XCTAssertNotNil(signInfoDict)
+        XCTAssertEqual(signInfoDict!.keys.count, 1)
+        let signInfo = signInfoDict!["signatureInformations"]
+        XCTAssertNotNil(signInfo)
+
+        XCTAssertEqual(signInfo!.pesIds.count, 6)
+        XCTAssertEqual(signInfo!.pesIds[0], "ID20081042008-04-2901")
+        XCTAssertEqual(signInfo!.pesIds[1], "ID20081052008-05-0501")
+        XCTAssertEqual(signInfo!.pesIds[2], "ID20081062008-05-0501")
+        XCTAssertEqual(signInfo!.pesIds[3], "ID20081072008-05-0501")
+        XCTAssertEqual(signInfo!.pesIds[4], "ID20081082008-05-0501")
+        XCTAssertEqual(signInfo!.pesIds[5], "ID20081092008-05-0501")
+        XCTAssertEqual(signInfo!.pesPolicyDesc, "Politique de Signature de l'Agent")
+        XCTAssertEqual(signInfo!.pesCountryName, "France")
+        XCTAssertEqual(signInfo!.pesPostalCode, "34000")
+        XCTAssertEqual(signInfo!.hashesToSign.count, 6)
+        XCTAssertEqual(signInfo!.hashesToSign[0], "dffc6fc6cc0fcc4c4a148feeaf733d12e56b87eb")
+        XCTAssertEqual(signInfo!.hashesToSign[1], "b347ef7371f145501db54ec01f77bd99cf97e5fd")
+        XCTAssertEqual(signInfo!.hashesToSign[2], "218cb5a0284e92f8cf314b9984bfb7251031ff8f")
+        XCTAssertEqual(signInfo!.hashesToSign[3], "68ae1ace827b73f5a0fab468fe2899309e97adab")
+        XCTAssertEqual(signInfo!.hashesToSign[4], "1078bd1d2dec63416ec6077ebe300e5003960ba4")
+        XCTAssertEqual(signInfo!.hashesToSign[5], "bc14c8e63c6bf76a9085bd4b994e64915408b77c")
+        XCTAssertEqual(signInfo!.format, "XADES-env")
+        XCTAssertEqual(signInfo!.pesSpuri, "http://www.s2low.org/PolitiqueSignature-Agent")
+        XCTAssertEqual(signInfo!.pesEncoding, "ISO-8859-1")
+        XCTAssertEqual(signInfo!.pesClaimedRole, "Maire")
+        XCTAssertEqual(signInfo!.pesPolicyId, "urn:oid:1.2.250.1.5.3.1.1.10")
+        XCTAssertEqual(signInfo!.pesPolicyHash, "G4CqRa9R5c9Yg+dzMH3gbEc4Kqo=")
+        XCTAssertNil(signInfo!.p7s)
+        XCTAssertEqual(signInfo!.pesCity, "Montpellier")
+    }
+
+
+	func testDecodeFromJsonEmpty() {
 		
 		let getSignInfoJsonString = "{\"signatureInformations\" : {} }"
 		let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
@@ -97,13 +158,13 @@ class SignInfoTests: XCTestCase {
 		XCTAssertEqual(signInfoDict!.keys.count, 1)
 		let signInfo = signInfoDict!["signatureInformations"]
 		XCTAssertNotNil(signInfo)
-		
-		XCTAssertNil(signInfo!.pesId)
-		XCTAssertNil(signInfo!.hashToSign)
+
+        XCTAssertEqual(signInfo!.pesIds.count, 0)
+		XCTAssertEqual(signInfo!.hashesToSign.count, 0)
 		XCTAssertNil(signInfo!.pesPolicyDesc)
 		XCTAssertNil(signInfo!.pesCountryName)
 		XCTAssertNil(signInfo!.pesPostalCode)
-		XCTAssertNil(signInfo!.hashToSign)
+		XCTAssertTrue(signInfo!.hashesToSign.isEmpty)
 		XCTAssertNil(signInfo!.format)
 		XCTAssertNil(signInfo!.pesSpuri)
 		XCTAssertNil(signInfo!.pesEncoding)

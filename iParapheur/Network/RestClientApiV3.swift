@@ -82,8 +82,6 @@ import Alamofire
         // TODO Adrien : add special character restrictions tests ?
         urlFixed = urlFixed.replacingOccurrences(of: " ", with: "")
 
-        print("Adrien - \(url)")
-
         // Getting the server name
         // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
         //			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
@@ -100,9 +98,6 @@ import Alamofire
             let swiftRange = Range(match!.range(at: 1), in: urlFixed)
             urlFixed = String(urlFixed[swiftRange!])
         }
-
-
-        print("Adrien - https://m-\(urlFixed)")
 
         return NSString(string: "https://m-\(urlFixed)")
     }
@@ -217,13 +212,31 @@ import Alamofire
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl).validate().responseJSON {
+        manager.request(getBureauxUrl).validate().responseString {
             response in
             switch (response.result) {
 
                 case .success:
-                    let bureauList = [Bureau].from(jsonArray: response.value as! [[String: AnyObject]])
-                    responseCallback!(bureauList! as NSArray)
+
+                    // Prepare
+
+                    let getBureauxJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let bureaux = try? jsonDecoder.decode([Bureau].self,
+                                                          from: getBureauxJsonData)
+
+                    // Parsing and callback
+
+                    let hasSomeData = (bureaux != nil)
+                    if (hasSomeData) {
+                        responseCallback!(bureaux! as NSArray)
+                    }
+                    else {
+                        errorCallback!(NSError(domain: "Invalid response",
+                                               code: 999))
+                    }
+
                     break
 
                 case .failure(let error):
