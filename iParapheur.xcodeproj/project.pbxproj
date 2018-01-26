@@ -26,6 +26,7 @@
 		64F34FD00654A813D7151026 /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348427F7EBCBC0A731851 /* Certificate.swift */; };
 		7A0FC7AD201651A6002837CE /* Filter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0FC7AC201651A6002837CE /* Filter+CoreDataProperties.swift */; };
 		7A0FC7AF201651CF002837CE /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0FC7AE201651CF002837CE /* Filter.swift */; };
+		7A0FCD2D201B91650018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */; };
 		7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
@@ -179,7 +180,6 @@
 		C5747EB01DD2388500DB6A1F /* ic_vpn_key_white_48dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EAD1DD2388500DB6A1F /* ic_vpn_key_white_48dp.png */; };
 		C5747EB11DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EAE1DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png */; };
 		C5747EB21DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EAF1DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png */; };
-		C5747EB51DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C5747EB41DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf */; };
 		C5747EB71DD31D9800DB6A1F /* DeskListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */; };
 		C5747EB91DD31DCA00DB6A1F /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5747EB81DD31DCA00DB6A1F /* DeskListEmptyView.swift */; };
 		C5747EBD1DD3237600DB6A1F /* ic_desktop_windows_white_48dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5747EBA1DD3237600DB6A1F /* ic_desktop_windows_white_48dp.png */; };
@@ -363,6 +363,7 @@
 		65B90403B5F0C32837C3AA55 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
 		7A0FC7AC201651A6002837CE /* Filter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Filter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7A0FC7AE201651CF002837CE /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
+		7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "i-Parapheur_mobile_import_certificats_v2.pdf"; sourceTree = "<group>"; };
 		7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSignerTest.swift; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		9514BFE1187AA73800118B9C /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
@@ -593,7 +594,6 @@
 		C5747EAD1DD2388500DB6A1F /* ic_vpn_key_white_48dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_vpn_key_white_48dp.png; path = ic_vpn_key_white_48dp/ic_vpn_key_white_48dp.png; sourceTree = "<group>"; };
 		C5747EAE1DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_vpn_key_white_48dp@2x.png"; path = "ic_vpn_key_white_48dp/ic_vpn_key_white_48dp@2x.png"; sourceTree = "<group>"; };
 		C5747EAF1DD2388500DB6A1F /* ic_vpn_key_white_48dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_vpn_key_white_48dp@3x.png"; path = "ic_vpn_key_white_48dp/ic_vpn_key_white_48dp@3x.png"; sourceTree = "<group>"; };
-		C5747EB41DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "i-Parapheur_mobile_import_certificats_v1.pdf"; sourceTree = "<group>"; };
 		C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeskListEmptyView.xib; sourceTree = "<group>"; };
 		C5747EB81DD31DCA00DB6A1F /* DeskListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListEmptyView.swift; sourceTree = "<group>"; };
 		C5747EBA1DD3237600DB6A1F /* ic_desktop_windows_white_48dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_desktop_windows_white_48dp.png; path = ic_desktop_windows_white_48dp/ic_desktop_windows_white_48dp.png; sourceTree = "<group>"; };
@@ -1014,7 +1014,7 @@
 				142B020716D61AF200EF3B8F /* acmobile.der */,
 				C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */,
 				1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */,
-				C5747EB41DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf */,
+				7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */,
 				B4E5ECAB153AF65F00BD514D /* InfoPlist.strings */,
 				C58CB2801AB719B500C79A97 /* ip-archivage.png */,
 				C58CB2811AB719B500C79A97 /* ip-archivage@2x.png */,
@@ -1915,7 +1915,6 @@
 				C54DB7971DCCC30C00B2CAFA /* ic_description_white_24dp.png in Resources */,
 				C5B8744B1DA567AE00909F80 /* ic_information_white_24dp.png in Resources */,
 				C54DB7A01DCCC34A00B2CAFA /* ic_attachment_white_24dp@3x.png in Resources */,
-				C5747EB51DD2439900DB6A1F /* i-Parapheur_mobile_import_certificats_v1.pdf in Resources */,
 				C5D627621DBF5A2200208287 /* ic_library_books_white_24dp@2x.png in Resources */,
 				C58CB28B1AB719D700C79A97 /* ir-archivage@2x.png in Resources */,
 				C54DDC101DA4F0B2001DEAE8 /* ic_verified_user_white_24dp@3x.png in Resources */,
@@ -1983,6 +1982,7 @@
 				C526D8CC1DA7F41200EE8BA9 /* ic_cloud_done_white_24dp@3x.png in Resources */,
 				C58CB2931AB719F600C79A97 /* ir-visa@2x.png in Resources */,
 				C5B874351DA5675300909F80 /* ic_account_outline_white_24dp@3x.png in Resources */,
+				7A0FCD2D201B91650018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf in Resources */,
 				C5747EB11DD2388500DB6A1F /* ic_vpn_key_white_48dp@2x.png in Resources */,
 				C54DB7981DCCC30C00B2CAFA /* ic_description_white_24dp@2x.png in Resources */,
 				C5EABB211DC3AA050019328A /* ic_circle_outline_white_18dp@2x.png in Resources */,
