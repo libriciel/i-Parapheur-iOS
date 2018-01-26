@@ -79,8 +79,9 @@ import AEXML
 
         // Compute values
 
-        let signaturePropertiesCanonicalString = CryptoUtils.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact,
-                                                                             forceXmlns: true)
+        let signaturePropertiesCanonicalString = XadesEnvSigner.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact,
+                                                                                forceSignPropertiesXmlns: true,
+                                                                                forceSignedInfoXmlns: false)
         let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
 
         let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashesToSign[mIndex])
@@ -238,10 +239,10 @@ import AEXML
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
 
-        let canonicalizedXml = CryptoUtils.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
-                                                           forceXmlns: false)
+        let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
+                                                              forceSignPropertiesXmlns: false,
+                                                              forceSignedInfoXmlns: true)
         let hashToSign = CryptoUtils.sha1Base64(string: canonicalizedXml)
-        print("Adrien :: hashToSign                :: \(hashToSign)")
 
         return hashToSign
     }
@@ -273,13 +274,82 @@ import AEXML
         // Return value
 
         let finalXml = rootDocument.xmlCompact
-        let finalXmlData = finalXml.data(using: .utf8)
+        let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: finalXml,
+                                                              forceSignPropertiesXmlns: false,
+                                                              forceSignedInfoXmlns: false)
+        let finalXmlData = canonicalizedXml.data(using: .utf8)
         print("Adrien - finalXmlB64 = \(finalXmlData!.base64EncodedString())")
         return finalXmlData!.base64EncodedString()
     }
 
 
     // </editor-fold desc="Signer">
+
+    /**
+     * This is ugly, I know...
+     * But no one library on iOS can do an XML canonicalization.
+     * The only ones are on macOS.
+     *
+     * Since we always have the same XML structure, we just have to fix it manually,
+     * to have a c14n XML.
+     *
+     * TODO : find an iOS XML canonicalizer, and get rid of this method.
+     */
+    class func canonicalizeXml(xmlCompactString: String,
+                               forceSignPropertiesXmlns: Bool,
+                               forceSignedInfoXmlns: Bool) -> String {
+
+        var result: String = xmlCompactString
+
+        // Closing DigestMethod tags
+
+        result = result.replacingOccurrences(of: "/><xad:DigestValue>",
+                                             with: "></xad:DigestMethod><xad:DigestValue>")
+
+        result = result.replacingOccurrences(of: "<ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\" />",
+                                             with: "<ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"></ds:CanonicalizationMethod>")
+
+        result = result.replacingOccurrences(of: "<ds:SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\" />",
+                                             with: "<ds:SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\"></ds:SignatureMethod>")
+
+        result = result.replacingOccurrences(of: "<ds:Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\" />",
+                                             with: "<ds:Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"></ds:Transform>")
+
+        result = result.replacingOccurrences(of: "<ds:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\" />",
+                                             with: "<ds:DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"></ds:DigestMethod>")
+
+        result = result.replacingOccurrences(of: "<ds:Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\" />",
+                                             with: "<ds:Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"></ds:Transform>")
+
+        // Adding manually XMLNS (yep, that's ugly)
+
+        if (forceSignPropertiesXmlns) {
+
+            result = result.replacingOccurrences(of: "<xad:SignedProperties Id=",
+                                                 with: "<xad:SignedProperties xmlns:xad=\"http://uri.etsi.org/01903/v1.1.1#\" Id=")
+
+            result = result.replacingOccurrences(of: "<ds:X509IssuerName>",
+                                                 with: "<ds:X509IssuerName xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">")
+
+            result = result.replacingOccurrences(of: "<ds:X509SerialNumber>",
+                                                 with: "<ds:X509SerialNumber xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">")
+        }
+
+        if (forceSignedInfoXmlns) {
+
+            result = result.replacingOccurrences(of: "<ds:SignedInfo>",
+                                                 with: "<ds:SignedInfo xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">")
+        }
+
+        // Closing brackets spaces
+
+        result = result.replacingOccurrences(of: "\" ><",
+                                             with: "\"><")
+
+        //
+
+        return result
+    }
 
     /**
      * Xemelios/PES is not compliant with RFC2253 given by OpenSSL.

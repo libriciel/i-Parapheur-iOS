@@ -339,39 +339,4 @@ import CryptoSwift
         return data
     }
 
-
-    class func canonicalizeXml(xmlCompactString: String,
-                               forceXmlns: Bool) -> String {
-
-        var cleanedString: String = xmlCompactString
-
-        // Closing DigestMethod tags
-
-        cleanedString = cleanedString.replacingOccurrences(of: "/><xad:DigestValue>",
-														   with: "></xad:DigestMethod><xad:DigestValue>")
-
-        // Adding manually XMLNS (yep, that's ugly)
-
-        if (forceXmlns) {
-
-            cleanedString = cleanedString.replacingOccurrences(of: "<xad:SignedProperties Id=",
-                                                               with: "<xad:SignedProperties xmlns:xad=\"http://uri.etsi.org/01903/v1.1.1#\" Id=")
-
-            cleanedString = cleanedString.replacingOccurrences(of: "<ds:X509IssuerName>",
-                                                               with: "<ds:X509IssuerName xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">")
-
-            cleanedString = cleanedString.replacingOccurrences(of: "<ds:X509SerialNumber>",
-                                                               with: "<ds:X509SerialNumber xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\">")
-        }
-
-        // Closing brackets spaces
-
-        cleanedString = cleanedString.replacingOccurrences(of: "\" ><",
-                                                           with: "\"><")
-
-        //
-
-        return cleanedString
-    }
-
 }

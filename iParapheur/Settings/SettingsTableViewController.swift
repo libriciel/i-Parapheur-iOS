@@ -50,12 +50,14 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     // MARK: - LifeCycle
 
+
     override func viewWillAppear(_ animated: Bool) {
 
 		menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
                                 animated: false,
                                 scrollPosition: UITableViewScrollPosition.none)
     }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,15 +74,18 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     // MARK: - Listeners
 
+
     @objc func onBackButtonClicked() {
         self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return menuElements.count
     }
+
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
@@ -91,13 +96,16 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         return header
     }
 
+
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return SettingsTableViewHeaderFooterView.PreferredHeight
     }
 
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuElements[section].elements.count
     }
+
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -112,6 +120,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
         return cell
     }
+
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
