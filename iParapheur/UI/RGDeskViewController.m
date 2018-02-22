@@ -362,7 +362,7 @@
 		                 failure:^(NSError *getDossiersError) {
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
-				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                 [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 														  title:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD
@@ -386,7 +386,7 @@
 		                 failure:^(NSError *error) {
 			                 __strong typeof(weakSelf) strongSelf = weakSelf;
 			                 if (strongSelf) {
-				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                 [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 				                                          title:nil];
 				                 [strongSelf.refreshControl endRefreshing];
 				                 HIDE_HUD

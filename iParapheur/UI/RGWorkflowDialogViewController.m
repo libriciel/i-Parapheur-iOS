@@ -318,7 +318,7 @@
 			                                  error:&error];
 
 			if (signature == nil && error != nil) {
-				[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				[ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 				                         title:@"Une erreur s'est produite lors de la signature"];
 				break;
 			}

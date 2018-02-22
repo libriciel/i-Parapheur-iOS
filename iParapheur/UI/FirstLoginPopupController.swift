@@ -201,7 +201,7 @@ import UIKit
 
                                       // Setup error message
 
-                                      let localizedDescription: NSString = StringUtils.getErrorMessage(error) as! NSString
+                                    let localizedDescription = StringsUtils.getMessage(error: error)
 
                                       if (error.localizedDescription == localizedDescription as String) {
                                           self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code))"

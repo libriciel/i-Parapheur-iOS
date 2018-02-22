@@ -265,7 +265,7 @@
 		                      NSLog(@"updateAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                      [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 		                                               title:@"Erreur à la sauvegarde de l'annotation"];
 	                      }];
 }
@@ -279,7 +279,7 @@
 		                      NSLog(@"deleteAnnotation success");
 	                      }
 	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                      [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 		                                               title:@"Erreur à la suppression de l'annotation"];
 	                      }];
 }
@@ -319,7 +319,7 @@
 		                   }
 	                   }
 	                   failure:^(NSError *error) {
-		                   [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+		                   [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 		                                            title:@"Erreur à la sauvegarde de l'annotation"];
 	                   }];
 }
@@ -770,7 +770,7 @@
 		                      }
 		                      failure:^(NSError *error) {
 			                      HIDE_HUD
-			                      [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+			                      [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 														   title:nil];
 		                      }];
 	}

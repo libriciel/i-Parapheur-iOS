@@ -38,7 +38,6 @@ import Alamofire
 
 @objc class RestClientApiV3: NSObject {
 
-    let kCFURLErrorBadServerResponse = -1011
     var manager: Alamofire.SessionManager
     @objc var serverUrl: NSURL
 
@@ -160,7 +159,9 @@ import Alamofire
 
                         case .success:
                             guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
-                                errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                                errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+                                                       code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
+                                                       userInfo: nil))
                                 return
                             }
 
@@ -373,7 +374,9 @@ import Alamofire
 
                 case .success:
                     guard let responseDossier = Dossier(json: response.value as! [String: AnyObject]) else {
-                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!, code: self.kCFURLErrorBadServerResponse, userInfo: nil))
+                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+                                               code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
+                                               userInfo: nil))
                         return
                     }
                     responseCallback!(responseDossier)
@@ -498,7 +501,7 @@ import Alamofire
                     }
                     else {
                         errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-                                               code: self.kCFURLErrorBadServerResponse,
+                                               code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
                                                userInfo: nil))
                         return
                     }

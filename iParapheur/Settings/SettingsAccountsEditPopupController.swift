@@ -120,7 +120,7 @@ import Foundation
                                          },
                                          onError: {
                                              (error: NSError) in
-                                             ViewUtils.logError(message: StringUtils.getErrorMessage(error) as! NSString,
+                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error),
                                                                 title: nil)
                                          })
     }

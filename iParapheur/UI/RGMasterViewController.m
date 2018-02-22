@@ -146,7 +146,7 @@
 				                 [ViewUtils logInfoWithMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
 														 title:nil];
 			                 } else {
-				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                 [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 				                                          title:nil];
 			                 }
 		                 }
@@ -240,7 +240,7 @@
 				                [strongSelf.refreshControl endRefreshing];
 				                [(UITableView *) strongSelf.view reloadData];
 				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
-				                [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 				                                         title:nil];
 			                }
 		                }];

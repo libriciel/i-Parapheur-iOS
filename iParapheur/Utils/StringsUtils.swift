@@ -32,25 +32,37 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
+import Foundation
+import SwiftMessages
 
+@objc class StringsUtils: NSObject {
 
-@interface StringUtils : NSObject
+    @objc class func getMessage(error: NSError) -> NSString {
+        switch (Int32(error.code)) {
 
-+ (NSDictionary *)nilifyDictionaryValues:(NSDictionary *)dictionary;
+        case CFNetworkErrors.cfurlErrorNotConnectedToInternet.rawValue:
+            return "La connexion Internet a été perdue."
 
-+ (BOOL)doesArray:(NSArray *)array
-   containsString:(NSString *)string;
+        case CFNetworkErrors.cfurlErrorBadServerResponse.rawValue:
+            return "Erreur d'authentification"
 
-+ (NSString *)decodeUrlString:(NSString *)encodedString;
+        case CFNetworkErrors.cfurlErrorCannotLoadFromNetwork.rawValue...CFNetworkErrors.cfurlErrorSecureConnectionFailed.rawValue,
+             CFNetworkErrors.cfurlErrorCancelled.rawValue:
+            return "Le serveur n'est pas valide"
 
-+ (NSData *)bytesFromHexString:(NSString *)aString;
+        case CFNetworkErrors.cfurlErrorUserAuthenticationRequired.rawValue:
+            return "Échec d'authentification"
 
-+ (NSString*) actionNameForAction:(NSString*) action;
+        case CFNetworkErrors.cfurlErrorCannotFindHost.rawValue,
+             CFNetworkErrors.cfurlErrorBadServerResponse.rawValue:
+            return "Le serveur est introuvable"
 
-+ (NSString*) actionNameForAction:(NSString*) action
-					withPaperSign:(BOOL)isPaperSign;
+        case CFNetworkErrors.cfurlErrorTimedOut.rawValue:
+            return "Le serveur ne répond pas dans le délai imparti"
 
-+ (NSString *)cleanupServerName:(NSString *)url;
+        default:
+            return error.localizedDescription as NSString
+        }
+    }
 
-@end
+}

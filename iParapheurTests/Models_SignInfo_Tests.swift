@@ -165,7 +165,7 @@ class Models_SignInfo_Tests: XCTestCase {
 		XCTAssertNil(signInfo!.pesCountryName)
 		XCTAssertNil(signInfo!.pesPostalCode)
 		XCTAssertTrue(signInfo!.hashesToSign.isEmpty)
-		XCTAssertNil(signInfo!.format)
+		XCTAssertEqual("unknown", signInfo!.format)
 		XCTAssertNil(signInfo!.pesSpuri)
 		XCTAssertNil(signInfo!.pesEncoding)
 		XCTAssertNil(signInfo!.pesClaimedRole)
