@@ -1,0 +1,9 @@
+stages:
+  - build
+
+build_project:
+  stage: build
+  script:
+    - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur | xcpretty
+    - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' | xcpretty
+    - slather coverage -s --workspace iParapheur.xcworkspace --scheme iParapheur iParapheur.xcodeproj

@@ -36,6 +36,7 @@
 		954A738B188D371D00A13D1E /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 954A738A188D371D00A13D1E /* NSString+Contains.m */; };
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
+		AB3CA96561606CC41F6052EA /* .gitlab-ci.yml in Resources */ = {isa = PBXBuildFile; fileRef = AB3CA9CD36178E762CC55FCD /* .gitlab-ci.yml */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
@@ -381,6 +382,7 @@
 		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
+		AB3CA9CD36178E762CC55FCD /* .gitlab-ci.yml */ = {isa = PBXFileReference; lastKnownFileType = file.yml; path = ".gitlab-ci.yml"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B609C15F0962100655827 /* ADLCircuitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCircuitCell.h; sourceTree = "<group>"; };
 		B41B609D15F0962100655827 /* ADLCircuitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCircuitCell.m; sourceTree = "<group>"; };
@@ -959,6 +961,7 @@
 				B4E5ECA1153AF65F00BD514D /* Frameworks */,
 				B4E5EC9F153AF65F00BD514D /* Products */,
 				95168E39403D0D99E2243D04 /* Pods */,
+				AB3CA9CD36178E762CC55FCD /* .gitlab-ci.yml */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2090,6 +2093,7 @@
 				C54DDC051DA4F09F001DEAE8 /* ic_filter_list_white.png in Resources */,
 				C5018C871DA4FFBD00D7A97D /* ic_filter_remove_outline_white_24dp@2x.png in Resources */,
 				C5675ECB1DBE56C5003FA418 /* ic_fiber_manual_record_white_18dp.png in Resources */,
+				AB3CA96561606CC41F6052EA /* .gitlab-ci.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
