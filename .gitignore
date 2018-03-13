@@ -6,3 +6,6 @@ iParapheur.xcworkspace
 .idea
 *~
 .DS_Store
+
+builds/*
+
