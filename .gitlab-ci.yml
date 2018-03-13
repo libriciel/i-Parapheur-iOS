@@ -4,9 +4,7 @@ stages:
 build_project:
   stage: build
   script:
-    - sudo chown -R runner ~/Library/Caches/CocoaPods
-    - sudo chown -R runner ~/.cocoapods
-    - su runner -c "pod install"
+    - pod install
     - ls -l
     - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur | xcpretty
     - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' | xcpretty
