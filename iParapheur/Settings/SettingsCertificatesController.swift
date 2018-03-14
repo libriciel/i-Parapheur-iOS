@@ -144,11 +144,13 @@ import Foundation
 
     @objc func downloadDocButton(sender: UIButton) {
 
-		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
+//		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
+//
+//        let docController:UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
+//        docController.delegate = self
+//        docController.presentPreview(animated: true)
 
-        let docController:UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
-        docController.delegate = self
-        docController.presentPreview(animated: true)
+        ImprimerieNationaleController.getTokenData();
     }
 
     @objc func onDeleteButtonClicked(sender: UIButton) {

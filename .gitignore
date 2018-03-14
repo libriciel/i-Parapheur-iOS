@@ -8,4 +8,4 @@ iParapheur.xcworkspace
 .DS_Store
 
 builds/*
-
+build/*

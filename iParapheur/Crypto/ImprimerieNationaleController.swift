@@ -1,5 +1,4 @@
 /*
- * Contributors : SKROBS (2012)
  * Copyright 2012-2017, Libriciel SCOP.
  *
  * contact@libriciel.coop
@@ -33,11 +32,39 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
+import Foundation
 
-@interface ADLDocument : NSObject
 
-@property (nonatomic, strong) NSData* documentData;
-@property (nonatomic, strong) NSString* documentMimetype;
-+(id) documentWithData:(NSData*)data AndMimeType:(NSString*)mimeType;
-@end
+class ImprimerieNationaleController {
+    
+    
+    class func getTokenData() {
+        
+        // let options = "{\"responseScheme\":\"iparapheur\",\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}}"
+        // let optionsEncoded = options.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        // let url = URL(string: "inmiddleware://GetTokenData")!
+        // let url = URL(string: "iparapheur://GetTokenData/\(optionsEncoded!)")!
+        
+        //        let options: [String : Any] = [
+        //            "responseScheme": "iparapheur",
+        //            "tokenExpectedData" : [
+        //                "middleware":"all",
+        //                "token":"all",
+        //                "certificates":"all"
+        //            ],
+        //        ]
+        let urlString = "inmiddleware://getTokenData?responseScheme=iparapheur&middleware=all&token=all&certificates=all"
+        let url = URL(string: urlString)!
+        
+        if #available(iOS 10, *) {
+            UIApplication.shared.open(url, completionHandler: { (result) in
+                if result {
+                    print("Result OK")
+                }
+            })
+        } else {
+            print("Open nope")
+        }
+    }
+    
+}
