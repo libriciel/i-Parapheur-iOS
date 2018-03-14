@@ -81,5 +81,14 @@ class Utils_CryptoUtils_Tests: XCTestCase {
 		XCTAssertEqual(sha1Base64fromString, "tTHoWxazhE1HwGzRsTygY8purRw=")
 		XCTAssertEqual(sha1Base64fromData, "tTHoWxazhE1HwGzRsTygY8purRw=")
     }
+    
+    
+    func testDataWithHexString() {
+        
+        let data = CryptoUtils.dataWithHexString(hex: "5465737431323334")
+        let decodedData = String(data: data, encoding: String.Encoding.utf8)
+        
+        XCTAssertEqual(decodedData, "Test1234")
+    }
 
 }

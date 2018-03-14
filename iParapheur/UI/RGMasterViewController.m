@@ -433,7 +433,7 @@
 	// Delegations
 
     if (bureau.dossiersDelegues > 0)
-        cell.foldersToDo.text = [NSString stringWithFormat:@"%@, %d en délégation", cell.foldersToDo.text, bureau.dossiersDelegues];
+        cell.foldersToDo.text = [NSString stringWithFormat:@"%@, %ld en délégation", cell.foldersToDo.text, bureau.dossiersDelegues];
 
 	// Late Folders
 	

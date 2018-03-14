@@ -519,7 +519,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		if (_selectedDossiersArray.count == 1)
 			self.navigationItem.title = @"1 dossier sélectionné";
 		else
-			self.navigationItem.title = [NSString stringWithFormat:@"%d dossiers sélectionnés",
+			self.navigationItem.title = [NSString stringWithFormat:@"%ld dossiers sélectionnés",
 			                                                       _selectedDossiersArray.count];
 
 		[self updateToolBar];

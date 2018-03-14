@@ -135,7 +135,7 @@ import Foundation
 
         if (currentAccount == nil) {
 			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
-			                                                     into:ModelsDataController.Context!) as! Account
+                                                                 into:ModelsDataController.Context!) as? Account
 
             currentAccount!.id = NSUUID().uuidString
             currentAccount!.isVisible = true

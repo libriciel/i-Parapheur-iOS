@@ -161,7 +161,7 @@ import UIKit
             restClient!.cancelAllOperations()
         }
 
-        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text) as! NSString,
+        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text)! as NSString,
                                      login: loginTextField.text! as NSString,
                                      password: passwordTextField.text! as NSString)
 
@@ -258,7 +258,7 @@ import UIKit
 
         if (currentAccount == nil) {
 			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
-			                                                     into:ModelsDataController.Context!) as! Account
+                                                                 into:ModelsDataController.Context!) as? Account
 
             currentAccount!.id = Account.FirstAccountId
             currentAccount!.isVisible = true
