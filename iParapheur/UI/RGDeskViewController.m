@@ -36,7 +36,6 @@
 #import "RGDeskViewController.h"
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
-#import "ADLRequester.h"
 #import "iParapheur-Swift.h"
 #import "StringUtils.h"
 
@@ -600,28 +599,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Wall delegate
 
 
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSArray *dossiers = API_GETDOSSIERHEADERS_GET_DOSSIERS(answer);
-	[self.refreshControl endRefreshing];
-	HIDE_HUD
-	[self getDossierDidEndWithSuccess:dossiers];
-}
-
-
 - (void)didEndWithUnAuthorizedAccess {
 
 	[self.refreshControl endRefreshing];
 	HIDE_HUD
 }
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	[self.refreshControl endRefreshing];
-	HIDE_HUD
-}
-
 
 - (void)filterDossiersForSearchText:(NSString *)searchText {
 

@@ -34,9 +34,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLParapheurWallDelegateProtocol.h"
 
-@interface RGSplitViewController : UISplitViewController<ADLParapheurWallDelegateProtocol> {
+@interface RGSplitViewController : UISplitViewController {
     id bureauView;
 }
 @property (nonatomic, strong) IBOutlet id bureauView;

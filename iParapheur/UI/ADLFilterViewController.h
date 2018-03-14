@@ -34,7 +34,6 @@
  */
 #import <UIKit/UIKit.h>
 #import "ADLSingletonState.h"
-#import "ADLParapheurWallDelegateProtocol.h"
 
 
 @protocol FilterDelegate;
@@ -46,8 +45,7 @@
 		UITableViewDelegate,
 		UIPickerViewDataSource,
 		UIPickerViewDelegate,
-		UIPopoverControllerDelegate,
-		ADLParapheurWallDelegateProtocol>
+		UIPopoverControllerDelegate>
 
 @property(weak) id <FilterDelegate> delegate;
 

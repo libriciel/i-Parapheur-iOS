@@ -33,10 +33,8 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "RGAppDelegate.h"
-#import "ADLCredentialVault.h"
 #import "PrivateKey.h"
 #import "ADLCertificateAlertView.h"
-#import "ADLAPIRequests.h"
 #import "ADLRestClient.h"
 #import "DeviceUtils.h"
 #import "StringUtils.h"
@@ -472,26 +470,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		[ViewUtils logErrorWithMessage:error.localizedDescription
 		                                title:@"Erreur à la suppression du fichier"];
 	}
-}
-
-
-#pragma mark - Api requests delegate
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-
-	if ([s isEqual:LOGIN_API]) {
-
-		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-
-		[vault addCredentialForHost:def.host
-		                   andLogin:def.username
-		                 withTicket:API_LOGIN_GET_TICKET(answer)];
-	}
-
 }
 
 

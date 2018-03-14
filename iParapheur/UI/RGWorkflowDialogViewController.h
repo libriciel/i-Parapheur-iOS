@@ -34,12 +34,11 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLParapheurWallDelegateProtocol.h"
 #import "PrivateKey.h"
 #import "ADLRestClient.h"
 
 
-@interface RGWorkflowDialogViewController : UIViewController<ADLParapheurWallDelegateProtocol, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface RGWorkflowDialogViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) ADLRestClient *restClient;
 

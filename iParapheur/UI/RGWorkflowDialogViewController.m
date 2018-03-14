@@ -38,7 +38,6 @@
 #import "ADLSingletonState.h"
 #import "RGAppDelegate.h"
 #import "ADLCertificateAlertView.h"
-#import "ADLRequester.h"
 #import "LGViewHUD.h"
 #import <NSData_Base64/NSData+Base64.h>
 #import "StringUtils.h"
@@ -140,103 +139,6 @@
 
 - (IBAction)finish:(id)sender {
 
-	ADLRequester *requester = ADLRequester.sharedRequester;
-
-	NSMutableArray *dossierIds = NSMutableArray.new;
-	for (Dossier *dossier in _dossiers)
-		[dossierIds addObject:dossier.unwrappedId];
-
-	NSMutableDictionary *args = @{
-			@"dossiers" : dossierIds,
-			@"annotPub" : _annotationPublique.text,
-			@"annotPriv" : _annotationPrivee.text,
-			@"bureauCourant" : _bureauCourant}.mutableCopy;
-
-	if ([_action isEqualToString:@"VISA"] || ([_action isEqualToString:@"SIGNATURE"] && _isPaperSign)) {
-		[self showHud];
-
-			for (Dossier *dossier in _dossiers) {
-				__weak typeof(self) weakSelf = self;
-				[_restClient actionViserForDossier:dossier.unwrappedId
-				                         forBureau:_bureauCourant
-				              withPublicAnnotation:_annotationPublique.text
-				             withPrivateAnnotation:_annotationPrivee.text
-				                           success:^(NSArray *result) {
-					                           __strong typeof(weakSelf) strongSelf = weakSelf;
-					                           if (strongSelf) {
-						                           [strongSelf dismissDialogView];
-					                           }
-				                           }
-				                           failure:^(NSError *error) {
-					                           __strong typeof(weakSelf) strongSelf = weakSelf;
-					                           if (strongSelf) {
-						                           NSLog(@"actionViser error : %@", error.localizedDescription);
-						                           [strongSelf didEndWithUnReachableNetwork];
-					                           }
-				                           }];
-			}
-		}
-	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
-		[self showHud];
-
-		// TODO Adrien : switch
-		[requester request:@"secretariat"
-		           andArgs:args
-		          delegate:self];
-	}
-	else if ([self.action isEqualToString:@"REJET"]) {
-		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
-			[self showHud];
-
-				for (Dossier *dossier in _dossiers) {
-					__weak typeof(self) weakSelf = self;
-					[_restClient actionRejeterForDossier:dossier.unwrappedId
-					                           forBureau:_bureauCourant
-					                withPublicAnnotation:_annotationPublique.text
-					               withPrivateAnnotation:_annotationPrivee.text
-					                             success:^(NSArray *success) {
-						                             __strong typeof(weakSelf) strongSelf = weakSelf;
-						                             if (strongSelf) {
-							                             [strongSelf dismissDialogView];
-						                             }
-					                             }
-					                             failure:^(NSError *error) {
-						                             __strong typeof(weakSelf) strongSelf = weakSelf;
-						                             if (strongSelf) {
-							                             NSLog(@"Action reject error : %@", error.localizedDescription);
-							                             [strongSelf didEndWithUnReachableNetwork];
-						                             }
-					                             }];
-				}
-			}
-			else {
-			[[UIAlertView.alloc initWithTitle:@"Attention"
-			                          message:@"Veuillez saisir le motif de votre rejet"
-			                         delegate:nil
-			                cancelButtonTitle:@"Fermer"
-			                otherButtonTitles:nil] show];
-		}
-
-	}
-	else if ([self.action isEqualToString:@"SIGNATURE"]) {
-		// create signatures array
-		PrivateKey *pkey = _currentPKey;
-
-		/* Ask for pkey password */
-
-		ADLCertificateAlertView *alertView =
-				[[ADLCertificateAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", pkey.p12Filename.lastPathComponent]
-				                                      delegate:self
-				                             cancelButtonTitle:@"Annuler"
-				                             otherButtonTitles:@"Confirmer", nil];
-
-		alertView.p12Path = pkey.p12Filename;
-		alertView.tag = RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE;
-		[alertView show];
-	}
-
-	// [args release];
 }
 
 
@@ -274,94 +176,6 @@
 	                                                    object:nil];
 }
 
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSLog(@"MIKAF %@", answer);
-
-	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
-		// get selected dossiers for some sign info action :)
-
-		NSMutableArray *hashes = NSMutableArray.new;
-		NSMutableArray *dossiers = NSMutableArray.new;
-		NSMutableArray *signatures = NSMutableArray.new;
-
-		for (Dossier *dossier in _dossiers) {
-			NSDictionary *signInfo = answer[dossier.unwrappedId];
-
-			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-				[dossiers addObject:dossier.unwrappedId];
-				[hashes addObject:signInfo[@"hash"]];
-			}
-
-		}
-
-		ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
-		PrivateKey *pkey = _currentPKey;
-		NSError *error = nil;
-
-		for (NSString *hash in hashes) {
-			NSData *hash_data = [StringUtils bytesFromHexString:hash];
-
-			NSFileManager *fileManager = NSFileManager.new;
-			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-			                                     inDomain:NSUserDomainMask
-			                            appropriateForURL:nil
-			                                       create:YES
-			                                        error:NULL];
-
-			NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
-
-			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-			                           withPassword:_p12password
-			                                andData:hash_data
-			                                  error:&error];
-
-			if (signature == nil && error != nil) {
-				[ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-				                         title:@"Une erreur s'est produite lors de la signature"];
-				break;
-			}
-			else {
-				NSString *b64EncodedSignature = [CryptoUtils dataToBase64StringWithData:signature];
-				[signatures addObject:b64EncodedSignature];
-			}
-
-		}
-
-		if ((signatures.count > 0) && (signatures.count == hashes.count) && (dossiers.count == hashes.count)) {
-			NSMutableDictionary *args = @{
-					@"dossiers" : dossiers,
-					@"annotPub" : _annotationPublique.text,
-					@"annotPriv" : _annotationPrivee.text,
-					@"bureauCourant" : _bureauCourant,
-					@"signatures" : signatures}.mutableCopy;
-
-			NSLog(@"%@", args);
-			ADLRequester *requester = ADLRequester.sharedRequester;
-
-			[self showHud];
-
-			[requester request:@"signature"
-			           andArgs:args
-			          delegate:self];
-		}
-	}
-	else {
-		[self dismissDialogView];
-	}
-
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	[[UIAlertView.alloc initWithTitle:@"Erreur"
-	                          message:@"Une erreur est survenue lors de l'envoi de la requête"
-	                         delegate:nil
-	                cancelButtonTitle:@"Fermer"
-	                otherButtonTitles:nil] show];
-}
 
 /**
 * APIv3 response
@@ -405,7 +219,11 @@
                                     __strong typeof(weakSelf) strongSelf = weakSelf;
                                     if (strongSelf) {
                                         NSLog(@"Signature fail");
-                                        [strongSelf didEndWithUnReachableNetwork];
+                                        [[UIAlertView.alloc initWithTitle:@"Erreur"
+                                                                  message:@"Une erreur est survenue lors de l'envoi de la requête"
+                                                                 delegate:nil
+                                                        cancelButtonTitle:@"Fermer"
+                                                        otherButtonTitles:nil] show];
                                     }
                                 }];
 }

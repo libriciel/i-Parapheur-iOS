@@ -34,8 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "RGSplitViewController.h"
-#import "ADLCredentialVault.h"
-#import "ADLRequester.h"
 
 @implementation RGSplitViewController
 @synthesize bureauView;
@@ -60,44 +58,5 @@
         return YES;
     }
 }
-
-
-#pragma mark - Requests response
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary*)answer {
-	
-	NSString *s = answer[@"_req"];
-	
-	if ([s isEqual:LOGIN_API]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network Error", @"Alert title when network error happens")
-															message:[NSString stringWithFormat:@"%@", answer[@"data"][@"ticket"]]
-														   delegate:nil
-												  cancelButtonTitle:NSLocalizedString(@"Dismiss", @"Alert view dismiss button")
-												  otherButtonTitles:nil];
-		
-		[alertView show];
-		//storing ticket ? lacks the host and login information
-        //we should add it into the request process ?
-        
-        ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-        ADLCollectivityDef *collectivityDef = [ADLCollectivityDef copyDefaultCollectity];
-				
-        [vault addCredentialForHost:collectivityDef.host
-						   andLogin:collectivityDef.username
-						 withTicket:answer[@"data"][@"ticket"]];
-    }
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-    
-}
-
-
-- (void)didEndWithUnAuthorizedAccess {
-    
-}
-
 
 @end

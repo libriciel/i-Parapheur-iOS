@@ -34,9 +34,7 @@
  */
 #import <SCNetworkReachability/SCNetworkStatus.h>
 #import "RGMasterViewController.h"
-#import "ADLCredentialVault.h"
 #import "iParapheur-Swift.h"
-#import "ADLRequester.h"
 #import "StringUtils.h"
 #import "DeviceUtils.h"
 #import <SCNetworkReachability/SCNetworkReachability.h>
@@ -291,55 +289,6 @@
 		[self performSegueWithIdentifier:FirstLoginPopupController.Segue
 		                          sender:self];
 	}
-}
-
-
-#pragma mark - Wall impl
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-	_loading = NO;
-	[self.refreshControl endRefreshing];
-
-	if ([s isEqual:LOGIN_API]) {
-
-		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-
-		[vault addCredentialForHost:def.host
-		                   andLogin:def.username
-		                 withTicket:API_LOGIN_GET_TICKET(answer)];
-
-		[self loadBureaux];
-	} else if ([s isEqual:GETBUREAUX_API]) {
-		NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
-
-		_bureauxArray = array;
-
-		// add a cast to get rid of the warning since the view is indeed a table view it respons to reloadData
-		[(UITableView *) self.view reloadData];
-
-		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-
-	}
-
-	//storing ticket ? lacks the host and login information
-	//we should add it into the request process ?
-
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	[self.refreshControl endRefreshing];
-}
-
-
-- (void)didEndWithUnAuthorizedAccess {
-
-	[self.refreshControl endRefreshing];
 }
 
 
