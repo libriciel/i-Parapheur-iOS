@@ -6,5 +6,5 @@ build_project:
   script:
     - pod install
     - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
-    - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -enableCodeCoverage YES
+    - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -enableCodeCoverage YES -quiet
     # - slather coverage -s --workspace iParapheur.xcworkspace --scheme iParapheur iParapheur.xcodeproj
