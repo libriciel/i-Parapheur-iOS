@@ -3,13 +3,11 @@ iParapheur
 
 [![pipeline status](https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/badges/develop/pipeline.svg)](https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/commits/develop) [![coverage report](https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/badges/develop/coverage.svg)](https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/commits/develop)
 
-Cocoa pods is required to build the project
-```
-$ [sudo] gem install cocoapods
-```
 
-```
-$ pod install
-```
+# Installation
 
-after pods installation use the iParapheur.xcworkspace instead of iParapheur.xcodeproj
+The app is released on the official AppStore :
+https://itunes.apple.com/fr/app/i-parapheur/id848611322?mt=8
+
+Tablet is required, phones are not supported yet
+
