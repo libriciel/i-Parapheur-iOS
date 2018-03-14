@@ -167,7 +167,6 @@
 		C54FA1EA1FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E71FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png */; };
 		C54FA1EB1FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C54FA1E81FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png */; };
 		C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54FA1EC1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift */; };
-		C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */; };
 		C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */; };
 		C5675EC41DBE5414003FA418 /* ic_navigate_next_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675EC11DBE5414003FA418 /* ic_navigate_next_white_24dp.png */; };
 		C5675EC51DBE5414003FA418 /* ic_navigate_next_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5675EC21DBE5414003FA418 /* ic_navigate_next_white_24dp@2x.png */; };
@@ -582,8 +581,6 @@
 		C54FA1E71FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_outline_white_24dp@2x.png"; path = "ic_certificate_outline_white_24dp/ic_certificate_outline_white_24dp@2x.png"; sourceTree = "<group>"; };
 		C54FA1E81FC78E0C00ED2D08 /* ic_certificate_outline_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_certificate_outline_white_24dp@3x.png"; path = "ic_certificate_outline_white_24dp/ic_certificate_outline_white_24dp@3x.png"; sourceTree = "<group>"; };
 		C54FA1EC1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_CryptoUtils_Tests.swift; sourceTree = "<group>"; };
-		C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLResponseCircuit.h; sourceTree = "<group>"; };
-		C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLResponseCircuit.m; sourceTree = "<group>"; };
 		C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListCell.swift; sourceTree = "<group>"; };
 		C5675EC11DBE5414003FA418 /* ic_navigate_next_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_navigate_next_white_24dp.png; path = ic_navigate_next_white_24dp/ic_navigate_next_white_24dp.png; sourceTree = "<group>"; };
 		C5675EC21DBE5414003FA418 /* ic_navigate_next_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_navigate_next_white_24dp@2x.png"; path = "ic_navigate_next_white_24dp/ic_navigate_next_white_24dp@2x.png"; sourceTree = "<group>"; };
@@ -1725,20 +1722,10 @@
 		C5BC17941A5EEDB4003D8E98 /* RestClientApi3 */ = {
 			isa = PBXGroup;
 			children = (
-				C5BC17951A5EEDC0003D8E98 /* ResponseModel */,
 				C5BC179C1A5FCFAE003D8E98 /* ADLRestClientApi3.h */,
 				C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */,
 			);
 			path = RestClientApi3;
-			sourceTree = "<group>";
-		};
-		C5BC17951A5EEDC0003D8E98 /* ResponseModel */ = {
-			isa = PBXGroup;
-			children = (
-				C5628EFC1A6523CD00CB884C /* ADLResponseCircuit.h */,
-				C5628EFD1A6523CD00CB884C /* ADLResponseCircuit.m */,
-			);
-			path = ResponseModel;
 			sourceTree = "<group>";
 		};
 		C5CED4271FC58ED900FC15DD /* ic_filter_outline_white_48dp */ = {
@@ -2310,7 +2297,6 @@
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
 				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
 				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,
-				C5628EFE1A6523CD00CB884C /* ADLResponseCircuit.m in Sources */,
 				C5A7DAE91FDECCD30022A813 /* Etape.swift in Sources */,
 				B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */,
 				B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */,
