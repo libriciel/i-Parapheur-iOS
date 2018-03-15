@@ -36,7 +36,6 @@
 #import "RGMasterViewController.h"
 #import "iParapheur-Swift.h"
 #import "StringUtils.h"
-#import "DeviceUtils.h"
 #import <SCNetworkReachability/SCNetworkReachability.h>
 #import "iParapheur-Swift.h"
 
@@ -154,7 +153,7 @@
 
 - (void)checkDemonstrationServer {
 
-	if (![DeviceUtils isConnectedToDemoAccount])
+	if (![ViewUtils isConnectedToDemoAccount])
 		return;
 
 	@try {

@@ -37,8 +37,9 @@ import Gloss
 
 @objc class ParapheurType: NSObject, Glossy {
 
-    let name: String?
-    let subTypes: Array<String>?
+    @objc let name: String
+    @objc let subTypes: Array<String>
+
 
     // MARK: - Glossy
 
@@ -51,13 +52,4 @@ import Gloss
 		return nil /* Not used */
 	}
 
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedName() -> NSString {
-        return NSString(string: name!)
-    }
-
-    @objc func unwrappedSubTypes() -> NSArray {
-        return subTypes as NSArray!
-    }
 }

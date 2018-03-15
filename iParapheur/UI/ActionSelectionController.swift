@@ -81,7 +81,7 @@ import UIKit
         let action : NSString = actions[indexPath.row] as! NSString
 
         cell.actionLabel.text = StringUtils.actionName(forAction: action as String,
-                                                                withPaperSign: currentDossier!.isSignPapier!)
+                                                                withPaperSign: currentDossier!.isSignPapier)
 
         if (action.isEqual(to: "REJET")) {
             cell.icon.image = UIImage(named: "ic_close_white")?.withRenderingMode(.alwaysTemplate)

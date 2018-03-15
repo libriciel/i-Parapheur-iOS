@@ -93,7 +93,6 @@
 		C50A87401D1AD07000025074 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C50A873F1D1AD07000025074 /* Settings.storyboard */; };
 		C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */; };
 		C50FC42B1DCCDA7400887B8D /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50FC42A1DCCDA7400887B8D /* SettingsTableViewCell.swift */; };
-		C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */; };
 		C516EDE51AB6D94400216E5F /* iw-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE41AB6D94400216E5F /* iw-signature@2x.png */; };
 		C516EDE71AB6D94E00216E5F /* ip-signature@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE61AB6D94E00216E5F /* ip-signature@2x.png */; };
 		C516EDE91AB6D96F00216E5F /* ip-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = C516EDE81AB6D96F00216E5F /* ip-signature.png */; };
@@ -492,8 +491,6 @@
 		C50A873F1D1AD07000025074 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		C50FC42A1DCCDA7400887B8D /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
-		C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceUtils.h; sourceTree = "<group>"; };
-		C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceUtils.m; sourceTree = "<group>"; };
 		C516EDE41AB6D94400216E5F /* iw-signature@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iw-signature@2x.png"; sourceTree = "<group>"; };
 		C516EDE61AB6D94E00216E5F /* ip-signature@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-signature@2x.png"; sourceTree = "<group>"; };
 		C516EDE81AB6D96F00216E5F /* ip-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ip-signature.png"; sourceTree = "<group>"; };
@@ -1748,8 +1745,6 @@
 				7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */,
 				C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */,
 				C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */,
-				C512E24B1AC2AA0B00FA6975 /* DeviceUtils.h */,
-				C512E24C1AC2AA0B00FA6975 /* DeviceUtils.m */,
 				C5978BCD1D8C1E7F0097AC55 /* ColorUtils.swift */,
 				C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */,
 				64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */,
@@ -2267,7 +2262,6 @@
 				C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */,
 				95719C821893D50600246F7C /* ADLInfoView.m in Sources */,
 				7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */,
-				C512E24D1AC2AA0B00FA6975 /* DeviceUtils.m in Sources */,
 				C503261F1DD08ECC004F00A6 /* ActionSelectionCell.swift in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F66F168DFDD2000C115D /* PrivateKey.m in Sources */,

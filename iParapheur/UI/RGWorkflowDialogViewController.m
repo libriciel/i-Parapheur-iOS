@@ -109,7 +109,7 @@
 
 	BOOL isSignPapier = true;
 	for (Dossier *dossier in _dossiers)
-		isSignPapier = isSignPapier && dossier.unwrappedIsSignPapier;
+		isSignPapier = isSignPapier && dossier.isSignPapier;
 
 	[_paperSignatureButton addTarget:self
 	                          action:@selector(onPaperSignatureButtonClicked:)
@@ -240,11 +240,11 @@
 
 	__weak typeof(self) weakSelf = self;
 	if ([_dossiers[index] isDelegue] == false) {
-		[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
+		[_restClient getCircuit:((Dossier *) _dossiers[index]).identifier
 		                success:^(Circuit *circuit) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
-				                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
+				                circuits[((Dossier *) _dossiers[index]).identifier] = circuit;
 				                [strongSelf checkSignPapierButtonVisibility];
 				                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
 			                }
@@ -252,7 +252,7 @@
 		                failure:^(NSError *error) {
 			                __strong typeof(weakSelf) strongSelf = weakSelf;
 			                if (strongSelf) {
-				                circuits[((Dossier *) _dossiers[index]).unwrappedId] = nil;
+				                circuits[((Dossier *) _dossiers[index]).identifier] = nil;
 				                [strongSelf checkSignPapierButtonVisibility];
 				                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
 			                }
@@ -273,7 +273,7 @@
 	}
 
 	__weak typeof(self) weakSelf = self;
-	[_restClient actionSwitchToPaperSignatureForDossier:((Dossier *) _dossiers[index]).unwrappedId
+	[_restClient actionSwitchToPaperSignatureForDossier:((Dossier *) _dossiers[index]).identifier
 	                                          forBureau:_bureauCourant
 	                                            success:^(NSArray *success) {
 		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -378,13 +378,13 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
 				for (Dossier *dossier in _dossiers) {
 					__weak typeof(self) weakSelf = self;
-					[_restClient getSignInfoForDossier:dossier.unwrappedId
+					[_restClient getSignInfoForDossier:dossier.identifier
 					                         andBureau:_bureauCourant
 					                           success:^(SignInfo *signInfo) {
 						                           __strong typeof(weakSelf) strongSelf = weakSelf;
 						                           if (strongSelf)
 							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo
-							                                                            dossier:dossier.unwrappedId];
+							                                                            dossier:dossier.identifier];
 					                           }
 					                           failure:^(NSError *error) {
 						                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);

@@ -32,33 +32,35 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import Gloss
 
 @objc class Annotation: NSObject, Glossy {
 
-    var author: String?
-    var id: String?
-    @objc var text: String?
-    let date: NSDate?
+    @objc var author: String
+    @objc var identifier: String
+    @objc var text: String
+    @objc let date: NSDate
     let secretaire: Int?
-    var rect: NSValue?
+    @objc var rect: NSValue
 
     let fillColor: String?
     let penColor: String?
-    let type: String?
+    @objc let type: String
 
-    var step: Int?
-    var page: Int?
-    var documentId: String?
-    var editable: Bool?
+    @objc var step: Int
+    @objc var page: Int
+    @objc var documentId: String
+    @objc var editable: Bool
+
 
     // MARK: - Glossy
 
     required init?(json: JSON) {
 
         author = ("author" <~~ json) ?? "(vide)"
-        id = ("id" <~~ json) ?? ""
+        identifier = ("id" <~~ json) ?? ""
         text = ("text" <~~ json) ?? ""
 
         fillColor = ("fillColor" <~~ json) ?? "undefined"
@@ -78,19 +80,23 @@ import Gloss
                                                   y: jsonRectTopLeft!["y"] as! CGFloat),
                                   size: CGSize(width: (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
                                                height: (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)))
-			
-			rect = NSValue(cgRect: DeviceUtils.translateDpiRect(tempRect,
-				                                                oldDpi: 150,
-				                                                newDpi: 72))
+
+            rect = NSValue(cgRect: ViewUtils.translateDpi(rect: tempRect,
+                                                          oldDpi: 150,
+                                                          newDpi: 72))
         }
-		
+
+        rect = NSValue.init()
+        page = -1
+        documentId = ""
         step = 0
+        editable = true
     }
 
     @objc init?(currentPage: NSNumber) {
 
         author = ""
-        id = "_new"
+        identifier = "_new"
         text = ""
 
         fillColor = "undefined"
@@ -99,10 +105,10 @@ import Gloss
 
         date = NSDate()
         secretaire = 0
-		rect = NSValue(cgRect: DeviceUtils.translateDpiRect(CGRect(origin: .zero,
-		                                                           size: CGSize(width: 150, height: 150)),
-                                                            oldDpi:150,
-                                                            newDpi:72))
+        rect = NSValue(cgRect: ViewUtils.translateDpi(rect: CGRect(origin: .zero,
+                                                                   size: CGSize(width: 150, height: 150)),
+                                                      oldDpi: 150,
+                                                      newDpi: 72))
         step = 0
         editable = false
         documentId = ""
@@ -113,74 +119,4 @@ import Gloss
         return nil /* Not used */
     }
 
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedId() -> NSString {
-        return NSString(string: id!)
-    }
-
-    @objc func unwrappedPage() -> NSNumber {
-        return page as NSNumber!
-    }
-
-    @objc func setUnwrappedPage(i: NSNumber) {
-		page = Int(truncating: i)
-    }
-
-    @objc func unwrappedRect() -> NSValue {
-        return rect!
-    }
-
-    @objc func setUnwrappedRect(rct: NSValue) {
-        rect = rct
-    }
-
-    @objc func unwrappedText() -> NSString {
-        return NSString(string: text!)
-    }
-
-    @objc func setUnwrappedText(txt: NSString) {
-        text = String(txt)
-    }
-
-    @objc func setUnwrappedAuthor(txt: NSString) {
-		author = String(txt)
-    }
-
-    @objc func unwrappedAuthor() -> NSString {
-        return NSString(string: author!)
-    }
-
-    @objc func unwrappedDocumentId() -> NSString {
-        return NSString(string: documentId!)
-    }
-
-    @objc func setUnwrappedDocumentId(txt: NSString) {
-        documentId = String(txt)
-    }
-
-    @objc func unwrappedDate() -> NSString {
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy"
-
-        return dateFormatter.string(from: date! as Date) as NSString
-    }
-
-    @objc func unwrappedStep() -> NSNumber {
-        return step! as NSNumber
-    }
-
-    @objc func unwrappedEditable() -> NSNumber {
-        return editable as NSNumber!
-    }
-
-    @objc func setUnwrappedEditable(value: NSNumber) {
-        editable = value.boolValue
-    }
-
-    @objc func unwrappedType() -> NSString {
-        return NSString(string: type!)
-    }
-	
 }

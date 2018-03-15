@@ -38,15 +38,14 @@ import CoreData
 
 @objc class Account: NSManagedObject {
 
-    static let EntityName: String! = "Account"
+    static let EntityName = "Account"
 
-    @objc static let PreferencesKeySelectedAccount: NSString! = "selected_account"
-
-    static let FirstAccountId: String! = "FirstAccountId"
-    @objc static let DemoId: String! = "DemoAccountId"
-    static let DemoTitle: String! = "iParapheur demo"
-    static let DemoUrl: String! = "iparapheur-partenaires.libriciel.fr"
-    static let DemoLogin: String! = "admin@demo"
-    static let DemoPassword: String! = "admin"
+    @objc static let PreferencesKeySelectedAccount = "selected_account"
+    static let FirstAccountId = "FirstAccountId"
+    @objc static let DemoId = "DemoAccountId"
+    static let DemoTitle = "iParapheur demo"
+    static let DemoUrl = "iparapheur-partenaires.libriciel.fr"
+    static let DemoLogin = "admin@demo"
+    static let DemoPassword = "admin"
 
 }

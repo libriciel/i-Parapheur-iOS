@@ -36,7 +36,6 @@
 #import "PrivateKey.h"
 #import "ADLCertificateAlertView.h"
 #import "ADLRestClient.h"
-#import "DeviceUtils.h"
 #import "StringUtils.h"
 #import "iParapheur-Swift.h"
 #import <Fabric/Fabric.h>

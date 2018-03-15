@@ -37,44 +37,45 @@ import Gloss
 
 @objc class Dossier : NSObject, Glossy {
 
-    let id: String?
-    let title: String?
+    @objc let identifier: String
+    @objc let title: String?
     let bureauName: String?
     let banetteName: String?
     let visibility: String?
     let status: String?
 
-    let type: String?
-    let sousType: String?
+    @objc let type: String
+    @objc let subType: String
     let protocole: String?
     let nomTdT: String?
     let xPathSignature: String?
 
-    let actionDemandee: String?
-    let actions: Array<String>?
-    let documents: Array<Document>?
+    @objc let actionDemandee: String
+    @objc var actions: Array<String>
+    @objc let documents: Array<Document>
     let acteursVariables: Array<String>?
     let metadatas: Dictionary<String, AnyObject>?
     let dateEmission: NSNumber?
-    let dateLimite: NSNumber?
+    @objc let limitDate: NSNumber
 
     let hasRead: Bool?
     let includeAnnexes: Bool?
     let isRead: Bool?
     let isSent: Bool?
     let canAdd: Bool?
-    let isLocked: Bool?
-    let isSignPapier: Bool?
+    @objc let isLocked: Bool
+    @objc let isSignPapier: Bool
     let isXemEnabled: Bool?
     let isReadingMandatory: Bool?
 
     @objc var isDelegue : Bool
 
+
     // MARK: - Glossy
 
     required init?(json: JSON) {
 
-        id = ("id" <~~ json) ?? ""
+        identifier = ("id" <~~ json) ?? ""
         title = ("title" <~~ json) ?? "(vide)"
         bureauName = ("bureauName" <~~ json) ?? "(vide)"
         banetteName = ("banetteName" <~~ json) ?? ""
@@ -82,7 +83,7 @@ import Gloss
         status = ("status" <~~ json) ?? ""
 
         type = ("type" <~~ json) ?? ""
-        sousType = ("sousType" <~~ json) ?? ""
+        subType = ("sousType" <~~ json) ?? ""
         protocole = ("protocole" <~~ json) ?? ""
         nomTdT = ("nomTdT" <~~ json) ?? ""
         xPathSignature = ("xPathSignature" <~~ json) ?? ""
@@ -93,7 +94,7 @@ import Gloss
         acteursVariables = ("acteursVariables" <~~ json) ?? []
         metadatas = ("metadatas" <~~ json) ?? [:]
         dateEmission = ("dateEmission" <~~ json) ?? -1
-        dateLimite = ("dateLimite" <~~ json) ?? 0
+        limitDate = ("dateLimite" <~~ json) ?? 0
 
         hasRead = ("hasRead" <~~ json) ?? false
         includeAnnexes = ("includeAnnexes" <~~ json) ?? false
@@ -108,8 +109,8 @@ import Gloss
         isDelegue = false
 
 		// Sometimes it happens
-		if (!(actions!.contains(actionDemandee!))) {
-			actions!.append(actionDemandee!)
+		if (!(actions.contains(actionDemandee))) {
+			actions.append(actionDemandee)
 		}
 	}
 
@@ -117,47 +118,6 @@ import Gloss
         return nil /* Not used */
     }
 
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedId() -> NSString {
-        return NSString(string: id!)
-    }
-
-    @objc func unwrappedDocuments() -> NSArray {
-        return documents as NSArray!
-    }
-
-    @objc func unwrappedTitle() -> NSString {
-        return title as NSString!
-    }
-
-    @objc func unwrappedActions() -> NSArray {
-        return actions as NSArray!
-    }
-
-    @objc func unwrappedActionDemandee() -> NSString {
-        return NSString(string: actionDemandee!)
-    }
-
-    @objc func unwrappedIsSignPapier() -> Bool {
-        return isSignPapier!
-    }
-
-    @objc func unwrappedType() -> NSString {
-        return NSString(string: type!)
-    }
-
-    @objc func unwrappedSubType() -> NSString {
-        return NSString(string: sousType!)
-    }
-
-    @objc func unwrappedLimitDate() -> NSNumber {
-        return dateLimite!
-    }
-
-    @objc func unwrappedIsLocked() -> Bool {
-        return isLocked!
-    }
 
     // MARK: - Static utils
 
@@ -199,11 +159,11 @@ import Gloss
 
         for dossierItem in dossierList {
             if let dossier = dossierItem as? Dossier {
-                hasVisa = hasVisa && dossier.actions!.contains("VISA")
-                hasSignature = hasSignature && (dossier.actions!.contains("SIGNATURE") || dossier.actions!.contains("VISA"))
-                hasOnlyVisa = hasOnlyVisa && !dossier.actions!.contains("SIGNATURE")
-                hasRejet = hasRejet && dossier.actions!.contains("REJET")
-                hasTDT = hasTDT && dossier.actions!.contains("TDT")
+                hasVisa = hasVisa && dossier.actions.contains("VISA")
+                hasSignature = hasSignature && (dossier.actions.contains("SIGNATURE") || dossier.actions.contains("VISA"))
+                hasOnlyVisa = hasOnlyVisa && !dossier.actions.contains("SIGNATURE")
+                hasRejet = hasRejet && dossier.actions.contains("REJET")
+                hasTDT = hasTDT && dossier.actions.contains("TDT")
             }
         }
 

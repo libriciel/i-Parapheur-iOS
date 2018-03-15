@@ -126,10 +126,10 @@
 		
 		int typeIndex = -1;
 		for (int i=0; i<_typologie.count; i++)
-			if ([((ParapheurType *)_typologie[(NSUInteger) i]).unwrappedName isEqualToString:selectedType])
+			if ([((ParapheurType *)_typologie[(NSUInteger) i]).name isEqualToString:selectedType])
 				typeIndex = i;
 
-        NSArray *sousTypes = ((ParapheurType *)_typologie[(NSUInteger) typeIndex]).unwrappedSubTypes;
+        NSArray *sousTypes = ((ParapheurType *)_typologie[(NSUInteger) typeIndex]).subTypes;
         for (NSString *selectedSousType in _selectedSousTypes) {
             NSUInteger sousTypeIndex = [sousTypes indexOfObject:selectedSousType];
             if (sousTypeIndex != NSNotFound) {
@@ -213,9 +213,9 @@
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
     ParapheurType* type = _typologie[(NSUInteger) indexPath.section];
-    NSString* sousType = type.unwrappedSubTypes[(NSUInteger) indexPath.row];
+    NSString* sousType = type.subTypes[(NSUInteger) indexPath.row];
     
-    [_selectedTypes addObject:type.unwrappedName];
+    [_selectedTypes addObject:type.name];
     [_selectedSousTypes addObject:sousType];
 }
 
@@ -224,9 +224,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	ParapheurType* type = _typologie[(NSUInteger) indexPath.section];
-    NSString* sousType = type.unwrappedSubTypes[(NSUInteger) indexPath.row];
+    NSString* sousType = type.subTypes[(NSUInteger) indexPath.row];
     
-    [_selectedTypes removeObject:type.unwrappedName];
+    [_selectedTypes removeObject:type.name];
     [_selectedSousTypes removeObject:sousType];
 
 }
@@ -239,7 +239,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
  numberOfRowsInSection:(NSInteger)section {
 
 	ParapheurType * type = _typologie[(NSUInteger) section];
-    return type.unwrappedSubTypes.count;
+    return type.subTypes.count;
 }
 
 
@@ -250,7 +250,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 
 	ParapheurType * type = _typologie[(NSUInteger) indexPath.section];
-    NSString * sousType = type.unwrappedSubTypes[(NSUInteger) indexPath.row];
+    NSString * sousType = type.subTypes[(NSUInteger) indexPath.row];
     cell.textLabel.text = sousType;
     return cell;
 }
@@ -264,7 +264,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section {
 	
-    return ((ParapheurType *)_typologie[(NSUInteger) section]).unwrappedName;
+    return ((ParapheurType *)_typologie[(NSUInteger) section]).name;
 }
 
 

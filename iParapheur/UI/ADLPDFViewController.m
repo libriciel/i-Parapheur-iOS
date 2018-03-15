@@ -164,7 +164,7 @@
 	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
 		((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 	} else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
-		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.unwrappedDocuments;
+		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
@@ -237,17 +237,17 @@
 	// Updating annotations
 
 	for (Annotation *annotation in _annotations) {
-		bool isEditable = (annotation.unwrappedStep.intValue >= currentStep);
-		[annotation setUnwrappedEditableWithValue:(isEditable ? @(1) : @(0))];
+		bool isEditable = (annotation.step >= currentStep);
+		annotation.editable = isEditable;
 	}
 
 	// Filtering annotations
 
 	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
 
-		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
-		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.unwrappedId];
-		bool isApi3 = [((Annotation *) object).unwrappedDocumentId isEqualToString:@"*"];
+		bool isPage = ((Annotation *) object).page == page;
+		bool isDoc = [((Annotation *) object).identifier isEqualToString:_document.unwrappedId];
+		bool isApi3 = [((Annotation *) object).identifier isEqualToString:@"*"];
 
 		return isPage && (isDoc || isApi3);
 	}]];
@@ -305,8 +305,8 @@
 
 	//
 
-	[annotation setUnwrappedAuthorWithTxt:login];
-	[annotation setUnwrappedDocumentIdWithTxt:_document.unwrappedId];
+	annotation.author = login;
+	annotation.documentId = _document.unwrappedId;
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient addAnnotation:annotation
@@ -342,7 +342,7 @@
 
 	// Determine the first pdf file to display
 
-	for (Document *document in dossier.unwrappedDocuments) {
+	for (Document *document in dossier.documents) {
 		if (document.isVisuelPdf) {
 			_document = document;
 			break;
@@ -352,13 +352,13 @@
 	//
 
 	[self displayDocumentAt:0];
-	self.navigationController.navigationBar.topItem.title = dossier.unwrappedTitle;
+	self.navigationController.navigationBar.topItem.title = dossier.title;
 
 	// Refresh buttons
 
 	NSArray *buttons;
 
-	if (dossier.unwrappedDocuments.count > 1)
+	if (dossier.documents.count > 1)
 		buttons = @[_actionButton, _documentsButton, _detailsButton];
 	else
 		buttons = @[_actionButton, _detailsButton];
@@ -603,8 +603,8 @@
 
 - (void)requestSignInfoForDossier:(Dossier *)dossier {
 
-	if ([dossier.unwrappedActions containsObject:@"SIGNATURE"]) {
-		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
+	if ([dossier.actions containsObject:@"SIGNATURE"]) {
+		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getSignInfoForDossier:_dossierRef
 			                         andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
@@ -664,7 +664,7 @@
 - (void)displayDocumentAt:(NSInteger)index {
 
 	_isDocumentPrincipal = (index == 0);
-	_document = _dossier.unwrappedDocuments[(NSUInteger) index];
+	_document = _dossier.documents[(NSUInteger) index];
 
 	// File cache
 
@@ -687,7 +687,7 @@
 
 	SHOW_HUD
 
-	if (_dossier.unwrappedDocuments) {
+	if (_dossier.documents) {
 		bool isPdf = (bool) _document.isVisuelPdf;
 
 		[_restClient downloadDocument:_document.unwrappedId
