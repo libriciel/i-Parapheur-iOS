@@ -357,7 +357,7 @@
     result[@"page"] = [NSString stringWithFormat:@"%ld", (long)annotation.page];
 //	result[@"uuid"] = annotation.unwrappedId;
 
-    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect.CGRectValue
+    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
                                            oldDpi:72
                                            newDpi:150];
     NSDictionary *annotationRectTopLeft = @{
@@ -390,7 +390,7 @@
     result[@"uuid"] = annotation.identifier;
     result[@"id"] = annotation.identifier;
 
-    CGRect rectData = [ViewUtils translateDpiWithRect:annotation.rect.CGRectValue
+    CGRect rectData = [ViewUtils translateDpiWithRect:annotation.rect
                                                oldDpi:72
                                                newDpi:150];
 

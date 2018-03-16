@@ -61,10 +61,10 @@ import SwiftMessages
                                   oldDpi: Int,
                                   newDpi: Int) -> CGRect {
 
-        return CGRect(x: rect.origin.x * CGFloat(newDpi / oldDpi),
-                      y: rect.origin.y * CGFloat(newDpi / oldDpi),
-                      width: rect.size.width * CGFloat(newDpi / oldDpi),
-                      height: rect.size.height * CGFloat(newDpi / oldDpi))
+        return CGRect(x: rect.origin.x * CGFloat(newDpi) / CGFloat(oldDpi),
+                      y: rect.origin.y * CGFloat(newDpi) / CGFloat(oldDpi),
+                      width: rect.size.width * CGFloat(newDpi) / CGFloat(oldDpi),
+                      height: rect.size.height * CGFloat(newDpi) / CGFloat(oldDpi))
     }
 
 
@@ -101,6 +101,7 @@ import SwiftMessages
                              subtitle: message,
                              messageType: .warning)
     }
+
 
     // MARK: - Private Methods
 

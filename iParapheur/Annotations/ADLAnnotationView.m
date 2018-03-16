@@ -101,7 +101,7 @@
 
 - (id)initWithAnnotation:(Annotation *)annotation {
 
-	CGRect frame = annotation.rect.CGRectValue;
+	CGRect frame = annotation.rect;
 
 	self = [super initWithFrame:frame];
 	if (self) {
@@ -384,8 +384,7 @@
 
 
 - (void)refreshModel {
-
-	self.annotationModel.rect = [NSValue valueWithCGRect:self.frame];
+	self.annotationModel.rect = self.frame;
 }
 
 
