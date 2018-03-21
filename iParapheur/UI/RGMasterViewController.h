@@ -34,11 +34,10 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLParapheurWallDelegateProtocol.h"
 #import "RGDeskViewController.h"
 #import "ADLRestClient.h"
 
-@interface RGMasterViewController : UITableViewController <UISplitViewControllerDelegate, ADLParapheurWallDelegateProtocol, UITableViewDataSource> {
+@interface RGMasterViewController : UITableViewController <UISplitViewControllerDelegate, UITableViewDataSource> {
 }
 
 @property (nonatomic, strong) ADLRestClient *restClient;

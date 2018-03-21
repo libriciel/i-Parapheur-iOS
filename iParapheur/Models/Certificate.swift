@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 @objc class Certificate: NSObject {
@@ -44,9 +45,10 @@ import Foundation
     let notBefore: NSDate?
     let notAfter: NSDate?
 
+
     // MARK: - Constructor
 
-    init(managedObject:NSManagedObject) {
+    init(managedObject: NSManagedObject) {
 
         commonName = managedObject.value(forKey: "commonName") as? String
         caName = managedObject.value(forKey: "caName") as? String
@@ -55,12 +57,6 @@ import Foundation
         serialNumber = managedObject.value(forKey: "serialNumber") as? String
         notBefore = managedObject.value(forKey: "notBefore") as? NSDate
         notAfter = managedObject.value(forKey: "notAfter") as? NSDate
-    }
-
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedP12File() -> NSString {
-        return NSString(string: p12Filename!)
     }
 
 }

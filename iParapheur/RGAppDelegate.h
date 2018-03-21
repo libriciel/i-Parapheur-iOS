@@ -35,10 +35,9 @@
  */
 #import <UIKit/UIKit.h>
 #import "ADLKeyStore.h"
-#import "ADLParapheurWallDelegateProtocol.h"
 
 
-@interface RGAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate, ADLParapheurWallDelegateProtocol>
+@interface RGAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate>
 
 
 @property (strong, nonatomic) UIWindow *window;
@@ -54,8 +53,6 @@
 - (void)saveContext;
 
 - (NSURL *)applicationDocumentsDirectory;
-
-- (void)didEndWithRequestAnswer:(NSDictionary*)answer;
 
 
 @end

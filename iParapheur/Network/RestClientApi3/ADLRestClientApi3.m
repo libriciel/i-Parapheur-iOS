@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLRestClientApi3.h"
-#import "DeviceUtils.h"
 #import "iParapheur-Swift.h"
 
 
@@ -350,17 +349,17 @@
 
 - (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
 
-    NSMutableDictionary *result = [NSMutableDictionary new];
+    NSMutableDictionary *result = NSMutableDictionary.new;
 
 //	result[@"author"] = annotation.unwrappedAuthor;
-    result[@"text"] = annotation.unwrappedText;
-    result[@"type"] = annotation.unwrappedType;
-    result[@"page"] = annotation.unwrappedPage;
+    result[@"text"] = annotation.text;
+    result[@"type"] = annotation.type;
+    result[@"page"] = [NSString stringWithFormat:@"%ld", (long)annotation.page];
 //	result[@"uuid"] = annotation.unwrappedId;
 
-    CGRect rect = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
-                                         oldDpi:72
-                                         newDpi:150];
+    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect.CGRectValue
+                                           oldDpi:72
+                                           newDpi:150];
     NSDictionary *annotationRectTopLeft = @{
             @"x": @(rect.origin.x),
             @"y": @(rect.origin.y)
@@ -385,15 +384,15 @@
 
     // Fixme : send every other data form annotation
 
-    result[@"page"] = annotation.unwrappedPage;
-    result[@"text"] = annotation.unwrappedText;
-    result[@"type"] = annotation.unwrappedType;
-    result[@"uuid"] = annotation.unwrappedId;
-    result[@"id"] = annotation.unwrappedId;
+    result[@"page"] = [NSString stringWithFormat:@"%ld", (long)annotation.page];
+    result[@"text"] = annotation.text;
+    result[@"type"] = annotation.type;
+    result[@"uuid"] = annotation.identifier;
+    result[@"id"] = annotation.identifier;
 
-    CGRect rectData = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
-                                             oldDpi:72
-                                             newDpi:150];
+    CGRect rectData = [ViewUtils translateDpiWithRect:annotation.rect.CGRectValue
+                                               oldDpi:72
+                                               newDpi:150];
 
     NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
     resultTopLeft[@"x"] = @(rectData.origin.x);
@@ -560,7 +559,7 @@
 
     [_swiftManager sendSimpleActionWithType:@(1)
                                         url:[self getAnnotationsUrlForDossier:dossierId
-                                                                  andDocument:annotation.unwrappedDocumentId]
+                                                                  andDocument:annotation.documentId]
                                        args:argumentDictionary
                                  onResponse:^(NSNumber *result) {
                                      success(NSArray.new);
@@ -584,8 +583,8 @@
 
     [_swiftManager sendSimpleActionWithType:@(2)
                                         url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.unwrappedDocumentId
-                                                             andAnnotationId:annotation.unwrappedId]
+                                                                 andDocument:annotation.documentId
+                                                             andAnnotationId:annotation.identifier]
                                        args:argumentDictionary
                                  onResponse:^(NSNumber *result) {
                                      success(NSArray.new);
@@ -609,8 +608,8 @@
 
     [_swiftManager sendSimpleActionWithType:@(3)
                                         url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.unwrappedDocumentId
-                                                             andAnnotationId:annotation.unwrappedId]
+                                                                 andDocument:annotation.documentId
+                                                             andAnnotationId:annotation.identifier]
                                        args:argumentDictionary
                                  onResponse:^(id result) {
                                      success(NSArray.new);

@@ -35,7 +35,6 @@
  */
 #import <UIKit/UIKit.h>
 #import "ADLFilterViewController.h"
-#import "ADLParapheurWallDelegateProtocol.h"
 #import "RGDossierDetailViewController.h"
 #import "RGFileCell.h"
 #import "ADLRestClient.h"
@@ -43,7 +42,6 @@
 
 @interface RGDeskViewController : UITableViewController
 		<UISplitViewControllerDelegate,
-		ADLParapheurWallDelegateProtocol,
 		UITableViewDataSource,
 		UITableViewDelegate,
 		UIActionSheetDelegate,

@@ -46,6 +46,7 @@ import UIKit
     var accountList: Array<Account> = []
     var selectedAccountId: String?
 
+
 	// MARK: - LifeCycle
 
 	override func viewDidLoad() {
@@ -65,6 +66,7 @@ import UIKit
         selectedAccountId = preferences.string(forKey: Account.PreferencesKeySelectedAccount as String)
 	}
 
+
     // MARK: - Private methods
 
     func loadAccountList() -> Array<Account> {
@@ -75,11 +77,13 @@ import UIKit
         return result
     }
 
+
     // MARK: - Button Listeners
 
     @objc func onBackButtonClicked() {
         self.dismiss(animated: true, completion: nil)
     }
+
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
 

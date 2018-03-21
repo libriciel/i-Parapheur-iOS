@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "ADLResponseCircuit.h"
 #import "iParapheur-Swift.h"
 
 

@@ -34,15 +34,13 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLParapheurWallDelegateProtocol.h"
 #import "ReaderViewController.h"
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
 #import "ADLRestClient.h"
 
 
-@interface ADLPDFViewController : UIViewController
-		<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
+@interface ADLPDFViewController : UIViewController<ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
 
 @property(nonatomic, strong) ADLRestClient *restClient;
 

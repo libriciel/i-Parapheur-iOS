@@ -40,7 +40,6 @@
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "StringUtils.h"
-#import "ADLRequester.h"
 #import "iParapheur-Swift.h"
 #import "RGWorkflowDialogViewController.h"
 
@@ -165,7 +164,7 @@
 	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
 		((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 	} else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
-		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.unwrappedDocuments;
+		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
@@ -238,17 +237,17 @@
 	// Updating annotations
 
 	for (Annotation *annotation in _annotations) {
-		bool isEditable = (annotation.unwrappedStep.intValue >= currentStep);
-		[annotation setUnwrappedEditableWithValue:(isEditable ? @(1) : @(0))];
+		bool isEditable = (annotation.step >= currentStep);
+		annotation.editable = isEditable;
 	}
 
 	// Filtering annotations
 
 	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
 
-		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
-		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.unwrappedId];
-		bool isApi3 = [((Annotation *) object).unwrappedDocumentId isEqualToString:@"*"];
+		bool isPage = ((Annotation *) object).page == page;
+		bool isDoc = [((Annotation *) object).identifier isEqualToString:_document.unwrappedId];
+		bool isApi3 = [((Annotation *) object).identifier isEqualToString:@"*"];
 
 		return isPage && (isDoc || isApi3);
 	}]];
@@ -306,8 +305,8 @@
 
 	//
 
-	[annotation setUnwrappedAuthorWithTxt:login];
-	[annotation setUnwrappedDocumentIdWithTxt:_document.unwrappedId];
+	annotation.author = login;
+	annotation.documentId = _document.unwrappedId;
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient addAnnotation:annotation
@@ -343,7 +342,7 @@
 
 	// Determine the first pdf file to display
 
-	for (Document *document in dossier.unwrappedDocuments) {
+	for (Document *document in dossier.documents) {
 		if (document.isVisuelPdf) {
 			_document = document;
 			break;
@@ -353,13 +352,13 @@
 	//
 
 	[self displayDocumentAt:0];
-	self.navigationController.navigationBar.topItem.title = dossier.unwrappedTitle;
+	self.navigationController.navigationBar.topItem.title = dossier.title;
 
 	// Refresh buttons
 
 	NSArray *buttons;
 
-	if (dossier.unwrappedDocuments.count > 1)
+	if (dossier.documents.count > 1)
 		buttons = @[_actionButton, _documentsButton, _detailsButton];
 	else
 		buttons = @[_actionButton, _detailsButton];
@@ -368,75 +367,6 @@
 
 	[self requestSignInfoForDossier:dossier];
 }
-
-
-/**
-* Responses for API v2 requests.
-*/
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-	HIDE_HUD
-
-	if ([s isEqual:GETDOSSIER_API]) {
-//		_document = answer.copy;
-		[self displayDocumentAt:0];
-
-		self.navigationController.navigationBar.topItem.title = _document.unwrappedName;
-
-		NSArray *buttons;
-
-		if (_dossier.unwrappedDocuments.count > 1)
-			buttons = @[_actionButton, _documentsButton, _detailsButton];
-		else
-			buttons = @[_actionButton, _detailsButton];
-
-		self.navigationItem.rightBarButtonItems = buttons;
-
-//		NSString *documentPrincipal = [[_document[@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
-//		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
-//		NSLog(@"%@", _document[@"actions"]);
-//
-//		if ([[_document[@"actions"] objectForKey:@"sign"] isEqualToNumber:@YES]) {
-//			if ([_document[@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
-//				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
-//				ADLRequester *requester = [ADLRequester sharedRequester];
-//				[requester request:@"getSignInfo"
-//				           andArgs:signInfoArgs
-//					      delegate:self];
-//			}
-//			else {
-//				_visaEnabled = YES;
-//				_signatureFormat = nil;
-//			}
-//		}
-
-		SHOW_HUD
-	} else if ([s isEqualToString:@"getSignInfo"]) {
-		_signatureFormat = [[answer[_dossierRef] objectForKey:@"format"] copy];
-	} else if ([s isEqualToString:GETANNOTATIONS_API]) {
-		NSArray *annotations = [answer[@"annotations"] copy];
-
-		_annotations = annotations;
-
-		for (NSNumber *contentViewIdx in [_readerViewController getContentViews]) {
-			ReaderContentView *currentReaderContentView = [_readerViewController getContentViews][contentViewIdx];
-			[[currentReaderContentView getContentPage] refreshAnnotations];
-		}
-	} else if ([s isEqualToString:@"addAnnotation"]) {
-		API_GETANNOTATIONS(_dossierRef);
-	} else if ([s isEqual:GETCIRCUIT_API]) {
-		self.circuit = answer[@"circuit"];
-		API_GETANNOTATIONS(_dossierRef);
-	}
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	HIDE_HUD
-}
-
 
 - (void)didEndWithUnAuthorizedAccess {
 
@@ -673,8 +603,8 @@
 
 - (void)requestSignInfoForDossier:(Dossier *)dossier {
 
-	if ([dossier.unwrappedActions containsObject:@"SIGNATURE"]) {
-		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
+	if ([dossier.actions containsObject:@"SIGNATURE"]) {
+		if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
 			__weak typeof(self) weakSelf = self;
 			[_restClient getSignInfoForDossier:_dossierRef
 			                         andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
@@ -734,7 +664,7 @@
 - (void)displayDocumentAt:(NSInteger)index {
 
 	_isDocumentPrincipal = (index == 0);
-	_document = _dossier.unwrappedDocuments[(NSUInteger) index];
+	_document = _dossier.documents[(NSUInteger) index];
 
 	// File cache
 
@@ -757,7 +687,7 @@
 
 	SHOW_HUD
 
-	if (_dossier.unwrappedDocuments) {
+	if (_dossier.documents) {
 		bool isPdf = (bool) _document.isVisuelPdf;
 
 		[_restClient downloadDocument:_document.unwrappedId
@@ -774,37 +704,6 @@
 														   title:nil];
 		                      }];
 	}
-}
-
-
-- (void)didEndWithDocument:(ADLDocument *)document {
-
-	HIDE_HUD
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		//here everything you want to perform in background
-
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSFileHandle *file;
-
-		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-
-		NSString *docPath = documentsPaths[0];
-		NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin",
-		                                                docPath,
-		                                                _dossierRef];
-		[fileManager createFileAtPath:filePath
-		                     contents:nil
-		                   attributes:nil];
-
-		file = [NSFileHandle fileHandleForWritingAtPath:filePath];
-		[file writeData:document.documentData];
-
-		dispatch_async(dispatch_get_main_queue(), ^{
-			//call back to main queue to update user interface
-			[self loadPdfAt:filePath];
-			[self requestAnnotations];
-		});
-	});
 }
 
 

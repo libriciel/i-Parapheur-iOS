@@ -35,7 +35,6 @@
  */
 #import "RGMasterViewController.h"
 #import "ADLNotifications.h"
-#import "ADLRequester.h"
 #import "ADLCircuitCell.h"
 #import "iParapheur-Swift.h"
 
@@ -176,7 +175,6 @@
 
 	dossierRef = _dossierRef;
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 		                dossier:dossierRef
@@ -190,15 +188,6 @@
 		                failure:^(NSError *error) {
 			                NSLog(@"getDossier error %@ : ", error.localizedDescription);
 		                }];
-	}
-	else {
-		NSDictionary *args = @{@"dossierRef" : _dossierRef};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:GETDOSSIER_API
-		           andArgs:args
-		          delegate:self];
-	}
 
 	SHOW_HUD
 }
@@ -319,13 +308,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)getCircuit {
 
-	ADLRequester *requester = [ADLRequester sharedRequester];
-	NSDictionary *args = @{@"dossier" : dossierRef};
-	[requester request:@"getCircuit"
-	           andArgs:args
-	          delegate:self];
-
-	SHOW_HUD
 }
 
 
@@ -342,32 +324,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	[self getCircuit];
 	[self showsEveryThing];
-}
-
-
-#pragma mark - Wall impl
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-
-	if ([s isEqual:GETDOSSIER_API]) {
-		[self getDossierDidEndWithREquestAnswer];
-	}
-	else if ([s isEqualToString:@"getCircuit"]) {
-		[self refreshCircuits:answer[@"circuit"]];
-	}
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-}
-
-
-- (void)didEndWithUnAuthorizedAccess {
-
 }
 
 

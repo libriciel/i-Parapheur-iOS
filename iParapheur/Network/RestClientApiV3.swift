@@ -115,7 +115,7 @@ import Alamofire
 
                     let annotation = Annotation(json: jsonAnnotation)
                     annotation!.step = step
-                    annotation!.page = Int(page.0)
+                    annotation!.page = Int(page.0)!
                     annotation!.documentId = documentId
 
                     parsedAnnotations.append(annotation!)

@@ -36,7 +36,6 @@
 #import "RGDeskViewController.h"
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
-#import "ADLRequester.h"
 #import "iParapheur-Swift.h"
 #import "StringUtils.h"
 
@@ -118,7 +117,7 @@
 		BOOL isPaperSign = YES;
 
 		for (Dossier *dossier in selectedArray)
-			if (!dossier.unwrappedIsSignPapier)
+			if (!dossier.isSignPapier)
 				isPaperSign = NO;
 
 		// Launch popup
@@ -215,7 +214,7 @@
 		NSArray *displayedDossierArray = (self.tableView == self.searchDisplayController.searchResultsTableView) ? _filteredDossiersArray : _dossiersArray;
 
 		for (int i = 0; i < displayedDossierArray.count; i++)
-			if ([((Dossier *) displayedDossierArray[(NSUInteger) i]).unwrappedId isEqualToString:selectedId])
+			if ([((Dossier *) displayedDossierArray[(NSUInteger) i]).identifier isEqualToString:selectedId])
 				index = [NSIndexPath indexPathForRow:i
 				                           inSection:0];
 
@@ -453,17 +452,17 @@
 	// Adapter
 
     cell.dot.tintColor = dossier.isDelegue ? ColorUtils.DarkPurple : ColorUtils.LightGrey;
-	cell.titleLabel.text = dossier.unwrappedTitle;
+	cell.titleLabel.text = dossier.title;
 	cell.typologyLabel.text = [NSString stringWithFormat:@"%@ / %@",
-	                                                     dossier.unwrappedType,
-	                                                     dossier.unwrappedSubType];
+	                                                     dossier.type,
+	                                                     dossier.subType];
 
 	// Date
 
 	NSDate *dossierDate = nil;
 
-	if (dossier.unwrappedLimitDate.longLongValue != 0)
-		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.unwrappedLimitDate.longLongValue / 1000];
+	if (dossier.limitDate.longLongValue != 0)
+		dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.limitDate.longLongValue / 1000];
 
 	cell.limitDateLabel.hidden = (dossierDate == nil);
 
@@ -533,7 +532,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	// Re-selection
 
-	if ([ADLSingletonState sharedSingletonState].dossierCourantReference == dossierClicked.unwrappedId)
+	if ([ADLSingletonState sharedSingletonState].dossierCourantReference == dossierClicked.identifier)
 		return;
 
 	// Cancel event if no internet
@@ -547,10 +546,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //		return;
 //	}
 
-	[ADLSingletonState sharedSingletonState].dossierCourantReference = dossierClicked.unwrappedId;
+	[ADLSingletonState sharedSingletonState].dossierCourantReference = dossierClicked.identifier;
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierSelected
-	                                                    object:dossierClicked.unwrappedId];
+	                                                    object:dossierClicked.identifier];
 }
 
 
@@ -600,28 +599,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Wall delegate
 
 
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSArray *dossiers = API_GETDOSSIERHEADERS_GET_DOSSIERS(answer);
-	[self.refreshControl endRefreshing];
-	HIDE_HUD
-	[self getDossierDidEndWithSuccess:dossiers];
-}
-
-
 - (void)didEndWithUnAuthorizedAccess {
 
 	[self.refreshControl endRefreshing];
 	HIDE_HUD
 }
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	[self.refreshControl endRefreshing];
-	HIDE_HUD
-}
-
 
 - (void)filterDossiersForSearchText:(NSString *)searchText {
 
@@ -651,7 +633,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 		NSMutableArray *lockedDossiers = [NSMutableArray arrayWithCapacity:dossiers.count];
 
 		for (Dossier *dossier in dossiers)
-			if (dossier && dossier.unwrappedIsLocked)
+			if (dossier && dossier.isLocked)
 				[lockedDossiers addObject:dossier];
 
 		if ([lockedDossiers count] > 0) {
