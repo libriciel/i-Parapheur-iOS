@@ -30,4 +30,4 @@ We should only register one (or several) MacOS runners here.
 
 # Launching GitLab-CI Runner
 
-`$ sudo gitlab-runner run --working-directory /some/existing/folder --user some_non_root_user`
+`$ sudo gitlab-runner run --working-directory /some/existing/folder --user the_current_non_root_user`
