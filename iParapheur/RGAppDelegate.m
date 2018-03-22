@@ -231,6 +231,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	// Scheme
 
+    if ([ImprimerieNationaleController parseIntentWithUrl:url]) {
+        return YES;
+    }
+
 	NSDictionary *importCertifArguments = [self parseImportCertificateArgumentsFromUrl:url];
 	if (importCertifArguments) {
 

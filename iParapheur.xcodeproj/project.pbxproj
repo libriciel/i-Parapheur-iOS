@@ -29,6 +29,7 @@
 		7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */; };
 		7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */; };
 		7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */; };
+		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
@@ -359,6 +360,7 @@
 		7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringsUtils.swift; sourceTree = "<group>"; };
 		7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_StringsUtils_Tests.swift; sourceTree = "<group>"; };
 		7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSignerTest.swift; sourceTree = "<group>"; };
+		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationaleController_Test.swift; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		9514BFE1187AA73800118B9C /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		9514BFE2187AA73800118B9C /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
@@ -1450,6 +1452,7 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */,
 				7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */,
 				7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */,
 				C5903CFE1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift */,
@@ -2294,6 +2297,7 @@
 				C5903CFF1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */,
 				C5A7DAEB1FDECDC70022A813 /* Models_Etape_Tests.swift in Sources */,
+				7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift in Sources */,
 				C58203C61FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift in Sources */,
 				7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */,
 				C5A7DAE51FDE89F60022A813 /* Models_Circuit_Tests.swift in Sources */,

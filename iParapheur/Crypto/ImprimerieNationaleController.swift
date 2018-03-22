@@ -34,7 +34,7 @@
  */
 import Foundation
 
-class ImprimerieNationaleController {
+@objc class ImprimerieNationaleController: NSObject {
     
     
     class func getTokenData() {
@@ -48,6 +48,17 @@ class ImprimerieNationaleController {
                 print("Result OK")
             }
         })
+    }
+
+    @objc class func parseIntent(url: URL) -> Bool {
+
+        if (url.scheme != "iparapheur") {
+            return false
+        }
+
+        print("Adrien - url - \(url.path)")
+
+        return true;
     }
     
 }
