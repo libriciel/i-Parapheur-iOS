@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import Alamofire
 
@@ -110,15 +111,16 @@ import Alamofire
 
         for page in pages {
 
-            if let jsonAnnotations = page.1 as? [[String: AnyObject]] {
+            if let jsonAnnotations = page.1 as? [[String: Any]] {
                 for jsonAnnotation in jsonAnnotations {
 
-                    let annotation = Annotation(json: jsonAnnotation)
-                    annotation!.step = step
-                    annotation!.page = Int(page.0)!
-                    annotation!.documentId = documentId
-
-                    parsedAnnotations.append(annotation!)
+                    print("Adrien - \(jsonAnnotation)")
+//                    let annotation = Annotation(json: jsonAnnotation)
+//                    annotation!.step = step
+//                    annotation!.page = Int(page.0)!
+//                    annotation!.documentId = documentId
+//
+//                    parsedAnnotations.append(annotation!)
                 }
             }
         }
@@ -157,24 +159,23 @@ import Alamofire
                     response in
                     switch (response.result) {
 
-                        case .success:
-                            guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
-                                errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-                                                       code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
-                                                       userInfo: nil))
-                                return
-                            }
+                    case .success:
+                        guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
+                            errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+                                                   code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
+                                                   userInfo: nil))
+                            return
+                        }
 
-                            responseCallback!(NSNumber(value: apiLevel.level!))
-                            break
+                        responseCallback!(NSNumber(value: apiLevel.level!))
+                        break
 
-                        case .failure(let error):
-                            errorCallback!(error as NSError)
-                            break
+                    case .failure(let error):
+                        errorCallback!(error as NSError)
+                        break
                     }
                 }
-            }
-            else {
+            } else {
                 errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
                                        code: 400))
             }
@@ -217,32 +218,31 @@ import Alamofire
             response in
             switch (response.result) {
 
-                case .success:
+            case .success:
 
-                    // Prepare
+                // Prepare
 
-                    let getBureauxJsonData = response.value!.data(using: .utf8)!
+                let getBureauxJsonData = response.value!.data(using: .utf8)!
 
-                    let jsonDecoder = JSONDecoder()
-                    let bureaux = try? jsonDecoder.decode([Bureau].self,
-                                                          from: getBureauxJsonData)
+                let jsonDecoder = JSONDecoder()
+                let bureaux = try? jsonDecoder.decode([Bureau].self,
+                                                      from: getBureauxJsonData)
 
-                    // Parsing and callback
+                // Parsing and callback
 
-                    let hasSomeData = (bureaux != nil)
-                    if (hasSomeData) {
-                        responseCallback!(bureaux! as NSArray)
-                    }
-                    else {
-                        errorCallback!(NSError(domain: "Invalid response",
-                                               code: 999))
-                    }
+                let hasSomeData = (bureaux != nil)
+                if (hasSomeData) {
+                    responseCallback!(bureaux! as NSArray)
+                } else {
+                    errorCallback!(NSError(domain: "Invalid response",
+                                           code: 999))
+                }
 
-                    break
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -279,32 +279,32 @@ import Alamofire
             response in
             switch (response.result) {
 
-                case .success:
-                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+            case .success:
+                let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
 
-                    // Retrieve deleguated
+                // Retrieve deleguated
 
-                    self.getDossiersDelegues(bureau: bureau,
-                                             page: 0, size: 100,
-                                             filterJson: nil,
-                                             onResponse: {
-                                                 (delegueList: [Dossier]) in
+                self.getDossiersDelegues(bureau: bureau,
+                                         page: 0, size: 100,
+                                         filterJson: nil,
+                                         onResponse: {
+                                             (delegueList: [Dossier]) in
 
-                                                 for dossierDelegue in delegueList {
-                                                     dossierDelegue.isDelegue = true;
-                                                 }
+                                             for dossierDelegue in delegueList {
+                                                 dossierDelegue.isDelegue = true;
+                                             }
 
-                                                 responseCallback!((dossierList! + delegueList) as NSArray)
-                                             },
-                                             onError: {
-                                                 (error: Error) in
-                                                 errorCallback!(error as NSError)
-                                             })
-                    break
+                                             responseCallback!((dossierList! + delegueList) as NSArray)
+                                         },
+                                         onError: {
+                                             (error: Error) in
+                                             errorCallback!(error as NSError)
+                                         })
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -342,14 +342,14 @@ import Alamofire
             response in
             switch (response.result) {
 
-                case .success:
-                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
-                    responseCallback!(dossierList!)
-                    break
+            case .success:
+                let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+                responseCallback!(dossierList!)
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -372,19 +372,19 @@ import Alamofire
             response in
             switch (response.result) {
 
-                case .success:
-                    guard let responseDossier = Dossier(json: response.value as! [String: AnyObject]) else {
-                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-                                               code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
-                                               userInfo: nil))
-                        return
-                    }
-                    responseCallback!(responseDossier)
-                    break
+            case .success:
+                guard let responseDossier = Dossier(json: response.value as! [String: AnyObject]) else {
+                    errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+                                           code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
+                                           userInfo: nil))
+                    return
+                }
+                responseCallback!(responseDossier)
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -403,33 +403,32 @@ import Alamofire
 
             switch (response.result) {
 
-                case .success:
+            case .success:
 
-                    // Prepare
+                // Prepare
 
-                    let getCircuitJsonData = response.value!.data(using: .utf8)!
+                let getCircuitJsonData = response.value!.data(using: .utf8)!
 
-                    let jsonDecoder = JSONDecoder()
-                    jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
-                    let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
-                                                                 from: getCircuitJsonData)
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+                let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
+                                                             from: getCircuitJsonData)
 
-                    // Parsing and callback
+                // Parsing and callback
 
-                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
-                    if (hasSomeData) {
-                        responseCallback!(circuitWrapper!["circuit"]!)
-                    }
-                    else {
-                        errorCallback!(NSError(domain: "Invalid response",
-                                               code: 999))
-                    }
+                let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
+                if (hasSomeData) {
+                    responseCallback!(circuitWrapper!["circuit"]!)
+                } else {
+                    errorCallback!(NSError(domain: "Invalid response",
+                                           code: 999))
+                }
 
-                    break
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -448,14 +447,14 @@ import Alamofire
 
             switch (response.result) {
 
-                case .success:
-                    let typeList = [ParapheurType].from(jsonArray: response.value as! [[String: AnyObject]])
-                    responseCallback!(typeList! as NSArray)
-                    break
+            case .success:
+                let typeList = [ParapheurType].from(jsonArray: response.value as! [[String: AnyObject]])
+                responseCallback!(typeList! as NSArray)
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -469,50 +468,53 @@ import Alamofire
 
         // Request
 
-        manager.request(getTypologyUrl).validate().responseJSON {
+        manager.request(getTypologyUrl).validate().responseString {
             response in
 
-            switch (response.result) {
-
-                case .success:
-                    var parsedAnnotations = [Annotation]()
-
-                    if let etapes = response.value as? [AnyObject] {
-                        for etapeIndex in 0..<etapes.count {
-
-                            if let documentPages = etapes[etapeIndex] as? [String: AnyObject] {
-
-                                for documentPage in documentPages {
-                                    if let pages = documentPage.1 as? [String: AnyObject] {
-
-                                        // Parsing API4
-                                        parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
-                                                                                                  step: etapeIndex,
-                                                                                                  documentId: documentPage.0 as String)
-                                    }
-                                }
-
-                                // Parsing API3
-                                parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
-                                                                                          step: etapeIndex,
-                                                                                          documentId: "*")
-                            }
-                        }
-                    }
-                    else {
-                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-                                               code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
-                                               userInfo: nil))
-                        return
-                    }
-
-                    responseCallback!(parsedAnnotations)
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
+            print("Adrien --- \(response.value)")
+//
+//            switch (response.result) {
+//
+//            case .success:
+//                var parsedAnnotations = [Annotation]()
+//
+//                if let etapes = response.value as? [AnyObject] {
+//                    for etapeIndex in 0..<etapes.count {
+//
+//                        if let documentPages = etapes[etapeIndex] as? [String: AnyObject] {
+//
+//                            // TODO : parse fixme
+//
+//                            for documentPage in documentPages {
+//                                if let pages = documentPage.1 as? [String: AnyObject] {
+//
+//                                    // Parsing API4
+//                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
+//                                                                                              step: etapeIndex,
+//                                                                                              documentId: documentPage.0 as String)
+//                                }
+//                            }
+//
+//                            // Parsing API3
+//                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
+//                                                                                      step: etapeIndex,
+//                                                                                      documentId: "*")
+//                        }
+//                    }
+//                } else {
+//                    errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
+//                                           code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
+//                                           userInfo: nil))
+//                    return
+//                }
+//
+//                responseCallback!(parsedAnnotations)
+//                break
+//
+//            case .failure(let error):
+//                errorCallback!(error as NSError)
+//                break
+//            }
         }
     }
 
@@ -535,32 +537,31 @@ import Alamofire
 
             switch (response.result) {
 
-                case .success:
+            case .success:
 
-                    // Prepare
+                // Prepare
 
-                    let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
+                let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
 
-                    let jsonDecoder = JSONDecoder()
-                    let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
-                                                                  from: getSignInfoJsonData)
+                let jsonDecoder = JSONDecoder()
+                let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
+                                                              from: getSignInfoJsonData)
 
-                    // Parsing and callback
+                // Parsing and callback
 
-                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
-                    if (hasSomeData) {
-                        responseCallback!(signInfoWrapper!["signatureInformations"]!)
-                    }
-                    else {
-                        errorCallback!(NSError(domain: "Invalid response",
-                                               code: 999))
-                    }
+                let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
+                if (hasSomeData) {
+                    responseCallback!(signInfoWrapper!["signatureInformations"]!)
+                } else {
+                    errorCallback!(NSError(domain: "Invalid response",
+                                           code: 999))
+                }
 
-                    break
+                break
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
             }
         }
     }
@@ -591,18 +592,17 @@ import Alamofire
 
                 switch (response.result) {
 
-                    case .success:
-                        responseCallback!(NSNumber(value: 1))
-                        break
+                case .success:
+                    responseCallback!(NSNumber(value: 1))
+                    break
 
-                    case .failure(let error):
-                        errorCallback!(error as NSError)
-                        print(error.localizedDescription)
-                        break
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    print(error.localizedDescription)
+                    break
                 }
             }
-        }
-        else if (type == 2) {
+        } else if (type == 2) {
 
             manager.request(annotationUrl,
                             method: .put,
@@ -612,18 +612,17 @@ import Alamofire
 
                 switch (response.result) {
 
-                    case .success:
-                        responseCallback!(NSNumber(value: 1))
-                        break
+                case .success:
+                    responseCallback!(NSNumber(value: 1))
+                    break
 
-                    case .failure(let error):
-                        errorCallback!(error as NSError)
-                        print(error.localizedDescription)
-                        break
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    print(error.localizedDescription)
+                    break
                 }
             }
-        }
-        else if (type == 3) {
+        } else if (type == 3) {
 
             manager.request(annotationUrl,
                             method: .delete,
@@ -632,13 +631,13 @@ import Alamofire
 
                 switch (response.result) {
 
-                    case .success:
-                        responseCallback!(NSNumber(value: 1))
-                        break
+                case .success:
+                    responseCallback!(NSNumber(value: 1))
+                    break
 
-                    case .failure(let error):
-                        errorCallback!(error as NSError)
-                        break
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    break
                 }
             }
         }

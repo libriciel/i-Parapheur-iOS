@@ -38,6 +38,7 @@ import XCTest
 
 class Models_Annotation_Tests: XCTestCase {
     
+    
     func testDecodeFull() {
         
         let annotationJsonString = """
@@ -129,5 +130,54 @@ class Models_Annotation_Tests: XCTestCase {
 //
 //        XCTAssertNil(bureaux)
 //    }
+
+    func testDecodeApi4() {
+        let value = """
+            [
+                {
+                    "4ff4408c-dafc-4b13-9fce-509bca4232d3": {}
+                },
+                {
+                    "4ff4408c-dafc-4b13-9fce-509bca4232d3": {
+                        "0":
+                            [
+                                {
+                                    "id": "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
+                                    "secretaire": false,
+                                    "type": "rect",
+                                    "date": "2018-03-15T17:22:19Z",
+                                    "author": "Administrator Admin",
+                                    "penColor": "undefined",
+                                    "text": "",
+                                    "fillColor": "undefined",
+                                    "rect": {
+                                        "topLeft": {
+                                            "x": 0,
+                                            "y": 0
+                                        },
+                                        "bottomRight": {
+                                            "x": 275.625,
+                                            "y": 307.8409090909091
+                                        }
+                                    }
+                                }
+                            ],
+                        "1": []
+                    }
+                },
+                {
+                    "4ff4408c-dafc-4b13-9fce-509bca4232d3": {}
+                }
+            ]
+        """
+        
+        let decoder = JSONDecoder()
+        
+        let parsedAnnotations = try? decoder.decode([[String:[Annotation]]].self, from: value.data(using: .utf8)!)
+//        let parsedAnnotations = try? decoder.decode([Annotation].self, from: value.data(using: .utf8)!)
+        print("Adrien -- \(parsedAnnotations![0]["0"]![0].identifier)")
+        
+//        XCTAssertEqual(parsedAnnotations!.count, 1)
+    }
 }
 
