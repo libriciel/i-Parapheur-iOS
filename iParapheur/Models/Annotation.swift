@@ -34,16 +34,16 @@
  */
 
 import Foundation
-import Gloss
 
-@objc class Annotation: NSObject, Glossy {
+
+@objc class Annotation: NSObject, Decodable {
 
     @objc var author: String
     @objc var identifier: String
     @objc var text: String
-    @objc let date: NSDate
-    let secretaire: Int?
-    @objc var rect: NSValue
+    @objc let date: Date
+    let secretaire: Bool
+    @objc var rect: CGRect
 
     let fillColor: String?
     let penColor: String?
@@ -51,42 +51,79 @@ import Gloss
 
     @objc var step: Int
     @objc var page: Int
-    @objc var documentId: String
+    @objc var documentId: String?
     @objc var editable: Bool
 
 
-    // MARK: - Glossy
+    // MARK: - JSON
 
-    required init?(json: JSON) {
+    enum CodingKeys: String, CodingKey {
+        case author
+        case identifier = "id"
+        case fillColor
+        case penColor
+        case date
+        case secretaire
+        case text
+        case type
+        case rect
+    }
 
-        author = ("author" <~~ json) ?? "(vide)"
-        identifier = ("id" <~~ json) ?? ""
-        text = ("text" <~~ json) ?? ""
+    enum RectKeys: String, CodingKey {
+        case topLeft
+        case bottomRight
+    }
 
-        fillColor = ("fillColor" <~~ json) ?? "undefined"
-        penColor = ("penColor" <~~ json) ?? "undefined"
-        type = ("type" <~~ json) ?? "rect"
-
-        date = NSDate(timeIntervalSince1970: (("date" <~~ json) ?? -1))
-        secretaire = ("secretaire" <~~ json) ?? 0
-
-        if let jsonRect: Dictionary<String, AnyObject>? = "rect" <~~ json {
-
-            let jsonRectTopLeft: Dictionary<String, AnyObject>? = jsonRect!["topLeft"] as! Dictionary<String, AnyObject>?
-            let jsonRectBottomRight: Dictionary<String, AnyObject>? = jsonRect!["bottomRight"] as! Dictionary<String, AnyObject>?
+    enum RectCornersKeys: String, CodingKey {
+        case x
+        case y
+    }
 
 
-            let tempRect = CGRect(origin: CGPoint(x: jsonRectTopLeft!["x"] as! CGFloat,
-                                                  y: jsonRectTopLeft!["y"] as! CGFloat),
-                                  size: CGSize(width: (jsonRectBottomRight!["x"] as! CGFloat) - (jsonRectTopLeft!["x"] as! CGFloat),
-                                               height: (jsonRectBottomRight!["y"] as! CGFloat) - (jsonRectTopLeft!["y"] as! CGFloat)))
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
 
-            rect = NSValue(cgRect: ViewUtils.translateDpi(rect: tempRect,
-                                                          oldDpi: 150,
-                                                          newDpi: 72))
+        author = try values.decodeIfPresent(String.self, forKey: .author) ?? "(vide)"
+        identifier = try values.decodeIfPresent(String.self, forKey: .identifier)!
+        text = try values.decodeIfPresent(String.self, forKey: .text) ?? "(vide)"
+        fillColor = try values.decodeIfPresent(String.self, forKey: .fillColor) ?? "undefined"
+        penColor = try values.decodeIfPresent(String.self, forKey: .penColor) ?? "undefined"
+        type = try values.decodeIfPresent(String.self, forKey: .type) ?? "rect"
+
+        // Secretary, may be string or bool
+
+        do {
+            secretaire = try values.decodeIfPresent(Bool.self, forKey: .secretaire) ?? false
+        } catch DecodingError.typeMismatch {
+            let secretaireString = try values.decodeIfPresent(String.self, forKey: .secretaire) ?? "false"
+            secretaire = Bool(secretaireString)!
         }
 
-        rect = NSValue.init()
+        // Date, cropping milliseconds
+
+        let dateString = try values.decodeIfPresent(String.self, forKey: .date) ?? "2000-01-01T00:00:00Z"
+        date = StringsUtils.deserializeAnnotationDate(string: "\(dateString.prefix(19))Z")
+
+        // Rect
+
+        let rectContainer = try values.nestedContainer(keyedBy: RectKeys.self, forKey: .rect)
+        let topLeftContainer = try rectContainer.nestedContainer(keyedBy: RectCornersKeys.self, forKey: .topLeft)
+        let bottomRightContainer = try rectContainer.nestedContainer(keyedBy: RectCornersKeys.self, forKey: .bottomRight)
+
+        let topLeftX = StringsUtils.parseNumberOrString(container: topLeftContainer, key: RectCornersKeys.x)
+        let topLeftY = StringsUtils.parseNumberOrString(container: topLeftContainer, key: RectCornersKeys.y)
+        let bottomRightX = StringsUtils.parseNumberOrString(container: bottomRightContainer, key: RectCornersKeys.x)
+        let bottomRightY = StringsUtils.parseNumberOrString(container: bottomRightContainer, key: RectCornersKeys.y)
+
+        let tempRect = CGRect(origin: CGPoint(x: CGFloat(topLeftX),
+                                              y: CGFloat(topLeftY)),
+                              size: CGSize(width: CGFloat(bottomRightX) - CGFloat(topLeftX),
+                                           height: CGFloat(bottomRightY) - CGFloat(topLeftY)))
+
+        rect = ViewUtils.translateDpi(rect: tempRect,
+                                      oldDpi: 150,
+                                      newDpi: 72)
+
         page = -1
         documentId = ""
         step = 0
@@ -103,20 +140,16 @@ import Gloss
         penColor = "undefined"
         type = "rect"
 
-        date = NSDate()
-        secretaire = 0
-        rect = NSValue(cgRect: ViewUtils.translateDpi(rect: CGRect(origin: .zero,
-                                                                   size: CGSize(width: 150, height: 150)),
-                                                      oldDpi: 150,
-                                                      newDpi: 72))
+        date = Date()
+        secretaire = false
+        rect = ViewUtils.translateDpi(rect: CGRect(origin: .zero,
+                                                   size: CGSize(width: 150, height: 150)),
+                                      oldDpi: 150,
+                                      newDpi: 72)
         step = 0
         editable = false
         documentId = ""
         page = currentPage.intValue
-    }
-
-    func toJSON() -> JSON? {
-        return nil /* Not used */
     }
 
 }

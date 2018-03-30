@@ -34,41 +34,64 @@
  */
 
 import Foundation
-import Gloss
 
 
-@objc class Document: NSObject, Glossy {
+@objc class AnnotationsUtils: NSObject {
 
-    @objc let identifier: String?
-    @objc let name: String?
 
-    let size: CLong
-    let pageCount: Int
-    let attestState: Int
-
-    @objc let isMainDocument: Bool
-    @objc let isVisuelPdf: Bool
-    let isLocked: Bool
-    let isDeletable: Bool
-
-    // MARK: - Glossy
-
-    required init?(json: JSON) {
-        identifier = ("id" <~~ json) ?? ""
-        name = ("name" <~~ json) ?? "(vide)"
-
-        size = ("size" <~~ json) ?? -1
-        pageCount = ("pageCount" <~~ json) ?? -1
-        attestState = ("attestState" <~~ json) ?? 0
-
-        isMainDocument = "isMainDocument" <~~ json ?? false
-        isVisuelPdf = "visuelPdf" <~~ json ?? false
-        isLocked = "isLocked" <~~ json ?? false
-        isDeletable = "canDelete" <~~ json ?? false
+    class func parse(string: String) -> [Annotation] {
+        var result = [Annotation]()
+        result += AnnotationsUtils.parseApi3(string: string)
+        result += AnnotationsUtils.parseApi4(string: string)
+        return result
     }
 
-    func toJSON() -> JSON? {
-        return nil /* Not used */
+    class func parseApi4(string: String) -> [Annotation] {
+
+        var result = [Annotation]()
+        let decoder = JSONDecoder()
+        let parsedData = try? decoder.decode([[String: [Int: [Annotation]]]].self, from: string.data(using: .utf8)!)
+        
+        if (parsedData == nil) {
+            return result
+        }
+
+        for stepDict in parsedData! {
+            for documentDict in stepDict {
+                for pageDict in documentDict.value {
+                    for annotation in pageDict.value {
+                        annotation.documentId = documentDict.key
+                        annotation.page = pageDict.key
+                        result.append(annotation)
+                    }
+                }
+            }
+        }
+
+        return result
+    }
+
+    class func parseApi3(string: String) -> [Annotation] {
+
+        var result = [Annotation]()
+        let decoder = JSONDecoder()
+        let parsedData = try? decoder.decode([[Int: [Annotation]]].self, from: string.data(using: .utf8)!)
+
+        if (parsedData == nil) {
+            return result
+        }
+        
+        for stepDict in parsedData! {
+            for pageDict in stepDict {
+                for annotation in pageDict.value {
+                    annotation.documentId = nil
+                    annotation.page = pageDict.key
+                    result.append(annotation)
+                }
+            }
+        }
+
+        return result
     }
 
 }

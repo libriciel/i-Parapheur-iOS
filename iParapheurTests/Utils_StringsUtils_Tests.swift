@@ -55,4 +55,14 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertEqual("Le serveur ne répond pas dans le délai imparti", StringsUtils.getMessage(error: errorTimeOut))
     }
     
+    func testAnnotationDate() {
+        
+        let stringBefore = "2018-03-15T17:22:19Z"
+        let date = StringsUtils.deserializeAnnotationDate(string: stringBefore)
+        let stringAfter = StringsUtils.serializeAnnotationDate(date: date)
+        
+        XCTAssertNotNil(date)
+        XCTAssertEqual(stringAfter, "2018-03-15T17:22:19Z")
+    }
+    
 }

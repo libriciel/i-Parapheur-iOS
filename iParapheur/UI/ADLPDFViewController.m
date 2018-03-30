@@ -246,7 +246,7 @@
 	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
 
 		bool isPage = ((Annotation *) object).page == page;
-		bool isDoc = [((Annotation *) object).identifier isEqualToString:_document.unwrappedId];
+		bool isDoc = [((Annotation *) object).identifier isEqualToString:_document.identifier];
 		bool isApi3 = [((Annotation *) object).identifier isEqualToString:@"*"];
 
 		return isPage && (isDoc || isApi3);
@@ -306,7 +306,7 @@
 	//
 
 	annotation.author = login;
-	annotation.documentId = _document.unwrappedId;
+	annotation.documentId = _document.identifier;
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient addAnnotation:annotation
@@ -578,7 +578,7 @@
 
 - (void)requestAnnotations {
 
-	NSString *documentId = _document.unwrappedId;
+	NSString *documentId = _document.identifier;
 
 	__weak typeof(self) weakSelf = self;
 	[_restClient getAnnotations:_dossierRef
@@ -668,8 +668,8 @@
 
 	// File cache
 
-	NSURL *filePath = [self getFileUrlWithDossierRef:_document.unwrappedId
-	                                 andDocumentName:_document.unwrappedName];
+	NSURL *filePath = [self getFileUrlWithDossierRef:_document.identifier
+	                                 andDocumentName:_document.name];
 
 	if ([NSFileManager.defaultManager fileExistsAtPath:filePath.path]) {
 
@@ -690,7 +690,7 @@
 	if (_dossier.documents) {
 		bool isPdf = (bool) _document.isVisuelPdf;
 
-		[_restClient downloadDocument:_document.unwrappedId
+		[_restClient downloadDocument:_document.identifier
 		                        isPdf:isPdf
 		                       atPath:filePath
 		                      success:^(NSString *string) {

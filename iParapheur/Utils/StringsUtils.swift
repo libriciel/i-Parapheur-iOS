@@ -37,6 +37,9 @@ import SwiftMessages
 
 @objc class StringsUtils: NSObject {
 
+    static private let ANNOTATION_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
+
     @objc class func getMessage(error: NSError) -> NSString {
         switch (Int32(error.code)) {
 
@@ -63,6 +66,33 @@ import SwiftMessages
         default:
             return error.localizedDescription as NSString
         }
+    }
+
+    class func deserializeAnnotationDate(string: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
+        return dateFormatter.date(from: string)!
+    }
+
+    class func serializeAnnotationDate(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
+        return dateFormatter.string(from: date)
+    }
+
+    class func parseNumberOrString<T>(container: KeyedDecodingContainer<T>,
+                                      key: KeyedDecodingContainer<T>.Key) -> Float {
+
+        let result: Float?
+
+        do {
+            let string = try container.decodeIfPresent(String.self, forKey: key)
+            result = (string! as NSString).floatValue
+        } catch {
+            result = try! container.decodeIfPresent(Float.self, forKey: key)
+        }
+
+        return result!
     }
 
 }

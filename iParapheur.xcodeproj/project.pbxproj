@@ -26,10 +26,14 @@
 		7A0FC7AF201651CF002837CE /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0FC7AE201651CF002837CE /* Filter.swift */; };
 		7A0FCD2D201B91650018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */; };
 		7A2C80DF20596F5D00AD3D99 /* ImprimerieNationaleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2C80DE20596F5D00AD3D99 /* ImprimerieNationaleController.swift */; };
+		7A61F896205BD06C008B6E46 /* Models_Annotation_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */; };
 		7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */; };
 		7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */; };
 		7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */; };
 		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */; };
+		7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */; };
+		7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */; };
+		7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
@@ -357,10 +361,14 @@
 		7A0FC7AE201651CF002837CE /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "i-Parapheur_mobile_import_certificats_v2.pdf"; sourceTree = "<group>"; };
 		7A2C80DE20596F5D00AD3D99 /* ImprimerieNationaleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImprimerieNationaleController.swift; sourceTree = "<group>"; };
+		7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Annotation_Tests.swift; sourceTree = "<group>"; };
 		7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringsUtils.swift; sourceTree = "<group>"; };
 		7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_StringsUtils_Tests.swift; sourceTree = "<group>"; };
 		7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSignerTest.swift; sourceTree = "<group>"; };
 		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationaleController_Test.swift; sourceTree = "<group>"; };
+		7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsUtils.swift; sourceTree = "<group>"; };
+		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
+		7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_ApiLevel_Tests.swift; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		9514BFE1187AA73800118B9C /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		9514BFE2187AA73800118B9C /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
@@ -1452,9 +1460,12 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */,
+				7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */,
 				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */,
 				7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */,
 				7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */,
+				7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */,
 				C5903CFE1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift */,
 				C5A7DAE41FDE89F50022A813 /* Models_Circuit_Tests.swift */,
 				C5A7DAEA1FDECDC70022A813 /* Models_Etape_Tests.swift */,
@@ -1463,6 +1474,7 @@
 				C585C8D41FBEF05D005A0544 /* Models_ModelsDataController_Tests.swift */,
 				C54FA1EC1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift */,
 				C58203C51FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift */,
+				7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */,
 				C58203BF1FBB466300B6606F /* Info.plist */,
 			);
 			path = iParapheurTests;
@@ -1746,6 +1758,7 @@
 		C5ECDDBF1AB2F5D4003F13ED /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */,
 				954A7389188D371D00A13D1E /* NSString+Contains.h */,
 				954A738A188D371D00A13D1E /* NSString+Contains.m */,
 				7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */,
@@ -2245,6 +2258,7 @@
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,
 				B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */,
 				C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */,
+				7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */,
 				B4FF341315473B85006F7BF3 /* CGPDFDocument.m in Sources */,
 				C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */,
 				B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */,
@@ -2290,12 +2304,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A61F896205BD06C008B6E46 /* Models_Annotation_Tests.swift in Sources */,
 				C5C0DA381FD38CAB00A993DB /* Models_SignInfo_Tests.swift in Sources */,
 				C585C8D51FBEF05D005A0544 /* Models_ModelsDataController_Tests.swift in Sources */,
 				7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */,
 				C5CED41E1FC474CE00FC15DD /* Models_Filter_Tests.swift in Sources */,
 				C5903CFF1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift in Sources */,
+				7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */,
+				7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */,
 				C5A7DAEB1FDECDC70022A813 /* Models_Etape_Tests.swift in Sources */,
 				7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift in Sources */,
 				C58203C61FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift in Sources */,
