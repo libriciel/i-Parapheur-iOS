@@ -150,7 +150,7 @@ import Foundation
 //        docController.delegate = self
 //        docController.presentPreview(animated: true)
 
-        ImprimerieNationaleController.getTokenData();
+        InController.getTokenData();
     }
 
     @objc func onDeleteButtonClicked(sender: UIButton) {

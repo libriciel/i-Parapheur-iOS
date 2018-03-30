@@ -32,13 +32,15 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-@objc class ImprimerieNationaleController: NSObject {
-    
-    
+
+@objc class InController: NSObject {
+
+
     class func getTokenData() {
-        
+
         let urlString = "inmiddleware://getTokenData/{\"responseScheme\":\"iparapheur\",\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}}"
         let urlEncodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
@@ -60,5 +62,5 @@ import Foundation
 
         return true;
     }
-    
+
 }

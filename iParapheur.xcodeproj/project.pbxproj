@@ -25,14 +25,16 @@
 		7A0FC7AD201651A6002837CE /* Filter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0FC7AC201651A6002837CE /* Filter+CoreDataProperties.swift */; };
 		7A0FC7AF201651CF002837CE /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0FC7AE201651CF002837CE /* Filter.swift */; };
 		7A0FCD2D201B91650018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */; };
-		7A2C80DF20596F5D00AD3D99 /* ImprimerieNationaleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2C80DE20596F5D00AD3D99 /* ImprimerieNationaleController.swift */; };
+		7A2C80DF20596F5D00AD3D99 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2C80DE20596F5D00AD3D99 /* InController.swift */; };
 		7A61F896205BD06C008B6E46 /* Models_Annotation_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */; };
 		7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */; };
 		7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */; };
 		7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */; };
-		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */; };
+		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */; };
 		7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */; };
 		7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */; };
+		7ACBEE17206E897B000618DC /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBEE16206E897B000618DC /* InTokenData.swift */; };
+		7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift */; };
 		7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
@@ -360,14 +362,16 @@
 		7A0FC7AC201651A6002837CE /* Filter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Filter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7A0FC7AE201651CF002837CE /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "i-Parapheur_mobile_import_certificats_v2.pdf"; sourceTree = "<group>"; };
-		7A2C80DE20596F5D00AD3D99 /* ImprimerieNationaleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImprimerieNationaleController.swift; sourceTree = "<group>"; };
+		7A2C80DE20596F5D00AD3D99 /* InController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
 		7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Annotation_Tests.swift; sourceTree = "<group>"; };
 		7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringsUtils.swift; sourceTree = "<group>"; };
 		7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_StringsUtils_Tests.swift; sourceTree = "<group>"; };
 		7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSignerTest.swift; sourceTree = "<group>"; };
-		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationaleController_Test.swift; sourceTree = "<group>"; };
+		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InController_Test.swift; sourceTree = "<group>"; };
 		7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsUtils.swift; sourceTree = "<group>"; };
 		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
+		7ACBEE16206E897B000618DC /* InTokenData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InTokenData.swift; sourceTree = "<group>"; };
+		7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InTokenData.swift; sourceTree = "<group>"; };
 		7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_ApiLevel_Tests.swift; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		9514BFE1187AA73800118B9C /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
@@ -776,6 +780,7 @@
 		1434F65D168DFB03000C115D /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				7ACBEE15206E894D000618DC /* ImprimerieNationale */,
 				1434F670168DFF98000C115D /* KeyStore.xcdatamodeld */,
 				1434F669168DFDD2000C115D /* ADLKeyStore.h */,
 				1434F66A168DFDD2000C115D /* ADLKeyStore.m */,
@@ -784,7 +789,6 @@
 				1434F66C168DFDD2000C115D /* PrivateKey.m */,
 				C5E28D6F1FE4114B006890C1 /* Signer.swift */,
 				C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */,
-				7A2C80DE20596F5D00AD3D99 /* ImprimerieNationaleController.swift */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -820,6 +824,15 @@
 				C5C0DA391FD390BD00A993DB /* SignInfo.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		7ACBEE15206E894D000618DC /* ImprimerieNationale */ = {
+			isa = PBXGroup;
+			children = (
+				7A2C80DE20596F5D00AD3D99 /* InController.swift */,
+				7ACBEE16206E897B000618DC /* InTokenData.swift */,
+			);
+			path = ImprimerieNationale;
 			sourceTree = "<group>";
 		};
 		9514BFDA187AA4CF00118B9C /* app-icons */ = {
@@ -1460,10 +1473,10 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift */,
 				7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */,
 				7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */,
-				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift */,
-				7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */,
+				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */,
 				7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */,
 				7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */,
 				C5903CFE1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift */,
@@ -2232,6 +2245,7 @@
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,
+				7ACBEE17206E897B000618DC /* InTokenData.swift in Sources */,
 				B4FF340315473B3D006F7BF3 /* ReaderViewController.m in Sources */,
 				B4FF340415473B43006F7BF3 /* ReaderMainToolbar.m in Sources */,
 				C5065EE11D82AB89008FE301 /* SettingsFiltersController.swift in Sources */,
@@ -2277,7 +2291,7 @@
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				B47944D81622BCDE0061E09B /* ADLPostItView.m in Sources */,
 				C5E28D6C1FE3DC7B006890C1 /* XadesEnvSigner.swift in Sources */,
-				7A2C80DF20596F5D00AD3D99 /* ImprimerieNationaleController.swift in Sources */,
+				7A2C80DF20596F5D00AD3D99 /* InController.swift in Sources */,
 				C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */,
 				1434F66E168DFDD2000C115D /* ADLKeyStore.m in Sources */,
 				C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */,
@@ -2311,10 +2325,11 @@
 				C5CED41E1FC474CE00FC15DD /* Models_Filter_Tests.swift in Sources */,
 				C5903CFF1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift in Sources */,
 				7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */,
+				7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */,
 				7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */,
 				C5A7DAEB1FDECDC70022A813 /* Models_Etape_Tests.swift in Sources */,
-				7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationaleController_Test.swift in Sources */,
+				7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift in Sources */,
 				C58203C61FBCAAE700B6606F /* Utils_ColorUtils_Tests.swift in Sources */,
 				7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */,
 				C5A7DAE51FDE89F60022A813 /* Models_Circuit_Tests.swift in Sources */,

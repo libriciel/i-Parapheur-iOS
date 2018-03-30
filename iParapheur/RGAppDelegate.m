@@ -231,7 +231,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	// Scheme
 
-    if ([ImprimerieNationaleController parseIntentWithUrl:url]) {
+    if ([InController parseIntentWithUrl:url]) {
         return YES;
     }
 
