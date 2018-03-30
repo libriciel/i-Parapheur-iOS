@@ -78,7 +78,7 @@ import Foundation
         case y
     }
 
-    
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
