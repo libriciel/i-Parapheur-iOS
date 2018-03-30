@@ -32,17 +32,29 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 
 @objc class AnnotationsUtils: NSObject {
 
 
+    class func parse(string: String) -> [Annotation] {
+        var result = [Annotation]()
+        result += AnnotationsUtils.parseApi3(string: string)
+        result += AnnotationsUtils.parseApi4(string: string)
+        return result
+    }
+
     class func parseApi4(string: String) -> [Annotation] {
 
         var result = [Annotation]()
         let decoder = JSONDecoder()
         let parsedData = try? decoder.decode([[String: [Int: [Annotation]]]].self, from: string.data(using: .utf8)!)
+        
+        if (parsedData == nil) {
+            return result
+        }
 
         for stepDict in parsedData! {
             for documentDict in stepDict {
@@ -59,5 +71,27 @@ import Foundation
         return result
     }
 
-    
+    class func parseApi3(string: String) -> [Annotation] {
+
+        var result = [Annotation]()
+        let decoder = JSONDecoder()
+        let parsedData = try? decoder.decode([[Int: [Annotation]]].self, from: string.data(using: .utf8)!)
+
+        if (parsedData == nil) {
+            return result
+        }
+        
+        for stepDict in parsedData! {
+            for pageDict in stepDict {
+                for annotation in pageDict.value {
+                    annotation.documentId = nil
+                    annotation.page = pageDict.key
+                    result.append(annotation)
+                }
+            }
+        }
+
+        return result
+    }
+
 }

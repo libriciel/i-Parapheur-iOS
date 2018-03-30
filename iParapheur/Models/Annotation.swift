@@ -41,7 +41,7 @@ import Foundation
     @objc var identifier: String
     @objc var text: String
     @objc let date: Date
-    let secretaire: Int
+    let secretaire: Bool
     @objc var rect: CGRect
 
     let fillColor: String?
@@ -50,7 +50,7 @@ import Foundation
 
     @objc var step: Int
     @objc var page: Int
-    @objc var documentId: String
+    @objc var documentId: String?
     @objc var editable: Bool
 
 
@@ -88,10 +88,20 @@ import Foundation
         fillColor = try values.decodeIfPresent(String.self, forKey: .fillColor) ?? "undefined"
         penColor = try values.decodeIfPresent(String.self, forKey: .penColor) ?? "undefined"
         type = try values.decodeIfPresent(String.self, forKey: .type) ?? "rect"
-        secretaire = try values.decodeIfPresent(Int.self, forKey: .secretaire) ?? 0
+
+        // Secretary, may be string or bool
+
+        do {
+            secretaire = try values.decodeIfPresent(Bool.self, forKey: .secretaire) ?? false
+        } catch DecodingError.typeMismatch {
+            let secretaireString = try values.decodeIfPresent(String.self, forKey: .secretaire) ?? "false"
+            secretaire = Bool(secretaireString)!
+        }
+
+        // Date, cropping milliseconds
 
         let dateString = try values.decodeIfPresent(String.self, forKey: .date) ?? "2000-01-01T00:00:00Z"
-        date = StringsUtils.deserializeAnnotationDate(string: dateString)
+        date = StringsUtils.deserializeAnnotationDate(string: "\(dateString.prefix(19))Z")
 
         // Rect
 
@@ -130,7 +140,7 @@ import Foundation
         type = "rect"
 
         date = Date()
-        secretaire = 0
+        secretaire = false
         rect = ViewUtils.translateDpi(rect: CGRect(origin: .zero,
                                                    size: CGSize(width: 150, height: 150)),
                                       oldDpi: 150,

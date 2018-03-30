@@ -42,11 +42,11 @@ class Utils_AnnotationsUtils_Tests: XCTestCase {
         let value = """
             [
                 {
-                    "4ff4408c-dafc-4b13-9fce-509bca4232d3": {}
+                    "22222222-dafc-4b13-9fce-509bca4232d2": {}
                 },
                 {
                     "4ff4408c-dafc-4b13-9fce-509bca4232d3": {
-                        "0":
+                        "8":
                             [
                                 {
                                     "id": "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
@@ -73,14 +73,55 @@ class Utils_AnnotationsUtils_Tests: XCTestCase {
                     }
                 },
                 {
-                    "4ff4408c-dafc-4b13-9fce-509bca4232d3": {}
+                    "66666666-dafc-4b13-9fce-509bca4232d3": {}
                 }
             ]
         """
         
-        let parsedAnnotations = AnnotationsUtils.parseApi4(string: value)
+        let parsedAnnotations = AnnotationsUtils.parse(string: value)
         XCTAssertTrue(parsedAnnotations.count > 0)
         XCTAssertEqual(parsedAnnotations[0].identifier, "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f")
+        XCTAssertEqual(parsedAnnotations[0].page, 8)
+        XCTAssertEqual(parsedAnnotations[0].documentId, "4ff4408c-dafc-4b13-9fce-509bca4232d3")
+    }
+
+    func testParseApi3() {
+        let value = """
+            [
+                {},
+                {
+                    "5": [
+                        {
+                            "id": "9a23ddea-a835-40fc-8bf9-57b4c0569924",
+                            "secretaire": "false",
+                            "type": "rect",
+                            "date": "2018-03-30T11:45:11.912+02:00",
+                            "author": "Administrator admin",
+                            "penColor": "undefined",
+                            "text": "Test annotation 01",
+                            "fillColor": "undefined",
+                            "rect": {
+                                "topLeft": {
+                                    "x": 133.73974208675264,
+                                    "y": 108.98922949461475
+                                },
+                                "bottomRight": {
+                                    "x": 495.70926143024616,
+                                    "y": 357.4846727423364
+                                }
+                            }
+                        }
+                    ]
+                },
+                {}
+            ]
+        """
+
+        let parsedAnnotations = AnnotationsUtils.parse(string: value)
+        XCTAssertTrue(parsedAnnotations.count > 0)
+        XCTAssertEqual(parsedAnnotations[0].identifier, "9a23ddea-a835-40fc-8bf9-57b4c0569924")
+        XCTAssertEqual(parsedAnnotations[0].page, 5)
+        XCTAssertEqual(parsedAnnotations[0].documentId, nil)
     }
     
 }

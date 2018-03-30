@@ -102,33 +102,6 @@ import Alamofire
         return NSString(string: "https://m-\(urlFixed)")
     }
 
-
-    class func parsePageAnnotations(pages: [String: AnyObject],
-                                    step: Int,
-                                    documentId: String) -> [Annotation] {
-
-        var parsedAnnotations = [Annotation]()
-
-        for page in pages {
-
-            if let jsonAnnotations = page.1 as? [[String: Any]] {
-                for jsonAnnotation in jsonAnnotations {
-
-                    print("Adrien - \(jsonAnnotation)")
-//                    let annotation = Annotation(json: jsonAnnotation)
-//                    annotation!.step = step
-//                    annotation!.page = Int(page.0)!
-//                    annotation!.documentId = documentId
-//
-//                    parsedAnnotations.append(annotation!)
-                }
-            }
-        }
-
-        return parsedAnnotations
-    }
-
-
     // </editor-fold desc="Static methods">
 
 
@@ -471,50 +444,17 @@ import Alamofire
         manager.request(getTypologyUrl).validate().responseString {
             response in
 
-            print("Adrien --- \(response.value)")
-//
-//            switch (response.result) {
-//
-//            case .success:
-//                var parsedAnnotations = [Annotation]()
-//
-//                if let etapes = response.value as? [AnyObject] {
-//                    for etapeIndex in 0..<etapes.count {
-//
-//                        if let documentPages = etapes[etapeIndex] as? [String: AnyObject] {
-//
-//                            // TODO : parse fixme
-//
-//                            for documentPage in documentPages {
-//                                if let pages = documentPage.1 as? [String: AnyObject] {
-//
-//                                    // Parsing API4
-//                                    parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: pages,
-//                                                                                              step: etapeIndex,
-//                                                                                              documentId: documentPage.0 as String)
-//                                }
-//                            }
-//
-//                            // Parsing API3
-//                            parsedAnnotations += RestClientApiV3.parsePageAnnotations(pages: documentPages,
-//                                                                                      step: etapeIndex,
-//                                                                                      documentId: "*")
-//                        }
-//                    }
-//                } else {
-//                    errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-//                                           code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
-//                                           userInfo: nil))
-//                    return
-//                }
-//
-//                responseCallback!(parsedAnnotations)
-//                break
-//
-//            case .failure(let error):
-//                errorCallback!(error as NSError)
-//                break
-//            }
+            switch (response.result) {
+
+            case .success:
+                let parsedAnnotations = AnnotationsUtils.parse(string: response.value!)
+                responseCallback!(parsedAnnotations)
+                break
+
+            case .failure(let error):
+                errorCallback!(error as NSError)
+                break
+            }
         }
     }
 

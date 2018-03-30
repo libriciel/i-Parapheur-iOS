@@ -58,7 +58,7 @@ class Models_Annotation_Tests: XCTestCase {
                         "y": 15
                     }
                 },
-                "secretaire": 10,
+                "secretaire": true,
                 "text": "plop",
                 "type": "rect"
             }
@@ -77,7 +77,7 @@ class Models_Annotation_Tests: XCTestCase {
         XCTAssertEqual(annotation.author, "Administrator Admin")
         XCTAssertEqual(annotation.fillColor, "undefined")
         XCTAssertEqual(annotation.penColor, "undefined")
-        XCTAssertEqual(annotation.secretaire, 10)
+        XCTAssertEqual(annotation.secretaire, true)
         XCTAssertEqual(StringsUtils.serializeAnnotationDate(date: annotation.date), "2018-03-15T17:22:19Z")
         XCTAssertEqual(annotation.text, "plop")
         XCTAssertEqual(annotation.type, "rect")
