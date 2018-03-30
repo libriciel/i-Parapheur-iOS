@@ -33,42 +33,28 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import Foundation
-import Gloss
+import XCTest
+@testable import iParapheur
 
 
-@objc class Document: NSObject, Glossy {
+class Models_ApiLevel_Tests: XCTestCase {
 
-    @objc let identifier: String?
-    @objc let name: String?
+    func testDecodeFull() {
 
-    let size: CLong
-    let pageCount: Int
-    let attestState: Int
+        let jsonString = """
+            {
+                "level": 4
+            }
+        """
+        let jsonData = jsonString.data(using: .utf8)!
 
-    @objc let isMainDocument: Bool
-    @objc let isVisuelPdf: Bool
-    let isLocked: Bool
-    let isDeletable: Bool
+        let jsonDecoder = JSONDecoder()
+        let apiLevel = try? jsonDecoder.decode(ApiLevel.self, from: jsonData)
 
-    // MARK: - Glossy
+        // Checks
 
-    required init?(json: JSON) {
-        identifier = ("id" <~~ json) ?? ""
-        name = ("name" <~~ json) ?? "(vide)"
-
-        size = ("size" <~~ json) ?? -1
-        pageCount = ("pageCount" <~~ json) ?? -1
-        attestState = ("attestState" <~~ json) ?? 0
-
-        isMainDocument = "isMainDocument" <~~ json ?? false
-        isVisuelPdf = "visuelPdf" <~~ json ?? false
-        isLocked = "isLocked" <~~ json ?? false
-        isDeletable = "canDelete" <~~ json ?? false
-    }
-
-    func toJSON() -> JSON? {
-        return nil /* Not used */
+        XCTAssertNotNil(apiLevel)
+        XCTAssertEqual(apiLevel?.level, 4)
     }
 
 }

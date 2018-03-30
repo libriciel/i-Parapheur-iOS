@@ -35,6 +35,7 @@
 
 import Foundation
 
+
 @objc class Annotation: NSObject, Decodable {
 
     @objc var author: String

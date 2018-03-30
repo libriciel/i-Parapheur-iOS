@@ -128,19 +128,15 @@ import Alamofire
             if (result) {
                 let apiVersionUrl = "\(self.serverUrl.absoluteString!)/parapheur/api/getApiLevel"
 
-                self.manager.request(apiVersionUrl).validate().responseJSON {
+                self.manager.request(apiVersionUrl).validate().responseString {
                     response in
                     switch (response.result) {
 
                     case .success:
-                        guard let apiLevel = ApiLevel(json: response.value as! [String: AnyObject]) else {
-                            errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-                                                   code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
-                                                   userInfo: nil))
-                            return
-                        }
-
-                        responseCallback!(NSNumber(value: apiLevel.level!))
+                        let decoder = JSONDecoder()
+                        let jsonData = response.value?.data(using: .utf8)!
+                        let apiLevel = try? decoder.decode(ApiLevel.self, from: jsonData!)
+                        responseCallback!(NSNumber(value: (apiLevel?.level)!))
                         break
 
                     case .failure(let error):
