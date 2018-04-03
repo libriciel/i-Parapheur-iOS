@@ -132,6 +132,10 @@ import Foundation
         return result
     }
 
+    func importImpromerieNationaleCertificates() {
+
+    }
+
 
     // MARK: - UIDocumentInteractionControllerDelegate
 
@@ -142,15 +146,17 @@ import Foundation
 
     // MARK: - Listeners
 
+    @IBAction func onImprimerieNationaleImportButtonClicked(_ sender: UIButton) {
+        InController.getTokenData();
+    }
+
     @objc func downloadDocButton(sender: UIButton) {
 
-//		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
-//
-//        let docController:UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
-//        docController.delegate = self
-//        docController.presentPreview(animated: true)
+		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
 
-        InController.getTokenData();
+        let docController:UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
+        docController.delegate = self
+        docController.presentPreview(animated: true)
     }
 
     @objc func onDeleteButtonClicked(sender: UIButton) {
