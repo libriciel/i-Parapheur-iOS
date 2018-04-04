@@ -55,7 +55,30 @@ import Foundation
     @objc var editable: Bool
 
 
-    // MARK: - JSON
+    @objc init?(currentPage: NSNumber) {
+
+        author = ""
+        identifier = "_new"
+        text = ""
+
+        fillColor = "undefined"
+        penColor = "undefined"
+        type = "rect"
+
+        date = Date()
+        secretaire = false
+        rect = ViewUtils.translateDpi(rect: CGRect(origin: .zero,
+                                                   size: CGSize(width: 150, height: 150)),
+                                      oldDpi: 150,
+                                      newDpi: 72)
+        step = 0
+        editable = false
+        documentId = ""
+        page = currentPage.intValue
+    }
+
+
+    // <editor-fold desc="Json methods">
 
     enum CodingKeys: String, CodingKey {
         case author
@@ -78,7 +101,6 @@ import Foundation
         case x
         case y
     }
-
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -130,26 +152,6 @@ import Foundation
         editable = true
     }
 
-    @objc init?(currentPage: NSNumber) {
-
-        author = ""
-        identifier = "_new"
-        text = ""
-
-        fillColor = "undefined"
-        penColor = "undefined"
-        type = "rect"
-
-        date = Date()
-        secretaire = false
-        rect = ViewUtils.translateDpi(rect: CGRect(origin: .zero,
-                                                   size: CGSize(width: 150, height: 150)),
-                                      oldDpi: 150,
-                                      newDpi: 72)
-        step = 0
-        editable = false
-        documentId = ""
-        page = currentPage.intValue
-    }
+    // </editor-fold desc="Json methods">
 
 }

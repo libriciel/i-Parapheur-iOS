@@ -32,10 +32,11 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import Gloss
 
-@objc class Dossier : NSObject, Glossy {
+@objc class Dossier: NSObject, Glossy {
 
     @objc let identifier: String
     @objc let title: String?
@@ -68,7 +69,7 @@ import Gloss
     let isXemEnabled: Bool?
     let isReadingMandatory: Bool?
 
-    @objc var isDelegue : Bool
+    @objc var isDelegue: Bool
 
 
     // MARK: - Glossy
@@ -108,11 +109,11 @@ import Gloss
 
         isDelegue = false
 
-		// Sometimes it happens
-		if (!(actions.contains(actionDemandee))) {
-			actions.append(actionDemandee)
-		}
-	}
+        // Sometimes it happens
+        if (!(actions.contains(actionDemandee))) {
+            actions.append(actionDemandee)
+        }
+    }
 
     func toJSON() -> JSON? {
         return nil /* Not used */
@@ -130,7 +131,7 @@ import Gloss
             return NSString(string: "SIGNATURE")
         }
 
-        return NSString(string:"")
+        return NSString(string: "")
     }
 
     /**
@@ -173,8 +174,7 @@ import Gloss
 
         if (hasSignature) {
             result.add(NSString(string: "SIGNATURE"))
-        }
-        else if (hasVisa) {
+        } else if (hasVisa) {
             result.add(NSString(string: "VISA"))
         }
 

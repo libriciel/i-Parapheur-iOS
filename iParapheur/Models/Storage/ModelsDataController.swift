@@ -32,9 +32,9 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import UIKit
 import CoreData
-
 
 /**
  * Taken from
@@ -48,8 +48,7 @@ import CoreData
     static var Context: NSManagedObjectContext? = nil
 
 
-    // MARK: - Utils
-
+    // <editor-fold desc="Utils">
 
     @objc static func loadManagedObjectContext() {
 
@@ -77,41 +76,37 @@ import CoreData
         DispatchQueue.global(qos: .background).async {
             DispatchQueue.main.async {
 
-				let docURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                let docURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
                 // The directory the application uses to store the Core Data store file.
                 // This code uses a file named "DataModel.sqlite" in the application's documents directory.
                 let storeURL = docURL.appendingPathComponent("DataModel.sqlite")
                 do {
-					try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
-                }
-                catch {
+                    try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+                } catch {
                     fatalError("Error migrating store: \(error)")
                 }
 
                 // Callback on UI thread
-				DispatchQueue.global(qos: .default).async {
-					DispatchQueue.main.async {
-						NotificationCenter.default.post(name: ModelsDataController.NotificationModelsDataControllerLoaded,
-														object: ["success": true])
-					}
+                DispatchQueue.global(qos: .default).async {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: ModelsDataController.NotificationModelsDataControllerLoaded,
+                                                        object: ["success": true])
+                    }
                 }
             }
         }
     }
 
-
     @objc static func save() {
         do {
             try ModelsDataController.Context!.save()
-        }
-        catch let error as NSError {
+        } catch let error as NSError {
             print("Could not save \(error), \(error.userInfo)")
         }
     }
 
-
-    // MARK: - Accounts methods
+    // </editor-fold desc="Utils">
 
 
     @objc static func fetchAccounts() -> [Account] {
@@ -120,15 +115,13 @@ import CoreData
         do {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.EntityName)
             result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Account]
-        }
-        catch {
+        } catch {
             print("Could not fetch Accounts")
             return result
         }
 
         return result
     }
-
 
     @objc static func cleanupAccounts() {
 
@@ -181,8 +174,7 @@ import CoreData
     }
 
 
-    // MARK: - Filters methods
-
+    // <editor-fold desc="Filter methods">
 
 //    @objc static func fetchFilter(id: String) -> Filter? {
 //
@@ -208,5 +200,7 @@ import CoreData
 //
 //        return result
 //    }
+
+    // </editor-fold desc="Filter methods">
 
 }

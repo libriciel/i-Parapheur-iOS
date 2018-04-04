@@ -71,8 +71,10 @@ extension Notification.Name {
         }
 
         print("tokenData : \(tokenData.label)-\(tokenData.serialNumber)")
-        NotificationCenter.default.post(name: .certificateImport, object: nil)
 
+
+
+        NotificationCenter.default.post(name: .certificateImport, object: nil)
         return true;
     }
 
