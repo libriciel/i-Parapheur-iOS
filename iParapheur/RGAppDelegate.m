@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "RGAppDelegate.h"
-#import "PrivateKey.h"
 #import "ADLCertificateAlertView.h"
 #import "ADLRestClient.h"
 #import "StringUtils.h"

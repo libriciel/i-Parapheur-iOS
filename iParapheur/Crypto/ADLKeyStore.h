@@ -68,7 +68,6 @@ enum {
   withPassword:(NSString *)password
          error:(NSError **)error;
 
-
 #pragma mark - Utils
 
 

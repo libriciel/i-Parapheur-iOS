@@ -39,14 +39,4 @@ import CoreData
 
 @objc class Account: NSManagedObject {
 
-    static let EntityName = "Account"
-
-    @objc static let PreferencesKeySelectedAccount = "selected_account"
-    static let FirstAccountId = "FirstAccountId"
-    @objc static let DemoId = "DemoAccountId"
-    static let DemoTitle = "iParapheur demo"
-    static let DemoUrl = "iparapheur-partenaires.libriciel.fr"
-    static let DemoLogin = "admin@demo"
-    static let DemoPassword = "admin"
-
 }

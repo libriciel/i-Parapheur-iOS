@@ -144,15 +144,6 @@ NSData *X509_to_NSData(X509 *cert) {
 }
 
 
-- (NSString *)UUID {
-
-    CFUUIDRef uuidObj = CFUUIDCreate(nil);
-    NSString *uuidString = (NSString *) CFBridgingRelease(CFUUIDCreateString(nil, uuidObj));
-    CFRelease(uuidObj);
-    return uuidString;
-}
-
-
 #pragma mark - Public API
 
 
@@ -211,7 +202,7 @@ NSData *X509_to_NSData(X509 *cert) {
 
     if (array.count == 0) {
 
-        NSString *newPath = [self.applicationDataDirectory.path stringByAppendingPathComponent:self.UUID];
+        NSString *newPath = [self.applicationDataDirectory.path stringByAppendingPathComponent:NSUUID.UUID.UUIDString];
 
         // move the file to applicationDataDirectory
         [NSFileManager.defaultManager moveItemAtPath:p12Path
