@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import UIKit
 import Foundation
 
@@ -60,6 +61,10 @@ import Foundation
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.none
         dateFormatter.locale = NSLocale.current;
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onCertificateImport),
+                                               name: .certificateImport,
+                                               object: nil)
     }
 
 
@@ -69,12 +74,11 @@ import Foundation
 
         if (certificateList.count == 0) {
             let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib();
-			emptyView.downloadDocButton.addTarget(self,
-			                                      action: #selector(downloadDocButton),
-			                                      for: UIControlEvents.touchUpInside)
+            emptyView.downloadDocButton.addTarget(self,
+                                                  action: #selector(downloadDocButton),
+                                                  for: UIControlEvents.touchUpInside)
             tableView.backgroundView = emptyView;
-        }
-        else {
+        } else {
             tableView.backgroundView = nil;
         }
 
@@ -83,8 +87,8 @@ import Foundation
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell = tableView.dequeueReusableCell(withIdentifier: "CertificateCell", for: indexPath)
-        let certificate = certificateList[indexPath.row] 
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CertificateCell", for: indexPath)
+        let certificate = certificateList[indexPath.row]
 
         if let nameLabel = cell.viewWithTag(101) as? UILabel {
             nameLabel.text = certificate.commonName
@@ -96,7 +100,7 @@ import Foundation
             if (certificate.notAfter != nil) {
                 expirationDateLabel.isHidden = false
                 let notAfterString: String = dateFormatter.string(from: certificate.notAfter! as Date)
-				expirationDateLabel.text = expirationDateLabel.text?.replacingOccurrences(of: ":date:", with: notAfterString)
+                expirationDateLabel.text = expirationDateLabel.text?.replacingOccurrences(of: ":date:", with: notAfterString)
 
                 let notAfterCompare: ComparisonResult = certificate.notAfter!.compare(Date())
                 expirationDateLabel.textColor = notAfterCompare == ComparisonResult.orderedAscending ? UIColor.red : UIColor.lightGray
@@ -108,9 +112,9 @@ import Foundation
         }
 
         if let deleteButton = cell.viewWithTag(103) as? UIButton {
-			deleteButton.addTarget(self,
-			                       action: #selector(onDeleteButtonClicked),
-			                       for: .touchUpInside)
+            deleteButton.addTarget(self,
+                                   action: #selector(onDeleteButtonClicked),
+                                   for: .touchUpInside)
         }
 
         return cell
@@ -132,10 +136,6 @@ import Foundation
         return result
     }
 
-    func importImpromerieNationaleCertificates() {
-
-    }
-
 
     // MARK: - UIDocumentInteractionControllerDelegate
 
@@ -152,16 +152,16 @@ import Foundation
 
     @objc func downloadDocButton(sender: UIButton) {
 
-		let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
+        let url = Bundle.main.url(forResource: SettingsCertificatesController.DocumentationPdfName, withExtension: "pdf")
 
-        let docController:UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
+        let docController: UIDocumentInteractionController! = UIDocumentInteractionController(url: url!)
         docController.delegate = self
         docController.presentPreview(animated: true)
     }
 
     @objc func onDeleteButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(.zero, to:certificatesTableView);
+        let buttonPosition: CGPoint = sender.convert(.zero, to: certificatesTableView);
         let indexPath: IndexPath = certificatesTableView.indexPathForRow(at: buttonPosition)!;
 
         // Find from NSManagedObjectContext
@@ -184,7 +184,7 @@ import Foundation
 
         // Delete from NSManagedObjectContext
 
-        let context:NSManagedObjectContext = appDelegate.managedObjectContext!
+        let context: NSManagedObjectContext = appDelegate.managedObjectContext!
         context.delete(privateKeyToDelete!)
         certificateList.remove(at: indexPath.row)
         try! context.save()
@@ -192,6 +192,10 @@ import Foundation
         // Delete from UITableView
 
         certificatesTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+    }
+
+    @objc func onCertificateImport() {
+        print("Adrien Notification Received")
     }
 
 }

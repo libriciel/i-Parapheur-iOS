@@ -36,6 +36,11 @@
 import Foundation
 
 
+extension Notification.Name {
+    static let certificateImport = Notification.Name("CertificateImport")
+}
+
+
 @objc class InController: NSObject {
 
 
@@ -58,7 +63,15 @@ import Foundation
             return false
         }
 
-        print("Adrien - url - \(url.path)")
+        let jsonDecoder = JSONDecoder()
+        let croppedUrl = String(url.path.dropFirst())
+        
+        guard let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!) else {
+             return false
+        }
+
+        print("tokenData : \(tokenData.label)-\(tokenData.serialNumber)")
+        NotificationCenter.default.post(name: .certificateImport, object: nil)
 
         return true;
     }

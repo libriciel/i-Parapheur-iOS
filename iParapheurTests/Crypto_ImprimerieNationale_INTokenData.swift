@@ -84,4 +84,5 @@ class Crypto_ImprimerieNationale_InTokenData: XCTestCase {
         XCTAssertEqual(tokenData.description, "MW Mobile")
         XCTAssertEqual(tokenData.version, "0.6.1")
     }
+
 }
