@@ -226,7 +226,7 @@ import CryptoSwift
             throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
         }
 
-        let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename)
+        let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename!)
 
         // Building signature response
 

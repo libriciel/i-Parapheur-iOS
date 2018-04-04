@@ -36,7 +36,7 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
-#import "PrivateKey.h"
+#import "iParapheur-Swift.h"
 
 
 @implementation ADLKeyStore

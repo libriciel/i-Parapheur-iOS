@@ -66,7 +66,7 @@ import AEXML
         mPrivateKey = privateKey
         mIndex = hashIndex
 
-        let pollutedPublicKey = String(data: mPrivateKey.publicKey, encoding: String.Encoding.utf8)
+        let pollutedPublicKey = String(data: mPrivateKey.publicKey! as Data, encoding: String.Encoding.utf8)
         mPublicKey = CryptoUtils.cleanupPublicKey(publicKey: pollutedPublicKey!)
     }
 
@@ -197,7 +197,7 @@ import AEXML
         currentCertDigest.addChild(name: "xad:DigestValue", value: publicKeyHashBase64)
 
         let currentIssuerSerial = curretCert.addChild(name: "xad:IssuerSerial")
-        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mPrivateKey.caName))
+        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mPrivateKey.caName!))
         currentIssuerSerial.addChild(name: "ds:X509SerialNumber", value: mPrivateKey.serialNumber)
 
         let currentSignaturePolicyIdentifier = currentSignedSignatureProperties.addChild(name: "xad:SignaturePolicyIdentifier")

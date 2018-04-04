@@ -72,10 +72,19 @@ extension Notification.Name {
 
         print("tokenData : \(tokenData.label)-\(tokenData.serialNumber)")
 
-
-
         NotificationCenter.default.post(name: .certificateImport, object: nil)
         return true;
+    }
+
+    class func importCertificate(token: InTokenData) {
+
+        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
+        let keystore: ADLKeyStore = appDelegate.keyStore
+
+        var result = Array<Certificate>()
+        for pkeyManagedObject:NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
+            result.append(Certificate(managedObject: pkeyManagedObject))
+        }
     }
 
 }
