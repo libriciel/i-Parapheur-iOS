@@ -83,7 +83,7 @@ import CoreData
                 let storeURL = docURL.appendingPathComponent("DataModel.sqlite")
                 let options = [NSInferMappingModelAutomaticallyOption: true,
                                NSMigratePersistentStoresAutomaticallyOption: true]
-                
+
                 do {
                     try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 } catch {
@@ -200,6 +200,34 @@ import CoreData
 
         if isSaveNeeded {
             save()
+        }
+    }
+
+    /**
+        Merging old momd into the new Model one.
+        The old one is still based on the appDelegate objc way,
+        the new one is on the iOS9-static swift way.
+
+        FIXME : Delete this method in 2020, and the KeyStore data model too.
+        Everybody would have been patched then.
+    */
+    static func cleanupCertificates() {
+
+        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
+        let oldKeystore: ADLKeyStore = appDelegate.keyStore
+        for oldPrivateKey in oldKeystore.listPrivateKeys() as! [NSManagedObject] {
+
+            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME,
+                                                                     into: context!) as! Certificate
+
+            print(" Adrien legacy privateKey = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
+            newCertificate.caName = oldPrivateKey.value(forKey: "caName") as? String
+            newCertificate.commonName = oldPrivateKey.value(forKey: "commonName") as? String
+            newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
+            newCertificate.p12Filename = oldPrivateKey.value(forKey: "p12Filename") as? String
+            newCertificate.publicKey = oldPrivateKey.value(forKey: "publicKey") as? NSData
+            newCertificate.serialNumber = oldPrivateKey.value(forKey: "serialNumber") as? String
+            newCertificate.sourceType = .p12File
         }
     }
 

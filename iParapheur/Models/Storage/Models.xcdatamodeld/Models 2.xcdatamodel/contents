@@ -16,7 +16,7 @@
         <attribute name="p12Filename" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="publicKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="serialNumber" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sourceType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sourceType" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Filter" representedClassName=".Filter" syncable="YES">
         <attribute name="beginDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -30,7 +30,7 @@
     </entity>
     <elements>
         <element name="Account" positionX="-54" positionY="-9" width="128" height="135"/>
-        <element name="Filter" positionX="-54" positionY="36" width="128" height="165"/>
         <element name="Certificate" positionX="0" positionY="108" width="128" height="165"/>
+        <element name="Filter" positionX="-54" positionY="36" width="128" height="165"/>
     </elements>
 </model>

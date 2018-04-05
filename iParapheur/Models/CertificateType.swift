@@ -34,19 +34,11 @@
  */
 
 import Foundation
-import CoreData
 
 
-extension Certificate {
-
-    static let ENTITY_NAME = "Certificate"
-
-    @NSManaged public var caName: String?
-    @NSManaged public var commonName: String?
-    @NSManaged public var notAfter: NSDate?
-    @NSManaged public var notBefore: NSDate?
-    @NSManaged public var p12Filename: String?
-    @NSManaged public var publicKey: NSData?
-    @NSManaged public var serialNumber: String?
-    @NSManaged public var sourceType: CertificateType
+@objc public enum CertificateType: Int32 {
+    
+    case p12File = 0
+    case ImprimerieNationale = 1
+    
 }

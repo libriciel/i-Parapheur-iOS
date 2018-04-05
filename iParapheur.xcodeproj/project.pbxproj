@@ -28,6 +28,7 @@
 		7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */; };
 		7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */; };
 		7A817122207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A817121207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift */; };
+		7A81712420765E2700C11F4C /* CertificateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A81712320765E2700C11F4C /* CertificateType.swift */; };
 		7A8D21902076126100D9D481 /* Certificate+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */; };
 		7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */; };
 		7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */; };
@@ -370,6 +371,7 @@
 		7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringsUtils.swift; sourceTree = "<group>"; };
 		7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_StringsUtils_Tests.swift; sourceTree = "<group>"; };
 		7A817121207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Storage_ModelsDataController_Tests.swift; sourceTree = "<group>"; };
+		7A81712320765E2700C11F4C /* CertificateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateType.swift; sourceTree = "<group>"; };
 		7A8D218D207611A400D9D481 /* Models 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Models 2.xcdatamodel"; sourceTree = "<group>"; };
 		7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -823,6 +825,7 @@
 				64F348D17E34A71E2E14D64A /* Bureau.swift */,
 				7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */,
 				7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */,
+				7A81712320765E2700C11F4C /* CertificateType.swift */,
 				C5A7DAE61FDE96F50022A813 /* Circuit.swift */,
 				C526D8DA1DA7FC5A00EE8BA9 /* Document.swift */,
 				C526D8DB1DA7FC5A00EE8BA9 /* Dossier.swift */,
@@ -2302,6 +2305,7 @@
 				C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */,
 				B4FF340D15473B6F006F7BF3 /* ReaderThumbQueue.m in Sources */,
 				B4FF340E15473B6F006F7BF3 /* ReaderThumbFetch.m in Sources */,
+				7A81712420765E2700C11F4C /* CertificateType.swift in Sources */,
 				C5B8745C1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift in Sources */,
 				B4FF340F15473B6F006F7BF3 /* ReaderThumbRender.m in Sources */,
 				C54DB7931DCCA34F00B2CAFA /* DocumentSelectionController.swift in Sources */,

@@ -131,10 +131,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		return _managedObjectContext;
 	}
 
-	NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+	NSPersistentStoreCoordinator *coordinator = self.persistentStoreCoordinator;
 	if (coordinator != nil) {
-		_managedObjectContext = [NSManagedObjectContext new];
-		[_managedObjectContext setPersistentStoreCoordinator:coordinator];
+		_managedObjectContext = NSManagedObjectContext.new;
+		_managedObjectContext.persistentStoreCoordinator = coordinator;
 	}
 	return _managedObjectContext;
 }
@@ -149,12 +149,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		return _managedObjectModel;
 	}
 
-	NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"KeyStore"
-	                                          withExtension:@"momd"];
+	NSURL *modelURL = [NSBundle.mainBundle URLForResource:@"KeyStore"
+											withExtension:@"momd"];
 	NSLog(@"%@", modelURL);
 
-	_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-
+	_managedObjectModel = [NSManagedObjectModel.alloc initWithContentsOfURL:modelURL];
 	return _managedObjectModel;
 }
 
