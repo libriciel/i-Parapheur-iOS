@@ -42,11 +42,11 @@ import Foundation
 
 
     let mSignInfo: SignInfo
-    let mPrivateKey: PrivateKey
+    let mPrivateKey: Certificate
 
 
     @objc init(signInfo: SignInfo,
-               privateKey: PrivateKey) {
+               privateKey: Certificate) {
 
         mSignInfo = signInfo
         mPrivateKey = privateKey

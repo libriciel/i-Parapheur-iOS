@@ -48,7 +48,7 @@ import AEXML
 
     let mSignInfo: SignInfo
     let mIndex: Int
-    let mPrivateKey: PrivateKey
+    let mPrivateKey: Certificate
     let mPublicKey: String
 
     var mSignedInfoNode: AEXMLElement?
@@ -60,7 +60,7 @@ import AEXML
 
     @objc init(signInfo: SignInfo,
                hashIndex: Int,
-               privateKey: PrivateKey) {
+               privateKey: Certificate) {
 
         mSignInfo = signInfo
         mPrivateKey = privateKey

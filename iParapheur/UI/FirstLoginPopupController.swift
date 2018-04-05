@@ -257,7 +257,7 @@ import UIKit
         // Saving data
 
         if (currentAccount == nil) {
-			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
                                                                  into:ModelsDataController.Context!) as? Account
 
             currentAccount!.id = Account.FirstAccountId

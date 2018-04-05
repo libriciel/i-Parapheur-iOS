@@ -344,7 +344,7 @@
 	if (cell == nil)
 		cell = UITableViewCell.new;
 
-	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
+	Certificate *pkey = _pkeys[(NSUInteger) indexPath.row];
 	cell.textLabel.text = pkey.commonName;
 
 	return cell;

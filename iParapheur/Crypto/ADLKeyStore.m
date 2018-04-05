@@ -55,7 +55,7 @@ static NSString *ISO_8601_FORMAT = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     NSArray *keys = [self listPrivateKeys];
 
-    for (PrivateKey *oldKey in keys) {
+    for (Certificate *oldKey in keys) {
         if (oldKey.p12Filename.pathComponents.count != 2) {
 
             NSString *relativePath = [NSString stringWithFormat:@"%@/%@",
@@ -211,7 +211,7 @@ NSData *X509_to_NSData(X509 *cert) {
 
         // generate an entry for the new Key
 
-        PrivateKey *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
+        Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
                                                                   inManagedObjectContext:self.managedObjectContext];
 
         NSDateFormatter *formatter = NSDateFormatter.new;

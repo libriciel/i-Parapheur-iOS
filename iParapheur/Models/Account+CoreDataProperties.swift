@@ -39,7 +39,7 @@ import CoreData
 
 extension Account {
 
-    static let EntityName = "Account"
+    static let ENTITY_NAME = "Account"
 
     @objc static let PreferencesKeySelectedAccount = "selected_account"
     static let FirstAccountId = "FirstAccountId"

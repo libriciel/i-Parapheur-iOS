@@ -192,7 +192,7 @@ import CryptoSwift
 
     @objc class func sign(signInfo: SignInfo,
                           dossierId: String,
-                          privateKey: PrivateKey,
+                          privateKey: Certificate,
                           password: String) throws -> String {
 
         var signers: [Signer] = []

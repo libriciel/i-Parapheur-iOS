@@ -58,6 +58,6 @@
 @property (strong, nonatomic) IBOutlet UITableView *certificatesTableView;
 
 @property (strong, nonatomic) NSString *p12password;
-@property (strong, nonatomic) PrivateKey *currentPKey;
+@property (strong, nonatomic) Certificate *currentPKey;
 
 @end

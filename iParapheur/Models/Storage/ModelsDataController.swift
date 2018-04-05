@@ -113,7 +113,7 @@ import CoreData
         var result: [Account] = []
 
         do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.EntityName)
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.ENTITY_NAME)
             result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Account]
         } catch {
             print("Could not fetch Accounts")
@@ -132,7 +132,7 @@ import CoreData
         let result: [Account] = fetchAccounts()
         if result.count == 0 {
 
-            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
                                                                   into: ModelsDataController.Context!) as! Account
             demoAccount.id = Account.DemoId as String
             demoAccount.title = Account.DemoTitle
@@ -148,7 +148,7 @@ import CoreData
 
         let preferences: UserDefaults = UserDefaults.standard
         if (preferences.string(forKey: "settings_login") != nil) {
-            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
+            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
                                                                     into: ModelsDataController.Context!) as! Account
             legacyAccount.id = Account.FirstAccountId
             legacyAccount.title = preferences.string(forKey: "settings_login")
