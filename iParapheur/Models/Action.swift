@@ -35,8 +35,8 @@
 import Foundation
 
 /**
- * Those are not used yet, ObjC is really sloppy with Swift enums.
- */
+    Those are not used yet, ObjC is really sloppy with Swift enums.
+*/
 //@objc class Action: NSObject {
 //
 // TODO : Use some real Action when everything would be Swift-ified

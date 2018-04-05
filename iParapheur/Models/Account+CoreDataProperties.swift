@@ -41,13 +41,13 @@ extension Account {
 
     static let ENTITY_NAME = "Account"
 
-    @objc static let PreferencesKeySelectedAccount = "selected_account"
-    static let FirstAccountId = "FirstAccountId"
-    @objc static let DemoId = "DemoAccountId"
-    static let DemoTitle = "iParapheur demo"
-    static let DemoUrl = "iparapheur-partenaires.libriciel.fr"
-    static let DemoLogin = "admin@demo"
-    static let DemoPassword = "admin"
+    @objc static let PREFERENCE_KEY_SELECTED_ACCOUNT = "selected_account"
+    static let LEGACY_ID = "FirstAccountId"
+    @objc static let DEMO_ID = "DemoAccountId"
+    static let DEMO_TITLE = "iParapheur demo"
+    static let DEMO_URL = "iparapheur-partenaires.libriciel.fr"
+    static let DEMO_LOGIN = "admin@demo"
+    static let DEMO_PASSWORD = "admin"
 
     @NSManaged var id: String?
     @NSManaged var isVisible: NSNumber?

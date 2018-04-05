@@ -38,10 +38,8 @@ import CoreData
 
 
 extension Filter {
-
-    public class func fetchRequest() -> NSFetchRequest<Filter> {
-        return NSFetchRequest<Filter>(entityName: "Filter")
-    }
+    
+    static let ENTITY_NAME = "Filter"
 
     @NSManaged public var beginDate: NSDate?
     @NSManaged public var endDate: NSDate?

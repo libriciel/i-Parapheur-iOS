@@ -123,7 +123,7 @@ import Gloss
     // MARK: - Static utils
 
     /**
-    * Returns the main negative {@link Action} available, by coherent priority.
+        Returns the main negative {@link Action} available, by coherent priority.
     */
     static func getPositiveAction(actions: NSArray) -> NSString! {
 
@@ -135,8 +135,8 @@ import Gloss
     }
 
     /**
-     * Returns the main negative {@link Action} available, by coherent priority.
-     */
+        Returns the main negative {@link Action} available, by coherent priority.
+    */
     @objc static func getNegativeAction(actions: NSArray) -> NSString! {
 
         if (actions.contains(NSString(string: "REJET"))) {

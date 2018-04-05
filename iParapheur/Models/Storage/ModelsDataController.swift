@@ -37,15 +37,15 @@ import UIKit
 import CoreData
 
 /**
- * Taken from
- * https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/
- *     -> InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
- */
+    Taken from
+    https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/
+        -> InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
+*/
 @objc class ModelsDataController: NSObject {
 
 
     @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
-    static var Context: NSManagedObjectContext? = nil
+    static var context: NSManagedObjectContext? = nil
 
 
     // <editor-fold desc="Utils">
@@ -54,7 +54,7 @@ import CoreData
 
         // Default case
 
-        if (ModelsDataController.Context != nil) {
+        if (ModelsDataController.context != nil) {
             return
         }
 
@@ -70,8 +70,8 @@ import CoreData
         }
 
         let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
-        ModelsDataController.Context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        ModelsDataController.Context!.persistentStoreCoordinator = psc
+        ModelsDataController.context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        ModelsDataController.context!.persistentStoreCoordinator = psc
 
         DispatchQueue.global(qos: .background).async {
             DispatchQueue.main.async {
@@ -81,8 +81,11 @@ import CoreData
                 // The directory the application uses to store the Core Data store file.
                 // This code uses a file named "DataModel.sqlite" in the application's documents directory.
                 let storeURL = docURL.appendingPathComponent("DataModel.sqlite")
+                let options = [NSInferMappingModelAutomaticallyOption: true,
+                               NSMigratePersistentStoresAutomaticallyOption: true]
+                
                 do {
-                    try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+                    try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 } catch {
                     fatalError("Error migrating store: \(error)")
                 }
@@ -100,7 +103,7 @@ import CoreData
 
     @objc static func save() {
         do {
-            try ModelsDataController.Context!.save()
+            try ModelsDataController.context!.save()
         } catch let error as NSError {
             print("Could not save \(error), \(error.userInfo)")
         }
@@ -114,7 +117,7 @@ import CoreData
 
         do {
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.ENTITY_NAME)
-            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Account]
+            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Account]
         } catch {
             print("Could not fetch Accounts")
             return result
@@ -123,7 +126,35 @@ import CoreData
         return result
     }
 
-    @objc static func cleanupAccounts() {
+    static func fetchCertificates() -> [Certificate] {
+        var result: [Certificate] = []
+
+        do {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.ENTITY_NAME)
+            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Certificate]
+        } catch {
+            print("Could not fetch Certificate")
+            return result
+        }
+
+        return result
+    }
+
+    static func fetchFilters() -> [Filter] {
+        var result: [Filter] = []
+
+        do {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.ENTITY_NAME)
+            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Filter]
+        } catch {
+            print("Could not fetch Filters")
+            return result
+        }
+
+        return result
+    }
+
+    @objc static func cleanupAccounts(preferences: UserDefaults) {
 
         var isSaveNeeded = false
 
@@ -133,12 +164,12 @@ import CoreData
         if result.count == 0 {
 
             let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
-                                                                  into: ModelsDataController.Context!) as! Account
-            demoAccount.id = Account.DemoId as String
-            demoAccount.title = Account.DemoTitle
-            demoAccount.url = Account.DemoUrl
-            demoAccount.login = Account.DemoLogin
-            demoAccount.password = Account.DemoPassword
+                                                                  into: ModelsDataController.context!) as! Account
+            demoAccount.id = Account.DEMO_ID as String
+            demoAccount.title = Account.DEMO_TITLE
+            demoAccount.url = Account.DEMO_URL
+            demoAccount.login = Account.DEMO_LOGIN
+            demoAccount.password = Account.DEMO_PASSWORD
             demoAccount.isVisible = true
 
             isSaveNeeded = true
@@ -146,18 +177,17 @@ import CoreData
 
         // Backup legacy settings
 
-        let preferences: UserDefaults = UserDefaults.standard
         if (preferences.string(forKey: "settings_login") != nil) {
             let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
-                                                                    into: ModelsDataController.Context!) as! Account
-            legacyAccount.id = Account.FirstAccountId
+                                                                    into: ModelsDataController.context!) as! Account
+            legacyAccount.id = Account.LEGACY_ID
             legacyAccount.title = preferences.string(forKey: "settings_login")
             legacyAccount.url = preferences.string(forKey: "settings_server_url")
             legacyAccount.login = preferences.string(forKey: "settings_login")
             legacyAccount.password = preferences.string(forKey: "settings_password")
             legacyAccount.isVisible = true
 
-            preferences.set(legacyAccount.id, forKey: Account.PreferencesKeySelectedAccount as String)
+            preferences.set(legacyAccount.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
             preferences.removeObject(forKey: "settings_login")
             preferences.removeObject(forKey: "settings_password")
             preferences.removeObject(forKey: "settings_server_url")
@@ -172,35 +202,5 @@ import CoreData
             save()
         }
     }
-
-
-    // <editor-fold desc="Filter methods">
-
-//    @objc static func fetchFilter(id: String) -> Filter? {
-//
-//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
-//        fetchRequest.predicate = NSPredicate(format: "id == %@", id)
-//        let results = try! ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
-//
-//        return (results.count > 0) ? results[0] : nil
-//    }
-//
-//
-//    @objc static func fetchFilters() -> [Filter] {
-//        var result: [Filter] = []
-//
-//        do {
-//            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.EntityName)
-//            result = try ModelsDataController.Context!.fetch(fetchRequest) as! [Filter]
-//        }
-//        catch {
-//            print("Could not fetch Filters")
-//            return result
-//        }
-//
-//        return result
-//    }
-
-    // </editor-fold desc="Filter methods">
 
 }

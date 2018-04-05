@@ -32,17 +32,18 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import AEXML
 
 
 /**
- * https://en.wikipedia.org/wiki/XML_Signature
- *
- * TL;DR : We have to build an XML, hashing a part of it and sign the result.
- * In the XML tree, we have to build the Object/SignedInfo/SignatureValue nodes, in that order.
- * Each elements are hashed, and the hash is used in the next one. KeyInfo is order-free.
- */
+    https://en.wikipedia.org/wiki/XML_Signature
+
+    TL;DR : We have to build an XML, hashing a part of it and sign the result.
+    In the XML tree, we have to build the Object/SignedInfo/SignatureValue nodes, in that order.
+    Each elements are hashed, and the hash is used in the next one. KeyInfo is order-free.
+*/
 @objc class XadesEnvSigner: Signer {
 
 
@@ -285,15 +286,15 @@ import AEXML
     // </editor-fold desc="Signer">
 
     /**
-     * This is ugly, I know...
-     * But no one library on iOS can do an XML canonicalization.
-     * The only ones are on macOS.
-     *
-     * Since we always have the same XML structure, we just have to fix it manually,
-     * to have a c14n XML.
-     *
-     * TODO : find an iOS XML canonicalizer, and get rid of this method.
-     */
+        This is ugly, I know...
+        But no one library on iOS can do an XML canonicalization.
+        The only ones are on macOS.
+
+        Since we always have the same XML structure, we just have to fix it manually,
+        to have a c14n XML.
+
+        TODO : find an iOS XML canonicalizer, and get rid of this method.
+    */
     class func canonicalizeXml(xmlCompactString: String,
                                forceSignPropertiesXmlns: Bool,
                                forceSignedInfoXmlns: Bool) -> String {
@@ -351,9 +352,9 @@ import AEXML
     }
 
     /**
-     * Xemelios/PES is not compliant with RFC2253 given by OpenSSL.
-     * We have to tweak it...
-     */
+        Xemelios/PES is not compliant with RFC2253 given by OpenSSL.
+        We have to tweak it...
+    */
     class func issuerHardcodedFixes(issuer: String) -> String {
         let fixedIssuer = issuer.replacingOccurrences(of: "emailAddress=", with: "EMAILADDRESS=")
         return fixedIssuer

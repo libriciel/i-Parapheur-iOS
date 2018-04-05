@@ -78,7 +78,7 @@ import UIKit
 
         let accountList: [Account] = ModelsDataController.fetchAccounts()
         for account in accountList {
-            if (account.id == Account.FirstAccountId) {
+            if (account.id == Account.LEGACY_ID) {
                 currentAccount = account
             }
         }
@@ -175,7 +175,7 @@ import UIKit
                                       // Register new account as selected
 
                                       let preferences: UserDefaults = UserDefaults.standard
-                                      preferences.set(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
+                                      preferences.set(self.currentAccount!.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
 
                                       // UI refresh
 
@@ -258,9 +258,9 @@ import UIKit
 
         if (currentAccount == nil) {
 			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
-                                                                 into:ModelsDataController.Context!) as? Account
+                                                                 into:ModelsDataController.context!) as? Account
 
-            currentAccount!.id = Account.FirstAccountId
+            currentAccount!.id = Account.LEGACY_ID
             currentAccount!.isVisible = true
         }
 

@@ -43,22 +43,22 @@ import SwiftMessages
     @objc class func isConnectedToDemoAccount() -> Bool {
 
         let preferences = UserDefaults.standard
-        let selectedId = preferences.object(forKey: Account.PreferencesKeySelectedAccount) as? String
+        let selectedId = preferences.object(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT) as? String
 
-        return Account.DemoId == selectedId
+        return Account.DEMO_ID == selectedId
     }
 
     /**
-     * Here's the trick : VFR on Android rasterizes its PDF at 72dpi.
-     * Ghostscript on the server rasterize at 150dpi, and takes that as a root scale.
-     * Every Annotation has a pixel-coordinates based on that 150dpi, on the server.
-     * We need to translate it from 150 to 72dpi, by default.
-     * <p/>
-     * Not by default : The server-dpi is an open parameter, in the alfresco-global.properties file...
-     * So we can't hardcode the old "150 dpi", we have to let an open parameter too, to allow any density coordinates.
-     * <p/>
-     * Maybe some day, we'll want some crazy 300dpi on tablets, that's why we don't want to hardcode the new "72 dpi" one.
-     */
+        Here's the trick : VFR on Android rasterizes its PDF at 72dpi.
+        Ghostscript on the server rasterize at 150dpi, and takes that as a root scale.
+        Every Annotation has a pixel-coordinates based on that 150dpi, on the server.
+        We need to translate it from 150 to 72dpi, by default.
+
+        Not by default : The server-dpi is an open parameter, in the alfresco-global.properties file...
+        So we can't hardcode the old "150 dpi", we have to let an open parameter too, to allow any density coordinates.
+
+        Maybe some day, we'll want some crazy 300dpi on tablets, that's why we don't want to hardcode the new "72 dpi" one.
+    */
     @objc class func translateDpi(rect: CGRect,
                                   oldDpi: Int,
                                   newDpi: Int) -> CGRect {

@@ -35,9 +35,9 @@
 import Foundation
 
 /**
- * Yes, this class seems kind of useless, it's the easiest signature.
- * But this wrapper eases the code factorization with other signature methods.
- */
+    Yes, this class seems kind of useless, it's the easiest signature.
+    But this wrapper eases the code factorization with other signature methods.
+*/
 @objc class CmsSigner: Signer {
 
 

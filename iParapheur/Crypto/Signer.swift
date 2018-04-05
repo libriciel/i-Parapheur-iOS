@@ -35,10 +35,10 @@
 import Foundation
 
 /**
-  * A Protocol would have been more elegant,
-  * But I had some issues with Swift/ObjC crossed calls.
-  * It was made in a rush, so... NSObject it is.
-  */
+    A Protocol would have been more elegant,
+    But I had some issues with Swift/ObjC crossed calls.
+    It was made in a rush, so... NSObject it is.
+*/
 @objc class Signer: NSObject {
 
     @objc func generateHashToSign() -> String { return "Generic signer" }

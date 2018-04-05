@@ -53,7 +53,7 @@ import UIKit
 		super.viewDidLoad()
 		print("View loaded : AccountSelectionController")
 
-        ModelsDataController.cleanupAccounts()
+        ModelsDataController.cleanupAccounts(preferences: UserDefaults.standard)
 
         accountList = loadAccountList()
         accountTableView.dataSource = self
@@ -63,7 +63,7 @@ import UIKit
 		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
         let preferences: UserDefaults = UserDefaults.standard
-        selectedAccountId = preferences.string(forKey: Account.PreferencesKeySelectedAccount as String)
+        selectedAccountId = preferences.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
 	}
 
 
@@ -110,7 +110,7 @@ import UIKit
 
         let accountSelected: Account = accountList[indexPath.row]
         let preferences: UserDefaults = UserDefaults.standard
-        preferences.set(accountSelected.id, forKey: Account.PreferencesKeySelectedAccount as String)
+        preferences.set(accountSelected.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
 
 		NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
                                         object: nil,

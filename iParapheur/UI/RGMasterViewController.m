@@ -278,7 +278,7 @@
 - (void)onAccountButtonClicked:(id)sender {
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
 	BOOL areSettingsSet = (selectedAccountId.length > 1);
 
 	if (areSettingsSet) {
@@ -296,12 +296,12 @@
 
 - (void)onModelsCoreDataLoaded:(NSNotification *)notification {
 
-	[ModelsDataController cleanupAccounts];
+	[ModelsDataController cleanupAccountsWithPreferences:NSUserDefaults.standardUserDefaults];
 
 	// Settings check
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedAccountId = [preferences objectForKey:Account.PREFERENCE_KEY_SELECTED_ACCOUNT];
 
 	BOOL areSettingsSet = (selectedAccountId.length > 1);
 	[self refreshAccountIcon:areSettingsSet];
@@ -327,7 +327,7 @@
 	// Popup response
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
 
 	BOOL areSettingsSet = (selectedAccountId.length > 1);
 
