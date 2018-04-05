@@ -211,7 +211,7 @@ import CoreData
         The old one is still based on the appDelegate objc way,
         the new one is on the iOS9-static swift way.
 
-        FIXME : Delete this method in 2020, and the KeyStore data model too.
+        FIXME : Delete this method in 2020, and the old KeyStore data model too.
         Everybody would have been patched then.
     */
     static func cleanupCertificates() {
@@ -224,6 +224,7 @@ import CoreData
                                                                      into: context!) as! Certificate
 
             print("Legacy PrivateKey found = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
+            newCertificate.identifier = UUID()
             newCertificate.caName = oldPrivateKey.value(forKey: "caName") as? String
             newCertificate.commonName = oldPrivateKey.value(forKey: "commonName") as? String
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate

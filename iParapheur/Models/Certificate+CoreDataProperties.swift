@@ -41,6 +41,7 @@ extension Certificate {
 
     static let ENTITY_NAME = "Certificate"
 
+    @NSManaged public var identifier: String?
     @NSManaged public var caName: String?
     @NSManaged public var commonName: String?
     @NSManaged public var notAfter: NSDate?

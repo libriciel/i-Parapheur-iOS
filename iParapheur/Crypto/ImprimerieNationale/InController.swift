@@ -65,9 +65,9 @@ extension Notification.Name {
 
         let jsonDecoder = JSONDecoder()
         let croppedUrl = String(url.path.dropFirst())
-        
+
         guard let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!) else {
-             return false
+            return false
         }
 
         print("tokenData : \(tokenData.label)-\(tokenData.serialNumber)")
@@ -78,12 +78,17 @@ extension Notification.Name {
 
     class func importCertificate(token: InTokenData) {
 
-        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
-        let keystore: ADLKeyStore = appDelegate.keyStore
+        let context = ModelsDataController.context!
+        let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: context) as! Certificate
 
-//        let context = (UIApplication.shared.delegate as! RGAppDelegate).persistentContainer.viewContext
-//        let privateKey = NSEntityDescription.insertNewObjectForEntityForName(PrivateKey.ENTITY_NAME, inManagedObjectContext: context) as! PrivateKey
-//        print("privateKey stored = \(privateKey)")
+        newCertificate.sourceType = .imprimerieNationale
+        newCertificate.caName = token.manufacturerId
+        newCertificate.commonName = token.manufacturerId
+        newCertificate.serialNumber = token.serialNumber
+//        newCertificate.publicKey = token.certificates[0]
+        newCertificate.identifier = UUID()
+
+        ModelsDataController.save()
     }
 
 }
