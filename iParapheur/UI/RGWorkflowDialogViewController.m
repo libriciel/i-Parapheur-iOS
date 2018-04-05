@@ -35,12 +35,9 @@
  */
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
-#import "ADLSingletonState.h"
-#import "RGAppDelegate.h"
-#import "ADLCertificateAlertView.h"
-#import "LGViewHUD.h"
-#import <NSData_Base64/NSData+Base64.h>
 #import "StringUtils.h"
+#import "ADLSingletonState.h"
+#import "LGViewHUD.h"
 #import "iParapheur-Swift.h"
 
 
@@ -115,10 +112,7 @@
 	                          action:@selector(onPaperSignatureButtonClicked:)
 	                forControlEvents:UIControlEventTouchUpInside];
 
-	//
-
-	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
-	_pkeys = keystore.listPrivateKeys;
+	_pkeys = [ModelsDataController fetchCertificates];
 }
 
 

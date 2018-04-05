@@ -81,10 +81,9 @@ extension Notification.Name {
         let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
 
-        var result = Array<Certificate>()
-        for pkeyManagedObject:NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-            result.append(Certificate(managedObject: pkeyManagedObject))
-        }
+//        let context = (UIApplication.shared.delegate as! RGAppDelegate).persistentContainer.viewContext
+//        let privateKey = NSEntityDescription.insertNewObjectForEntityForName(PrivateKey.ENTITY_NAME, inManagedObjectContext: context) as! PrivateKey
+//        print("privateKey stored = \(privateKey)")
     }
 
 }

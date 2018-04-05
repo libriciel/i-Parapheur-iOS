@@ -36,7 +36,7 @@
 		7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */; };
 		7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */; };
 		7ACBEE17206E897B000618DC /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBEE16206E897B000618DC /* InTokenData.swift */; };
-		7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift */; };
+		7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift */; };
 		7ACBEE242073C357000618DC /* ic_imprimerie_nationale_white_24dp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBEE212073C357000618DC /* ic_imprimerie_nationale_white_24dp@2x.png */; };
 		7ACBEE252073C357000618DC /* ic_imprimerie_nationale_white_24dp@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBEE222073C357000618DC /* ic_imprimerie_nationale_white_24dp@3x.png */; };
 		7ACBEE262073C357000618DC /* ic_imprimerie_nationale_white_24dp.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBEE232073C357000618DC /* ic_imprimerie_nationale_white_24dp.png */; };
@@ -380,7 +380,7 @@
 		7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsUtils.swift; sourceTree = "<group>"; };
 		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
 		7ACBEE16206E897B000618DC /* InTokenData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InTokenData.swift; sourceTree = "<group>"; };
-		7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InTokenData.swift; sourceTree = "<group>"; };
+		7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_INTokenData.swift; sourceTree = "<group>"; };
 		7ACBEE212073C357000618DC /* ic_imprimerie_nationale_white_24dp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_imprimerie_nationale_white_24dp@2x.png"; path = "ic_imprimerie_nationale_white_24dp/ic_imprimerie_nationale_white_24dp@2x.png"; sourceTree = "<group>"; };
 		7ACBEE222073C357000618DC /* ic_imprimerie_nationale_white_24dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_imprimerie_nationale_white_24dp@3x.png"; path = "ic_imprimerie_nationale_white_24dp/ic_imprimerie_nationale_white_24dp@3x.png"; sourceTree = "<group>"; };
 		7ACBEE232073C357000618DC /* ic_imprimerie_nationale_white_24dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_imprimerie_nationale_white_24dp.png; path = ic_imprimerie_nationale_white_24dp/ic_imprimerie_nationale_white_24dp.png; sourceTree = "<group>"; };
@@ -1508,7 +1508,7 @@
 			isa = PBXGroup;
 			children = (
 				7A817121207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift */,
-				7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift */,
+				7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift */,
 				7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */,
 				7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */,
 				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */,
@@ -2368,7 +2368,7 @@
 				7A817122207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift in Sources */,
 				C5903CFF1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift in Sources */,
 				7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */,
-				7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_InTokenData.swift in Sources */,
+				7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */,
 				7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */,
 				C5A7DAEB1FDECDC70022A813 /* Models_Etape_Tests.swift in Sources */,

@@ -44,7 +44,7 @@ import Foundation
 
     @IBOutlet var certificatesTableView: UITableView!
 
-    var certificateList: Array<Certificate>!
+    var certificateList: [Certificate] = []
     var dateFormatter: DateFormatter!
 
 
@@ -54,7 +54,8 @@ import Foundation
         super.viewDidLoad()
         print("View loaded : SettingsCertificatesController")
 
-        certificateList = loadCertificateList()
+        certificateList = ModelsDataController.fetchCertificates()
+        print("Adrien - \(certificateList)")
         certificatesTableView.dataSource = self
 
         dateFormatter = DateFormatter()
@@ -121,22 +122,6 @@ import Foundation
     }
 
 
-    // MARK: - Private methods
-
-    func loadCertificateList() -> Array<Certificate> {
-
-        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
-        let keystore: ADLKeyStore = appDelegate.keyStore
-
-        var result = Array<Certificate>()
-        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-            result.append(Certificate(managedObject: pkeyManagedObject))
-        }
-
-        return result
-    }
-
-
     // MARK: - UIDocumentInteractionControllerDelegate
 
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
@@ -170,7 +155,7 @@ import Foundation
 
         let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
         let keystore: ADLKeyStore = appDelegate.keyStore
-        for pkeyManagedObject: NSManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
+        for pkeyManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
             if (pkeyManagedObject.value(forKey: "serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
                 privateKeyToDelete = pkeyManagedObject
             }
@@ -182,12 +167,9 @@ import Foundation
             return
         }
 
-        // Delete from NSManagedObjectContext
+        // Delete from local DB
 
-        let context: NSManagedObjectContext = appDelegate.managedObjectContext!
-        context.delete(privateKeyToDelete!)
-        certificateList.remove(at: indexPath.row)
-        try! context.save()
+        ModelsDataController.context!.delete(privateKeyToDelete!)
 
         // Delete from UITableView
 

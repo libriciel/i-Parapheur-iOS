@@ -90,6 +90,9 @@ import CoreData
                     fatalError("Error migrating store: \(error)")
                 }
 
+                // Patches
+                cleanupCertificates()
+
                 // Callback on UI thread
                 DispatchQueue.global(qos: .default).async {
                     DispatchQueue.main.async {
@@ -126,7 +129,7 @@ import CoreData
         return result
     }
 
-    static func fetchCertificates() -> [Certificate] {
+    @objc static func fetchCertificates() -> [Certificate] {
         var result: [Certificate] = []
 
         do {
@@ -204,7 +207,7 @@ import CoreData
     }
 
     /**
-        Merging old momd into the new Model one.
+        Merging old xcdatamodel into the new Model one.
         The old one is still based on the appDelegate objc way,
         the new one is on the iOS9-static swift way.
 
@@ -220,7 +223,7 @@ import CoreData
             let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME,
                                                                      into: context!) as! Certificate
 
-            print(" Adrien legacy privateKey = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
+            print("Legacy PrivateKey found = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
             newCertificate.caName = oldPrivateKey.value(forKey: "caName") as? String
             newCertificate.commonName = oldPrivateKey.value(forKey: "commonName") as? String
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
@@ -228,6 +231,11 @@ import CoreData
             newCertificate.publicKey = oldPrivateKey.value(forKey: "publicKey") as? NSData
             newCertificate.serialNumber = oldPrivateKey.value(forKey: "serialNumber") as? String
             newCertificate.sourceType = .p12File
+            save()
+
+            let oldContext: NSManagedObjectContext = appDelegate.managedObjectContext!
+            oldContext.delete(oldPrivateKey)
+            try! oldContext.save()
         }
     }
 
