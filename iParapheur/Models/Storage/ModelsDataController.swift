@@ -224,7 +224,7 @@ import CoreData
                                                                      into: context!) as! Certificate
 
             print("Legacy PrivateKey found = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
-            newCertificate.identifier = UUID()
+            newCertificate.identifier = UUID().uuidString
             newCertificate.caName = oldPrivateKey.value(forKey: "caName") as? String
             newCertificate.commonName = oldPrivateKey.value(forKey: "commonName") as? String
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate

@@ -44,9 +44,14 @@ extension Notification.Name {
 @objc class InController: NSObject {
 
 
+    // <editor-fold desc="Middleware">
+
     class func getTokenData() {
 
-        let urlString = "inmiddleware://getTokenData/{\"responseScheme\":\"iparapheur\",\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}}"
+        let urlString = "inmiddleware://getTokenData/{" +
+                "\"responseScheme\":\"iparapheur\"," +
+                "\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}" +
+                "}"
         let urlEncodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
@@ -56,6 +61,9 @@ extension Notification.Name {
             }
         })
     }
+
+    // </editor-fold desc="Middleware">
+
 
     @objc class func parseIntent(url: URL) -> Bool {
 
@@ -70,9 +78,9 @@ extension Notification.Name {
             return false
         }
 
-        print("tokenData : \(tokenData.label)-\(tokenData.serialNumber)")
-
+        importCertificate(token: tokenData)
         NotificationCenter.default.post(name: .certificateImport, object: nil)
+
         return true;
     }
 
@@ -83,10 +91,10 @@ extension Notification.Name {
 
         newCertificate.sourceType = .imprimerieNationale
         newCertificate.caName = token.manufacturerId
-        newCertificate.commonName = token.manufacturerId
+        newCertificate.commonName = "\(token.manufacturerId) \(token.serialNumber)"
         newCertificate.serialNumber = token.serialNumber
-//        newCertificate.publicKey = token.certificates[0]
-        newCertificate.identifier = UUID()
+        // newCertificate.publicKey = token.certificates[0]
+        newCertificate.identifier = UUID().uuidString
 
         ModelsDataController.save()
     }

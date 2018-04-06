@@ -49,7 +49,7 @@ import CryptoSwift
     static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
     static private let PKCS7_BEGIN = "-----PKCS7 BEGIN-----"
     static private let PKCS7_END = "-----PKCS7 BEGIN-----"
-
+    static private let HEX_ALPHABET = "0123456789abcdef".unicodeScalars.map { $0 }
 
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
 
@@ -330,7 +330,7 @@ import CryptoSwift
 
     class func sha1Base64(string: String) -> String {
         let hexSha1 = string.sha1()
-        let sha1Data = CryptoUtils.dataWithHexString(hex: hexSha1)
+        let sha1Data = CryptoUtils.data(hex: hexSha1)
         return sha1Data.base64EncodedString()
     }
 
@@ -341,7 +341,7 @@ import CryptoSwift
     }
 
 
-    class func dataWithHexString(hex: String) -> Data {
+    class func data(hex: String) -> Data {
 
         var hex = hex
         var data = Data()
@@ -360,6 +360,14 @@ import CryptoSwift
         }
         
         return data
+    }
+
+
+    class func hex(data: Data) -> String {
+        return String(data.reduce(into: "".unicodeScalars, { (result, value) in
+            result.append(HEX_ALPHABET[Int(value/16)])
+            result.append(HEX_ALPHABET[Int(value%16)])
+        }))
     }
 
 }

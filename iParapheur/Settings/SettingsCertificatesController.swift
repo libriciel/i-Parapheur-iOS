@@ -151,25 +151,22 @@ import Foundation
 
         // Find from NSManagedObjectContext
 
-        var privateKeyToDelete: NSManagedObject? = nil
-
-        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
-        let keystore: ADLKeyStore = appDelegate.keyStore
-        for pkeyManagedObject in keystore.listPrivateKeys() as! [NSManagedObject] {
-            if (pkeyManagedObject.value(forKey: "serialNumber") as? String == certificateList[indexPath.row].serialNumber) {
-                privateKeyToDelete = pkeyManagedObject
+        var certificateToDelete: NSManagedObject? = nil
+        for certificate in  ModelsDataController.fetchCertificates() {
+            if (certificate.identifier == certificateList[indexPath.row].identifier) {
+                certificateToDelete = certificate
             }
         }
 
         // Safety check
 
-        if (privateKeyToDelete == nil) {
+        if (certificateToDelete == nil) {
             return
         }
 
         // Delete from local DB
 
-        ModelsDataController.context!.delete(privateKeyToDelete!)
+        ModelsDataController.context!.delete(certificateToDelete!)
 
         // Delete from UITableView
 

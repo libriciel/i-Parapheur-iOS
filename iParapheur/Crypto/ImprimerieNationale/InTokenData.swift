@@ -80,7 +80,7 @@ class InTokenData: Decodable {
         certificates = [String:Data]()
         let parsedCertificates = try resultContainer.decodeIfPresent([[String: String]].self, forKey: .certificates) ?? []
         for parsedCertificate in parsedCertificates {
-            certificates[parsedCertificate["id"]!] = CryptoUtils.dataWithHexString(hex: parsedCertificate["value"]!)
+            certificates[parsedCertificate["id"]!] = CryptoUtils.data(hex: parsedCertificate["value"]!)
         }
 
         let middlewareContainer = try resultContainer.nestedContainer(keyedBy: MiddlewareKeys.self, forKey: .middleware)

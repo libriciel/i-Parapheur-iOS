@@ -84,7 +84,7 @@ import AEXML
                                                                                 forceSignedInfoXmlns: false)
         let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
 
-        let base64hashData = CryptoUtils.dataWithHexString(hex: mSignInfo.hashesToSign[mIndex])
+        let base64hashData = CryptoUtils.data(hex: mSignInfo.hashesToSign[mIndex])
         let base64Hash = base64hashData.base64EncodedString()
 
         // Build XML

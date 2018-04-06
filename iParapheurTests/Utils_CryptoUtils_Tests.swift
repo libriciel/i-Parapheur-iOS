@@ -83,12 +83,22 @@ class Utils_CryptoUtils_Tests: XCTestCase {
     }
     
     
-    func testDataWithHexString() {
+    func testData() {
         
-        let data = CryptoUtils.dataWithHexString(hex: "5465737431323334")
-        let decodedData = String(data: data, encoding: String.Encoding.utf8)
+        let data = CryptoUtils.data(hex: "5465737431323334")
+        let decodedData = String(data: data, encoding: .utf8)
         
         XCTAssertEqual(decodedData, "Test1234")
     }
+    
+    
+    func testHex() {
+        
+        let data = "Test1234".data(using: .utf8)
+        let string = CryptoUtils.hex(data: data!)
+
+        XCTAssertEqual(string, "5465737431323334")
+    }
+    
 
 }
