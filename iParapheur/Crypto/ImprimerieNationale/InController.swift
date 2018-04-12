@@ -97,6 +97,7 @@ extension Notification.Name {
 
         let jsonDecoder = JSONDecoder()
         let croppedUrl = String(url.path.dropFirst())
+        print("Adrien - croppedUrl :: \(croppedUrl)")
 
         guard let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!) else {
             return false

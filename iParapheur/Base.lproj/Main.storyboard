@@ -711,7 +711,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="Oxg-t6-g9e">
                                             <connections>
-                                                <action selector="onSignatureButtonClicked:" destination="zs0-y1-eAs" id="to8-IE-XuR"/>
+                                                <action selector="onValidateButtonClicked:" destination="zs0-y1-eAs" id="VDQ-bn-kFj"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>

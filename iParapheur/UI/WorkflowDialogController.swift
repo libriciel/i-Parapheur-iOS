@@ -48,6 +48,7 @@ import Foundation
     @IBOutlet var paperSignatureButton: UIButton!
 
     var certificateList: [Certificate] = []
+    var selectedCertificate: Certificate?
     @objc var dossiersToSign: [Dossier] = []
     @objc var currentAction: String?
 
@@ -90,7 +91,7 @@ import Foundation
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        print("Adrien -- Row selected")
+        selectedCertificate = certificateList[indexPath.row]
     }
 
     // </editor-fold desc="TableView">
@@ -102,6 +103,7 @@ import Foundation
     }
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
+        InController.sign(hash: "test", certificateId: selectedCertificate!.serialNumber!)
     }
 
     // </editor-fold desc="Listeners">
