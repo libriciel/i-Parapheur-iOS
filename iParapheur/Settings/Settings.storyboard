@@ -95,7 +95,7 @@
                                                         <constraint firstAttribute="height" constant="24" id="xXg-ie-eSx"/>
                                                     </constraints>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" image="ic_visibility_off_white_24dp.png">
+                                                    <state key="normal" image="ic_visibility_off_white_24dp">
                                                         <color key="titleColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
                                                     <state key="selected" image="ic_visibility_white_24dp.png">
@@ -953,7 +953,7 @@ Initié et Developpé par Libriciel-SCOP.</string>
         <image name="ic_close_white_24dp" width="24" height="24"/>
         <image name="ic_delete_white_24dp" width="24" height="24"/>
         <image name="ic_edit_white_24dp" width="24" height="24"/>
-        <image name="ic_visibility_off_white_24dp.png" width="24" height="24"/>
+        <image name="ic_visibility_off_white_24dp" width="24" height="24"/>
         <image name="ic_visibility_white_24dp.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
