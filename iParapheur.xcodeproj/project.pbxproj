@@ -45,6 +45,7 @@
 		7ACBEE2D2073C371000618DC /* ic_imprimerie_nationale_white_48dp.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ACBEE2A2073C370000618DC /* ic_imprimerie_nationale_white_48dp.png */; };
 		7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
+		7AF3389E2077C58A00DE5F61 /* WorkflowDialogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
@@ -387,6 +388,7 @@
 		7ACBEE292073C370000618DC /* ic_imprimerie_nationale_white_48dp@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ic_imprimerie_nationale_white_48dp@3x.png"; path = "ic_imprimerie_nationale_white_48dp/ic_imprimerie_nationale_white_48dp@3x.png"; sourceTree = "<group>"; };
 		7ACBEE2A2073C370000618DC /* ic_imprimerie_nationale_white_48dp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ic_imprimerie_nationale_white_48dp.png; path = ic_imprimerie_nationale_white_48dp/ic_imprimerie_nationale_white_48dp.png; sourceTree = "<group>"; };
 		7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_ApiLevel_Tests.swift; sourceTree = "<group>"; };
+		7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowDialogController.swift; sourceTree = "<group>"; };
 		9514BFDF187AA73800118B9C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		9514BFE1187AA73800118B9C /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		9514BFE2187AA73800118B9C /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
@@ -941,6 +943,7 @@
 				B42D54E8153B10970033E95B /* RGSplitViewController.m */,
 				B46BCC48156A855900A96560 /* RGWorkflowDialogViewController.h */,
 				B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */,
+				7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2336,6 +2339,7 @@
 				C503261F1DD08ECC004F00A6 /* ActionSelectionCell.swift in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
+				7AF3389E2077C58A00DE5F61 /* WorkflowDialogController.swift in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
 				7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */,
 				C5747EAC1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift in Sources */,

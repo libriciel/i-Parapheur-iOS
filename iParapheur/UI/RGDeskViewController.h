@@ -41,14 +41,8 @@
 
 
 @interface RGDeskViewController : UITableViewController
-		<UISplitViewControllerDelegate,
-		UITableViewDataSource,
-		UITableViewDelegate,
-		UIActionSheetDelegate,
-		UISearchBarDelegate,
-		RGFileCellDelegate,
-		FilterDelegate,
-		LGViewHUDDelegate>
+		<UISplitViewControllerDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UISearchBarDelegate, RGFileCellDelegate,
+		FilterDelegate, LGViewHUDDelegate>
 
 
 @property(nonatomic, strong) Bureau *desk;

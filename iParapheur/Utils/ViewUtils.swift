@@ -70,7 +70,7 @@ import SwiftMessages
     }
 
 
-    // MARK: - Logs
+    // <editor-folds desc="Logs">
 
     @objc class func logError(message: NSString,
                               title: NSString?) {
@@ -104,9 +104,6 @@ import SwiftMessages
                              messageType: .warning)
     }
 
-
-    // MARK: - Private Methods
-
     class func logMessage(title: NSString?,
                           subtitle: NSString,
                           messageType: Theme) {
@@ -125,5 +122,7 @@ import SwiftMessages
             return view
         }
     }
+
+    // </editor-folds desc="Logs">
 
 }

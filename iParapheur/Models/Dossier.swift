@@ -146,9 +146,9 @@ import Gloss
         return NSString(string: "")
     }
 
-    @objc class func filterActions(dossierList: NSArray) -> NSMutableArray {
+    class func filterActions(dossierList: NSArray) -> [String] {
 
-        let result: NSMutableArray = NSMutableArray()
+        var result: [String] = []
 
         // Compute values
 
@@ -173,16 +173,17 @@ import Gloss
         // Build result
 
         if (hasSignature) {
-            result.add(NSString(string: "SIGNATURE"))
+            result.append("SIGNATURE")
         } else if (hasVisa) {
-            result.add(NSString(string: "VISA"))
+            result.append("VISA")
         }
 
         if (hasRejet) {
-            result.add(NSString(string: "REJET"))
+            result.append("REJET")
         }
+
         if (hasTDT) {
-            result.add(NSString(string: "TDT"))
+            result.append("TDT")
         }
 
         return result
