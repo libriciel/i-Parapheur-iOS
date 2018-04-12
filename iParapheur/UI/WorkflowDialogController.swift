@@ -74,7 +74,12 @@ import Foundation
         let certificate = certificateList[indexPath.row]
 
         if let image = cell.viewWithTag(101) as? UIImageView {
-            // image.image = UIImage(named: "")
+            switch (certificate.sourceType) {
+                case .imprimerieNationale: image.image = UIImage(named: "ic_imprimerie_nationale_white_24dp")?.withRenderingMode(.alwaysTemplate)
+                default: image.image = UIImage(named: "ic_certificate_white_24dp")?.withRenderingMode(.alwaysTemplate)
+            }
+        } else {
+            print("NOT FOUND !!!!!!?????????? ")
         }
 
         if let nameLabel = cell.viewWithTag(102) as? UILabel {

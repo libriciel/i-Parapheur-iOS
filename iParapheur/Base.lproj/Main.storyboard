@@ -186,7 +186,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="J5X-aU-lB4">
                         <rightBarButtonItems>
-                            <barButtonItem image="ic_action_white_24dp.png" id="fQA-eM-WHG">
+                            <barButtonItem image="ic_action_white_24dp" id="fQA-eM-WHG">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <segue destination="KoI-Hd-Qp2" kind="popover" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
@@ -194,13 +194,13 @@
                                     </segue>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="ic_info_outline_white_24dp.png" id="UJR-Wz-2Gr">
+                            <barButtonItem image="ic_info_outline_white_24dp" id="UJR-Wz-2Gr">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <segue destination="b1B-Q6-eI1" kind="modal" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="ic_library_books_white_24dp.png" id="e2H-L5-DmJ">
+                            <barButtonItem image="ic_library_books_white_24dp" id="e2H-L5-DmJ">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <segue destination="XYH-uf-RCC" kind="popover" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
@@ -321,13 +321,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Bureaux" id="PxO-wH-GeW">
-                        <barButtonItem key="leftBarButtonItem" image="ic_account_circle_white.png" id="Cjo-Ew-HTT">
+                        <barButtonItem key="leftBarButtonItem" image="ic_account_circle_white_24dp" id="Cjo-Ew-HTT">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <segue destination="nxB-H0-cxL" kind="modal" identifier="AccountListSegue" modalPresentationStyle="currentContext" id="GrA-mP-kF0"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="ic_settings_white.png" id="XVu-qm-8t4">
+                        <barButtonItem key="rightBarButtonItem" image="ic_settings_white_24dp" id="XVu-qm-8t4">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <segue destination="0Rw-5c-KLL" kind="modal" identifier="FirstLoginPopupSegue" modalPresentationStyle="formSheet" id="391-AD-jqw"/>
@@ -768,7 +768,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="728" height="56.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lrj-y6-Au8" userLabel="Icon">
+                                                <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" image="ic_certificate_white_24dp" translatesAutoresizingMaskIntoConstraints="NO" id="Lrj-y6-Au8" userLabel="Icon">
                                                     <rect key="frame" x="15" y="17" width="24" height="24"/>
                                                     <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
@@ -1316,10 +1316,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_account_circle_white.png" width="24" height="24"/>
-        <image name="ic_action_white_24dp.png" width="24" height="24"/>
+        <image name="ic_account_circle_white_24dp" width="24" height="24"/>
+        <image name="ic_action_white_24dp" width="24" height="24"/>
         <image name="ic_arrow_back_white_24dp.png" width="24" height="24"/>
         <image name="ic_attachment_white_24dp.png" width="24" height="24"/>
+        <image name="ic_certificate_white_24dp" width="24" height="24"/>
         <image name="ic_check_circle_white_18dp.png" width="18" height="18"/>
         <image name="ic_check_white_18dp.png" width="18" height="18"/>
         <image name="ic_circle_outline_white_18dp.png" width="18" height="18"/>
@@ -1327,10 +1328,10 @@
         <image name="ic_fiber_manual_record_white_18dp.png" width="18" height="18"/>
         <image name="ic_filter_white_24dp.png" width="24" height="24"/>
         <image name="ic_inbox_white_24dp.png" width="24" height="24"/>
-        <image name="ic_info_outline_white_24dp.png" width="24" height="24"/>
-        <image name="ic_library_books_white_24dp.png" width="24" height="24"/>
+        <image name="ic_info_outline_white_24dp" width="24" height="24"/>
+        <image name="ic_library_books_white_24dp" width="24" height="24"/>
         <image name="ic_navigate_next_white_24dp.png" width="24" height="24"/>
-        <image name="ic_settings_white.png" width="24" height="24"/>
+        <image name="ic_settings_white_24dp" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Les-T2-Xz2"/>

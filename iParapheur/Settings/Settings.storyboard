@@ -77,7 +77,7 @@
                                                         <constraint firstAttribute="width" constant="24" id="oa3-AF-xAG"/>
                                                     </constraints>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" image="ic_delete_white.png"/>
+                                                    <state key="normal" image="ic_delete_white_24dp"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kcm-cA-FQh" userLabel="edit">
                                                     <rect key="frame" x="352" y="21" width="24" height="24"/>
@@ -86,7 +86,7 @@
                                                         <constraint firstAttribute="width" constant="24" id="llf-az-chb"/>
                                                     </constraints>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" image="ic_edit_white_24dp.png"/>
+                                                    <state key="normal" image="ic_edit_white_24dp"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1oR-Ko-gxu" userLabel="visibility">
                                                     <rect key="frame" x="384" y="21" width="24" height="24"/>
@@ -325,7 +325,7 @@
                                                         <constraint firstAttribute="width" constant="24" id="WZA-Qo-lov"/>
                                                     </constraints>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" image="ic_delete_white.png"/>
+                                                    <state key="normal" image="ic_delete_white_24dp"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nom_du_certif.p12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="adl-eh-TlW">
                                                     <rect key="frame" x="8" y="22" width="287" height="21"/>
@@ -425,7 +425,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Réglages" id="DWG-pA-QbG" customClass="SettingsTableViewController">
-                        <barButtonItem key="leftBarButtonItem" image="ic_close_white.png" id="Yvn-GK-kgU">
+                        <barButtonItem key="leftBarButtonItem" image="ic_close_white_24dp" id="Yvn-GK-kgU">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </barButtonItem>
                     </navigationItem>
@@ -860,7 +860,7 @@ Initié et Developpé par Libriciel-SCOP.</string>
                                                         <constraint firstAttribute="width" constant="24" id="n5Z-aY-MtL"/>
                                                     </constraints>
                                                     <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" image="ic_delete_white.png"/>
+                                                    <state key="normal" image="ic_delete_white_24dp"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter_title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="71D-jQ-8vZ">
                                                     <rect key="frame" x="8" y="22" width="432" height="21"/>
@@ -950,9 +950,9 @@ Initié et Developpé par Libriciel-SCOP.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="ic_close_white.png" width="24" height="24"/>
-        <image name="ic_delete_white.png" width="24" height="24"/>
-        <image name="ic_edit_white_24dp.png" width="24" height="24"/>
+        <image name="ic_close_white_24dp" width="24" height="24"/>
+        <image name="ic_delete_white_24dp" width="24" height="24"/>
+        <image name="ic_edit_white_24dp" width="24" height="24"/>
         <image name="ic_visibility_off_white_24dp.png" width="24" height="24"/>
         <image name="ic_visibility_white_24dp.png" width="24" height="24"/>
     </resources>

@@ -94,7 +94,7 @@ import UIKit
                                                        withPaperSign: currentDossier!.isSignPapier)
 
         if (action.isEqual(to: "REJET")) {
-            cell.icon.image = UIImage(named: "ic_close_white")?.withRenderingMode(.alwaysTemplate)
+            cell.icon.image = UIImage(named: "ic_close_white_24dp")?.withRenderingMode(.alwaysTemplate)
         } else {
             cell.icon.image = UIImage(named: "ic_done_white_24dp")?.withRenderingMode(.alwaysTemplate)
         }

@@ -32,20 +32,21 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import UIKit
 
 class SettingsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var backButton: UIBarButtonItem!
-	@IBOutlet var menuTableView: UITableView!
+    @IBOutlet var menuTableView: UITableView!
 
-    let menuElements: [(title:String, elements:[(name:String, segue:String, icon:String, iconHighlight:String)])] = [
-            ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png", "ic_account_white_24dp.png"),
-                         ("Certificats", "certificatesSegue", "ic_certificate_outline_white_24dp.png", "ic_certificate_white_24dp.png")]),
-                         // ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
-            ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png", "ic_information_white_24dp.png"),
-                          ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
+    let menuElements: [(title: String, elements: [(name: String, segue: String, icon: String, iconHighlight: String)])] = [
+        ("Général", [("Comptes", "accountsSegue", "ic_account_outline_white_24dp.png", "ic_account_white_24dp.png"),
+                     ("Certificats", "certificatesSegue", "ic_certificate_outline_white_24dp.png", "ic_certificate_white_24dp.png")]),
+        // ("Filtres", "filtersSegue", "ic_filter_outline_white_24dp.png", "ic_filter_white_24dp.png")]),
+        ("À propos", [("Informations légales", "aboutSegue", "ic_info_outline_white_24dp.png", "ic_information_white_24dp.png"),
+                      ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]
 
     // MARK: - LifeCycle
@@ -53,7 +54,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     override func viewWillAppear(_ animated: Bool) {
 
-		menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
+        menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
                                 animated: false,
                                 scrollPosition: UITableViewScrollPosition.none)
     }
@@ -69,8 +70,8 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-		menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
-	}
+        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
+    }
 
     // MARK: - Listeners
 
@@ -97,7 +98,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     }
 
 
-	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return SettingsTableViewHeaderFooterView.PreferredHeight
     }
 
@@ -109,8 +110,8 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell: SettingsTableViewCell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.CellId,
-		                                                                for: indexPath as IndexPath) as! SettingsTableViewCell
+        let cell: SettingsTableViewCell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.CellId,
+                                                                        for: indexPath as IndexPath) as! SettingsTableViewCell
 
         let element = menuElements[indexPath.section].elements[indexPath.row]
 
@@ -122,7 +123,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     }
 
 
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
 
