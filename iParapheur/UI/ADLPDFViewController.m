@@ -60,6 +60,7 @@
 	[super viewDidLoad];
 	NSLog(@"View loaded : ADLPDFViewController");
 
+    self.definesPresentationContext = true;
 	[self deleteEveryBinFile];
 	self.navigationItem.rightBarButtonItems = @[];
 
