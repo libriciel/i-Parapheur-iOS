@@ -73,11 +73,13 @@ import Foundation
         let cell = tableView.dequeueReusableCell(withIdentifier: "CertificateCell", for: indexPath)
         let certificate = certificateList[indexPath.row]
 
-        if let nameLabel = cell.viewWithTag(101) as? UILabel {
-            nameLabel.text = certificate.commonName
+        if let image = cell.viewWithTag(101) as? UIImageView {
+            // image.image = UIImage(named: "")
         }
 
-        print("Adrien -- \(certificate.commonName)")
+        if let nameLabel = cell.viewWithTag(102) as? UILabel {
+            nameLabel.text = certificate.commonName
+        }
 
         return cell
     }
