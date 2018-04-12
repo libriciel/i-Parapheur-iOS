@@ -164,13 +164,12 @@ import Foundation
             return
         }
 
-        // Delete from local DB
+        // Delete from local DB, and update UI
 
         ModelsDataController.context!.delete(certificateToDelete!)
-
-        // Delete from UITableView
-
+        certificateList = ModelsDataController.fetchCertificates()
         certificatesTableView.deleteRows(at: [indexPath as IndexPath], with: .fade)
+        ModelsDataController.save()
     }
 
     @objc func onCertificateImport() {

@@ -38,13 +38,13 @@
 
 @interface ADLFilterViewController ()
 
-@property (nonatomic, strong) NSArray* typologie;
-@property (nonatomic, strong) NSMutableArray* selectedTypes;
-@property (nonatomic, strong) NSMutableArray* selectedSousTypes;
+@property(nonatomic, strong) NSArray *typologie;
+@property(nonatomic, strong) NSMutableArray *selectedTypes;
+@property(nonatomic, strong) NSMutableArray *selectedSousTypes;
 
-@property (nonatomic, strong) NSDictionary* banettesNames;
-@property (nonatomic, strong) NSArray* banettes;
-@property (nonatomic, strong) NSString* selectedBanette;
+@property(nonatomic, strong) NSDictionary *banettesNames;
+@property(nonatomic, strong) NSArray *banettes;
+@property(nonatomic, strong) NSString *selectedBanette;
 
 @end
 
@@ -144,17 +144,17 @@
 
 
 - (IBAction)handleSave:(id)sender {
-    NSDictionary * filter = @{
-		    @"titre": _titreTextField.text,
-		    @"banette": _selectedBanette,
-		    @"types": _selectedTypes,
-		    @"sousTypes": _selectedSousTypes};
-    
+    NSDictionary *filter = @{
+            @"titre": _titreTextField.text,
+            @"banette": _selectedBanette,
+            @"types": _selectedTypes,
+            @"sousTypes": _selectedSousTypes};
+
     if ([_delegate respondsToSelector:@selector(shouldReload:)]) {
         [_delegate shouldReload:filter];
     }
     [self dismissViewControllerAnimated:YES
-							 completion:nil];
+                             completion:nil];
 }
 
 
@@ -162,7 +162,7 @@
     [_titreTextField setText:@""];
     _selectedBanette = @"a-traiter";
     [_banetteButton setTitle:_banettesNames[_selectedBanette]
-					forState:UIControlStateNormal];
+                    forState:UIControlStateNormal];
     [_selectedSousTypes removeAllObjects];
     [_selectedTypes removeAllObjects];
     [_typesTableView reloadData];
@@ -171,12 +171,12 @@
 
 - (IBAction)handleCancel:(id)sender {
     [self dismissViewControllerAnimated:YES
-							 completion:nil];
+                             completion:nil];
 }
 
 
 - (IBAction)displayBanettePicker:(id)sender {
-    
+
     // Setting banette UIPickerView
     _banettePicker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 216)];
     _banettePicker.backgroundColor = [UIColor clearColor];
@@ -190,18 +190,18 @@
     pickerController.view = _banettePicker;
     // Make it popover
     _pickerPopover = [[UIPopoverController alloc] initWithContentViewController:pickerController];
-    
+
     // The anchor is on the banette button
-    [_pickerPopover presentPopoverFromRect:((UIButton *)sender).frame
-										inView:self.view
-					  permittedArrowDirections:UIPopoverArrowDirectionAny
-									  animated:YES];
-    
+    [_pickerPopover presentPopoverFromRect:((UIButton *) sender).frame
+                                    inView:self.view
+                  permittedArrowDirections:UIPopoverArrowDirectionAny
+                                  animated:YES];
+
     _pickerPopover.delegate = self;
-	
+
     [_banettePicker selectRow:[_banettes indexOfObject:_selectedBanette]
-					  inComponent:0
-						 animated:NO];
+                  inComponent:0
+                     animated:NO];
 
 }
 
@@ -209,23 +209,23 @@
 #pragma mark - UITableViewDelegate protocol implementation
 
 
-- (void)tableView:(UITableView *)tableView
+- (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	
-    ParapheurType* type = _typologie[(NSUInteger) indexPath.section];
-    NSString* sousType = type.subTypes[(NSUInteger) indexPath.row];
-    
+
+    ParapheurType *type = _typologie[(NSUInteger) indexPath.section];
+    NSString *sousType = type.subTypes[(NSUInteger) indexPath.row];
+
     [_selectedTypes addObject:type.name];
     [_selectedSousTypes addObject:sousType];
 }
 
 
-- (void)tableView:(UITableView *)tableView
+- (void)        tableView:(UITableView *)tableView
 didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	ParapheurType* type = _typologie[(NSUInteger) indexPath.section];
-    NSString* sousType = type.subTypes[(NSUInteger) indexPath.row];
-    
+    ParapheurType *type = _typologie[(NSUInteger) indexPath.section];
+    NSString *sousType = type.subTypes[(NSUInteger) indexPath.row];
+
     [_selectedTypes removeObject:type.name];
     [_selectedSousTypes removeObject:sousType];
 
@@ -238,19 +238,19 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
-	ParapheurType * type = _typologie[(NSUInteger) section];
+    ParapheurType *type = _typologie[(NSUInteger) section];
     return type.subTypes.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
-		 cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
     static NSString *CellIdentifier = @"TypeCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 
-	ParapheurType * type = _typologie[(NSUInteger) indexPath.section];
-    NSString * sousType = type.subTypes[(NSUInteger) indexPath.row];
+    ParapheurType *type = _typologie[(NSUInteger) indexPath.section];
+    NSString *sousType = type.subTypes[(NSUInteger) indexPath.row];
     cell.textLabel.text = sousType;
     return cell;
 }
@@ -263,8 +263,8 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section {
-	
-    return ((ParapheurType *)_typologie[(NSUInteger) section]).name;
+
+    return ((ParapheurType *) _typologie[(NSUInteger) section]).name;
 }
 
 
@@ -272,19 +272,19 @@ titleForHeaderInSection:(NSInteger)section {
 
 
 - (void)pickerView:(UIPickerView *)pickerView
-	  didSelectRow:(NSInteger)row
-	   inComponent:(NSInteger)component {
+      didSelectRow:(NSInteger)row
+       inComponent:(NSInteger)component {
 
-	_selectedBanette = _banettes[(NSUInteger) row];
-	[_banetteButton setTitle:_banettesNames[_selectedBanette]
-	                forState:UIControlStateNormal];
+    _selectedBanette = _banettes[(NSUInteger) row];
+    [_banetteButton setTitle:_banettesNames[_selectedBanette]
+                    forState:UIControlStateNormal];
 }
 
 
 - (NSString *)pickerView:(UIPickerView *)pickerView
-			 titleForRow:(NSInteger)row
-			forComponent:(NSInteger)component {
-	
+             titleForRow:(NSInteger)row
+            forComponent:(NSInteger)component {
+
     return _banettesNames[_banettes[(NSUInteger) row]];
 }
 
@@ -299,7 +299,7 @@ titleForHeaderInSection:(NSInteger)section {
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView
 numberOfRowsInComponent:(NSInteger)component {
-	
+
     return _banettes.count;
 }
 
