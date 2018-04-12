@@ -73,16 +73,16 @@ import Foundation
         let cell = tableView.dequeueReusableCell(withIdentifier: "CertificateCell", for: indexPath)
         let certificate = certificateList[indexPath.row]
 
-        if let image = cell.viewWithTag(101) as? UIImageView {
+        if let imageView = cell.contentView.viewWithTag(101) as? UIImageView {
+            imageView.image = imageView.image!.withRenderingMode(.alwaysTemplate)
+
             switch (certificate.sourceType) {
-                case .imprimerieNationale: image.image = UIImage(named: "ic_imprimerie_nationale_white_24dp")?.withRenderingMode(.alwaysTemplate)
-                default: image.image = UIImage(named: "ic_certificate_white_24dp")?.withRenderingMode(.alwaysTemplate)
+                case .imprimerieNationale: imageView.image = UIImage(named: "ic_imprimerie_nationale_white_24dp")?.withRenderingMode(.alwaysTemplate)
+                default: imageView.image = UIImage(named: "ic_certificate_white_24dp")?.withRenderingMode(.alwaysTemplate)
             }
-        } else {
-            print("NOT FOUND !!!!!!?????????? ")
         }
 
-        if let nameLabel = cell.viewWithTag(102) as? UILabel {
+        if let nameLabel = cell.contentView.viewWithTag(102) as? UILabel {
             nameLabel.text = certificate.commonName
         }
 

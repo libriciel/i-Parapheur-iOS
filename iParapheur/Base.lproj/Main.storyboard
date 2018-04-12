@@ -764,12 +764,12 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="CertificateCell" rowHeight="57" id="9ow-14-BA6">
                                         <rect key="frame" x="0.0" y="22" width="728" height="57"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="101" contentMode="center" tableViewCell="9ow-14-BA6" id="jSd-Xw-lZi">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9ow-14-BA6" id="jSd-Xw-lZi">
                                             <rect key="frame" x="0.0" y="0.0" width="728" height="56.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" image="ic_certificate_white_24dp" translatesAutoresizingMaskIntoConstraints="NO" id="Lrj-y6-Au8" userLabel="Icon">
-                                                    <rect key="frame" x="15" y="17" width="24" height="24"/>
+                                                    <rect key="frame" x="23" y="17" width="24" height="24"/>
                                                     <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="24" id="K2C-tQ-n9c"/>
@@ -777,7 +777,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="102" contentMode="left" text="Certificat name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jZ-Rd-07T">
-                                                    <rect key="frame" x="55" y="18" width="658" height="21"/>
+                                                    <rect key="frame" x="63" y="18" width="650" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -788,7 +788,7 @@
                                                 <constraint firstItem="4jZ-Rd-07T" firstAttribute="centerY" secondItem="jSd-Xw-lZi" secondAttribute="centerY" id="8lZ-U6-Sph"/>
                                                 <constraint firstItem="4jZ-Rd-07T" firstAttribute="leading" secondItem="Lrj-y6-Au8" secondAttribute="trailing" constant="16" id="Gm5-UT-6KA"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="4jZ-Rd-07T" secondAttribute="trailing" id="Ncz-uF-5oc"/>
-                                                <constraint firstItem="Lrj-y6-Au8" firstAttribute="leading" secondItem="jSd-Xw-lZi" secondAttribute="leadingMargin" id="qr4-4e-ZdI"/>
+                                                <constraint firstItem="Lrj-y6-Au8" firstAttribute="leading" secondItem="jSd-Xw-lZi" secondAttribute="leadingMargin" constant="8" id="tFn-Es-k1h"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
