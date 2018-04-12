@@ -52,6 +52,30 @@ extension Notification.Name {
                 "\"responseScheme\":\"iparapheur\"," +
                 "\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}" +
                 "}"
+
+        let urlEncodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let url = URL(string: urlEncodedString)!
+
+        UIApplication.shared.open(url, completionHandler: { (result) in
+            if result {
+                print("Result OK")
+            }
+        })
+    }
+
+    @objc class func sign(hash: String,
+                          certificateId: String) {
+
+        let data = hash.data(using: .utf8)
+        let dataHex = CryptoUtils.hex(data: data!)
+
+        let urlString = "inmiddleware://sign/{" +
+                "\"responseScheme\":\"iparapheur\"," +
+                "\"mechanism\":\"rsa\"," +
+                "\"values\":[{\"certificateId\":\"\(certificateId)\"},{\"data\":\"\(dataHex)\"}]," +
+                "\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}" +
+                "}"
+
         let urlEncodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 

@@ -84,7 +84,7 @@
 		@catch (NSException *e) {}
 	}
 
-	_restClient = [ADLRestClient sharedManager];
+	_restClient = ADLRestClient.sharedManager;
 }
 
 
@@ -117,11 +117,6 @@
 	[NSNotificationCenter.defaultCenter addObserver:self
 	                                       selector:@selector(showDocumentWithIndex:)
 	                                           name:DocumentSelectionController.NotifShowDocument
-	                                         object:nil];
-
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(showAction:)
-	                                           name:ActionSelectionController.NotifLaunchAction
 	                                         object:nil];
 
 	//
@@ -162,36 +157,38 @@
                  sender:(id)sender {
 
 	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
+
 		((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
 	} else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
+
 		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;
 		if (_documentsPopover != nil)
 			[_documentsPopover dismissPopoverAnimated:NO];
 
 		_documentsPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-//		_documentsPopover.delegate = self;
-	} else if ([segue.identifier isEqualToString:@"showActionPopover"]) {
+
+	} else if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
+
+	    NSLog(@"Adrien -- ADL PDF VIEW CONTROLLER IN");
 
 		if (_actionPopover != nil)
 			[_actionPopover dismissPopoverAnimated:NO];
 
 		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
 		((ActionSelectionController *) _actionPopover.contentViewController).currentDossier = _dossier;
+		((ActionSelectionController *) _actionPopover.contentViewController).delegate = self;
 
 		if ([_signatureFormat isEqualToString:@"CMS"])
 			((ActionSelectionController *) _actionPopover.contentViewController).signatureEnabled = @1;
 		else if (_visaEnabled)
 			((ActionSelectionController *) _actionPopover.contentViewController).visaEnabled = @1;
-	} else {
-		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiers = @[_dossier];
-		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
+
 	}
 }
 
 
 - (void)dealloc {
-
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 
@@ -368,11 +365,6 @@
 	[self requestSignInfoForDossier:dossier];
 }
 
-- (void)didEndWithUnAuthorizedAccess {
-
-	HIDE_HUD
-}
-
 
 #pragma mark - NotificationCenter selectors
 
@@ -416,25 +408,6 @@
 }
 
 
-- (void)showAction:(NSNotification *)notification {
-
-	NSString *action = [notification object];
-
-	@try {
-		[self performSegueWithIdentifier:action
-		                          sender:self];
-	}
-	@catch (NSException *exception) {
-		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-		                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-		                           delegate:nil
-		                  cancelButtonTitle:@"Fermer"
-		                  otherButtonTitles:nil] show];
-	}
-	@finally {}
-}
-
-
 - (void)showDocumentWithIndex:(NSNotification *)notification {
 
 	NSNumber *docIndex = [notification object];
@@ -464,35 +437,6 @@
 
 	if (_actionPopover != nil)
 		[_actionPopover dismissPopoverAnimated:NO];
-}
-
-
-#pragma mark - Split view
-
-
-- (void)splitViewController:(UISplitViewController *)splitController
-     willHideViewController:(UIViewController *)viewController
-          withBarButtonItem:(UIBarButtonItem *)barButtonItem
-       forPopoverController:(UIPopoverController *)popoverController {
-
-	barButtonItem.title = @"Dossiers";
-	barButtonItem.tintColor = ColorUtils.Aqua;
-
-//	[self.navigationItem setLeftBarButtonItem:barButtonItem
-//									 animated:YES];
-//	self.masterPopoverController = popoverController;
-}
-
-
-- (void)splitViewController:(UISplitViewController *)splitController
-     willShowViewController:(UIViewController *)viewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
-
-	// Called when the view is shown again in the split view, invalidating the button and popover controller.
-//	[self.navigationItem setLeftBarButtonItem:nil
-//									 animated:YES];
-
-//	self.masterPopoverController = nil;
 }
 
 
@@ -528,23 +472,6 @@
 			                        error:&error];
 		}
 	});
-}
-
-
-- (NSString *)getFilePathWithDossierRef:(NSString *)dossierRef {
-
-	// The preferred way to get the apps documents directory
-
-	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *docDirectory = documentsPaths[0];
-
-	// Grab all the files in the documents dir
-
-	NSString *fileName = [NSString stringWithFormat:@"%@.bin",
-	                                                _dossierRef];
-	NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-
-	return filePath;
 }
 
 
@@ -663,7 +590,6 @@
 
 - (void)displayDocumentAt:(NSInteger)index {
 
-	_isDocumentPrincipal = (index == 0);
 	_document = _dossier.documents[(NSUInteger) index];
 
 	// File cache
@@ -706,5 +632,14 @@
 	}
 }
 
+// <editor-fold desc="ActionSelectionControllerDelegate">
+
+- (void)onActionSelectedWithAction:(NSString *)action {
+    NSLog(@"Adrien -- onActionSelectedWithAction");
+    [self performSegueWithIdentifier:WorkflowDialogController.SEGUE
+                              sender:action];
+}
+
+// </editor-fold desc="ActionSelectionControllerDelegate">
 
 @end

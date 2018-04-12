@@ -88,7 +88,7 @@ import Foundation
     }
 
 
-    // MARK: - UITableViewDataSource
+    // <editor-fold desc="TableView">
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
@@ -138,6 +138,8 @@ import Foundation
 
         return cell
     }
+
+    // </editor-fold desc="TableView">
 
 
     // MARK: - Listeners

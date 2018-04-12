@@ -32,15 +32,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 @objc class ActionSelectionCell: UITableViewCell {
-	
-	static let CellId: String! = "ActionSelectionCell"
-	static let PreferredHeight: CGFloat! = 44
-	static let PreferredWidth: CGFloat! = 250
-	
-	@IBOutlet var icon: UIImageView!
-	@IBOutlet var actionLabel: UILabel!
+
+    static let CellId: String! = "ActionSelectionCell"
+    static let PreferredHeight: CGFloat! = 44
+    static let PreferredWidth: CGFloat! = 250
+
+    @IBOutlet var icon: UIImageView!
+    @IBOutlet var actionLabel: UILabel!
 
 }

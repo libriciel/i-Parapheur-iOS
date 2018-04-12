@@ -40,11 +40,11 @@
 #import "ADLRestClient.h"
 
 
-@interface ADLPDFViewController : UIViewController<ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
+@interface ADLPDFViewController : UIViewController
+        <ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate, ActionSelectionControllerDelegate>
 
 @property(nonatomic, strong) ADLRestClient *restClient;
 
-@property(strong, nonatomic) id detailItem;
 @property(strong, nonatomic) Document *document;
 @property(strong, nonatomic) Dossier *dossier;
 @property(strong, nonatomic) NSString *dossierRef;
@@ -63,8 +63,6 @@
 
 @property(strong, nonatomic) NSString *signatureFormat;
 @property(assign, nonatomic) BOOL visaEnabled;
-
-@property(assign, nonatomic) BOOL isDocumentPrincipal;
 
 
 - (void)requestAnnotations;
