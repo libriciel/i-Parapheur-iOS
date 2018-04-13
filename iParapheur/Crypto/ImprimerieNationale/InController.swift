@@ -48,12 +48,20 @@ extension Notification.Name {
 
     class func getTokenData() {
 
-        let urlString = "inmiddleware://getTokenData/{" +
-                "\"responseScheme\":\"iparapheur\"," +
-                "\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}" +
-                "}"
+        let urlString = """
+            inmiddleware://getTokenData/ {
 
-        let urlEncodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                "responseScheme" : "iparapheur",
+                "tokenExpectedData" : {
+                    "middleware" : "all",
+                    "token" : "all",
+                    "certificates" : "all"
+                }
+            }
+        """
+
+        let cleanedString = StringsUtils.trim(string: urlString)
+        let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
         UIApplication.shared.open(url, completionHandler: { (result) in
@@ -68,15 +76,27 @@ extension Notification.Name {
 
         let data = hash.data(using: .utf8)
         let dataHex = CryptoUtils.hex(data: data!)
+        let urlString = """
+            inmiddleware://sign/ {
 
-        let urlString = "inmiddleware://sign/{" +
-                "\"responseScheme\":\"iparapheur\"," +
-                "\"mechanism\":\"rsa\"," +
-                "\"values\":[{\"certificateId\":\"\(certificateId)\"},{\"data\":\"\(dataHex)\"}]," +
-                "\"tokenExpectedData\":{\"middleware\":\"all\",\"token\":\"all\",\"certificates\":\"all\"}" +
-                "}"
+                "responseScheme" : "iparapheur",
+                "mechanism" : "rsa",
+                "values" : [
+                    {
+                        "certificateId" : "E828BD080FA00000050450524F2002030101",
+                        "data" : "5465737431323334"
+                    }
+                ],
+                "tokenExpectedData" : {
+                    "middleware" : "all",
+                    "token" : "all",
+                    "certificates" : "all"
+                }
+            }
+        """
 
-        let urlEncodedString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let cleanedString = StringsUtils.trim(string: urlString)
+        let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
         UIApplication.shared.open(url, completionHandler: { (result) in

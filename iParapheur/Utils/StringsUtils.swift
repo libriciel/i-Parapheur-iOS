@@ -74,6 +74,11 @@ import SwiftMessages
         return dateFormatter.date(from: string)!
     }
 
+    class func trim(string: String) -> String {
+        let tempString = string.replacingOccurrences(of: "\n", with: "")
+        return tempString.replacingOccurrences(of: " ", with: "")
+    }
+
     class func serializeAnnotationDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
