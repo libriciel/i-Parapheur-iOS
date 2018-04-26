@@ -1,5 +1,4 @@
 /*
- * Contributors : SKROBS (2012)
  * Copyright 2012-2017, Libriciel SCOP.
  *
  * contact@libriciel.coop
@@ -49,16 +48,35 @@ import Foundation
 
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
+    var dossierHashesMap: [String:[String]] = [:]
+    @objc var restClient: RestClient?
     @objc var dossiersToSign: [Dossier] = []
     @objc var currentAction: String?
+    @objc var currentBureau: String?
 
 
     // <editor-fold desc="LifeCycle">
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        certificateList.append(contentsOf: ModelsDataController.fetchCertificates())
-        print("Adrien --> Certificates --> \(certificateList)")
+
+        if (currentAction == "SIGNATURE") {
+            for dossierToSign in dossiersToSign {
+
+                restClient?.getSignInfo(dossier: dossiersToSign[0].identifier as NSString,
+                                        bureau: currentBureau! as NSString,
+                                        onResponse: { signInfo in
+                                            self.dossierHashesMap[dossierToSign.identifier] = signInfo.hashesToSign
+                                            self.refreshCertificateListVisibility()
+                                        },
+                                        onError: {
+                                            error in
+                                            ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                               title: "Erreur à la récupération des données à signer")
+                                        }
+                )
+            }
+        }
     }
 
     // </editor-fold desc="LifeCycle">
@@ -90,11 +108,29 @@ import Foundation
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCertificate = certificateList[indexPath.row]
     }
 
     // </editor-fold desc="TableView">
+
+    /**
+        Here, we want to display the certificate list if everything is set
+    */
+    func refreshCertificateListVisibility() {
+
+        var result = true
+        for dossierToSign in dossiersToSign {
+            if (!dossierHashesMap.keys.contains(dossierToSign.identifier)) {
+                result = false
+            }
+        }
+
+        if (result) {
+            certificateList = ModelsDataController.fetchCertificates()
+            certificateTableView.reloadData()
+        }
+    }
 
     // <editor-fold desc="Listeners">
 
@@ -103,7 +139,17 @@ import Foundation
     }
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
-        InController.sign(hash: "test", certificateId: selectedCertificate!.serialNumber!)
+
+        switch (selectedCertificate!.sourceType) {
+
+            case .imprimerieNationale:
+                print("Adrien -- \(dossierHashesMap)")
+                InController.sign(hash: Array(dossierHashesMap.values)[0][0],
+                                  certificateId: selectedCertificate!.serialNumber!)
+
+            default:
+                print("//TODO") //TODO
+        }
     }
 
     // </editor-fold desc="Listeners">

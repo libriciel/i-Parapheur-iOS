@@ -184,6 +184,13 @@
         else if (_visaEnabled)
             ((ActionSelectionController *) _actionPopover.contentViewController).visaEnabled = @1;
 
+    } else if ([segue.identifier isEqualToString:WorkflowDialogController.SEGUE]) {
+        WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
+        controller.currentAction = sender;
+        controller.restClient = _restClient.restClientApi.swiftManager;
+        controller.dossiersToSign = @[_dossier];
+        controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
+                                                                                                                              withString:@""];
     }
 }
 
@@ -636,11 +643,11 @@
 // <editor-fold desc="ActionSelectionControllerDelegate">
 
 - (void)onActionSelectedWithAction:(NSString *)action {
-    NSLog(@"Adrien -- onActionSelectedWithAction");
     [self performSegueWithIdentifier:WorkflowDialogController.SEGUE
                               sender:action];
 }
 
 // </editor-fold desc="ActionSelectionControllerDelegate">
+
 
 @end

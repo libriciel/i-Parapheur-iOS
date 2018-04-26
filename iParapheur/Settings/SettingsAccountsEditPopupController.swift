@@ -55,7 +55,7 @@ import Foundation
 	@IBOutlet var passwordTextView: UITextField!
 
     var currentAccount: Account?
-    var currentRestClient: RestClientApiV3?
+    var currentRestClient: RestClient?
 
 
 	// MARK: - Life cycle
@@ -109,9 +109,9 @@ import Foundation
             currentRestClient!.cancelAllOperations()
         }
 
-        currentRestClient = RestClientApiV3(baseUrl: NSString(string: urlTextView.text!),
-                                            login: NSString(string: loginTextView.text!),
-                                            password: NSString(string: passwordTextView.text!))
+        currentRestClient = RestClient(baseUrl: NSString(string: urlTextView.text!),
+                                       login: NSString(string: loginTextView.text!),
+                                       password: NSString(string: passwordTextView.text!))
 
 		currentRestClient!.getApiVersion(onResponse: {
                                             (result: NSNumber) in

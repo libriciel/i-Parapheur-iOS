@@ -109,9 +109,9 @@
     if (_swiftManager)
         [_swiftManager cancelAllOperations];
 
-    _swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
-                                                       login:login
-                                                    password:password];
+    _swiftManager = [RestClient.alloc initWithBaseUrl:url
+                                                     login:login
+                                                  password:password];
 }
 
 

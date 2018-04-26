@@ -38,7 +38,7 @@
 
 @interface ADLRestClientApi3 : NSObject
 
-@property(nonatomic, strong) RestClientApiV3 *swiftManager;
+@property(nonatomic, strong) RestClient *swiftManager;
 
 
 - (id)init;

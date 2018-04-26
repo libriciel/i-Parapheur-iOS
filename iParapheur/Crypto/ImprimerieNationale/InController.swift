@@ -83,8 +83,8 @@ extension Notification.Name {
                 "mechanism" : "rsa",
                 "values" : [
                     {
-                        "certificateId" : "E828BD080FA00000050450524F2002030101",
-                        "data" : "5465737431323334"
+                        "certificateId" : " \(certificateId) ",
+                        "data" : " \(dataHex) "
                     }
                 ],
                 "tokenExpectedData" : {

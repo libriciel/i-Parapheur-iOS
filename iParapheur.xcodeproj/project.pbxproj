@@ -12,7 +12,7 @@
 		1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1434F670168DFF98000C115D /* KeyStore.xcdatamodeld */; };
 		1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1434F680168E087A000C115D /* ADLCertificateAlertView.m */; };
 		1469DFFA1675F72C0064E8E7 /* ca_mobiles_chaine.der in Resources */ = {isa = PBXBuildFile; fileRef = 1469DFF91675F72C0064E8E7 /* ca_mobiles_chaine.der */; };
-		64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */; };
+		64F34227DFBB4E139A8FFDD6 /* RestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348FF8B3A453ABB77C011 /* RestClient.swift */; };
 		64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F348D17E34A71E2E14D64A /* Bureau.swift */; };
 		64F343754DD86D7E822D4760 /* ParapheurType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F341F438EA838A05990950 /* ParapheurType.swift */; };
 		64F3475A8C8C052791313956 /* AccountSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */; };
@@ -240,7 +240,7 @@
 		64F343C3AC1B23A07FD54747 /* AccountSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSelectionController.swift; sourceTree = "<group>"; };
 		64F344871EECF705F8C071C3 /* ModelsDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelsDataController.swift; path = iParapheur/Models/Storage/ModelsDataController.swift; sourceTree = SOURCE_ROOT; };
 		64F348D17E34A71E2E14D64A /* Bureau.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bureau.swift; sourceTree = "<group>"; };
-		64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestClientApiV3.swift; sourceTree = "<group>"; };
+		64F348FF8B3A453ABB77C011 /* RestClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestClient.swift; sourceTree = "<group>"; };
 		64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CryptoUtils.swift; sourceTree = "<group>"; };
 		64F34B9E3174AC2F54CA6EC1 /* ApiLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiLevel.swift; sourceTree = "<group>"; };
 		65B90403B5F0C32837C3AA55 /* Pods-iParapheur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheur/Pods-iParapheur.debug.xcconfig"; sourceTree = "<group>"; };
@@ -825,7 +825,7 @@
 				C524A6F11B15F4DF003DBED9 /* RestClientApi4 */,
 				C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */,
 				C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */,
-				64F348FF8B3A453ABB77C011 /* RestClientApiV3.swift */,
+				64F348FF8B3A453ABB77C011 /* RestClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1537,7 +1537,7 @@
 				C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */,
 				C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */,
 				C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */,
-				64F34227DFBB4E139A8FFDD6 /* RestClientApiV3.swift in Sources */,
+				64F34227DFBB4E139A8FFDD6 /* RestClient.swift in Sources */,
 				64F3475A8C8C052791313956 /* AccountSelectionController.swift in Sources */,
 				64F343754DD86D7E822D4760 /* ParapheurType.swift in Sources */,
 				64F348D02CB574C17FAAFAFE /* State.swift in Sources */,

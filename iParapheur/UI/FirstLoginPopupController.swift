@@ -48,7 +48,7 @@ import UIKit
     @IBOutlet var spinnerView: UIActivityIndicatorView!
     @IBOutlet var errorLabel: UITextView!
 
-    var restClient: RestClientApiV3?
+    var restClient: RestClient?
     var currentAccount: Account?
 
     // MARK: - LifeCycle
@@ -161,9 +161,9 @@ import UIKit
             restClient!.cancelAllOperations()
         }
 
-        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text)! as NSString,
-                                     login: loginTextField.text! as NSString,
-                                     password: passwordTextField.text! as NSString)
+        restClient = RestClient(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text)! as NSString,
+                                login: loginTextField.text! as NSString,
+                                password: passwordTextField.text! as NSString)
 
         // Test request
 
