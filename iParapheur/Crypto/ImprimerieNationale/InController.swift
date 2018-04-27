@@ -38,6 +38,7 @@ import Foundation
 
 extension Notification.Name {
     static let certificateImport = Notification.Name("CertificateImport")
+    static let signatureResult = Notification.Name("SignatureResult")
 }
 
 
@@ -121,14 +122,20 @@ extension Notification.Name {
         let croppedUrl = String(url.path.dropFirst())
         print("Adrien - croppedUrl :: \(croppedUrl)")
 
-        guard let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!) else {
-            return false
+        let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!)
+        if (tokenData != nil) {
+            importCertificate(token: tokenData!)
+            NotificationCenter.default.post(name: .certificateImport, object: nil)
+            return true
         }
 
-        importCertificate(token: tokenData)
-        NotificationCenter.default.post(name: .certificateImport, object: nil)
+        let signedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
+        if (signedData != nil) {
+            NotificationCenter.default.post(name: .signatureResult, object: nil)
+            return true
+        }
 
-        return true;
+        return false;
     }
 
     class func importCertificate(token: InTokenData) {
@@ -140,18 +147,16 @@ extension Notification.Name {
         newCertificate.caName = token.manufacturerId
         newCertificate.commonName = "\(token.manufacturerId) \(token.serialNumber)"
         newCertificate.serialNumber = token.serialNumber
-        // newCertificate.publicKey = token.certificates[0]
         newCertificate.identifier = UUID().uuidString
 
         // Payload
 
         var payload: [String: [String]] = [:]
         payload[PAYLOAD_CERT_ID_LIST] = Array(token.certificates.keys)
-        print("Adrien -- payload \(payload)")
 
         let jsonEncoder = JSONEncoder()
         let jsonData = try? jsonEncoder.encode(payload)
-        newCertificate.payload = jsonData as! NSData
+        newCertificate.payload = jsonData! as NSData
 
         //
 

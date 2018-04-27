@@ -37,9 +37,9 @@ import XCTest
 @testable import iParapheur
 
 
-class Crypto_ImprimerieNationale_InTokenData: XCTestCase {
+class Crypto_ImprimerieNationale_InTokenData_Tests: XCTestCase {
 
-
+    
     func testDecodeFull() {
 
         let jsonString = """

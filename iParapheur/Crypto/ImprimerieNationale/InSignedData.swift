@@ -33,11 +33,29 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-#import "RGAppDelegate.h"
+import Foundation
 
-int main(int argc, char *argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass(RGAppDelegate.class));
+
+class InSignedData: Decodable {
+    
+    let signedData:String
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case result
     }
+    
+    enum ResultKeys: String, CodingKey {
+        case signedData
+    }
+    
+    
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let resultContainer = try values.nestedContainer(keyedBy: ResultKeys.self, forKey: .result)
+
+        signedData = try resultContainer.decodeIfPresent(String.self, forKey: .signedData) ?? ""
+    }
+    
 }
+

@@ -60,6 +60,10 @@ import Foundation
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        NotificationCenter.default.addObserver(self, selector: #selector(onSignatureResult),
+                                               name: .signatureResult,
+                                               object: nil)
+
         if (currentAction == "SIGNATURE") {
             for dossierToSign in dossiersToSign {
 
@@ -140,16 +144,13 @@ import Foundation
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
 
-        print("Adrien -- \(selectedCertificate!)")
         switch (selectedCertificate!.sourceType) {
 
             case .imprimerieNationale:
 
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: [String]] = try! jsonDecoder.decode([String: [String]].self, from: selectedCertificate!.payload! as Data)
-                print("Adrien -1- \(selectedCertificate!)")
                 let certificateId = payload[InController.PAYLOAD_CERT_ID_LIST]![0]
-                print("Adrien -2- \(certificateId)")
 
                 InController.sign(hash: Array(dossierHashesMap.values)[0][0],
                                   certificateId: certificateId)
@@ -157,6 +158,10 @@ import Foundation
             default:
                 print("//TODO") //TODO
         }
+    }
+
+    @objc func onSignatureResult(dataSigned: String) {
+        print("HEEEEEEEREEEE \(dataSigned)")
     }
 
     // </editor-fold desc="Listeners">
