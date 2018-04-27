@@ -173,8 +173,6 @@
 //                                                        error:&error];
 
     Certificate *certificate = [ModelsDataController fetchCertificates][1];
-    NSLog(@"Adrien HEEEEEEEERRRRRRREEEEEE %@", certificate);
-
     NSString *dataToSign = signInfo.hashesToSign[0];
 
     [InController signWithHash:dataToSign

@@ -78,7 +78,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	for (Certificate *pkey in keys) {
 		NSLog(@"commonName %@", pkey.commonName);
 		NSLog(@"caName %@", pkey.caName);
-		NSLog(@"p12Filename %@", pkey.p12Filename);
+		// NSLog(@"p12Filename %@", pkey.p12Filename);
 		NSString *cert = [NSString.alloc initWithData:pkey.publicKey
 		                                     encoding:NSUTF8StringEncoding];
 		NSLog(@"certData %@", cert);

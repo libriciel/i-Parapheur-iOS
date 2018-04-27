@@ -56,15 +56,15 @@ static NSString *ISO_8601_FORMAT = @"yyyy-MM-dd'T'HH:mm:ssZZZZZ";
     NSArray *keys = [self listPrivateKeys];
 
     for (Certificate *oldKey in keys) {
-        if (oldKey.p12Filename.pathComponents.count != 2) {
-
-            NSString *relativePath = [NSString stringWithFormat:@"%@/%@",
-                                                                [NSBundle mainBundle].bundleIdentifier,
-                                                                oldKey.p12Filename.lastPathComponent];
-            oldKey.p12Filename = relativePath;
-
-            [self.managedObjectContext save:nil];
-        }
+//        if (oldKey.p12Filename.pathComponents.count != 2) { TODO Adrien payload
+//
+//            NSString *relativePath = [NSString stringWithFormat:@"%@/%@",
+//                                                                [NSBundle mainBundle].bundleIdentifier,
+//                                                                oldKey.p12Filename.lastPathComponent];
+//            oldKey.p12Filename = relativePath;
+//
+//            [self.managedObjectContext save:nil];
+//        }
     }
 }
 
@@ -217,7 +217,7 @@ NSData *X509_to_NSData(X509 *cert) {
         NSDateFormatter *formatter = NSDateFormatter.new;
         formatter.dateFormat = ISO_8601_FORMAT;
 
-        newPrivateKey.p12Filename = newPath;
+        // newPrivateKey.p12Filename = newPath; TODO Adrien payload
         newPrivateKey.publicKey = [x509Values[@"publicKey"] dataUsingEncoding:NSUTF8StringEncoding];
         newPrivateKey.serialNumber = x509Values[@"serialNumber"];
         newPrivateKey.notBefore = [formatter dateFromString:x509Values[@"notBefore"]];

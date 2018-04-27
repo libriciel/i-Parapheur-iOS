@@ -228,7 +228,7 @@ import CoreData
             newCertificate.caName = oldPrivateKey.value(forKey: "caName") as? String
             newCertificate.commonName = oldPrivateKey.value(forKey: "commonName") as? String
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
-            newCertificate.p12Filename = oldPrivateKey.value(forKey: "p12Filename") as? String
+            // newCertificate.p12Filename = oldPrivateKey.value(forKey: "p12Filename") as? String TODO : Adrien payload
             newCertificate.publicKey = oldPrivateKey.value(forKey: "publicKey") as? NSData
             newCertificate.serialNumber = oldPrivateKey.value(forKey: "serialNumber") as? String
             newCertificate.sourceType = .p12File

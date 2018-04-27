@@ -41,13 +41,14 @@ extension Certificate {
 
     static let ENTITY_NAME = "Certificate"
 
-    @NSManaged public var identifier: String?
     @NSManaged public var caName: String?
     @NSManaged public var commonName: String?
+    @NSManaged public var identifier: String?
     @NSManaged public var notAfter: NSDate?
     @NSManaged public var notBefore: NSDate?
-    @NSManaged public var p12Filename: String?
     @NSManaged public var publicKey: NSData?
     @NSManaged public var serialNumber: String?
     @NSManaged public var sourceType: CertificateType
+    @NSManaged public var payload: NSData?
+
 }

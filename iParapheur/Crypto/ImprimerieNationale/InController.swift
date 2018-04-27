@@ -43,6 +43,7 @@ extension Notification.Name {
 
 @objc class InController: NSObject {
 
+    static let PAYLOAD_CERT_ID_LIST = "CertificateIdList"
 
     // <editor-fold desc="Middleware">
 
@@ -96,6 +97,7 @@ extension Notification.Name {
         """
 
         let cleanedString = StringsUtils.trim(string: urlString)
+        print("Adrien call string : \(cleanedString)")
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
@@ -140,6 +142,18 @@ extension Notification.Name {
         newCertificate.serialNumber = token.serialNumber
         // newCertificate.publicKey = token.certificates[0]
         newCertificate.identifier = UUID().uuidString
+
+        // Payload
+
+        var payload: [String: [String]] = [:]
+        payload[PAYLOAD_CERT_ID_LIST] = Array(token.certificates.keys)
+        print("Adrien -- payload \(payload)")
+
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try? jsonEncoder.encode(payload)
+        newCertificate.payload = jsonData as! NSData
+
+        //
 
         ModelsDataController.save()
     }

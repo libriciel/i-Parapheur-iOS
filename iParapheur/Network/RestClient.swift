@@ -169,9 +169,6 @@ import Alamofire
 
         manager.download(downloadFileUrl, to: destination).validate().responseData {
             response in
-
-            print("Adrien - url     : \(downloadFileUrl)")
-            print("Adrien - reponse : \(response)")
             let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
             responseCallback!(isAcValid)
         }
@@ -465,9 +462,6 @@ import Alamofire
         // Parameters
 
         let parameters: Parameters = ["bureauCourant": bureau]
-
-        print("Adrien --- --- -- - \(getSignInfoUrl)")
-        print("Adrien --- --- -- - \(parameters)")
 
         // Request
 

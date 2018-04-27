@@ -226,7 +226,7 @@ import CryptoSwift
             throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
         }
 
-        let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename!)
+        // let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename!) TODO Adrien payload
 
         // Building signature response
 
@@ -234,7 +234,7 @@ import CryptoSwift
 
             let hash = signer.generateHashToSign();
             var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
-                                                     keyFilePath: p12AbsolutePath.path,
+                                                     keyFilePath: "", // TODO Adrien payload p12AbsolutePath.path,
                                                      password: password)
 
             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")

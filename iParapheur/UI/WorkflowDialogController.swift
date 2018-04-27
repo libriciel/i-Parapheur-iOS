@@ -140,12 +140,19 @@ import Foundation
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
 
+        print("Adrien -- \(selectedCertificate!)")
         switch (selectedCertificate!.sourceType) {
 
             case .imprimerieNationale:
-                print("Adrien -- \(dossierHashesMap)")
+
+                let jsonDecoder = JSONDecoder()
+                let payload: [String: [String]] = try! jsonDecoder.decode([String: [String]].self, from: selectedCertificate!.payload! as Data)
+                print("Adrien -1- \(selectedCertificate!)")
+                let certificateId = payload[InController.PAYLOAD_CERT_ID_LIST]![0]
+                print("Adrien -2- \(certificateId)")
+
                 InController.sign(hash: Array(dossierHashesMap.values)[0][0],
-                                  certificateId: selectedCertificate!.serialNumber!)
+                                  certificateId: certificateId)
 
             default:
                 print("//TODO") //TODO

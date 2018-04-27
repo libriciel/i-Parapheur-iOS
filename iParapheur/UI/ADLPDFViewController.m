@@ -170,8 +170,6 @@
 
     } else if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
 
-        NSLog(@"Adrien -- ADL PDF VIEW CONTROLLER IN");
-
         if (_actionPopover != nil)
             [_actionPopover dismissPopoverAnimated:NO];
 
