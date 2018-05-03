@@ -217,8 +217,12 @@ NSData *X509_to_NSData(X509 *cert) {
         formatter.dateFormat = ISO_8601_FORMAT;
 
         NSDictionary *payload = @{Certificate.PAYLOAD_P12_FILEPATH: newPath};
-        newPrivateKey.payload = [NSData dataFromBase64String:payload.description];
+        NSError *jsonError = nil;
+        NSData *payloadData = [NSJSONSerialization dataWithJSONObject:payload
+                                                              options:NSJSONWritingPrettyPrinted
+                                                                error:&jsonError];
 
+        newPrivateKey.payload = payloadData;
         newPrivateKey.publicKey = [x509Values[@"publicKey"] dataUsingEncoding:NSUTF8StringEncoding];
         newPrivateKey.serialNumber = x509Values[@"serialNumber"];
         newPrivateKey.notBefore = [formatter dateFromString:x509Values[@"notBefore"]];

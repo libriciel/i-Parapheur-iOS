@@ -168,7 +168,7 @@ import Foundation
                                 bureauId: currentBureau!,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
-                                signature: signedData.signedData.base64EncodedString(),
+                                signature: signedData.signedData, //.base64EncodedString(),
                                 responseCallback: {
                                     number in
                                 },
