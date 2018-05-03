@@ -48,7 +48,7 @@ import Foundation
 
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
-    var dossierHashesMap: [String:[String]] = [:]
+    var dossierHashesMap: [String: [String]] = [:]
     @objc var restClient: RestClient?
     @objc var dossiersToSign: [Dossier] = []
     @objc var currentAction: String?
@@ -60,7 +60,8 @@ import Foundation
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onSignatureResult),
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onSignatureResult),
                                                name: .signatureResult,
                                                object: nil)
 
@@ -150,7 +151,7 @@ import Foundation
 
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: [String]] = try! jsonDecoder.decode([String: [String]].self, from: selectedCertificate!.payload! as Data)
-                let certificateId = payload[InController.PAYLOAD_CERT_ID_LIST]![0]
+                let certificateId = payload[Certificate.PAYLOAD_CERT_ID_LIST]![0]
 
                 InController.sign(hash: Array(dossierHashesMap.values)[0][0],
                                   certificateId: certificateId)
@@ -160,8 +161,22 @@ import Foundation
         }
     }
 
-    @objc func onSignatureResult(dataSigned: String) {
-        print("HEEEEEEEREEEE \(dataSigned)")
+    @objc func onSignatureResult(notification: Notification) {
+        let signedData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
+
+        restClient?.signDossier(dossierId: dossiersToSign[0].identifier,
+                                bureauId: currentBureau!,
+                                publicAnnotation: publicAnnotationTextView.text,
+                                privateAnnotation: privateAnnotationTextView.text,
+                                signature: signedData.signedData.base64EncodedString(),
+                                responseCallback: {
+                                    number in
+                                },
+                                errorCallback:                     {
+                                    error in
+                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                       title: "Erreur à l'envoi de la signature")
+                                })
     }
 
     // </editor-fold desc="Listeners">

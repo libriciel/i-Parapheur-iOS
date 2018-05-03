@@ -186,11 +186,10 @@ NSData *X509_to_NSData(X509 *cert) {
     NSFetchRequest *request = NSFetchRequest.new;
     request.entity = entityDescription;
 
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:
-                                                  @"commonName=%@ AND caName=%@ AND serialNumber=%@",
-                                                  x509Values[@"commonName"],
-                                                  x509Values[@"issuerName"],
-                                                  x509Values[@"serialNumber"]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"commonName=%@ AND caName=%@ AND serialNumber=%@",
+                                                              x509Values[@"commonName"],
+                                                              x509Values[@"issuerName"],
+                                                              x509Values[@"serialNumber"]];
 
     request.predicate = predicate;
 
@@ -212,12 +211,14 @@ NSData *X509_to_NSData(X509 *cert) {
         // generate an entry for the new Key
 
         Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
-                                                                  inManagedObjectContext:self.managedObjectContext];
+                                                                   inManagedObjectContext:ModelsDataController.context];
 
         NSDateFormatter *formatter = NSDateFormatter.new;
         formatter.dateFormat = ISO_8601_FORMAT;
 
-        // newPrivateKey.p12Filename = newPath; TODO Adrien payload
+        NSDictionary *payload = @{Certificate.PAYLOAD_P12_FILEPATH: newPath};
+        newPrivateKey.payload = [NSData dataFromBase64String:payload.description];
+
         newPrivateKey.publicKey = [x509Values[@"publicKey"] dataUsingEncoding:NSUTF8StringEncoding];
         newPrivateKey.serialNumber = x509Values[@"serialNumber"];
         newPrivateKey.notBefore = [formatter dateFromString:x509Values[@"notBefore"]];

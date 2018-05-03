@@ -500,6 +500,37 @@ import Alamofire
     }
 
 
+    @objc func signDossier(dossierId: String,
+                           bureauId: String,
+                           publicAnnotation: String?,
+                           privateAnnotation: String?,
+                           signature: String,
+                           responseCallback: ((NSNumber) -> Void)?,
+                           errorCallback: ((NSError) -> Void)?) {
+
+
+        var argumentDictionary: [String:String] = [:]
+        argumentDictionary["bureauCourant"] = bureauId
+        argumentDictionary["annotPriv"] = privateAnnotation
+        argumentDictionary["annotPub"] = publicAnnotation
+        argumentDictionary["signature"] = signature
+
+        // Send request
+
+        self.sendSimpleAction(type: 1,
+                              url: "/parapheur/dossiers/\(dossierId)/signature" as NSString,
+                              args: argumentDictionary as NSDictionary,
+                              onResponse: {
+                                  id in
+                                  responseCallback!(1);
+                              },
+                              onError: {
+                                  error in
+                                  errorCallback!(error as NSError);
+                              })
+    }
+
+
     @objc func sendSimpleAction(type: NSNumber,
                                 url: NSString,
                                 args: NSDictionary,

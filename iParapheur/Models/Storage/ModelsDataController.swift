@@ -45,7 +45,7 @@ import CoreData
 
 
     @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
-    static var context: NSManagedObjectContext? = nil
+    @objc static var context: NSManagedObjectContext? = nil
 
 
     // <editor-fold desc="Utils">
@@ -228,7 +228,13 @@ import CoreData
             newCertificate.caName = oldPrivateKey.value(forKey: "caName") as? String
             newCertificate.commonName = oldPrivateKey.value(forKey: "commonName") as? String
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
-            // newCertificate.p12Filename = oldPrivateKey.value(forKey: "p12Filename") as? String TODO : Adrien payload
+
+            var payload: [String: String] = [:]
+            payload[Certificate.PAYLOAD_P12_FILEPATH] = oldPrivateKey.value(forKey: "p12Filename") as? String
+            let jsonEncoder = JSONEncoder()
+            let payloadData = try? jsonEncoder.encode(payload)
+
+            newCertificate.payload = payloadData! as NSData
             newCertificate.publicKey = oldPrivateKey.value(forKey: "publicKey") as? NSData
             newCertificate.serialNumber = oldPrivateKey.value(forKey: "serialNumber") as? String
             newCertificate.sourceType = .p12File

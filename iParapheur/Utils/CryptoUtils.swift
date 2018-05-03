@@ -201,18 +201,18 @@ import CryptoSwift
         for hashIndex in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
 
-            case "CMS",
-                 "PADES":
-                signers.append(CmsSigner(signInfo: signInfo,
-                                         privateKey: privateKey))
+                case "CMS",
+                     "PADES":
+                    signers.append(CmsSigner(signInfo: signInfo,
+                                             privateKey: privateKey))
 
-            case "XADES-env":
-                signers.append(XadesEnvSigner(signInfo: signInfo,
-                                              hashIndex: hashIndex,
-                                              privateKey: privateKey))
+                case "XADES-env":
+                    signers.append(XadesEnvSigner(signInfo: signInfo,
+                                                  hashIndex: hashIndex,
+                                                  privateKey: privateKey))
 
-            default:
-                throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
+                default:
+                    throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
             }
         }
 
@@ -226,7 +226,9 @@ import CryptoSwift
             throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
         }
 
-        // let p12AbsolutePath = pathURL.appendingPathComponent(privateKey.p12Filename!) TODO Adrien payload
+        let jsonDecoder = JSONDecoder()
+        let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: privateKey.payload! as Data)
+        let p12AbsolutePath = pathURL.appendingPathComponent(payload[Certificate.PAYLOAD_P12_FILEPATH]!)
 
         // Building signature response
 
@@ -234,7 +236,7 @@ import CryptoSwift
 
             let hash = signer.generateHashToSign();
             var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
-                                                     keyFilePath: "", // TODO Adrien payload p12AbsolutePath.path,
+                                                     keyFilePath: p12AbsolutePath.absoluteString,
                                                      password: password)
 
             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
@@ -257,7 +259,7 @@ import CryptoSwift
         }
 
         guard let result = CryptoUtils.rsaSign(data: data,
-                                         privateKey: secKey) else {
+                                               privateKey: secKey) else {
             throw NSError(domain: "Erreur inconnue", code: 0, userInfo: nil)
         }
 
@@ -352,21 +354,21 @@ import CryptoSwift
             let c = String(hex[..<indexTo])
             let indexFrom = hex.index(hex.startIndex, offsetBy: 2)
             hex = String(hex[indexFrom...])
-            
+
             var ch: UInt32 = 0
             Scanner(string: c).scanHexInt32(&ch)
             var char = UInt8(ch)
             data.append(&char, count: 1)
         }
-        
+
         return data
     }
 
 
     class func hex(data: Data) -> String {
         return String(data.reduce(into: "".unicodeScalars, { (result, value) in
-            result.append(HEX_ALPHABET[Int(value/16)])
-            result.append(HEX_ALPHABET[Int(value%16)])
+            result.append(HEX_ALPHABET[Int(value / 16)])
+            result.append(HEX_ALPHABET[Int(value % 16)])
         }))
     }
 

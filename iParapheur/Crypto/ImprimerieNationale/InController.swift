@@ -37,14 +37,17 @@ import Foundation
 
 
 extension Notification.Name {
+
     static let certificateImport = Notification.Name("CertificateImport")
+
     static let signatureResult = Notification.Name("SignatureResult")
+
 }
 
 
 @objc class InController: NSObject {
 
-    static let PAYLOAD_CERT_ID_LIST = "CertificateIdList"
+    static let NOTIF_USERINFO_SIGNEDDATA = "signedData"
 
     // <editor-fold desc="Middleware">
 
@@ -131,7 +134,7 @@ extension Notification.Name {
 
         let signedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
         if (signedData != nil) {
-            NotificationCenter.default.post(name: .signatureResult, object: nil)
+            NotificationCenter.default.post(name: .signatureResult, object: nil, userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData])
             return true
         }
 
@@ -152,10 +155,10 @@ extension Notification.Name {
         // Payload
 
         var payload: [String: [String]] = [:]
-        payload[PAYLOAD_CERT_ID_LIST] = Array(token.certificates.keys)
-
+        payload[Certificate.PAYLOAD_CERT_ID_LIST] = Array(token.certificates.keys)
         let jsonEncoder = JSONEncoder()
         let jsonData = try? jsonEncoder.encode(payload)
+
         newCertificate.payload = jsonData! as NSData
 
         //

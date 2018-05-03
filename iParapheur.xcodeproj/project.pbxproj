@@ -1041,11 +1041,11 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
-				7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */,
 				7A817121207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift */,
 				7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift */,
 				7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */,
 				7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */,
+				7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */,
 				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */,
 				7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */,
 				7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */,

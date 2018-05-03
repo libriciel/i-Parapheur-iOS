@@ -37,25 +37,28 @@ import Foundation
 
 
 class InSignedData: Decodable {
-    
-    let signedData:String
-    
-    
+
+    let signedData: String
+
+
     enum CodingKeys: String, CodingKey {
         case result
     }
-    
+
     enum ResultKeys: String, CodingKey {
         case signedData
     }
-    
-    
+
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let resultContainer = try values.nestedContainer(keyedBy: ResultKeys.self, forKey: .result)
 
+//        let signedDataHex = try resultContainer.decodeIfPresent(String.self, forKey: .signedData) ?? ""
+//        signedData = CryptoUtils.data(hex: signedDataHex)
+
         signedData = try resultContainer.decodeIfPresent(String.self, forKey: .signedData) ?? ""
     }
-    
+
 }
 

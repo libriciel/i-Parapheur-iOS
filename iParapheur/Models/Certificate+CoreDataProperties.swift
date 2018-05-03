@@ -39,7 +39,11 @@ import CoreData
 
 extension Certificate {
 
-    static let ENTITY_NAME = "Certificate"
+    @objc static let ENTITY_NAME = "Certificate"
+
+    static let PAYLOAD_CERT_ID_LIST = "CertificateIdList"
+    @objc static let PAYLOAD_P12_FILEPATH = "CertificateP12Filepath"
+
 
     @NSManaged public var caName: String?
     @NSManaged public var commonName: String?
