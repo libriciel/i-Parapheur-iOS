@@ -160,9 +160,9 @@ import Foundation
 
             default:
 
-                let jsonDecoder = JSONDecoder()
-                let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
-                let certificatePath = payload[Certificate.PAYLOAD_P12_FILEPATH]
+//                let jsonDecoder = JSONDecoder()
+//                let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
+//                let certificateName = payload[Certificate.PAYLOAD_P12_FILENAME]
 
                 // Display password popup
 
@@ -180,6 +180,7 @@ import Foundation
                                 signature: signedData.signedData,
                                 responseCallback: {
                                     number in
+                                    print("Adrien -- Signature sent !!!")
                                 },
                                 errorCallback: {
                                     error in
@@ -194,11 +195,11 @@ import Foundation
 
         // Prepare Popup
 
-        let alertView =  UIAlertView(title: "Entrer le mot de passe du certificat",
-                                     message: "",
-                                     delegate: self,
-                                     cancelButtonTitle: "Annuler",
-                                     otherButtonTitles: "OK")
+        let alertView = UIAlertView(title: "Entrer le mot de passe du certificat",
+                                    message: "",
+                                    delegate: self,
+                                    cancelButtonTitle: "Annuler",
+                                    otherButtonTitles: "OK")
 
         alertView.alertViewStyle = .plainTextInput
         alertView.textField(at: 0)!.isSecureTextEntry = true
@@ -208,12 +209,51 @@ import Foundation
 
     func signWithP12(password: String) {
 
-        print("Adrien pass:\(password))")
+        // Compute signature(s)
 
-        let test = try? CryptoUtils.sign(signInfo: Array(self.dossierSignInfoMap.values)[0],
-                                         dossierId: Array(self.dossierSignInfoMap.keys)[0],
-                                         privateKey: self.selectedCertificate!,
-                                         password: password)
+        do {
+            let signatureResult = try CryptoUtils.sign(signInfo: Array(self.dossierSignInfoMap.values)[0],
+                                                       dossierId: Array(self.dossierSignInfoMap.keys)[0],
+                                                       privateKey: self.selectedCertificate!,
+                                                       password: password)
+
+            print("Adrien ->>-->>- \(signatureResult)")
+
+        } catch {
+            ViewUtils.logError(message: error.localizedDescription as NSString,
+                               title: "Erreur à la signature")
+            return
+        }
+
+
+//    // Sending back result
+//
+//
+//    __weak typeof(self) weakSelf = self;
+//    [_restClient actionSignerForDossier:dossierId
+//                              forBureau:_bureauCourant
+//                   withPublicAnnotation:_annotationPublique.text
+//                  withPrivateAnnotation:_annotationPrivee.text
+//                          withSignature:signatureResult
+//                                success:^(NSArray *array) {
+//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+//                                    if (strongSelf) {
+//                                        NSLog(@"Signature success");
+//                                        [strongSelf dismissDialogView];
+//                                    }
+//                                }
+//                                failure:^(NSError *restError) {
+//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+//                                    if (strongSelf) {
+//                                        NSLog(@"Signature fail");
+//                                        [[UIAlertView.alloc initWithTitle:@"Erreur"
+//                                                                  message:@"Une erreur est survenue lors de l'envoi de la requête"
+//                                                                 delegate:nil
+//                                                        cancelButtonTitle:@"Fermer"
+//                                                        otherButtonTitles:nil] show];
+//                                    }
+//                                }];
+
     }
 
     // <editor-fold desc="UIAlertViewDelegate">
@@ -222,11 +262,12 @@ import Foundation
 
         if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_PASSWORD) {
             if (buttonIndex == 1) {
-                let givenPassword =  alertView.textField(at: 0)!.text!
+                let givenPassword = alertView.textField(at: 0)!.text!
                 self.signWithP12(password: givenPassword)
             }
         }
     }
+
     // </editor-fold desc="UIAlertViewDelegate">
 
 }

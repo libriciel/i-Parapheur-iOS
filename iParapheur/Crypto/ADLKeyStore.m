@@ -216,7 +216,8 @@ NSData *X509_to_NSData(X509 *cert) {
         NSDateFormatter *formatter = NSDateFormatter.new;
         formatter.dateFormat = ISO_8601_FORMAT;
 
-        NSDictionary *payload = @{Certificate.PAYLOAD_P12_FILEPATH: newPath};
+        NSString *p12FileName = [NSString stringWithFormat:@"coop.adullact-projet.iparapheur/%@", newPath.lastPathComponent];
+        NSDictionary *payload = @{Certificate.PAYLOAD_P12_FILENAME: p12FileName};
         NSError *jsonError = nil;
         NSData *payloadData = [NSJSONSerialization dataWithJSONObject:payload
                                                               options:NSJSONWritingPrettyPrinted

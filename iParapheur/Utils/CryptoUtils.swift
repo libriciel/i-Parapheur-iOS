@@ -49,7 +49,9 @@ import CryptoSwift
     static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
     static private let PKCS7_BEGIN = "-----PKCS7 BEGIN-----"
     static private let PKCS7_END = "-----PKCS7 BEGIN-----"
-    static private let HEX_ALPHABET = "0123456789abcdef".unicodeScalars.map { $0 }
+    static private let HEX_ALPHABET = "0123456789abcdef".unicodeScalars.map {
+        $0
+    }
 
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
 
@@ -202,7 +204,8 @@ import CryptoSwift
             switch signInfo.format {
 
                 case "CMS",
-                     "PADES":
+                     "PADES",
+                     "PADES-basic":
                     signers.append(CmsSigner(signInfo: signInfo,
                                              privateKey: privateKey))
 
@@ -228,7 +231,8 @@ import CryptoSwift
 
         let jsonDecoder = JSONDecoder()
         let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: privateKey.payload! as Data)
-        let p12AbsolutePath = pathURL.appendingPathComponent(payload[Certificate.PAYLOAD_P12_FILEPATH]!)
+        let p12Name = payload[Certificate.PAYLOAD_P12_FILENAME]!
+        let p12FinalUrl = pathURL.appendingPathComponent(p12Name)
 
         // Building signature response
 
@@ -236,7 +240,7 @@ import CryptoSwift
 
             let hash = signer.generateHashToSign();
             var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
-                                                     keyFilePath: p12AbsolutePath.absoluteString,
+                                                     keyFileUrl: p12FinalUrl,
                                                      password: password)
 
             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
@@ -250,10 +254,10 @@ import CryptoSwift
 
 
     @objc class func rsaSign(data: NSData,
-                             keyFilePath: String,
+                             keyFileUrl: URL,
                              password: String?) throws -> String {
 
-        guard let secKey = CryptoUtils.pkcs12ReadKey(path: keyFilePath,
+        guard let secKey = CryptoUtils.pkcs12ReadKey(path: keyFileUrl,
                                                      password: password) else {
             throw NSError(domain: "Mot de passe invalide ?", code: 0, userInfo: nil)
         }
@@ -290,15 +294,15 @@ import CryptoSwift
     }
 
 
-    class func pkcs12ReadKey(path keyFilePath: String,
+    class func pkcs12ReadKey(path keyFileUrl: URL,
                              password: String?) -> SecKey? {
 
         var p12KeyFileContent: CFData?
         do {
-            p12KeyFileContent = try Data(contentsOf: URL(fileURLWithPath: keyFilePath),
+            p12KeyFileContent = try Data(contentsOf: keyFileUrl,
                                          options: .alwaysMapped) as CFData
         } catch {
-            NSLog("Cannot read PKCS12 file from \(keyFilePath)")
+            NSLog("Cannot read PKCS12 file from \(keyFileUrl.lastPathComponent)")
             return nil
         }
 

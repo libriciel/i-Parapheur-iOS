@@ -230,7 +230,7 @@ import CoreData
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
 
             var payload: [String: String] = [:]
-            payload[Certificate.PAYLOAD_P12_FILEPATH] = oldPrivateKey.value(forKey: "p12Filename") as? String
+            payload[Certificate.PAYLOAD_P12_FILENAME] = oldPrivateKey.value(forKey: "p12Filename") as? String
             let jsonEncoder = JSONEncoder()
             let payloadData = try? jsonEncoder.encode(payload)
 
