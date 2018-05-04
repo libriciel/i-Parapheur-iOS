@@ -55,7 +55,6 @@ import Foundation
 
     // <editor-fold desc="Signer">
 
-
     override func generateHashToSign() -> String {
         return mSignInfo.hashesToSign[0]
     }
@@ -64,7 +63,6 @@ import Foundation
     override func buildDataToReturn(signedHash: String) -> String {
         return signedHash
     }
-
 
     // </editor-fold desc="Signer">
 

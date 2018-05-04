@@ -505,11 +505,11 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 			           withPassword:passwordTextField.text];
 		}
 		else {
-			ADLCertificateAlertView *realert = [[ADLCertificateAlertView alloc] initWithTitle:@"Voulez-vous supprimer ce certificat ?"
-			                                                                          message:pwdAlertView.p12Path.lastPathComponent
-			                                                                         delegate:self
-			                                                                cancelButtonTitle:@"Annuler"
-			                                                                otherButtonTitles:@"Confirmer", nil];
+			ADLCertificateAlertView *realert = [ADLCertificateAlertView.alloc initWithTitle:@"Voulez-vous supprimer ce certificat ?"
+                                                                                    message:pwdAlertView.p12Path.lastPathComponent
+                                                                                   delegate:self
+                                                                          cancelButtonTitle:@"Annuler"
+                                                                          otherButtonTitles:@"Confirmer", nil];
 
 			realert.tag = RGAPPDELEGATE_POPUP_TAG_CERTIFICATE_DELETE;
 			realert.p12Path = pwdAlertView.p12Path;

@@ -48,7 +48,7 @@ import Foundation
 
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
-    var dossierHashesMap: [String: [String]] = [:]
+    var dossierSignInfoMap: [String: SignInfo] = [:]
     @objc var restClient: RestClient?
     @objc var dossiersToSign: [Dossier] = []
     @objc var currentAction: String?
@@ -71,7 +71,7 @@ import Foundation
                 restClient?.getSignInfo(dossier: dossiersToSign[0].identifier as NSString,
                                         bureau: currentBureau! as NSString,
                                         onResponse: { signInfo in
-                                            self.dossierHashesMap[dossierToSign.identifier] = signInfo.hashesToSign
+                                            self.dossierSignInfoMap[dossierToSign.identifier] = signInfo
                                             self.refreshCertificateListVisibility()
                                         },
                                         onError: {
@@ -126,7 +126,7 @@ import Foundation
 
         var result = true
         for dossierToSign in dossiersToSign {
-            if (!dossierHashesMap.keys.contains(dossierToSign.identifier)) {
+            if (!dossierSignInfoMap.keys.contains(dossierToSign.identifier)) {
                 result = false
             }
         }
@@ -153,11 +153,20 @@ import Foundation
                 let payload: [String: [String]] = try! jsonDecoder.decode([String: [String]].self, from: selectedCertificate!.payload! as Data)
                 let certificateId = payload[Certificate.PAYLOAD_CERT_ID_LIST]![0]
 
-                InController.sign(hash: Array(dossierHashesMap.values)[0][0],
+                InController.sign(hash: Array(dossierSignInfoMap.values)[0].hashesToSign[0],
                                   certificateId: certificateId)
 
             default:
-                print("//TODO") //TODO
+
+                let jsonDecoder = JSONDecoder()
+                let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
+                let certificatePath = payload[Certificate.PAYLOAD_P12_FILEPATH]
+
+                CryptoUtils.sign(signInfo: Array(dossierSignInfoMap.values)[0],
+                                 dossierId: Array(dossierSignInfoMap.keys)[0],
+                                 privateKey: selectedCertificate,
+                                 password: selectedCertificate.password)
+
         }
     }
 
@@ -168,11 +177,11 @@ import Foundation
                                 bureauId: currentBureau!,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
-                                signature: signedData.signedData, //.base64EncodedString(),
+                                signature: signedData.signedData,
                                 responseCallback: {
                                     number in
                                 },
-                                errorCallback:                     {
+                                errorCallback: {
                                     error in
                                     ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
                                                        title: "Erreur à l'envoi de la signature")

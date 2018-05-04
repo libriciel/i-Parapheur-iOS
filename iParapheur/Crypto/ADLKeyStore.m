@@ -210,7 +210,7 @@ NSData *X509_to_NSData(X509 *cert) {
 
         // generate an entry for the new Key
 
-        Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:@"PrivateKey"
+        Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:Certificate.ENTITY_NAME
                                                                    inManagedObjectContext:ModelsDataController.context];
 
         NSDateFormatter *formatter = NSDateFormatter.new;
@@ -230,12 +230,10 @@ NSData *X509_to_NSData(X509 *cert) {
         newPrivateKey.commonName = x509Values[@"commonName"];
         newPrivateKey.caName = x509Values[@"issuerName"];
 
-        error = nil;
-        if (![self.managedObjectContext save:error]) {
-            // Something's gone seriously wrong
-            NSLog(@"Error saving new PrivateKey: %@", (*error).localizedDescription);
-        }
+        [ModelsDataController save];
+
     } else {
+
         NSLog(@"Object already in KeyStore %@", [array[0] commonName]);
         *error = [NSError errorWithDomain:P12ErrorDomain
                                      code:P12AlreadyImported

@@ -357,8 +357,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)   alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    NSLog(@"Adrien clickedButtonAtIndexclickedButtonAtIndexclickedButtonAtIndexclickedButtonAtIndex");
-
     if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE) {
         if (buttonIndex == 1) {
             UITextField *passwordTextField = [alertView textFieldAtIndex:0];
