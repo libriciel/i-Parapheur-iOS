@@ -36,9 +36,11 @@
 import Foundation
 
 
-@objc class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+@objc class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
 
     @objc static let SEGUE = "WorkflowDialogController"
+    static let ALERTVIEW_TAG_PASSWORD = 1
+    static let ALERTVIEW_TAG_PAPER_SIGNATURE = 2
 
     @IBOutlet var certificateTableView: UITableView!
     @IBOutlet var certificateSelectionLabel: UILabel!
@@ -162,11 +164,9 @@ import Foundation
                 let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
                 let certificatePath = payload[Certificate.PAYLOAD_P12_FILEPATH]
 
-                CryptoUtils.sign(signInfo: Array(dossierSignInfoMap.values)[0],
-                                 dossierId: Array(dossierSignInfoMap.keys)[0],
-                                 privateKey: selectedCertificate,
-                                 password: selectedCertificate.password)
+                // Display password popup
 
+                self.displayPasswordAlert()
         }
     }
 
@@ -189,5 +189,44 @@ import Foundation
     }
 
     // </editor-fold desc="Listeners">
+
+    func displayPasswordAlert() {
+
+        // Prepare Popup
+
+        let alertView =  UIAlertView(title: "Entrer le mot de passe du certificat",
+                                     message: "",
+                                     delegate: self,
+                                     cancelButtonTitle: "Annuler",
+                                     otherButtonTitles: "OK")
+
+        alertView.alertViewStyle = .plainTextInput
+        alertView.textField(at: 0)!.isSecureTextEntry = true
+        alertView.tag = WorkflowDialogController.ALERTVIEW_TAG_PASSWORD
+        alertView.show()
+    }
+
+    func signWithP12(password: String) {
+
+        print("Adrien pass:\(password))")
+
+        let test = try? CryptoUtils.sign(signInfo: Array(self.dossierSignInfoMap.values)[0],
+                                         dossierId: Array(self.dossierSignInfoMap.keys)[0],
+                                         privateKey: self.selectedCertificate!,
+                                         password: password)
+    }
+
+    // <editor-fold desc="UIAlertViewDelegate">
+
+    func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
+
+        if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_PASSWORD) {
+            if (buttonIndex == 1) {
+                let givenPassword =  alertView.textField(at: 0)!.text!
+                self.signWithP12(password: givenPassword)
+            }
+        }
+    }
+    // </editor-fold desc="UIAlertViewDelegate">
 
 }
