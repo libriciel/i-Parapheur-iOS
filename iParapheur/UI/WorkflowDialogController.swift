@@ -160,33 +160,14 @@ import Foundation
 
             default:
 
-//                let jsonDecoder = JSONDecoder()
-//                let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
-//                let certificateName = payload[Certificate.PAYLOAD_P12_FILENAME]
-
-                // Display password popup
-
+                // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
                 self.displayPasswordAlert()
         }
     }
 
     @objc func onSignatureResult(notification: Notification) {
         let signedData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
-
-        restClient?.signDossier(dossierId: dossiersToSign[0].identifier,
-                                bureauId: currentBureau!,
-                                publicAnnotation: publicAnnotationTextView.text,
-                                privateAnnotation: privateAnnotationTextView.text,
-                                signature: signedData.signedData,
-                                responseCallback: {
-                                    number in
-                                    print("Adrien -- Signature sent !!!")
-                                },
-                                errorCallback: {
-                                    error in
-                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-                                                       title: "Erreur à l'envoi de la signature")
-                                })
+        self.sendResult(signature: signedData.signedData)
     }
 
     // </editor-fold desc="Listeners">
@@ -217,43 +198,34 @@ import Foundation
                                                        privateKey: self.selectedCertificate!,
                                                        password: password)
 
-            print("Adrien ->>-->>- \(signatureResult)")
+            sendResult(signature: signatureResult)
 
         } catch {
             ViewUtils.logError(message: error.localizedDescription as NSString,
                                title: "Erreur à la signature")
             return
         }
+    }
 
+    func sendResult(signature: String) {
 
-//    // Sending back result
-//
-//
-//    __weak typeof(self) weakSelf = self;
-//    [_restClient actionSignerForDossier:dossierId
-//                              forBureau:_bureauCourant
-//                   withPublicAnnotation:_annotationPublique.text
-//                  withPrivateAnnotation:_annotationPrivee.text
-//                          withSignature:signatureResult
-//                                success:^(NSArray *array) {
-//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-//                                    if (strongSelf) {
-//                                        NSLog(@"Signature success");
-//                                        [strongSelf dismissDialogView];
-//                                    }
-//                                }
-//                                failure:^(NSError *restError) {
-//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-//                                    if (strongSelf) {
-//                                        NSLog(@"Signature fail");
-//                                        [[UIAlertView.alloc initWithTitle:@"Erreur"
-//                                                                  message:@"Une erreur est survenue lors de l'envoi de la requête"
-//                                                                 delegate:nil
-//                                                        cancelButtonTitle:@"Fermer"
-//                                                        otherButtonTitles:nil] show];
-//                                    }
-//                                }];
+        print("Adrien -- Sending back signature : \(signature)")
 
+//        restClient?.signDossier(dossierId: dossiersToSign[0].identifier,
+//                                bureauId: currentBureau!,
+//                                publicAnnotation: publicAnnotationTextView.text,
+//                                privateAnnotation: privateAnnotationTextView.text,
+//                                signature: signature,
+//                                responseCallback: {
+//                                    number in
+//                                    print("Adrien -- Signature sent !!!")
+//                                    // self.dismiss(animated: true)
+//                                },
+//                                errorCallback: {
+//                                    error in
+//                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+//                                                       title: "Erreur à l'envoi de la signature")
+//                                })
     }
 
     // <editor-fold desc="UIAlertViewDelegate">
@@ -263,7 +235,7 @@ import Foundation
         if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_PASSWORD) {
             if (buttonIndex == 1) {
                 let givenPassword = alertView.textField(at: 0)!.text!
-                self.signWithP12(password: givenPassword)
+                signWithP12(password: givenPassword)
             }
         }
     }

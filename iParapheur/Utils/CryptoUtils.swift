@@ -206,6 +206,7 @@ import CryptoSwift
                 case "CMS",
                      "PADES",
                      "PADES-basic":
+
                     signers.append(CmsSigner(signInfo: signInfo,
                                              privateKey: privateKey))
 
@@ -251,7 +252,6 @@ import CryptoSwift
         let finalSignature = signatures.joined(separator: ",")
         return finalSignature
     }
-
 
     @objc class func rsaSign(data: NSData,
                              keyFileUrl: URL,
