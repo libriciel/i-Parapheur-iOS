@@ -39,7 +39,7 @@ import Foundation
 @objc class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
 
     @objc static let SEGUE = "WorkflowDialogController"
-    static let ALERTVIEW_TAG_PASSWORD = 1
+    static let ALERTVIEW_TAG_P12_PASSWORD = 1
     static let ALERTVIEW_TAG_PAPER_SIGNATURE = 2
 
     @IBOutlet var certificateTableView: UITableView!
@@ -50,9 +50,8 @@ import Foundation
 
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
-    var dossierSignInfoMap: [String: SignInfo] = [:]
+    var signInfoMap: [String: SignInfo?] = [:]
     @objc var restClient: RestClient?
-    @objc var dossiersToSign: [Dossier] = []
     @objc var currentAction: String?
     @objc var currentBureau: String?
 
@@ -68,12 +67,13 @@ import Foundation
                                                object: nil)
 
         if (currentAction == "SIGNATURE") {
-            for dossierToSign in dossiersToSign {
+            for dossierId in signInfoMap.keys {
 
-                restClient?.getSignInfo(dossier: dossiersToSign[0].identifier as NSString,
+                restClient?.getSignInfo(dossier: dossierId as NSString,
                                         bureau: currentBureau! as NSString,
-                                        onResponse: { signInfo in
-                                            self.dossierSignInfoMap[dossierToSign.identifier] = signInfo
+                                        onResponse: {
+                                            signInfo in
+                                            self.signInfoMap[dossierId] = signInfo
                                             self.refreshCertificateListVisibility()
                                         },
                                         onError: {
@@ -126,14 +126,9 @@ import Foundation
     */
     func refreshCertificateListVisibility() {
 
-        var result = true
-        for dossierToSign in dossiersToSign {
-            if (!dossierSignInfoMap.keys.contains(dossierToSign.identifier)) {
-                result = false
-            }
-        }
-
-        if (result) {
+        if (!signInfoMap.values.contains {
+            $0 == nil
+        }) {
             certificateList = ModelsDataController.fetchCertificates()
             certificateTableView.reloadData()
         }
@@ -155,7 +150,7 @@ import Foundation
                 let payload: [String: [String]] = try! jsonDecoder.decode([String: [String]].self, from: selectedCertificate!.payload! as Data)
                 let certificateId = payload[Certificate.PAYLOAD_CERT_ID_LIST]![0]
 
-                InController.sign(hash: Array(dossierSignInfoMap.values)[0].hashesToSign[0],
+                InController.sign(hash: Array(signInfoMap.values)[0]!.hashesToSign[0],
                                   certificateId: certificateId)
 
             default:
@@ -167,12 +162,19 @@ import Foundation
 
     @objc func onSignatureResult(notification: Notification) {
         let signedData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
-        self.sendResult(signature: signedData.signedData)
+        self.sendResult(dossierId: "TODO", // TODO : send an array to IN, and map the results to retrieve dossierId-s
+                        signature: signedData.signedData)
     }
 
     // </editor-fold desc="Listeners">
 
-    func displayPasswordAlert() {
+    @objc func setDossiersToSign(objcArray: NSArray) {
+        for dossierId in objcArray as! [String] {
+            signInfoMap[dossierId] = nil as SignInfo?
+        }
+    }
+
+    private func displayPasswordAlert() {
 
         // Prepare Popup
 
@@ -184,34 +186,39 @@ import Foundation
 
         alertView.alertViewStyle = .plainTextInput
         alertView.textField(at: 0)!.isSecureTextEntry = true
-        alertView.tag = WorkflowDialogController.ALERTVIEW_TAG_PASSWORD
+        alertView.tag = WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD
         alertView.show()
     }
 
-    func signWithP12(password: String) {
-
-        // Compute signature(s)
+    private func generateSignerWrappers() -> [String: [Signer]] {
 
         do {
-            let signatureResult = try CryptoUtils.sign(signInfo: Array(self.dossierSignInfoMap.values)[0],
-                                                       dossierId: Array(self.dossierSignInfoMap.keys)[0],
-                                                       privateKey: self.selectedCertificate!,
-                                                       password: password)
+            // Compute signature(s) hash(es)
 
-            sendResult(signature: signatureResult)
+            var signersMap: [String: [Signer]] = [:]
+
+            for (dossierId, signInfo) in signInfoMap {
+                let signers = try CryptoUtils.generateSignerWrappers(signInfo: signInfo!,
+                                                                     dossierId: dossierId,
+                                                                     certificate: self.selectedCertificate!)
+                signersMap[dossierId] = signers
+            }
+
+            return signersMap
 
         } catch {
             ViewUtils.logError(message: error.localizedDescription as NSString,
                                title: "Erreur à la signature")
-            return
+            return [:]
         }
     }
 
-    func sendResult(signature: String) {
+    private func sendResult(dossierId: String,
+                            signature: String) {
 
         print("Adrien -- Sending back signature : \(signature)")
 
-//        restClient?.signDossier(dossierId: dossiersToSign[0].identifier,
+//        restClient?.signDossier(dossierId: dossierId,
 //                                bureauId: currentBureau!,
 //                                publicAnnotation: publicAnnotationTextView.text,
 //                                privateAnnotation: privateAnnotationTextView.text,
@@ -232,10 +239,19 @@ import Foundation
 
     func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 
-        if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_PASSWORD) {
+        if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD) {
             if (buttonIndex == 1) {
+
                 let givenPassword = alertView.textField(at: 0)!.text!
-                signWithP12(password: givenPassword)
+                let signaturesTodo = generateSignerWrappers()
+
+                for (dossierId, signers) in signaturesTodo {
+                    let signatureResult = try? CryptoUtils.signWithP12(signers: signers,
+                                                                       certificate: selectedCertificate!,
+                                                                       password: givenPassword)
+                    sendResult(dossierId: dossierId,
+                               signature: signatureResult!)
+                }
             }
         }
     }

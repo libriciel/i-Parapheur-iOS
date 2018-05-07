@@ -68,7 +68,7 @@ import UIKit
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == WorkflowDialogController.SEGUE {
             if let destinationWorkflowDialogController = segue.destination as? WorkflowDialogController {
-                destinationWorkflowDialogController.dossiersToSign = [currentDossier!]
+                destinationWorkflowDialogController.setDossiersToSign(objcArray: [currentDossier!] as NSArray)
                 destinationWorkflowDialogController.currentAction = pendingAction
             }
         }

@@ -49,8 +49,9 @@ import AEXML
 
     let mSignInfo: SignInfo
     let mIndex: Int
-    let mPrivateKey: Certificate
     let mPublicKey: String
+    let mCaName: String
+    let mSerialNumber: String
 
     var mSignedInfoNode: AEXMLElement?
     var mSignatureValueNode: AEXMLElement?
@@ -61,14 +62,15 @@ import AEXML
 
     @objc init(signInfo: SignInfo,
                hashIndex: Int,
-               privateKey: Certificate) {
+               publicKey: String,
+               caName: String,
+               serialNumber: String) {
 
         mSignInfo = signInfo
-        mPrivateKey = privateKey
         mIndex = hashIndex
-
-        let pollutedPublicKey = String(data: mPrivateKey.publicKey! as Data, encoding: String.Encoding.utf8)
-        mPublicKey = CryptoUtils.cleanupPublicKey(publicKey: pollutedPublicKey!)
+        mPublicKey = publicKey
+        mCaName = caName
+        mSerialNumber = serialNumber
     }
 
 
@@ -198,8 +200,8 @@ import AEXML
         currentCertDigest.addChild(name: "xad:DigestValue", value: publicKeyHashBase64)
 
         let currentIssuerSerial = curretCert.addChild(name: "xad:IssuerSerial")
-        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mPrivateKey.caName!))
-        currentIssuerSerial.addChild(name: "ds:X509SerialNumber", value: mPrivateKey.serialNumber)
+        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mCaName))
+        currentIssuerSerial.addChild(name: "ds:X509SerialNumber", value: mSerialNumber)
 
         let currentSignaturePolicyIdentifier = currentSignedSignatureProperties.addChild(name: "xad:SignaturePolicyIdentifier")
         let currentSignaturePolicyId = currentSignaturePolicyIdentifier.addChild(name: "xad:SignaturePolicyId")

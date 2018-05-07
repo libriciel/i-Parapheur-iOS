@@ -186,7 +186,7 @@
         WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
         controller.currentAction = sender;
         controller.restClient = _restClient.restClientApi.swiftManager;
-        controller.dossiersToSign = @[_dossier];
+        [controller setDossiersToSignWithObjcArray: @[_dossier.identifier]];
         controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
                                                                                                                               withString:@""];
     }

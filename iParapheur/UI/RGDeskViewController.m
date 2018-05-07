@@ -113,7 +113,7 @@
         NSMutableArray *selectedArray = NSMutableArray.new;
 
         for (Dossier *dossier in _selectedDossiersArray)
-            [selectedArray addObject:dossier];
+            [selectedArray addObject:dossier.identifier];
 
         // Paper signature is just a Visa, actually
 
@@ -126,7 +126,7 @@
         // Launch popup
 
         WorkflowDialogController *workflowDialogController = segue.destinationViewController;
-        workflowDialogController.dossiersToSign = selectedArray;
+        [workflowDialogController setDossiersToSignWithObjcArray:selectedArray];
         workflowDialogController.currentAction = (NSString *) sender;
         // workflowDialogController.isPaperSign = isPaperSign; //FIXME
     }

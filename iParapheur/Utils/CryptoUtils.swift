@@ -191,34 +191,11 @@ import CryptoSwift
         return result
     }
 
+    class func signWithP12(signers: [Signer],
+                           certificate: Certificate,
+                           password: String) throws -> String {
 
-    @objc class func sign(signInfo: SignInfo,
-                          dossierId: String,
-                          privateKey: Certificate,
-                          password: String) throws -> String {
-
-        var signers: [Signer] = []
         var signatures: [String] = []
-
-        for hashIndex in 0..<signInfo.hashesToSign.count {
-            switch signInfo.format {
-
-                case "CMS",
-                     "PADES",
-                     "PADES-basic":
-
-                    signers.append(CmsSigner(signInfo: signInfo,
-                                             privateKey: privateKey))
-
-                case "XADES-env":
-                    signers.append(XadesEnvSigner(signInfo: signInfo,
-                                                  hashIndex: hashIndex,
-                                                  privateKey: privateKey))
-
-                default:
-                    throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
-            }
-        }
 
         // Retrieving signature certificate
 
@@ -231,7 +208,7 @@ import CryptoSwift
         }
 
         let jsonDecoder = JSONDecoder()
-        let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: privateKey.payload! as Data)
+        let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: certificate.payload! as Data)
         let p12Name = payload[Certificate.PAYLOAD_P12_FILENAME]!
         let p12FinalUrl = pathURL.appendingPathComponent(p12Name)
 
@@ -251,6 +228,37 @@ import CryptoSwift
 
         let finalSignature = signatures.joined(separator: ",")
         return finalSignature
+    }
+
+    class func generateSignerWrappers(signInfo: SignInfo,
+                                      dossierId: String,
+                                      certificate: Certificate) throws -> [Signer] {
+
+        var signers: [Signer] = []
+
+        for hashIndex in 0..<signInfo.hashesToSign.count {
+            switch signInfo.format {
+
+                case "CMS",
+                     "PADES",
+                     "PADES-basic":
+
+                    signers.append(CmsSigner(signInfo: signInfo,
+                                             privateKey: certificate))
+
+                case "XADES-env":
+                    signers.append(XadesEnvSigner(signInfo: signInfo,
+                                                  hashIndex: hashIndex,
+                                                  publicKey: certificate.publicKey!.base64EncodedString(),
+                                                  caName: certificate.caName!,
+                                                  serialNumber: certificate.serialNumber!))
+
+                default:
+                    throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
+            }
+        }
+
+        return signers
     }
 
     @objc class func rsaSign(data: NSData,
