@@ -52,7 +52,6 @@ import Foundation
     var selectedCertificate: Certificate?
     var signInfoMap: [String: SignInfo?] = [:]
     var signaturesToDo: [String: [Signer]] = [:]
-    // var signaturesDone: [Signer: String] = [:]
     @objc var restClient: RestClient?
     @objc var currentAction: String?
     @objc var currentBureau: String?
@@ -149,8 +148,9 @@ import Foundation
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
+                let signer: Signer = Array(signaturesToDo.values)[0][0]
 
-                InController.sign(hashes: Array(signInfoMap.values)[0]!.hashesToSign, certificateId: certificateId)
+                InController.sign(hashes: [signer.generateHashToSign()], certificateId: certificateId)
 
             default:
 
@@ -164,11 +164,14 @@ import Foundation
 
 
     @objc func onImprimerieNationaleSignatureResult(notification: Notification) {
-        let signedData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
-        let signatureString = CryptoUtils.data(hex: signedData.signedData).base64EncodedString()
 
-        self.sendResult(dossierId: "TODO", // TODO : send an array to IN, and map the results to retrieve dossierId-s
-                        signature: signatureString)
+        let signedHashData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
+        let signedHashString = CryptoUtils.data(hex: signedHashData.signedData).base64EncodedString()
+
+        let signer: Signer = Array(signaturesToDo.values)[0][0]
+        let finalSignatureString = signer.buildDataToReturn(signedHash: signedHashString);
+
+        self.sendResult(dossierId: Array(signaturesToDo.keys)[0], signature: finalSignatureString)
     }
 
 

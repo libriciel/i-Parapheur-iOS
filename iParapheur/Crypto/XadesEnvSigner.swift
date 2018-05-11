@@ -280,7 +280,6 @@ import AEXML
                                                               forceSignPropertiesXmlns: false,
                                                               forceSignedInfoXmlns: false)
         let finalXmlData = canonicalizedXml.data(using: .utf8)
-        print("Adrien - finalXmlB64 = \(finalXmlData!.base64EncodedString())")
         return finalXmlData!.base64EncodedString()
     }
 

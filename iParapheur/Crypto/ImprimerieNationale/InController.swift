@@ -116,13 +116,13 @@ extension Notification.Name {
 
     @objc class func parseIntent(url: URL) -> Bool {
 
-        print("Adrien -- Intent ::: \(url)")
         if (url.scheme != "iparapheur") {
             return false
         }
 
         let jsonDecoder = JSONDecoder()
         let croppedUrl = String(url.path.dropFirst())
+        print("Adrien -- Intent ::: \(croppedUrl)")
 
         let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!)
         if (tokenData != nil) {
