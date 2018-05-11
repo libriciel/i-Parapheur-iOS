@@ -175,8 +175,8 @@
     Certificate *certificate = [ModelsDataController fetchCertificates][1];
     NSString *dataToSign = signInfo.hashesToSign[0];
 
-    [InController signWithHash:dataToSign
-                 certificateId:certificate.serialNumber];
+    [InController signWithHashes:@[dataToSign]
+                   certificateId:certificate.serialNumber];
 
 //    if (error != nil) {
 //        [ViewUtils logErrorWithMessage:error.domain

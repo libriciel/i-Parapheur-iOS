@@ -64,7 +64,7 @@ import Foundation
         dateFormatter.locale = NSLocale.current;
 
         NotificationCenter.default.addObserver(self, selector: #selector(onCertificateImport),
-                                               name: .certificateImport,
+                                               name: .imprimerieNationaleCertificateImport,
                                                object: nil)
     }
 

@@ -41,7 +41,7 @@ extension Certificate {
 
     @objc static let ENTITY_NAME = "Certificate"
 
-    static let PAYLOAD_CERT_ID_LIST = "CertificateIdList"
+    static let PAYLOAD_EXTERNAL_CERTIFICATE_ID = "ExternalCertificateId"
     @objc static let PAYLOAD_P12_FILENAME = "CertificateP12FileName"
 
 

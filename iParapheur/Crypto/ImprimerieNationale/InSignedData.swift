@@ -54,9 +54,6 @@ class InSignedData: Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let resultContainer = try values.nestedContainer(keyedBy: ResultKeys.self, forKey: .result)
 
-//        let signedDataHex = try resultContainer.decodeIfPresent(String.self, forKey: .signedData) ?? ""
-//        signedData = CryptoUtils.data(hex: signedDataHex)
-
         signedData = try resultContainer.decodeIfPresent(String.self, forKey: .signedData) ?? ""
     }
 

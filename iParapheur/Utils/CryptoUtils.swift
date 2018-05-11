@@ -191,6 +191,7 @@ import CryptoSwift
         return result
     }
 
+
     class func signWithP12(signers: [Signer],
                            certificate: Certificate,
                            password: String) throws -> String {
@@ -247,6 +248,7 @@ import CryptoSwift
                                              privateKey: certificate))
 
                 case "XADES-env":
+
                     signers.append(XadesEnvSigner(signInfo: signInfo,
                                                   hashIndex: hashIndex,
                                                   publicKey: certificate.publicKey!.base64EncodedString(),

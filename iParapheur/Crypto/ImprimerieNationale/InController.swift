@@ -38,9 +38,8 @@ import Foundation
 
 extension Notification.Name {
 
-    static let certificateImport = Notification.Name("CertificateImport")
-
-    static let signatureResult = Notification.Name("SignatureResult")
+    static let imprimerieNationaleCertificateImport = Notification.Name("ImprimerieNationaleCertificateImport")
+    static let imprimerieNationaleSignatureResult = Notification.Name("ImprimerieNationaleSignatureResult")
 
 }
 
@@ -49,7 +48,6 @@ extension Notification.Name {
 
     static let NOTIF_USERINFO_SIGNEDDATA = "signedData"
 
-    // <editor-fold desc="Middleware">
 
     class func getTokenData() {
 
@@ -76,32 +74,35 @@ extension Notification.Name {
         })
     }
 
-    @objc class func sign(hash: String,
-                          certificateId: String) {
 
-        let data = hash.data(using: .utf8)
-        let dataHex = CryptoUtils.hex(data: data!)
+    @objc class func sign(hashes: [String], certificateId: String) {
+
+        var hashesJsonList: [String] = []
+        for hash in hashes {
+
+            let data = hash.data(using: .utf8)
+            let dataHex = CryptoUtils.hex(data: data!)
+
+            hashesJsonList.append("""
+                {
+                    "certificateId" : " \(certificateId) ",
+                    "data" : " \(dataHex) "
+                }
+            """)
+        }
+
         let urlString = """
             inmiddleware://sign/ {
 
                 "responseScheme" : "iparapheur",
                 "mechanism" : "rsa",
                 "values" : [
-                    {
-                        "certificateId" : " \(certificateId) ",
-                        "data" : " \(dataHex) "
-                    }
-                ],
-                "tokenExpectedData" : {
-                    "middleware" : "all",
-                    "token" : "all",
-                    "certificates" : "all"
-                }
+                    \(hashesJsonList.joined(separator: ","))
+                ]
             }
         """
 
         let cleanedString = StringsUtils.trim(string: urlString)
-        print("Adrien call string : \(cleanedString)")
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
@@ -112,54 +113,58 @@ extension Notification.Name {
         })
     }
 
-    // </editor-fold desc="Middleware">
-
 
     @objc class func parseIntent(url: URL) -> Bool {
 
+        print("Adrien -- Intent ::: \(url)")
         if (url.scheme != "iparapheur") {
             return false
         }
 
         let jsonDecoder = JSONDecoder()
         let croppedUrl = String(url.path.dropFirst())
-        print("Adrien - croppedUrl :: \(croppedUrl)")
 
         let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!)
         if (tokenData != nil) {
             importCertificate(token: tokenData!)
-            NotificationCenter.default.post(name: .certificateImport, object: nil)
+            NotificationCenter.default.post(name: .imprimerieNationaleCertificateImport, object: nil)
             return true
         }
 
         let signedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
         if (signedData != nil) {
-            NotificationCenter.default.post(name: .signatureResult, object: nil, userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData])
+            NotificationCenter.default.post(name: .imprimerieNationaleSignatureResult, object: nil, userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData])
             return true
         }
 
         return false;
     }
 
+
     class func importCertificate(token: InTokenData) {
 
-        let context = ModelsDataController.context!
-        let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: context) as! Certificate
+        for (externalId, publicKey) in token.certificates {
 
-        newCertificate.sourceType = .imprimerieNationale
-        newCertificate.caName = token.manufacturerId
-        newCertificate.commonName = "\(token.manufacturerId) \(token.serialNumber)"
-        newCertificate.serialNumber = token.serialNumber
-        newCertificate.identifier = UUID().uuidString
+            let context = ModelsDataController.context!
+            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: context) as! Certificate
 
-        // Payload
+            newCertificate.sourceType = .imprimerieNationale
+            newCertificate.caName = token.manufacturerId
+            newCertificate.commonName = "\(token.manufacturerId) \(token.serialNumber)"
+            newCertificate.serialNumber = token.serialNumber
+            newCertificate.identifier = UUID().uuidString
+            newCertificate.publicKey = publicKey as NSData
 
-        var payload: [String: [String]] = [:]
-        payload[Certificate.PAYLOAD_CERT_ID_LIST] = Array(token.certificates.keys)
-        let jsonEncoder = JSONEncoder()
-        let jsonData = try? jsonEncoder.encode(payload)
+            // Payload
 
-        newCertificate.payload = jsonData! as NSData
+            var payload: [String: String] = [:]
+            payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID] = externalId
+
+            let jsonEncoder = JSONEncoder()
+            let jsonData = try? jsonEncoder.encode(payload)
+
+            newCertificate.payload = jsonData! as NSData
+        }
 
         //
 

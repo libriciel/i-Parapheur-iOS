@@ -51,6 +51,8 @@ import Foundation
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
     var signInfoMap: [String: SignInfo?] = [:]
+    var signaturesToDo: [String: [Signer]] = [:]
+    // var signaturesDone: [Signer: String] = [:]
     @objc var restClient: RestClient?
     @objc var currentAction: String?
     @objc var currentBureau: String?
@@ -58,12 +60,13 @@ import Foundation
 
     // <editor-fold desc="LifeCycle">
 
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(onSignatureResult),
-                                               name: .signatureResult,
+                                               selector: #selector(onImprimerieNationaleSignatureResult),
+                                               name: .imprimerieNationaleSignatureResult,
                                                object: nil)
 
         if (currentAction == "SIGNATURE") {
@@ -86,13 +89,17 @@ import Foundation
         }
     }
 
+
     // </editor-fold desc="LifeCycle">
 
+
     // <editor-fold desc="TableView">
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return certificateList.count
     }
+
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -115,16 +122,66 @@ import Foundation
         return cell
     }
 
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCertificate = certificateList[indexPath.row]
     }
 
+
     // </editor-fold desc="TableView">
+
+
+    // <editor-fold desc="UI Listeners">
+
+
+    @IBAction func onCancelButtonClicked(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+
+
+    @IBAction func onValidateButtonClicked(_ sender: Any) {
+
+        signaturesToDo = generateSignerWrappers()
+        switch (selectedCertificate!.sourceType) {
+
+            case .imprimerieNationale:
+
+                let jsonDecoder = JSONDecoder()
+                let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
+                let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
+
+                InController.sign(hashes: Array(signInfoMap.values)[0]!.hashesToSign, certificateId: certificateId)
+
+            default:
+
+                // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
+                self.displayPasswordAlert()
+        }
+    }
+
+
+    // </editor-fold desc="UI Listeners">
+
+
+    @objc func onImprimerieNationaleSignatureResult(notification: Notification) {
+        let signedData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
+        let signatureString = CryptoUtils.data(hex: signedData.signedData).base64EncodedString()
+
+        self.sendResult(dossierId: "TODO", // TODO : send an array to IN, and map the results to retrieve dossierId-s
+                        signature: signatureString)
+    }
+
+
+    @objc func setDossiersToSign(objcArray: NSArray) {
+        for dossierId in objcArray as! [String] {
+            signInfoMap[dossierId] = nil as SignInfo?
+        }
+    }
 
     /**
         Here, we want to display the certificate list if everything is set
     */
-    func refreshCertificateListVisibility() {
+    private func refreshCertificateListVisibility() {
 
         if (!signInfoMap.values.contains {
             $0 == nil
@@ -134,46 +191,11 @@ import Foundation
         }
     }
 
-    // <editor-fold desc="Listeners">
-
-    @IBAction func onCancelButtonClicked(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
-
-    @IBAction func onValidateButtonClicked(_ sender: Any) {
-
-        switch (selectedCertificate!.sourceType) {
-
-            case .imprimerieNationale:
-
-                let jsonDecoder = JSONDecoder()
-                let payload: [String: [String]] = try! jsonDecoder.decode([String: [String]].self, from: selectedCertificate!.payload! as Data)
-                let certificateId = payload[Certificate.PAYLOAD_CERT_ID_LIST]![0]
-
-                InController.sign(hash: Array(signInfoMap.values)[0]!.hashesToSign[0],
-                                  certificateId: certificateId)
-
-            default:
-
-                // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
-                self.displayPasswordAlert()
-        }
-    }
-
-    @objc func onSignatureResult(notification: Notification) {
-        let signedData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
-        self.sendResult(dossierId: "TODO", // TODO : send an array to IN, and map the results to retrieve dossierId-s
-                        signature: signedData.signedData)
-    }
-
-    // </editor-fold desc="Listeners">
-
-    @objc func setDossiersToSign(objcArray: NSArray) {
-        for dossierId in objcArray as! [String] {
-            signInfoMap[dossierId] = nil as SignInfo?
-        }
-    }
-
+    /**
+        Yes, UIAlertView are deprecated, but UIAlertController can't be overlapped.
+        Since we already are in a popup, we can't show another one to prompt the password.
+        This has to stay an UIAlertView, until iOS has a proper replacement.
+    */
     private func displayPasswordAlert() {
 
         // Prepare Popup
@@ -189,6 +211,7 @@ import Foundation
         alertView.tag = WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD
         alertView.show()
     }
+
 
     private func generateSignerWrappers() -> [String: [Signer]] {
 
@@ -213,8 +236,8 @@ import Foundation
         }
     }
 
-    private func sendResult(dossierId: String,
-                            signature: String) {
+
+    private func sendResult(dossierId: String, signature: String) {
 
         print("Adrien -- Sending back signature : \(signature)")
 
@@ -235,7 +258,9 @@ import Foundation
 //                                })
     }
 
+
     // <editor-fold desc="UIAlertViewDelegate">
+
 
     func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 
@@ -243,9 +268,8 @@ import Foundation
             if (buttonIndex == 1) {
 
                 let givenPassword = alertView.textField(at: 0)!.text!
-                let signaturesTodo = generateSignerWrappers()
 
-                for (dossierId, signers) in signaturesTodo {
+                for (dossierId, signers) in signaturesToDo {
                     let signatureResult = try? CryptoUtils.signWithP12(signers: signers,
                                                                        certificate: selectedCertificate!,
                                                                        password: givenPassword)
@@ -255,6 +279,7 @@ import Foundation
             }
         }
     }
+
 
     // </editor-fold desc="UIAlertViewDelegate">
 
