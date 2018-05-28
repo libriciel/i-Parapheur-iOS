@@ -276,6 +276,7 @@ import AEXML
         // Return value
 
         let finalXml = rootDocument.xmlCompact
+        print("Adrien -- final XML == \(finalXml)")
         let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: finalXml,
                                                               forceSignPropertiesXmlns: false,
                                                               forceSignedInfoXmlns: false)

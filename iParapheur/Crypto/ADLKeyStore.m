@@ -37,6 +37,7 @@
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
 #import "iParapheur-Swift.h"
+#import "NSData+Base64.h"
 
 
 @implementation ADLKeyStore

@@ -243,20 +243,20 @@ import Foundation
     private func sendResult(dossierId: String, signature: String) {
 
         print("Adrien -- Sending back signature : \(signature)")
-//        restClient?.signDossier(dossierId: dossierId,
-//                                bureauId: currentBureau!,
-//                                publicAnnotation: publicAnnotationTextView.text,
-//                                privateAnnotation: privateAnnotationTextView.text,
-//                                signature: signature,
-//                                responseCallback: {
-//                                    number in
-//                                     self.dismiss(animated: true)
-//                                },
-//                                errorCallback: {
-//                                    error in
-//                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-//                                                       title: "Erreur à l'envoi de la signature")
-//                                })
+        restClient?.signDossier(dossierId: dossierId,
+                                bureauId: currentBureau!,
+                                publicAnnotation: publicAnnotationTextView.text,
+                                privateAnnotation: privateAnnotationTextView.text,
+                                signature: signature,
+                                responseCallback: {
+                                    number in
+                                     self.dismiss(animated: true)
+                                },
+                                errorCallback: {
+                                    error in
+                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                       title: "Erreur à l'envoi de la signature")
+                                })
     }
 
 
