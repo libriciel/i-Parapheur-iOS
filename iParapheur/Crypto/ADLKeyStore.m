@@ -223,8 +223,11 @@ NSData *X509_to_NSData(X509 *cert) {
                                                               options:NSJSONWritingPrettyPrinted
                                                                 error:&jsonError];
 
+        NSString *publicKeyB64 = [CryptoUtils cleanupPublicKeyWithPublicKey:x509Values[@"publicKey"]];
+        NSData *publicKeyData = [NSData dataFromBase64String:publicKeyB64];
+
         newPrivateKey.payload = payloadData;
-        newPrivateKey.publicKey = [x509Values[@"publicKey"] dataUsingEncoding:NSUTF8StringEncoding];
+        newPrivateKey.publicKey = publicKeyData;
         newPrivateKey.serialNumber = x509Values[@"serialNumber"];
         newPrivateKey.notBefore = [formatter dateFromString:x509Values[@"notBefore"]];
         newPrivateKey.notAfter = [formatter dateFromString:x509Values[@"notAfter"]];

@@ -243,7 +243,6 @@ import Foundation
     private func sendResult(dossierId: String, signature: String) {
 
         print("Adrien -- Sending back signature : \(signature)")
-
 //        restClient?.signDossier(dossierId: dossierId,
 //                                bureauId: currentBureau!,
 //                                publicAnnotation: publicAnnotationTextView.text,
@@ -251,8 +250,7 @@ import Foundation
 //                                signature: signature,
 //                                responseCallback: {
 //                                    number in
-//                                    print("Adrien -- Signature sent !!!")
-//                                    // self.dismiss(animated: true)
+//                                     self.dismiss(animated: true)
 //                                },
 //                                errorCallback: {
 //                                    error in

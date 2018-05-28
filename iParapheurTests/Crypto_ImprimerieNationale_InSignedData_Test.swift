@@ -75,12 +75,15 @@ class Crypto_ImprimerieNationale_InSignedData_Tests: XCTestCase {
         let jsonData = jsonString.data(using:.utf8)!
         
         let jsonDecoder = JSONDecoder()
-        let signedData = try! jsonDecoder.decode(InSignedData.self, from:jsonData)
+        let inSignedData = try! jsonDecoder.decode(InSignedData.self, from:jsonData)
         
         // Checks
         
-        XCTAssertNotNil(signedData)
-        XCTAssertEqual(signedData.signedData.base64EncodedString(), "kzNL1nK9uy1m6TfKI0fzXyX4uVjiG0urxXLkNS8uODbWQlE9yaXzdooEtElst6DI0WXY8yObBnHLB3za7JLykFEibMp01JTwJ2Ng3HGeOOXRDY1rYBqN9J2FaAmab3M3xA6V4LJztxmrlHUab8vpwLqbbn6VVjWh6gibjOwJnlX58VF+YULowopyLlWxo/Pha5euqQDWVWQQ1+WyHa/4I8Po8nKW6N1+IjgLD1SEj99TZbawxjc32+NXiP/6QQKm/QPdnvyMzY9Ls+qZipxse9Lx3um8sgiezqXg1Wod6Fgq0lrXebM8bEcp6YFMhDjaNd8Zz9Xfy6d7in3pi3Fay5AA")
+        XCTAssertNotNil(inSignedData)
+        let signedData = CryptoUtils.data(hex: inSignedData.signedData)
+        let signedDataB64 = signedData.base64EncodedString()
+        
+        XCTAssertEqual(signedDataB64, "kzNL1nK9uy1m6TfKI0fzXyX4uVjiG0urxXLkNS8uODbWQlE9yaXzdooEtElst6DI0WXY8yObBnHLB3za7JLykFEibMp01JTwJ2Ng3HGeOOXRDY1rYBqN9J2FaAmab3M3xA6V4LJztxmrlHUab8vpwLqbbn6VVjWh6gibjOwJnlX58VF+YULowopyLlWxo/Pha5euqQDWVWQQ1+WyHa/4I8Po8nKW6N1+IjgLD1SEj99TZbawxjc32+NXiP/6QQKm/QPdnvyMzY9Ls+qZipxse9Lx3um8sgiezqXg1Wod6Fgq0lrXebM8bEcp6YFMhDjaNd8Zz9Xfy6d7in3pi3Fay5AA")
     }
     
 }
