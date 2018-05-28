@@ -150,7 +150,8 @@ import Foundation
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
                 let signer: Signer = Array(signaturesToDo.values)[0][0]
 
-                InController.sign(hashes: [signer.generateHashToSign()], certificateId: certificateId)
+                let hashToSign = signer.generateHashToSign()
+                InController.sign(hashes: [hashToSign], certificateId: certificateId)
 
             default:
 
@@ -280,7 +281,6 @@ import Foundation
             }
         }
     }
-
 
     // </editor-fold desc="UIAlertViewDelegate">
 

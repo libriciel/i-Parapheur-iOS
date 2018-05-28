@@ -47,8 +47,8 @@ import CryptoSwift
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
     static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
     static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
-    static private let PKCS7_BEGIN = "-----PKCS7 BEGIN-----"
-    static private let PKCS7_END = "-----PKCS7 BEGIN-----"
+    static private let PKCS7_BEGIN = "-----BEGIN PKCS7-----"
+    static private let PKCS7_END = "-----END PKCS7-----"
     static private let HEX_ALPHABET = "0123456789abcdef".unicodeScalars.map {
         $0
     }
@@ -147,7 +147,7 @@ import CryptoSwift
         // let result = (data as Data).base64EncodedString()
 
         let pollutedSignature = String(data: data as Data, encoding: .utf8)
-        let cleanedSignature = cleanupSignature(publicKey: pollutedSignature!)
+        let cleanedSignature = cleanupSignature(string: pollutedSignature!)
 
         print("dataToBase64String << \(pollutedSignature!)")
         print("dataToBase64String >> \(cleanedSignature)")
@@ -170,13 +170,14 @@ import CryptoSwift
             result = String(result.prefix(upTo: index))
         }
 
+        result = result.replacingOccurrences(of: " ", with: "")
         return result
     }
 
 
-    @objc class func cleanupSignature(publicKey: String) -> String {
+    @objc class func cleanupSignature(string: String) -> String {
 
-        var result = publicKey.trimmingCharacters(in: CharacterSet.whitespaces)
+        var result = string.trimmingCharacters(in: CharacterSet.whitespaces)
         result = result.trimmingCharacters(in: CharacterSet.newlines)
         result = result.replacingOccurrences(of: "\n", with: "")
 
@@ -188,6 +189,7 @@ import CryptoSwift
             result = String(result.prefix(upTo: index))
         }
 
+        result = result.replacingOccurrences(of: " ", with: "")
         return result
     }
 
