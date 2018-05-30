@@ -38,7 +38,7 @@ import Foundation
 
 class InSignedData: Decodable {
 
-    let signedData: String
+    var signedData: String
 
 
     enum CodingKeys: String, CodingKey {

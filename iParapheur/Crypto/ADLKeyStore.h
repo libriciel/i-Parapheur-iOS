@@ -39,15 +39,15 @@
 
 
 enum {
-	P12OpenErrorCode,
-	P12AlreadyImported
+    P12OpenErrorCode,
+    P12AlreadyImported
 };
 
 #define P12ErrorDomain @"P12Errors"
 
 
 @interface ADLKeyStore : NSObject {
-	NSManagedObjectContext *managedObjectContext;
+    NSManagedObjectContext *managedObjectContext;
 }
 
 /* Only usable on the soft KeyStore*/

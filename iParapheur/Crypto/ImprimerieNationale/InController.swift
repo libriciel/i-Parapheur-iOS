@@ -126,6 +126,15 @@ extension Notification.Name {
 
         let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!)
         if (tokenData != nil) {
+
+            // FIXME : Adrien hardcoded (should check for "Auto-Repudiation" instead)
+            for (identifier, data) in tokenData!.certificates {
+                if (data.base64EncodedString().count > 1975) {
+                    tokenData!.certificates.removeValue(forKey: identifier)
+                }
+            }
+
+            print("Adrien -- \(tokenData!.certificates)")
             importCertificate(token: tokenData!)
             NotificationCenter.default.post(name: .imprimerieNationaleCertificateImport, object: nil)
             return true
@@ -133,6 +142,10 @@ extension Notification.Name {
 
         let signedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
         if (signedData != nil) {
+
+            // FIXME : Adrien hardcoded (temporary fix)
+            signedData!.signedData.removeLast(4)
+
             NotificationCenter.default.post(name: .imprimerieNationaleSignatureResult, object: nil, userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData])
             return true
         }
