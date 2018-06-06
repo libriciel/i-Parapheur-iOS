@@ -38,6 +38,7 @@ import XCTest
 
 class Utils_StringsUtils_Tests: XCTestCase {
 
+
     func testGetMessage() {
         let errorBadServer = NSError(domain: "", code: -1011, userInfo: nil)
         let errorUnknown = NSError(domain: "Cause inconnue", code: 974399, userInfo: nil)
@@ -56,6 +57,7 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertEqual("Le serveur ne répond pas dans le délai imparti", StringsUtils.getMessage(error: errorTimeOut))
     }
 
+
     func testAnnotationDate() {
 
         let stringBefore = "2018-03-15T17:22:19Z"
@@ -65,6 +67,7 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertNotNil(date)
         XCTAssertEqual(stringAfter, "2018-03-15T17:22:19Z")
     }
+
 
     func testTrim() {
 
@@ -79,4 +82,18 @@ class Utils_StringsUtils_Tests: XCTestCase {
         """
         XCTAssertEqual(StringsUtils.trim(string: plopMultiline), "plop")
     }
+
+
+    func testSplit() {
+
+        let stringShort = "12345"
+        let stringLong = "1234567890123456789"
+
+        let resultShort = StringsUtils.split(string: stringShort, length: 5)
+        let resultLong = StringsUtils.split(string: stringLong, length: 5)
+
+        XCTAssertEqual(resultShort, ["12345"])
+        XCTAssertEqual(resultLong, ["12345", "67890", "12345", "6789"])
+    }
+
 }

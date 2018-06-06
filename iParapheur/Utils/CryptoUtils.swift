@@ -175,6 +175,20 @@ import CryptoSwift
     }
 
 
+    @objc class func pemToWrappedPem(publicKey: String) -> String {
+
+        let cleanedString = cleanupPublicKey(publicKey: publicKey)
+
+        var result = ""
+        result.append("\(PUBLIC_KEY_BEGIN_CERTIFICATE)\n")
+        for split in StringsUtils.split(string: cleanedString, length: 64) {
+            result.append("\(split)\n")
+        }
+        result.append("\(PUBLIC_KEY_END_CERTIFICATE)")
+        return result
+    }
+
+
     @objc class func cleanupSignature(string: String) -> String {
 
         var result = string.trimmingCharacters(in: CharacterSet.whitespaces)
