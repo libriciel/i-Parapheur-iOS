@@ -175,7 +175,7 @@ import CryptoSwift
     }
 
 
-    @objc class func pemToWrappedPem(publicKey: String) -> String {
+    @objc class func wrappedPem(publicKey: String) -> String {
 
         let cleanedString = cleanupPublicKey(publicKey: publicKey)
 
@@ -246,6 +246,7 @@ import CryptoSwift
         let finalSignature = signatures.joined(separator: ",")
         return finalSignature
     }
+
 
     class func generateSignerWrappers(signInfo: SignInfo,
                                       dossierId: String,

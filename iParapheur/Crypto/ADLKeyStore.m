@@ -36,6 +36,7 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
+#import <OpenSSL-Universal/openssl/x509v3.h>
 #import "iParapheur-Swift.h"
 #import "NSData+Base64.h"
 
@@ -320,6 +321,7 @@ NSData *X509_to_NSData(X509 *cert) {
     BIO_get_mem_ptr(issuerBio, &issuerBuffer);
     NSData *data = [NSData.alloc initWithBytes:issuerBuffer->data
                                         length:issuerBuffer->length];
+    BIO_free_all(issuerBio);
 
     // Other fields
 
@@ -334,8 +336,18 @@ NSData *X509_to_NSData(X509 *cert) {
 
     // Convert values into Foundation classes
 
-    NSString *aliasString = [NSString stringWithCString:(const char *) aliasChar encoding:NSUTF8StringEncoding];
-    NSString *serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
+    NSString *aliasString = @"";
+    if (aliasChar) {
+        aliasString = [NSString stringWithCString:(const char *) aliasChar encoding:NSUTF8StringEncoding];
+    }
+
+    NSString *serialString = @"";
+    if (serialChar) {
+        serialString = [NSString stringWithCString:(const char *) serialChar encoding:NSUTF8StringEncoding];
+    }
+
+    NSString *keyUsageString = @"";
+    [self parseX509V3Extensions:certX509];
 
     NSString *issuerString = [NSString.alloc initWithData:data encoding:NSUTF8StringEncoding];
     NSString *certString = [NSString.alloc initWithData:certNsData encoding:NSUTF8StringEncoding];
@@ -357,10 +369,64 @@ NSData *X509_to_NSData(X509 *cert) {
             @"notBefore": notBeforeString,
             @"notAfter": notAfterString,
             @"serialNumber": serialString,
-            @"publicKey": certString
+            @"publicKey": certString,
+            @"keyUsage": keyUsageString
     };
 
     return result;
+}
+
+
++ (NSDictionary *)parseX509V3Extensions:(X509 *)x509Cert {
+
+    NSMutableDictionary *result = NSMutableDictionary.new;
+    STACK_OF(X509_EXTENSION) *ext_list = x509Cert->cert_info->extensions;
+
+    if (sk_X509_EXTENSION_num(ext_list) <= 0)
+        return result;
+
+    for (int i = 0; i < sk_X509_EXTENSION_num(ext_list); i++) {
+
+        X509_EXTENSION *ext = sk_X509_EXTENSION_value(ext_list, i);
+        ASN1_OBJECT *obj = X509_EXTENSION_get_object(ext);
+
+        BIO *bioKey = BIO_new(BIO_s_mem());
+        i2a_ASN1_OBJECT(bioKey, obj);
+        NSString *key = [self asn1ObjectToString:obj];
+        BIO_free_all(bioKey);
+
+        NSLog(@"Adrien key   ??? %@", key);
+
+        BIO *bioValue = BIO_new(BIO_s_mem());
+        X509V3_EXT_print(bioValue, ext, NULL, NULL);
+        NSString *value = [self bioToString:bioValue];
+        BIO_free_all(bioValue);
+
+        NSLog(@"Adrien value ??? %@", value);
+
+        result[key] = @"";
+    }
+
+    NSLog(@"Adrien result ::: \n%@", result);
+    return result;
+}
+
+
++ (NSString *)asn1ObjectToString:(ASN1_OBJECT *)ans1Object {
+    int TEXTUAL_REPRESENTATION_IF_AVAILABLE = 0;
+    int BUFFER_SIZE = 2048;
+    char buff[BUFFER_SIZE];
+    OBJ_obj2txt(buff, BUFFER_SIZE, ans1Object, TEXTUAL_REPRESENTATION_IF_AVAILABLE);
+    return [NSString stringWithUTF8String:buff];
+}
+
+
++ (NSString *)bioToString: (BIO *)bio {
+    BUF_MEM *buffer = NULL;
+    BIO_get_mem_ptr(bio, &buffer);
+    NSString *value = [NSString stringWithUTF8String:buffer->data];
+    return value;
+
 }
 
 

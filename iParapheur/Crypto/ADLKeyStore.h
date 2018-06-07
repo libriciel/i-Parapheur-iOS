@@ -88,4 +88,7 @@ enum {
 
 + (NSDate *)asn1TimeToNsDate:(ASN1_TIME *)time;
 
+
++ (void)getX509Values:(NSString *)publicKey;
+
 @end
