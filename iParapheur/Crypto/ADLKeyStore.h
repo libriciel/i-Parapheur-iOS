@@ -68,8 +68,23 @@ enum {
   withPassword:(NSString *)password
          error:(NSError **)error;
 
-#pragma mark - Utils
 
+// <editor-fold desc="X509 PEM utils">
+
+
++ (X509 *)x509FromPem:(NSString *)pem;
+
+
++ (NSDictionary *)parseX509Values:(X509 *)certX509;
+
+
++ (NSDictionary *)parseX509V3Extensions:(X509 *)x509Cert;
+
+
++ (NSDate *)asn1TimeToNsDate:(ASN1_TIME *)time;
+
+
+// </editor-fold desc="X509 PEM utils">
 
 /**
  * P12 data into Dictionary containing "commonName", "issuerName", "notBefore", "notAfter", "serialNumber", "publicKey",
@@ -86,9 +101,14 @@ enum {
                          withPassword:(NSString *)password;
 
 
-+ (NSDate *)asn1TimeToNsDate:(ASN1_TIME *)time;
++ (NSData *)PKCS7Sign:(NSString *)p12Path
+         withPassword:(NSString *)password
+              andData:(NSData *)data
+                error:(NSError **)error;
 
 
-+ (void)getX509Values:(NSString *)publicKey;
++ (PKCS7 *)buildPkcs7Wrapper:(NSString *)publicKey
+              pkcs1Signature:(NSString *)signature;
+
 
 @end
