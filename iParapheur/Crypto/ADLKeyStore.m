@@ -370,7 +370,8 @@ NSData *X509_to_NSData(X509 *cert) {
 
         // Building result
 
-        result[key] = value;
+        if ((key != nil) && (value != nil))
+            result[key] = value;
     }
 
     return result;
@@ -566,9 +567,10 @@ NSData *X509_to_NSData(X509 *cert) {
         BIO_write(p7bio, buf, i);
     }
 
-    if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) [data bytes], [data length])) {
+    if (!ADL_PKCS7_dataFinal(p7, p7bio, (unsigned char *) data.bytes, data.length)) {
         return nil;
     }
+
     BIO_free(p7bio);
     BIO *signature_bio = BIO_new(BIO_s_mem());
     PEM_write_bio_PKCS7(signature_bio, p7);
@@ -769,9 +771,6 @@ static int PKCS7_type_is_other(PKCS7 *p7) {
 }
 
 
-/**
- * Build a complete PKCS#7 enveloped data
- */
 PKCS7 *PKCS7_encrypt(STACK_OF(X509) *certs, BIO *in, const EVP_CIPHER *cipher, int flags) {
     PKCS7 *p7;
     BIO *p7bio = NULL;
@@ -821,6 +820,7 @@ PKCS7 *PKCS7_encrypt(STACK_OF(X509) *certs, BIO *in, const EVP_CIPHER *cipher, i
     return NULL;
 
 }
+
 
 // </editor-fold desc="PKCS7 utils">
 

@@ -89,7 +89,6 @@ class Crypto_ADLKeyStore_Tests: XCTestCase {
         XCTAssertFalse(valuesDict.isEmpty)
         
         XCTAssertEqual(String(describing: valuesDict["notAfter"]!), "2021-01-10T13:49:03+01:00")
-        XCTAssertEqual(String(describing: valuesDict["commonName"]!), "")
         XCTAssertEqual(String(describing: valuesDict["serialNumber"]!), "1492312803695880384522100141540144058214476")
         XCTAssertEqual(String(describing: valuesDict["keyUsage"]!), "Non Repudiation")
         XCTAssertEqual(String(describing: valuesDict["notBefore"]!), "2018-01-11T13:49:03+01:00")
