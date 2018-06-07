@@ -127,14 +127,17 @@ extension Notification.Name {
         let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!)
         if (tokenData != nil) {
 
-            // FIXME : Adrien hardcoded (should check for "Auto-Repudiation" instead)
             for (identifier, data) in tokenData!.certificates {
-                if (data.base64EncodedString().count > 1975) {
+
+                let x509 = ADLKeyStore.x509(fromPem: data.base64EncodedString())
+                let x509Values = ADLKeyStore.parseX509Values(x509) as! [String: AnyObject]
+                let keyUsage = String(describing: x509Values["keyUsage"])
+
+                if (!keyUsage.contains("Non Repudiation")) {
                     tokenData!.certificates.removeValue(forKey: identifier)
                 }
             }
 
-            print("Adrien -- \(tokenData!.certificates)")
             importCertificate(token: tokenData!)
             NotificationCenter.default.post(name: .imprimerieNationaleCertificateImport, object: nil)
             return true
@@ -161,12 +164,17 @@ extension Notification.Name {
             let context = ModelsDataController.context!
             let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: context) as! Certificate
 
+            let x509 = ADLKeyStore.x509(fromPem: publicKey.base64EncodedString())
+            let x509Values = ADLKeyStore.parseX509Values(x509) as! [String: AnyObject]
+
             newCertificate.sourceType = .imprimerieNationale
             newCertificate.caName = token.manufacturerId
             newCertificate.commonName = "\(token.manufacturerId) \(token.serialNumber)"
             newCertificate.serialNumber = token.serialNumber
             newCertificate.identifier = UUID().uuidString
             newCertificate.publicKey = publicKey as NSData
+            newCertificate.notBefore = (x509Values["notBefore"] as! NSDate)
+            newCertificate.notAfter = (x509Values["notAfter"] as! NSDate)
 
             // Payload
 

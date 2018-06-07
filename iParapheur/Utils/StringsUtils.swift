@@ -38,7 +38,8 @@ import SwiftMessages
 
 @objc class StringsUtils: NSObject {
 
-    static private let ANNOTATION_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    static let ANNOTATION_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    static let ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
 
     @objc class func getMessage(error: NSError) -> NSString {
@@ -70,13 +71,6 @@ import SwiftMessages
     }
 
 
-    class func deserializeAnnotationDate(string: String) -> Date {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
-        return dateFormatter.date(from: string)!
-    }
-
-
     class func trim(string: String) -> String {
         let tempString = string.replacingOccurrences(of: "\n", with: "")
         return tempString.replacingOccurrences(of: " ", with: "")
@@ -87,6 +81,13 @@ import SwiftMessages
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
         return dateFormatter.string(from: date)
+    }
+
+
+    class func deserializeAnnotationDate(string: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
+        return dateFormatter.date(from: string)!
     }
 
 

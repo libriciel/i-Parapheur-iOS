@@ -215,9 +215,6 @@ NSData *X509_to_NSData(X509 *cert) {
         Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:Certificate.ENTITY_NAME
                                                                    inManagedObjectContext:ModelsDataController.context];
 
-        NSDateFormatter *formatter = NSDateFormatter.new;
-        formatter.dateFormat = ISO_8601_FORMAT;
-
         NSString *p12FileName = [NSString stringWithFormat:@"coop.adullact-projet.iparapheur/%@", newPath.lastPathComponent];
         NSDictionary *payload = @{Certificate.PAYLOAD_P12_FILENAME: p12FileName};
         NSError *jsonError = nil;
@@ -231,8 +228,8 @@ NSData *X509_to_NSData(X509 *cert) {
         newPrivateKey.payload = payloadData;
         newPrivateKey.publicKey = publicKeyData;
         newPrivateKey.serialNumber = x509Values[@"serialNumber"];
-        newPrivateKey.notBefore = [formatter dateFromString:x509Values[@"notBefore"]];
-        newPrivateKey.notAfter = [formatter dateFromString:x509Values[@"notAfter"]];
+        newPrivateKey.notBefore = (NSDate *) x509Values[@"notBefore"];
+        newPrivateKey.notAfter = (NSDate *) x509Values[@"notAfter"];
         newPrivateKey.commonName = x509Values[@"commonName"];
         newPrivateKey.caName = x509Values[@"issuerName"];
 
@@ -320,19 +317,13 @@ NSData *X509_to_NSData(X509 *cert) {
     NSDate *notBeforeDate = [ADLKeyStore asn1TimeToNsDate:notBeforeAsn1Time];
     NSDate *notAfterDate = [ADLKeyStore asn1TimeToNsDate:notAfterAsn1Time];
 
-    NSDateFormatter *formatter = NSDateFormatter.new;
-    formatter.dateFormat = ISO_8601_FORMAT;
-
-    NSString *notBeforeString = [formatter stringFromDate:notBeforeDate];
-    NSString *notAfterString = [formatter stringFromDate:notAfterDate];
-
     // Result
 
     NSDictionary *result = @{
             @"commonName": aliasString,
             @"issuerName": issuerString,
-            @"notBefore": notBeforeString,
-            @"notAfter": notAfterString,
+            @"notBefore": notBeforeDate,
+            @"notAfter": notAfterDate,
             @"serialNumber": serialString,
             @"publicKey": certString,
             @"keyUsage": keyUsageString
