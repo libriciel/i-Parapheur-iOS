@@ -377,7 +377,7 @@ NSData *X509_to_NSData(X509 *cert) {
 }
 
 
-+ (NSString *)bioToString: (BIO *)bio {
++ (NSString *)bioToString:(BIO *)bio {
     BUF_MEM *buffer = NULL;
     BIO_get_mem_ptr(bio, &buffer);
     NSString *value = [NSString stringWithUTF8String:buffer->data];
