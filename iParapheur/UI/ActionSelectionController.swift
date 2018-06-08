@@ -88,7 +88,7 @@ import UIKit
         let cell: ActionSelectionCell = tableView.dequeueReusableCell(withIdentifier: ActionSelectionCell.CellId,
                                                                       for: indexPath as IndexPath) as! ActionSelectionCell
 
-        let action: NSString = actions[indexPath.row] as! NSString
+        let action: NSString = actions[indexPath.row] as NSString
 
         cell.actionLabel.text = StringUtils.actionName(forAction: action as String,
                                                        withPaperSign: currentDossier!.isSignPapier)

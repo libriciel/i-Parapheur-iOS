@@ -408,13 +408,18 @@ import Alamofire
 
         // Request
 
-        manager.request(getTypologyUrl).validate().responseJSON {
+        manager.request(getTypologyUrl).validate().responseString {
             response in
 
             switch (response.result) {
 
                 case .success:
-                    let typeList = [ParapheurType].from(jsonArray: response.value as! [[String: AnyObject]])
+
+                    let decoder = JSONDecoder()
+                    let jsonData = response.value?.data(using: .utf8)!
+                    let typeList = try? decoder.decode([ParapheurType].self,
+                                                       from: jsonData!)
+
                     responseCallback!(typeList! as NSArray)
                     break
 
@@ -509,7 +514,7 @@ import Alamofire
                            errorCallback: ((NSError) -> Void)?) {
 
 
-        var argumentDictionary: [String:String] = [:]
+        var argumentDictionary: [String: String] = [:]
         argumentDictionary["bureauCourant"] = bureauId
         argumentDictionary["annotPriv"] = privateAnnotation
         argumentDictionary["annotPub"] = publicAnnotation

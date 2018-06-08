@@ -34,23 +34,27 @@
  */
 
 import Foundation
-import Gloss
 
-@objc class ParapheurType: NSObject, Glossy {
+@objc class ParapheurType: NSObject, Decodable {
 
     @objc let name: String
     @objc let subTypes: Array<String>
 
 
-    // MARK: - Glossy
+    // <editor-fold desc="Json methods">
 
-    required init?(json: JSON) {
-        name = ("id" <~~ json) ?? ""
-        subTypes = ("sousTypes" <~~ json) ?? []
+    enum CodingKeys: String, CodingKey {
+        case name = "id"
+        case subTypes = "sousTypes"
     }
-	
-	func toJSON() -> JSON? {
-		return nil /* Not used */
-	}
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+
+        name = try values.decodeIfPresent(String.self, forKey: .name) ?? "(aucun nom)"
+        subTypes = try values.decodeIfPresent([String].self, forKey: .subTypes) ?? []
+    }
+
+    // </editor-fold desc="Json methods">
 
 }
