@@ -54,7 +54,6 @@ class Models_ParapheurType_Tests: XCTestCase {
                 "sousTypes": [],
                 "id": "MARCHES PUBLICS"
             },{
-                "id": "Empty one"
             }
         ]
         """
@@ -87,7 +86,7 @@ class Models_ParapheurType_Tests: XCTestCase {
         XCTAssertNotNil(types![2].subTypes)
         XCTAssertEqual(types![2].subTypes.count, 0)
 
-        XCTAssertEqual(types![3].name, "Empty one")
+        XCTAssertEqual(types![3].name, "(aucun nom)")
         XCTAssertNotNil(types![3].subTypes)
         XCTAssertEqual(types![3].subTypes.count, 0)
     }

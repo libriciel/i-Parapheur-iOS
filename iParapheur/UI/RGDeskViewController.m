@@ -447,8 +447,8 @@
 
     NSDate *dossierDate = nil;
 
-    if (dossier.limitDate.longLongValue != 0)
-        dossierDate = [NSDate dateWithTimeIntervalSince1970:dossier.limitDate.longLongValue / 1000];
+    if (dossier.limitDate != nil)
+        dossierDate = dossier.limitDate;
 
     cell.limitDateLabel.hidden = (dossierDate == nil);
 

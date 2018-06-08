@@ -31,6 +31,7 @@
 		7A81712420765E2700C11F4C /* CertificateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A81712320765E2700C11F4C /* CertificateType.swift */; };
 		7A8556EF20C934E90083BFA6 /* Crypto_ADLKeyStore_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8556EE20C934E90083BFA6 /* Crypto_ADLKeyStore_Tests.swift */; };
 		7A8556F120CAE0AB0083BFA6 /* Models_ParapheurType_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8556F020CAE0AB0083BFA6 /* Models_ParapheurType_Tests.swift */; };
+		7A8556F320CAE9650083BFA6 /* Models_Dossier_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8556F220CAE9650083BFA6 /* Models_Dossier_Tests.swift */; };
 		7A8D21902076126100D9D481 /* Certificate+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */; };
 		7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */; };
 		7AB3CA3220936F960021B3FC /* InSignedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3CA3120936F960021B3FC /* InSignedData.swift */; };
@@ -259,6 +260,7 @@
 		7A81712320765E2700C11F4C /* CertificateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateType.swift; sourceTree = "<group>"; };
 		7A8556EE20C934E90083BFA6 /* Crypto_ADLKeyStore_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ADLKeyStore_Tests.swift; sourceTree = "<group>"; };
 		7A8556F020CAE0AB0083BFA6 /* Models_ParapheurType_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_ParapheurType_Tests.swift; sourceTree = "<group>"; };
+		7A8556F220CAE9650083BFA6 /* Models_Dossier_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Dossier_Tests.swift; sourceTree = "<group>"; };
 		7A8D218D207611A400D9D481 /* Models 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Models 2.xcdatamodel"; sourceTree = "<group>"; };
 		7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -1045,6 +1047,7 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				7A8556F220CAE9650083BFA6 /* Models_Dossier_Tests.swift */,
 				7A8556F020CAE0AB0083BFA6 /* Models_ParapheurType_Tests.swift */,
 				7A8556EE20C934E90083BFA6 /* Crypto_ADLKeyStore_Tests.swift */,
 				7A817121207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift */,
@@ -1571,6 +1574,7 @@
 				7AB3CA3420936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift in Sources */,
 				7A817122207619F100C11F4C /* Models_Storage_ModelsDataController_Tests.swift in Sources */,
 				C5903CFF1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift in Sources */,
+				7A8556F320CAE9650083BFA6 /* Models_Dossier_Tests.swift in Sources */,
 				7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */,
 				7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */,

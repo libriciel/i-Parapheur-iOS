@@ -34,9 +34,9 @@
  */
 
 import Foundation
-import Gloss
 
-@objc class Dossier: NSObject, Glossy {
+
+@objc class Dossier: NSObject, Decodable {
 
     @objc let identifier: String
     @objc let title: String?
@@ -53,59 +53,110 @@ import Gloss
 
     @objc let actionDemandee: String
     @objc var actions: Array<String>
-    @objc let documents: Array<Document>
-    let acteursVariables: Array<String>?
-    let metadatas: Dictionary<String, AnyObject>?
-    let dateEmission: NSNumber?
-    @objc let limitDate: NSNumber
+    @objc let documents: [Document]
+    let acteursVariables: [String]
+    let metadatas: [String: AnyObject]
+    let emitDate: Date?
+    @objc let limitDate: Date?
 
-    let hasRead: Bool?
-    let includeAnnexes: Bool?
-    let isRead: Bool?
-    let isSent: Bool?
-    let canAdd: Bool?
+    let hasRead: Bool
+    let includeAnnexes: Bool
+    let isRead: Bool
+    let isSent: Bool
+    let canAdd: Bool
     @objc let isLocked: Bool
     @objc let isSignPapier: Bool
-    let isXemEnabled: Bool?
-    let isReadingMandatory: Bool?
+    let isXemEnabled: Bool
+    let isReadingMandatory: Bool
 
     @objc var isDelegue: Bool
 
 
-    // MARK: - Glossy
+    // <editor-fold desc="Json methods">
 
-    required init?(json: JSON) {
+    enum CodingKeys: String, CodingKey {
 
-        identifier = ("id" <~~ json) ?? ""
-        title = ("title" <~~ json) ?? "(vide)"
-        bureauName = ("bureauName" <~~ json) ?? "(vide)"
-        banetteName = ("banetteName" <~~ json) ?? ""
-        visibility = ("visibility" <~~ json) ?? ""
-        status = ("status" <~~ json) ?? ""
+        case identifier = "id"
+        case title
+        case bureauName
+        case banetteName
+        case visibility
+        case status
 
-        type = ("type" <~~ json) ?? ""
-        subType = ("sousType" <~~ json) ?? ""
-        protocole = ("protocole" <~~ json) ?? ""
-        nomTdT = ("nomTdT" <~~ json) ?? ""
-        xPathSignature = ("xPathSignature" <~~ json) ?? ""
+        case type
+        case subType = "sousType"
+        case protocole = "protocol"
+        case nomTdT
+        case xPathSignature
 
-        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
-        actions = ("actions" <~~ json) ?? []
-        documents = ("documents" <~~ json) ?? []
-        acteursVariables = ("acteursVariables" <~~ json) ?? []
-        metadatas = ("metadatas" <~~ json) ?? [:]
-        dateEmission = ("dateEmission" <~~ json) ?? -1
-        limitDate = ("dateLimite" <~~ json) ?? 0
+        case actionDemandee
+        case actions
+        case documents
+        case acteursVariables
+        case metadatas
+        case emitDate = "dateEmission"
+        case limitDate = "dateLimite"
 
-        hasRead = ("hasRead" <~~ json) ?? false
-        includeAnnexes = ("includeAnnexes" <~~ json) ?? false
-        isRead = ("isRead" <~~ json) ?? false
-        isSent = ("isSent" <~~ json) ?? false
-        canAdd = ("canAdd" <~~ json) ?? false
-        isLocked = ("locked" <~~ json) ?? false
-        isSignPapier = ("isSignPapier" <~~ json) ?? false
-        isXemEnabled = ("isXemEnabled" <~~ json) ?? false
-        isReadingMandatory = ("readingMandatory" <~~ json) ?? false
+        case hasRead
+        case includeAnnexes
+        case isRead
+        case isSent
+        case canAdd
+        case isLocked = "locked"
+        case isSignPapier
+        case isXemEnabled
+        case isReadingMandatory = "readingMandatory"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+
+        identifier = try values.decodeIfPresent(String.self, forKey: .identifier) ?? ""
+        title = try values.decodeIfPresent(String.self, forKey: .title) ?? "(vide)"
+        bureauName = try values.decodeIfPresent(String.self, forKey: .bureauName) ?? "(vide)"
+        banetteName = try values.decodeIfPresent(String.self, forKey: .banetteName) ?? ""
+        visibility = try values.decodeIfPresent(String.self, forKey: .visibility) ?? ""
+        status = try values.decodeIfPresent(String.self, forKey: .status) ?? ""
+
+        type = try values.decodeIfPresent(String.self, forKey: .type) ?? ""
+        subType = try values.decodeIfPresent(String.self, forKey: .subType) ?? ""
+        protocole = try values.decodeIfPresent(String.self, forKey: .protocole) ?? ""
+        nomTdT = try values.decodeIfPresent(String.self, forKey: .nomTdT) ?? ""
+        xPathSignature = try values.decodeIfPresent(String.self, forKey: .xPathSignature) ?? ""
+
+        actionDemandee = try values.decodeIfPresent(String.self, forKey: .actionDemandee) ?? "VISA"
+        actions = try values.decodeIfPresent([String].self, forKey: .actions) ?? []
+        documents = try values.decodeIfPresent([Document].self, forKey: .documents) ?? []
+        acteursVariables = try values.decodeIfPresent([String].self, forKey: .acteursVariables) ?? []
+        metadatas = try values.decodeIfPresent([String: AnyObject].self, forKey: .metadatas) ?? [:]
+
+        var emitDateInt = try values.decodeIfPresent(Int.self, forKey: .emitDate)
+        if (emitDateInt != nil) {
+            emitDateInt = emitDateInt! / 1000
+            emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt!))
+        } else {
+            emitDate = nil
+        }
+
+        var limitDateInt = try values.decodeIfPresent(Int.self, forKey: .limitDate)
+        if (limitDateInt != nil) {
+            limitDateInt = limitDateInt! / 1000
+            limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt!))
+        } else {
+            limitDate = nil
+        }
+
+        hasRead = try values.decodeIfPresent(Bool.self, forKey: .hasRead) ?? false
+        includeAnnexes = try values.decodeIfPresent(Bool.self, forKey: .includeAnnexes) ?? false
+        isRead = try values.decodeIfPresent(Bool.self, forKey: .isRead) ?? false
+        isSent = try values.decodeIfPresent(Bool.self, forKey: .isSent) ?? false
+        canAdd = try values.decodeIfPresent(Bool.self, forKey: .canAdd) ?? false
+        isLocked = try values.decodeIfPresent(Bool.self, forKey: .isLocked) ?? false
+        isSignPapier = try values.decodeIfPresent(Bool.self, forKey: .isSignPapier) ?? false
+        isXemEnabled = try values.decodeIfPresent(Bool.self, forKey: .isXemEnabled) ?? false
+        isReadingMandatory = try values.decodeIfPresent(Bool.self, forKey: .isReadingMandatory) ?? false
+
+        // Small fixes
 
         isDelegue = false
 
@@ -115,9 +166,54 @@ import Gloss
         }
     }
 
-    func toJSON() -> JSON? {
-        return nil /* Not used */
-    }
+    // </editor-fold desc="Json methods">
+
+
+    // MARK: - Glossy
+
+//    required init?(json: JSON) {
+//        identifier = ("id" <~~ json) ?? ""
+//        title = ("title" <~~ json) ?? "(vide)"
+//        bureauName = ("bureauName" <~~ json) ?? "(vide)"
+//        banetteName = ("banetteName" <~~ json) ?? ""
+//        visibility = ("visibility" <~~ json) ?? ""
+//        status = ("status" <~~ json) ?? ""
+//
+//        type = ("type" <~~ json) ?? ""
+//        subType = ("sousType" <~~ json) ?? ""
+//        protocole = ("protocole" <~~ json) ?? ""
+//        nomTdT = ("nomTdT" <~~ json) ?? ""
+//        xPathSignature = ("xPathSignature" <~~ json) ?? ""
+//
+//        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
+//        actions = ("actions" <~~ json) ?? []
+//        documents = ("documents" <~~ json) ?? []
+//        acteursVariables = ("acteursVariables" <~~ json) ?? []
+//        metadatas = ("metadatas" <~~ json) ?? [:]
+//        emitDate = ("dateEmission" <~~ json) ?? -1
+//        limitDate = ("dateLimite" <~~ json) ?? 0
+//
+//        hasRead = ("hasRead" <~~ json) ?? false
+//        includeAnnexes = ("includeAnnexes" <~~ json) ?? false
+//        isRead = ("isRead" <~~ json) ?? false
+//        isSent = ("isSent" <~~ json) ?? false
+//        canAdd = ("canAdd" <~~ json) ?? false
+//        isLocked = ("locked" <~~ json) ?? false
+//        isSignPapier = ("isSignPapier" <~~ json) ?? false
+//        isXemEnabled = ("isXemEnabled" <~~ json) ?? false
+//        isReadingMandatory = ("readingMandatory" <~~ json) ?? false
+//
+//        isDelegue = false
+//
+//        // Sometimes it happens
+//        if (!(actions.contains(actionDemandee))) {
+//            actions.append(actionDemandee)
+//        }
+//    }
+//
+//    func toJSON() -> JSON? {
+//        return nil /* Not used */
+//    }
 
 
     // MARK: - Static utils

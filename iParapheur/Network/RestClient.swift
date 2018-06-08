@@ -241,7 +241,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getDossiersUrl, parameters: parameters).validate().responseJSON {
+        manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
             response in
             switch (response.result) {
 
@@ -304,7 +304,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getDossiersUrl, parameters: parameters).validate().responseJSON {
+        manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
             response in
             switch (response.result) {
 
@@ -334,7 +334,7 @@ import Alamofire
 
         // Request
 
-        manager.request(getDossierUrl, parameters: parameters).validate().responseJSON {
+        manager.request(getDossierUrl, parameters: parameters).validate().responseString {
             response in
             switch (response.result) {
 
