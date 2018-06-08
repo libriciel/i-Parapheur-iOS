@@ -172,7 +172,7 @@ import Foundation
         let signer: Signer = Array(signaturesToDo.values)[0][0]
         let finalSignatureString = signer.buildDataToReturn(signedHash: signedHashString);
 
-        self.sendResult(dossierId: Array(signaturesToDo.keys)[0], signature: finalSignatureString)
+        sendResult(dossierId: Array(signaturesToDo.keys)[0], signature: finalSignatureString)
     }
 
 

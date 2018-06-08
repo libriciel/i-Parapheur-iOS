@@ -284,6 +284,12 @@ NSData *X509_to_NSData(X509 *cert) {
     NSString *issuerString = [self bioToString:issuerBio];
     BIO_free_all(issuerBio);
 
+    BIO *subjectBio = BIO_new(BIO_s_mem());
+    X509_NAME *subjectX509Name = X509_get_subject_name(certX509);
+    X509_NAME_print_ex(subjectBio, subjectX509Name, 0, XN_FLAG_RFC2253);
+    NSString *subjectString = [self bioToString:subjectBio];
+    BIO_free_all(subjectBio);
+
     // Other fields
 
     ASN1_TIME *notBeforeAsn1Time = X509_get_notBefore(certX509);
@@ -320,6 +326,7 @@ NSData *X509_to_NSData(X509 *cert) {
     // Result
 
     NSDictionary *result = @{
+            @"subject": subjectString,
             @"commonName": aliasString,
             @"issuerName": issuerString,
             @"notBefore": notBeforeDate,
@@ -361,8 +368,7 @@ NSData *X509_to_NSData(X509 *cert) {
 
         // Building result
 
-        if ((key != nil) && (value != nil))
-            result[key] = value;
+        result[key] = value;
     }
 
     return result;
@@ -370,11 +376,14 @@ NSData *X509_to_NSData(X509 *cert) {
 
 
 + (NSString *)bioToString:(BIO *)bio {
-    BUF_MEM *buffer = NULL;
-    BIO_get_mem_ptr(bio, &buffer);
-    NSString *value = [NSString stringWithUTF8String:buffer->data];
-    return value;
 
+    int len = BIO_pending(bio);
+    char *out = calloc((size_t) (len + 1), 1);
+    int i = BIO_read(bio, out, len);
+
+    NSData *data = [NSData dataWithBytes:out length:(NSUInteger) i];
+    NSString *value = [NSString.alloc initWithData:data encoding:NSUTF8StringEncoding];
+    return value;
 }
 
 

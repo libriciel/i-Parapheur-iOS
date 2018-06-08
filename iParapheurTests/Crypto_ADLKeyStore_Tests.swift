@@ -86,10 +86,14 @@ class Crypto_ADLKeyStore_Tests: XCTestCase {
         let valuesDict = ADLKeyStore.parseX509Values(x509) as! [String: AnyObject]
         
         XCTAssertNotNil(valuesDict)
-        XCTAssertFalse(valuesDict.isEmpty)
-        
-        XCTAssertEqual(String(describing: valuesDict["serialNumber"]!), "1492312803695880384522100141540144058214476")
-        XCTAssertEqual(String(describing: valuesDict["keyUsage"]!), "Non Repudiation")
+        XCTAssertEqual(valuesDict.count, 8)
+
+        XCTAssertEqual(valuesDict["commonName"] as! String, "")
+        XCTAssertEqual(valuesDict["keyUsage"] as! String, "Non Repudiation")
+        XCTAssertEqual(valuesDict["serialNumber"] as! String, "1492312803695880384522100141540144058214476")
+        XCTAssertEqual(valuesDict["issuerName"] as! String, "CN=AC Imprimerie Nationale El\\C3\\A9mentaire Personnel,OU=0002 41049449600046,O=Groupe Imprimerie Nationale,C=FR")
+        XCTAssertEqual(valuesDict["subject"] as! String, "serialNumber=e67d1488cd9745068f5080f6a0de73c3,CN=St\\C3\\A9phane VAST,OU=0002 12345678200010,O=Prospect Client,C=FR")
+        XCTAssertEqual((valuesDict["publicKey"] as! String).count, 1996)
         XCTAssertEqual((valuesDict["notBefore"] as! NSDate).timeIntervalSince1970, 1515674943)
         XCTAssertEqual((valuesDict["notAfter"] as! NSDate).timeIntervalSince1970, 1610282943)
     }
@@ -98,19 +102,17 @@ class Crypto_ADLKeyStore_Tests: XCTestCase {
     func testParseX509V3Extensions() {
         let x509 = ADLKeyStore.x509(fromPem: Crypto_ADLKeyStore_Tests.PUBLIC_KEY)
         let valuesDict = ADLKeyStore.parseX509V3Extensions(x509) as! [String: AnyObject]
-        
-        XCTAssertNotNil(valuesDict)
-        XCTAssertFalse(valuesDict.isEmpty)
 
-        XCTAssertEqual(String(describing: valuesDict["X509v3 Key Usage"]!), "Non Repudiation")
-        XCTAssertEqual(String(describing: valuesDict["X509v3 Basic Constraints"]!), "CA:FALSE")
-        XCTAssertEqual(String(describing: valuesDict["X509v3 Subject Alternative Name"]!), "email:stephane.vast@libriciel.coop")
-        
-        // There is som weird things here : OpenSSL doesn't always return the same result.
-        // Those 2 fields may be differents (or missing) amongst multiple executions.
-        
-        // XCTAssertTrue(String(describing: valuesDict["X509v3 Subject Key Identifier"]).contains("85:08:2F:BA:1A:DD:67:92:FF:4C:F7:C2:7A:06:57:AF:BB:3A:35:4F"))
-        // XCTAssertTrue(String(describing: valuesDict["X509v3 Authority Key Identifier"]).contains("keyid:1A:51:38:A6:9A:63:0E:5C:E4:C8:C7:8E:A1:5E:C5:D0:2E:DC:85:CA"))
+        XCTAssertNotNil(valuesDict)
+        XCTAssertEqual(valuesDict.count, 8)
+
+        XCTAssertEqual(valuesDict["X509v3 Key Usage"] as! String, "Non Repudiation")
+        XCTAssertEqual(valuesDict["Authority Information Access"] as! String, "OCSP - URI:http://ocsp-ac-el-p.imprimerienationale.fr\nCA Issuers - URI:http://www.imprimerienationale.fr/GIN/AC/AC-EL-P.p7b\n")
+        XCTAssertEqual(valuesDict["X509v3 Authority Key Identifier"] as! String, "keyid:1A:51:38:A6:9A:63:0E:5C:E4:C8:C7:8E:A1:5E:C5:D0:2E:DC:85:CA\n")
+        XCTAssertEqual(valuesDict["X509v3 CRL Distribution Points"] as! String, "\nFull Name:\n  URI:http://crl.imprimerienationale.fr/GIN/cert/ACF-EL-P.crl\n  URI:http://www.imprimerienationale.fr/GIN/CRL/cert/ACF-EL-P.crl\n")
+        XCTAssertEqual(valuesDict["X509v3 Certificate Policies"] as! String, "Policy: 1.2.250.1.295.1.1.2.1.1.102.1\n  CPS: http://www.imprimerienationale.fr/GIN/PC\n")
+        XCTAssertEqual(valuesDict["X509v3 Subject Alternative Name"] as! String, "email:stephane.vast@libriciel.coop")
+        XCTAssertEqual(valuesDict["X509v3 Basic Constraints"] as! String, "CA:FALSE")
     }
     
 }
