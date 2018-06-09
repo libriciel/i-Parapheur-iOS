@@ -34,13 +34,12 @@
  */
 
 import Foundation
-import Gloss
 
 
-@objc class Document: NSObject, Glossy {
+@objc class Document: NSObject, Decodable {
 
-    @objc let identifier: String?
-    @objc let name: String?
+    @objc let identifier: String
+    @objc let name: String
 
     let size: CLong
     let pageCount: Int
@@ -51,24 +50,37 @@ import Gloss
     let isLocked: Bool
     let isDeletable: Bool
 
-    // MARK: - Glossy
 
-    required init?(json: JSON) {
-        identifier = ("id" <~~ json) ?? ""
-        name = ("name" <~~ json) ?? "(vide)"
+    // <editor-fold desc="Json methods">
 
-        size = ("size" <~~ json) ?? -1
-        pageCount = ("pageCount" <~~ json) ?? -1
-        attestState = ("attestState" <~~ json) ?? 0
-
-        isMainDocument = "isMainDocument" <~~ json ?? false
-        isVisuelPdf = "visuelPdf" <~~ json ?? false
-        isLocked = "isLocked" <~~ json ?? false
-        isDeletable = "canDelete" <~~ json ?? false
+    enum CodingKeys: String, CodingKey {
+        case identifier = "id"
+        case name
+        case size
+        case pageCount
+        case attestState
+        case isMainDocument
+        case isVisuelPdf = "visuelPdf"
+        case isLocked
+        case isDeletable = "canDelete"
     }
 
-    func toJSON() -> JSON? {
-        return nil /* Not used */
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+
+        identifier = try values.decodeIfPresent(String.self, forKey: .identifier) ?? ""
+        name = try values.decodeIfPresent(String.self, forKey: .name) ?? "(vide)"
+
+        size = try values.decodeIfPresent(Int.self, forKey: .size) ?? -1
+        pageCount = try values.decodeIfPresent(Int.self, forKey: .pageCount) ?? -1
+        attestState = try values.decodeIfPresent(Int.self, forKey: .attestState) ?? 0
+
+        isMainDocument = try values.decodeIfPresent(Bool.self, forKey: .isMainDocument) ?? false
+        isVisuelPdf = try values.decodeIfPresent(Bool.self, forKey: .isVisuelPdf) ?? false
+        isLocked = try values.decodeIfPresent(Bool.self, forKey: .isLocked) ?? false
+        isDeletable = try values.decodeIfPresent(Bool.self, forKey: .isDeletable) ?? false
     }
+
+    // </editor-fold desc="Json methods">
 
 }

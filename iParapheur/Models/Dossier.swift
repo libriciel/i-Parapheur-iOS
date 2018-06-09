@@ -55,7 +55,7 @@ import Foundation
     @objc var actions: Array<String>
     @objc let documents: [Document]
     let acteursVariables: [String]
-    let metadatas: [String: AnyObject]
+    // TODO let metadatas: [String: Any]
     let emitDate: Date?
     @objc let limitDate: Date?
 
@@ -128,7 +128,7 @@ import Foundation
         actions = try values.decodeIfPresent([String].self, forKey: .actions) ?? []
         documents = try values.decodeIfPresent([Document].self, forKey: .documents) ?? []
         acteursVariables = try values.decodeIfPresent([String].self, forKey: .acteursVariables) ?? []
-        metadatas = try values.decodeIfPresent([String: AnyObject].self, forKey: .metadatas) ?? [:]
+        // TODO metadatas = try values.decodeIfPresent([String: Any].self, forKey: .metadatas) ?? [:]
 
         var emitDateInt = try values.decodeIfPresent(Int.self, forKey: .emitDate)
         if (emitDateInt != nil) {

@@ -246,7 +246,14 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+
+                    // Prepare
+
+                    let responseJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let dossierList = try? jsonDecoder.decode([Dossier].self,
+                                                              from: responseJsonData)
 
                     // Retrieve deleguated
 
@@ -309,7 +316,13 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    let dossierList = [Dossier].from(jsonArray: response.value as! [[String: AnyObject]])
+
+                    let responseJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let dossierList = try? jsonDecoder.decode([Dossier].self,
+                                                              from: responseJsonData)
+
                     responseCallback!(dossierList!)
                     break
 
@@ -339,13 +352,14 @@ import Alamofire
             switch (response.result) {
 
                 case .success:
-                    guard let responseDossier = Dossier(json: response.value as! [String: AnyObject]) else {
-                        errorCallback!(NSError(domain: self.serverUrl.absoluteString!,
-                                               code: Int(CFNetworkErrors.cfurlErrorBadServerResponse.rawValue),
-                                               userInfo: nil))
-                        return
-                    }
-                    responseCallback!(responseDossier)
+
+                    let responseJsonData = response.value!.data(using: .utf8)!
+
+                    let jsonDecoder = JSONDecoder()
+                    let dossier = try? jsonDecoder.decode(Dossier.self,
+                                                              from: responseJsonData)
+
+                    responseCallback!(dossier!)
                     break
 
                 case .failure(let error):
