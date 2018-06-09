@@ -115,7 +115,7 @@ class Models_Dossier_Tests: XCTestCase {
         XCTAssertEqual(dossiers![0].actions, ["ENREGISTRER", "EMAIL", "SIGNATURE"])
         XCTAssertEqual(dossiers![0].documents, [])
         XCTAssertTrue(dossiers![0].acteursVariables.isEmpty)
-        XCTAssertTrue(dossiers![0].metadatas.isEmpty)
+        // XCTAssertTrue(dossiers![0].metadatas.isEmpty)
         XCTAssertEqual(dossiers![0].emitDate!.timeIntervalSince1970, 1527518906)
         XCTAssertNil(dossiers![0].limitDate)
 
@@ -150,7 +150,7 @@ class Models_Dossier_Tests: XCTestCase {
         XCTAssertEqual(dossiers![1].actions, ["VISA"])
         XCTAssertEqual(dossiers![1].documents, [])
         XCTAssertTrue(dossiers![1].acteursVariables.isEmpty)
-        XCTAssertTrue(dossiers![1].metadatas.isEmpty)
+        // XCTAssertTrue(dossiers![1].metadatas.isEmpty)
         XCTAssertNil(dossiers![1].emitDate)
         XCTAssertNil(dossiers![1].limitDate)
 
