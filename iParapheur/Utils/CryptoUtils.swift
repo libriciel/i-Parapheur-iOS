@@ -257,12 +257,12 @@ import CryptoSwift
         for hashIndex in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
 
-                case "CMS",
-                     "PADES",
-                     "PADES-basic":
-
-                    signers.append(CmsSigner(signInfo: signInfo,
-                                             privateKey: certificate))
+//                case "CMS",
+//                     "PADES":
+//                    // "PADES-basic": FIXME
+//
+//                    signers.append(CmsSigner(signInfo: signInfo,
+//                                             privateKey: certificate))
 
                 case "XADES-env":
 

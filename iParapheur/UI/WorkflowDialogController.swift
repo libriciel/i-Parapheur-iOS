@@ -140,7 +140,15 @@ import Foundation
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
 
+        if (selectedCertificate == nil) {
+            return
+        }
+
         signaturesToDo = generateSignerWrappers()
+        if (signaturesToDo.isEmpty) {
+            return
+        }
+
         switch (selectedCertificate!.sourceType) {
 
             case .imprimerieNationale:
@@ -225,9 +233,11 @@ import Foundation
             var signersMap: [String: [Signer]] = [:]
 
             for (dossierId, signInfo) in signInfoMap {
+
                 let signers = try CryptoUtils.generateSignerWrappers(signInfo: signInfo!,
                                                                      dossierId: dossierId,
                                                                      certificate: self.selectedCertificate!)
+
                 signersMap[dossierId] = signers
             }
 
@@ -251,7 +261,7 @@ import Foundation
                                 signature: signature,
                                 responseCallback: {
                                     number in
-                                     self.dismiss(animated: true)
+                                    self.dismiss(animated: true)
                                 },
                                 errorCallback: {
                                     error in
@@ -281,6 +291,7 @@ import Foundation
             }
         }
     }
+
 
     // </editor-fold desc="UIAlertViewDelegate">
 

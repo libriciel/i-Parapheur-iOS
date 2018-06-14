@@ -9,7 +9,7 @@ target "iParapheur" do
   pod 'Alamofire', '~> 4.5'
   pod 'SwiftMessages'
   pod 'NSData+Base64'
-  pod 'OpenSSL-Universal', '1.0.2.10'
+  pod 'OpenSSL-Universal', '1.0.2.13'
   pod 'AEXML'
   pod 'SSZipArchive'
   pod 'CryptoSwift'

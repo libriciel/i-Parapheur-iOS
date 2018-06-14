@@ -80,13 +80,10 @@ extension Notification.Name {
         var hashesJsonList: [String] = []
         for hash in hashes {
 
-            let data = hash.data(using: .utf8)
-            let dataHex = CryptoUtils.hex(data: data!)
-
             hashesJsonList.append("""
                 {
                     "certificateId" : " \(certificateId) ",
-                    "data" : " \(dataHex) "
+                    "data" : " \(hash) "
                 }
             """)
         }
@@ -146,7 +143,7 @@ extension Notification.Name {
         let signedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
         if (signedData != nil) {
 
-            // FIXME : Adrien hardcoded (temporary fix)
+            // FIXME : Hardcoded (hopefully temporary fix)
             signedData!.signedData.removeLast(4)
 
             NotificationCenter.default.post(name: .imprimerieNationaleSignatureResult, object: nil, userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData])
