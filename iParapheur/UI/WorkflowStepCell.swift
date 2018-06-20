@@ -1,5 +1,4 @@
 /*
- * Contributors : SKROBS (2012)
  * Copyright 2012-2017, Libriciel SCOP.
  *
  * contact@libriciel.coop
@@ -33,13 +32,15 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <UIKit/UIKit.h>
 
-@interface ADLCircuitCell : UITableViewCell
-@property (strong, nonatomic) IBOutlet UILabel *parapheurName;
-@property (strong, nonatomic) IBOutlet UILabel *validationDate;
-@property (strong, nonatomic) IBOutlet UILabel *validateurName;
-@property (strong, nonatomic) IBOutlet UILabel *annotation;
-@property (strong, nonatomic) IBOutlet UIImageView *etapeTypeIcon;
+import Foundation
 
-@end
+@objc class WorkflowStepCell: UITableViewCell {
+
+    @IBOutlet var deskTextView: UILabel!
+    @IBOutlet var stepIconImageView: UIImageView!
+    @IBOutlet var dateTextView: UILabel!
+    @IBOutlet var userTextView: UILabel!
+    @IBOutlet var publicAnnotationTextView: UILabel!
+
+}

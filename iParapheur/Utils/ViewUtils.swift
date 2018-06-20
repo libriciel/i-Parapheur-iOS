@@ -70,6 +70,16 @@ import SwiftMessages
     }
 
 
+    @objc class func getImageName(action: String) -> String {
+
+        switch (action) {
+            case "REJET": return "ic_close_white_24dp"
+            case "VISA": return "ic_done_white_24dp"
+            default: return "ic_fiber_manual_record_white_18dp"
+        }
+    }
+
+
     // <editor-folds desc="Logs">
 
     @objc class func logError(message: NSString,

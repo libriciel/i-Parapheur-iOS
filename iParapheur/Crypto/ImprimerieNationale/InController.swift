@@ -146,7 +146,9 @@ extension Notification.Name {
             // FIXME : Hardcoded (hopefully temporary fix)
             signedData!.signedData.removeLast(4)
 
-            NotificationCenter.default.post(name: .imprimerieNationaleSignatureResult, object: nil, userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData])
+            NotificationCenter.default.post(name: .imprimerieNationaleSignatureResult,
+                                            object: nil,
+                                            userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData!])
             return true
         }
 

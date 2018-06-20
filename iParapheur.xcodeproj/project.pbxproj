@@ -25,6 +25,7 @@
 		7A0FCD2D201B91650018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */; };
 		7A2C80DF20596F5D00AD3D99 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2C80DE20596F5D00AD3D99 /* InController.swift */; };
 		7A43289320CBE739004F0B2C /* Models_Document_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A43289220CBE739004F0B2C /* Models_Document_Tests.swift */; };
+		7A5E08BF20D3EFD000BFBA1A /* WorkflowStepCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5E08BE20D3EFD000BFBA1A /* WorkflowStepCell.swift */; };
 		7A61F896205BD06C008B6E46 /* Models_Annotation_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */; };
 		7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */; };
 		7A6FDB62203E9C0600F5252E /* Utils_StringsUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */; };
@@ -52,7 +53,6 @@
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
-		B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B609D15F0962100655827 /* ADLCircuitCell.m */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
 		B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41DBD37153D942D004F1AEF /* RGDeskViewController.m */; };
 		B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B42D54E8153B10970033E95B /* RGSplitViewController.m */; };
@@ -255,6 +255,7 @@
 		7A0FCD2C201B91640018DA1E /* i-Parapheur_mobile_import_certificats_v2.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "i-Parapheur_mobile_import_certificats_v2.pdf"; sourceTree = "<group>"; };
 		7A2C80DE20596F5D00AD3D99 /* InController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
 		7A43289220CBE739004F0B2C /* Models_Document_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Document_Tests.swift; sourceTree = "<group>"; };
+		7A5E08BE20D3EFD000BFBA1A /* WorkflowStepCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowStepCell.swift; sourceTree = "<group>"; };
 		7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Annotation_Tests.swift; sourceTree = "<group>"; };
 		7A6FDB5F203E8E1B00F5252E /* StringsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringsUtils.swift; sourceTree = "<group>"; };
 		7A6FDB61203E9C0600F5252E /* Utils_StringsUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_StringsUtils_Tests.swift; sourceTree = "<group>"; };
@@ -288,8 +289,6 @@
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
-		B41B609C15F0962100655827 /* ADLCircuitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLCircuitCell.h; sourceTree = "<group>"; };
-		B41B609D15F0962100655827 /* ADLCircuitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLCircuitCell.m; sourceTree = "<group>"; };
 		B41B946C156227A6004D57A1 /* rounded-checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-checkmark.png"; sourceTree = "<group>"; };
 		B41B946D156227A6004D57A1 /* rounded-checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-checkmark@2x.png"; sourceTree = "<group>"; };
 		B41B946E156227A6004D57A1 /* rounded-fail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-fail.png"; sourceTree = "<group>"; };
@@ -664,7 +663,9 @@
 				C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */,
 				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
 				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
+				7A5E08BE20D3EFD000BFBA1A /* WorkflowStepCell.swift */,
 				C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */,
+				B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */,
 				C5D627651DBF5E1900208287 /* FolderListCell.swift */,
 				C5747ECA1DD3269200DB6A1F /* FolderListEmptyView.swift */,
 				C5747EC81DD3264A00DB6A1F /* FolderListEmptyView.xib */,
@@ -673,7 +674,6 @@
 				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
 				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
 				B4E5ECBD153AF65F00BD514D /* RGMasterViewController.h */,
-				B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */,
 				B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */,
 				B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */,
 				B42D54E7153B10970033E95B /* RGSplitViewController.h */,
@@ -688,8 +688,6 @@
 		B43C7ACB154162DD00BA43A8 /* CustomCells */ = {
 			isa = PBXGroup;
 			children = (
-				B41B609C15F0962100655827 /* ADLCircuitCell.h */,
-				B41B609D15F0962100655827 /* ADLCircuitCell.m */,
 				B488310D15ECBF6500EC5BB3 /* RGFileCell.h */,
 				B488310E15ECBF6500EC5BB3 /* RGFileCell.m */,
 			);
@@ -1199,7 +1197,7 @@
 			attributes = {
 				CLASSPREFIX = RG;
 				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0940;
 				TargetAttributes = {
 					B4E5EC9D153AF65F00BD514D = {
 						DevelopmentTeam = WG6RXYLAQX;
@@ -1483,6 +1481,7 @@
 				B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */,
 				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
 				B42D54E9153B10970033E95B /* RGSplitViewController.m in Sources */,
+				7A5E08BF20D3EFD000BFBA1A /* WorkflowStepCell.swift in Sources */,
 				C5747EB91DD31DCA00DB6A1F /* DeskListEmptyView.swift in Sources */,
 				C5A03D891DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift in Sources */,
 				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
@@ -1529,7 +1528,6 @@
 				C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
 				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
-				B41B609E15F0962100655827 /* ADLCircuitCell.m in Sources */,
 				C587BFE01AD53743009AE6C3 /* ReaderDocumentOutline.m in Sources */,
 				C5A7DAE91FDECCD30022A813 /* Etape.swift in Sources */,
 				B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */,
@@ -1638,11 +1636,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -1688,11 +1688,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;

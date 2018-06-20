@@ -35,7 +35,6 @@
  */
 #import "RGMasterViewController.h"
 #import "ADLNotifications.h"
-#import "ADLCircuitCell.h"
 #import "iParapheur-Swift.h"
 
 
@@ -67,7 +66,7 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
 
-	_restClient = [ADLRestClient sharedManager];
+	_restClient = ADLRestClient.sharedManager;
 
 	self.navigationItem.rightBarButtonItem = nil;
 	_objects = NSMutableArray.new;
@@ -185,6 +184,35 @@
 
 
 #pragma mark - Table View
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    WorkflowStepCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CircuitCell"];
+    Etape *step = _objects[(NSUInteger) indexPath.row];
+
+    cell.deskTextView.text = step.parapheurName;
+    cell.userTextView.text = step.signataire;
+    cell.publicAnnotationTextView.text = step.annotPub;
+
+	if (step.dateValidation != nil) {
+		cell.dateTextView.text = [StringsUtils prettyPrintWithDate:step.dateValidation];
+	} else {
+        cell.dateTextView.text = @"";
+	}
+
+	// Image
+
+    NSString *imageName = [ViewUtils getImageNameWithAction:step.actionDemandee];
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImage *tintedImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [cell.stepIconImageView setImage:tintedImage];
+    cell.stepIconImageView.tintColor = [ColorUtils getColorWithAction:step.actionDemandee];
+
+    //
+
+	return cell;
+}
 
 
 - (NSInteger)tableView:(UITableView *)tableView

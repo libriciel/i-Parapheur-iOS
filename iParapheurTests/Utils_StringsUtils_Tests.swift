@@ -83,6 +83,15 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertEqual(StringsUtils.trim(string: plopMultiline), "plop")
     }
 
+    
+    func testprettyPrintDate() {
+        
+        let stringBefore = "2018-03-15T17:22:19Z"
+        let date = StringsUtils.deserializeAnnotationDate(string: stringBefore)
+    
+        XCTAssertEqual(StringsUtils.prettyPrint(date: date), "le 15/22/2018 à 17h22")
+    }
+    
 
     func testSplit() {
 

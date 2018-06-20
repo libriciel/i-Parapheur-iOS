@@ -40,6 +40,7 @@ import SwiftMessages
 
     static let ANNOTATION_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     static let ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+    static let PRETTY_PRINT_TIME_FORMAT = "'le 'dd/mm/yyyy' à 'HH'h'mm";
 
 
     @objc class func getMessage(error: NSError) -> NSString {
@@ -104,6 +105,13 @@ import SwiftMessages
         }
 
         return result!
+    }
+
+
+    @objc class func prettyPrint(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = PRETTY_PRINT_TIME_FORMAT
+        return dateFormatter.string(from: date)
     }
 
 

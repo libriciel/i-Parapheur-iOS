@@ -39,7 +39,7 @@
 
 @class RGDetailViewController;
 
-@interface RGDossierDetailViewController : UIViewController <ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, LGViewHUDDelegate> {
+@interface RGDossierDetailViewController : UIViewController <ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, UITableViewDataSource, LGViewHUDDelegate> {
 	UILabel *dossierName;
 	UILabel *typeLabel;
 	UILabel *sousTypeLabel;

@@ -57,9 +57,10 @@ import Foundation
 
     @objc static let DefaultTintColor = Aqua
 
+
     // MARK: - Static methods
 
-    @objc static func colorForAction(action: NSString) -> UIColor {
+    @objc static func getColor(action: NSString) -> UIColor {
 
         switch (action) {
             
