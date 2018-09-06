@@ -273,7 +273,6 @@ import Foundation
 
     // <editor-fold desc="UIAlertViewDelegate">
 
-
     func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 
         if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD) {
@@ -291,7 +290,6 @@ import Foundation
             }
         }
     }
-
 
     // </editor-fold desc="UIAlertViewDelegate">
 

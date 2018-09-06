@@ -99,6 +99,7 @@ extension Notification.Name {
             }
         """
 
+
         let cleanedString = StringsUtils.trim(string: urlString)
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
