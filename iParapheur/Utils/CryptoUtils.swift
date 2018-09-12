@@ -175,6 +175,25 @@ import CryptoSwift
     }
 
 
+    @objc class func cleanupPkcs7(signature: String) -> String {
+
+        var result = signature.trimmingCharacters(in: CharacterSet.whitespaces)
+        result = result.trimmingCharacters(in: CharacterSet.newlines)
+        result = result.replacingOccurrences(of: "\n", with: "")
+
+        if let index = result.range(of: PKCS7_BEGIN)?.upperBound {
+            result = String(result.suffix(from: index))
+        }
+
+        if let index = result.range(of: PKCS7_END)?.lowerBound {
+            result = String(result.prefix(upTo: index))
+        }
+
+        result = result.replacingOccurrences(of: " ", with: "")
+        return result
+    }
+
+
     @objc class func wrappedPem(publicKey: String) -> String {
 
         let cleanedString = cleanupPublicKey(publicKey: publicKey)
@@ -185,6 +204,20 @@ import CryptoSwift
             result.append("\(split)\n")
         }
         result.append("\(PUBLIC_KEY_END_CERTIFICATE)")
+        return result
+    }
+
+
+    class func wrappedPkcs7(pkcs7: String) -> String {
+
+        let cleanedString = cleanupPkcs7(signature: pkcs7)
+
+        var result = ""
+        result.append("\(PKCS7_BEGIN)\n")
+        for split in StringsUtils.split(string: cleanedString, length: 64) {
+            result.append("\(split)\n")
+        }
+        result.append("\(PKCS7_END)")
         return result
     }
 

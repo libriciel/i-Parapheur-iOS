@@ -764,13 +764,6 @@ static int PKCS7_type_is_other(PKCS7 *p7) {
 // <editor-fold desc="PKCS7 utils">
 
 
-+ (NSString *)buildPkcs7Wrapper:(NSString *)publicKey
-                 pkcs1Signature:(NSString *)signature {
-
-
-}
-
-
 PKCS7 *PKCS7_encrypt(STACK_OF(X509) *certs, BIO *in, const EVP_CIPHER *cipher, int flags) {
     PKCS7 *p7;
     BIO *p7bio = NULL;

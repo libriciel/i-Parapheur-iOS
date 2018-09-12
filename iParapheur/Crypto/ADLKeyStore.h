@@ -107,8 +107,5 @@ enum {
                 error:(NSError **)error;
 
 
-+ (PKCS7 *)buildPkcs7Wrapper:(NSString *)publicKey
-              pkcs1Signature:(NSString *)signature;
-
 
 @end
