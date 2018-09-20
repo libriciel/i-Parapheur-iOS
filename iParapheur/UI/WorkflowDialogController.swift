@@ -182,12 +182,12 @@ import Foundation
     @objc func onImprimerieNationaleSignatureResult(notification: Notification) {
 
         let signedHashData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
-        let signedHashString = CryptoUtils.data(hex: signedHashData.signedData).base64EncodedString()
+        let signedData = CryptoUtils.data(hex: signedHashData.signedData)
 
         let signer: Signer = Array(signaturesToDo.values)[0][0]
-        signer.buildDataToReturn(signedHash: signedHashString,
+        signer.buildDataToReturn(signature: signedData,
                                  onResponse: {
-                                     (result: String) in
+                                     (result: Data) in
                                      self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: result)
                                  },
                                  onError: {
@@ -264,10 +264,10 @@ import Foundation
     }
 
 
-    private func sendResult(dossierId: String, signature: String) {
+    private func sendResult(dossierId: String, signature: Data) {
 
-        let pkcs7 = signature
-        let pkcs7Wrapped = CryptoUtils.wrappedPkcs7(pkcs7: pkcs7)
+        let pkcs7Base64 = signature.base64EncodedString()
+        let pkcs7Wrapped = CryptoUtils.wrappedPkcs7(pkcs7: pkcs7Base64)
         let pkcs7WrappedData = pkcs7Wrapped.data(using: .utf8)
         let pkcs7WrappedBase64 = pkcs7WrappedData?.base64EncodedString()
 

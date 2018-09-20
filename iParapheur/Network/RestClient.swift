@@ -220,7 +220,7 @@ import Alamofire
     func getFinalSignature(hashBase64: String,
                            signatureBase64: String,
                            publicKeyBase64: String,
-                           onResponse responseCallback: ((String) -> Void)?,
+                           onResponse responseCallback: ((Data) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
         let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/sign"
@@ -251,7 +251,7 @@ import Alamofire
                     let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
                                                                  from: responseJsonData)
 
-                    responseCallback!(finalSignature!.signatureResultBase64)
+                    responseCallback!(Data(base64Encoded: finalSignature!.signatureResultBase64)!)
                     break
 
                 case .failure(let error):

@@ -252,41 +252,40 @@ import AEXML
     }
 
 
-    override func buildDataToReturn(signedHash: String,
-                                    onResponse responseCallback: ((String) -> Void)?,
+    override func buildDataToReturn(signature: Data,
+                                    onResponse responseCallback: ((Data) -> Void)?,
                                     onError errorCallback: ((Error) -> Void)?) {
 
         // Compute the rest of the XML wrapper
 
         buildKeyInfo()
         buildObject()
-        buildSignatureValue(signedHash: signedHash)
+        buildSignatureValue(signedHash: signature.base64EncodedString())
 
         // Wrap-up everything
 
         let rootDocument = AEXMLDocument()
         let documentDetachedExternalSignature = rootDocument.addChild(name: "DocumentDetachedExternalSignature")
-        let signature = documentDetachedExternalSignature.addChild(name: "ds:Signature",
-                                                                   attributes: [
+        let signatureNode = documentDetachedExternalSignature.addChild(name: "ds:Signature",
+                                                                       attributes: [
                                                                        "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
                                                                        "Id": "\(mSignInfo.pesIds[mIndex])_SIG_1"
                                                                    ])
 
-        signature.addChild(mSignedInfoNode!)
-        signature.addChild(mSignatureValueNode!)
-        signature.addChild(mKeyInfoNode!)
-        signature.addChild(mObjectNode!)
+        signatureNode.addChild(mSignedInfoNode!)
+        signatureNode.addChild(mSignatureValueNode!)
+        signatureNode.addChild(mKeyInfoNode!)
+        signatureNode.addChild(mObjectNode!)
 
         // Return value
 
         let finalXml = rootDocument.xmlCompact
-        print("Adrien -- final XML == \(finalXml)")
         let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: finalXml,
                                                               forceSignPropertiesXmlns: false,
                                                               forceSignedInfoXmlns: false)
         let finalXmlData = canonicalizedXml.data(using: .utf8)
 
-        responseCallback!(finalXmlData!.base64EncodedString())
+        responseCallback!(finalXmlData!)
     }
 
 

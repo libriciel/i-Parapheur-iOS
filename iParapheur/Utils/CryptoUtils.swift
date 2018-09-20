@@ -243,7 +243,7 @@ import CryptoSwift
 
     class func signWithP12(signers: [Signer],
                            certificate: Certificate,
-                           password: String) throws -> String {
+                           password: String) throws -> Data {
 
         var signatures: [String] = []
 

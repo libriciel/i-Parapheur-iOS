@@ -46,8 +46,8 @@ import Foundation
                                   onError errorCallback: ((Error) -> Void)?) {}
 
 
-    @objc func buildDataToReturn(signedHash: String,
-                                 onResponse responseCallback: ((String) -> Void)?,
+    @objc func buildDataToReturn(signature: Data,
+                                 onResponse responseCallback: ((Data) -> Void)?,
                                  onError errorCallback: ((Error) -> Void)?) {}
 
 }

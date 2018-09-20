@@ -56,19 +56,22 @@ import Foundation
 
     // <editor-fold desc="Signer">
 
+
     override func generateHashToSign(onResponse responseCallback: ((Data) -> Void)?,
                                      onError errorCallback: ((Error) -> Void)?) {
 
-        let hashBase64 = mSignInfo.hashesToSign[0]
+        let hashHex = mSignInfo.hashesToSign[0]
+        let hash = CryptoUtils.data(hex: hashHex)
         let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
 
-        restClient!.getDataToSign(hashBase64: hashBase64,
+        restClient!.getDataToSign(hashBase64: hash.base64EncodedString(),
                                   publicKeyBase64: publicKeyBase64,
                                   onResponse: {
                                       (response: Data) in
 
-                                      print("Adrien - signInfoB64 : \(hashBase64)")
+                                      print("Adrien - signInfoB64 : \(hash.base64EncodedString())")
                                       print("Adrien - PublicKey   : \(publicKeyBase64)")
+                                      print("Adrien - dataToSign  : \(response.base64EncodedString())")
 
                                       responseCallback!(response)
                                   },
@@ -78,21 +81,21 @@ import Foundation
     }
 
 
-    override func buildDataToReturn(signedHash: String,
-                                    onResponse responseCallback: ((String) -> Void)?,
+    override func buildDataToReturn(signature: Data,
+                                    onResponse responseCallback: ((Data) -> Void)?,
                                     onError errorCallback: ((Error) -> Void)?) {
 
-        let hashBase64 = mSignInfo.hashesToSign[0]
+        let hashHex = mSignInfo.hashesToSign[0]
+        let hash = CryptoUtils.data(hex: hashHex)
         let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
 
-        restClient!.getFinalSignature(hashBase64: hashBase64,
-                                      signatureBase64: signedHash,
+        restClient!.getFinalSignature(hashBase64: hash.base64EncodedString(),
+                                      signatureBase64: signature.base64EncodedString(),
                                       publicKeyBase64: publicKeyBase64,
                                       onResponse: {
-                                          (response: String) in
+                                          (response: Data) in
 
-                                          print("Adrien - finalSign   : \(response)")
-
+                                          print("Adrien - finalSignat : \(response.base64EncodedString())")
                                           responseCallback!(response)
                                       },
                                       onError: {
