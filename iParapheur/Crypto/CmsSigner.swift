@@ -56,7 +56,7 @@ import Foundation
 
     // <editor-fold desc="Signer">
 
-    override func generateHashToSign(onResponse responseCallback: ((String) -> Void)?,
+    override func generateHashToSign(onResponse responseCallback: ((Data) -> Void)?,
                                      onError errorCallback: ((Error) -> Void)?) {
 
         let hashBase64 = mSignInfo.hashesToSign[0]
@@ -65,7 +65,7 @@ import Foundation
         restClient!.getDataToSign(hashBase64: hashBase64,
                                   publicKeyBase64: publicKeyBase64,
                                   onResponse: {
-                                      (response: String) in
+                                      (response: Data) in
 
                                       print("Adrien - signInfoB64 : \(hashBase64)")
                                       print("Adrien - PublicKey   : \(publicKeyBase64)")

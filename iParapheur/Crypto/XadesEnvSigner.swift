@@ -236,7 +236,7 @@ import AEXML
     // <editor-fold desc="Signer">
 
 
-    override func generateHashToSign(onResponse responseCallback: ((String) -> Void)?,
+    override func generateHashToSign(onResponse responseCallback: ((Data) -> Void)?,
                                      onError errorCallback: ((Error) -> Void)?) {
 
         buildObjectSignedSignatureProperties()
@@ -248,7 +248,7 @@ import AEXML
 
         let hashToSign = CryptoUtils.sha1Base64(string: canonicalizedXml)
 
-        responseCallback!(hashToSign)
+        responseCallback!(Data(base64Encoded: hashToSign)!)
     }
 
 

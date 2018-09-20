@@ -177,7 +177,7 @@ import Alamofire
 
     func getDataToSign(hashBase64: String,
                        publicKeyBase64: String,
-                       onResponse responseCallback: ((String) -> Void)?,
+                       onResponse responseCallback: ((Data) -> Void)?,
                        onError errorCallback: ((Error) -> Void)?) {
 
         let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/dataToSign"
@@ -206,7 +206,7 @@ import Alamofire
                     let dataToSign = try? jsonDecoder.decode(DataToSign.self,
                                                              from: responseJsonData)
 
-                    responseCallback!(dataToSign!.dataToSignBase64)
+                    responseCallback!(Data(base64Encoded: dataToSign!.dataToSignBase64)!)
                     break
 
                 case .failure(let error):
@@ -248,8 +248,6 @@ import Alamofire
 
                     let responseJsonData = response.value!.data(using: .utf8)!
                     let jsonDecoder = JSONDecoder()
-                    print(response.value)
-
                     let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
                                                                  from: responseJsonData)
 

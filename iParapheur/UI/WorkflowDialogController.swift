@@ -159,8 +159,8 @@ import Foundation
                 let signer: Signer = Array(signaturesToDo.values)[0][0]
 
                 signer.generateHashToSign(onResponse: {
-                                              (result: String) in
-                                              InController.sign(hashesBase64: [result], certificateId: certificateId)
+                                              (result: Data) in
+                                              InController.sign(hashes: [result], certificateId: certificateId)
                                           },
                                           onError: {
                                               (error: Error) in

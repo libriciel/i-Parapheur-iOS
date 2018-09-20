@@ -75,13 +75,12 @@ extension Notification.Name {
     }
 
 
-    @objc class func sign(hashesBase64: [String], certificateId: String) {
+    @objc class func sign(hashes: [Data], certificateId: String) {
 
         var hashesJsonList: [String] = []
-        for hash in hashesBase64 {
+        for hash in hashes {
 
-            let hashData = Data(base64Encoded: hash)!
-            let HashHex = CryptoUtils.hex(data: hashData)
+            let HashHex = CryptoUtils.hex(data: hash)
 
             hashesJsonList.append("""
                 {
