@@ -32,20 +32,30 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-/**
-    A Protocol would have been more elegant,
-    But I had some issues with Swift/ObjC crossed calls.
-    It was made in a rush, so... NSObject it is.
-*/
-@objc class Signer: NSObject {
 
-    @objc func generateHashToSign(onResponse responseCallback: ((String) -> Void)?,
-                                  onError errorCallback: ((Error) -> Void)?) {}
+@objc public class DataToSign: NSObject, Decodable {
 
-    @objc func buildDataToReturn(signedHash: String,
-                                 onResponse responseCallback: ((String) -> Void)?,
-                                 onError errorCallback: ((Error) -> Void)?) {}
+    let dataToSignBase64: String
+    let payload: [String: String]
+
+
+    // <editor-fold desc="Json methods">
+
+    enum CodingKeys: String, CodingKey {
+        case dataToSignBase64
+        case payload
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+
+        dataToSignBase64 = try values.decodeIfPresent(String.self, forKey: .dataToSignBase64)!
+        payload = try values.decodeIfPresent([String: String].self, forKey: .payload) ?? [:]
+    }
+
+    // </editor-fold desc="Json methods">
 
 }

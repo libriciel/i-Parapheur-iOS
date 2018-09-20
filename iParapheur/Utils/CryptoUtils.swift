@@ -283,19 +283,24 @@ import CryptoSwift
 
     class func generateSignerWrappers(signInfo: SignInfo,
                                       dossierId: String,
-                                      certificate: Certificate) throws -> [Signer] {
+                                      certificate: Certificate,
+                                      restClient: RestClient) throws -> [Signer] {
 
         var signers: [Signer] = []
 
         for hashIndex in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
 
-//                case "CMS",
-//                     "PADES":
-//                    // "PADES-basic": FIXME
-//
-//                    signers.append(CmsSigner(signInfo: signInfo,
-//                                             privateKey: certificate))
+                case "CMS",
+                     "PADES",
+                     "PADES-basic": // FIXME
+
+                    let cmsSigner = CmsSigner(signInfo: signInfo,
+                                              privateKey: certificate)
+
+                    cmsSigner.restClient = restClient
+                    signers.append(cmsSigner)
+
 
                 case "XADES-env":
 
@@ -304,6 +309,7 @@ import CryptoSwift
                                                   publicKey: certificate.publicKey!.base64EncodedString(),
                                                   caName: certificate.caName!,
                                                   serialNumber: certificate.serialNumber!))
+
 
                 default:
                     throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)

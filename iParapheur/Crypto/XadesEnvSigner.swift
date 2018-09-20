@@ -236,7 +236,8 @@ import AEXML
     // <editor-fold desc="Signer">
 
 
-    override func generateHashToSign() -> String {
+    override func generateHashToSign(onResponse responseCallback: ((String) -> Void)?,
+                                     onError errorCallback: ((Error) -> Void)?) {
 
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
@@ -244,13 +245,16 @@ import AEXML
         let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
                                                               forceSignPropertiesXmlns: false,
                                                               forceSignedInfoXmlns: true)
+
         let hashToSign = CryptoUtils.sha1Base64(string: canonicalizedXml)
 
-        return hashToSign
+        responseCallback!(hashToSign)
     }
 
 
-    override func buildDataToReturn(signedHash: String) -> String {
+    override func buildDataToReturn(signedHash: String,
+                                    onResponse responseCallback: ((String) -> Void)?,
+                                    onError errorCallback: ((Error) -> Void)?) {
 
         // Compute the rest of the XML wrapper
 
@@ -281,7 +285,8 @@ import AEXML
                                                               forceSignPropertiesXmlns: false,
                                                               forceSignedInfoXmlns: false)
         let finalXmlData = canonicalizedXml.data(using: .utf8)
-        return finalXmlData!.base64EncodedString()
+
+        responseCallback!(finalXmlData!.base64EncodedString())
     }
 
 

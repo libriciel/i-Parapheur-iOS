@@ -217,7 +217,7 @@
 
 	[self.refreshControl beginRefreshing];
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue != -1) {
+	if ([ADLRestClient.sharedManager getRestApiVersion].intValue != -1) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getBureaux:^(NSArray *bureaux) {
 							 __strong typeof(weakSelf) strongSelf = weakSelf;

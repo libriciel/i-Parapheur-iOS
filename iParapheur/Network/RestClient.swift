@@ -175,6 +175,48 @@ import Alamofire
     }
 
 
+    func getDataToSign(hashBase64: String,
+                       publicKeyBase64: String,
+                       onResponse responseCallback: ((String?) -> Void)?,
+                       onError errorCallback: ((Error) -> Void)?) {
+
+        let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/dataToSign"
+
+        // Parameters
+
+        let parameters: Parameters = [
+            "fileHash": hashBase64,
+            "fileHashDigestAlgorithm": "SHA256",
+            "publicKeyBase64": publicKeyBase64
+        ]
+
+        // Request
+
+        manager.request(getDataToSignUrl, method: .get, parameters: parameters).validate().responseString {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+
+                    // Prepare
+
+                    let responseJsonData = response.value!.data(using: .utf8)!
+                    let jsonDecoder = JSONDecoder()
+                    let dossierList = try? jsonDecoder.decode(DataToSign.self,
+                                                              from: responseJsonData)
+
+                    responseCallback!(dossierList?.dataToSignBase64)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error)
+                    break
+            }
+        }
+    }
+
+
     @objc func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
                           onError errorCallback: ((NSError) -> Void)?) {
 
@@ -357,7 +399,7 @@ import Alamofire
 
                     let jsonDecoder = JSONDecoder()
                     let dossier = try? jsonDecoder.decode(Dossier.self,
-                                                              from: responseJsonData)
+                                                          from: responseJsonData)
 
                     responseCallback!(dossier!)
                     break

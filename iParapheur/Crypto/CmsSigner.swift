@@ -43,6 +43,7 @@ import Foundation
 
     let mSignInfo: SignInfo
     let mPrivateKey: Certificate
+    @objc var restClient: RestClient?
 
 
     @objc init(signInfo: SignInfo,
@@ -55,13 +56,36 @@ import Foundation
 
     // <editor-fold desc="Signer">
 
-    override func generateHashToSign() -> String {
-        return mSignInfo.hashesToSign[0]
+    override func generateHashToSign(onResponse responseCallback: ((String) -> Void)?,
+                                     onError errorCallback: ((Error) -> Void)?) {
+
+        let hashBase64 = mSignInfo.hashesToSign[0]
+        let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
+
+        restClient!.getDataToSign(hashBase64: hashBase64,
+                                  publicKeyBase64: publicKeyBase64,
+                                  onResponse: {
+                                      (response: String?) in
+
+                                      let hashData = Data(base64Encoded: hashBase64)
+                                      let hashHex = CryptoUtils.hex(data: hashData!)
+
+                                      responseCallback!(response!)
+                                  },
+                                  onError: {
+                                      (error: Error) in
+                                  })
     }
 
 
-    override func buildDataToReturn(signedHash: String) -> String {
-        return signedHash
+    override func buildDataToReturn(signedHash: String,
+                                    onResponse responseCallback: ((String) -> Void)?,
+                                    onError errorCallback: ((Error) -> Void)?) {
+
+        let signatureData = CryptoUtils.data(hex: signedHash)
+        let signaureBase64 = signatureData.base64EncodedString()
+
+        responseCallback!(signedHash)
     }
 
     // </editor-fold desc="Signer">

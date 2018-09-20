@@ -110,8 +110,8 @@
         [_swiftManager cancelAllOperations];
 
     _swiftManager = [RestClient.alloc initWithBaseUrl:url
-                                                     login:login
-                                                  password:password];
+                                                login:login
+                                             password:password];
 }
 
 
@@ -354,7 +354,7 @@
 //	result[@"author"] = annotation.unwrappedAuthor;
     result[@"text"] = annotation.text;
     result[@"type"] = annotation.type;
-    result[@"page"] = [NSString stringWithFormat:@"%ld", (long)annotation.page];
+    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
 //	result[@"uuid"] = annotation.unwrappedId;
 
     CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
@@ -384,7 +384,7 @@
 
     // Fixme : send every other data form annotation
 
-    result[@"page"] = [NSString stringWithFormat:@"%ld", (long)annotation.page];
+    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
     result[@"text"] = annotation.text;
     result[@"type"] = annotation.type;
     result[@"uuid"] = annotation.identifier;

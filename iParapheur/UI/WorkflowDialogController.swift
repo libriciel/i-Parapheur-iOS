@@ -158,8 +158,15 @@ import Foundation
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
                 let signer: Signer = Array(signaturesToDo.values)[0][0]
 
-                let hashToSign = signer.generateHashToSign()
-                InController.sign(hashes: [hashToSign], certificateId: certificateId)
+                signer.generateHashToSign(onResponse: {
+                                              (result: String) in
+                                              InController.sign(hashes: [result], certificateId: certificateId)
+                                          },
+                                          onError: {
+                                              (error: Error) in
+                                              // TODO
+                                          }
+                )
 
             default:
 
@@ -178,9 +185,14 @@ import Foundation
         let signedHashString = CryptoUtils.data(hex: signedHashData.signedData).base64EncodedString()
 
         let signer: Signer = Array(signaturesToDo.values)[0][0]
-        let finalSignatureString = signer.buildDataToReturn(signedHash: signedHashString);
-
-        sendResult(dossierId: Array(signaturesToDo.keys)[0], signature: finalSignatureString)
+        signer.buildDataToReturn(signedHash: signedHashString,
+                                 onResponse: {
+                                     (result: String) in
+                                     self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: result)
+                                 },
+                                 onError: {
+                                     (error: Error) in
+                                 });
     }
 
 
@@ -236,7 +248,8 @@ import Foundation
 
                 let signers = try CryptoUtils.generateSignerWrappers(signInfo: signInfo!,
                                                                      dossierId: dossierId,
-                                                                     certificate: self.selectedCertificate!)
+                                                                     certificate: self.selectedCertificate!,
+                                                                     restClient: restClient!)
 
                 signersMap[dossierId] = signers
             }

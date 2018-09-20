@@ -92,7 +92,7 @@ extension Notification.Name {
             inmiddleware://sign/ {
 
                 "responseScheme" : "iparapheur",
-                "mechanism" : "rsa",
+                "mechanism" : "sha256rsa",
                 "values" : [
                     \(hashesJsonList.joined(separator: ","))
                 ]
