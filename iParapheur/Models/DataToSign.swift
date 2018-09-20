@@ -52,7 +52,7 @@ import Foundation
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        dataToSignBase64 = try values.decodeIfPresent(String.self, forKey: .dataToSignBase64)!
+        dataToSignBase64 = try values.decodeIfPresent(String.self, forKey: .dataToSignBase64) ?? ""
         payload = try values.decodeIfPresent([String: String].self, forKey: .payload) ?? [:]
     }
 

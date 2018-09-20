@@ -65,12 +65,12 @@ import Foundation
         restClient!.getDataToSign(hashBase64: hashBase64,
                                   publicKeyBase64: publicKeyBase64,
                                   onResponse: {
-                                      (response: String?) in
+                                      (response: String) in
 
-                                      let hashData = Data(base64Encoded: hashBase64)
-                                      let hashHex = CryptoUtils.hex(data: hashData!)
+                                      print("Adrien - signInfoB64 : \(hashBase64)")
+                                      print("Adrien - PublicKey   : \(publicKeyBase64)")
 
-                                      responseCallback!(response!)
+                                      responseCallback!(response)
                                   },
                                   onError: {
                                       (error: Error) in
@@ -82,10 +82,22 @@ import Foundation
                                     onResponse responseCallback: ((String) -> Void)?,
                                     onError errorCallback: ((Error) -> Void)?) {
 
-        let signatureData = CryptoUtils.data(hex: signedHash)
-        let signaureBase64 = signatureData.base64EncodedString()
+        let hashBase64 = mSignInfo.hashesToSign[0]
+        let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
 
-        responseCallback!(signedHash)
+        restClient!.getFinalSignature(hashBase64: hashBase64,
+                                      signatureBase64: signedHash,
+                                      publicKeyBase64: publicKeyBase64,
+                                      onResponse: {
+                                          (response: String) in
+
+                                          print("Adrien - finalSign   : \(response)")
+
+                                          responseCallback!(response)
+                                      },
+                                      onError: {
+                                          (error: Error) in
+                                      })
     }
 
     // </editor-fold desc="Signer">

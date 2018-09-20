@@ -51,6 +51,7 @@
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
+		AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
 		AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
@@ -289,6 +290,7 @@
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B946C156227A6004D57A1 /* rounded-checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded-checkmark.png"; sourceTree = "<group>"; };
@@ -592,6 +594,7 @@
 				64F342B900CD2EE0E4AA64DD /* State.swift */,
 				C5C0DA391FD390BD00A993DB /* SignInfo.swift */,
 				AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */,
+				AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1562,6 +1565,7 @@
 				64F34C7DE0EEAF5125C6D9AE /* CryptoUtils.swift in Sources */,
 				AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */,
 				AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */,
+				AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -160,7 +160,7 @@ import Foundation
 
                 signer.generateHashToSign(onResponse: {
                                               (result: String) in
-                                              InController.sign(hashes: [result], certificateId: certificateId)
+                                              InController.sign(hashesBase64: [result], certificateId: certificateId)
                                           },
                                           onError: {
                                               (error: Error) in
@@ -266,12 +266,17 @@ import Foundation
 
     private func sendResult(dossierId: String, signature: String) {
 
-        print("Adrien -- Sending back signature : \(signature)")
+        let pkcs7 = signature
+        let pkcs7Wrapped = CryptoUtils.wrappedPkcs7(pkcs7: pkcs7)
+        let pkcs7WrappedData = pkcs7Wrapped.data(using: .utf8)
+        let pkcs7WrappedBase64 = pkcs7WrappedData?.base64EncodedString()
+
+        print("Adrien -- Sending back signature : \(pkcs7WrappedBase64!)")
         restClient?.signDossier(dossierId: dossierId,
                                 bureauId: currentBureau!,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
-                                signature: signature,
+                                signature: pkcs7WrappedBase64!,
                                 responseCallback: {
                                     number in
                                     self.dismiss(animated: true)

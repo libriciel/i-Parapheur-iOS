@@ -177,7 +177,7 @@ import Alamofire
 
     func getDataToSign(hashBase64: String,
                        publicKeyBase64: String,
-                       onResponse responseCallback: ((String?) -> Void)?,
+                       onResponse responseCallback: ((String) -> Void)?,
                        onError errorCallback: ((Error) -> Void)?) {
 
         let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/dataToSign"
@@ -203,10 +203,57 @@ import Alamofire
 
                     let responseJsonData = response.value!.data(using: .utf8)!
                     let jsonDecoder = JSONDecoder()
-                    let dossierList = try? jsonDecoder.decode(DataToSign.self,
-                                                              from: responseJsonData)
+                    let dataToSign = try? jsonDecoder.decode(DataToSign.self,
+                                                             from: responseJsonData)
 
-                    responseCallback!(dossierList?.dataToSignBase64)
+                    responseCallback!(dataToSign!.dataToSignBase64)
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error)
+                    break
+            }
+        }
+    }
+
+
+    func getFinalSignature(hashBase64: String,
+                           signatureBase64: String,
+                           publicKeyBase64: String,
+                           onResponse responseCallback: ((String) -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
+
+        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/sign"
+
+        // Parameters
+
+        let parameters: Parameters = [
+            "fileHash": hashBase64,
+            "signatureBase64": signatureBase64,
+            "fileHashDigestAlgorithm": "SHA256",
+            "encryptionAlgorithm": "RSA",
+            "publicKeyBase64": publicKeyBase64
+        ]
+
+        // Request
+
+        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters).validate().responseString {
+            response in
+
+            switch (response.result) {
+
+                case .success:
+
+                    // Prepare
+
+                    let responseJsonData = response.value!.data(using: .utf8)!
+                    let jsonDecoder = JSONDecoder()
+                    print(response.value)
+
+                    let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
+                                                                 from: responseJsonData)
+
+                    responseCallback!(finalSignature!.signatureResultBase64)
                     break
 
                 case .failure(let error):
