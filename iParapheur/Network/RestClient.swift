@@ -186,7 +186,7 @@ import Alamofire
 
         let parameters: Parameters = [
             "fileHash": hashBase64,
-            "fileHashDigestAlgorithm": "SHA256",
+            "fileHashDigestAlgorithm": "SHA1",
             "publicKeyBase64": publicKeyBase64
         ]
 
@@ -230,7 +230,7 @@ import Alamofire
         let parameters: Parameters = [
             "fileHash": hashBase64,
             "signatureBase64": signatureBase64,
-            "fileHashDigestAlgorithm": "SHA256",
+            "fileHashDigestAlgorithm": "SHA1",
             "encryptionAlgorithm": "RSA",
             "publicKeyBase64": publicKeyBase64
         ]
@@ -247,10 +247,9 @@ import Alamofire
                     // Prepare
 
                     let responseJsonData = response.value!.data(using: .utf8)!
-                    let responseJsonData = response.value?.data(using: .utf8)!
                     let jsonDecoder = JSONDecoder()
                     let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
-                                                                 from: responseJsonData!)
+                                                                 from: responseJsonData)
 
                     responseCallback!(Data(base64Encoded: finalSignature!.signatureResultBase64)!)
                     break
