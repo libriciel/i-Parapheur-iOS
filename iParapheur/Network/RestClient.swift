@@ -247,9 +247,10 @@ import Alamofire
                     // Prepare
 
                     let responseJsonData = response.value!.data(using: .utf8)!
+                    let responseJsonData = response.value?.data(using: .utf8)!
                     let jsonDecoder = JSONDecoder()
                     let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
-                                                                 from: responseJsonData)
+                                                                 from: responseJsonData!)
 
                     responseCallback!(Data(base64Encoded: finalSignature!.signatureResultBase64)!)
                     break
