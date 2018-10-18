@@ -32,22 +32,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-
 import Foundation
 
 
 extension Notification.Name {
 
     static let imprimerieNationaleCertificateImport = Notification.Name("ImprimerieNationaleCertificateImport")
-    static let imprimerieNationaleSignatureResult = Notification.Name("ImprimerieNationaleSignatureResult")
-
 }
 
 
 @objc class InController: NSObject {
-
-    static let NOTIF_USERINFO_SIGNEDDATA = "signedData"
-
 
     class func getTokenData() {
 
@@ -143,15 +137,19 @@ extension Notification.Name {
             return true
         }
 
-        let signedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
-        if (signedData != nil) {
+        let inSignedData = try? jsonDecoder.decode(InSignedData.self, from: croppedUrl.data(using: .utf8)!)
+        if (inSignedData != nil) {
 
-            // FIXME : Hardcoded (hopefully temporary fix)
-            signedData!.signedData.removeLast(4)
+            // FIXME : Hardcoded (hopefully a temporary fix)
+            inSignedData!.signedData.removeLast(4)
+            let signedData = CryptoUtils.data(hex: inSignedData!.signedData)
 
-            NotificationCenter.default.post(name: .imprimerieNationaleSignatureResult,
+            NotificationCenter.default.post(name: .p12SignatureResult,
                                             object: nil,
-                                            userInfo: [NOTIF_USERINFO_SIGNEDDATA: signedData!])
+                                            userInfo: [
+                                                CryptoUtils.NOTIF_USERINFO_SIGNEDDATA: signedData,
+                                                CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX: 0
+                                            ])
             return true
         }
 

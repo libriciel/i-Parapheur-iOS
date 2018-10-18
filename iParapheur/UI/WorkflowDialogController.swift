@@ -64,11 +64,7 @@ import Foundation
         super.viewDidLoad()
 
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(onImprimerieNationaleSignatureResult),
-                                               name: .imprimerieNationaleSignatureResult,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(onP12SignatureResult),
+                                               selector: #selector(onSignatureResult),
                                                name: .p12SignatureResult,
                                                object: nil)
 
@@ -182,28 +178,13 @@ import Foundation
 
     // </editor-fold desc="UI Listeners">
 
-    @objc func onP12SignatureResult(notification: Notification) {
+
+    @objc func onSignatureResult(notification: Notification) {
 
         let signedData = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNEDDATA] as! Data
         let signatureOrder = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX] as! Int
 
         print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength64Characters))")
-
-        let signer: Signer = Array(signaturesToDo.values)[0][0]
-        signer.buildDataToReturn(signature: signedData,
-                                 onResponse: {
-                                     (result: Data) in
-                                     self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: result)
-                                 },
-                                 onError: {
-                                     (error: Error) in
-                                 });
-    }
-
-    @objc func onImprimerieNationaleSignatureResult(notification: Notification) {
-
-        let signedHashData: InSignedData = notification.userInfo![InController.NOTIF_USERINFO_SIGNEDDATA] as! InSignedData
-        let signedData = CryptoUtils.data(hex: signedHashData.signedData)
 
         let signer: Signer = Array(signaturesToDo.values)[0][0]
         signer.buildDataToReturn(signature: signedData,
@@ -319,11 +300,9 @@ import Foundation
                 let givenPassword = alertView.textField(at: 0)!.text!
 
                 for (dossierId, signers) in signaturesToDo {
-                    let signatureResult = try? CryptoUtils.signWithP12(signers: signers,
-                                                                       certificate: selectedCertificate!,
-                                                                       password: givenPassword)
-                    sendResult(dossierId: dossierId,
-                               signature: signatureResult!)
+                    try? CryptoUtils.signWithP12(signers: signers,
+                                                 certificate: selectedCertificate!,
+                                                 password: givenPassword)
                 }
             }
         }

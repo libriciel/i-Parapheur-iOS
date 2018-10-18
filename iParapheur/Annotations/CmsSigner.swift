@@ -61,6 +61,7 @@ import Foundation
                                      onError errorCallback: ((Error) -> Void)?) {
 
         let hashHex = mSignInfo.hashesToSign[0]
+
         let hash = CryptoUtils.data(hex: hashHex)
         let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
 
