@@ -67,6 +67,10 @@ import Foundation
                                                selector: #selector(onImprimerieNationaleSignatureResult),
                                                name: .imprimerieNationaleSignatureResult,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onP12SignatureResult),
+                                               name: .p12SignatureResult,
+                                               object: nil)
 
         if (currentAction == "SIGNATURE") {
             for dossierId in signInfoMap.keys {
@@ -178,6 +182,23 @@ import Foundation
 
     // </editor-fold desc="UI Listeners">
 
+    @objc func onP12SignatureResult(notification: Notification) {
+
+        let signedData = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNEDDATA] as! Data
+        let signatureOrder = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX] as! Int
+
+        print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength64Characters))")
+
+        let signer: Signer = Array(signaturesToDo.values)[0][0]
+        signer.buildDataToReturn(signature: signedData,
+                                 onResponse: {
+                                     (result: Data) in
+                                     self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: result)
+                                 },
+                                 onError: {
+                                     (error: Error) in
+                                 });
+    }
 
     @objc func onImprimerieNationaleSignatureResult(notification: Notification) {
 
@@ -243,7 +264,6 @@ import Foundation
             // Compute signature(s) hash(es)
 
             var signersMap: [String: [Signer]] = [:]
-
             for (dossierId, signInfo) in signInfoMap {
 
                 let signers = try CryptoUtils.generateSignerWrappers(signInfo: signInfo!,

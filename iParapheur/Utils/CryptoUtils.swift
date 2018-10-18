@@ -41,8 +41,16 @@ import Security
 import CryptoSwift
 
 
+extension Notification.Name {
+
+    static let p12SignatureResult = Notification.Name("p12SignatureResult")
+
+}
+
 @objc class CryptoUtils: NSObject {
 
+    static public let NOTIF_USERINFO_SIGNEDDATA = "signedData"
+    static public let NOTIF_USERINFO_SIGNATUREINDEX = "signatureIndex"
 
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
     static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
@@ -243,7 +251,7 @@ import CryptoSwift
 
     class func signWithP12(signers: [Signer],
                            certificate: Certificate,
-                           password: String) throws -> Data {
+                           password: String) throws {
 
         var signatures: [String] = []
 
@@ -264,20 +272,41 @@ import CryptoSwift
 
         // Building signature response
 
-        for signer in signers {
+        for i in 0..<signers.count {
+            let signer: Signer = signers[i]
 
-            let hash = signer.generateHashToSign();
-            var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
-                                                     keyFileUrl: p12FinalUrl,
-                                                     password: password)
+            signer.generateHashToSign(
+                    onResponse: {
+                        (result: Data) in
 
-            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
-            let finalSignature = signer.buildDataToReturn(signedHash: signedHash)
-            signatures.append(finalSignature)
+                        var signedHash = try? CryptoUtils.rsaSign(data: result.sha1() as NSData,
+                                                                  keyFileUrl: p12FinalUrl,
+                                                                  password: password)
+
+                        signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
+                        signer.buildDataToReturn(signature: Data(base64Encoded: signedHash!)!,
+                                                 onResponse: {
+                                                     (result: Data) in
+
+
+                                                     NotificationCenter.default.post(name: .p12SignatureResult,
+                                                                                     object: nil,
+                                                                                     userInfo: [
+                                                                                         NOTIF_USERINFO_SIGNEDDATA: result,
+                                                                                         NOTIF_USERINFO_SIGNATUREINDEX: i
+                                                                                     ])
+                                                 },
+                                                 onError: {
+                                                     (error: Error) in
+
+                                                 })
+
+                    },
+                    onError: {
+                        (error: Error) in
+                        //TODO
+                    })
         }
-
-        let finalSignature = signatures.joined(separator: ",")
-        return finalSignature
     }
 
 
@@ -366,7 +395,7 @@ import CryptoSwift
 
         var p12KeyFileContent: CFData?
         do {
-            p12KeyFileContent = try Data(contentsOf: keyFileUrl,
+            try p12KeyFileContent = Data(contentsOf: keyFileUrl,
                                          options: .alwaysMapped) as CFData
         } catch {
             NSLog("Cannot read PKCS12 file from \(keyFileUrl.lastPathComponent)")

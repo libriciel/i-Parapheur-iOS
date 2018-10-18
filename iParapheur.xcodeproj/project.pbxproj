@@ -52,6 +52,7 @@
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
 		AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */; };
+		AB3CA69F6AD47CAD81C16363 /* CmsSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA534361CA9D5D5BE04BD /* CmsSigner.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
 		AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
@@ -215,7 +216,6 @@
 		C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D627651DBF5E1900208287 /* FolderListCell.swift */; };
 		C5DF831F1DB518FD00BA14BB /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */; };
 		C5E28D6C1FE3DC7B006890C1 /* XadesEnvSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */; };
-		C5E28D6E1FE40FCE006890C1 /* CmsSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */; };
 		C5E28D701FE4114B006890C1 /* Signer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E28D6F1FE4114B006890C1 /* Signer.swift */; };
 		C5ECDDC21AB2F6E7003F13ED /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */; };
 		C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */; };
@@ -289,6 +289,7 @@
 		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
+		AB3CA534361CA9D5D5BE04BD /* CmsSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CmsSigner.swift; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
 		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
@@ -511,7 +512,6 @@
 		C5D627651DBF5E1900208287 /* FolderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtils.swift; sourceTree = "<group>"; };
 		C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSigner.swift; sourceTree = "<group>"; };
-		C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmsSigner.swift; sourceTree = "<group>"; };
 		C5E28D6F1FE4114B006890C1 /* Signer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signer.swift; sourceTree = "<group>"; };
 		C5ECDDC01AB2F6E7003F13ED /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtils.h; sourceTree = "<group>"; };
 		C5ECDDC11AB2F6E7003F13ED /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtils.m; sourceTree = "<group>"; };
@@ -555,7 +555,6 @@
 				7ACBEE15206E894D000618DC /* ImprimerieNationale */,
 				1434F669168DFDD2000C115D /* ADLKeyStore.h */,
 				1434F66A168DFDD2000C115D /* ADLKeyStore.m */,
-				C5E28D6D1FE40FCE006890C1 /* CmsSigner.swift */,
 				C5E28D6F1FE4114B006890C1 /* Signer.swift */,
 				C5E28D6B1FE3DC7B006890C1 /* XadesEnvSigner.swift */,
 			);
@@ -712,6 +711,7 @@
 				95719C811893D50600246F7C /* ADLInfoView.m */,
 				B47944D61622BCDE0061E09B /* ADLPostItView.h */,
 				B47944D71622BCDE0061E09B /* ADLPostItView.m */,
+				AB3CA534361CA9D5D5BE04BD /* CmsSigner.swift */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";
@@ -1467,7 +1467,6 @@
 				7A0FC7AF201651CF002837CE /* Filter+CoreDataClass.swift in Sources */,
 				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
 				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
-				C5E28D6E1FE40FCE006890C1 /* CmsSigner.swift in Sources */,
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
 				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
 				C5A7DAE71FDE96F50022A813 /* Circuit.swift in Sources */,
@@ -1566,6 +1565,7 @@
 				AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */,
 				AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */,
 				AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */,
+				AB3CA69F6AD47CAD81C16363 /* CmsSigner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
