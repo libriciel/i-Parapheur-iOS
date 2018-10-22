@@ -144,7 +144,7 @@ extension Notification.Name {
             inSignedData!.signedData.removeLast(4)
             let signedData = CryptoUtils.data(hex: inSignedData!.signedData)
 
-            NotificationCenter.default.post(name: .p12SignatureResult,
+            NotificationCenter.default.post(name: .signatureResult,
                                             object: nil,
                                             userInfo: [
                                                 CryptoUtils.NOTIF_USERINFO_SIGNEDDATA: signedData,

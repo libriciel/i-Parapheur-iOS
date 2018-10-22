@@ -43,7 +43,7 @@ import CryptoSwift
 
 extension Notification.Name {
 
-    static let p12SignatureResult = Notification.Name("p12SignatureResult")
+    static let signatureResult = Notification.Name("p12SignatureResult")
 
 }
 
@@ -279,28 +279,18 @@ extension Notification.Name {
                     onResponse: {
                         (result: Data) in
 
+                        // TODO FIXME : set SHA1/SHA256 parameter
                         var signedHash = try? CryptoUtils.rsaSign(data: result.sha1() as NSData,
                                                                   keyFileUrl: p12FinalUrl,
                                                                   password: password)
 
                         signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
-                        signer.buildDataToReturn(signature: Data(base64Encoded: signedHash!)!,
-                                                 onResponse: {
-                                                     (result: Data) in
-
-
-                                                     NotificationCenter.default.post(name: .p12SignatureResult,
-                                                                                     object: nil,
-                                                                                     userInfo: [
-                                                                                         NOTIF_USERINFO_SIGNEDDATA: result,
-                                                                                         NOTIF_USERINFO_SIGNATUREINDEX: i
-                                                                                     ])
-                                                 },
-                                                 onError: {
-                                                     (error: Error) in
-
-                                                 })
-
+                        NotificationCenter.default.post(name: .signatureResult,
+                                                        object: nil,
+                                                        userInfo: [
+                                                            NOTIF_USERINFO_SIGNEDDATA: Data(base64Encoded: signedHash!),
+                                                            NOTIF_USERINFO_SIGNATUREINDEX: i
+                                                        ])
                     },
                     onError: {
                         (error: Error) in

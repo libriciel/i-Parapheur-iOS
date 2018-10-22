@@ -65,7 +65,7 @@ import Foundation
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
-                                               name: .p12SignatureResult,
+                                               name: .signatureResult,
                                                object: nil)
 
         if (currentAction == "SIGNATURE") {
@@ -184,7 +184,7 @@ import Foundation
         let signedData = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNEDDATA] as! Data
         let signatureOrder = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX] as! Int
 
-        print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength64Characters))")
+        print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength76Characters))")
 
         let signer: Signer = Array(signaturesToDo.values)[0][0]
         signer.buildDataToReturn(signature: signedData,

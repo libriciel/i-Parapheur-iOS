@@ -96,7 +96,7 @@ import Foundation
                                       onResponse: {
                                           (response: Data) in
 
-                                          print("Adrien - finalSignat : \(response.base64EncodedString())")
+                                          print("Adrien - finalSignat : \(response.base64EncodedString(options: .lineLength64Characters))")
                                           responseCallback!(response)
                                       },
                                       onError: {
