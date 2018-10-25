@@ -77,7 +77,7 @@ import Foundation
             let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib();
             emptyView.downloadDocButton.addTarget(self,
                                                   action: #selector(downloadDocButton),
-                                                  for: UIControlEvents.touchUpInside)
+                                                  for: UIControl.Event.touchUpInside)
             tableView.backgroundView = emptyView;
         } else {
             tableView.backgroundView = nil;

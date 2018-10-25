@@ -56,7 +56,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
         menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
                                 animated: false,
-                                scrollPosition: UITableViewScrollPosition.none)
+                                scrollPosition: UITableView.ScrollPosition.none)
     }
 
 

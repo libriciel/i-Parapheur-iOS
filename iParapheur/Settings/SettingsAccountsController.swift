@@ -156,7 +156,7 @@ import Foundation
             accountList.append(account)
             let newIndexPath = IndexPath(row: accountList.count - 1, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.insertRows(at: [newIndexPath], with: UITableViewRowAnimation.fade)
+            accountTableView.insertRows(at: [newIndexPath], with: UITableView.RowAnimation.fade)
             accountTableView.endUpdates()
 
         } else {
@@ -165,7 +165,7 @@ import Foundation
 
             let accountIndexPath = IndexPath(row: accountIndex!, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.reloadRows(at: [accountIndexPath], with: UITableViewRowAnimation.none)
+            accountTableView.reloadRows(at: [accountIndexPath], with: UITableView.RowAnimation.none)
             accountTableView.endUpdates()
         }
 
@@ -198,7 +198,7 @@ import Foundation
 
             let demoIndexPath = IndexPath(row: 0, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.reloadRows(at: [demoIndexPath], with: UITableViewRowAnimation.none)
+            accountTableView.reloadRows(at: [demoIndexPath], with: UITableView.RowAnimation.none)
             accountTableView.endUpdates()
         }
 

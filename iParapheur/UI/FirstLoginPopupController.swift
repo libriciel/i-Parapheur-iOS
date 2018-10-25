@@ -64,15 +64,15 @@ import UIKit
 
 		serverUrlTextField.addTarget(self,
 		                             action: #selector(onTextFieldValueChanged),
-		                             for: UIControlEvents.editingChanged)
+		                             for: UIControl.Event.editingChanged)
 
 		loginTextField.addTarget(self,
 		                         action: #selector(onTextFieldValueChanged),
-		                         for: UIControlEvents.editingChanged)
+		                         for: UIControl.Event.editingChanged)
 
 		passwordTextField.addTarget(self,
 		                            action: #selector(onTextFieldValueChanged),
-		                            for: UIControlEvents.editingChanged)
+		                            for: UIControl.Event.editingChanged)
 
         // Load existing account (if any)
 
@@ -95,15 +95,15 @@ import UIKit
     deinit {
 		serverUrlTextField.removeTarget(self,
 		                                action: #selector(onTextFieldValueChanged),
-		                                for: UIControlEvents.editingChanged)
+		                                for: UIControl.Event.editingChanged)
 
 		loginTextField.removeTarget(self,
 		                            action: #selector(onTextFieldValueChanged),
-		                            for: UIControlEvents.editingChanged)
+		                            for: UIControl.Event.editingChanged)
 
 		passwordTextField.removeTarget(self,
 		                               action: #selector(onTextFieldValueChanged),
-		                               for: UIControlEvents.editingChanged)
+		                               for: UIControl.Event.editingChanged)
     }
 
     // MARK: - Private methods

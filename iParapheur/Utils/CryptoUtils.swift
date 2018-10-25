@@ -43,7 +43,7 @@ import CryptoSwift
 
 extension Notification.Name {
 
-    static let signatureResult = Notification.Name("p12SignatureResult")
+    static let signatureResult = Notification.Name("signatureResult")
 
 }
 
