@@ -1,5 +1,4 @@
 /*
- * Contributors : SKROBS (2012)
  * Copyright 2012-2017, Libriciel SCOP.
  *
  * contact@libriciel.coop
@@ -33,10 +32,21 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <UIKit/UIKit.h>
 
-@interface RGSplitViewController : UISplitViewController {
-    id bureauView;
+import UIKit
+
+class GlobalSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()        
+        self.delegate = self
+        self.preferredDisplayMode = .allVisible
+    }
+    
+    func splitViewController(_ splitViewController: UISplitViewController,
+                             collapseSecondary secondaryViewController: UIViewController,
+                             onto primaryViewController: UIViewController) -> Bool {
+        return true
+    }
+    
 }
-@property (nonatomic, strong) IBOutlet id bureauView;
-@end
