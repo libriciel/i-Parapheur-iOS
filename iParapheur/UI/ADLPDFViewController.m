@@ -164,31 +164,31 @@
 
         ((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;
         if (_documentsPopover != nil)
-            [_documentsPopover dismissPopoverAnimated:NO];
+            [_documentsPopover dismissViewControllerAnimated:NO completion:nil];
 
-        _documentsPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
+        _documentsPopover = segue.destinationViewController;
 
     } else if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
 
         if (_actionPopover != nil)
-            [_actionPopover dismissPopoverAnimated:NO];
+            [_actionPopover dismissViewControllerAnimated:NO completion:nil];
 
-        _actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-        ((ActionSelectionController *) _actionPopover.contentViewController).currentDossier = _dossier;
-        ((ActionSelectionController *) _actionPopover.contentViewController).delegate = self;
+        _actionPopover = segue.destinationViewController;
+        ((ActionSelectionController *) _actionPopover).currentDossier = _dossier;
+        ((ActionSelectionController *) _actionPopover).delegate = self;
 
         if ([_signatureFormat isEqualToString:@"CMS"])
-            ((ActionSelectionController *) _actionPopover.contentViewController).signatureEnabled = @1;
+            ((ActionSelectionController *) _actionPopover).signatureEnabled = @1;
         else if (_visaEnabled)
-            ((ActionSelectionController *) _actionPopover.contentViewController).visaEnabled = @1;
+            ((ActionSelectionController *) _actionPopover).visaEnabled = @1;
 
     } else if ([segue.identifier isEqualToString:WorkflowDialogController.SEGUE]) {
         WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
         controller.currentAction = sender;
         controller.restClient = _restClient.restClientApi.swiftManager;
-        [controller setDossiersToSignWithObjcArray: @[_dossier.identifier]];
+        [controller setDossiersToSignWithObjcArray:@[_dossier.identifier]];
         controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
-                                                                                                                              withString:@""];
+                                                                                                                   withString:@""];
     }
 }
 
@@ -418,7 +418,7 @@
 
     NSNumber *docIndex = notification.object;
     [self displayDocumentAt:docIndex.integerValue];
-    [_documentsPopover dismissPopoverAnimated:YES];
+    [_documentsPopover dismissViewControllerAnimated:YES completion:nil];
     _documentsPopover = nil;
 }
 
@@ -439,10 +439,10 @@
     // Hide popovers
 
     if (_documentsPopover != nil)
-        [_documentsPopover dismissPopoverAnimated:NO];
+        [_documentsPopover dismissViewControllerAnimated:NO completion:nil];
 
     if (_actionPopover != nil)
-        [_actionPopover dismissPopoverAnimated:NO];
+        [_actionPopover dismissViewControllerAnimated:NO completion:nil];
 }
 
 

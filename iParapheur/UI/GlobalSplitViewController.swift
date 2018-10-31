@@ -40,7 +40,7 @@ class GlobalSplitViewController: UISplitViewController, UISplitViewControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()        
         self.delegate = self
-        self.preferredDisplayMode = .allVisible
+        self.preferredDisplayMode = .automatic
     }
     
     func splitViewController(_ splitViewController: UISplitViewController,
