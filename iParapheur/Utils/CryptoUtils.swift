@@ -312,7 +312,7 @@ extension Notification.Name {
 
                 case "CMS",
                      "PADES",
-                     "PADES-basic": // FIXME
+                     "PADES-basic":
 
                     let cmsSigner = CmsSigner(signInfo: signInfo,
                                               privateKey: certificate)

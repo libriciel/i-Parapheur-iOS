@@ -177,6 +177,7 @@ import Alamofire
 
     func getDataToSign(hashBase64: String,
                        publicKeyBase64: String,
+                       signatureFormat: String,
                        onResponse responseCallback: ((Data) -> Void)?,
                        onError errorCallback: ((Error) -> Void)?) {
 
@@ -186,7 +187,7 @@ import Alamofire
 
         let parameters: Parameters = [
             "fileHash": hashBase64,
-            "fileHashDigestAlgorithm": "SHA1",
+            "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64
         ]
 
@@ -220,6 +221,7 @@ import Alamofire
     func getFinalSignature(hashBase64: String,
                            signatureBase64: String,
                            publicKeyBase64: String,
+                           signatureFormat: String,
                            onResponse responseCallback: ((Data) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
@@ -230,8 +232,7 @@ import Alamofire
         let parameters: Parameters = [
             "fileHash": hashBase64,
             "signatureBase64": signatureBase64,
-            "fileHashDigestAlgorithm": "SHA1",
-            "encryptionAlgorithm": "RSA",
+            "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64
         ]
 

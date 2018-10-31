@@ -67,6 +67,7 @@ import Foundation
 
         restClient!.getDataToSign(hashBase64: hash.base64EncodedString(),
                                   publicKeyBase64: publicKeyBase64,
+                                  signatureFormat: mSignInfo.format,
                                   onResponse: {
                                       (response: Data) in
 
@@ -93,6 +94,7 @@ import Foundation
         restClient!.getFinalSignature(hashBase64: hash.base64EncodedString(),
                                       signatureBase64: signature.base64EncodedString(),
                                       publicKeyBase64: publicKeyBase64,
+                                      signatureFormat: mSignInfo.format,
                                       onResponse: {
                                           (response: Data) in
 
