@@ -39,6 +39,7 @@ import Foundation
 @objc public class DataToSign: NSObject, Decodable {
 
     let dataToSignBase64: String
+    let rawDataToEncryptBase64: String
     let payload: [String: String]
 
 
@@ -46,13 +47,21 @@ import Foundation
 
     enum CodingKeys: String, CodingKey {
         case dataToSignBase64
+        case rawDataToEncryptBase64
         case payload
+    }
+
+    public init(dataToSignBase64 dataToSignB64: String) {
+        dataToSignBase64 = dataToSignB64
+        rawDataToEncryptBase64 = ""
+        payload = [:]
     }
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         dataToSignBase64 = try values.decodeIfPresent(String.self, forKey: .dataToSignBase64) ?? ""
+        rawDataToEncryptBase64 = try values.decodeIfPresent(String.self, forKey: .rawDataToEncryptBase64) ?? ""
         payload = try values.decodeIfPresent([String: String].self, forKey: .payload) ?? [:]
     }
 

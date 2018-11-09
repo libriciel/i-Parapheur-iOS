@@ -158,11 +158,14 @@ import Foundation
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
                 let signer: Signer = Array(signaturesToDo.values)[0][0]
 
-                signer.generateHashToSign(onResponse: {
-                                              (result: Data) in
-                                              InController.sign(hashes: [result], certificateId: certificateId)
+                signer.generateHashToSign(onResponse:
+                                          {
+                                              (result: DataToSign) in
+                                              let rawData = Data(base64Encoded: result.rawDataToEncryptBase64)!
+                                              InController.sign(hashes: [rawData], certificateId: certificateId)
                                           },
-                                          onError: {
+                                          onError:
+                                          {
                                               (error: Error) in
                                               // TODO
                                           }

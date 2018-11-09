@@ -57,7 +57,7 @@ import Foundation
     // <editor-fold desc="Signer">
 
 
-    override func generateHashToSign(onResponse responseCallback: ((Data) -> Void)?,
+    override func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
                                      onError errorCallback: ((Error) -> Void)?) {
 
         let hashHex = mSignInfo.hashesToSign[0]
@@ -69,11 +69,12 @@ import Foundation
                                   publicKeyBase64: publicKeyBase64,
                                   signatureFormat: mSignInfo.format,
                                   onResponse: {
-                                      (response: Data) in
+                                      (response: DataToSign) in
 
-                                      print("Adrien - signInfoB64 : \(hash.base64EncodedString())")
-                                      print("Adrien - PublicKey   : \(publicKeyBase64)")
-                                      print("Adrien - dataToSign  : \(response.base64EncodedString())")
+                                      print("Adrien - signInfoB64   : \(hash.base64EncodedString())")
+                                      print("Adrien - PublicKey     : \(publicKeyBase64)")
+                                      print("Adrien - dataToSign    : \(response.dataToSignBase64)")
+                                      print("Adrien - rawDataToSign : \(response.rawDataToEncryptBase64)")
 
                                       responseCallback!(response)
                                   },

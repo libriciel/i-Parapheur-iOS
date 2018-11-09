@@ -41,7 +41,7 @@ import Foundation
 */
 @objc class Signer: NSObject {
 
-    @objc func generateHashToSign(onResponse responseCallback: ((Data) -> Void)?,
+    @objc func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
                                   onError errorCallback: ((Error) -> Void)?) {}
 
 

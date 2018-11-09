@@ -277,14 +277,20 @@ extension Notification.Name {
 
             signer.generateHashToSign(
                     onResponse: {
-                        (result: Data) in
+                        (result: DataToSign) in
+
+                        let data = Data(base64Encoded: result.dataToSignBase64)!
 
                         // TODO FIXME : set SHA1/SHA256 parameter
-                        var signedHash = try? CryptoUtils.rsaSign(data: result.sha1() as NSData,
+                        var signedHash = try? CryptoUtils.rsaSign(data: data.sha1() as NSData,
                                                                   keyFileUrl: p12FinalUrl,
                                                                   password: password)
 
                         signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
+                        print("Adrien - p12 toSign : \(result.dataToSignBase64))")
+                        print("Adrien - p12 hash-- : \(CryptoUtils.hex(data: data.sha1()))")
+                        print("Adrien - p12 signed : \(signedHash!)")
+
                         NotificationCenter.default.post(name: .signatureResult,
                                                         object: nil,
                                                         userInfo: [
@@ -321,7 +327,7 @@ extension Notification.Name {
                     signers.append(cmsSigner)
 
 
-                case "XADES-env":
+                case "xades-env-1.2.2-sha256":
 
                     signers.append(XadesEnvSigner(signInfo: signInfo,
                                                   hashIndex: hashIndex,
