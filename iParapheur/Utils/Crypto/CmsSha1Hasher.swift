@@ -35,11 +35,41 @@
 
 import Foundation
 
+/**
+    Yes, this class seems kind of useless, it's the easiest signature.
+    But this wrapper eases the code factorization with other signature methods.
+*/
+class CmsSha1Hasher: Hasher {
 
-@objc public enum SignatureAlgorithm: Int32 {
-    
-    case unknown = 0
-    case sha1WithRsa = 1
-    case sha256WithRsa = 2
-    
+    var mSignatureAlgorithm: SignatureAlgorithm {
+        return .sha1WithRsa
+    }
+
+    let mSignInfo: SignInfo
+
+    init(signInfo: SignInfo) {
+        mSignInfo = signInfo
+    }
+
+
+    // <editor-fold desc="Hasher">
+
+
+    func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
+                            onError errorCallback: ((Error) -> Void)?) {
+
+        let dataToSign = DataToSign(dataToSignBase64: mSignInfo.hashesToSign[0])
+        responseCallback!(dataToSign)
+    }
+
+
+    func buildDataToReturn(signature: Data,
+                           onResponse responseCallback: ((Data) -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
+
+        responseCallback!(signature)
+    }
+
+    // </editor-fold desc="Hasher">
+
 }

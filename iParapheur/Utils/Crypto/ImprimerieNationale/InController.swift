@@ -75,16 +75,13 @@ extension Notification.Name {
         var hashesJsonList: [String] = []
         for hash in hashes {
 
-            print("Adrien - in toSign : \(hash.base64EncodedString())")
-            print("Adrien - in hash-- : \(CryptoUtils.hex(data: hash.sha1()))")
+            let hex = CryptoUtils.hex(data: hash)
 
-            let sha1hex = CryptoUtils.hex(data: hash)
-
-            print("Adrien -- hash signed :: \(sha1hex)")
+            print("Adrien -- hash signed :: \(hex)")
             hashesJsonList.append("""
                 {
                     "certificateId" : " \(certificateId) ",
-                    "data" : " \(sha1hex) "
+                    "data" : " \(hex) "
                 }
             """)
         }
@@ -93,7 +90,7 @@ extension Notification.Name {
             inmiddleware://sign/ {
 
                 "responseScheme" : "iparapheur",
-                "mechanism" : "rsa",
+                "mechanism" : "sha256rsa",
                 "values" : [
                     \(hashesJsonList.joined(separator: ","))
                 ]

@@ -36,25 +36,28 @@
 import Foundation
 
 /**
-    Yes, this class seems kind of useless, it's the easiest signature.
-    But this wrapper eases the code factorization with other signature methods.
+    Calling the Crypto element server-side
 */
 class RemoteHasher: Hasher {
 
     var mSignatureAlgorithm: SignatureAlgorithm {
-        return .sha256withRsa
+        return .sha256WithRsa
     }
 
     let mSignInfo: SignInfo
-    let mPrivateKey: Certificate
-    @objc var restClient: RestClient?
+    let mPublicKeyBase64: String
+    var mPayload: [String: String]
+    @objc var mRestClient: RestClient
 
 
     init(signInfo: SignInfo,
-         privateKey: Certificate) {
+         publicKeyBase64: String,
+         restClient: RestClient) {
 
         mSignInfo = signInfo
-        mPrivateKey = privateKey
+        mPublicKeyBase64 = publicKeyBase64
+        mRestClient = restClient
+        mPayload = [:]
     }
 
 
@@ -65,21 +68,20 @@ class RemoteHasher: Hasher {
                             onError errorCallback: ((Error) -> Void)?) {
 
         let hashHex = mSignInfo.hashesToSign[0]
-
         let hash = CryptoUtils.data(hex: hashHex)
-        let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
 
-        restClient!.getDataToSign(hashBase64: hash.base64EncodedString(),
-                                  publicKeyBase64: publicKeyBase64,
+        mRestClient.getDataToSign(hashBase64: hash.base64EncodedString(),
+                                  publicKeyBase64: mPublicKeyBase64,
                                   signatureFormat: mSignInfo.format,
                                   onResponse: {
                                       (response: DataToSign) in
 
                                       print("Adrien - signInfoB64   : \(hash.base64EncodedString())")
-                                      print("Adrien - PublicKey     : \(publicKeyBase64)")
+                                      print("Adrien - PublicKey     : \(self.mPublicKeyBase64)")
                                       print("Adrien - dataToSign    : \(response.dataToSignBase64)")
-                                      print("Adrien - rawDataToSign : \(response.rawDataToEncryptBase64)")
+                                      print("Adrien - payload       : \(response.payload)")
 
+                                      self.mPayload = response.payload
                                       responseCallback!(response)
                                   },
                                   onError: {
@@ -94,12 +96,12 @@ class RemoteHasher: Hasher {
 
         let hashHex = mSignInfo.hashesToSign[0]
         let hash = CryptoUtils.data(hex: hashHex)
-        let publicKeyBase64 = mPrivateKey.publicKey?.base64EncodedString() ?? ""
 
-        restClient!.getFinalSignature(hashBase64: hash.base64EncodedString(),
+        mRestClient.getFinalSignature(hashBase64: hash.base64EncodedString(),
                                       signatureBase64: signature.base64EncodedString(),
-                                      publicKeyBase64: publicKeyBase64,
+                                      publicKeyBase64: mPublicKeyBase64,
                                       signatureFormat: mSignInfo.format,
+                                      payload: mPayload,
                                       onResponse: {
                                           (response: Data) in
 

@@ -222,6 +222,7 @@ import Alamofire
                            signatureBase64: String,
                            publicKeyBase64: String,
                            signatureFormat: String,
+                           payload: [String: String],
                            onResponse responseCallback: ((Data) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
@@ -233,7 +234,8 @@ import Alamofire
             "fileHash": hashBase64,
             "signatureBase64": signatureBase64,
             "signatureFormat": signatureFormat,
-            "publicKeyBase64": publicKeyBase64
+            "publicKeyBase64": publicKeyBase64,
+            "payload": payload
         ]
 
         // Request

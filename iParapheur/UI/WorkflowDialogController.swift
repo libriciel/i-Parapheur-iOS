@@ -154,6 +154,15 @@ import Foundation
 
             case .imprimerieNationale:
 
+                for signatureToDo in signaturesToDo {
+                    print(signatureToDo)
+//                    if (signatureToDo.value.first!.mSignatureAlgorithm != .sha256withRsa) {
+//                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",
+//                                           title: "Impossible de signer avec ce certificat")
+//                        return
+//                    }
+                }
+
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
@@ -162,7 +171,7 @@ import Foundation
                 hasher.generateHashToSign(onResponse:
                                           {
                                               (result: DataToSign) in
-                                              let rawData = Data(base64Encoded: result.rawDataToEncryptBase64)!
+                                              let rawData = Data(base64Encoded: result.dataToSignBase64)!
                                               InController.sign(hashes: [rawData], certificateId: certificateId)
                                           },
                                           onError:
@@ -173,6 +182,15 @@ import Foundation
                 )
 
             default:
+
+                for signatureToDo in signaturesToDo {
+                    print(signatureToDo)
+//                    if (signatureToDo.value.first!.mSignatureAlgorithm != .sha1WithRsa) {
+//                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA1",
+//                                           title: "Impossible de signer avec ce certificat")
+//                        return
+//                    }
+                }
 
                 // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
                 self.displayPasswordAlert()

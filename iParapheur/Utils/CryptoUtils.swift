@@ -320,29 +320,26 @@ extension Notification.Name {
                      "PADES",
                      "PADES-basic":
 
-                    let cmsHasher = RemoteHasher(signInfo: signInfo,
-                                              privateKey: certificate)
-
-                    cmsHasher.restClient = restClient
+                    let cmsHasher = CmsSha1Hasher(signInfo: signInfo)
                     hashers.append(cmsHasher)
 
 
                 case "xades":
 
-                    hashers.append(XadesSha1EnvHasher(signInfo: signInfo,
-                                                      hashIndex: hashIndex,
-                                                      publicKey: certificate.publicKey!.base64EncodedString(),
-                                                      caName: certificate.caName!,
-                                                      serialNumber: certificate.serialNumber!))
+                    let xadesHasher = XadesSha1EnvHasher(signInfo: signInfo,
+                                                         hashIndex: hashIndex,
+                                                         publicKey: certificate.publicKey!.base64EncodedString(),
+                                                         caName: certificate.caName!,
+                                                         serialNumber: certificate.serialNumber!)
+                    hashers.append(xadesHasher)
 
 
                 case "xades-env-1.2.2-sha256":
 
-                    hashers.append(XadesSha1EnvHasher(signInfo: signInfo,
-                                                      hashIndex: hashIndex,
-                                                      publicKey: certificate.publicKey!.base64EncodedString(),
-                                                      caName: certificate.caName!,
-                                                      serialNumber: certificate.serialNumber!))
+                    let remoteHasher = RemoteHasher(signInfo: signInfo,
+                                                    publicKeyBase64: certificate.publicKey!.base64EncodedString(),
+                                                    restClient: restClient)
+                    hashers.append(remoteHasher)
 
 
                 default:
