@@ -32,33 +32,37 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 /**
     Yes, this class seems kind of useless, it's the easiest signature.
     But this wrapper eases the code factorization with other signature methods.
 */
-@objc class CmsSigner: Signer {
+class RemoteHasher: Hasher {
 
+    var mSignatureAlgorithm: SignatureAlgorithm {
+        return .sha256withRsa
+    }
 
     let mSignInfo: SignInfo
     let mPrivateKey: Certificate
     @objc var restClient: RestClient?
 
 
-    @objc init(signInfo: SignInfo,
-               privateKey: Certificate) {
+    init(signInfo: SignInfo,
+         privateKey: Certificate) {
 
         mSignInfo = signInfo
         mPrivateKey = privateKey
     }
 
 
-    // <editor-fold desc="Signer">
+    // <editor-fold desc="Hasher">
 
 
-    override func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
-                                     onError errorCallback: ((Error) -> Void)?) {
+    func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
+                            onError errorCallback: ((Error) -> Void)?) {
 
         let hashHex = mSignInfo.hashesToSign[0]
 
@@ -84,9 +88,9 @@ import Foundation
     }
 
 
-    override func buildDataToReturn(signature: Data,
-                                    onResponse responseCallback: ((Data) -> Void)?,
-                                    onError errorCallback: ((Error) -> Void)?) {
+    func buildDataToReturn(signature: Data,
+                           onResponse responseCallback: ((Data) -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
 
         let hashHex = mSignInfo.hashesToSign[0]
         let hash = CryptoUtils.data(hex: hashHex)
@@ -107,6 +111,6 @@ import Foundation
                                       })
     }
 
-    // </editor-fold desc="Signer">
+    // </editor-fold desc="Hasher">
 
 }

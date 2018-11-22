@@ -44,8 +44,11 @@ import AEXML
     In the XML tree, we have to build the Object/SignedInfo/SignatureValue nodes, in that order.
     Each elements are hashed, and the hash is used in the next one. KeyInfo is order-free.
 */
-@objc class XadesEnvSigner: Signer {
+class XadesSha1EnvHasher: Hasher {
 
+    var mSignatureAlgorithm: SignatureAlgorithm {
+        return .sha1WithRsa
+    }
 
     let mSignInfo: SignInfo
     let mIndex: Int
@@ -81,9 +84,9 @@ import AEXML
 
         // Compute values
 
-        let signaturePropertiesCanonicalString = XadesEnvSigner.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact,
-                                                                                forceSignPropertiesXmlns: true,
-                                                                                forceSignedInfoXmlns: false)
+        let signaturePropertiesCanonicalString = XadesSha1EnvHasher.canonicalizeXml(xmlCompactString: mObjectSignedPropertiesNode!.xmlCompact,
+                                                                                    forceSignPropertiesXmlns: true,
+                                                                                    forceSignedInfoXmlns: false)
         let signaturePropertiesHash = CryptoUtils.sha1Base64(string: signaturePropertiesCanonicalString)
 
         let base64hashData = CryptoUtils.data(hex: mSignInfo.hashesToSign[mIndex])
@@ -200,7 +203,7 @@ import AEXML
         currentCertDigest.addChild(name: "xad:DigestValue", value: publicKeyHashBase64)
 
         let currentIssuerSerial = curretCert.addChild(name: "xad:IssuerSerial")
-        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesEnvSigner.issuerHardcodedFixes(issuer: mCaName))
+        currentIssuerSerial.addChild(name: "ds:X509IssuerName", value: XadesSha1EnvHasher.issuerHardcodedFixes(issuer: mCaName))
         currentIssuerSerial.addChild(name: "ds:X509SerialNumber", value: mSerialNumber)
 
         let currentSignaturePolicyIdentifier = currentSignedSignatureProperties.addChild(name: "xad:SignaturePolicyIdentifier")
@@ -233,18 +236,18 @@ import AEXML
 
     // </editor-fold desc="Builders">
 
-    // <editor-fold desc="Signer">
+    // <editor-fold desc="Hasher">
 
 
-    override func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
-                                     onError errorCallback: ((Error) -> Void)?) {
+    func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
+                            onError errorCallback: ((Error) -> Void)?) {
 
         buildObjectSignedSignatureProperties()
         buildSignedInfo()
 
-        let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
-                                                              forceSignPropertiesXmlns: false,
-                                                              forceSignedInfoXmlns: true)
+        let canonicalizedXml = XadesSha1EnvHasher.canonicalizeXml(xmlCompactString: mSignedInfoNode!.xmlCompact,
+                                                                  forceSignPropertiesXmlns: false,
+                                                                  forceSignedInfoXmlns: true)
 
         let hashToSign = CryptoUtils.sha1Base64(string: canonicalizedXml)
 
@@ -253,9 +256,9 @@ import AEXML
     }
 
 
-    override func buildDataToReturn(signature: Data,
-                                    onResponse responseCallback: ((Data) -> Void)?,
-                                    onError errorCallback: ((Error) -> Void)?) {
+    func buildDataToReturn(signature: Data,
+                           onResponse responseCallback: ((Data) -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
 
         // Compute the rest of the XML wrapper
 
@@ -269,9 +272,9 @@ import AEXML
         let documentDetachedExternalSignature = rootDocument.addChild(name: "DocumentDetachedExternalSignature")
         let signatureNode = documentDetachedExternalSignature.addChild(name: "ds:Signature",
                                                                        attributes: [
-                                                                       "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
-                                                                       "Id": "\(mSignInfo.pesIds[mIndex])_SIG_1"
-                                                                   ])
+                                                                           "xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
+                                                                           "Id": "\(mSignInfo.pesIds[mIndex])_SIG_1"
+                                                                       ])
 
         signatureNode.addChild(mSignedInfoNode!)
         signatureNode.addChild(mSignatureValueNode!)
@@ -281,16 +284,16 @@ import AEXML
         // Return value
 
         let finalXml = rootDocument.xmlCompact
-        let canonicalizedXml = XadesEnvSigner.canonicalizeXml(xmlCompactString: finalXml,
-                                                              forceSignPropertiesXmlns: false,
-                                                              forceSignedInfoXmlns: false)
+        let canonicalizedXml = XadesSha1EnvHasher.canonicalizeXml(xmlCompactString: finalXml,
+                                                                  forceSignPropertiesXmlns: false,
+                                                                  forceSignedInfoXmlns: false)
         let finalXmlData = canonicalizedXml.data(using: .utf8)
 
         responseCallback!(finalXmlData!)
     }
 
 
-    // </editor-fold desc="Signer">
+    // </editor-fold desc="Hasher">
 
     /**
         This is ugly, I know...

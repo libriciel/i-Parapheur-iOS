@@ -32,21 +32,14 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-/**
-    A Protocol would have been more elegant,
-    But I had some issues with Swift/ObjC crossed calls.
-    It was made in a rush, so... NSObject it is.
-*/
-@objc class Signer: NSObject {
 
-    @objc func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
-                                  onError errorCallback: ((Error) -> Void)?) {}
-
-
-    @objc func buildDataToReturn(signature: Data,
-                                 onResponse responseCallback: ((Data) -> Void)?,
-                                 onError errorCallback: ((Error) -> Void)?) {}
-
+@objc public enum SignatureAlgorithm: Int32 {
+    
+    case unknown = 0
+    case sha1WithRsa = 1
+    case sha256withRsa = 2
+    
 }

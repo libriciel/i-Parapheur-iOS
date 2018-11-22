@@ -249,7 +249,7 @@ extension Notification.Name {
     }
 
 
-    class func signWithP12(signers: [Signer],
+    class func signWithP12(hashers: [Hasher],
                            certificate: Certificate,
                            password: String) throws {
 
@@ -272,10 +272,10 @@ extension Notification.Name {
 
         // Building signature response
 
-        for i in 0..<signers.count {
-            let signer: Signer = signers[i]
+        for i in 0..<hashers.count {
+            let hasher: Hasher = hashers[i]
 
-            signer.generateHashToSign(
+            hasher.generateHashToSign(
                     onResponse: {
                         (result: DataToSign) in
 
@@ -306,12 +306,12 @@ extension Notification.Name {
     }
 
 
-    class func generateSignerWrappers(signInfo: SignInfo,
+    class func generateHasherWrappers(signInfo: SignInfo,
                                       dossierId: String,
                                       certificate: Certificate,
-                                      restClient: RestClient) throws -> [Signer] {
+                                      restClient: RestClient) throws -> [Hasher] {
 
-        var signers: [Signer] = []
+        var hashers: [Hasher] = []
 
         for hashIndex in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
@@ -320,20 +320,29 @@ extension Notification.Name {
                      "PADES",
                      "PADES-basic":
 
-                    let cmsSigner = CmsSigner(signInfo: signInfo,
+                    let cmsHasher = RemoteHasher(signInfo: signInfo,
                                               privateKey: certificate)
 
-                    cmsSigner.restClient = restClient
-                    signers.append(cmsSigner)
+                    cmsHasher.restClient = restClient
+                    hashers.append(cmsHasher)
+
+
+                case "xades":
+
+                    hashers.append(XadesSha1EnvHasher(signInfo: signInfo,
+                                                      hashIndex: hashIndex,
+                                                      publicKey: certificate.publicKey!.base64EncodedString(),
+                                                      caName: certificate.caName!,
+                                                      serialNumber: certificate.serialNumber!))
 
 
                 case "xades-env-1.2.2-sha256":
 
-                    signers.append(XadesEnvSigner(signInfo: signInfo,
-                                                  hashIndex: hashIndex,
-                                                  publicKey: certificate.publicKey!.base64EncodedString(),
-                                                  caName: certificate.caName!,
-                                                  serialNumber: certificate.serialNumber!))
+                    hashers.append(XadesSha1EnvHasher(signInfo: signInfo,
+                                                      hashIndex: hashIndex,
+                                                      publicKey: certificate.publicKey!.base64EncodedString(),
+                                                      caName: certificate.caName!,
+                                                      serialNumber: certificate.serialNumber!))
 
 
                 default:
@@ -341,7 +350,7 @@ extension Notification.Name {
             }
         }
 
-        return signers
+        return hashers
     }
 
 

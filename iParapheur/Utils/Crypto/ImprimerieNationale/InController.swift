@@ -75,12 +75,16 @@ extension Notification.Name {
         var hashesJsonList: [String] = []
         for hash in hashes {
 
-            let HashHex = CryptoUtils.hex(data: hash)
+            print("Adrien - in toSign : \(hash.base64EncodedString())")
+            print("Adrien - in hash-- : \(CryptoUtils.hex(data: hash.sha1()))")
 
+            let sha1hex = CryptoUtils.hex(data: hash)
+
+            print("Adrien -- hash signed :: \(sha1hex)")
             hashesJsonList.append("""
                 {
                     "certificateId" : " \(certificateId) ",
-                    "data" : " \(HashHex) "
+                    "data" : " \(sha1hex) "
                 }
             """)
         }
@@ -89,18 +93,19 @@ extension Notification.Name {
             inmiddleware://sign/ {
 
                 "responseScheme" : "iparapheur",
-                "mechanism" : "sha256rsa",
+                "mechanism" : "rsa",
                 "values" : [
                     \(hashesJsonList.joined(separator: ","))
                 ]
             }
         """
 
-
         let cleanedString = StringsUtils.trim(string: urlString)
+        print("Request sent :: \(cleanedString)")
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
+        print("Request sent :: \(url.absoluteString)")
         UIApplication.shared.open(url, completionHandler: { (result) in
             if result {
                 print("Result OK")
@@ -144,6 +149,8 @@ extension Notification.Name {
             // FIXME : Hardcoded (hopefully a temporary fix)
             inSignedData!.signedData.removeLast(4)
             let signedData = CryptoUtils.data(hex: inSignedData!.signedData)
+
+            print("Adrien - in signed : \(signedData.base64EncodedString())")
 
             NotificationCenter.default.post(name: .signatureResult,
                                             object: nil,
