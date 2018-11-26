@@ -171,8 +171,9 @@ import Foundation
                 hasher.generateHashToSign(onResponse:
                                           {
                                               (result: DataToSign) in
-                                              let rawData = Data(base64Encoded: result.dataToSignBase64)!
-                                              InController.sign(hashes: [rawData], certificateId: certificateId)
+
+                                              InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
+                                                                certificateId: certificateId)
                                           },
                                           onError:
                                           {
@@ -203,19 +204,22 @@ import Foundation
 
     @objc func onSignatureResult(notification: Notification) {
 
-        let signedData = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNEDDATA] as! Data
+        let signedDataList = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNEDDATA] as! [Data]
         let signatureOrder = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX] as! Int
 
-        print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength76Characters))")
+//        print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength76Characters))")
 
         let hasher: Hasher = Array(signaturesToDo.values)[0][0]
-        hasher.buildDataToReturn(signature: signedData,
+        hasher.buildDataToReturn(signatureList: signedDataList,
                                  onResponse: {
-                                     (result: Data) in
-                                     self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: result)
+                                     (result: [Data]) in
+
+                                     let resultBase64List = StringsUtils.toBase64List(dataList: result)
+                                     self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
                                  },
                                  onError: {
                                      (error: Error) in
+                                     print(error.localizedDescription)
                                  });
     }
 
@@ -287,19 +291,21 @@ import Foundation
     }
 
 
-    private func sendResult(dossierId: String, signature: Data) {
+    private func sendResult(dossierId: String, signature: [String]) {
 
-        let pkcs7Base64 = signature.base64EncodedString()
-        let pkcs7Wrapped = CryptoUtils.wrappedPkcs7(pkcs7: pkcs7Base64)
-        let pkcs7WrappedData = pkcs7Wrapped.data(using: .utf8)
-        let pkcs7WrappedBase64 = pkcs7WrappedData?.base64EncodedString()
+        let signatureConcat = signature.joined(separator: ",")
 
-        print("Adrien -- Sending back signature : \(pkcs7WrappedBase64!)")
+//        let pkcs7Base64 = signature.base64EncodedString()
+//        let pkcs7Wrapped = CryptoUtils.wrappedPkcs7(pkcs7: pkcs7Base64)
+//        let pkcs7WrappedData = pkcs7Wrapped.data(using: .utf8)
+//        let pkcs7WrappedBase64 = pkcs7WrappedData?.base64EncodedString()
+
+        print("Adrien -- Sending back signature : \(signature)")
         restClient?.signDossier(dossierId: dossierId,
                                 bureauId: currentBureau!,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
-                                signature: pkcs7WrappedBase64!,
+                                signature: signatureConcat,
                                 responseCallback: {
                                     number in
                                     self.dismiss(animated: true)

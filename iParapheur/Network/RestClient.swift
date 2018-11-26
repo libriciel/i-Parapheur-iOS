@@ -175,25 +175,26 @@ import Alamofire
     }
 
 
-    func getDataToSign(hashBase64: String,
+    func getDataToSign(hashBase64List: [String],
                        publicKeyBase64: String,
                        signatureFormat: String,
                        onResponse responseCallback: ((DataToSign) -> Void)?,
                        onError errorCallback: ((Error) -> Void)?) {
 
-        let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/dataToSign"
+        let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/generateDataToSign"
 
         // Parameters
 
         let parameters: Parameters = [
-            "fileHash": hashBase64,
+            "hashBase64List": hashBase64List,
             "signatureFormat": signatureFormat,
-            "publicKeyBase64": publicKeyBase64
+            "publicKeyBase64": publicKeyBase64,
+            "payload": [:]
         ]
 
         // Request
 
-        manager.request(getDataToSignUrl, method: .get, parameters: parameters).validate().responseString {
+        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 
             switch (response.result) {
@@ -218,21 +219,22 @@ import Alamofire
     }
 
 
-    func getFinalSignature(hashBase64: String,
-                           signatureBase64: String,
+    func getFinalSignature(hashBase64List: [String],
+                           signatureBase64List: [String],
                            publicKeyBase64: String,
                            signatureFormat: String,
+                           signatureDateTime: Int,
                            payload: [String: String],
-                           onResponse responseCallback: ((Data) -> Void)?,
+                           onResponse responseCallback: (([Data]) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
-        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/sign"
+        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
 
         // Parameters
 
         let parameters: Parameters = [
-            "fileHash": hashBase64,
-            "signatureBase64": signatureBase64,
+            "fileHashList": hashBase64List,
+            "signatureBase64List": signatureBase64List,
             "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64,
             "payload": payload
@@ -240,12 +242,19 @@ import Alamofire
 
         // Request
 
-        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters).validate().responseString {
+        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
+
+            print("Adrien oooh ?? \(response.request)")
+            print("Adrien oooh ?? \(response.request?.httpBody)")
+            print("Adrien oooh ?? \(response.request?.allHTTPHeaderFields)")
+            print("Adrien oooh ?? \(response.value)")
 
             switch (response.result) {
 
                 case .success:
+
+                    print("Adrien hey !!!")
 
                     // Prepare
 
@@ -254,11 +263,13 @@ import Alamofire
                     let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
                                                                  from: responseJsonData)
 
-                    responseCallback!(Data(base64Encoded: finalSignature!.signatureResultBase64)!)
+                    responseCallback!(StringsUtils.toDataList(base64StringList: finalSignature!.signatureResultBase64List))
                     break
 
                 case .failure(let error):
                     errorCallback!(error)
+                    print("Adrien urgh !!!")
+
                     break
             }
         }

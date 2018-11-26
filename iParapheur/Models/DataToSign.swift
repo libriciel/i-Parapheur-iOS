@@ -38,26 +38,26 @@ import Foundation
 
 @objc public class DataToSign: NSObject, Decodable {
 
-    let dataToSignBase64: String
+    let dataToSignBase64List: [String]
     let payload: [String: String]
 
 
     // <editor-fold desc="Json methods">
 
     enum CodingKeys: String, CodingKey {
-        case dataToSignBase64
+        case dataToSignBase64List
         case payload
     }
 
-    public init(dataToSignBase64 dataToSignB64: String) {
-        dataToSignBase64 = dataToSignB64
+    public init(dataToSignBase64 dataToSignB64: [String]) {
+        dataToSignBase64List = dataToSignB64
         payload = [:]
     }
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        dataToSignBase64 = try values.decodeIfPresent(String.self, forKey: .dataToSignBase64) ?? ""
+        dataToSignBase64List = try values.decodeIfPresent([String].self, forKey: .dataToSignBase64List) ?? []
         payload = try values.decodeIfPresent([String: String].self, forKey: .payload) ?? [:]
     }
 

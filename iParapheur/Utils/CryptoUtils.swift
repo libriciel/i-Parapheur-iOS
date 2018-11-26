@@ -279,22 +279,30 @@ extension Notification.Name {
                     onResponse: {
                         (result: DataToSign) in
 
-                        let data = Data(base64Encoded: result.dataToSignBase64)!
+                        var signedHashList: [Data] = []
 
-                        // TODO FIXME : set SHA1/SHA256 parameter
-                        var signedHash = try? CryptoUtils.rsaSign(data: data.sha1() as NSData,
-                                                                  keyFileUrl: p12FinalUrl,
-                                                                  password: password)
+                        let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
+                        for dataToSign in dataToSignList {
+                            let data = dataToSign.sha1()
 
-                        signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
-                        print("Adrien - p12 toSign : \(result.dataToSignBase64))")
-                        print("Adrien - p12 hash-- : \(CryptoUtils.hex(data: data.sha1()))")
-                        print("Adrien - p12 signed : \(signedHash!)")
+                            // TODO FIXME : set SHA1/SHA256 parameter
+                            var signedHash = try? CryptoUtils.rsaSign(data: data as NSData,
+                                                                      keyFileUrl: p12FinalUrl,
+                                                                      password: password)
+
+                            signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
+
+                            print("Adrien - p12 toSign : \(result.dataToSignBase64List))")
+                            print("Adrien - p12 hash-- : \(CryptoUtils.hex(data: data.sha1()))")
+                            print("Adrien - p12 signed : \(signedHash!)")
+
+                            signedHashList.append(Data(base64Encoded: signedHash!)!)
+                        }
 
                         NotificationCenter.default.post(name: .signatureResult,
                                                         object: nil,
                                                         userInfo: [
-                                                            NOTIF_USERINFO_SIGNEDDATA: Data(base64Encoded: signedHash!),
+                                                            NOTIF_USERINFO_SIGNEDDATA: signedHashList,
                                                             NOTIF_USERINFO_SIGNATUREINDEX: i
                                                         ])
                     },
@@ -326,12 +334,13 @@ extension Notification.Name {
 
                 case "xades":
 
-                    let xadesHasher = XadesSha1EnvHasher(signInfo: signInfo,
-                                                         hashIndex: hashIndex,
-                                                         publicKey: certificate.publicKey!.base64EncodedString(),
-                                                         caName: certificate.caName!,
-                                                         serialNumber: certificate.serialNumber!)
-                    hashers.append(xadesHasher)
+//                    let xadesHasher = XadesSha1EnvHasher(signInfo: signInfo,
+//                                                         hashIndex: hashIndex,
+//                                                         publicKey: certificate.publicKey!.base64EncodedString(),
+//                                                         caName: certificate.caName!,
+//                                                         serialNumber: certificate.serialNumber!)
+//                    hashers.append(xadesHasher)
+                    throw NSError(domain: "Ce format (\(signInfo.format)) est obsolète", code: 0, userInfo: nil)
 
 
                 case "xades-env-1.2.2-sha256":

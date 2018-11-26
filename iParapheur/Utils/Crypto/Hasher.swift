@@ -44,8 +44,8 @@ protocol Hasher {
     func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
                             onError errorCallback: ((Error) -> Void)?)
 
-    func buildDataToReturn(signature: Data,
-                           onResponse responseCallback: ((Data) -> Void)?,
+    func buildDataToReturn(signatureList: [Data],
+                           onResponse responseCallback: (([Data]) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?)
 
 }

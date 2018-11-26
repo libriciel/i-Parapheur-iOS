@@ -46,6 +46,7 @@ class RemoteHasher: Hasher {
 
     let mSignInfo: SignInfo
     let mPublicKeyBase64: String
+    var mSignatureDateTime: Int?
     var mPayload: [String: String]
     @objc var mRestClient: RestClient
 
@@ -67,18 +68,15 @@ class RemoteHasher: Hasher {
     func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
                             onError errorCallback: ((Error) -> Void)?) {
 
-        let hashHex = mSignInfo.hashesToSign[0]
-        let hash = CryptoUtils.data(hex: hashHex)
-
-        mRestClient.getDataToSign(hashBase64: hash.base64EncodedString(),
+        mRestClient.getDataToSign(hashBase64List: mSignInfo.hashesToSign,
                                   publicKeyBase64: mPublicKeyBase64,
                                   signatureFormat: mSignInfo.format,
                                   onResponse: {
                                       (response: DataToSign) in
 
-                                      print("Adrien - signInfoB64   : \(hash.base64EncodedString())")
+                                      print("Adrien - signInfoB64   : \(self.mSignInfo.hashesToSign)")
                                       print("Adrien - PublicKey     : \(self.mPublicKeyBase64)")
-                                      print("Adrien - dataToSign    : \(response.dataToSignBase64)")
+                                      print("Adrien - dataToSign    : \(response.dataToSignBase64List)")
                                       print("Adrien - payload       : \(response.payload)")
 
                                       self.mPayload = response.payload
@@ -90,22 +88,25 @@ class RemoteHasher: Hasher {
     }
 
 
-    func buildDataToReturn(signature: Data,
-                           onResponse responseCallback: ((Data) -> Void)?,
+    func buildDataToReturn(signatureList: [Data],
+                           onResponse responseCallback: (([Data]) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
-        let hashHex = mSignInfo.hashesToSign[0]
-        let hash = CryptoUtils.data(hex: hashHex)
+        var signatureBase64EncodedList: [String] = []
+        for signature in signatureList {
+            signatureBase64EncodedList.append(signature.base64EncodedString())
+        }
 
-        mRestClient.getFinalSignature(hashBase64: hash.base64EncodedString(),
-                                      signatureBase64: signature.base64EncodedString(),
+        mRestClient.getFinalSignature(hashBase64List: mSignInfo.hashesToSign,
+                                      signatureBase64List: signatureBase64EncodedList,
                                       publicKeyBase64: mPublicKeyBase64,
                                       signatureFormat: mSignInfo.format,
+                                      signatureDateTime: mSignatureDateTime!,
                                       payload: mPayload,
                                       onResponse: {
-                                          (response: Data) in
+                                          (response: [Data]) in
 
-                                          print("Adrien - finalSignat : \(response.base64EncodedString(options: .lineLength64Characters))")
+                                          print("Adrien - finalSignat : \(response))")
                                           responseCallback!(response)
                                       },
                                       onError: {

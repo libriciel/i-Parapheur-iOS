@@ -132,4 +132,27 @@ import SwiftMessages
         }
     }
 
+
+    class func toDataList(base64StringList: [String]) -> [Data] {
+
+        var dataToSignList: [Data] = []
+        for dataBase64 in base64StringList {
+            let rawData = Data(base64Encoded: dataBase64)!
+            dataToSignList.append(rawData)
+        }
+
+        return dataToSignList
+    }
+
+
+    class func toBase64List(dataList: [Data]) -> [String] {
+
+        var base64List: [String] = []
+        for data in dataList {
+            base64List.append(data.base64EncodedString())
+        }
+
+        return base64List
+    }
+
 }
