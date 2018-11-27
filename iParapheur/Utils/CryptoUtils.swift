@@ -348,6 +348,8 @@ extension Notification.Name {
                     let remoteHasher = RemoteHasher(signInfo: signInfo,
                                                     publicKeyBase64: certificate.publicKey!.base64EncodedString(),
                                                     restClient: restClient)
+
+                    remoteHasher.mPayload[RemoteHasher.PAYLOAD_KEY_PES_ID] = signInfo.pesIds.joined(separator: ",")
                     hashers.append(remoteHasher)
 
 

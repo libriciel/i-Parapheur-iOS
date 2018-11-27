@@ -178,6 +178,7 @@ import Alamofire
     func getDataToSign(hashBase64List: [String],
                        publicKeyBase64: String,
                        signatureFormat: String,
+                       payload: [String: String],
                        onResponse responseCallback: ((DataToSign) -> Void)?,
                        onError errorCallback: ((Error) -> Void)?) {
 
@@ -189,7 +190,7 @@ import Alamofire
             "hashBase64List": hashBase64List,
             "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64,
-            "payload": [:]
+            "payload": payload
         ]
 
         // Request
@@ -245,16 +246,9 @@ import Alamofire
         manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 
-            print("Adrien oooh ?? \(response.request)")
-            print("Adrien oooh ?? \(response.request?.httpBody)")
-            print("Adrien oooh ?? \(response.request?.allHTTPHeaderFields)")
-            print("Adrien oooh ?? \(response.value)")
-
             switch (response.result) {
 
                 case .success:
-
-                    print("Adrien hey !!!")
 
                     // Prepare
 
@@ -268,7 +262,6 @@ import Alamofire
 
                 case .failure(let error):
                     errorCallback!(error)
-                    print("Adrien urgh !!!")
 
                     break
             }

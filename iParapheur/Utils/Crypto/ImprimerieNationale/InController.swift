@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 
@@ -152,7 +153,7 @@ extension Notification.Name {
             NotificationCenter.default.post(name: .signatureResult,
                                             object: nil,
                                             userInfo: [
-                                                CryptoUtils.NOTIF_USERINFO_SIGNEDDATA: signedData,
+                                                CryptoUtils.NOTIF_USERINFO_SIGNEDDATA: [signedData],
                                                 CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX: 0
                                             ])
             return true

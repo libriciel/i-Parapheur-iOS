@@ -154,13 +154,26 @@ import Foundation
 
             case .imprimerieNationale:
 
+                if (signaturesToDo.count != 1) {
+                    ViewUtils.logError(message: "Les certificat sélectionné ne permet pas la signature multiple",
+                                       title: "Impossible de signer avec ce certificat")
+                    return
+                }
+
                 for signatureToDo in signaturesToDo {
                     print(signatureToDo)
-//                    if (signatureToDo.value.first!.mSignatureAlgorithm != .sha256withRsa) {
-//                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",
-//                                           title: "Impossible de signer avec ce certificat")
-//                        return
-//                    }
+
+                    if (signatureToDo.value.count != 1) {
+                        ViewUtils.logError(message: "Les certificat sélectionné ne permet pas la signature de flux multi-bordereaux",
+                                           title: "Impossible de signer avec ce certificat")
+                        return
+                    }
+
+                    if (signatureToDo.value.first!.mSignatureAlgorithm != .sha256WithRsa) {
+                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",
+                                           title: "Impossible de signer avec ce certificat")
+                        return
+                    }
                 }
 
                 let jsonDecoder = JSONDecoder()
@@ -178,7 +191,8 @@ import Foundation
                                           onError:
                                           {
                                               (error: Error) in
-                                              // TODO
+                                              ViewUtils.logError(message: "Vérifier le réseau",
+                                                                 title: "Erreur à la récupération du hash à signer")
                                           }
                 )
 

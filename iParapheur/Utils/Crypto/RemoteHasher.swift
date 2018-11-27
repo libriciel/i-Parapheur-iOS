@@ -40,13 +40,20 @@ import Foundation
 */
 class RemoteHasher: Hasher {
 
+    static public let PAYLOAD_KEY_PES_SIGNATURE_DATE_TIME = "signaturedate";
+    static public let PAYLOAD_KEY_PES_ID = "pesid";
+    static public let PAYLOAD_KEY_PES_CLAIMED_ROLE = "pesclaimedrole";
+    static public let PAYLOAD_KEY_PES_POSTAL_CODE = "pespostalcode";
+    static public let PAYLOAD_KEY_PES_COUNTRY_NAME = "pescountryname";
+    static public let PAYLOAD_KEY_PES_CITY = "pescity";
+
+
     var mSignatureAlgorithm: SignatureAlgorithm {
         return .sha256WithRsa
     }
 
     let mSignInfo: SignInfo
     let mPublicKeyBase64: String
-    var mSignatureDateTime: Int?
     var mPayload: [String: String]
     @objc var mRestClient: RestClient
 
@@ -71,6 +78,7 @@ class RemoteHasher: Hasher {
         mRestClient.getDataToSign(hashBase64List: mSignInfo.hashesToSign,
                                   publicKeyBase64: mPublicKeyBase64,
                                   signatureFormat: mSignInfo.format,
+                                  payload: mPayload,
                                   onResponse: {
                                       (response: DataToSign) in
 
@@ -97,11 +105,13 @@ class RemoteHasher: Hasher {
             signatureBase64EncodedList.append(signature.base64EncodedString())
         }
 
+        let signatureTime = Int(mPayload[RemoteHasher.PAYLOAD_KEY_PES_SIGNATURE_DATE_TIME]!)!
+
         mRestClient.getFinalSignature(hashBase64List: mSignInfo.hashesToSign,
                                       signatureBase64List: signatureBase64EncodedList,
                                       publicKeyBase64: mPublicKeyBase64,
                                       signatureFormat: mSignInfo.format,
-                                      signatureDateTime: mSignatureDateTime!,
+                                      signatureDateTime: signatureTime,
                                       payload: mPayload,
                                       onResponse: {
                                           (response: [Data]) in
