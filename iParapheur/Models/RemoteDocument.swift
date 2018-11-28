@@ -36,18 +36,20 @@
 import Foundation
 
 
-protocol Hasher {
+class RemoteDocument: Encodable {
 
-    var mSignatureAlgorithm: SignatureAlgorithm { get }
+    let id: String
+    let digestBase64: String
+    let signatureBase64: String?
 
-    var mDossierId: String { get }
 
+    init(id: String,
+         digestBase64: String,
+         signatureBase64: String?) {
 
-    func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
-                            onError errorCallback: ((Error) -> Void)?)
-
-    func buildDataToReturn(signatureList: [Data],
-                           onResponse responseCallback: (([Data]) -> Void)?,
-                           onError errorCallback: ((Error) -> Void)?)
+        self.id = id
+        self.digestBase64 = digestBase64
+        self.signatureBase64 = signatureBase64
+    }
 
 }

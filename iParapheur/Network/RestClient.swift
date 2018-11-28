@@ -175,7 +175,7 @@ import Alamofire
     }
 
 
-    func getDataToSign(hashBase64List: [String],
+    func getDataToSign(remoteDocumentList: [RemoteDocument],
                        publicKeyBase64: String,
                        signatureFormat: String,
                        payload: [String: String],
@@ -186,8 +186,22 @@ import Alamofire
 
         // Parameters
 
+        // Alamofire can't stand Encodable object in its Parameters.
+        // We have to either re-create the full request, with a JSON raw data body
+        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
+        //
+        // ... Yep, I chose the second.
+        //
+        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
+
+        var remoteDocumentMapList: [[String: String]] = []
+        for remoteDocument in remoteDocumentList {
+            remoteDocumentMapList.append(["id": remoteDocument.digestBase64,
+                                          "digestBase64": remoteDocument.digestBase64])
+        }
+
         let parameters: Parameters = [
-            "hashBase64List": hashBase64List,
+            "remoteDocumentList": remoteDocumentMapList,
             "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64,
             "payload": payload
@@ -195,9 +209,11 @@ import Alamofire
 
         // Request
 
+        print("getDataToSign !")
         manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 
+            print("getDataToSign response")
             switch (response.result) {
 
                 case .success:
@@ -220,8 +236,7 @@ import Alamofire
     }
 
 
-    func getFinalSignature(hashBase64List: [String],
-                           signatureBase64List: [String],
+    func getFinalSignature(remoteDocumentList: [RemoteDocument],
                            publicKeyBase64: String,
                            signatureFormat: String,
                            signatureDateTime: Int,
@@ -233,9 +248,23 @@ import Alamofire
 
         // Parameters
 
+        // Alamofire can't stand Encodable object in its Parameters.
+        // We have to either re-create the full request, with a JSON raw data body
+        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
+        //
+        // ... Yep, I chose the second.
+        //
+        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
+
+        var remoteDocumentMapList: [[String: String]] = []
+        for remoteDocument in remoteDocumentList {
+            remoteDocumentMapList.append(["id": remoteDocument.digestBase64,
+                                          "digestBase64": remoteDocument.digestBase64,
+                                          "signatureBase64": remoteDocument.signatureBase64!])
+        }
+
         let parameters: Parameters = [
-            "fileHashList": hashBase64List,
-            "signatureBase64List": signatureBase64List,
+            "remoteDocumentList": remoteDocumentMapList,
             "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64,
             "payload": payload

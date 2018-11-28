@@ -51,7 +51,7 @@ import Foundation
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
     var signInfoMap: [String: SignInfo?] = [:]
-    var signaturesToDo: [String: [Hasher]] = [:]
+    var signaturesToDo: [String: Hasher] = [:]
     @objc var restClient: RestClient?
     @objc var currentAction: String?
     @objc var currentBureau: String?
@@ -155,7 +155,7 @@ import Foundation
             case .imprimerieNationale:
 
                 if (signaturesToDo.count != 1) {
-                    ViewUtils.logError(message: "Les certificat sélectionné ne permet pas la signature multiple",
+                    ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
                                        title: "Impossible de signer avec ce certificat")
                     return
                 }
@@ -163,13 +163,7 @@ import Foundation
                 for signatureToDo in signaturesToDo {
                     print(signatureToDo)
 
-                    if (signatureToDo.value.count != 1) {
-                        ViewUtils.logError(message: "Les certificat sélectionné ne permet pas la signature de flux multi-bordereaux",
-                                           title: "Impossible de signer avec ce certificat")
-                        return
-                    }
-
-                    if (signatureToDo.value.first!.mSignatureAlgorithm != .sha256WithRsa) {
+                    if (signatureToDo.value.mSignatureAlgorithm != .sha256WithRsa) {
                         ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",
                                            title: "Impossible de signer avec ce certificat")
                         return
@@ -179,7 +173,7 @@ import Foundation
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
-                let hasher: Hasher = Array(signaturesToDo.values)[0][0]
+                let hasher: Hasher = Array(signaturesToDo.values)[0]
 
                 hasher.generateHashToSign(onResponse:
                                           {
@@ -218,23 +212,29 @@ import Foundation
 
     @objc func onSignatureResult(notification: Notification) {
 
-        let signedDataList = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNEDDATA] as! [Data]
-        let signatureOrder = notification.userInfo![CryptoUtils.NOTIF_USERINFO_SIGNATUREINDEX] as! Int
+        let signedDataList = notification.userInfo![CryptoUtils.NOTIF_SIGNEDDATA] as! [Data]
+        let dossierId: String? = notification.userInfo![CryptoUtils.NOTIF_DOSSIERID] as? String
+        let signatureIndex: Int? = notification.userInfo![CryptoUtils.NOTIF_SIGNATUREINDEX] as? Int
 
-//        print("Adrien signature \(signatureOrder) : \(signedData.base64EncodedString(options: .lineLength76Characters))")
+        var hasher: Hasher? = nil
+        if (dossierId != nil) {
+            hasher = signaturesToDo[dossierId!]
+        }
+        if (signatureIndex != nil) {
+            hasher = Array(signaturesToDo.values)[signatureIndex!]
+        }
 
-        let hasher: Hasher = Array(signaturesToDo.values)[0][0]
-        hasher.buildDataToReturn(signatureList: signedDataList,
-                                 onResponse: {
-                                     (result: [Data]) in
+        hasher!.buildDataToReturn(signatureList: signedDataList,
+                                  onResponse: {
+                                      (result: [Data]) in
 
-                                     let resultBase64List = StringsUtils.toBase64List(dataList: result)
-                                     self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
-                                 },
-                                 onError: {
-                                     (error: Error) in
-                                     print(error.localizedDescription)
-                                 });
+                                      let resultBase64List = StringsUtils.toBase64List(dataList: result)
+                                      self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
+                                  },
+                                  onError: {
+                                      (error: Error) in
+                                      print(error.localizedDescription)
+                                  });
     }
 
 
@@ -279,20 +279,20 @@ import Foundation
     }
 
 
-    private func generateHasherWrappers() -> [String: [Hasher]] {
+    private func generateHasherWrappers() -> [String: Hasher] {
 
         do {
             // Compute signature(s) hash(es)
 
-            var hashersMap: [String: [Hasher]] = [:]
+            var hashersMap: [String: Hasher] = [:]
             for (dossierId, signInfo) in signInfoMap {
 
-                let hashers = try CryptoUtils.generateHasherWrappers(signInfo: signInfo!,
-                                                                     dossierId: dossierId,
-                                                                     certificate: self.selectedCertificate!,
-                                                                     restClient: restClient!)
+                let hasher = try CryptoUtils.generateHasherWrappers(signInfo: signInfo!,
+                                                                    dossierId: dossierId,
+                                                                    certificate: self.selectedCertificate!,
+                                                                    restClient: restClient!)
 
-                hashersMap[dossierId] = hashers
+                hashersMap[dossierId] = hasher
             }
 
             return hashersMap
@@ -341,8 +341,8 @@ import Foundation
 
                 let givenPassword = alertView.textField(at: 0)!.text!
 
-                for (dossierId, hashers) in signaturesToDo {
-                    try? CryptoUtils.signWithP12(hashers: hashers,
+                for (_, hasher) in signaturesToDo {
+                    try? CryptoUtils.signWithP12(hasher: hasher,
                                                  certificate: selectedCertificate!,
                                                  password: givenPassword)
                 }

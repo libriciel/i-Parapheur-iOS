@@ -49,8 +49,9 @@ extension Notification.Name {
 
 @objc class CryptoUtils: NSObject {
 
-    static public let NOTIF_USERINFO_SIGNEDDATA = "signedData"
-    static public let NOTIF_USERINFO_SIGNATUREINDEX = "signatureIndex"
+    static public let NOTIF_SIGNEDDATA = "signedData"
+    static public let NOTIF_SIGNATUREINDEX = "signatureIndex"
+    static public let NOTIF_DOSSIERID = "dossierId"
 
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
     static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
@@ -249,11 +250,9 @@ extension Notification.Name {
     }
 
 
-    class func signWithP12(hashers: [Hasher],
+    class func signWithP12(hasher: Hasher,
                            certificate: Certificate,
                            password: String) throws {
-
-        var signatures: [String] = []
 
         // Retrieving signature certificate
 
@@ -272,54 +271,48 @@ extension Notification.Name {
 
         // Building signature response
 
-        for i in 0..<hashers.count {
-            let hasher: Hasher = hashers[i]
+        hasher.generateHashToSign(
+                onResponse: {
+                    (result: DataToSign) in
 
-            hasher.generateHashToSign(
-                    onResponse: {
-                        (result: DataToSign) in
+                    print("Adrien - p12 toSign : \(result.dataToSignBase64List))")
+                    print("Adrien - sign algo  : \(hasher.mSignatureAlgorithm))")
 
-                        var signedHashList: [Data] = []
+                    var signedHashList: [Data] = []
+                    let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
+                    for dataToSign in dataToSignList {
 
-                        let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
-                        for dataToSign in dataToSignList {
-                            let data = dataToSign.sha1()
+                        let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
+                        var signedHash = try? CryptoUtils.rsaSign(data: data as NSData,
+                                                                  keyFileUrl: p12FinalUrl,
+                                                                  password: password)
 
-                            // TODO FIXME : set SHA1/SHA256 parameter
-                            var signedHash = try? CryptoUtils.rsaSign(data: data as NSData,
-                                                                      keyFileUrl: p12FinalUrl,
-                                                                      password: password)
+                        signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
 
-                            signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
+                        print("Adrien - p12 hash   : \(CryptoUtils.hex(data: data))")
+                        print("Adrien - p12 signed : \(signedHash!)")
 
-                            print("Adrien - p12 toSign : \(result.dataToSignBase64List))")
-                            print("Adrien - p12 hash-- : \(CryptoUtils.hex(data: data.sha1()))")
-                            print("Adrien - p12 signed : \(signedHash!)")
+                        signedHashList.append(Data(base64Encoded: signedHash!)!)
+                    }
 
-                            signedHashList.append(Data(base64Encoded: signedHash!)!)
-                        }
-
-                        NotificationCenter.default.post(name: .signatureResult,
-                                                        object: nil,
-                                                        userInfo: [
-                                                            NOTIF_USERINFO_SIGNEDDATA: signedHashList,
-                                                            NOTIF_USERINFO_SIGNATUREINDEX: i
-                                                        ])
-                    },
-                    onError: {
-                        (error: Error) in
-                        //TODO
-                    })
-        }
+                    NotificationCenter.default.post(name: .signatureResult,
+                                                    object: nil,
+                                                    userInfo: [
+                                                        NOTIF_SIGNEDDATA: signedHashList,
+                                                        NOTIF_DOSSIERID: hasher.mDossierId
+                                                    ])
+                },
+                onError: {
+                    (error: Error) in
+                    //TODO
+                })
     }
 
 
     class func generateHasherWrappers(signInfo: SignInfo,
                                       dossierId: String,
                                       certificate: Certificate,
-                                      restClient: RestClient) throws -> [Hasher] {
-
-        var hashers: [Hasher] = []
+                                      restClient: RestClient) throws -> Hasher {
 
         for hashIndex in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
@@ -328,8 +321,8 @@ extension Notification.Name {
                      "PADES",
                      "PADES-basic":
 
-                    let cmsHasher = CmsSha1Hasher(signInfo: signInfo)
-                    hashers.append(cmsHasher)
+                    return CmsSha1Hasher(signInfo: signInfo,
+                                         dossierId: dossierId)
 
 
                 case "xades":
@@ -345,20 +338,22 @@ extension Notification.Name {
 
                 case "xades-env-1.2.2-sha256":
 
-                    let remoteHasher = RemoteHasher(signInfo: signInfo,
-                                                    publicKeyBase64: certificate.publicKey!.base64EncodedString(),
-                                                    restClient: restClient)
+                    let hasher = RemoteHasher(signInfo: signInfo,
+                                              publicKeyBase64: certificate.publicKey!.base64EncodedString(),
+                                              dossierId: dossierId,
+                                              restClient: restClient)
 
-                    remoteHasher.mPayload[RemoteHasher.PAYLOAD_KEY_PES_ID] = signInfo.pesIds.joined(separator: ",")
-                    hashers.append(remoteHasher)
+                    let idListJsonData = try! JSONSerialization.data(withJSONObject: signInfo.pesIds)
+                    let idListJsonString = String(data: idListJsonData, encoding: .utf8)
 
+                    return hasher
 
                 default:
-                    throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
+                    print("Ce format (\(signInfo.format)) n'est pas supporté")
             }
         }
 
-        return hashers
+        throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
     }
 
 

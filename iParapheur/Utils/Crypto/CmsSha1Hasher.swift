@@ -46,9 +46,14 @@ class CmsSha1Hasher: Hasher {
     }
 
     let mSignInfo: SignInfo
+    var mDossierId: String
 
-    init(signInfo: SignInfo) {
+
+    init(signInfo: SignInfo,
+         dossierId: String) {
+
         mSignInfo = signInfo
+        mDossierId = dossierId
     }
 
 
