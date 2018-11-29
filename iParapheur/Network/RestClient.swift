@@ -196,7 +196,7 @@ import Alamofire
 
         var remoteDocumentMapList: [[String: String]] = []
         for remoteDocument in remoteDocumentList {
-            remoteDocumentMapList.append(["id": remoteDocument.digestBase64,
+            remoteDocumentMapList.append(["id": remoteDocument.id,
                                           "digestBase64": remoteDocument.digestBase64])
         }
 
@@ -258,7 +258,7 @@ import Alamofire
 
         var remoteDocumentMapList: [[String: String]] = []
         for remoteDocument in remoteDocumentList {
-            remoteDocumentMapList.append(["id": remoteDocument.digestBase64,
+            remoteDocumentMapList.append(["id": remoteDocument.id,
                                           "digestBase64": remoteDocument.digestBase64,
                                           "signatureBase64": remoteDocument.signatureBase64!])
         }
