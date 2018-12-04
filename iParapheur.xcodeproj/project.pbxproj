@@ -36,7 +36,6 @@
 		7A8D21902076126100D9D481 /* Certificate+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */; };
 		7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */; };
 		7AB3CA3420936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */; };
-		7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */; };
 		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */; };
 		7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */; };
 		7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */; };
@@ -52,7 +51,6 @@
 		AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */; };
 		AB3CA364C70E08DE58F5F39B /* Hasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA44650D16605A73B9DCC /* Hasher.swift */; };
 		AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA35534D838DA33430B24 /* RemoteDocument.swift */; };
-		AB3CA4C2BC5A7183DC6F4CBC /* XadesSha1EnvHasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA249A9C9CB43EA486CCE /* XadesSha1EnvHasher.swift */; };
 		AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
 		AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */; };
@@ -271,7 +269,6 @@
 		7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InSignedData_Test.swift; sourceTree = "<group>"; };
-		7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XadesEnvSignerTest.swift; sourceTree = "<group>"; };
 		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InController_Test.swift; sourceTree = "<group>"; };
 		7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsUtils.swift; sourceTree = "<group>"; };
 		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
@@ -288,7 +285,6 @@
 		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
-		AB3CA249A9C9CB43EA486CCE /* XadesSha1EnvHasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XadesSha1EnvHasher.swift; sourceTree = "<group>"; };
 		AB3CA2C9F890B3FCFD4970FC /* InController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
 		AB3CA35534D838DA33430B24 /* RemoteDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteDocument.swift; sourceTree = "<group>"; };
 		AB3CA3898C79B8ED617822B7 /* InSignedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InSignedData.swift; sourceTree = "<group>"; };
@@ -642,7 +638,6 @@
 				AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */,
 				AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */,
 				AB3CA44650D16605A73B9DCC /* Hasher.swift */,
-				AB3CA249A9C9CB43EA486CCE /* XadesSha1EnvHasher.swift */,
 				AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */,
 				AB3CA68650D0E730DD1011D5 /* CmsSha1Hasher.swift */,
 			);
@@ -1067,7 +1062,6 @@
 				7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */,
 				7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */,
 				7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */,
-				7ABD397F2018A21700CBE66D /* XadesEnvSignerTest.swift */,
 				7A61F895205BD06C008B6E46 /* Models_Annotation_Tests.swift */,
 				C5903CFE1FD7EAF2007BF0F8 /* Models_Bureau_Tests.swift */,
 				C5A7DAE41FDE89F50022A813 /* Models_Circuit_Tests.swift */,
@@ -1524,7 +1518,6 @@
 				AB3CAD3E9A26BC332C8524F2 /* InSignedData.swift in Sources */,
 				AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */,
 				AB3CA364C70E08DE58F5F39B /* Hasher.swift in Sources */,
-				AB3CA4C2BC5A7183DC6F4CBC /* XadesSha1EnvHasher.swift in Sources */,
 				AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */,
 				AB3CA19B2384EE7D819CDCD3 /* SignatureAlgorithm.swift in Sources */,
 				AB3CAD22F8A240240B7BBD87 /* CmsSha1Hasher.swift in Sources */,
@@ -1538,7 +1531,6 @@
 			files = (
 				7A61F896205BD06C008B6E46 /* Models_Annotation_Tests.swift in Sources */,
 				C5C0DA381FD38CAB00A993DB /* Models_SignInfo_Tests.swift in Sources */,
-				7ABD39802018A21700CBE66D /* XadesEnvSignerTest.swift in Sources */,
 				7A8556EF20C934E90083BFA6 /* Crypto_ADLKeyStore_Tests.swift in Sources */,
 				C5CED41E1FC474CE00FC15DD /* Models_Filter_Tests.swift in Sources */,
 				7AB3CA3420936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift in Sources */,

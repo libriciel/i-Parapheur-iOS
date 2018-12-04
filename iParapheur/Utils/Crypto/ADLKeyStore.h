@@ -101,11 +101,4 @@ enum {
                          withPassword:(NSString *)password;
 
 
-+ (NSData *)PKCS7Sign:(NSString *)p12Path
-         withPassword:(NSString *)password
-              andData:(NSData *)data
-                error:(NSError **)error;
-
-
-
 @end
