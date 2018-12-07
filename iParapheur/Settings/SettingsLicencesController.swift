@@ -34,14 +34,15 @@
  */
 
 import UIKit
+import os
 
 class SettingsLicencesController: UIViewController {
 
-	// MARK: - Life cycle
-	
+    // MARK: - Life cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-		print("View loaded : SettingsLicencesController")
-	}
+        os_log("View loaded : SettingsLicencesController", type: .debug)
+    }
 
 }

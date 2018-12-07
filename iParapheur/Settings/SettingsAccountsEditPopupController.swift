@@ -32,9 +32,11 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import UIKit
 import CoreData
 import Foundation
+import os
 
 
 @objc class SettingsAccountsEditPopupController: UIViewController {
@@ -45,27 +47,27 @@ import Foundation
     static let PreferredWidth: CGFloat = 500
     static let PreferredHeight: CGFloat = 252
 
-	@IBOutlet var cancelButton: UIButton!
+    @IBOutlet var cancelButton: UIButton!
     @IBOutlet var testButton: UIButton!
-	@IBOutlet var saveButton: UIButton!	
-	
-	@IBOutlet var titleTextView: UITextField!
-	@IBOutlet var urlTextView: UITextField!
-	@IBOutlet var loginTextView: UITextField!
-	@IBOutlet var passwordTextView: UITextField!
+    @IBOutlet var saveButton: UIButton!
+
+    @IBOutlet var titleTextView: UITextField!
+    @IBOutlet var urlTextView: UITextField!
+    @IBOutlet var loginTextView: UITextField!
+    @IBOutlet var passwordTextView: UITextField!
 
     var currentAccount: Account?
     var currentRestClient: RestClient?
 
 
-	// MARK: - Life cycle
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-        print("View loaded : SettingsAccountsEditPopupController")
+    // MARK: - Life cycle
 
-		self.preferredContentSize = CGSize(width: SettingsAccountsEditPopupController.PreferredWidth,
-		                                   height : SettingsAccountsEditPopupController.PreferredHeight);
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        os_log("View loaded : SettingsAccountsEditPopupController", type: .debug)
+
+        self.preferredContentSize = CGSize(width: SettingsAccountsEditPopupController.PreferredWidth,
+                                           height: SettingsAccountsEditPopupController.PreferredHeight);
 
         // Values
 
@@ -78,17 +80,17 @@ import Foundation
 
         // Listeners
 
-		cancelButton.addTarget(self,
-		                       action: #selector(onCancelButtonClicked),
-		                       for: .touchUpInside)
+        cancelButton.addTarget(self,
+                               action: #selector(onCancelButtonClicked),
+                               for: .touchUpInside)
 
-		testButton.addTarget(self,
-		                     action: #selector(onTestButtonClicked),
-		                     for: .touchUpInside)
+        testButton.addTarget(self,
+                             action: #selector(onTestButtonClicked),
+                             for: .touchUpInside)
 
-		saveButton.addTarget(self,
-		                     action: #selector(onSaveButtonClicked),
-		                     for: .touchUpInside)
+        saveButton.addTarget(self,
+                             action: #selector(onSaveButtonClicked),
+                             for: .touchUpInside)
     }
 
     // MARK: - Listeners
@@ -113,11 +115,11 @@ import Foundation
                                        login: NSString(string: loginTextView.text!),
                                        password: NSString(string: passwordTextView.text!))
 
-		currentRestClient!.getApiVersion(onResponse: {
-                                            (result: NSNumber) in
-                                            ViewUtils.logSuccess(message: "Connexion réussie",
-                                                                 title: nil)
-                                         },
+        currentRestClient!.getApiVersion(onResponse: {
+            (result: NSNumber) in
+            ViewUtils.logSuccess(message: "Connexion réussie",
+                                 title: nil)
+        },
                                          onError: {
                                              (error: NSError) in
                                              ViewUtils.logError(message: StringsUtils.getMessage(error: error),
@@ -134,8 +136,8 @@ import Foundation
         // Update model
 
         if (currentAccount == nil) {
-			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
-                                                                 into:ModelsDataController.context!) as? Account
+            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+                                                                 into: ModelsDataController.context!) as? Account
 
             currentAccount!.id = NSUUID().uuidString
             currentAccount!.isVisible = true
@@ -148,7 +150,7 @@ import Foundation
 
         // Callback and dismiss
 
-		NotificationCenter.default.post(name: SettingsAccountsEditPopupController.NotifDocumentSaved,
+        NotificationCenter.default.post(name: SettingsAccountsEditPopupController.NotifDocumentSaved,
                                         object: currentAccount!)
 
         dismiss(animated: true, completion: nil)

@@ -186,7 +186,7 @@
         WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
         controller.currentAction = sender;
         controller.restClient = _restClient.restClientApi.swiftManager;
-        [controller setDossiersToSignWithObjcArray:@[_dossier.identifier]];
+        [controller setDossiersToSignWithObjcArray:@[_dossier]];
         controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
                                                                                                                    withString:@""];
     }
@@ -539,7 +539,7 @@
     if ([dossier.actions containsObject:@"SIGNATURE"]) {
         if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
             __weak typeof(self) weakSelf = self;
-            [_restClient getSignInfoForDossier:_dossierRef
+            [_restClient getSignInfoForDossier:dossier
                                      andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
                                        success:^(SignInfo *signInfo) {
                                            __strong typeof(weakSelf) strongSelf = weakSelf;

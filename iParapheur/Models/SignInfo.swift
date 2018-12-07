@@ -72,6 +72,7 @@ import CoreData
         case pesSpuri = "pesspuri"
     }
 
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 

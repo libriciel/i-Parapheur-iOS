@@ -78,7 +78,6 @@ extension Notification.Name {
 
             let hex = CryptoUtils.hex(data: hash)
 
-            print("Adrien -- hash signed :: \(hex)")
             hashesJsonList.append("""
                 {
                     "certificateId" : " \(certificateId) ",
@@ -120,7 +119,6 @@ extension Notification.Name {
 
         let jsonDecoder = JSONDecoder()
         let croppedUrl = String(url.path.dropFirst())
-        print("Adrien -- Intent ::: \(croppedUrl)")
 
         let tokenData = try? jsonDecoder.decode(InTokenData.self, from: croppedUrl.data(using: .utf8)!)
         if (tokenData != nil) {

@@ -35,6 +35,7 @@
 
 import Foundation
 import UIKit
+import os
 
 class SettingsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -62,7 +63,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : SettingsTableViewController")
+        os_log("View loaded : SettingsTableViewController", type: .debug)
 
         backButton.target = self
         backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)

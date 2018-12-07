@@ -110,23 +110,18 @@
 
     } else if ([segue.identifier isEqualToString:@"filterSegue"]) {
 
-        NSMutableArray *selectedArray = NSMutableArray.new;
-
-        for (Dossier *dossier in _selectedDossiersArray)
-            [selectedArray addObject:dossier.identifier];
-
         // Paper signature is just a Visa, actually
 
         BOOL isPaperSign = YES;
 
-        for (Dossier *dossier in selectedArray)
+        for (Dossier *dossier in _selectedDossiersArray)
             if (!dossier.isSignPapier)
                 isPaperSign = NO;
 
         // Launch popup
 
         WorkflowDialogController *workflowDialogController = segue.destinationViewController;
-        [workflowDialogController setDossiersToSignWithObjcArray:selectedArray];
+        [workflowDialogController setDossiersToSignWithObjcArray:_selectedDossiersArray];
         workflowDialogController.currentAction = (NSString *) sender;
         // workflowDialogController.isPaperSign = isPaperSign; //FIXME
     }

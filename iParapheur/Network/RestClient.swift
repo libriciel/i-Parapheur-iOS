@@ -35,6 +35,7 @@
 
 import Foundation
 import Alamofire
+import os
 
 
 @objc class RestClient: NSObject {
@@ -182,6 +183,8 @@ import Alamofire
                        onResponse responseCallback: ((DataToSign) -> Void)?,
                        onError errorCallback: ((Error) -> Void)?) {
 
+        os_log("getDataToSign called", type: .debug)
+
         let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/generateDataToSign"
 
         // Parameters
@@ -209,11 +212,11 @@ import Alamofire
 
         // Request
 
-        print("getDataToSign !")
+        os_log("getDataToSign request sent", type: .debug)
         manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 
-            print("getDataToSign response")
+            os_log("getDataToSign response...", type: .debug)
             switch (response.result) {
 
                 case .success:
@@ -225,6 +228,7 @@ import Alamofire
                     let dataToSign = try? jsonDecoder.decode(DataToSign.self,
                                                              from: responseJsonData)
 
+                    os_log("getDataToSign response : %@", type: .debug, dataToSign!)
                     responseCallback!(dataToSign!)
                     break
 
@@ -239,7 +243,6 @@ import Alamofire
     func getFinalSignature(remoteDocumentList: [RemoteDocument],
                            publicKeyBase64: String,
                            signatureFormat: String,
-                           signatureDateTime: Int,
                            payload: [String: String],
                            onResponse responseCallback: (([Data]) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
@@ -594,12 +597,12 @@ import Alamofire
     }
 
 
-    @objc func getSignInfo(dossier: NSString,
+    @objc func getSignInfo(dossier: Dossier,
                            bureau: NSString,
                            onResponse responseCallback: ((SignInfo) -> Void)?,
                            onError errorCallback: ((NSError) -> Void)?) {
 
-        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/getSignInfo"
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/getSignInfo"
 
         // Parameters
 

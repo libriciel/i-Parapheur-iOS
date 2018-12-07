@@ -35,6 +35,7 @@
 
 import Foundation
 import UIKit
+import os
 
 @objc class DocumentSelectionController: UITableViewController {
 
@@ -47,7 +48,7 @@ import UIKit
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : DocumentSelectionController")
+        os_log("View loaded : DocumentSelectionController", type: .debug)
 
         // Parse ObjC array
 

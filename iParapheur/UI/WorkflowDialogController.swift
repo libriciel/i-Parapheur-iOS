@@ -34,6 +34,7 @@
  */
 
 import Foundation
+import os
 
 
 @objc class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
@@ -50,8 +51,8 @@ import Foundation
 
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
-    var signInfoMap: [String: SignInfo?] = [:]
-    var signaturesToDo: [String: Hasher] = [:]
+    var signInfoMap: [Dossier: SignInfo?] = [:]
+    var signaturesToDo: [String: RemoteHasher] = [:]
     @objc var restClient: RestClient?
     @objc var currentAction: String?
     @objc var currentBureau: String?
@@ -62,6 +63,7 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        os_log("View loaded : WorkflowDialogController", type: .debug)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
@@ -69,13 +71,13 @@ import Foundation
                                                object: nil)
 
         if (currentAction == "SIGNATURE") {
-            for dossierId in signInfoMap.keys {
+            for dossier in signInfoMap.keys {
 
-                restClient?.getSignInfo(dossier: dossierId as NSString,
+                restClient?.getSignInfo(dossier: dossier,
                                         bureau: currentBureau! as NSString,
                                         onResponse: {
                                             signInfo in
-                                            self.signInfoMap[dossierId] = signInfo
+                                            self.signInfoMap[dossier] = signInfo
                                             self.refreshCertificateListVisibility()
                                         },
                                         onError: {
@@ -145,7 +147,6 @@ import Foundation
         }
 
         signaturesToDo = generateHasherWrappers()
-        print("Adrien signaturesToDo -- \(signaturesToDo)")
         if (signaturesToDo.isEmpty) {
             return
         }
@@ -154,7 +155,7 @@ import Foundation
 
             case .imprimerieNationale:
 
-                if (signaturesToDo.count != 1) {
+                if (signaturesToDo.count != 1 || signaturesToDo.values.count > 1) {
                     ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
                                        title: "Impossible de signer avec ce certificat")
                     return
@@ -173,7 +174,7 @@ import Foundation
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
                 let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
-                let hasher: Hasher = Array(signaturesToDo.values)[0]
+                let hasher: RemoteHasher = Array(signaturesToDo.values)[0]
 
                 hasher.generateHashToSign(onResponse:
                                           {
@@ -216,7 +217,7 @@ import Foundation
         let dossierId: String? = notification.userInfo![CryptoUtils.NOTIF_DOSSIERID] as? String
         let signatureIndex: Int? = notification.userInfo![CryptoUtils.NOTIF_SIGNATUREINDEX] as? Int
 
-        var hasher: Hasher? = nil
+        var hasher: RemoteHasher? = nil
         if (dossierId != nil) {
             hasher = signaturesToDo[dossierId!]
         }
@@ -239,8 +240,8 @@ import Foundation
 
 
     @objc func setDossiersToSign(objcArray: NSArray) {
-        for dossierId in objcArray as! [String] {
-            signInfoMap[dossierId] = nil as SignInfo?
+        for dossier in objcArray as! [Dossier] {
+            signInfoMap[dossier] = nil as SignInfo?
         }
     }
 
@@ -279,20 +280,20 @@ import Foundation
     }
 
 
-    private func generateHasherWrappers() -> [String: Hasher] {
+    private func generateHasherWrappers() -> [String: RemoteHasher] {
 
         do {
             // Compute signature(s) hash(es)
 
-            var hashersMap: [String: Hasher] = [:]
-            for (dossierId, signInfo) in signInfoMap {
+            var hashersMap: [String: RemoteHasher] = [:]
+            for (dossier, signInfo) in signInfoMap {
 
                 let hasher = try CryptoUtils.generateHasherWrappers(signInfo: signInfo!,
-                                                                    dossierId: dossierId,
+                                                                    dossier: dossier,
                                                                     certificate: self.selectedCertificate!,
                                                                     restClient: restClient!)
 
-                hashersMap[dossierId] = hasher
+                hashersMap[dossier.identifier] = hasher
             }
 
             return hashersMap
@@ -314,7 +315,6 @@ import Foundation
 //        let pkcs7WrappedData = pkcs7Wrapped.data(using: .utf8)
 //        let pkcs7WrappedBase64 = pkcs7WrappedData?.base64EncodedString()
 
-        print("Adrien -- Sending back signature : \(signature)")
         restClient?.signDossier(dossierId: dossierId,
                                 bureauId: currentBureau!,
                                 publicAnnotation: publicAnnotationTextView.text,

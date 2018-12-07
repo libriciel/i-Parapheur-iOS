@@ -364,7 +364,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex {
 
             for (Dossier *dossier in _dossiers) {
                 __weak typeof(self) weakSelf = self;
-                [_restClient getSignInfoForDossier:dossier.identifier
+                [_restClient getSignInfoForDossier:dossier
                                          andBureau:_bureauCourant
                                            success:^(SignInfo *signInfo) {
                                                __strong typeof(weakSelf) strongSelf = weakSelf;

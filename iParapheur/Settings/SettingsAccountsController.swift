@@ -36,6 +36,7 @@
 import UIKit
 import CoreData
 import Foundation
+import os
 
 
 @objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
@@ -48,7 +49,7 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : SettingsAccountsController")
+        os_log("View loaded : SettingsAccountsController", type: .debug)
 
         accountTableView.allowsSelection = false
 

@@ -63,7 +63,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	[Fabric with:@[Crashlytics.class]];
 
-	NSLog(@"Adrien = Application did launch");
 	[self checkP12FilesInLocalDirectory];
 
 	// Override point for customization after application launch.
@@ -221,7 +220,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Open With
 
 	if ([url.scheme isEqualToString:@"file"]) {
-		NSLog(@"Adrien given file : %@", url);
 		[CryptoUtils moveCertificateWithUrl:url];
 		[self checkP12FilesInLocalDirectory];
 		return YES;
@@ -361,7 +359,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)checkP12FilesInLocalDirectory {
 
 	NSArray *p12Docs = [self importableP12Stores];
-	NSLog(@"Adrien importables p12 : %@", p12Docs);
 
 	for (NSString *p12Path in p12Docs) {
 		NSLog(@"p12Path :%@", p12Docs);
@@ -390,16 +387,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	NSArray *files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:certificateFolderPath
 	                                                                   error:&error];
 
-	NSLog(@"Adrien certificateFolderPath -- %@", certificateFolderPath);
-	NSLog(@"Adrien    -> %@", files);
-
 	if (files == nil) {
 		NSLog(@"Error reading contents of documents directory: %@", error.localizedDescription);
 		return retval;
 	}
 
 	for (NSString *file in files) {
-		NSLog(@"Adrien -- %@", file);
 		
 		if (([file.pathExtension compare:@"p12"
 		                         options:NSCaseInsensitiveSearch] == NSOrderedSame) ||

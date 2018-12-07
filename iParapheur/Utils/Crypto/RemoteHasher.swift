@@ -34,11 +34,12 @@
  */
 
 import Foundation
+import os
 
 /**
     Calling the Crypto element server-side
 */
-class RemoteHasher: Hasher {
+class RemoteHasher {
 
     static public let PAYLOAD_KEY_PES_SIGNATURE_DATE_TIME = "signaturedate";
     static public let PAYLOAD_KEY_PES_CLAIMED_ROLE = "pesclaimedrole";
@@ -47,26 +48,25 @@ class RemoteHasher: Hasher {
     static public let PAYLOAD_KEY_PES_CITY = "pescity";
 
 
-    var mSignatureAlgorithm: SignatureAlgorithm {
-        return .sha256WithRsa
-    }
-
+    let mSignatureAlgorithm: SignatureAlgorithm
     let mSignInfo: SignInfo
     let mPublicKeyBase64: String
-    var mDossierId: String
+    var mDossier: Dossier
     var mPayload: [String: String]
     @objc var mRestClient: RestClient
 
 
     init(signInfo: SignInfo,
          publicKeyBase64: String,
-         dossierId: String,
-         restClient: RestClient) {
+         dossier: Dossier,
+         restClient: RestClient,
+         signatureAlgorithm: SignatureAlgorithm) {
 
-        mDossierId = dossierId
+        mDossier = dossier
         mSignInfo = signInfo
         mPublicKeyBase64 = publicKeyBase64
         mRestClient = restClient
+        mSignatureAlgorithm = signatureAlgorithm
         mPayload = [:]
     }
 
@@ -77,22 +77,20 @@ class RemoteHasher: Hasher {
     func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
                             onError errorCallback: ((Error) -> Void)?) {
 
-        print("buildDataToReturn payload : \(mPayload)")
+        os_log("RemoteHasher#generateHashToSign", type: .debug)
 
         var remoteDocumentList: [RemoteDocument] = []
-
-        print("RemoteDocument ids : \(mSignInfo.pesIds)")
-        print("RemoteDocument d64 : \(mSignInfo.hashesToSign)")
-
         for i in 0..<mSignInfo.hashesToSign.count {
 
-            print("RemoteDocument n   : \(i)")
-
-            let remoteDocument = RemoteDocument(id: mSignInfo.pesIds[i],
-                                                digestBase64: mSignInfo.hashesToSign[i],
-                                                signatureBase64: nil)
-
-            remoteDocumentList.append(remoteDocument)
+            if (mSignInfo.pesIds.count > 0) {
+                remoteDocumentList.append(RemoteDocument(id: mSignInfo.pesIds[i],
+                                                         digestBase64: mSignInfo.hashesToSign[i],
+                                                         signatureBase64: nil))
+            } else {
+                remoteDocumentList.append(RemoteDocument(id: mDossier.documents[i].identifier,
+                                                         digestBase64: mSignInfo.hashesToSign[i],
+                                                         signatureBase64: nil))
+            }
         }
 
         mRestClient.getDataToSign(remoteDocumentList: remoteDocumentList,
@@ -101,10 +99,6 @@ class RemoteHasher: Hasher {
                                   payload: mPayload,
                                   onResponse: {
                                       (response: DataToSign) in
-
-                                      print("Adrien - signInfoB64   : \(self.mSignInfo.hashesToSign)")
-                                      print("Adrien - PublicKey     : \(self.mPublicKeyBase64)")
-                                      print("Adrien - dataToSign    : \(response.dataToSignBase64List)")
 
                                       self.mPayload = response.payload
                                       responseCallback!(response)
@@ -119,27 +113,29 @@ class RemoteHasher: Hasher {
                            onResponse responseCallback: (([Data]) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
+        os_log("RemoteHasher#buildDataToReturn", type: .debug)
+
         var remoteDocumentList: [RemoteDocument] = []
         for i in 0..<mSignInfo.hashesToSign.count {
 
-            let remoteDocument = RemoteDocument(id: mSignInfo.pesIds[i],
-                                                digestBase64: mSignInfo.hashesToSign[i],
-                                                signatureBase64: signatureList[i].base64EncodedString())
-
-            remoteDocumentList.append(remoteDocument)
+            if (mSignInfo.pesIds.count > 0) {
+                remoteDocumentList.append(RemoteDocument(id: mSignInfo.pesIds[i],
+                                                         digestBase64: mSignInfo.hashesToSign[i],
+                                                         signatureBase64: signatureList[i].base64EncodedString()))
+            } else {
+                remoteDocumentList.append(RemoteDocument(id: mDossier.documents[i].identifier,
+                                                         digestBase64: mSignInfo.hashesToSign[i],
+                                                         signatureBase64: signatureList[i].base64EncodedString()))
+            }
         }
-
-        let signatureTime = Int(mPayload[RemoteHasher.PAYLOAD_KEY_PES_SIGNATURE_DATE_TIME]!)!
 
         mRestClient.getFinalSignature(remoteDocumentList: remoteDocumentList,
                                       publicKeyBase64: mPublicKeyBase64,
                                       signatureFormat: mSignInfo.format,
-                                      signatureDateTime: signatureTime,
                                       payload: mPayload,
                                       onResponse: {
                                           (response: [Data]) in
 
-                                          print("Adrien - finalSignat : \(response))")
                                           responseCallback!(response)
                                       },
                                       onError: {

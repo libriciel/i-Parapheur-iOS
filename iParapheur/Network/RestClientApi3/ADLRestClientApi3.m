@@ -241,14 +241,14 @@
 }
 
 
-- (void)getSignInfoForDossier:(NSString *)dossierId
+- (void)getSignInfoForDossier:(Dossier *)dossier
                     andBureau:(NSString *)bureauId
                       success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
     [self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-    [_swiftManager getSignInfoWithDossier:dossierId
+    [_swiftManager getSignInfoWithDossier:dossier
                                    bureau:bureauId
                                onResponse:^(SignInfo *response) {
                                    success(response);

@@ -35,6 +35,7 @@
 
 import UIKit
 import CoreData
+import os
 
 /**
     Taken from
@@ -108,7 +109,7 @@ import CoreData
         do {
             try ModelsDataController.context!.save()
         } catch let error as NSError {
-            print("Could not save \(error), \(error.userInfo)")
+            os_log("Could not save %@, %@", type: .error, error, error.userInfo)
         }
     }
 
@@ -122,7 +123,7 @@ import CoreData
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.ENTITY_NAME)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Account]
         } catch {
-            print("Could not fetch Accounts")
+            os_log("Could not fetch Accounts", type: .error)
             return result
         }
 
@@ -136,7 +137,7 @@ import CoreData
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.ENTITY_NAME)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Certificate]
         } catch {
-            print("Could not fetch Certificate")
+            os_log("Could not fetch Certificate", type: .error)
             return result
         }
 
@@ -150,7 +151,7 @@ import CoreData
             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.ENTITY_NAME)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Filter]
         } catch {
-            print("Could not fetch Filters")
+            os_log("Could not fetch Filters", type: .error)
             return result
         }
 

@@ -32,26 +32,28 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import UIKit
+import os
 
 @objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @objc static let NotifSelected = Notification.Name("AccountSelectionControllerAccountSelectionController")
     @objc static let Segue: NSString! = "AccountListSegue"
 
-	@IBOutlet var backButton: UIBarButtonItem!
-	@IBOutlet var accountTableView: UITableView!
+    @IBOutlet var backButton: UIBarButtonItem!
+    @IBOutlet var accountTableView: UITableView!
 
     var accountList: Array<Account> = []
     var selectedAccountId: String?
 
 
-	// MARK: - LifeCycle
+    // MARK: - LifeCycle
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		print("View loaded : AccountSelectionController")
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        os_log("View loaded : AccountSelectionController", type: .debug)
 
         ModelsDataController.cleanupAccounts(preferences: UserDefaults.standard)
 
@@ -59,12 +61,12 @@ import UIKit
         accountTableView.dataSource = self
         accountTableView.delegate = self
 
-		backButton.target = self
-		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
+        backButton.target = self
+        backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
         let preferences: UserDefaults = UserDefaults.standard
         selectedAccountId = preferences.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
-	}
+    }
 
 
     // MARK: - Private methods
@@ -72,7 +74,9 @@ import UIKit
     func loadAccountList() -> Array<Account> {
 
         var result: Array<Account> = ModelsDataController.fetchAccounts()
-        result = result.filter{ $0.isVisible!.boolValue }
+        result = result.filter {
+            $0.isVisible!.boolValue
+        }
 
         return result
     }
@@ -93,12 +97,12 @@ import UIKit
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell:AccountSelectionCell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.CellId,
-		                                                              for: indexPath) as! AccountSelectionCell
+        let cell: AccountSelectionCell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.CellId,
+                                                                       for: indexPath) as! AccountSelectionCell
         let account = accountList[indexPath.row]
 
-		cell.inboxIcon.image = cell.inboxIcon.image!.withRenderingMode(.alwaysTemplate)
-		cell.nameLabel.text = account.title
+        cell.inboxIcon.image = cell.inboxIcon.image!.withRenderingMode(.alwaysTemplate)
+        cell.nameLabel.text = account.title
 
         cell.checkIcon.image = cell.checkIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.checkIcon.isHidden = (selectedAccountId != account.id)
@@ -112,7 +116,7 @@ import UIKit
         let preferences: UserDefaults = UserDefaults.standard
         preferences.set(accountSelected.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
 
-		NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
+        NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
                                         object: nil,
                                         userInfo: ["success": true])
         onBackButtonClicked()

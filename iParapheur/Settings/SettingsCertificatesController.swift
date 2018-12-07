@@ -35,6 +35,7 @@
 
 import UIKit
 import Foundation
+import os
 
 
 @objc class SettingsCertificatesController: UIViewController, UITableViewDataSource, UIDocumentInteractionControllerDelegate {
@@ -52,10 +53,9 @@ import Foundation
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : SettingsCertificatesController")
+        os_log("View loaded : SettingsCertificatesController", type: .debug)
 
         certificateList = ModelsDataController.fetchCertificates()
-        print("Adrien - \(certificateList)")
         certificatesTableView.dataSource = self
 
         dateFormatter = DateFormatter()
@@ -152,7 +152,7 @@ import Foundation
         // Find from NSManagedObjectContext
 
         var certificateToDelete: NSManagedObject? = nil
-        for certificate in  ModelsDataController.fetchCertificates() {
+        for certificate in ModelsDataController.fetchCertificates() {
             if (certificate.identifier == certificateList[indexPath.row].identifier) {
                 certificateToDelete = certificate
             }
@@ -173,7 +173,6 @@ import Foundation
     }
 
     @objc func onCertificateImport() {
-        print("Adrien Notification Received")
     }
 
 }

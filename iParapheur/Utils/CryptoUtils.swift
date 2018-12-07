@@ -250,7 +250,7 @@ extension Notification.Name {
     }
 
 
-    class func signWithP12(hasher: Hasher,
+    class func signWithP12(hasher: RemoteHasher,
                            certificate: Certificate,
                            password: String) throws {
 
@@ -275,9 +275,6 @@ extension Notification.Name {
                 onResponse: {
                     (result: DataToSign) in
 
-                    print("Adrien - p12 toSign : \(result.dataToSignBase64List))")
-                    print("Adrien - sign algo  : \(hasher.mSignatureAlgorithm))")
-
                     var signedHashList: [Data] = []
                     let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
                     for dataToSign in dataToSignList {
@@ -288,19 +285,24 @@ extension Notification.Name {
                                                                   password: password)
 
                         signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
-
-                        print("Adrien - p12 hash   : \(CryptoUtils.hex(data: data))")
-                        print("Adrien - p12 signed : \(signedHash!)")
-
                         signedHashList.append(Data(base64Encoded: signedHash!)!)
                     }
 
-                    NotificationCenter.default.post(name: .signatureResult,
-                                                    object: nil,
-                                                    userInfo: [
-                                                        NOTIF_SIGNEDDATA: signedHashList,
-                                                        NOTIF_DOSSIERID: hasher.mDossierId
-                                                    ])
+                    hasher.buildDataToReturn(signatureList: signedHashList,
+                                             onResponse:
+                                             {
+                                                 (resultList: [Data]) in
+
+                                                 NotificationCenter.default.post(name: .signatureResult,
+                                                                                 object: nil,
+                                                                                 userInfo: [
+                                                                                     NOTIF_SIGNEDDATA: resultList,
+                                                                                     NOTIF_DOSSIERID: hasher.mDossier.identifier
+                                                                                 ])
+                                             },
+                                             onError: {
+                                                 error in
+                                             })
                 },
                 onError: {
                     (error: Error) in
@@ -310,20 +312,12 @@ extension Notification.Name {
 
 
     class func generateHasherWrappers(signInfo: SignInfo,
-                                      dossierId: String,
+                                      dossier: Dossier,
                                       certificate: Certificate,
-                                      restClient: RestClient) throws -> Hasher {
+                                      restClient: RestClient) throws -> RemoteHasher {
 
         for hashIndex in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
-
-                case "CMS",
-                     "PADES",
-                     "PADES-basic":
-
-                    return CmsSha1Hasher(signInfo: signInfo,
-                                         dossierId: dossierId)
-
 
                 case "xades":
 
@@ -336,15 +330,26 @@ extension Notification.Name {
                     throw NSError(domain: "Ce format (\(signInfo.format)) est obsolète", code: 0, userInfo: nil)
 
 
+                case "CMS",
+                     "PADES",
+                     "PADES-basic":
+
+                    let hasher = RemoteHasher(signInfo: signInfo,
+                                              publicKeyBase64: certificate.publicKey!.base64EncodedString(),
+                                              dossier: dossier,
+                                              restClient: restClient,
+                                              signatureAlgorithm: .sha1WithRsa)
+
+                    return hasher
+
+
                 case "xades-env-1.2.2-sha256":
 
                     let hasher = RemoteHasher(signInfo: signInfo,
                                               publicKeyBase64: certificate.publicKey!.base64EncodedString(),
-                                              dossierId: dossierId,
-                                              restClient: restClient)
-
-                    let idListJsonData = try! JSONSerialization.data(withJSONObject: signInfo.pesIds)
-                    let idListJsonString = String(data: idListJsonData, encoding: .utf8)
+                                              dossier: dossier,
+                                              restClient: restClient,
+                                              signatureAlgorithm: .sha256WithRsa)
 
                     return hasher
 

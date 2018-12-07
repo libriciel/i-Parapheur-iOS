@@ -35,6 +35,7 @@
 
 import Foundation
 import UIKit
+import os
 
 
 @objc protocol ActionSelectionControllerDelegate: class {
@@ -57,7 +58,7 @@ import UIKit
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : ActionSelectionController")
+        os_log("View loaded : ActionSelectionController", type: .debug)
 
         actions = Dossier.filterActions(dossierList: [currentDossier!])
 
