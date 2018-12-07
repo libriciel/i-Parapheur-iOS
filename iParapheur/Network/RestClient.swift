@@ -212,7 +212,7 @@ import os
 
         // Request
 
-        os_log("getDataToSign request sent", type: .debug)
+        os_log("getDataToSign request sent with parameters %@", type: .debug, parameters)
         manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 
@@ -275,6 +275,7 @@ import os
 
         // Request
 
+        os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
         manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 

@@ -82,15 +82,13 @@ class RemoteHasher {
         var remoteDocumentList: [RemoteDocument] = []
         for i in 0..<mSignInfo.hashesToSign.count {
 
-            if (mSignInfo.pesIds.count > 0) {
-                remoteDocumentList.append(RemoteDocument(id: mSignInfo.pesIds[i],
-                                                         digestBase64: mSignInfo.hashesToSign[i],
-                                                         signatureBase64: nil))
-            } else {
-                remoteDocumentList.append(RemoteDocument(id: mDossier.documents[i].identifier,
-                                                         digestBase64: mSignInfo.hashesToSign[i],
-                                                         signatureBase64: nil))
-            }
+            let hashToSignData: Data = CryptoUtils.data(hex: mSignInfo.hashesToSign[i])
+            let hashToSignBase64 = hashToSignData.base64EncodedString()
+            let remoteDocumentId = (mSignInfo.pesIds.count > 0) ? mSignInfo.pesIds[i] : mDossier.documents[i].identifier
+
+            remoteDocumentList.append(RemoteDocument(id: remoteDocumentId,
+                                                     digestBase64: hashToSignBase64,
+                                                     signatureBase64: nil))
         }
 
         mRestClient.getDataToSign(remoteDocumentList: remoteDocumentList,
@@ -118,15 +116,13 @@ class RemoteHasher {
         var remoteDocumentList: [RemoteDocument] = []
         for i in 0..<mSignInfo.hashesToSign.count {
 
-            if (mSignInfo.pesIds.count > 0) {
-                remoteDocumentList.append(RemoteDocument(id: mSignInfo.pesIds[i],
-                                                         digestBase64: mSignInfo.hashesToSign[i],
-                                                         signatureBase64: signatureList[i].base64EncodedString()))
-            } else {
-                remoteDocumentList.append(RemoteDocument(id: mDossier.documents[i].identifier,
-                                                         digestBase64: mSignInfo.hashesToSign[i],
-                                                         signatureBase64: signatureList[i].base64EncodedString()))
-            }
+            let hashToSignData: Data = CryptoUtils.data(hex: mSignInfo.hashesToSign[i])
+            let hashToSignBase64 = hashToSignData.base64EncodedString()
+            let remoteDocumentId = (mSignInfo.pesIds.count > 0) ? mSignInfo.pesIds[i] : mDossier.documents[i].identifier
+
+            remoteDocumentList.append(RemoteDocument(id: remoteDocumentId,
+                                                     digestBase64: hashToSignBase64,
+                                                     signatureBase64: signatureList[i].base64EncodedString()))
         }
 
         mRestClient.getFinalSignature(remoteDocumentList: remoteDocumentList,
