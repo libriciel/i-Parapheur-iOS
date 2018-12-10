@@ -242,6 +242,7 @@ import os
 
     func getFinalSignature(remoteDocumentList: [RemoteDocument],
                            publicKeyBase64: String,
+                           signatureDateTime: Int,
                            signatureFormat: String,
                            payload: [String: String],
                            onResponse responseCallback: (([Data]) -> Void)?,
@@ -270,6 +271,7 @@ import os
             "remoteDocumentList": remoteDocumentMapList,
             "signatureFormat": signatureFormat,
             "publicKeyBase64": publicKeyBase64,
+            "signatureDateTime": signatureDateTime,
             "payload": payload
         ]
 

@@ -39,6 +39,7 @@ import UIKit
 import AEXML
 import Security
 import CryptoSwift
+import os
 
 
 extension Notification.Name {
@@ -282,6 +283,7 @@ extension Notification.Name {
                         let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
                         var signedHash = try? CryptoUtils.rsaSign(data: data as NSData,
                                                                   keyFileUrl: p12FinalUrl,
+                                                                  signatureAlgorithm: hasher.mSignatureAlgorithm,
                                                                   password: password)
 
                         signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
@@ -364,6 +366,7 @@ extension Notification.Name {
 
     @objc class func rsaSign(data: NSData,
                              keyFileUrl: URL,
+                             signatureAlgorithm: SignatureAlgorithm,
                              password: String?) throws -> String {
 
         guard let secKey = CryptoUtils.pkcs12ReadKey(path: keyFileUrl,
@@ -372,6 +375,7 @@ extension Notification.Name {
         }
 
         guard let result = CryptoUtils.rsaSign(data: data,
+                                               signatureAlgorithm: signatureAlgorithm,
                                                privateKey: secKey) else {
             throw NSError(domain: "Erreur inconnue", code: 0, userInfo: nil)
         }
@@ -381,13 +385,14 @@ extension Notification.Name {
 
 
     class func rsaSign(data: NSData,
+                       signatureAlgorithm: SignatureAlgorithm,
                        privateKey: SecKey!) -> String? {
 
         let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
         var signedDataLength = signedData.length
 
         let err: OSStatus = SecKeyRawSign(privateKey,
-                                          SecPadding.PKCS1SHA1,
+                                          signatureAlgorithm == SignatureAlgorithm.sha1WithRsa ? SecPadding.PKCS1SHA1 : SecPadding.PKCS1SHA256,
                                           data.bytes.assumingMemoryBound(to: UInt8.self),
                                           data.length,
                                           signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),

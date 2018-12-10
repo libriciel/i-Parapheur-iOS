@@ -53,6 +53,7 @@ class RemoteHasher {
     let mPublicKeyBase64: String
     var mDossier: Dossier
     var mPayload: [String: String]
+    var mDataToSign: DataToSign?
     @objc var mRestClient: RestClient
 
 
@@ -82,6 +83,7 @@ class RemoteHasher {
         var remoteDocumentList: [RemoteDocument] = []
         for i in 0..<mSignInfo.hashesToSign.count {
 
+            os_log("RemoteHasher#generateHashToSign %@", type: .debug, mSignInfo.hashesToSign)
             let hashToSignData: Data = CryptoUtils.data(hex: mSignInfo.hashesToSign[i])
             let hashToSignBase64 = hashToSignData.base64EncodedString()
             let remoteDocumentId = (mSignInfo.pesIds.count > 0) ? mSignInfo.pesIds[i] : mDossier.documents[i].identifier
@@ -97,8 +99,8 @@ class RemoteHasher {
                                   payload: mPayload,
                                   onResponse: {
                                       (response: DataToSign) in
-
-                                      self.mPayload = response.payload
+                                      os_log("mRestClient#getDataToSign hashes : %@", type: .debug, response.dataToSignBase64List)
+                                      self.mDataToSign = response
                                       responseCallback!(response)
                                   },
                                   onError: {
@@ -127,11 +129,11 @@ class RemoteHasher {
 
         mRestClient.getFinalSignature(remoteDocumentList: remoteDocumentList,
                                       publicKeyBase64: mPublicKeyBase64,
+                                      signatureDateTime: mDataToSign!.signatureDateTime,
                                       signatureFormat: mSignInfo.format,
                                       payload: mPayload,
                                       onResponse: {
                                           (response: [Data]) in
-
                                           responseCallback!(response)
                                       },
                                       onError: {
