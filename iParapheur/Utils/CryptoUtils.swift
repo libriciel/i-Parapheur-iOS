@@ -290,21 +290,12 @@ extension Notification.Name {
                         signedHashList.append(Data(base64Encoded: signedHash!)!)
                     }
 
-                    hasher.buildDataToReturn(signatureList: signedHashList,
-                                             onResponse:
-                                             {
-                                                 (resultList: [Data]) in
-
-                                                 NotificationCenter.default.post(name: .signatureResult,
-                                                                                 object: nil,
-                                                                                 userInfo: [
-                                                                                     NOTIF_SIGNEDDATA: resultList,
-                                                                                     NOTIF_DOSSIERID: hasher.mDossier.identifier
-                                                                                 ])
-                                             },
-                                             onError: {
-                                                 error in
-                                             })
+                    NotificationCenter.default.post(name: .signatureResult,
+                                                    object: nil,
+                                                    userInfo: [
+                                                        NOTIF_SIGNEDDATA: signedHashList,
+                                                        NOTIF_DOSSIERID: hasher.mDossier.identifier
+                                                    ])
                 },
                 onError: {
                     (error: Error) in
