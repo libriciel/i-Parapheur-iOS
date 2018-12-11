@@ -155,7 +155,7 @@ import os
 
             case .imprimerieNationale:
 
-                if (signaturesToDo.count != 1 || signaturesToDo.values.count > 1) {
+                if ((signaturesToDo.count != 1) || (signaturesToDo.values.count > 1)) {
                     ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
                                        title: "Impossible de signer avec ce certificat")
                     return
@@ -163,6 +163,12 @@ import os
 
                 for signatureToDo in signaturesToDo {
                     print(signatureToDo)
+
+                    if ((signatureToDo.value.mSignInfo.hashesToSign.count != 1) || (signatureToDo.value.mSignInfo.hashesToSign.count > 1)) {
+                        ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
+                                           title: "Impossible de signer avec ce certificat")
+                        return
+                    }
 
                     if (signatureToDo.value.mSignatureAlgorithm != .sha256WithRsa) {
                         ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",

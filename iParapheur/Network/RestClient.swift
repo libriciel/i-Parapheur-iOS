@@ -233,6 +233,7 @@ import os
                     break
 
                 case .failure(let error):
+                    os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
                     errorCallback!(error)
                     break
             }

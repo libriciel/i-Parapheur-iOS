@@ -299,7 +299,8 @@ extension Notification.Name {
                 },
                 onError: {
                     (error: Error) in
-                    //TODO
+                    ViewUtils.logError(message: "Vérifier le réseau",
+                                       title: "Erreur à la récupération du hash à signer")
                 })
     }
 

@@ -105,6 +105,8 @@ class RemoteHasher {
                                   },
                                   onError: {
                                       (error: Error) in
+                                      os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
+                                      errorCallback!(error)
                                   })
     }
 
@@ -138,6 +140,8 @@ class RemoteHasher {
                                       },
                                       onError: {
                                           (error: Error) in
+                                          os_log("RemoteHasher#buildDataToReturn error : %@", type: .error, error.localizedDescription)
+                                          errorCallback!(error)
                                       })
     }
 
