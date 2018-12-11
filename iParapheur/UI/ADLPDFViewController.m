@@ -40,7 +40,6 @@
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
 #import "StringUtils.h"
-#import "ADLRequester.h"
 #import "iParapheur-Swift.h"
 #import "RGWorkflowDialogViewController.h"
 
@@ -58,141 +57,144 @@
 
 - (void)viewDidLoad {
 
-	[super viewDidLoad];
-	NSLog(@"View loaded : ADLPDFViewController");
+    [super viewDidLoad];
+    NSLog(@"View loaded : ADLPDFViewController");
 
-	[self deleteEveryBinFile];
-	self.navigationItem.rightBarButtonItems = @[];
+    self.definesPresentationContext = true;
+    [self deleteEveryBinFile];
+    self.navigationItem.rightBarButtonItems = @[];
 
-	// Build UI
+    // Build UI
 
-	self.navigationController.navigationBar.tintColor = ColorUtils.Aqua;
-	self.navigationItem.rightBarButtonItem = nil;
+    self.navigationController.navigationBar.tintColor = ColorUtils.Aqua;
+    self.navigationItem.rightBarButtonItem = nil;
 
-	if (UIDevice.currentDevice.systemVersion.floatValue > 8.0) {
-		UISplitViewController *uiSplitView = (UISplitViewController *) UIApplication.sharedApplication.delegate.window.rootViewController;
-		UIBarButtonItem *backButton = uiSplitView.displayModeButtonItem;
+    if (UIDevice.currentDevice.systemVersion.floatValue > 8.0) {
+        UISplitViewController *uiSplitView = (UISplitViewController *) UIApplication.sharedApplication.delegate.window.rootViewController;
+        UIBarButtonItem *backButton = uiSplitView.displayModeButtonItem;
 
-		self.navigationItem.leftBarButtonItem = backButton;
-		self.navigationItem.leftItemsSupplementBackButton = YES;
+        self.navigationItem.leftBarButtonItem = backButton;
+        self.navigationItem.leftItemsSupplementBackButton = YES;
 
-		@try {
+        @try {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-			[backButton.target performSelector:backButton.action];
+            [backButton.target performSelector:backButton.action];
 #pragma clang diagnostic pop
-		}
-		@catch (NSException *e) {}
-	}
+        }
+        @catch (NSException *e) {}
+    }
 
-	_restClient = [ADLRestClient sharedManager];
+    _restClient = ADLRestClient.sharedManager;
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
 
-	[super viewWillAppear:animated];
+    [super viewWillAppear:animated];
 
-	// Notifications register
+    // Notifications register
 
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(dossierSelected:)
-	                                           name:kDossierSelected
-	                                         object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(dossierSelected:)
+                                               name:kDossierSelected
+                                             object:nil];
 
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(clearDetail:)
-	                                           name:kSelectBureauAppeared
-	                                         object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(clearDetail:)
+                                               name:kSelectBureauAppeared
+                                             object:nil];
 
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(clearDetail:)
-	                                           name:kDossierActionComplete
-	                                         object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(clearDetail:)
+                                               name:kDossierActionComplete
+                                             object:nil];
 
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(clearDetail:)
-	                                           name:kFilterChanged
-	                                         object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(clearDetail:)
+                                               name:kFilterChanged
+                                             object:nil];
 
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(showDocumentWithIndex:)
-	                                           name:DocumentSelectionController.NotifShowDocument
-	                                         object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(showDocumentWithIndex:)
+                                               name:DocumentSelectionController.NotifShowDocument
+                                             object:nil];
 
-	[NSNotificationCenter.defaultCenter addObserver:self
-	                                       selector:@selector(showAction:)
-	                                           name:ActionSelectionController.NotifLaunchAction
-	                                         object:nil];
+    //
 
-	//
-
-	[self.navigationController setNavigationBarHidden:NO
-	                                         animated:animated];
+    [self.navigationController setNavigationBarHidden:NO
+                                             animated:animated];
 }
 
 
 - (void)viewDidAppear:(BOOL)animated {
 
-	[super viewDidAppear:animated];
+    [super viewDidAppear:animated];
 }
 
 
 - (void)viewWillDisappear:(BOOL)animated {
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super viewWillDisappear:animated];
 }
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-	else
-		return YES;
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+    else
+        return YES;
 }
 
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	// [_readerViewController updateScrollViewContentViews];
+    // [_readerViewController updateScrollViewContentViews];
 }
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
 
-	if ([segue.identifier isEqualToString:@"dossierDetails"]) {
-		((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
-	} else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
-		((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.unwrappedDocuments;
-		if (_documentsPopover != nil)
-			[_documentsPopover dismissPopoverAnimated:NO];
+    if ([segue.identifier isEqualToString:@"dossierDetails"]) {
 
-		_documentsPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-//		_documentsPopover.delegate = self;
-	} else if ([segue.identifier isEqualToString:@"showActionPopover"]) {
+        ((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
+    } else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
 
-		if (_actionPopover != nil)
-			[_actionPopover dismissPopoverAnimated:NO];
+        ((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;
+        if (_documentsPopover != nil)
+            [_documentsPopover dismissViewControllerAnimated:NO completion:nil];
 
-		_actionPopover = ((UIStoryboardPopoverSegue *) segue).popoverController;
-		((ActionSelectionController *) _actionPopover.contentViewController).currentDossier = _dossier;
+        _documentsPopover = segue.destinationViewController;
 
-		if ([_signatureFormat isEqualToString:@"CMS"])
-			((ActionSelectionController *) _actionPopover.contentViewController).signatureEnabled = @1;
-		else if (_visaEnabled)
-			((ActionSelectionController *) _actionPopover.contentViewController).visaEnabled = @1;
-	} else {
-		((RGWorkflowDialogViewController *) segue.destinationViewController).dossiers = @[_dossier];
-		((RGWorkflowDialogViewController *) segue.destinationViewController).action = segue.identifier;
-	}
+    } else if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
+
+        if (_actionPopover != nil)
+            [_actionPopover dismissViewControllerAnimated:NO completion:nil];
+
+        _actionPopover = segue.destinationViewController;
+        ((ActionSelectionController *) _actionPopover).currentDossier = _dossier;
+        ((ActionSelectionController *) _actionPopover).delegate = self;
+
+        if ([_signatureFormat isEqualToString:@"CMS"])
+            ((ActionSelectionController *) _actionPopover).signatureEnabled = @1;
+        else if (_visaEnabled)
+            ((ActionSelectionController *) _actionPopover).visaEnabled = @1;
+
+    } else if ([segue.identifier isEqualToString:WorkflowDialogController.SEGUE]) {
+        WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
+        controller.currentAction = sender;
+        controller.restClient = _restClient.restClientApi.swiftManager;
+        [controller setDossiersToSignWithObjcArray:@[_dossier]];
+        controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
+                                                                                                                   withString:@""];
+    }
 }
 
 
 - (void)dealloc {
-
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 
@@ -201,12 +203,12 @@
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController {
 
-	_readerViewController.delegate = nil;
-	_readerViewController.dataSource = nil;
-	[_readerViewController willMoveToParentViewController:nil];
-	[_readerViewController.view removeFromSuperview];
-	[_readerViewController removeFromParentViewController];
-	_readerViewController = nil;
+    _readerViewController.delegate = nil;
+    _readerViewController.dataSource = nil;
+    [_readerViewController willMoveToParentViewController:nil];
+    [_readerViewController.view removeFromSuperview];
+    [_readerViewController removeFromParentViewController];
+    _readerViewController = nil;
 }
 
 
@@ -215,113 +217,113 @@
 
 - (NSArray *)annotationsForPage:(NSInteger)page {
 
-	// Get current step
+    // Get current step
 
-	int currentStep = 0;
+    int currentStep = 0;
 
-	if (_circuit && (_circuit.count > 0)) {
-		for (NSUInteger i = 0; i < _circuit.count; i++) {
+    if (_circuit && (_circuit.count > 0)) {
+        for (NSUInteger i = 0; i < _circuit.count; i++) {
 
-			Circuit *circuit = _circuit[i];
-			NSArray *steps = circuit.etapes;
-			for (NSUInteger j = 0; j < steps.count; j++) {
+            Circuit *circuit = _circuit[i];
+            NSArray *steps = circuit.etapes;
+            for (NSUInteger j = 0; j < steps.count; j++) {
 
-				Etape *step = steps[j];
-				if (step.approved) {
-					// If this step was approved, the current step might be the next one
-					currentStep = j + 1;
-				}
-			}
-		}
-	}
+                Etape *step = steps[j];
+                if (step.approved) {
+                    // If this step was approved, the current step might be the next one
+                    currentStep = j + 1;
+                }
+            }
+        }
+    }
 
-	// Updating annotations
+    // Updating annotations
 
-	for (Annotation *annotation in _annotations) {
-		bool isEditable = (annotation.unwrappedStep.intValue >= currentStep);
-		[annotation setUnwrappedEditableWithValue:(isEditable ? @(1) : @(0))];
-	}
+    for (Annotation *annotation in _annotations) {
+        bool isEditable = (annotation.step >= currentStep);
+        annotation.editable = isEditable;
+    }
 
-	// Filtering annotations
+    // Filtering annotations
 
-	NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+    NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
 
-		bool isPage = ((Annotation *) object).unwrappedPage.intValue == page;
-		bool isDoc = [((Annotation *) object).unwrappedDocumentId isEqualToString:_document.unwrappedId];
-		bool isApi3 = [((Annotation *) object).unwrappedDocumentId isEqualToString:@"*"];
+        bool isPage = ((Annotation *) object).page == page;
+        bool isDoc = [((Annotation *) object).identifier isEqualToString:_document.identifier];
+        bool isApi3 = [((Annotation *) object).identifier isEqualToString:@"*"];
 
-		return isPage && (isDoc || isApi3);
-	}]];
+        return isPage && (isDoc || isApi3);
+    }]];
 
-	return result;
+    return result;
 }
 
 
 - (void)updateAnnotation:(Annotation *)annotation {
 
-	[_restClient updateAnnotation:annotation
-	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-	                      success:^(NSArray *result) {
-		                      NSLog(@"updateAnnotation success");
-	                      }
-	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-		                                               title:@"Erreur à la sauvegarde de l'annotation"];
-	                      }];
+    [_restClient updateAnnotation:annotation
+                       forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+                          success:^(NSArray *result) {
+                              NSLog(@"updateAnnotation success");
+                          }
+                          failure:^(NSError *error) {
+                              [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
+                                                       title:@"Erreur à la sauvegarde de l'annotation"];
+                          }];
 }
 
 
 - (void)removeAnnotation:(Annotation *)annotation {
 
-	[_restClient removeAnnotation:annotation
-	                   forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-	                      success:^(NSArray *result) {
-		                      NSLog(@"deleteAnnotation success");
-	                      }
-	                      failure:^(NSError *error) {
-		                      [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-		                                               title:@"Erreur à la suppression de l'annotation"];
-	                      }];
+    [_restClient removeAnnotation:annotation
+                       forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
+                          success:^(NSArray *result) {
+                              NSLog(@"deleteAnnotation success");
+                          }
+                          failure:^(NSError *error) {
+                              [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
+                                                       title:@"Erreur à la suppression de l'annotation"];
+                          }];
 }
 
 
 - (void)addAnnotation:(Annotation *)annotation {
 
-	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+    NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
+    NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
 
-	if (selectedAccountId.length == 0)
-		selectedAccountId = Account.DemoId;
+    if (selectedAccountId.length == 0)
+        selectedAccountId = Account.DEMO_ID;
 
-	// Fetch Login
+    // Fetch Login
 
-	NSString *login = @"";
-	NSArray *accountList = [ModelsDataController fetchAccounts];
+    NSString *login = @"";
+    NSArray *accountList = [ModelsDataController fetchAccounts];
 
-	for (Account *account in accountList) {
-		if ([selectedAccountId isEqualToString:account.id]) {
-			login = account.login;
-		}
-	}
+    for (Account *account in accountList) {
+        if ([selectedAccountId isEqualToString:account.id]) {
+            login = account.login;
+        }
+    }
 
-	//
+    //
 
-	[annotation setUnwrappedAuthorWithTxt:login];
-	[annotation setUnwrappedDocumentIdWithTxt:_document.unwrappedId];
+    annotation.author = login;
+    annotation.documentId = _document.identifier;
 
-	__weak typeof(self) weakSelf = self;
-	[_restClient addAnnotation:annotation
-	                forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-	                   success:^(NSArray *result) {
-		                   __strong typeof(weakSelf) strongSelf = weakSelf;
-		                   if (strongSelf) {
-			                   [strongSelf requestAnnotations];
-		                   }
-	                   }
-	                   failure:^(NSError *error) {
-		                   [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-		                                            title:@"Erreur à la sauvegarde de l'annotation"];
-	                   }];
+    __weak typeof(self) weakSelf = self;
+    [_restClient addAnnotation:annotation
+                    forDossier:ADLSingletonState.sharedSingletonState.dossierCourantReference
+                       success:^(NSArray *result) {
+                           __strong typeof(weakSelf) strongSelf = weakSelf;
+                           if (strongSelf) {
+                               [strongSelf requestAnnotations];
+                           }
+                       }
+                       failure:^(NSError *error) {
+                           [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
+                                                    title:@"Erreur à la sauvegarde de l'annotation"];
+                       }];
 }
 
 
@@ -330,7 +332,7 @@
 
 - (void)shallDismissHUD:(LGViewHUD *)hud {
 
-	HIDE_HUD
+    HIDE_HUD
 }
 
 
@@ -339,108 +341,34 @@
 
 - (void)getDossierDidEndWithRequestAnswer:(Dossier *)dossier {
 
-	_dossier = dossier;
+    _dossier = dossier;
 
-	// Determine the first pdf file to display
+    // Determine the first pdf file to display
 
-	for (Document *document in dossier.unwrappedDocuments) {
-		if (document.isVisuelPdf) {
-			_document = document;
-			break;
-		}
-	}
+    for (Document *document in dossier.documents) {
+        if (document.isVisuelPdf) {
+            _document = document;
+            break;
+        }
+    }
 
-	//
+    //
 
-	[self displayDocumentAt:0];
-	self.navigationController.navigationBar.topItem.title = dossier.unwrappedTitle;
+    [self displayDocumentAt:0];
+    self.navigationController.navigationBar.topItem.title = dossier.title;
 
-	// Refresh buttons
+    // Refresh buttons
 
-	NSArray *buttons;
+    NSArray *buttons;
 
-	if (dossier.unwrappedDocuments.count > 1)
-		buttons = @[_actionButton, _documentsButton, _detailsButton];
-	else
-		buttons = @[_actionButton, _detailsButton];
+    if (dossier.documents.count > 1)
+        buttons = @[_actionButton, _documentsButton, _detailsButton];
+    else
+        buttons = @[_actionButton, _detailsButton];
 
-	self.navigationItem.rightBarButtonItems = buttons;
+    self.navigationItem.rightBarButtonItems = buttons;
 
-	[self requestSignInfoForDossier:dossier];
-}
-
-
-/**
-* Responses for API v2 requests.
-*/
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-	HIDE_HUD
-
-	if ([s isEqual:GETDOSSIER_API]) {
-//		_document = answer.copy;
-		[self displayDocumentAt:0];
-
-		self.navigationController.navigationBar.topItem.title = _document.unwrappedName;
-
-		NSArray *buttons;
-
-		if (_dossier.unwrappedDocuments.count > 1)
-			buttons = @[_actionButton, _documentsButton, _detailsButton];
-		else
-			buttons = @[_actionButton, _detailsButton];
-
-		self.navigationItem.rightBarButtonItems = buttons;
-
-//		NSString *documentPrincipal = [[_document[@"documents"] objectAtIndex:0] objectForKey:@"downloadUrl"];
-//		[[ADLSingletonState sharedSingletonState] setCurrentPrincipalDocPath:documentPrincipal];
-//		NSLog(@"%@", _document[@"actions"]);
-//
-//		if ([[_document[@"actions"] objectForKey:@"sign"] isEqualToNumber:@YES]) {
-//			if ([_document[@"actionDemandee"] isEqualToString:@"SIGNATURE"]) {
-//				NSDictionary *signInfoArgs = @{@"dossiers" : @[_dossierRef]};
-//				ADLRequester *requester = [ADLRequester sharedRequester];
-//				[requester request:@"getSignInfo"
-//				           andArgs:signInfoArgs
-//					      delegate:self];
-//			}
-//			else {
-//				_visaEnabled = YES;
-//				_signatureFormat = nil;
-//			}
-//		}
-
-		SHOW_HUD
-	} else if ([s isEqualToString:@"getSignInfo"]) {
-		_signatureFormat = [[answer[_dossierRef] objectForKey:@"format"] copy];
-	} else if ([s isEqualToString:GETANNOTATIONS_API]) {
-		NSArray *annotations = [answer[@"annotations"] copy];
-
-		_annotations = annotations;
-
-		for (NSNumber *contentViewIdx in [_readerViewController getContentViews]) {
-			ReaderContentView *currentReaderContentView = [_readerViewController getContentViews][contentViewIdx];
-			[[currentReaderContentView getContentPage] refreshAnnotations];
-		}
-	} else if ([s isEqualToString:@"addAnnotation"]) {
-		API_GETANNOTATIONS(_dossierRef);
-	} else if ([s isEqual:GETCIRCUIT_API]) {
-		self.circuit = answer[@"circuit"];
-		API_GETANNOTATIONS(_dossierRef);
-	}
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	HIDE_HUD
-}
-
-
-- (void)didEndWithUnAuthorizedAccess {
-
-	HIDE_HUD
+    [self requestSignInfoForDossier:dossier];
 }
 
 
@@ -449,120 +377,72 @@
 
 - (void)dossierSelected:(NSNotification *)notification {
 
-	NSString *dossierRef = [notification object];
+    NSString *dossierRef = [notification object];
 
-	_dossierRef = dossierRef;
+    _dossierRef = dossierRef;
 
-	SHOW_HUD
+    SHOW_HUD
 
-	__weak typeof(self) weakSelf = self;
-	[_restClient getDossier:[ADLSingletonState sharedSingletonState].bureauCourant
-	                dossier:_dossierRef
-	                success:^(Dossier *result) {
-		                __strong typeof(weakSelf) strongSelf = weakSelf;
-		                if (strongSelf) {
-			                HIDE_HUD
-			                [strongSelf getDossierDidEndWithRequestAnswer:result];
-		                }
-	                }
-	                failure:^(NSError *error) {
-		                NSLog(@"getBureau fail : %@", error.localizedDescription);
-	                }];
+    __weak typeof(self) weakSelf = self;
+    [_restClient getDossier:[ADLSingletonState sharedSingletonState].bureauCourant
+                    dossier:_dossierRef
+                    success:^(Dossier *result) {
+                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                        if (strongSelf) {
+                            HIDE_HUD
+                            [strongSelf getDossierDidEndWithRequestAnswer:result];
+                        }
+                    }
+                    failure:^(NSError *error) {
+                        NSLog(@"getBureau fail : %@", error.localizedDescription);
+                    }];
 
-	[_restClient getCircuit:_dossierRef
-	                success:^(Circuit *circuit) {
-		                __strong typeof(weakSelf) strongSelf = weakSelf;
-		                if (strongSelf) {
-			                HIDE_HUD
-			                strongSelf.circuit = @[circuit].mutableCopy;
-			                //[strongSelf requestAnnotations];
-		                }
-	                }
-	                failure:^(NSError *error) {
-		                NSLog(@"getCircuit fail : %@", error.localizedDescription);
-	                }];
+    [_restClient getCircuit:_dossierRef
+                    success:^(Circuit *circuit) {
+                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                        if (strongSelf) {
+                            HIDE_HUD
+                            strongSelf.circuit = @[circuit].mutableCopy;
+                            //[strongSelf requestAnnotations];
+                        }
+                    }
+                    failure:^(NSError *error) {
+                        NSLog(@"getCircuit fail : %@", error.localizedDescription);
+                    }];
 
-	//[[self navigationController] popToRootViewControllerAnimated:YES];
-}
-
-
-- (void)showAction:(NSNotification *)notification {
-
-	NSString *action = [notification object];
-
-	@try {
-		[self performSegueWithIdentifier:action
-		                          sender:self];
-	}
-	@catch (NSException *exception) {
-		[[[UIAlertView alloc] initWithTitle:@"Action impossible"
-		                            message:@"Vous ne pouvez pas effectuer cette action sur tablette."
-		                           delegate:nil
-		                  cancelButtonTitle:@"Fermer"
-		                  otherButtonTitles:nil] show];
-	}
-	@finally {}
+    //[[self navigationController] popToRootViewControllerAnimated:YES];
 }
 
 
 - (void)showDocumentWithIndex:(NSNotification *)notification {
 
-	NSNumber *docIndex = [notification object];
-	[self displayDocumentAt:[docIndex integerValue]];
-	[_documentsPopover dismissPopoverAnimated:YES];
-	_documentsPopover = nil;
+    NSNumber *docIndex = notification.object;
+    [self displayDocumentAt:docIndex.integerValue];
+    [_documentsPopover dismissViewControllerAnimated:YES completion:nil];
+    _documentsPopover = nil;
 }
 
 
 - (void)clearDetail:(NSNotification *)notification {
 
-	[self dismissReaderViewController:_readerViewController];
+    [self dismissReaderViewController:_readerViewController];
 
-	// Hide title
+    // Hide title
 
-	self.navigationController.navigationBar.topItem.title = nil;
+    self.navigationController.navigationBar.topItem.title = nil;
 
-	// Hide Buttons
+    // Hide Buttons
 
-	NSArray *buttons = @[];
-	self.navigationItem.rightBarButtonItems = buttons;
+    NSArray *buttons = @[];
+    self.navigationItem.rightBarButtonItems = buttons;
 
-	// Hide popovers
+    // Hide popovers
 
-	if (_documentsPopover != nil)
-		[_documentsPopover dismissPopoverAnimated:NO];
+    if (_documentsPopover != nil)
+        [_documentsPopover dismissViewControllerAnimated:NO completion:nil];
 
-	if (_actionPopover != nil)
-		[_actionPopover dismissPopoverAnimated:NO];
-}
-
-
-#pragma mark - Split view
-
-
-- (void)splitViewController:(UISplitViewController *)splitController
-     willHideViewController:(UIViewController *)viewController
-          withBarButtonItem:(UIBarButtonItem *)barButtonItem
-       forPopoverController:(UIPopoverController *)popoverController {
-
-	barButtonItem.title = @"Dossiers";
-	barButtonItem.tintColor = ColorUtils.Aqua;
-
-//	[self.navigationItem setLeftBarButtonItem:barButtonItem
-//									 animated:YES];
-//	self.masterPopoverController = popoverController;
-}
-
-
-- (void)splitViewController:(UISplitViewController *)splitController
-     willShowViewController:(UIViewController *)viewController
-  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
-
-	// Called when the view is shown again in the split view, invalidating the button and popover controller.
-//	[self.navigationItem setLeftBarButtonItem:nil
-//									 animated:YES];
-
-//	self.masterPopoverController = nil;
+    if (_actionPopover != nil)
+        [_actionPopover dismissViewControllerAnimated:NO completion:nil];
 }
 
 
@@ -571,241 +451,201 @@
 
 - (void)deleteEveryBinFile {
 
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		//here everything you want to perform in background
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //here everything you want to perform in background
 
-		// The preferred way to get the apps documents directory
+        // The preferred way to get the apps documents directory
 
-		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString *docDirectory = documentsPaths[0];
+        NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *docDirectory = documentsPaths[0];
 
-		// Grab all the files in the documents dir
+        // Grab all the files in the documents dir
 
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory
-		                                                     error:nil];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory
+                                                             error:nil];
 
-		// Filter the array for only bin files
+        // Filter the array for only bin files
 
-		NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.bin'"];
-		NSArray *binFiles = [allFiles filteredArrayUsingPredicate:fltr];
+        NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.bin'"];
+        NSArray *binFiles = [allFiles filteredArrayUsingPredicate:fltr];
 
-		// Use fast enumeration to iterate the array and delete the files
+        // Use fast enumeration to iterate the array and delete the files
 
-		for (NSString *binFile in binFiles) {
-			NSError *error = nil;
-			[fileManager removeItemAtPath:[docDirectory stringByAppendingPathComponent:binFile]
-			                        error:&error];
-		}
-	});
-}
-
-
-- (NSString *)getFilePathWithDossierRef:(NSString *)dossierRef {
-
-	// The preferred way to get the apps documents directory
-
-	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *docDirectory = documentsPaths[0];
-
-	// Grab all the files in the documents dir
-
-	NSString *fileName = [NSString stringWithFormat:@"%@.bin",
-	                                                _dossierRef];
-	NSString *filePath = [docDirectory stringByAppendingPathComponent:fileName];
-
-	return filePath;
+        for (NSString *binFile in binFiles) {
+            NSError *error = nil;
+            [fileManager removeItemAtPath:[docDirectory stringByAppendingPathComponent:binFile]
+                                    error:&error];
+        }
+    });
 }
 
 
 - (NSURL *)getFileUrlWithDossierRef:(NSString *)dossierId
                     andDocumentName:(NSString *)documentName {
 
-	NSURL *documentsDirectoryURL = [NSFileManager.defaultManager URLForDirectory:NSDocumentDirectory
-	                                                                    inDomain:NSUserDomainMask
-	                                                           appropriateForURL:nil
-	                                                                      create:YES
-	                                                                       error:nil];
+    NSURL *documentsDirectoryURL = [NSFileManager.defaultManager URLForDirectory:NSDocumentDirectory
+                                                                        inDomain:NSUserDomainMask
+                                                               appropriateForURL:nil
+                                                                          create:YES
+                                                                           error:nil];
 
-	NSString *cleanedName = [documentName stringByReplacingOccurrencesOfString:@" "
-	                                                                withString:@"_"];
-	NSString *fileName = [NSString stringWithFormat:@"%@.bin",
-	                                                cleanedName];
+    NSString *cleanedName = [documentName stringByReplacingOccurrencesOfString:@" "
+                                                                    withString:@"_"];
+    NSString *fileName = [NSString stringWithFormat:@"%@.bin",
+                                                    cleanedName];
 
-	documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:@"dossiers" isDirectory:true];
-	[NSFileManager.defaultManager createDirectoryAtPath:documentsDirectoryURL.absoluteString
-	                                         attributes:nil];
+    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:@"dossiers" isDirectory:true];
+    [NSFileManager.defaultManager createDirectoryAtPath:documentsDirectoryURL.absoluteString
+                                             attributes:nil];
 
-	documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:dossierId isDirectory:true];
-	[NSFileManager.defaultManager createDirectoryAtPath:documentsDirectoryURL.absoluteString
-	                                         attributes:nil];
+    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:dossierId isDirectory:true];
+    [NSFileManager.defaultManager createDirectoryAtPath:documentsDirectoryURL.absoluteString
+                                             attributes:nil];
 
-	documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:fileName];
+    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:fileName];
 
-	return documentsDirectoryURL;
+    return documentsDirectoryURL;
 }
 
 
 - (void)requestAnnotations {
 
-	NSString *documentId = _document.unwrappedId;
+    NSString *documentId = _document.identifier;
 
-	__weak typeof(self) weakSelf = self;
-	[_restClient getAnnotations:_dossierRef
-	                   document:documentId
-	                    success:^(NSArray *annotations) {
+    __weak typeof(self) weakSelf = self;
+    [_restClient getAnnotations:_dossierRef
+                       document:documentId
+                        success:^(NSArray *annotations) {
 
-		                    __strong typeof(weakSelf) strongSelf = weakSelf;
-		                    if (strongSelf) {
-			                    strongSelf.annotations = annotations;
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            if (strongSelf) {
+                                strongSelf.annotations = annotations;
 
-			                    for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
-				                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
-				                    [currentReaderContentView.getContentPage refreshAnnotations];
-			                    }
-		                    }
-	                    }
-	                    failure:^(NSError *error) {
-		                    NSLog(@"getAnnotations error");
-	                    }];
+                                for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
+                                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
+                                    [currentReaderContentView.getContentPage refreshAnnotations];
+                                }
+                            }
+                        }
+                        failure:^(NSError *error) {
+                            NSLog(@"getAnnotations error");
+                        }];
 }
 
 
 - (void)requestSignInfoForDossier:(Dossier *)dossier {
 
-	if ([dossier.unwrappedActions containsObject:@"SIGNATURE"]) {
-		if ([dossier.unwrappedActionDemandee isEqualToString:@"SIGNATURE"]) {
-			__weak typeof(self) weakSelf = self;
-			[_restClient getSignInfoForDossier:_dossierRef
-			                         andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
-			                           success:^(SignInfo *signInfo) {
-				                           __strong typeof(weakSelf) strongSelf = weakSelf;
-				                           if (strongSelf) {
-					                           strongSelf.signatureFormat = signInfo.format;
-				                           }
-			                           }
-			                           failure:^(NSError *error) {
-				                           NSLog(@"getSignInfo %@", error.localizedDescription);
-			                           }];
-		} else {
-			_visaEnabled = YES;
-			_signatureFormat = nil;
-		}
-	}
+    if ([dossier.actions containsObject:@"SIGNATURE"]) {
+        if ([dossier.actionDemandee isEqualToString:@"SIGNATURE"]) {
+            __weak typeof(self) weakSelf = self;
+            [_restClient getSignInfoForDossier:dossier
+                                     andBureau:ADLSingletonState.sharedSingletonState.bureauCourant
+                                       success:^(SignInfo *signInfo) {
+                                           __strong typeof(weakSelf) strongSelf = weakSelf;
+                                           if (strongSelf) {
+                                               strongSelf.signatureFormat = signInfo.format;
+                                           }
+                                       }
+                                       failure:^(NSError *error) {
+                                           NSLog(@"getSignInfo %@", error.localizedDescription);
+                                       }];
+        } else {
+            _visaEnabled = YES;
+            _signatureFormat = nil;
+        }
+    }
 }
 
 
 - (void)loadPdfAt:(NSString *)filePath {
 
-	_readerDocument = [ReaderDocument withDocumentFilePath:filePath
-	                                              password:nil];
+    _readerDocument = [ReaderDocument withDocumentFilePath:filePath
+                                                  password:nil];
 
-	if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
-	{
-		// Deleting previous child controller
+    if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
+    {
+        // Deleting previous child controller
 
-		_readerViewController.delegate = nil;
-		_readerViewController.dataSource = nil;
-		[_readerViewController willMoveToParentViewController:nil];
-		[_readerViewController.view removeFromSuperview];
-		[_readerViewController removeFromParentViewController];
-		_readerViewController = nil;
+        _readerViewController.delegate = nil;
+        _readerViewController.dataSource = nil;
+        [_readerViewController willMoveToParentViewController:nil];
+        [_readerViewController.view removeFromSuperview];
+        [_readerViewController removeFromParentViewController];
+        _readerViewController = nil;
 
-		// Creating new child controller
+        // Creating new child controller
 
-		_readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
-		_readerViewController.delegate = self;
-		_readerViewController.dataSource = self;
-		_readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-		_readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
+        _readerViewController.delegate = self;
+        _readerViewController.dataSource = self;
+        _readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        _readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
-		[self.view setAutoresizesSubviews:YES];
-		[self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [self.view setAutoresizesSubviews:YES];
+        [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
-		[self addChildViewController:_readerViewController];
-		[self.view addSubview:_readerViewController.view];
-	} else // Log an error so that we know that something went wrong
-	{
-		NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:nil] failed.", __FUNCTION__, filePath);
-	}
+        [self addChildViewController:_readerViewController];
+        [self.view addSubview:_readerViewController.view];
+    } else {    // Log an error so that we know that something went wrong
+        NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:nil] failed.", __FUNCTION__, filePath);
+    }
 }
 
 
 - (void)displayDocumentAt:(NSInteger)index {
 
-	_isDocumentPrincipal = (index == 0);
-	_document = _dossier.unwrappedDocuments[(NSUInteger) index];
+    _document = _dossier.documents[(NSUInteger) index];
 
-	// File cache
+    // File cache
 
-	NSURL *filePath = [self getFileUrlWithDossierRef:_document.unwrappedId
-	                                 andDocumentName:_document.unwrappedName];
+    NSURL *filePath = [self getFileUrlWithDossierRef:_document.identifier
+                                     andDocumentName:_document.name];
 
-	if ([NSFileManager.defaultManager fileExistsAtPath:filePath.path]) {
+    if ([NSFileManager.defaultManager fileExistsAtPath:filePath.path]) {
 
-		NSLog(@"PDF : Cached data");
+        NSLog(@"PDF : Cached data");
 
-		[self loadPdfAt:filePath.path];
-		[self requestAnnotations];
+        [self loadPdfAt:filePath.path];
+        [self requestAnnotations];
 
-		return;
-	}
+        return;
+    }
 
-	// Downloading files
+    // Downloading files
 
-	NSLog(@"PDF : Download data");
+    NSLog(@"PDF : Download data");
 
-	SHOW_HUD
+    SHOW_HUD
 
-	if (_dossier.unwrappedDocuments) {
-		bool isPdf = (bool) _document.isVisuelPdf;
+    if (_dossier.documents) {
+        bool isPdf = (bool) _document.isVisuelPdf;
 
-		[_restClient downloadDocument:_document.unwrappedId
-		                        isPdf:isPdf
-		                       atPath:filePath
-		                      success:^(NSString *string) {
-			                      HIDE_HUD
-			                      [self loadPdfAt:string];
-			                      [self requestAnnotations];
-		                      }
-		                      failure:^(NSError *error) {
-			                      HIDE_HUD
-			                      [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-														   title:nil];
-		                      }];
-	}
+        [_restClient downloadDocument:_document.identifier
+                                isPdf:isPdf
+                               atPath:filePath
+                              success:^(NSString *string) {
+                                  HIDE_HUD
+                                  [self loadPdfAt:string];
+                                  [self requestAnnotations];
+                              }
+                              failure:^(NSError *error) {
+                                  HIDE_HUD
+                                  [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
+                                                           title:nil];
+                              }];
+    }
 }
 
 
-- (void)didEndWithDocument:(ADLDocument *)document {
+// <editor-fold desc="ActionSelectionControllerDelegate">
 
-	HIDE_HUD
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		//here everything you want to perform in background
-
-		NSFileManager *fileManager = [NSFileManager defaultManager];
-		NSFileHandle *file;
-
-		NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-
-		NSString *docPath = documentsPaths[0];
-		NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin",
-		                                                docPath,
-		                                                _dossierRef];
-		[fileManager createFileAtPath:filePath
-		                     contents:nil
-		                   attributes:nil];
-
-		file = [NSFileHandle fileHandleForWritingAtPath:filePath];
-		[file writeData:document.documentData];
-
-		dispatch_async(dispatch_get_main_queue(), ^{
-			//call back to main queue to update user interface
-			[self loadPdfAt:filePath];
-			[self requestAnnotations];
-		});
-	});
+- (void)onActionSelectedWithAction:(NSString *)action {
+    [self performSegueWithIdentifier:WorkflowDialogController.SEGUE
+                              sender:action];
 }
+
+// </editor-fold desc="ActionSelectionControllerDelegate">
 
 
 @end

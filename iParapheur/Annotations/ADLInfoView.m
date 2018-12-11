@@ -61,8 +61,8 @@
 - (void)setAnnotationModel:(Annotation *)annotationModel {
 
 	_annotationModel = annotationModel;
-	_author.text = annotationModel.unwrappedAuthor;
-	_date.text = annotationModel.unwrappedDate;
+	_author.text = annotationModel.author;
+	_date.text = annotationModel.date;
 
 }
 

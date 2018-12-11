@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 
@@ -58,7 +59,7 @@ import Foundation
     let isSecretaire: Bool
 
 
-    // MARK: - JSON
+    // <editor-fold desc="Json methods">
 
     enum CodingKeys: String, CodingKey {
         case name
@@ -103,5 +104,7 @@ import Foundation
         // showAVenir = try values.decodeIfPresent(Bool.self, forKey: .showAVenir) // ?? false
         isSecretaire = try values.decodeIfPresent(Bool.self, forKey: .isSecretaire) ?? false
     }
+
+    // </editor-fold desc="Json methods">
 
 }

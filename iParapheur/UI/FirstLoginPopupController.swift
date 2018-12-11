@@ -32,7 +32,10 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import UIKit
+import os
+
 
 @objc class FirstLoginPopupController: UIViewController {
 
@@ -41,44 +44,44 @@ import UIKit
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
 
-	@IBOutlet var saveButton: UIBarButtonItem!
-	@IBOutlet var serverUrlTextField: UITextField!
-	@IBOutlet var loginTextField: UITextField!
+    @IBOutlet var saveButton: UIBarButtonItem!
+    @IBOutlet var serverUrlTextField: UITextField!
+    @IBOutlet var loginTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var spinnerView: UIActivityIndicatorView!
     @IBOutlet var errorLabel: UITextView!
 
-    var restClient: RestClientApiV3?
+    var restClient: RestClient?
     var currentAccount: Account?
 
     // MARK: - LifeCycle
 
     override func viewDidLoad() {
-		super.viewDidLoad()
-		print("View loaded : FirstLoginPopupController")
+        super.viewDidLoad()
+        os_log("View loaded : FirstLoginPopupController", type: .debug)
 
-		self.preferredContentSize = CGSize(width: FirstLoginPopupController.PreferredWidth,
-		                                   height: FirstLoginPopupController.PreferredHeight);
+        self.preferredContentSize = CGSize(width: FirstLoginPopupController.PreferredWidth,
+                                           height: FirstLoginPopupController.PreferredHeight);
 
         // Change value events
 
-		serverUrlTextField.addTarget(self,
-		                             action: #selector(onTextFieldValueChanged),
-		                             for: UIControlEvents.editingChanged)
+        serverUrlTextField.addTarget(self,
+                                     action: #selector(onTextFieldValueChanged),
+                                     for: UIControl.Event.editingChanged)
 
-		loginTextField.addTarget(self,
-		                         action: #selector(onTextFieldValueChanged),
-		                         for: UIControlEvents.editingChanged)
+        loginTextField.addTarget(self,
+                                 action: #selector(onTextFieldValueChanged),
+                                 for: UIControl.Event.editingChanged)
 
-		passwordTextField.addTarget(self,
-		                            action: #selector(onTextFieldValueChanged),
-		                            for: UIControlEvents.editingChanged)
+        passwordTextField.addTarget(self,
+                                    action: #selector(onTextFieldValueChanged),
+                                    for: UIControl.Event.editingChanged)
 
         // Load existing account (if any)
 
         let accountList: [Account] = ModelsDataController.fetchAccounts()
         for account in accountList {
-            if (account.id == Account.FirstAccountId) {
+            if (account.id == Account.LEGACY_ID) {
                 currentAccount = account
             }
         }
@@ -93,17 +96,17 @@ import UIKit
     }
 
     deinit {
-		serverUrlTextField.removeTarget(self,
-		                                action: #selector(onTextFieldValueChanged),
-		                                for: UIControlEvents.editingChanged)
+        serverUrlTextField.removeTarget(self,
+                                        action: #selector(onTextFieldValueChanged),
+                                        for: UIControl.Event.editingChanged)
 
-		loginTextField.removeTarget(self,
-		                            action: #selector(onTextFieldValueChanged),
-		                            for: UIControlEvents.editingChanged)
+        loginTextField.removeTarget(self,
+                                    action: #selector(onTextFieldValueChanged),
+                                    for: UIControl.Event.editingChanged)
 
-		passwordTextField.removeTarget(self,
-		                               action: #selector(onTextFieldValueChanged),
-		                               for: UIControlEvents.editingChanged)
+        passwordTextField.removeTarget(self,
+                                       action: #selector(onTextFieldValueChanged),
+                                       for: UIControl.Event.editingChanged)
     }
 
     // MARK: - Private methods
@@ -125,13 +128,13 @@ import UIKit
         // only on connection event, not on change value events
 
         setBorderOnTextField(textField: serverUrlTextField,
-                             alert:(!isServerTextFieldValid))
+                             alert: (!isServerTextFieldValid))
 
         setBorderOnTextField(textField: loginTextField,
-                             alert:(!isLoginTextFieldValid))
+                             alert: (!isLoginTextFieldValid))
 
         setBorderOnTextField(textField: passwordTextField,
-                             alert:(!isPasswordTextFieldValid))
+                             alert: (!isPasswordTextFieldValid))
 
         //
 
@@ -146,8 +149,7 @@ import UIKit
             textField.layer.borderWidth = 1.0;
             textField.layer.borderColor = ColorUtils.DarkOrange.cgColor
             textField.backgroundColor = ColorUtils.DarkOrange.withAlphaComponent(0.1)
-        }
-        else {
+        } else {
             textField.layer.borderColor = UIColor.clear.cgColor
             textField.backgroundColor = UIColor.clear
         }
@@ -161,27 +163,27 @@ import UIKit
             restClient!.cancelAllOperations()
         }
 
-        restClient = RestClientApiV3(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text) as! NSString,
-                                     login: loginTextField.text! as NSString,
-                                     password: passwordTextField.text! as NSString)
+        restClient = RestClient(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text)! as NSString,
+                                login: loginTextField.text! as NSString,
+                                password: passwordTextField.text! as NSString)
 
         // Test request
 
         enableInterface(enabled: false)
 
         restClient!.getApiVersion(onResponse: {
-                                      (level: NSNumber) in
+            (level: NSNumber) in
 
-                                      // Register new account as selected
+            // Register new account as selected
 
-                                      let preferences: UserDefaults = UserDefaults.standard
-                                      preferences.set(self.currentAccount!.id, forKey: Account.PreferencesKeySelectedAccount as String)
+            let preferences: UserDefaults = UserDefaults.standard
+            preferences.set(self.currentAccount!.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
 
-                                      // UI refresh
+            // UI refresh
 
-                                      self.enableInterface(enabled: true)
-                                      self.dismissWithSuccess(success: true)
-                                  },
+            self.enableInterface(enabled: true)
+            self.dismissWithSuccess(success: true)
+        },
                                   onError: {
                                       (error: NSError) in
 
@@ -194,23 +196,21 @@ import UIKit
                                       if (error.code == -1011) {
                                           self.setBorderOnTextField(textField: self.loginTextField, alert: true)
                                           self.setBorderOnTextField(textField: self.passwordTextField, alert: true)
-                                      }
-                                      else {
+                                      } else {
                                           self.setBorderOnTextField(textField: self.serverUrlTextField, alert: true)
                                       }
 
                                       // Setup error message
 
-                                    let localizedDescription = StringsUtils.getMessage(error: error)
+                                      let localizedDescription = StringsUtils.getMessage(error: error)
 
                                       if (error.localizedDescription == localizedDescription as String) {
                                           self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code))"
-                                      }
-                                      else {
+                                      } else {
                                           self.errorLabel.text = String(localizedDescription)
                                       }
                                   }
-                )
+        )
     }
 
     func enableInterface(enabled: Bool) {
@@ -233,7 +233,7 @@ import UIKit
 
         let result: NSNumber = NSNumber(value: (success ? 1 : 0))
         let userInfo: [NSObject: AnyObject] = ["success" as NSObject: result]
-		NotificationCenter.default.post(name: FirstLoginPopupController.NotifDismiss,
+        NotificationCenter.default.post(name: FirstLoginPopupController.NotifDismiss,
                                         object: nil,
                                         userInfo: userInfo)
     }
@@ -243,7 +243,7 @@ import UIKit
     @objc func onTextFieldValueChanged(sender: AnyObject) {
 
         errorLabel.text = ""
-        setBorderOnTextField(textField: sender as! UITextField, alert:false)
+        setBorderOnTextField(textField: sender as! UITextField, alert: false)
     }
 
     // MARK: - Buttons listeners
@@ -257,10 +257,10 @@ import UIKit
         // Saving data
 
         if (currentAccount == nil) {
-			currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.EntityName,
-			                                                     into:ModelsDataController.Context!) as! Account
+            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+                                                                 into: ModelsDataController.context!) as? Account
 
-            currentAccount!.id = Account.FirstAccountId
+            currentAccount!.id = Account.LEGACY_ID
             currentAccount!.isVisible = true
         }
 

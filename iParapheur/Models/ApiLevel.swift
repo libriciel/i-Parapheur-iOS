@@ -32,20 +32,12 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import Foundation
-import Gloss
 
-class ApiLevel: Glossy {
+import Foundation
+
+
+class ApiLevel: Decodable {
 
     let level: Int?
 
-    // MARK: - Glossy
-
-    required init?(json: JSON) {
-        level = "level" <~~ json
-    }
-
-    func toJSON() -> JSON? {
-        return nil /* Not used */
-    }
 }

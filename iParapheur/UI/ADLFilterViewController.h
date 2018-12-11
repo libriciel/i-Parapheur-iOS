@@ -32,9 +32,9 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 #import <UIKit/UIKit.h>
 #import "ADLSingletonState.h"
-#import "ADLParapheurWallDelegateProtocol.h"
 
 
 @protocol FilterDelegate;
@@ -46,8 +46,7 @@
 		UITableViewDelegate,
 		UIPickerViewDataSource,
 		UIPickerViewDelegate,
-		UIPopoverControllerDelegate,
-		ADLParapheurWallDelegateProtocol>
+		UIPopoverControllerDelegate>
 
 @property(weak) id <FilterDelegate> delegate;
 

@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import XCTest
 @testable import iParapheur
 
@@ -92,7 +93,7 @@ class Models_Bureau_Tests: XCTestCase {
         """
         let getBureauxJsonData = getBureauxJsonString.data(using: .utf8)!
 
-		let jsonDecoder = JSONDecoder()
+        let jsonDecoder = JSONDecoder()
         let bureaux = try? jsonDecoder.decode([Bureau].self,
                                               from: getBureauxJsonData)
 
@@ -133,52 +134,52 @@ class Models_Bureau_Tests: XCTestCase {
         XCTAssertEqual(bureaux![1].aTraiter, 0)
         XCTAssertEqual(bureaux![1].aArchiver, 33)
         XCTAssertEqual(bureaux![1].retournes, 10)
-		// XCTAssertEqual(bureaux![1].syncDate, bureau02.SyncDate)
-		// XCTAssertEqual(bureaux![1].parent, bureau02.Parent)
-		// XCTAssertEqual(bureaux![1].childrenDossiers, bureau02.ChildrenDossiers)
-		XCTAssertEqual(bureaux![1].dossiersDelegues, 0)
+        // XCTAssertEqual(bureaux![1].syncDate, bureau02.SyncDate)
+        // XCTAssertEqual(bureaux![1].parent, bureau02.Parent)
+        // XCTAssertEqual(bureaux![1].childrenDossiers, bureau02.ChildrenDossiers)
+        XCTAssertEqual(bureaux![1].dossiersDelegues, 0)
     }
 
-	
+
     func testDecodeEmpty() {
-		
-		let bureauJsonString = "{}"
-		let bureauJsonData = bureauJsonString.data(using: .utf8)!
-		
-		let jsonDecoder = JSONDecoder()
-		let bureau = try? jsonDecoder.decode(Bureau.self,
-											 from: bureauJsonData)
-		
-		// Checks
-		
-		XCTAssertNotNil(bureau)
+
+        let bureauJsonString = "{}"
+        let bureauJsonData = bureauJsonString.data(using: .utf8)!
+
+        let jsonDecoder = JSONDecoder()
+        let bureau = try? jsonDecoder.decode(Bureau.self,
+                                             from: bureauJsonData)
+
+        // Checks
+
+        XCTAssertNotNil(bureau)
 
         XCTAssertEqual(bureau!.hasSecretaire, false)
-		XCTAssertEqual(bureau!.isSecretaire, false)
-		XCTAssertNil(bureau!.identifier)
-		XCTAssertNil(bureau!.nodeRef)
-		XCTAssertEqual(bureau!.name, "(aucun nom)")
-		XCTAssertNil(bureau!.shortName)
+        XCTAssertEqual(bureau!.isSecretaire, false)
+        XCTAssertNil(bureau!.identifier)
+        XCTAssertNil(bureau!.nodeRef)
+        XCTAssertEqual(bureau!.name, "(aucun nom)")
+        XCTAssertNil(bureau!.shortName)
         XCTAssertEqual(bureau!.enPreparation, 0)
-		XCTAssertEqual(bureau!.enRetard, 0)
-		XCTAssertEqual(bureau!.aTraiter, 0)
-		XCTAssertEqual(bureau!.aArchiver, 0)
-		XCTAssertEqual(bureau!.retournes, 0)
-		XCTAssertEqual(bureau!.dossiersDelegues, 0)
+        XCTAssertEqual(bureau!.enRetard, 0)
+        XCTAssertEqual(bureau!.aTraiter, 0)
+        XCTAssertEqual(bureau!.aArchiver, 0)
+        XCTAssertEqual(bureau!.retournes, 0)
+        XCTAssertEqual(bureau!.dossiersDelegues, 0)
     }
-	
-	
-	func testDecodeFail() {
-		
-		let getBureauxJsonString = "{{{"
-		let getBureauxJsonData = getBureauxJsonString.data(using: .utf8)!
-		
-		let jsonDecoder = JSONDecoder()
-		let bureaux = try? jsonDecoder.decode([Bureau].self,
-											  from: getBureauxJsonData)
-		
-		// Checks
-		
-		XCTAssertNil(bureaux)
-	}
+
+
+    func testDecodeFail() {
+
+        let getBureauxJsonString = "{{{"
+        let getBureauxJsonData = getBureauxJsonString.data(using: .utf8)!
+
+        let jsonDecoder = JSONDecoder()
+        let bureaux = try? jsonDecoder.decode([Bureau].self,
+                                              from: getBureauxJsonData)
+
+        // Checks
+
+        XCTAssertNil(bureaux)
+    }
 }

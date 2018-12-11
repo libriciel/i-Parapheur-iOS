@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 
@@ -41,49 +42,54 @@ import Foundation
     @objc let approved: Bool
     @objc let signataire: String?
     @objc let rejected: Bool
-    @objc let dateValidation:Date?
-    @objc let annotPub:String?
-	@objc let parapheurName:String
-	let delegueName:String?
+    @objc let dateValidation: Date?
+    @objc let annotPub: String?
+    @objc let parapheurName: String
+    let delegueName: String?
     // let signatureInfo:String?,
-	let delegateur:String?
-    @objc let actionDemandee:String
-	let id:String
-	let isCurrent:Bool
+    let delegateur: String?
+    @objc let actionDemandee: String
+    let id: String
+    let isCurrent: Bool
     // let signatureEtape:Bool
 
 
-	enum CodingKeys: String, CodingKey {
-		case approved
-		case signataire
-		case rejected
+    // <editor-fold desc="Json methods">
+
+    enum CodingKeys: String, CodingKey {
+        case approved
+        case signataire
+        case rejected
         case dateValidation
         case annotPub
         case parapheurName
-		case delegueName
+        case delegueName
         // case signatureInfo
         case delegateur
         case actionDemandee
         case id
         case isCurrent
         // case signatureEtape
-	}
-	
+    }
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-		approved = try values.decodeIfPresent(Bool.self, forKey: .approved) ?? false
-		signataire = try values.decodeIfPresent(String.self, forKey: .signataire)
-		rejected = try values.decodeIfPresent(Bool.self, forKey: .rejected) ?? false
+        approved = try values.decodeIfPresent(Bool.self, forKey: .approved) ?? false
+        signataire = try values.decodeIfPresent(String.self, forKey: .signataire)
+        rejected = try values.decodeIfPresent(Bool.self, forKey: .rejected) ?? false
         dateValidation = try values.decodeIfPresent(Date.self, forKey: .dateValidation)
         annotPub = try values.decodeIfPresent(String.self, forKey: .annotPub)
         parapheurName = try values.decodeIfPresent(String.self, forKey: .parapheurName) ?? ""
-		delegueName = try values.decodeIfPresent(String.self, forKey: .delegueName)
+        delegueName = try values.decodeIfPresent(String.self, forKey: .delegueName)
         // signatureInfo = try values.decodeIfPresent(String.self, forKey: .signatureInfo)
         delegateur = try values.decodeIfPresent(String.self, forKey: .delegateur)
         actionDemandee = try values.decodeIfPresent(String.self, forKey: .actionDemandee) ?? "VISA"
         id = try values.decodeIfPresent(String.self, forKey: .id) ?? ""
         isCurrent = try values.decodeIfPresent(Bool.self, forKey: .isCurrent) ?? false
         // signatureEtape = try values.decodeIfPresent(String.self, forKey: .signatureEtape) ?? false
-	}
+    }
+
+    // </editor-fold desc="Json methods">
+
 }

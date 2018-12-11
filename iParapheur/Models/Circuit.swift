@@ -47,7 +47,7 @@ import Foundation
     let signatureProtocol: String?
 
 
-    // MARK: - JSON
+    // <editor-fold desc="Json methods">
 
     enum CodingKeys: String, CodingKey {
         case etapes
@@ -70,6 +70,8 @@ import Foundation
         sigFormat = try values.decodeIfPresent(String.self, forKey: .sigFormat)
         signatureProtocol = try values.decodeIfPresent(String.self, forKey: .signatureProtocol)
     }
+
+    // </editor-fold desc="Json methods">
 
 }
 

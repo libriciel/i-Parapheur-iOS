@@ -101,7 +101,7 @@
 
 - (id)initWithAnnotation:(Annotation *)annotation {
 
-	CGRect frame = annotation.unwrappedRect.CGRectValue;
+	CGRect frame = annotation.rect;
 
 	self = [super initWithFrame:frame];
 	if (self) {
@@ -150,7 +150,7 @@
 	buttonFrame.origin.y = 0;
 	buttonFrame.size.width = kFingerSize;
 	buttonFrame.size.height = kFingerSize;
-	if (_annotationModel.unwrappedEditable) {
+	if (_annotationModel.editable) {
 		// CLOSE BUTTON
 		_closeButton = [[ADLAnnotationButton alloc] initWithFrame:buttonFrame];
 		[_closeButton setTitle:@"X"
@@ -202,7 +202,7 @@
 	if ((_postItView) && !_selected) {
 		[_postItView setHidden:YES];
 		[_postItView removeFromSuperview];
-		if (_annotationModel.unwrappedEditable) {
+		if (_annotationModel.editable) {
 			[_drawingView updateAnnotation:_annotationModel];
 		}
 		_postItView = nil;
@@ -238,7 +238,7 @@
 		_infoView = nil;
 	}
 
-	if (_annotationModel.unwrappedId != nil)
+	if (_annotationModel.identifier != nil)
 		[_drawingView removeAnnotation:_annotationModel];
 
 	[self removeFromSuperview];
@@ -263,7 +263,7 @@
 	if (!_postItView) {
 		CGRect clippedFrame = [_drawingView clipRectInView:CGRectMake(CGRectGetMaxX(self.frame), CGRectGetMinY(self.frame), kPostItWidth, kPostItheight)];
 		_postItView = [[ADLPostItView alloc] initWithFrame:clippedFrame];
-		_postItView.userInteractionEnabled = _annotationModel.unwrappedEditable.boolValue;
+		_postItView.userInteractionEnabled = _annotationModel.editable;
 		_postItView.annotationModel = _annotationModel;
 		_postItView.contentScaleFactor = self.contentScaleFactor;
 		[self.superview addSubview:_postItView];
@@ -294,7 +294,7 @@
 	CGContextRef context = UIGraphicsGetCurrentContext();
 
 
-	if (self.annotationModel.unwrappedEditable) {
+	if (self.annotationModel.editable) {
 		CGContextSaveGState(context);
 		UIGraphicsPushContext(context);
 		{
@@ -384,8 +384,7 @@
 
 
 - (void)refreshModel {
-
-	[self.annotationModel setUnwrappedRectWithRct:[NSValue valueWithCGRect:self.frame]];
+	self.annotationModel.rect = self.frame;
 }
 
 

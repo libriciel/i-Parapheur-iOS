@@ -32,11 +32,13 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import XCTest
 @testable import iParapheur
 
 class Utils_StringsUtils_Tests: XCTestCase {
-    
+
+
     func testGetMessage() {
         let errorBadServer = NSError(domain: "", code: -1011, userInfo: nil)
         let errorUnknown = NSError(domain: "Cause inconnue", code: 974399, userInfo: nil)
@@ -54,5 +56,53 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertEqual("Le serveur est introuvable", StringsUtils.getMessage(error: errorCannotFindHost))
         XCTAssertEqual("Le serveur ne répond pas dans le délai imparti", StringsUtils.getMessage(error: errorTimeOut))
     }
+
+
+    func testAnnotationDate() {
+
+        let stringBefore = "2018-03-15T17:22:19Z"
+        let date = StringsUtils.deserializeAnnotationDate(string: stringBefore)
+        let stringAfter = StringsUtils.serializeAnnotationDate(date: date)
+
+        XCTAssertNotNil(date)
+        XCTAssertEqual(stringAfter, "2018-03-15T17:22:19Z")
+    }
+
+
+    func testTrim() {
+
+        let plopString = "    p l o p     "
+        XCTAssertEqual(StringsUtils.trim(string: plopString), "plop")
+
+        let plopMultiline = """
+                 p
+                 l
+                 o
+                 p
+        """
+        XCTAssertEqual(StringsUtils.trim(string: plopMultiline), "plop")
+    }
+
     
+    func testprettyPrintDate() {
+        
+        let stringBefore = "2018-03-15T17:22:19Z"
+        let date = StringsUtils.deserializeAnnotationDate(string: stringBefore)
+    
+        XCTAssertEqual(StringsUtils.prettyPrint(date: date), "le 15/22/2018 à 17h22")
+    }
+    
+
+    func testSplit() {
+
+        let stringShort = "12345"
+        let stringLong = "1234567890123456789"
+
+        let resultShort = StringsUtils.split(string: stringShort, length: 5)
+        let resultLong = StringsUtils.split(string: stringLong, length: 5)
+
+        XCTAssertEqual(resultShort, ["12345"])
+        XCTAssertEqual(resultLong, ["12345", "67890", "12345", "6789"])
+    }
+
 }

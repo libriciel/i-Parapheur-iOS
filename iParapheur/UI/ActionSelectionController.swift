@@ -32,74 +32,86 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import UIKit
+import os
 
+
+@objc protocol ActionSelectionControllerDelegate: class {
+    @objc func onActionSelected(action: String)
+}
 
 @objc class ActionSelectionController: UITableViewController {
 
+    @objc static let SEGUE = "showActionPopover"
 
-	@objc static let NotifLaunchAction = Notification.Name("ActionSelectionControllerNotifLaunchAction")
-	
-	var actions: NSArray! = NSArray()
-	@objc var currentDossier: Dossier?
-	@objc var signatureEnabled: NSNumber! = 0
-	@objc var visaEnabled: NSNumber! = 0
-
-
-	// MARK: - LifeCycle
+    var actions: [String] = []
+    @objc var currentDossier: Dossier?
+    @objc var signatureEnabled: NSNumber! = 0
+    @objc var visaEnabled: NSNumber! = 0
+    var pendingAction: String = ""
+    @objc weak var delegate: ActionSelectionControllerDelegate?
 
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		print("View loaded : ActionSelectionController")
-		
-		// Parse ObjC array
+    // <editor-fold desc="LifeCycle">
 
-		actions = Dossier.filterActions(dossierList: [currentDossier!])
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        os_log("View loaded : ActionSelectionController", type: .debug)
 
-		//
-		
-		preferredContentSize = CGSize(width: ActionSelectionCell.PreferredWidth,
-		                              height: ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
-	}
+        actions = Dossier.filterActions(dossierList: [currentDossier!])
+
+        preferredContentSize = CGSize(width: ActionSelectionCell.PreferredWidth,
+                                      height: ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == WorkflowDialogController.SEGUE {
+            if let destinationWorkflowDialogController = segue.destination as? WorkflowDialogController {
+                destinationWorkflowDialogController.setDossiersToSign(objcArray: [currentDossier!] as NSArray)
+                destinationWorkflowDialogController.currentAction = pendingAction
+            }
+        }
+    }
+
+    // </editor-fold desc="LifeCycle">
 
 
-    // MARK: - TableViewDelegate
+    // <editor-fold desc="TableView">
 
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return actions.count
+    }
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return actions.count
-	}
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+        let cell: ActionSelectionCell = tableView.dequeueReusableCell(withIdentifier: ActionSelectionCell.CellId,
+                                                                      for: indexPath as IndexPath) as! ActionSelectionCell
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-		let cell: ActionSelectionCell = tableView.dequeueReusableCell(withIdentifier: ActionSelectionCell.CellId,
-		                                                              for: indexPath as IndexPath) as! ActionSelectionCell
-
-        let action : NSString = actions[indexPath.row] as! NSString
+        let action: NSString = actions[indexPath.row] as NSString
 
         cell.actionLabel.text = StringUtils.actionName(forAction: action as String,
-                                                                withPaperSign: currentDossier!.isSignPapier!)
+                                                       withPaperSign: currentDossier!.isSignPapier)
 
         if (action.isEqual(to: "REJET")) {
-            cell.icon.image = UIImage(named: "ic_close_white")?.withRenderingMode(.alwaysTemplate)
+            cell.icon.image = UIImage(named: "ic_close_white_24dp")?.withRenderingMode(.alwaysTemplate)
         } else {
             cell.icon.image = UIImage(named: "ic_done_white_24dp")?.withRenderingMode(.alwaysTemplate)
         }
 
-		return cell;
-	}
-
+        return cell
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-		dismiss(animated: false,
-				completion: { () -> Void in
-					NotificationCenter.default.post(name: ActionSelectionController.NotifLaunchAction,
-													object: self.actions[indexPath.row])
-				})
-	}
+        dismiss(animated: true, completion: {
+            if (self.delegate != nil) {
+                self.delegate!.onActionSelected(action: self.actions[indexPath.row])
+            }
+        })
+    }
+
+    // </editor-fold desc="TableView">
 
 }

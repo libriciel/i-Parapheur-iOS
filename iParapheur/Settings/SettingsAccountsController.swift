@@ -32,25 +32,28 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import UIKit
 import CoreData
 import Foundation
+import os
+
 
 @objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
-	@IBOutlet var addAccountUIButton: UIButton!
+    @IBOutlet var addAccountUIButton: UIButton!
     @IBOutlet var accountTableView: UITableView!
-    var accountList: Array<Account> = []
+    var accountList: [Account] = []
 
     // MARK: - Life cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : SettingsAccountsController")
+        os_log("View loaded : SettingsAccountsController", type: .debug)
 
         accountTableView.allowsSelection = false
 
-        accountList = loadAccountList()
+        accountList = ModelsDataController.fetchAccounts()
         accountTableView.dataSource = self
 
         // Registering for popup notifications
@@ -62,9 +65,9 @@ import Foundation
 
         // Buttons Listeners
 
-		addAccountUIButton.addTarget(self,
-		                             action: #selector(onAddAccountButtonClicked),
-		                             for: .touchUpInside)
+        addAccountUIButton.addTarget(self,
+                                     action: #selector(onAddAccountButtonClicked),
+                                     for: .touchUpInside)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -85,7 +88,8 @@ import Foundation
         NotificationCenter.default.removeObserver(self)
     }
 
-    // MARK: - UITableViewDataSource
+
+    // <editor-fold desc="TableView">
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
@@ -93,8 +97,8 @@ import Foundation
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.CellIdentifier,
-		                                                               for: indexPath as IndexPath) as! SettingsAccountsCell
+        let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.CellIdentifier,
+                                                                       for: indexPath as IndexPath) as! SettingsAccountsCell
 
         // Compute data
 
@@ -109,17 +113,17 @@ import Foundation
         cell.titleLabel.text = titlePrint
         cell.infoLabel.text = "\(loginPrint) @ \(urlPrint)"
 
-        cell.deleteButton.isHidden = (account.id! == Account.DemoId)
-		cell.deleteButton.addTarget(self,
-		                            action: #selector(onDeleteButtonClicked),
-		                            for: .touchUpInside)
+        cell.deleteButton.isHidden = (account.id! == Account.DEMO_ID)
+        cell.deleteButton.addTarget(self,
+                                    action: #selector(onDeleteButtonClicked),
+                                    for: .touchUpInside)
 
-        cell.editButton.isHidden = (account.id! == Account.DemoId)
-		cell.editButton.addTarget(self,
-		                          action: #selector(onEditButtonClicked),
-		                          for: .touchUpInside)
+        cell.editButton.isHidden = (account.id! == Account.DEMO_ID)
+        cell.editButton.addTarget(self,
+                                  action: #selector(onEditButtonClicked),
+                                  for: .touchUpInside)
 
-        cell.visibilityButton.isHidden = (account.id != Account.DemoId)
+        cell.visibilityButton.isHidden = (account.id != Account.DEMO_ID)
         cell.visibilityButton.isSelected = (account.isVisible!.boolValue || (accountList.count == 1))
 
         let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.withRenderingMode(.alwaysTemplate)
@@ -129,18 +133,15 @@ import Foundation
         cell.visibilityButton.setImage(imageOn, for: .selected)
         cell.visibilityButton.tintColor = ColorUtils.Aqua
 
-		cell.visibilityButton.addTarget(self,
-		                                action: #selector(onVisibilityButtonClicked),
-		                                for: .touchUpInside)
+        cell.visibilityButton.addTarget(self,
+                                        action: #selector(onVisibilityButtonClicked),
+                                        for: .touchUpInside)
 
         return cell
     }
 
-    // MARK: - Private methods
+    // </editor-fold desc="TableView">
 
-    func loadAccountList() -> Array<Account> {
-        return ModelsDataController.fetchAccounts()
-    }
 
     // MARK: - Listeners
 
@@ -156,7 +157,7 @@ import Foundation
             accountList.append(account)
             let newIndexPath = IndexPath(row: accountList.count - 1, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.insertRows(at: [newIndexPath], with: UITableViewRowAnimation.fade)
+            accountTableView.insertRows(at: [newIndexPath], with: UITableView.RowAnimation.fade)
             accountTableView.endUpdates()
 
         } else {
@@ -165,7 +166,7 @@ import Foundation
 
             let accountIndexPath = IndexPath(row: accountIndex!, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.reloadRows(at: [accountIndexPath], with: UITableViewRowAnimation.none)
+            accountTableView.reloadRows(at: [accountIndexPath], with: UITableView.RowAnimation.none)
             accountTableView.endUpdates()
         }
 
@@ -182,9 +183,9 @@ import Foundation
         let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
         let accountToDelete: Account = accountList[indexPath.row]
 
-        // Delete from NSManagedObjectContext
+        // Delete from local DB
 
-        ModelsDataController.Context!.delete(accountToDelete)
+        ModelsDataController.context!.delete(accountToDelete)
 
         // Delete from UITableView
 
@@ -198,7 +199,7 @@ import Foundation
 
             let demoIndexPath = IndexPath(row: 0, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.reloadRows(at: [demoIndexPath], with: UITableViewRowAnimation.none)
+            accountTableView.reloadRows(at: [demoIndexPath], with: UITableView.RowAnimation.none)
             accountTableView.endUpdates()
         }
 

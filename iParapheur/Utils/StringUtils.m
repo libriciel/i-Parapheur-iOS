@@ -38,60 +38,11 @@
 @implementation StringUtils
 
 
-+ (NSDictionary *)nilifyDictionaryValues:(NSDictionary *)dictionary {
-	
-	NSMutableDictionary *mutableDictionary = [NSMutableDictionary new];
-	
-	for (NSString* key in dictionary) {
-		
-		id value = dictionary[key];
-		
-		if ((value == NULL) || ([value isEqual:[NSNull null]]))
-			[mutableDictionary setValue:nil
-								 forKey:key];
-		else
-			[mutableDictionary setValue:dictionary[key]
-								 forKey:key];
-	}
-	
-	return mutableDictionary;
-}
-
-
-+ (BOOL)doesArray:(NSArray *)array
-   containsString:(NSString *)string {
-
-	for (NSString *arrayElement in array)
-		if ([string isEqualToString:arrayElement])
-			return TRUE;
-
-	return FALSE;
-}
-
-
 + (NSString *)decodeUrlString:(NSString *)encodedString {
 
 	NSString *result = [encodedString stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 	result = result.stringByRemovingPercentEncoding;
 	return result;
-}
-
-
-+ (NSData *)bytesFromHexString:(NSString *)aString; {
-
-	NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:@""];
-	NSMutableData *data = [NSMutableData data];
-	int idx;
-	for (idx = 0; idx + 2 <= theString.length; idx += 2) {
-		NSRange range = NSMakeRange((NSUInteger) idx, 2);
-		NSString *hexStr = [theString substringWithRange:range];
-		NSScanner *scanner = [NSScanner scannerWithString:hexStr];
-		unsigned int intValue;
-		if ([scanner scanHexInt:&intValue])
-			[data appendBytes:&intValue
-			           length:1];
-	}
-	return data;
 }
 
 

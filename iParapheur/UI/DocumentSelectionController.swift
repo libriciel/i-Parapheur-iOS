@@ -32,8 +32,10 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import UIKit
+import os
 
 @objc class DocumentSelectionController: UITableViewController {
 
@@ -46,7 +48,7 @@ import UIKit
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View loaded : DocumentSelectionController")
+        os_log("View loaded : DocumentSelectionController", type: .debug)
 
         // Parse ObjC array
 
@@ -56,8 +58,8 @@ import UIKit
 
         //
 
-		preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
-		                              height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
+        preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
+                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
     }
 
     // MARK: - TableViewDelegate
@@ -66,10 +68,10 @@ import UIKit
         return docList.count
     }
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
-		                                                                for: indexPath as IndexPath) as! DocumentSelectionCell
+        let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
+                                                                        for: indexPath as IndexPath) as! DocumentSelectionCell
 
         let document: Document = docList[indexPath.row]
 

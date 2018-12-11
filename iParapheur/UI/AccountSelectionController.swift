@@ -32,54 +32,62 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 import UIKit
+import os
 
 @objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @objc static let NotifSelected = Notification.Name("AccountSelectionControllerAccountSelectionController")
     @objc static let Segue: NSString! = "AccountListSegue"
 
-	@IBOutlet var backButton: UIBarButtonItem!
-	@IBOutlet var accountTableView: UITableView!
+    @IBOutlet var backButton: UIBarButtonItem!
+    @IBOutlet var accountTableView: UITableView!
 
     var accountList: Array<Account> = []
     var selectedAccountId: String?
 
-	// MARK: - LifeCycle
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		print("View loaded : AccountSelectionController")
+    // MARK: - LifeCycle
 
-        ModelsDataController.cleanupAccounts()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        os_log("View loaded : AccountSelectionController", type: .debug)
+
+        ModelsDataController.cleanupAccounts(preferences: UserDefaults.standard)
 
         accountList = loadAccountList()
         accountTableView.dataSource = self
         accountTableView.delegate = self
 
-		backButton.target = self
-		backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
+        backButton.target = self
+        backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
         let preferences: UserDefaults = UserDefaults.standard
-        selectedAccountId = preferences.string(forKey: Account.PreferencesKeySelectedAccount as String)
-	}
+        selectedAccountId = preferences.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+    }
+
 
     // MARK: - Private methods
 
     func loadAccountList() -> Array<Account> {
 
         var result: Array<Account> = ModelsDataController.fetchAccounts()
-        result = result.filter{ $0.isVisible!.boolValue }
+        result = result.filter {
+            $0.isVisible!.boolValue
+        }
 
         return result
     }
+
 
     // MARK: - Button Listeners
 
     @objc func onBackButtonClicked() {
         self.dismiss(animated: true, completion: nil)
     }
+
 
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
@@ -89,12 +97,12 @@ import UIKit
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-		let cell:AccountSelectionCell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.CellId,
-		                                                              for: indexPath) as! AccountSelectionCell
+        let cell: AccountSelectionCell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.CellId,
+                                                                       for: indexPath) as! AccountSelectionCell
         let account = accountList[indexPath.row]
 
-		cell.inboxIcon.image = cell.inboxIcon.image!.withRenderingMode(.alwaysTemplate)
-		cell.nameLabel.text = account.title
+        cell.inboxIcon.image = cell.inboxIcon.image!.withRenderingMode(.alwaysTemplate)
+        cell.nameLabel.text = account.title
 
         cell.checkIcon.image = cell.checkIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.checkIcon.isHidden = (selectedAccountId != account.id)
@@ -106,9 +114,9 @@ import UIKit
 
         let accountSelected: Account = accountList[indexPath.row]
         let preferences: UserDefaults = UserDefaults.standard
-        preferences.set(accountSelected.id, forKey: Account.PreferencesKeySelectedAccount as String)
+        preferences.set(accountSelected.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
 
-		NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
+        NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
                                         object: nil,
                                         userInfo: ["success": true])
         onBackButtonClicked()

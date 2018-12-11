@@ -32,15 +32,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 @objc class DocumentSelectionCell: UITableViewCell {
-	
-	static let CellId: String! = "DocumentSelectionCell"
-	static let PreferredHeight: CGFloat! = 44
-	static let PreferredWidth: CGFloat! = 350
 
-	@IBOutlet var titleLabel: UILabel!
-	@IBOutlet var mainDocIcon: UIImageView!
-	@IBOutlet var annexeIcon: UIImageView!
+    static let CellId: String! = "DocumentSelectionCell"
+    static let PreferredHeight: CGFloat! = 44
+    static let PreferredWidth: CGFloat! = 350
+
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var mainDocIcon: UIImageView!
+    @IBOutlet var annexeIcon: UIImageView!
 }
