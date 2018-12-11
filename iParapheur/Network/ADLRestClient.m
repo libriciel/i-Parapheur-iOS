@@ -44,53 +44,53 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 
 + (id)sharedManager {
 
-	static ADLRestClient *sharedMyManager = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		sharedMyManager = [[self alloc] init];
-	});
-	return sharedMyManager;
+    static ADLRestClient *sharedMyManager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedMyManager = [[self alloc] init];
+    });
+    return sharedMyManager;
 }
 
 
 - (NSNumber *)getRestApiVersion {
 
-	return PARAPHEUR_API_VERSION;
+    return PARAPHEUR_API_VERSION;
 }
 
 
 - (void)setRestApiVersion:(NSNumber *)apiVersion {
 
-	if (apiVersion.intValue != PARAPHEUR_API_VERSION.intValue) {
-		PARAPHEUR_API_VERSION = apiVersion;
-		[self resetClient];
-	}
+    if (apiVersion.intValue != PARAPHEUR_API_VERSION.intValue) {
+        PARAPHEUR_API_VERSION = apiVersion;
+        [self resetClient];
+    }
 }
 
 
 - (id)init {
 
-	[self resetClient];
-	return self;
+    [self resetClient];
+    return self;
 }
 
 
 - (void)resetClient {
 
-	_restClientApi = nil;
+    _restClientApi = nil;
 
-	if (PARAPHEUR_API_VERSION.intValue == 4)
-		_restClientApi = [[ADLRestClientApi4 alloc] init];
-	else
-		_restClientApi = [[ADLRestClientApi3 alloc] init];
+    if (PARAPHEUR_API_VERSION.intValue == 4)
+        _restClientApi = [[ADLRestClientApi4 alloc] init];
+    else
+        _restClientApi = [[ADLRestClientApi3 alloc] init];
 }
 
 
 - (NSString *)getDownloadUrl:(NSString *)dossierId
                       forPdf:(bool)isPdf {
 
-	return [_restClientApi getDownloadUrl:dossierId
-	                               forPdf:isPdf];
+    return [_restClientApi getDownloadUrl:dossierId
+                                   forPdf:isPdf];
 }
 
 
@@ -100,54 +100,53 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                  success:(void (^)(NSString *))success
                  failure:(void (^)(NSError *))failure {
 
-	[_restClientApi downloadDocument:documentId
-	                           isPdf:isPdf
-	                          atPath:filePath
-	                         success:^(NSString *string) {
-		                         success(string);
-	                         }
-	                         failure:^(NSError *error) {
-		                         failure(error);
-	                         }];
+    [_restClientApi downloadDocument:documentId
+                               isPdf:isPdf
+                              atPath:filePath
+                             success:^(NSString *string) {
+                                 success(string);
+                             }
+                             failure:^(NSError *error) {
+                                 failure(error);
+                             }];
 }
 
 
 - (NSString *)fixBureauId:(NSString *)dossierId {
 
-	NSString *prefixToRemove = @"workspace://SpacesStore/";
+    NSString *prefixToRemove = @"workspace://SpacesStore/";
 
-	if ([dossierId hasPrefix:prefixToRemove])
-		return [dossierId substringFromIndex:prefixToRemove.length];
-	else
-		return dossierId;
+    if ([dossierId hasPrefix:prefixToRemove])
+        return [dossierId substringFromIndex:prefixToRemove.length];
+    else
+        return dossierId;
 }
 
 
 - (NSError *)downloadCertificateUrlWithUrl:(NSString *)url
                                     onPath:(NSString *)localPath {
 
-	NSError *error = nil;
+    NSError *error = nil;
 
-	NSData *urlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-	if (urlData) {
+    NSData *urlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+    if (urlData) {
 
-		NSString *filePath = [NSString stringWithFormat:@"%@/%@",
-		                                                localPath,
-		                                                url.lastPathComponent];
-		[urlData writeToFile:filePath
-		          atomically:YES];
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@",
+                                                        localPath,
+                                                        url.lastPathComponent];
+        [urlData writeToFile:filePath
+                  atomically:YES];
 
-		uint64_t fileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath
-		                                                                     error:&error].fileSize;
-		NSLog(@"Downloaded - file : %@ (%llu)", filePath, fileSize);
-	}
-	else {
-		error = [[NSError alloc] initWithDomain:url //AFURLRequestSerializationErrorDomain
-		                                   code:NSURLErrorBadURL
-		                               userInfo:nil];
-	}
+        uint64_t fileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath
+                                                                             error:&error].fileSize;
+        NSLog(@"Downloaded - file : %@ (%llu)", filePath, fileSize);
+    } else {
+        error = [[NSError alloc] initWithDomain:url //AFURLRequestSerializationErrorDomain
+                                           code:NSURLErrorBadURL
+                                       userInfo:nil];
+    }
 
-	return error;
+    return error;
 }
 
 
@@ -157,28 +156,28 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
 - (void)getApiLevel:(void (^)(NSNumber *versionNumber))success
             failure:(void (^)(NSError *error))failure {
 
-	[_restClientApi getApiLevel:^(NSNumber *versionNumber) {
-		 success(versionNumber);
+    [_restClientApi getApiLevel:^(NSNumber *versionNumber) {
+         success(versionNumber);
 
-		 if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
-			 [ViewUtils logWarningWithMessage:@"Veuillez mettre à jour votre application."
-			                            title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."];
-	 }
-	                    failure:^(NSError *error) {
-		                    failure(error);
-	                    }];
+         if (versionNumber.integerValue > PARAPHEUR_API_MAX_VERSION)
+             [ViewUtils logWarningWithMessage:@"Veuillez mettre à jour votre application."
+                                        title:@"La version du i-Parapheur associé à ce compte est trop récente pour cette application."];
+     }
+                        failure:^(NSError *error) {
+                            failure(error);
+                        }];
 }
 
 
 - (void)getBureaux:(void (^)(NSArray *))success
            failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getBureaux:^(NSArray *bureaux) {
-		 success(bureaux);
-	 }
-	                   failure:^(NSError *error) {
-		                   failure(error);
-	                   }];
+    [_restClientApi getBureaux:^(NSArray *bureaux) {
+         success(bureaux);
+     }
+                       failure:^(NSError *error) {
+                           failure(error);
+                       }];
 }
 
 
@@ -189,16 +188,16 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getDossiers:[self fixBureauId:bureau]
-	                       page:page
-	                       size:size
-	                     filter:filterJson
-	                    success:^(NSArray *dossiers) {
-		                    success(dossiers);
-	                    }
-	                    failure:^(NSError *error) {
-		                    failure(error);
-	                    }];
+    [_restClientApi getDossiers:[self fixBureauId:bureau]
+                           page:page
+                           size:size
+                         filter:filterJson
+                        success:^(NSArray *dossiers) {
+                            success(dossiers);
+                        }
+                        failure:^(NSError *error) {
+                            failure(error);
+                        }];
 }
 
 
@@ -207,28 +206,28 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
            success:(void (^)(Dossier *))success
            failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getDossier:[self fixBureauId:bureauId]
-	                   dossier:dossierId
-	                   success:^(Dossier *dossier) {
-		                   success(dossier);
-	                   }
-	                   failure:^(NSError *error) {
-		                   failure(error);
-	                   }];
+    [_restClientApi getDossier:[self fixBureauId:bureauId]
+                       dossier:dossierId
+                       success:^(Dossier *dossier) {
+                           success(dossier);
+                       }
+                       failure:^(NSError *error) {
+                           failure(error);
+                       }];
 }
 
 
 - (void)getTypology:(NSString *)bureauId
-			success:(void (^)(NSArray *))success
+            success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getTypology:bureauId
-	                    success:^(NSArray *typeList) {
-		                    success(typeList);
-	                    }
-	                    failure:^(NSError *error) {
-		                    failure(error);
-	                    }];
+    [_restClientApi getTypology:bureauId
+                        success:^(NSArray *typeList) {
+                            success(typeList);
+                        }
+                        failure:^(NSError *error) {
+                            failure(error);
+                        }];
 }
 
 
@@ -236,13 +235,13 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
            success:(void (^)(Circuit *))success
            failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getCircuit:dossier
-	                   success:^(Circuit *circuit) {
-		                   success(circuit);
-	                   }
-	                   failure:^(NSError *error) {
-		                   failure(error);
-	                   }];
+    [_restClientApi getCircuit:dossier
+                       success:^(Circuit *circuit) {
+                           success(circuit);
+                       }
+                       failure:^(NSError *error) {
+                           failure(error);
+                       }];
 }
 
 
@@ -251,14 +250,14 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                success:(void (^)(NSArray *))success
                failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getAnnotations:dossier
-	                      document:document
-	                       success:^(NSArray *annotations) {
-		                       success(annotations);
-	                       }
-	                       failure:^(NSError *error) {
-		                       failure(error);
-	                       }];
+    [_restClientApi getAnnotations:dossier
+                          document:document
+                           success:^(NSArray *annotations) {
+                               success(annotations);
+                           }
+                           failure:^(NSError *error) {
+                               failure(error);
+                           }];
 }
 
 
@@ -267,14 +266,14 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
               success:(void (^)(NSArray *))success
               failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionAddAnnotation:annotation
-	                         forDossier:dossier
-	                            success:^(NSArray *annotations) {
-		                            success(annotations);
-	                            }
-	                            failure:^(NSError *error) {
-		                            failure(error);
-	                            }];
+    [_restClientApi actionAddAnnotation:annotation
+                             forDossier:dossier
+                                success:^(NSArray *annotations) {
+                                    success(annotations);
+                                }
+                                failure:^(NSError *error) {
+                                    failure(error);
+                                }];
 }
 
 
@@ -283,14 +282,14 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                  success:(void (^)(NSArray *))success
                  failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionUpdateAnnotation:annotation
-	                            forDossier:dossier
-	                               success:^(NSArray *annotations) {
-		                               success(annotations);
-	                               }
-	                               failure:^(NSError *error) {
-		                               failure(error);
-	                               }];
+    [_restClientApi actionUpdateAnnotation:annotation
+                                forDossier:dossier
+                                   success:^(NSArray *annotations) {
+                                       success(annotations);
+                                   }
+                                   failure:^(NSError *error) {
+                                       failure(error);
+                                   }];
 }
 
 
@@ -299,30 +298,30 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                  success:(void (^)(NSArray *))success
                  failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionRemoveAnnotation:annotation
-	                            forDossier:dossier
-	                               success:^(NSArray *annotations) {
-		                               success(annotations);
-	                               }
-	                               failure:^(NSError *error) {
-		                               failure(error);
-	                               }];
+    [_restClientApi actionRemoveAnnotation:annotation
+                                forDossier:dossier
+                                   success:^(NSArray *annotations) {
+                                       success(annotations);
+                                   }
+                                   failure:^(NSError *error) {
+                                       failure(error);
+                                   }];
 }
 
 
-- (void)getSignInfoForDossier:(NSString *)dossierId
+- (void)getSignInfoForDossier:(Dossier *)dossier
                     andBureau:(NSString *)bureauId
                       success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
-	[_restClientApi getSignInfoForDossier:dossierId
-	                            andBureau:[self fixBureauId:bureauId]
-	                              success:^(SignInfo *signInfo) {
-		                              success(signInfo);
-	                              }
-	                              failure:^(NSError *error) {
-		                              failure(error);
-	                              }];
+    [_restClientApi getSignInfoForDossier:dossier
+                                andBureau:[self fixBureauId:bureauId]
+                                  success:^(SignInfo *signInfo) {
+                                      success(signInfo);
+                                  }
+                                  failure:^(NSError *error) {
+                                      failure(error);
+                                  }];
 }
 
 
@@ -333,16 +332,16 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                       success:(void (^)(NSArray *))success
                       failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionViserForDossier:dossierId
-	                            forBureau:[self fixBureauId:bureauId]
-	                 withPublicAnnotation:publicAnnotation
-	                withPrivateAnnotation:privateAnnotation
-	                              success:^(NSArray *result) {
-		                              success(result);
-	                              }
-	                              failure:^(NSError *error) {
-		                              failure(error);
-	                              }];
+    [_restClientApi actionViserForDossier:dossierId
+                                forBureau:[self fixBureauId:bureauId]
+                     withPublicAnnotation:publicAnnotation
+                    withPrivateAnnotation:privateAnnotation
+                                  success:^(NSArray *result) {
+                                      success(result);
+                                  }
+                                  failure:^(NSError *error) {
+                                      failure(error);
+                                  }];
 }
 
 
@@ -354,17 +353,17 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                        success:(void (^)(NSArray *))success
                        failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionSignerForDossier:dossierId
-	                             forBureau:[self fixBureauId:bureauId]
-	                  withPublicAnnotation:publicAnnotation
-	                 withPrivateAnnotation:privateAnnotation
-	                         withSignature:signature
-	                               success:^(NSArray *result) {
-		                               success(result);
-	                               }
-	                               failure:^(NSError *error) {
-		                               failure(error);
-	                               }];
+    [_restClientApi actionSignerForDossier:dossierId
+                                 forBureau:[self fixBureauId:bureauId]
+                      withPublicAnnotation:publicAnnotation
+                     withPrivateAnnotation:privateAnnotation
+                             withSignature:signature
+                                   success:^(NSArray *result) {
+                                       success(result);
+                                   }
+                                   failure:^(NSError *error) {
+                                       failure(error);
+                                   }];
 }
 
 
@@ -375,16 +374,16 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                         success:(void (^)(NSArray *))success
                         failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionRejeterForDossier:dossierId
-	                              forBureau:[self fixBureauId:bureauId]
-	                   withPublicAnnotation:publicAnnotation
-	                  withPrivateAnnotation:privateAnnotation
-	                                success:^(NSArray *result) {
-		                                success(result);
-	                                }
-	                                failure:^(NSError *error) {
-		                                failure(error);
-	                                }];
+    [_restClientApi actionRejeterForDossier:dossierId
+                                  forBureau:[self fixBureauId:bureauId]
+                       withPublicAnnotation:publicAnnotation
+                      withPrivateAnnotation:privateAnnotation
+                                    success:^(NSArray *result) {
+                                        success(result);
+                                    }
+                                    failure:^(NSError *error) {
+                                        failure(error);
+                                    }];
 }
 
 
@@ -393,14 +392,14 @@ static int PARAPHEUR_API_MAX_VERSION = 4;
                                        success:(void (^)(NSArray *))success
                                        failure:(void (^)(NSError *))failure {
 
-	[_restClientApi actionSwitchToPaperSignatureForDossier:dossierId
-	                                             forBureau:[self fixBureauId:bureauId]
-	                                               success:^(NSArray *result) {
-		                                               success(result);
-	                                               }
-	                                               failure:^(NSError *error) {
-		                                               failure(error);
-	                                               }];
+    [_restClientApi actionSwitchToPaperSignatureForDossier:dossierId
+                                                 forBureau:[self fixBureauId:bureauId]
+                                                   success:^(NSArray *result) {
+                                                       success(result);
+                                                   }
+                                                   failure:^(NSError *error) {
+                                                       failure(error);
+                                                   }];
 }
 
 

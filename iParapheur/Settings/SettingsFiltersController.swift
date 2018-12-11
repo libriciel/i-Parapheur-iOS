@@ -33,6 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import UIKit
+import os
 
 
 class SettingsFiltersController: UIViewController {
@@ -42,7 +43,7 @@ class SettingsFiltersController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		print("View loaded : SettingsFiltersController")
+        os_log("View loaded : SettingsFiltersController", type: .debug)
     }
 
 

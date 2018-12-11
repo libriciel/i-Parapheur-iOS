@@ -34,13 +34,12 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLParapheurWallDelegateProtocol.h"
 #import "ReaderViewController.h"
 #import "ADLPDFViewController.h"
 
 @class RGDetailViewController;
 
-@interface RGDossierDetailViewController : UIViewController <ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, LGViewHUDDelegate> {
+@interface RGDossierDetailViewController : UIViewController <ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, UITableViewDataSource, LGViewHUDDelegate> {
 	UILabel *dossierName;
 	UILabel *typeLabel;
 	UILabel *sousTypeLabel;

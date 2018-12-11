@@ -35,13 +35,9 @@
  */
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
-#import "ADLSingletonState.h"
-#import "RGAppDelegate.h"
-#import "ADLCertificateAlertView.h"
-#import "ADLRequester.h"
-#import "LGViewHUD.h"
-#import <NSData_Base64/NSData+Base64.h>
 #import "StringUtils.h"
+#import "ADLSingletonState.h"
+#import "LGViewHUD.h"
 #import "iParapheur-Swift.h"
 
 
@@ -50,8 +46,7 @@
 
 
 @interface RGWorkflowDialogViewController () {
-
-	NSMutableDictionary *circuits;
+    NSMutableDictionary *circuits;
 }
 
 
@@ -64,14 +59,14 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil
                bundle:(NSBundle *)nibBundleOrNil {
 
-	self = [super initWithNibName:nibNameOrNil
-	                       bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil
+                           bundle:nibBundleOrNil];
 
-	if (self) {
-		// Custom initialization
-	}
+    if (self) {
+        // Custom initialization
+    }
 
-	return self;
+    return self;
 }
 
 
@@ -80,58 +75,54 @@
 
 - (void)viewDidLoad {
 
-	[super viewDidLoad];
-	NSLog(@"View Loaded : RGWorkflowDialogViewController");
+    [super viewDidLoad];
+    NSLog(@"View Loaded : RGWorkflowDialogViewController");
 
-	_restClient = ADLRestClient.sharedManager;
-	circuits = NSMutableDictionary.new;
-	_bureauCourant = ADLSingletonState.sharedSingletonState.bureauCourant;
+    _restClient = ADLRestClient.sharedManager;
+    circuits = NSMutableDictionary.new;
+    _bureauCourant = ADLSingletonState.sharedSingletonState.bureauCourant;
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
 
-	[super viewWillAppear:animated];
-	_navigationBar.topItem.title = [StringUtils actionNameForAction:_action
-	                                                  withPaperSign:_isPaperSign];
+    [super viewWillAppear:animated];
+    _navigationBar.topItem.title = [StringUtils actionNameForAction:_action
+                                                      withPaperSign:_isPaperSign];
 
-	if ([_action isEqualToString:@"SIGNATURE" ] && !_isPaperSign) {
-		_navigationBar.topItem.rightBarButtonItem.enabled = NO;
-	}
-	else {
-		_certificateLabel.hidden = YES;
-		_certificatesTableView.hidden = YES;
+    if ([_action isEqualToString:@"SIGNATURE"] && !_isPaperSign) {
+        _navigationBar.topItem.rightBarButtonItem.enabled = NO;
+    } else {
+        _certificateLabel.hidden = YES;
+        _certificatesTableView.hidden = YES;
 
-		if ([_action isEqualToString:@"REJET"])
-			_annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
-	}
+        if ([_action isEqualToString:@"REJET"])
+            _annotationPubliqueLabel.text = @"Motif de rejet (obligatoire)";
+    }
 
-	// Paper Signature
+    // Paper Signature
 
-	BOOL isSignPapier = true;
-	for (Dossier *dossier in _dossiers)
-		isSignPapier = isSignPapier && dossier.unwrappedIsSignPapier;
+    BOOL isSignPapier = true;
+    for (Dossier *dossier in _dossiers)
+        isSignPapier = isSignPapier && dossier.isSignPapier;
 
-	[_paperSignatureButton addTarget:self
-	                          action:@selector(onPaperSignatureButtonClicked:)
-	                forControlEvents:UIControlEventTouchUpInside];
+    [_paperSignatureButton addTarget:self
+                              action:@selector(onPaperSignatureButtonClicked:)
+                    forControlEvents:UIControlEventTouchUpInside];
 
-	//
-
-	ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
-	_pkeys = keystore.listPrivateKeys;
+    _pkeys = [ModelsDataController fetchCertificates];
 }
 
 
 - (void)viewDidAppear:(BOOL)animated {
 
-	[self retrieveCircuitsForDossierAtIndex:0];
+    [self retrieveCircuitsForDossierAtIndex:0];
 }
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-	return YES;
+    return YES;
 }
 
 
@@ -140,274 +131,87 @@
 
 - (IBAction)finish:(id)sender {
 
-	ADLRequester *requester = ADLRequester.sharedRequester;
-
-	NSMutableArray *dossierIds = NSMutableArray.new;
-	for (Dossier *dossier in _dossiers)
-		[dossierIds addObject:dossier.unwrappedId];
-
-	NSMutableDictionary *args = @{
-			@"dossiers" : dossierIds,
-			@"annotPub" : _annotationPublique.text,
-			@"annotPriv" : _annotationPrivee.text,
-			@"bureauCourant" : _bureauCourant}.mutableCopy;
-
-	if ([_action isEqualToString:@"VISA"] || ([_action isEqualToString:@"SIGNATURE"] && _isPaperSign)) {
-		[self showHud];
-
-			for (Dossier *dossier in _dossiers) {
-				__weak typeof(self) weakSelf = self;
-				[_restClient actionViserForDossier:dossier.unwrappedId
-				                         forBureau:_bureauCourant
-				              withPublicAnnotation:_annotationPublique.text
-				             withPrivateAnnotation:_annotationPrivee.text
-				                           success:^(NSArray *result) {
-					                           __strong typeof(weakSelf) strongSelf = weakSelf;
-					                           if (strongSelf) {
-						                           [strongSelf dismissDialogView];
-					                           }
-				                           }
-				                           failure:^(NSError *error) {
-					                           __strong typeof(weakSelf) strongSelf = weakSelf;
-					                           if (strongSelf) {
-						                           NSLog(@"actionViser error : %@", error.localizedDescription);
-						                           [strongSelf didEndWithUnReachableNetwork];
-					                           }
-				                           }];
-			}
-		}
-	else if ([self.action isEqualToString:@"SECRETARIAT"]) {
-		[self showHud];
-
-		// TODO Adrien : switch
-		[requester request:@"secretariat"
-		           andArgs:args
-		          delegate:self];
-	}
-	else if ([self.action isEqualToString:@"REJET"]) {
-		if (self.annotationPublique.text && (self.annotationPublique.text.length > 0)) {
-			[self showHud];
-
-				for (Dossier *dossier in _dossiers) {
-					__weak typeof(self) weakSelf = self;
-					[_restClient actionRejeterForDossier:dossier.unwrappedId
-					                           forBureau:_bureauCourant
-					                withPublicAnnotation:_annotationPublique.text
-					               withPrivateAnnotation:_annotationPrivee.text
-					                             success:^(NSArray *success) {
-						                             __strong typeof(weakSelf) strongSelf = weakSelf;
-						                             if (strongSelf) {
-							                             [strongSelf dismissDialogView];
-						                             }
-					                             }
-					                             failure:^(NSError *error) {
-						                             __strong typeof(weakSelf) strongSelf = weakSelf;
-						                             if (strongSelf) {
-							                             NSLog(@"Action reject error : %@", error.localizedDescription);
-							                             [strongSelf didEndWithUnReachableNetwork];
-						                             }
-					                             }];
-				}
-			}
-			else {
-			[[UIAlertView.alloc initWithTitle:@"Attention"
-			                          message:@"Veuillez saisir le motif de votre rejet"
-			                         delegate:nil
-			                cancelButtonTitle:@"Fermer"
-			                otherButtonTitles:nil] show];
-		}
-
-	}
-	else if ([self.action isEqualToString:@"SIGNATURE"]) {
-		// create signatures array
-		PrivateKey *pkey = _currentPKey;
-
-		/* Ask for pkey password */
-
-		ADLCertificateAlertView *alertView =
-				[[ADLCertificateAlertView alloc] initWithTitle:@"Déverrouillage de la clef privée"
-				                                       message:[NSString stringWithFormat:@"Entrez le mot de passe pour %@", pkey.p12Filename.lastPathComponent]
-				                                      delegate:self
-				                             cancelButtonTitle:@"Annuler"
-				                             otherButtonTitles:@"Confirmer", nil];
-
-		alertView.p12Path = pkey.p12Filename;
-		alertView.tag = RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE;
-		[alertView show];
-	}
-
-	// [args release];
 }
 
 
 - (IBAction)cancel:(id)sender {
 
-	[self dismissViewControllerAnimated:YES
-	                         completion:nil];
-}
-
-
-- (void)showHud {
-
-	LGViewHUD *hud = [LGViewHUD defaultHUD];
-	hud.image = [UIImage imageNamed:@"rounded-checkmark.png"];
-	hud.topText = @"";
-	hud.bottomText = @"Chargement ...";
-	hud.activityIndicatorOn = YES;
-	[hud showInView:self.view];
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
 }
 
 
 - (void)hideHud {
 
-	LGViewHUD *hud = LGViewHUD.defaultHUD;
-	[hud hideWithAnimation:HUDAnimationHideFadeOut];
+    LGViewHUD *hud = LGViewHUD.defaultHUD;
+    [hud hideWithAnimation:HUDAnimationHideFadeOut];
 }
 
 
 - (void)dismissDialogView {
 
-	[self hideHud];
-	[self dismissViewControllerAnimated:YES
-	                         completion:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete
-	                                                    object:nil];
-}
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSLog(@"MIKAF %@", answer);
-
-	if ([answer[@"_req"] isEqualToString:@"getSignInfo"]) {
-		// get selected dossiers for some sign info action :)
-
-		NSMutableArray *hashes = NSMutableArray.new;
-		NSMutableArray *dossiers = NSMutableArray.new;
-		NSMutableArray *signatures = NSMutableArray.new;
-
-		for (Dossier *dossier in _dossiers) {
-			NSDictionary *signInfo = answer[dossier.unwrappedId];
-
-			if ([signInfo[@"format"] isEqualToString:@"CMS"]) {
-				[dossiers addObject:dossier.unwrappedId];
-				[hashes addObject:signInfo[@"hash"]];
-			}
-
-		}
-
-		ADLKeyStore *keystore = ((RGAppDelegate *) UIApplication.sharedApplication.delegate).keyStore;
-		PrivateKey *pkey = _currentPKey;
-		NSError *error = nil;
-
-		for (NSString *hash in hashes) {
-			NSData *hash_data = [StringUtils bytesFromHexString:hash];
-
-			NSFileManager *fileManager = NSFileManager.new;
-			NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory
-			                                     inDomain:NSUserDomainMask
-			                            appropriateForURL:nil
-			                                       create:YES
-			                                        error:NULL];
-
-			NSString *p12AbsolutePath = [pathURL.path stringByAppendingPathComponent:pkey.p12Filename];
-
-			NSData *signature = [keystore PKCS7Sign:p12AbsolutePath
-			                           withPassword:_p12password
-			                                andData:hash_data
-			                                  error:&error];
-
-			if (signature == nil && error != nil) {
-				[ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
-				                         title:@"Une erreur s'est produite lors de la signature"];
-				break;
-			}
-			else {
-				NSString *b64EncodedSignature = [CryptoUtils dataToBase64StringWithData:signature];
-				[signatures addObject:b64EncodedSignature];
-			}
-
-		}
-
-		if ((signatures.count > 0) && (signatures.count == hashes.count) && (dossiers.count == hashes.count)) {
-			NSMutableDictionary *args = @{
-					@"dossiers" : dossiers,
-					@"annotPub" : _annotationPublique.text,
-					@"annotPriv" : _annotationPrivee.text,
-					@"bureauCourant" : _bureauCourant,
-					@"signatures" : signatures}.mutableCopy;
-
-			NSLog(@"%@", args);
-			ADLRequester *requester = ADLRequester.sharedRequester;
-
-			[self showHud];
-
-			[requester request:@"signature"
-			           andArgs:args
-			          delegate:self];
-		}
-	}
-	else {
-		[self dismissDialogView];
-	}
-
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	[[UIAlertView.alloc initWithTitle:@"Erreur"
-	                          message:@"Une erreur est survenue lors de l'envoi de la requête"
-	                         delegate:nil
-	                cancelButtonTitle:@"Fermer"
-	                otherButtonTitles:nil] show];
+    [self hideHud];
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete
+                                                        object:nil];
 }
 
 /**
 * APIv3 response
 */
 - (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo
-							 dossier:(NSString *)dossierId {
+                             dossier:(NSString *)dossierId {
 
     // Compute signature(s)
 
     NSError *error = nil;
-    NSString *signatureResult = [CryptoUtils signWithSignInfo:signInfo
-                                                    dossierId:dossierId
-                                                   privateKey:_currentPKey
-                                                     password:_p12password
-                                                        error:&error];
+//    NSString *signatureResult = [CryptoUtils signWithSignInfo:signInfo
+//                                                    dossierId:dossierId
+//                                                   privateKey:_currentPKey
+//                                                     password:_p12password
+//                                                        error:&error];
 
-    if (error != nil) {
-        [ViewUtils logErrorWithMessage:error.domain
-                                 title:@"Erreur à la signature"];
-        return;
-    }
+    Certificate *certificate = [ModelsDataController fetchCertificates][1];
+    NSString *dataToSign = signInfo.hashesToSign[0];
 
-    // Sending back result
+    [InController signWithHashes:@[dataToSign]
+                   certificateId:certificate.serialNumber];
 
-    [self showHud];
-
-    __weak typeof(self) weakSelf = self;
-    [_restClient actionSignerForDossier:dossierId
-                              forBureau:_bureauCourant
-                   withPublicAnnotation:_annotationPublique.text
-                  withPrivateAnnotation:_annotationPrivee.text
-                          withSignature:signatureResult
-                                success:^(NSArray *array) {
-                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                    if (strongSelf) {
-                                        NSLog(@"Signature success");
-                                        [strongSelf dismissDialogView];
-                                    }
-                                }
-                                failure:^(NSError *restError) {
-                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-                                    if (strongSelf) {
-                                        NSLog(@"Signature fail");
-                                        [strongSelf didEndWithUnReachableNetwork];
-                                    }
-                                }];
+//    if (error != nil) {
+//        [ViewUtils logErrorWithMessage:error.domain
+//                                 title:@"Erreur à la signature"];
+//        return;
+//    }
+//
+//    // Sending back result
+//
+//    [self showHud];
+//
+//    __weak typeof(self) weakSelf = self;
+//    [_restClient actionSignerForDossier:dossierId
+//                              forBureau:_bureauCourant
+//                   withPublicAnnotation:_annotationPublique.text
+//                  withPrivateAnnotation:_annotationPrivee.text
+//                          withSignature:signatureResult
+//                                success:^(NSArray *array) {
+//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+//                                    if (strongSelf) {
+//                                        NSLog(@"Signature success");
+//                                        [strongSelf dismissDialogView];
+//                                    }
+//                                }
+//                                failure:^(NSError *restError) {
+//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+//                                    if (strongSelf) {
+//                                        NSLog(@"Signature fail");
+//                                        [[UIAlertView.alloc initWithTitle:@"Erreur"
+//                                                                  message:@"Une erreur est survenue lors de l'envoi de la requête"
+//                                                                 delegate:nil
+//                                                        cancelButtonTitle:@"Fermer"
+//                                                        otherButtonTitles:nil] show];
+//                                    }
+//                                }];
 }
 
 /**
@@ -417,29 +221,29 @@
  */
 - (void)retrieveCircuitsForDossierAtIndex:(NSUInteger)index {
 
-	if (index >= _dossiers.count)
-		return;
+    if (index >= _dossiers.count)
+        return;
 
-	__weak typeof(self) weakSelf = self;
-	if ([_dossiers[index] isDelegue] == false) {
-		[_restClient getCircuit:((Dossier *) _dossiers[index]).unwrappedId
-		                success:^(Circuit *circuit) {
-			                __strong typeof(weakSelf) strongSelf = weakSelf;
-			                if (strongSelf) {
-				                circuits[((Dossier *) _dossiers[index]).unwrappedId] = circuit;
-				                [strongSelf checkSignPapierButtonVisibility];
-				                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
-			                }
-		                }
-		                failure:^(NSError *error) {
-			                __strong typeof(weakSelf) strongSelf = weakSelf;
-			                if (strongSelf) {
-				                circuits[((Dossier *) _dossiers[index]).unwrappedId] = nil;
-				                [strongSelf checkSignPapierButtonVisibility];
-				                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
-			                }
-		                }];
-	}
+    __weak typeof(self) weakSelf = self;
+    if ([_dossiers[index] isDelegue] == false) {
+        [_restClient getCircuit:((Dossier *) _dossiers[index]).identifier
+                        success:^(Circuit *circuit) {
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            if (strongSelf) {
+                                circuits[((Dossier *) _dossiers[index]).identifier] = circuit;
+                                [strongSelf checkSignPapierButtonVisibility];
+                                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+                            }
+                        }
+                        failure:^(NSError *error) {
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            if (strongSelf) {
+                                circuits[((Dossier *) _dossiers[index]).identifier] = nil;
+                                [strongSelf checkSignPapierButtonVisibility];
+                                [strongSelf retrieveCircuitsForDossierAtIndex:(index + 1)];
+                            }
+                        }];
+    }
 }
 
 /**
@@ -449,24 +253,24 @@
  */
 - (void)switchToPaperSigntureForDocumentAtIndex:(NSUInteger)index {
 
-	if (index >= _dossiers.count) {
-		[self dismissDialogView];
-		return;
-	}
+    if (index >= _dossiers.count) {
+        [self dismissDialogView];
+        return;
+    }
 
-	__weak typeof(self) weakSelf = self;
-	[_restClient actionSwitchToPaperSignatureForDossier:((Dossier *) _dossiers[index]).unwrappedId
-	                                          forBureau:_bureauCourant
-	                                            success:^(NSArray *success) {
-		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
-		                                            if (strongSelf)
-			                                            [strongSelf switchToPaperSigntureForDocumentAtIndex:(index + 1)];
-	                                            }
-	                                            failure:^(NSError *error) {
-		                                            __strong typeof(weakSelf) strongSelf = weakSelf;
-		                                            if (strongSelf)
-			                                            [strongSelf switchToPaperSigntureForDocumentAtIndex:(index + 1)];
-	                                            }];
+    __weak typeof(self) weakSelf = self;
+    [_restClient actionSwitchToPaperSignatureForDossier:((Dossier *) _dossiers[index]).identifier
+                                              forBureau:_bureauCourant
+                                                success:^(NSArray *success) {
+                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                    if (strongSelf)
+                                                        [strongSelf switchToPaperSigntureForDocumentAtIndex:(index + 1)];
+                                                }
+                                                failure:^(NSError *error) {
+                                                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                    if (strongSelf)
+                                                        [strongSelf switchToPaperSigntureForDocumentAtIndex:(index + 1)];
+                                                }];
 }
 
 
@@ -481,7 +285,7 @@
 //
 //	if ([_action isEqualToString:@"SIGNATURE"] && (!_isPaperSign))
 //		_paperSignatureButton.hidden = isSignMandatory;
-	_paperSignatureButton.hidden = true; // TODO Adrien : Fix this
+    _paperSignatureButton.hidden = true; // TODO Adrien : Fix this
 }
 
 
@@ -490,15 +294,15 @@
 
 - (void)onPaperSignatureButtonClicked:(id)sender {
 
-	UIAlertView *signPapierConfirm =
-			[[UIAlertView alloc] initWithTitle:@"Voulez vous réellement changer le mode de signature de ce dossier vers le mode signature papier ?"
-			                           message:@"Vous devrez imprimer et signer le document manuellement."
-			                          delegate:self
-			                 cancelButtonTitle:@"Annuler"
-			                 otherButtonTitles:@"Confirmer", nil];
+    UIAlertView *signPapierConfirm =
+            [[UIAlertView alloc] initWithTitle:@"Voulez vous réellement changer le mode de signature de ce dossier vers le mode signature papier ?"
+                                       message:@"Vous devrez imprimer et signer le document manuellement."
+                                      delegate:self
+                             cancelButtonTitle:@"Annuler"
+                             otherButtonTitles:@"Confirmer", nil];
 
-	signPapierConfirm.tag = RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE;
-	[signPapierConfirm show];
+    signPapierConfirm.tag = RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE;
+    [signPapierConfirm show];
 }
 
 
@@ -507,29 +311,29 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 
-	return 1;
+    return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
-	return _pkeys.count;
+    return _pkeys.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PKeyCell"];
 
-	if (cell == nil)
-		cell = UITableViewCell.new;
+    if (cell == nil)
+        cell = UITableViewCell.new;
 
-	PrivateKey *pkey = _pkeys[(NSUInteger) indexPath.row];
-	cell.textLabel.text = pkey.commonName;
+    Certificate *pkey = _pkeys[(NSUInteger) indexPath.row];
+    cell.textLabel.text = pkey.commonName;
 
-	return cell;
+    return cell;
 }
 
 
@@ -538,12 +342,12 @@
 
 - (void)      tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	// we selected a private key now fetching it
+    // we selected a private key now fetching it
 
-	_currentPKey = _pkeys[(NSUInteger) indexPath.row];
+    _currentPKey = _pkeys[(NSUInteger) indexPath.row];
 
-	// now we have a pkey we can activate Sign Button
-	_navigationBar.topItem.rightBarButtonItem.enabled = YES;
+    // now we have a pkey we can activate Sign Button
+    _navigationBar.topItem.rightBarButtonItem.enabled = YES;
 }
 
 
@@ -553,32 +357,31 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)   alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-	if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE) {
-		if (buttonIndex == 1) {
-			UITextField *passwordTextField = [alertView textFieldAtIndex:0];
-			_p12password = passwordTextField.text;
+    if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE) {
+        if (buttonIndex == 1) {
+            UITextField *passwordTextField = [alertView textFieldAtIndex:0];
+            _p12password = passwordTextField.text;
 
-				for (Dossier *dossier in _dossiers) {
-					__weak typeof(self) weakSelf = self;
-					[_restClient getSignInfoForDossier:dossier.unwrappedId
-					                         andBureau:_bureauCourant
-					                           success:^(SignInfo *signInfo) {
-						                           __strong typeof(weakSelf) strongSelf = weakSelf;
-						                           if (strongSelf)
-							                           [strongSelf getSignInfoDidEndWithSuccess:signInfo
-							                                                            dossier:dossier.unwrappedId];
-					                           }
-					                           failure:^(NSError *error) {
-						                           NSLog(@"Error on getSignInfo %@", error.localizedDescription);
-					                           }];
-				}
-			}
-	}
-	else if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE) {
+            for (Dossier *dossier in _dossiers) {
+                __weak typeof(self) weakSelf = self;
+                [_restClient getSignInfoForDossier:dossier
+                                         andBureau:_bureauCourant
+                                           success:^(SignInfo *signInfo) {
+                                               __strong typeof(weakSelf) strongSelf = weakSelf;
+                                               if (strongSelf)
+                                                   [strongSelf getSignInfoDidEndWithSuccess:signInfo
+                                                                                    dossier:dossier.identifier];
+                                           }
+                                           failure:^(NSError *error) {
+                                               NSLog(@"Error on getSignInfo %@", error.localizedDescription);
+                                           }];
+            }
+        }
+    } else if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE) {
 
-		if (buttonIndex == 1)
-			[self switchToPaperSigntureForDocumentAtIndex:0];
-	}
+        if (buttonIndex == 1)
+            [self switchToPaperSigntureForDocumentAtIndex:0];
+    }
 }
 
 

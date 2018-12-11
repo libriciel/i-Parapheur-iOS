@@ -57,20 +57,23 @@ import Foundation
 
     @objc static let DefaultTintColor = Aqua
 
+
     // MARK: - Static methods
 
-    @objc static func colorForAction(action: NSString) -> UIColor {
+    @objc static func getColor(action: NSString) -> UIColor {
 
-        if (action.isEqual(to: "VISA") || action.isEqual(to: "SIGNATURE")) {
+        switch (action) {
+            
+        case "VISA", "SIGNATURE":
             return DarkGreen
-        }
-        else if (action.isEqual(to: "REJET")) {
+        
+        case "REJET":
             return DarkRed
-        }
-        else if action.isEqual(to: "ARCHIVER") {
+        
+        case "ARCHIVER":
             return UIKit.UIColor.black
-        }
-        else {
+        
+        default:
             return UIKit.UIColor.lightGray
         }
     }

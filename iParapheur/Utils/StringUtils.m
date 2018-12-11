@@ -38,89 +38,11 @@
 @implementation StringUtils
 
 
-+ (NSDictionary *)nilifyDictionaryValues:(NSDictionary *)dictionary {
-	
-	NSMutableDictionary *mutableDictionary = [NSMutableDictionary new];
-	
-	for (NSString* key in dictionary) {
-		
-		id value = dictionary[key];
-		
-		if ((value == NULL) || ([value isEqual:[NSNull null]]))
-			[mutableDictionary setValue:nil
-								 forKey:key];
-		else
-			[mutableDictionary setValue:dictionary[key]
-								 forKey:key];
-	}
-	
-	return mutableDictionary;
-}
-
-
-+ (BOOL)doesString:(NSString*)string
- containsSubString:(NSString*)substring {
-
-	NSRange range = [string rangeOfString:substring];
-	return range.length != 0;
-}
-
-
-+ (BOOL)doesArray:(NSArray *)array
-   containsString:(NSString *)string {
-
-	for (NSString *arrayElement in array)
-		if ([string isEqualToString:arrayElement])
-			return TRUE;
-
-	return FALSE;
-}
-
-
-+ (NSString *)getErrorMessage:(NSError *)error {
-	
-	NSString *message = error.localizedDescription;
-
-	if (error.code == kCFURLErrorNotConnectedToInternet)
-		message = @"La connexion Internet a été perdue.";
-	else if (error.code == -1011) // TODO : static value
-		message = @"Erreur d'authentification";
-	else if ( ((kCFURLErrorCannotLoadFromNetwork <= error.code) && (error.code <= kCFURLErrorSecureConnectionFailed)) || (error.code == kCFURLErrorCancelled) )
-		message = @"Le serveur n'est pas valide";
-	else if (error.code == kCFURLErrorUserAuthenticationRequired)
-		message = @"Échec d'authentification";
-	else if ((error.code == kCFURLErrorCannotFindHost) || (error.code == kCFURLErrorBadServerResponse))
-		message = @"Le serveur est introuvable";
-	else if (error.code == kCFURLErrorTimedOut)
-		message = @"Le serveur ne répond pas dans le délai imparti";
-
-	return message;
-}
-
-
 + (NSString *)decodeUrlString:(NSString *)encodedString {
 
 	NSString *result = [encodedString stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 	result = result.stringByRemovingPercentEncoding;
 	return result;
-}
-
-
-+ (NSData *)bytesFromHexString:(NSString *)aString; {
-
-	NSString *theString = [[aString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsJoinedByString:@""];
-	NSMutableData *data = [NSMutableData data];
-	int idx;
-	for (idx = 0; idx + 2 <= theString.length; idx += 2) {
-		NSRange range = NSMakeRange((NSUInteger) idx, 2);
-		NSString *hexStr = [theString substringWithRange:range];
-		NSScanner *scanner = [NSScanner scannerWithString:hexStr];
-		unsigned int intValue;
-		if ([scanner scanHexInt:&intValue])
-			[data appendBytes:&intValue
-			           length:1];
-	}
-	return data;
 }
 
 

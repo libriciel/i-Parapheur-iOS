@@ -32,6 +32,7 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import XCTest
 @testable import iParapheur
 
@@ -165,7 +166,7 @@ class Models_SignInfo_Tests: XCTestCase {
 		XCTAssertNil(signInfo!.pesCountryName)
 		XCTAssertNil(signInfo!.pesPostalCode)
 		XCTAssertTrue(signInfo!.hashesToSign.isEmpty)
-		XCTAssertNil(signInfo!.format)
+		XCTAssertEqual("unknown", signInfo!.format)
 		XCTAssertNil(signInfo!.pesSpuri)
 		XCTAssertNil(signInfo!.pesEncoding)
 		XCTAssertNil(signInfo!.pesClaimedRole)

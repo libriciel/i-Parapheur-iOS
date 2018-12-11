@@ -34,11 +34,8 @@
  */
 #import <SCNetworkReachability/SCNetworkStatus.h>
 #import "RGMasterViewController.h"
-#import "ADLCredentialVault.h"
 #import "iParapheur-Swift.h"
-#import "ADLRequester.h"
 #import "StringUtils.h"
-#import "DeviceUtils.h"
 #import <SCNetworkReachability/SCNetworkReachability.h>
 #import "iParapheur-Swift.h"
 
@@ -146,7 +143,7 @@
 				                 [ViewUtils logInfoWithMessage:@"Une connexion Internet est nécessaire au lancement de l'application."
 														 title:nil];
 			                 } else {
-				                 [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                 [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 				                                          title:nil];
 			                 }
 		                 }
@@ -156,7 +153,7 @@
 
 - (void)checkDemonstrationServer {
 
-	if (![DeviceUtils isConnectedToDemoAccount])
+	if (![ViewUtils isConnectedToDemoAccount])
 		return;
 
 	@try {
@@ -220,7 +217,7 @@
 
 	[self.refreshControl beginRefreshing];
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue != -1) {
+	if ([ADLRestClient.sharedManager getRestApiVersion].intValue != -1) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getBureaux:^(NSArray *bureaux) {
 							 __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -240,7 +237,7 @@
 				                [strongSelf.refreshControl endRefreshing];
 				                [(UITableView *) strongSelf.view reloadData];
 				                [LGViewHUD.defaultHUD hideWithAnimation:HUDAnimationNone];
-				                [ViewUtils logErrorWithMessage:[StringUtils getErrorMessage:error]
+				                [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
 				                                         title:nil];
 			                }
 		                }];
@@ -281,7 +278,7 @@
 - (void)onAccountButtonClicked:(id)sender {
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
 	BOOL areSettingsSet = (selectedAccountId.length > 1);
 
 	if (areSettingsSet) {
@@ -294,66 +291,17 @@
 }
 
 
-#pragma mark - Wall impl
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-	_loading = NO;
-	[self.refreshControl endRefreshing];
-
-	if ([s isEqual:LOGIN_API]) {
-
-		ADLCredentialVault *vault = [ADLCredentialVault sharedCredentialVault];
-		ADLCollectivityDef *def = [ADLCollectivityDef copyDefaultCollectity];
-
-		[vault addCredentialForHost:def.host
-		                   andLogin:def.username
-		                 withTicket:API_LOGIN_GET_TICKET(answer)];
-
-		[self loadBureaux];
-	} else if ([s isEqual:GETBUREAUX_API]) {
-		NSArray *array = API_GETBUREAUX_GET_BUREAUX(answer);
-
-		_bureauxArray = array;
-
-		// add a cast to get rid of the warning since the view is indeed a table view it respons to reloadData
-		[(UITableView *) self.view reloadData];
-
-		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-
-	}
-
-	//storing ticket ? lacks the host and login information
-	//we should add it into the request process ?
-
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-	[self.refreshControl endRefreshing];
-}
-
-
-- (void)didEndWithUnAuthorizedAccess {
-
-	[self.refreshControl endRefreshing];
-}
-
-
 #pragma mark - NotificationCenter messages
 
 
 - (void)onModelsCoreDataLoaded:(NSNotification *)notification {
 
-	[ModelsDataController cleanupAccounts];
+	[ModelsDataController cleanupAccountsWithPreferences:NSUserDefaults.standardUserDefaults];
 
 	// Settings check
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedAccountId = [preferences objectForKey:Account.PREFERENCE_KEY_SELECTED_ACCOUNT];
 
 	BOOL areSettingsSet = (selectedAccountId.length > 1);
 	[self refreshAccountIcon:areSettingsSet];
@@ -379,7 +327,7 @@
 	// Popup response
 
 	NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-	NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+	NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
 
 	BOOL areSettingsSet = (selectedAccountId.length > 1);
 
@@ -433,7 +381,7 @@
 	// Delegations
 
     if (bureau.dossiersDelegues > 0)
-        cell.foldersToDo.text = [NSString stringWithFormat:@"%@, %d en délégation", cell.foldersToDo.text, bureau.dossiersDelegues];
+        cell.foldersToDo.text = [NSString stringWithFormat:@"%@, %ld en délégation", cell.foldersToDo.text, bureau.dossiersDelegues];
 
 	// Late Folders
 	

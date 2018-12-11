@@ -39,11 +39,11 @@ import XCTest
 class Utils_ColorUtils_Tests: XCTestCase {
 
     func testColorForAction() {
-		XCTAssertEqual(ColorUtils.colorForAction(action: "VISA"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "SIGNATURE"), ColorUtils.DarkGreen)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "REJET"), ColorUtils.DarkRed)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.colorForAction(action: "PLOP"), UIKit.UIColor.lightGray)
+		XCTAssertEqual(ColorUtils.getColor(action: "VISA"), ColorUtils.DarkGreen)
+		XCTAssertEqual(ColorUtils.getColor(action: "SIGNATURE"), ColorUtils.DarkGreen)
+		XCTAssertEqual(ColorUtils.getColor(action: "REJET"), ColorUtils.DarkRed)
+		XCTAssertEqual(ColorUtils.getColor(action: "ARCHIVER"), UIKit.UIColor.black)
+		XCTAssertEqual(ColorUtils.getColor(action: "PLOP"), UIKit.UIColor.lightGray)
     }
 
 }

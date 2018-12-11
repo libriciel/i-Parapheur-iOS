@@ -32,32 +32,29 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
-import Gloss
 
-@objc class ParapheurType: NSObject, Glossy {
+@objc class ParapheurType: NSObject, Decodable {
 
-    let name: String?
-    let subTypes: Array<String>?
+    @objc let name: String
+    @objc let subTypes: Array<String>
 
-    // MARK: - Glossy
 
-    required init?(json: JSON) {
-        name = ("id" <~~ json) ?? ""
-        subTypes = ("sousTypes" <~~ json) ?? []
-    }
-	
-	func toJSON() -> JSON? {
-		return nil /* Not used */
-	}
+    // <editor-fold desc="Json methods">
 
-    // MARK: - ObjC accessors
-
-    @objc func unwrappedName() -> NSString {
-        return NSString(string: name!)
+    enum CodingKeys: String, CodingKey {
+        case name = "id"
+        case subTypes = "sousTypes"
     }
 
-    @objc func unwrappedSubTypes() -> NSArray {
-        return subTypes as NSArray!
+    public required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+
+        name = try values.decodeIfPresent(String.self, forKey: .name) ?? "(aucun nom)"
+        subTypes = try values.decodeIfPresent([String].self, forKey: .subTypes) ?? []
     }
+
+    // </editor-fold desc="Json methods">
+
 }

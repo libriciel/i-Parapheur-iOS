@@ -35,14 +35,11 @@
  */
 #import "RGMasterViewController.h"
 #import "ADLNotifications.h"
-#import "ADLRequester.h"
-#import "ADLCircuitCell.h"
 #import "iParapheur-Swift.h"
 
 
 @interface RGDossierDetailViewController () {
 	NSMutableArray *_objects;
-	__weak UIPopoverController *documentsPopover;
 }
 @end
 
@@ -69,7 +66,7 @@
 	[super viewDidLoad];
 	NSLog(@"View Loaded : RGDossierDetailViewController");
 
-	_restClient = [ADLRestClient sharedManager];
+	_restClient = ADLRestClient.sharedManager;
 
 	self.navigationItem.rightBarButtonItem = nil;
 	_objects = NSMutableArray.new;
@@ -80,7 +77,7 @@
 	self.sousTypeLabel.text = _dossier[@"sousType"];
 	documents = _dossier[@"documents"];
 
-	if ([[[ADLRestClient sharedManager] getRestApiVersion] intValue] >= 3) {
+	if ([ADLRestClient.sharedManager getRestApiVersion].intValue >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getCircuit:dossierRef
 		                success:^(Circuit *retrievedCircuit) {
@@ -95,7 +92,6 @@
 	}
 	else {
 		dossierRef = _dossier[@"dossierRef"];
-		[self getCircuit];
 	}
 
 	[self showsEveryThing];
@@ -165,18 +161,10 @@
 }
 
 
-- (void)dossierSelected:(NSNotification *)notification {
-
-	NSString *selectedDossierRef = [notification object];
-	[self setDossierRef:selectedDossierRef];
-}
-
-
 - (void)setDossierRef:(NSString *)_dossierRef {
 
 	dossierRef = _dossierRef;
 
-	if ([[ADLRestClient sharedManager] getRestApiVersion].intValue >= 3) {
 		__weak typeof(self) weakSelf = self;
 		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
 		                dossier:dossierRef
@@ -190,15 +178,6 @@
 		                failure:^(NSError *error) {
 			                NSLog(@"getDossier error %@ : ", error.localizedDescription);
 		                }];
-	}
-	else {
-		NSDictionary *args = @{@"dossierRef" : _dossierRef};
-
-		ADLRequester *requester = [ADLRequester sharedRequester];
-		[requester request:GETDOSSIER_API
-		           andArgs:args
-		          delegate:self];
-	}
 
 	SHOW_HUD
 }
@@ -207,9 +186,32 @@
 #pragma mark - Table View
 
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-	return 1;
+    WorkflowStepCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CircuitCell"];
+    Etape *step = _objects[(NSUInteger) indexPath.row];
+
+    cell.deskTextView.text = step.parapheurName;
+    cell.userTextView.text = step.signataire;
+    cell.publicAnnotationTextView.text = step.annotPub;
+
+	if (step.dateValidation != nil) {
+		cell.dateTextView.text = [StringsUtils prettyPrintWithDate:step.dateValidation];
+	} else {
+        cell.dateTextView.text = @"";
+	}
+
+	// Image
+
+    NSString *imageName = [ViewUtils getImageNameWithAction:step.actionDemandee];
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImage *tintedImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [cell.stepIconImageView setImage:tintedImage];
+    cell.stepIconImageView.tintColor = [ColorUtils getColorWithAction:step.actionDemandee];
+
+    //
+
+	return cell;
 }
 
 
@@ -217,115 +219,6 @@
  numberOfRowsInSection:(NSInteger)section {
 
 	return _objects.count;
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-	static NSString *CellIdentifier = @"CircuitCell";
-	ADLCircuitCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-
-	// TODO Adrien : check
-
-	if (cell == nil) {
-		cell = [ADLCircuitCell new];
-	}
-
-	Etape *etape = (Etape *) _objects[(NSUInteger) indexPath.row];
-	// cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [etape objectForKey:@"parapheurName"], [etape objectForKey:@"actionDemandee"]];
-
-	cell.parapheurName.text = etape.parapheurName;
-	if (etape.approved) {
-		cell.validateurName.text = etape.signataire;
-		cell.annotation.text = etape.annotPub;
-	}
-	else {
-		cell.validateurName.text = @"";
-		cell.annotation.text = @"";
-	}
-
-	if (etape.dateValidation) {
-
-		NSDateFormatter *outputFormatter = NSDateFormatter.new;
-		outputFormatter.dateFormat = @"'le' dd/MM/yyyy 'à' HH:mm";
-		NSString *validationDateStr = [outputFormatter stringFromDate:etape.dateValidation];
-
-		cell.validationDate.text = validationDateStr;
-	}
-	else {
-		cell.validationDate.text = nil;
-	}
-
-
-	NSString *imagePrefix = @"iw";
-	if (etape.rejected) {
-		imagePrefix = @"ir";
-	}
-	else if (etape.approved) {
-		imagePrefix = @"ip";
-	}
-
-	NSString *action = [etape.actionDemandee lowercaseString];
-
-	cell.etapeTypeIcon.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-%@.png",
-	                                                                          imagePrefix,
-	                                                                          action]];
-
-	return cell;
-}
-
-
-- (BOOL)    tableView:(UITableView *)tableView
-canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-	// Return NO if you do not want the specified item to be editable.
-	return YES;
-}
-
-
-- (void) tableView:(UITableView *)tableView
-commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
- forRowAtIndexPath:(NSIndexPath *)indexPath {
-
-	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		[_objects removeObjectAtIndex:(NSUInteger) indexPath.row];
-		[tableView deleteRowsAtIndexPaths:@[indexPath]
-		                 withRowAnimation:UITableViewRowAnimationFade];
-	} else if (editingStyle == UITableViewCellEditingStyleInsert) {
-		// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-	}
-}
-
-
-- (IBAction)showDocumentsViewController:(id)sender {
-
-	if (documentsPopover)
-		[documentsPopover dismissPopoverAnimated:YES];
-	else
-		[self performSegueWithIdentifier:@"showDocumentsView"
-		                          sender:sender];
-}
-
-
-- (void)      tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-		NSDate *object = _objects[(NSUInteger) indexPath.row];
-		self.detailViewController.detailItem = object;
-	}
-}
-
-
-- (void)getCircuit {
-
-	ADLRequester *requester = [ADLRequester sharedRequester];
-	NSDictionary *args = @{@"dossier" : dossierRef};
-	[requester request:@"getCircuit"
-	           andArgs:args
-	          delegate:self];
-
-	SHOW_HUD
 }
 
 
@@ -340,34 +233,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	}
 	[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 
-	[self getCircuit];
 	[self showsEveryThing];
-}
-
-
-#pragma mark - Wall impl
-
-
-- (void)didEndWithRequestAnswer:(NSDictionary *)answer {
-
-	NSString *s = answer[@"_req"];
-
-	if ([s isEqual:GETDOSSIER_API]) {
-		[self getDossierDidEndWithREquestAnswer];
-	}
-	else if ([s isEqualToString:@"getCircuit"]) {
-		[self refreshCircuits:answer[@"circuit"]];
-	}
-}
-
-
-- (void)didEndWithUnReachableNetwork {
-
-}
-
-
-- (void)didEndWithUnAuthorizedAccess {
-
 }
 
 
@@ -389,57 +255,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - IBActions
 
 
-- (IBAction)showVisuelPDF:(id)sender {
-
-	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf"
-	                                                   inDirectory:nil];
-
-	NSString *filePath = pdfs.lastObject;
-
-	ReaderDocument *document = [[ReaderDocument alloc] initWithFilePath:filePath
-	                                                           password:nil];
-
-	readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-	readerViewController.delegate = self;
-
-	readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-	readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-
-	[self.splitViewController presentViewController:readerViewController
-	                                       animated:YES
-	                                     completion:nil];
-}
-
-
 - (void)dismissReaderViewController:(ReaderViewController *)viewController {
 	// do nothing for now
 	[self.splitViewController dismissViewControllerAnimated:YES
 	                                             completion:nil];
-}
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender {
-
-	/*
-	 if ([[segue identifier] isEqualToString:@"showDocumentsView"]) {
-	 
-	 if (documentsPopover) {
-	 [documentsPopover dismissPopoverAnimated:NO];
-	 [documentsPopover release];
-	 documentsPopover = nil;
-	 }
-	 documentsPopover = [[(UIStoryboardPopoverSegue *)segue popoverController] retain];
-	 
-	 [((RGDocumentsView
-	 *)[segue destinationViewController]) setDocuments:documents];
-	 
-	 [((RGDocumentsView
-	 *)[segue destinationViewController]) setSplitViewController:[self splitViewController]];
-	 
-	 [((RGDocumentsView
-	 *)[segue destinationViewController]) setPopoverController:[(UIStoryboardPopoverSegue *)segue popoverController]];
-	 }*/
 }
 
 

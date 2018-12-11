@@ -37,19 +37,7 @@
 
 @interface StringUtils : NSObject
 
-+ (NSDictionary *)nilifyDictionaryValues:(NSDictionary *)dictionary;
-
-+ (BOOL)doesString:(NSString*)string
- containsSubString:(NSString*)substring;
-
-+ (BOOL)doesArray:(NSArray *)array
-   containsString:(NSString *)string;
-
-+ (NSString *)getErrorMessage:(NSError *)error;
-
 + (NSString *)decodeUrlString:(NSString *)encodedString;
-
-+ (NSData *)bytesFromHexString:(NSString *)aString;
 
 + (NSString*) actionNameForAction:(NSString*) action;
 

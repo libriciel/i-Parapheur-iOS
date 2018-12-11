@@ -33,6 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 import UIKit
+import os
 
 class SettingsAboutController: UIViewController {
 	
@@ -42,7 +43,7 @@ class SettingsAboutController: UIViewController {
 	
     override func viewDidLoad() {
 		super.viewDidLoad()
-		print("View loaded : SettingsAboutController")
+		os_log("View loaded : SettingsAboutController", type: .debug)
 		
 		let appVersionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
 		versionLabel.text = versionLabel.text?.replacingOccurrences(of: ":version:", with: appVersionString)

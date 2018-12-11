@@ -33,13 +33,12 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "ADLResponseCircuit.h"
 #import "iParapheur-Swift.h"
 
 
 @interface ADLRestClientApi3 : NSObject
 
-@property(nonatomic, strong) RestClientApiV3 *swiftManager;
+@property(nonatomic, strong) RestClient *swiftManager;
 
 
 - (id)init;

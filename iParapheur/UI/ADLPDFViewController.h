@@ -34,7 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLParapheurWallDelegateProtocol.h"
 #import "ReaderViewController.h"
 #import "LGViewHUD.h"
 #import "ADLDrawingView.h"
@@ -42,19 +41,18 @@
 
 
 @interface ADLPDFViewController : UIViewController
-		<ADLParapheurWallDelegateProtocol, ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate>
+        <ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate, ActionSelectionControllerDelegate>
 
 @property(nonatomic, strong) ADLRestClient *restClient;
 
-@property(strong, nonatomic) id detailItem;
 @property(strong, nonatomic) Document *document;
 @property(strong, nonatomic) Dossier *dossier;
 @property(strong, nonatomic) NSString *dossierRef;
 
 @property(strong, nonatomic) ReaderViewController *readerViewController;
 @property(strong, nonatomic) ReaderDocument *readerDocument;
-@property(strong, nonatomic) UIPopoverController *documentsPopover;
-@property(strong, nonatomic) UIPopoverController *actionPopover;
+@property(strong, nonatomic) UIViewController *documentsPopover;
+@property(strong, nonatomic) UIViewController *actionPopover;
 
 @property(strong, nonatomic) IBOutlet UIBarButtonItem *detailsButton;
 @property(strong, nonatomic) IBOutlet UIBarButtonItem *documentsButton;
@@ -65,8 +63,6 @@
 
 @property(strong, nonatomic) NSString *signatureFormat;
 @property(assign, nonatomic) BOOL visaEnabled;
-
-@property(assign, nonatomic) BOOL isDocumentPrincipal;
 
 
 - (void)requestAnnotations;

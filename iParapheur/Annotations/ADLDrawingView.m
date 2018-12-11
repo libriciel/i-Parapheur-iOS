@@ -34,7 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLDrawingView.h"
-#import "DeviceUtils.h"
 
 
 #define _UIKeyboardFrameEndUserInfoKey (&UIKeyboardFrameEndUserInfoKey != NULL ? UIKeyboardFrameEndUserInfoKey : @"UIKeyboardBoundsUserInfoKey")
@@ -237,7 +236,7 @@
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
 
-	if ([DeviceUtils isConnectedToDemoAccount]) {
+	if ([ViewUtils isConnectedToDemoAccount]) {
 		[ViewUtils logInfoWithMessage:@"L'ajout d'annotations est désactivé sur le parapheur de démonstration."
 		                        title:@"Action indisponible"];
 		return;
@@ -270,7 +269,7 @@
 
 	CGPoint touchPoint = [gestureRecognizer locationInView:self];
 
-	if (_hittedView && _enabled && _hittedView.annotationModel.unwrappedEditable) {
+	if (_hittedView && _enabled && _hittedView.annotationModel.editable) {
 		[self animateviewOnLongPressGesture:touchPoint];
 		_hasBeenLongPressed = YES;
 	}
@@ -365,7 +364,7 @@
 
 		if ([_hittedView isKindOfClass:[ADLAnnotationView class]] || [_hittedView isKindOfClass:[ADLDrawingView class]]) {
 			CGPoint point = [self clipPointToView:[touch locationInView:self]];
-			if (_hittedView.annotationModel.unwrappedEditable) {
+			if (_hittedView.annotationModel.editable) {
 				if ([_hittedView isInHandle:[touch locationInView:self]]) {
 
 					CGRect frame = _hittedView.frame;
@@ -419,7 +418,7 @@
 			[_hittedView refreshModel];
 			Annotation *annotation = _hittedView.annotationModel;
 
-			if (_hittedView.annotationModel.unwrappedId && _hittedView.annotationModel.unwrappedEditable)
+			if (_hittedView.annotationModel.identifier && _hittedView.annotationModel.editable)
 				[self updateAnnotation:annotation];
 		}
 
@@ -541,14 +540,14 @@
 
 - (void)updateAnnotation:(Annotation *)annotation {
 
-	[annotation setUnwrappedPageWithI:@(_pageNumber)];
+	annotation.page = _pageNumber;
 	[_masterViewController.dataSource updateAnnotation:annotation];
 }
 
 
 - (void)addAnnotation:(Annotation *)annotation {
 
-	[annotation setUnwrappedPageWithI:@(_pageNumber)];
+	annotation.page = _pageNumber;
 	[_masterViewController.dataSource addAnnotation:annotation];
 }
 

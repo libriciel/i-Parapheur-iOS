@@ -33,7 +33,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLRestClientApi3.h"
-#import "DeviceUtils.h"
 #import "iParapheur-Swift.h"
 
 
@@ -45,10 +44,10 @@
     // Fetch selected Account Id
 
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    NSString *selectedAccountId = [preferences objectForKey:[Account PreferencesKeySelectedAccount]];
+    NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
 
     if (selectedAccountId.length == 0)
-        selectedAccountId = Account.DemoId;
+        selectedAccountId = Account.DEMO_ID;
 
     // Fetch Account model values
 
@@ -110,9 +109,9 @@
     if (_swiftManager)
         [_swiftManager cancelAllOperations];
 
-    _swiftManager = [[RestClientApiV3 alloc] initWithBaseUrl:url
-                                                       login:login
-                                                    password:password];
+    _swiftManager = [RestClient.alloc initWithBaseUrl:url
+                                                login:login
+                                             password:password];
 }
 
 
@@ -242,14 +241,14 @@
 }
 
 
-- (void)getSignInfoForDossier:(NSString *)dossierId
+- (void)getSignInfoForDossier:(Dossier *)dossier
                     andBureau:(NSString *)bureauId
                       success:(void (^)(SignInfo *))success
                       failure:(void (^)(NSError *))failure {
 
     [self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-    [_swiftManager getSignInfoWithDossier:dossierId
+    [_swiftManager getSignInfoWithDossier:dossier
                                    bureau:bureauId
                                onResponse:^(SignInfo *response) {
                                    success(response);
@@ -350,17 +349,17 @@
 
 - (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
 
-    NSMutableDictionary *result = [NSMutableDictionary new];
+    NSMutableDictionary *result = NSMutableDictionary.new;
 
 //	result[@"author"] = annotation.unwrappedAuthor;
-    result[@"text"] = annotation.unwrappedText;
-    result[@"type"] = annotation.unwrappedType;
-    result[@"page"] = annotation.unwrappedPage;
+    result[@"text"] = annotation.text;
+    result[@"type"] = annotation.type;
+    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
 //	result[@"uuid"] = annotation.unwrappedId;
 
-    CGRect rect = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
-                                         oldDpi:72
-                                         newDpi:150];
+    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
+                                           oldDpi:72
+                                           newDpi:150];
     NSDictionary *annotationRectTopLeft = @{
             @"x": @(rect.origin.x),
             @"y": @(rect.origin.y)
@@ -385,15 +384,15 @@
 
     // Fixme : send every other data form annotation
 
-    result[@"page"] = annotation.unwrappedPage;
-    result[@"text"] = annotation.unwrappedText;
-    result[@"type"] = annotation.unwrappedType;
-    result[@"uuid"] = annotation.unwrappedId;
-    result[@"id"] = annotation.unwrappedId;
+    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
+    result[@"text"] = annotation.text;
+    result[@"type"] = annotation.type;
+    result[@"uuid"] = annotation.identifier;
+    result[@"id"] = annotation.identifier;
 
-    CGRect rectData = [DeviceUtils translateDpiRect:annotation.unwrappedRect.CGRectValue
-                                             oldDpi:72
-                                             newDpi:150];
+    CGRect rectData = [ViewUtils translateDpiWithRect:annotation.rect
+                                               oldDpi:72
+                                               newDpi:150];
 
     NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
     resultTopLeft[@"x"] = @(rectData.origin.x);
@@ -560,7 +559,7 @@
 
     [_swiftManager sendSimpleActionWithType:@(1)
                                         url:[self getAnnotationsUrlForDossier:dossierId
-                                                                  andDocument:annotation.unwrappedDocumentId]
+                                                                  andDocument:annotation.documentId]
                                        args:argumentDictionary
                                  onResponse:^(NSNumber *result) {
                                      success(NSArray.new);
@@ -584,8 +583,8 @@
 
     [_swiftManager sendSimpleActionWithType:@(2)
                                         url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.unwrappedDocumentId
-                                                             andAnnotationId:annotation.unwrappedId]
+                                                                 andDocument:annotation.documentId
+                                                             andAnnotationId:annotation.identifier]
                                        args:argumentDictionary
                                  onResponse:^(NSNumber *result) {
                                      success(NSArray.new);
@@ -609,8 +608,8 @@
 
     [_swiftManager sendSimpleActionWithType:@(3)
                                         url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.unwrappedDocumentId
-                                                             andAnnotationId:annotation.unwrappedId]
+                                                                 andDocument:annotation.documentId
+                                                             andAnnotationId:annotation.identifier]
                                        args:argumentDictionary
                                  onResponse:^(id result) {
                                      success(NSArray.new);
