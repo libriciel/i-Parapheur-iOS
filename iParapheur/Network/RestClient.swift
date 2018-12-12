@@ -680,6 +680,86 @@ import os
     }
 
 
+    func visa(dossier: Dossier,
+              bureauId: String,
+              publicAnnotation: String?,
+              privateAnnotation: String?,
+              responseCallback: ((NSNumber) -> Void)?,
+              errorCallback: ((NSError) -> Void)?) {
+
+        let visaUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/visa"
+
+        // Create arguments dictionary
+
+        var argumentDictionary: [String: String] = [:]
+        argumentDictionary["bureauCourant"] = bureauId
+        argumentDictionary["annotPriv"] = privateAnnotation
+        argumentDictionary["annotPub"] = publicAnnotation
+
+        // Send request
+
+        manager.request(visaUrl,
+                        method: .post,
+                        parameters: argumentDictionary,
+                        encoding: JSONEncoding.default).validate().responseString {
+
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    responseCallback!(NSNumber(value: 1))
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    print(error.localizedDescription)
+                    break
+            }
+        }
+    }
+
+
+    func reject(dossier: Dossier,
+                bureauId: String,
+                publicAnnotation: String?,
+                privateAnnotation: String?,
+                responseCallback: ((NSNumber) -> Void)?,
+                errorCallback: ((NSError) -> Void)?) {
+
+        let rejectUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/rejet"
+
+        // Create arguments dictionary
+
+        var argumentDictionary: [String: String] = [:]
+        argumentDictionary["bureauCourant"] = bureauId
+        argumentDictionary["annotPriv"] = privateAnnotation
+        argumentDictionary["annotPub"] = publicAnnotation
+
+        // Send request
+
+        manager.request(rejectUrl,
+                        method: .post,
+                        parameters: argumentDictionary,
+                        encoding: JSONEncoding.default).validate().responseString {
+
+            response in
+
+            switch (response.result) {
+
+                case .success:
+                    responseCallback!(NSNumber(value: 1))
+                    break
+
+                case .failure(let error):
+                    errorCallback!(error as NSError)
+                    print(error.localizedDescription)
+                    break
+            }
+        }
+    }
+
+
     @objc func sendSimpleAction(type: NSNumber,
                                 url: NSString,
                                 args: NSDictionary,
