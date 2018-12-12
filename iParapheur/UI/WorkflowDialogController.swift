@@ -143,6 +143,67 @@ import os
 
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
+        switch currentAction {
+
+
+            case "SIGNATURE":
+
+                signature()
+
+
+            case "VISA":
+
+                restClient?.visa(dossier: Array(signInfoMap.keys)[0],
+                                 bureauId: currentBureau!,
+                                 publicAnnotation: publicAnnotationTextView.text,
+                                 privateAnnotation: privateAnnotationTextView.text,
+                                 responseCallback: {
+                                     number in
+                                     self.dismiss(animated: true)
+                                 },
+                                 errorCallback: {
+                                     error in
+                                     ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                        title: "Erreur à l'envoi du visa")
+                                 })
+
+
+            case "REJET":
+
+                restClient?.reject(dossier: Array(signInfoMap.keys)[0],
+                                   bureauId: currentBureau!,
+                                   publicAnnotation: publicAnnotationTextView.text,
+                                   privateAnnotation: privateAnnotationTextView.text,
+                                   responseCallback: {
+                                       number in
+                                       self.dismiss(animated: true)
+                                   },
+                                   errorCallback: {
+                                       error in
+                                       ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                          title: "Erreur à l'envoi du rejet")
+                                   })
+
+
+            default:
+
+                ViewUtils.logError(message: "Cette action n'est pas disponible sur cette version du client i-Parapheur",
+                                   title: "Action impossible")
+        }
+    }
+
+
+    // </editor-fold desc="UI Listeners">
+
+
+    @objc func setDossiersToSign(objcArray: NSArray) {
+        for dossier in objcArray as! [Dossier] {
+            signInfoMap[dossier] = nil as SignInfo?
+        }
+    }
+
+
+    private func signature() {
 
         if (selectedCertificate == nil) {
             return
@@ -187,7 +248,6 @@ import os
                 hasher.generateHashToSign(onResponse:
                                           {
                                               (result: DataToSign) in
-
                                               InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
                                                                 certificateId: certificateId)
                                           },
@@ -203,20 +263,12 @@ import os
 
                 for signatureToDo in signaturesToDo {
                     print(signatureToDo)
-//                    if (signatureToDo.value.first!.mSignatureAlgorithm != .sha1WithRsa) {
-//                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA1",
-//                                           title: "Impossible de signer avec ce certificat")
-//                        return
-//                    }
-                }
 
-                // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
-                self.displayPasswordAlert()
+                    // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
+                    self.displayPasswordAlert()
+                }
         }
     }
-
-
-    // </editor-fold desc="UI Listeners">
 
 
     @objc func onSignatureResult(notification: Notification) {
@@ -238,7 +290,7 @@ import os
                                       (result: [Data]) in
 
                                       let resultBase64List = StringsUtils.toBase64List(dataList: result)
-                                      self.sendResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
+                                      self.sendFinalSignatureResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
                                   },
                                   onError: {
                                       (error: Error) in
@@ -247,11 +299,26 @@ import os
     }
 
 
-    @objc func setDossiersToSign(objcArray: NSArray) {
-        for dossier in objcArray as! [Dossier] {
-            signInfoMap[dossier] = nil as SignInfo?
-        }
+    private func sendFinalSignatureResult(dossierId: String, signature: [String]) {
+
+        let signatureConcat = signature.joined(separator: ",")
+
+        restClient?.signDossier(dossierId: dossierId,
+                                bureauId: currentBureau!,
+                                publicAnnotation: publicAnnotationTextView.text,
+                                privateAnnotation: privateAnnotationTextView.text,
+                                signature: signatureConcat,
+                                responseCallback: {
+                                    number in
+                                    self.dismiss(animated: true)
+                                },
+                                errorCallback: {
+                                    error in
+                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                       title: "Erreur à l'envoi de la signature")
+                                })
     }
+
 
     /**
         Here, we want to display the certificate list if everything is set
@@ -311,32 +378,6 @@ import os
                                title: "Erreur à la signature")
             return [:]
         }
-    }
-
-
-    private func sendResult(dossierId: String, signature: [String]) {
-
-        let signatureConcat = signature.joined(separator: ",")
-
-//        let pkcs7Base64 = signature.base64EncodedString()
-//        let pkcs7Wrapped = CryptoUtils.wrappedPkcs7(pkcs7: pkcs7Base64)
-//        let pkcs7WrappedData = pkcs7Wrapped.data(using: .utf8)
-//        let pkcs7WrappedBase64 = pkcs7WrappedData?.base64EncodedString()
-
-        restClient?.signDossier(dossierId: dossierId,
-                                bureauId: currentBureau!,
-                                publicAnnotation: publicAnnotationTextView.text,
-                                privateAnnotation: privateAnnotationTextView.text,
-                                signature: signatureConcat,
-                                responseCallback: {
-                                    number in
-                                    self.dismiss(animated: true)
-                                },
-                                errorCallback: {
-                                    error in
-                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-                                                       title: "Erreur à l'envoi de la signature")
-                                })
     }
 
 
