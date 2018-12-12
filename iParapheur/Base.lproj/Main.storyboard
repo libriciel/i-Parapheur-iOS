@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -710,118 +711,121 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Annotation Publique" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yl3-xf-Iit">
-                                <rect key="frame" x="20" y="66" width="500" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gh8-sQ-Ge1">
-                                <rect key="frame" x="20" y="95" width="500" height="88"/>
-                                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="DSl-e2-HVE"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Annotation Privée" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okg-Nz-e0W">
-                                <rect key="frame" x="20" y="199" width="500" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34E-II-hCb">
-                                <rect key="frame" x="20" y="228" width="500" height="88"/>
-                                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="88" id="UAL-9x-2wX"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Sélection du certificat" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVu-0w-Fhk">
-                                <rect key="frame" x="20" y="332" width="168" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aqz-4E-SWr">
-                                <rect key="frame" x="407" y="324" width="113" height="30"/>
-                                <state key="normal" title="Signature papier"/>
-                            </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="57" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="yYh-fW-UKe">
-                                <rect key="frame" x="20" y="362" width="500" height="242"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="CertificateCell" rowHeight="57" id="9ow-14-BA6">
-                                        <rect key="frame" x="0.0" y="22" width="500" height="57"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9ow-14-BA6" id="jSd-Xw-lZi">
-                                            <rect key="frame" x="0.0" y="0.0" width="500" height="56.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" image="ic_certificate_white_24dp" translatesAutoresizingMaskIntoConstraints="NO" id="Lrj-y6-Au8" userLabel="Icon">
-                                                    <rect key="frame" x="16" y="16.5" width="24" height="24"/>
-                                                    <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="24" id="K2C-tQ-n9c"/>
-                                                        <constraint firstAttribute="height" constant="24" id="Y5W-5N-FdZ"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="102" contentMode="left" text="Certificat name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jZ-Rd-07T">
-                                                    <rect key="frame" x="56" y="18" width="310" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="Lrj-y6-Au8" firstAttribute="centerY" secondItem="jSd-Xw-lZi" secondAttribute="centerY" id="8UE-lp-w4i"/>
-                                                <constraint firstItem="4jZ-Rd-07T" firstAttribute="centerY" secondItem="jSd-Xw-lZi" secondAttribute="centerY" id="8lZ-U6-Sph"/>
-                                                <constraint firstItem="4jZ-Rd-07T" firstAttribute="leading" secondItem="Lrj-y6-Au8" secondAttribute="trailing" constant="16" id="Gm5-UT-6KA"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="4jZ-Rd-07T" secondAttribute="trailing" id="Ncz-uF-5oc"/>
-                                                <constraint firstItem="Lrj-y6-Au8" firstAttribute="leading" secondItem="jSd-Xw-lZi" secondAttribute="leadingMargin" constant="8" id="tFn-Es-k1h"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="zs0-y1-eAs" id="1EZ-fR-0zK"/>
-                                    <outlet property="delegate" destination="zs0-y1-eAs" id="6v3-a2-MD1"/>
-                                </connections>
-                            </tableView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="uTC-XN-dLV" userLabel="Main Layout">
+                                <rect key="frame" x="16" y="66" width="508" height="538"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="wAK-QR-yGX" userLabel="Public Annotation Layout">
+                                        <rect key="frame" x="0.0" y="0.0" width="508" height="174"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Annotation Publique" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yl3-xf-Iit">
+                                                <rect key="frame" x="0.0" y="0.0" width="508" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gh8-sQ-Ge1">
+                                                <rect key="frame" x="0.0" y="28.5" width="508" height="145.5"/>
+                                                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CNi-kx-cRh" userLabel="Private Annotation Layout">
+                                        <rect key="frame" x="0.0" y="182" width="508" height="174"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Annotation Privée" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okg-Nz-e0W">
+                                                <rect key="frame" x="0.0" y="0.0" width="508" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34E-II-hCb">
+                                                <rect key="frame" x="0.0" y="28.5" width="508" height="145.5"/>
+                                                <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="mph-hb-Tib" userLabel="Certificates Layout">
+                                        <rect key="frame" x="0.0" y="364" width="508" height="174"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tlA-48-TVb" userLabel="Certificate Label Layout">
+                                                <rect key="frame" x="0.0" y="0.0" width="508" height="30"/>
+                                                <subviews>
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" text="Sélection du certificat" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVu-0w-Fhk">
+                                                        <rect key="frame" x="0.0" y="0.0" width="395" height="30"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aqz-4E-SWr">
+                                                        <rect key="frame" x="395" y="0.0" width="113" height="30"/>
+                                                        <state key="normal" title="Signature papier"/>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="57" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="yYh-fW-UKe">
+                                                <rect key="frame" x="0.0" y="38" width="508" height="136"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <prototypes>
+                                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="CertificateCell" rowHeight="57" id="9ow-14-BA6">
+                                                        <rect key="frame" x="0.0" y="22" width="508" height="57"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9ow-14-BA6" id="jSd-Xw-lZi">
+                                                            <rect key="frame" x="0.0" y="0.0" width="508" height="56.5"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <subviews>
+                                                                <imageView userInteractionEnabled="NO" tag="101" contentMode="scaleToFill" image="ic_certificate_white_24dp" translatesAutoresizingMaskIntoConstraints="NO" id="Lrj-y6-Au8" userLabel="Icon">
+                                                                    <rect key="frame" x="23" y="16.5" width="24" height="24"/>
+                                                                    <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="24" id="K2C-tQ-n9c"/>
+                                                                        <constraint firstAttribute="height" constant="24" id="Y5W-5N-FdZ"/>
+                                                                    </constraints>
+                                                                </imageView>
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="102" contentMode="left" text="Certificat name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jZ-Rd-07T">
+                                                                    <rect key="frame" x="63" y="18" width="430" height="21"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                </label>
+                                                            </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="Lrj-y6-Au8" firstAttribute="centerY" secondItem="jSd-Xw-lZi" secondAttribute="centerY" id="8UE-lp-w4i"/>
+                                                                <constraint firstItem="4jZ-Rd-07T" firstAttribute="centerY" secondItem="jSd-Xw-lZi" secondAttribute="centerY" id="8lZ-U6-Sph"/>
+                                                                <constraint firstItem="4jZ-Rd-07T" firstAttribute="leading" secondItem="Lrj-y6-Au8" secondAttribute="trailing" constant="16" id="Gm5-UT-6KA"/>
+                                                                <constraint firstAttribute="trailingMargin" secondItem="4jZ-Rd-07T" secondAttribute="trailing" id="Ncz-uF-5oc"/>
+                                                                <constraint firstItem="Lrj-y6-Au8" firstAttribute="leading" secondItem="jSd-Xw-lZi" secondAttribute="leadingMargin" constant="8" id="tFn-Es-k1h"/>
+                                                            </constraints>
+                                                        </tableViewCellContentView>
+                                                    </tableViewCell>
+                                                </prototypes>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="zs0-y1-eAs" id="1EZ-fR-0zK"/>
+                                                    <outlet property="delegate" destination="zs0-y1-eAs" id="6v3-a2-MD1"/>
+                                                </connections>
+                                            </tableView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="XGz-TV-tza" firstAttribute="top" secondItem="QR5-du-X1i" secondAttribute="top" id="1Bc-aN-MXa"/>
-                            <constraint firstItem="yYh-fW-UKe" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" id="2lg-c0-4s1"/>
-                            <constraint firstItem="okg-Nz-e0W" firstAttribute="trailing" secondItem="QR5-du-X1i" secondAttribute="trailingMargin" id="3qk-Aa-szK"/>
-                            <constraint firstItem="Gh8-sQ-Ge1" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" id="5DI-FD-vYS"/>
-                            <constraint firstItem="yl3-xf-Iit" firstAttribute="top" secondItem="XGz-TV-tza" secondAttribute="bottom" constant="16" id="6cC-xv-PS0"/>
-                            <constraint firstItem="yYh-fW-UKe" firstAttribute="top" secondItem="aqz-4E-SWr" secondAttribute="bottom" constant="8" id="F3g-Bp-TfW"/>
-                            <constraint firstItem="Gh8-sQ-Ge1" firstAttribute="top" secondItem="yl3-xf-Iit" secondAttribute="bottom" constant="8" id="Jrd-5M-WSH"/>
-                            <constraint firstItem="aqz-4E-SWr" firstAttribute="trailing" secondItem="QR5-du-X1i" secondAttribute="trailingMargin" id="K8I-cq-5CG"/>
-                            <constraint firstItem="yYh-fW-UKe" firstAttribute="trailing" secondItem="QR5-du-X1i" secondAttribute="trailingMargin" id="Kly-aW-zEQ"/>
-                            <constraint firstItem="Gh8-sQ-Ge1" firstAttribute="trailing" secondItem="QR5-du-X1i" secondAttribute="trailingMargin" id="LOX-Fm-Gjw"/>
-                            <constraint firstItem="okg-Nz-e0W" firstAttribute="top" secondItem="Gh8-sQ-Ge1" secondAttribute="bottom" constant="16" id="TFE-bY-h6I"/>
+                            <constraint firstItem="uTC-XN-dLV" firstAttribute="top" secondItem="XGz-TV-tza" secondAttribute="bottom" constant="16" id="HRU-wa-YeX"/>
                             <constraint firstItem="XGz-TV-tza" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leading" id="Ty0-4k-dwu"/>
-                            <constraint firstItem="yl3-xf-Iit" firstAttribute="trailing" secondItem="QR5-du-X1i" secondAttribute="trailingMargin" id="UeK-4K-UCu"/>
-                            <constraint firstItem="34E-II-hCb" firstAttribute="top" secondItem="okg-Nz-e0W" secondAttribute="bottom" constant="8" id="WU4-kO-4P2"/>
                             <constraint firstAttribute="trailing" secondItem="XGz-TV-tza" secondAttribute="trailing" id="Wba-DF-12P"/>
-                            <constraint firstItem="ZsO-T6-OgW" firstAttribute="top" secondItem="yYh-fW-UKe" secondAttribute="bottom" constant="16" id="XkC-Ew-YzU"/>
-                            <constraint firstItem="rVu-0w-Fhk" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" id="aVr-a1-n1n"/>
-                            <constraint firstItem="okg-Nz-e0W" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" id="cyb-0x-v5J"/>
-                            <constraint firstItem="aqz-4E-SWr" firstAttribute="top" secondItem="34E-II-hCb" secondAttribute="bottom" constant="8" id="d6h-4E-CSr"/>
-                            <constraint firstItem="34E-II-hCb" firstAttribute="trailing" secondItem="QR5-du-X1i" secondAttribute="trailingMargin" id="hMn-6e-EZC"/>
-                            <constraint firstItem="yl3-xf-Iit" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" id="hsQ-Xs-oUT"/>
-                            <constraint firstItem="rVu-0w-Fhk" firstAttribute="top" secondItem="34E-II-hCb" secondAttribute="bottom" constant="16" id="qGw-qq-PdG"/>
-                            <constraint firstItem="34E-II-hCb" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" id="smA-cz-lwd"/>
+                            <constraint firstItem="uTC-XN-dLV" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" constant="-4" id="cnL-oq-Wgu"/>
+                            <constraint firstItem="ZsO-T6-OgW" firstAttribute="top" secondItem="uTC-XN-dLV" secondAttribute="bottom" constant="16" id="iyB-vT-BKt"/>
+                            <constraint firstItem="uTC-XN-dLV" firstAttribute="centerX" secondItem="XGz-TV-tza" secondAttribute="centerX" id="oGe-Yg-Kfe"/>
                         </constraints>
                     </view>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="certificateSelectionLabel" destination="rVu-0w-Fhk" id="Jp8-JC-UCz"/>
+                        <outlet property="certificateLayout" destination="mph-hb-Tib" id="CvP-wv-ikT"/>
                         <outlet property="certificateTableView" destination="yYh-fW-UKe" id="oeM-jv-qUt"/>
                         <outlet property="paperSignatureButton" destination="aqz-4E-SWr" id="5rB-nh-mg3"/>
                         <outlet property="privateAnnotationTextView" destination="34E-II-hCb" id="Dug-Ey-4Np"/>
@@ -830,7 +834,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2474" y="-768"/>
+            <point key="canvasLocation" x="2473.828125" y="-768.22840409956075"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="1GW-4K-Vsd">
@@ -1305,6 +1309,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="62J-N8-HVF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="564" y="526"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ADh-jw-Fro">
+            <objects>
+                <viewController id="vBM-6r-53G" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6Sn-pY-do8">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1WE-lh-FUi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Wau-Ed-CdG">
+            <objects>
+                <viewController id="6lu-im-qNN" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AwT-Tt-620">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="etc-G9-9gN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
     <resources>

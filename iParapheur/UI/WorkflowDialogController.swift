@@ -43,8 +43,8 @@ import os
     static let ALERTVIEW_TAG_P12_PASSWORD = 1
     static let ALERTVIEW_TAG_PAPER_SIGNATURE = 2
 
+    @IBOutlet var certificateLayout: UIStackView!
     @IBOutlet var certificateTableView: UITableView!
-    @IBOutlet var certificateSelectionLabel: UILabel!
     @IBOutlet var privateAnnotationTextView: UITextView!
     @IBOutlet var publicAnnotationTextView: UITextView!
     @IBOutlet var paperSignatureButton: UIButton!
@@ -64,6 +64,8 @@ import os
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View loaded : WorkflowDialogController", type: .debug)
+
+        self.certificateLayout.isHidden = !(currentAction == "SIGNATURE")
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
@@ -340,6 +342,7 @@ import os
 
     // <editor-fold desc="UIAlertViewDelegate">
 
+
     func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 
         if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD) {
@@ -355,6 +358,7 @@ import os
             }
         }
     }
+
 
     // </editor-fold desc="UIAlertViewDelegate">
 
