@@ -159,7 +159,7 @@ import os
                                  privateAnnotation: privateAnnotationTextView.text,
                                  responseCallback: {
                                      number in
-                                     self.dismiss(animated: true)
+                                     self.dismissWithRefresh()
                                  },
                                  errorCallback: {
                                      error in
@@ -176,7 +176,7 @@ import os
                                    privateAnnotation: privateAnnotationTextView.text,
                                    responseCallback: {
                                        number in
-                                       self.dismiss(animated: true)
+                                       self.dismissWithRefresh()
                                    },
                                    errorCallback: {
                                        error in
@@ -310,7 +310,7 @@ import os
                                 signature: signatureConcat,
                                 responseCallback: {
                                     number in
-                                    self.dismiss(animated: true)
+                                    self.dismissWithRefresh()
                                 },
                                 errorCallback: {
                                     error in
@@ -380,6 +380,18 @@ import os
         }
     }
 
+
+    private func dismissWithRefresh() {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Notification.Name("actionOnDossierComplete"),
+                                                object: "")
+            }
+        }
+
+        self.dismiss(animated: true)
+    }
 
     // <editor-fold desc="UIAlertViewDelegate">
 
