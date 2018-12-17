@@ -649,7 +649,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)shouldReload:(NSDictionary *)filter {
 
-    [ADLSingletonState sharedSingletonState].currentFilter = [NSMutableDictionary dictionaryWithDictionary:filter];
+    ADLSingletonState.sharedSingletonState.currentFilter = [NSMutableDictionary dictionaryWithDictionary:filter];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFilterChanged
                                                         object:nil];
 

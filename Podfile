@@ -3,8 +3,8 @@ target "iParapheur" do
   platform :ios, '10.0'
   use_frameworks!
 
-  pod 'Fabric', '1.8.0'
-  pod 'Crashlytics', '3.11.0'
+  pod 'Fabric'
+  pod 'Crashlytics'
   pod 'SCNetworkReachability', '2.0.6'
   pod 'Alamofire', '4.7.3'
   pod 'SwiftMessages', '6.0.0'
