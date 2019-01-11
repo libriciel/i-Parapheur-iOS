@@ -155,4 +155,29 @@ import SwiftMessages
         return base64List
     }
 
+    /**
+        For some reason, the commonName, sometimes, isn't parsed.
+        Working around the bug is way easier than fix the actual ASN1 parsing.
+     */
+    @objc class func cleanupX509CertificateValues(_ dict: NSDictionary) -> NSMutableDictionary {
+        let result = dict.mutableCopy() as! NSMutableDictionary
+
+        if ((dict["commonName"] == nil) || (dict["commonName"] as! String).isEmpty) {
+            if (dict["subject"] != nil) {
+
+                let issuerName = dict["subject"] as! String
+                let regex = try? NSRegularExpression(pattern: "CN=(.*?),", options: .caseInsensitive)
+                let matches = regex?.matches(in: issuerName, options: [], range: NSRange(location: 0, length: issuerName.count))
+
+                if let match = matches?.first {
+                    if let swiftRange = Range(match.range(at: 1), in: issuerName) {
+                        result["commonName"] = issuerName[swiftRange];
+                    }
+                }
+            }
+        }
+
+        return result
+    }
+
 }

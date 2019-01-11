@@ -333,6 +333,7 @@ NSData *X509_to_NSData(X509 *cert) {
             @"keyUsage": keyUsageString
     };
 
+    result = [StringsUtils cleanupX509CertificateValues:result];
     return result;
 }
 
@@ -346,6 +347,7 @@ NSData *X509_to_NSData(X509 *cert) {
         return result;
 
     for (int i = 0; i < sk_X509_EXTENSION_num(ext_list); i++) {
+
         X509_EXTENSION *ext = sk_X509_EXTENSION_value(ext_list, i);
 
         // Key parsing
@@ -375,6 +377,11 @@ NSData *X509_to_NSData(X509 *cert) {
 + (NSString *)bioToString:(BIO *)bio {
 
     int len = BIO_pending(bio);
+
+    if (len == 0) {
+        return @"";
+    }
+
     char *out = calloc((size_t) (len + 1), 1);
     int i = BIO_read(bio, out, len);
 
@@ -472,7 +479,6 @@ NSData *X509_to_NSData(X509 *cert) {
 
     return [self parseX509Values:certX509];
 }
-
 
 
 @end

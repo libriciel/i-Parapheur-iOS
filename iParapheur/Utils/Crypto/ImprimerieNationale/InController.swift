@@ -48,16 +48,16 @@ extension Notification.Name {
     class func getTokenData() {
 
         let urlString = """
-            inmiddleware://getTokenData/ {
+                            inmiddleware://getTokenData/ {
 
-                "responseScheme" : "iparapheur",
-                "tokenExpectedData" : {
-                    "middleware" : "all",
-                    "token" : "all",
-                    "certificates" : "all"
-                }
-            }
-        """
+                                "responseScheme" : "iparapheur",
+                                "tokenExpectedData" : {
+                                    "middleware" : "all",
+                                    "token" : "all",
+                                    "certificates" : "all"
+                                }
+                            }
+                        """
 
         let cleanedString = StringsUtils.trim(string: urlString)
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
@@ -79,23 +79,23 @@ extension Notification.Name {
             let hex = CryptoUtils.hex(data: hash)
 
             hashesJsonList.append("""
-                {
-                    "certificateId" : " \(certificateId) ",
-                    "data" : " \(hex) "
-                }
-            """)
+                                      {
+                                          "certificateId" : " \(certificateId) ",
+                                          "data" : " \(hex) "
+                                      }
+                                  """)
         }
 
         let urlString = """
-            inmiddleware://sign/ {
+                            inmiddleware://sign/ {
 
-                "responseScheme" : "iparapheur",
-                "mechanism" : "sha256rsa",
-                "values" : [
-                    \(hashesJsonList.joined(separator: ","))
-                ]
-            }
-        """
+                                "responseScheme" : "iparapheur",
+                                "mechanism" : "sha256rsa",
+                                "values" : [
+                                    \(hashesJsonList.joined(separator: ","))
+                                ]
+                            }
+                        """
 
         let cleanedString = StringsUtils.trim(string: urlString)
         print("Request sent :: \(cleanedString)")
