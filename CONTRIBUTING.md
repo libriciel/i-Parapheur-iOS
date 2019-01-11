@@ -24,6 +24,19 @@ The iParapheur.xcodeproj file doesn't contain pods dependancies, and should not 
 Gitlab specifies who to install the `gitlab-runner` for a specific project :
 https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/settings/ci_cd
 
+TLDR :
+```
+sudo curl --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+sudo chmod +x /usr/local/bin/gitlab-runner
+cd ~
+gitlab-runner install
+gitlab-runner register
+  # url : https://gitlab.libriciel.fr/
+  # token : (find it in the project CI/CD settings)
+  # executor : shell
+gitlab-runner start
+```
+
 Every other shared runners should be disabled, since those are Linux ones.  
 We should only register one (or several) MacOS runners here.
 
