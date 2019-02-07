@@ -1,6 +1,6 @@
 /*
  * Contributors : SKROBS (2012)
- * Copyright 2012-2017, Libriciel SCOP.
+ * Copyright 2012-2019, Libriciel SCOP.
  *
  * contact@libriciel.coop
  *
@@ -171,13 +171,13 @@
 //                                                   privateKey:_currentPKey
 //                                                     password:_p12password
 //                                                        error:&error];
-
-    Certificate *certificate = [ModelsDataController fetchCertificates][1];
-    NSString *dataToSign = signInfo.hashesToSign[0];
-
-    [InController signWithHashes:@[dataToSign]
-                   certificateId:certificate.serialNumber];
-
+//
+//    Certificate *certificate = [ModelsDataController fetchCertificates][1];
+//    NSString *dataToSign = signInfo.hashesToSign[0];
+//
+//    [InController signWithHashes:@[dataToSign]
+//                   certificateId:certificate.serialNumber];
+//
 //    if (error != nil) {
 //        [ViewUtils logErrorWithMessage:error.domain
 //                                 title:@"Erreur à la signature"];

@@ -1,6 +1,6 @@
 /*
  * Contributors : SKROBS (2012)
- * Copyright 2012-2017, Libriciel SCOP.
+ * Copyright 2012-2019, Libriciel SCOP.
  *
  * contact@libriciel.coop
  *

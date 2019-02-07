@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017, Libriciel SCOP.
+ * Copyright 2012-2019, Libriciel SCOP.
  *
  * contact@libriciel.coop
  *
@@ -232,12 +232,6 @@ import os
                                            title: "Impossible de signer avec ce certificat")
                         return
                     }
-
-                    if (signatureToDo.value.mSignatureAlgorithm != .sha256WithRsa) {
-                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",
-                                           title: "Impossible de signer avec ce certificat")
-                        return
-                    }
                 }
 
                 let jsonDecoder = JSONDecoder()
@@ -248,8 +242,10 @@ import os
                 hasher.generateHashToSign(onResponse:
                                           {
                                               (result: DataToSign) in
+
                                               InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
-                                                                certificateId: certificateId)
+                                                                certificateId: certificateId,
+                                                                signatureAlgorithm: Array(self.signaturesToDo.values)[0].mSignatureAlgorithm)
                                           },
                                           onError:
                                           {
@@ -404,9 +400,9 @@ import os
                 let givenPassword = alertView.textField(at: 0)!.text!
 
                 for (_, hasher) in signaturesToDo {
-                    try? CryptoUtils.signWithP12(hasher: hasher,
-                                                 certificate: selectedCertificate!,
-                                                 password: givenPassword)
+                    CryptoUtils.signWithP12(hasher: hasher,
+                                            certificate: selectedCertificate!,
+                                            password: givenPassword)
                 }
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017, Libriciel SCOP.
+ * Copyright 2012-2019, Libriciel SCOP.
  *
  * contact@libriciel.coop
  *
@@ -53,6 +53,7 @@ extension Notification.Name {
     static public let NOTIF_SIGNEDDATA = "signedData"
     static public let NOTIF_SIGNATUREINDEX = "signatureIndex"
     static public let NOTIF_DOSSIERID = "dossierId"
+    static public let PKCS15_ASN1_HEX_PREFIX = "3021300906052B0E03021A05000414"
 
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
     static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
@@ -253,7 +254,7 @@ extension Notification.Name {
 
     class func signWithP12(hasher: RemoteHasher,
                            certificate: Certificate,
-                           password: String) throws {
+                           password: String) {
 
         // Retrieving signature certificate
 
@@ -262,7 +263,9 @@ extension Notification.Name {
                                                  in: .userDomainMask,
                                                  appropriateFor: nil,
                                                  create: true) else {
-            throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
+            ViewUtils.logError(message: "Impossible de récupérer le certificat",
+                               title: "Erreur à la signature")
+            return
         }
 
         let jsonDecoder = JSONDecoder()
@@ -278,24 +281,29 @@ extension Notification.Name {
 
                     var signedHashList: [Data] = []
                     let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
-                    for dataToSign in dataToSignList {
+                    do {
+                        for dataToSign in dataToSignList {
 
-                        let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
-                        var signedHash = try? CryptoUtils.rsaSign(data: data as NSData,
-                                                                  keyFileUrl: p12FinalUrl,
-                                                                  signatureAlgorithm: hasher.mSignatureAlgorithm,
-                                                                  password: password)
+                            let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
+                            var signedHash = try CryptoUtils.rsaSign(data: data as NSData,
+                                                                     keyFileUrl: p12FinalUrl,
+                                                                     signatureAlgorithm: hasher.mSignatureAlgorithm,
+                                                                     password: password)
 
-                        signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
-                        signedHashList.append(Data(base64Encoded: signedHash!)!)
+                            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
+                            signedHashList.append(Data(base64Encoded: signedHash)!)
+
+                            NotificationCenter.default.post(name: .signatureResult,
+                                                            object: nil,
+                                                            userInfo: [
+                                                                NOTIF_SIGNEDDATA: signedHashList,
+                                                                NOTIF_DOSSIERID: hasher.mDossier.identifier
+                                                            ])
+                        }
+                    } catch let error {
+                        ViewUtils.logError(message: error.localizedDescription as NSString,
+                                           title: "Erreur à la signature")
                     }
-
-                    NotificationCenter.default.post(name: .signatureResult,
-                                                    object: nil,
-                                                    userInfo: [
-                                                        NOTIF_SIGNEDDATA: signedHashList,
-                                                        NOTIF_DOSSIERID: hasher.mDossier.identifier
-                                                    ])
                 },
                 onError: {
                     (error: Error) in
@@ -315,12 +323,6 @@ extension Notification.Name {
 
                 case "xades":
 
-//                    let xadesHasher = XadesSha1EnvHasher(signInfo: signInfo,
-//                                                         hashIndex: hashIndex,
-//                                                         publicKey: certificate.publicKey!.base64EncodedString(),
-//                                                         caName: certificate.caName!,
-//                                                         serialNumber: certificate.serialNumber!)
-//                    hashers.append(xadesHasher)
                     throw NSError(domain: "Ce format (\(signInfo.format)) est obsolète", code: 0, userInfo: nil)
 
 

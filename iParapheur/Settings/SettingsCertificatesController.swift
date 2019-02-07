@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017, Libriciel SCOP.
+ * Copyright 2012-2019, Libriciel SCOP.
  *
  * contact@libriciel.coop
  *
@@ -173,6 +173,8 @@ import os
     }
 
     @objc func onCertificateImport() {
+        certificateList = ModelsDataController.fetchCertificates()
+        certificatesTableView.reloadData()
     }
 
 }
