@@ -87,8 +87,7 @@
 - (void)viewWillAppear:(BOOL)animated {
 
     [super viewWillAppear:animated];
-    _navigationBar.topItem.title = [StringUtils actionNameForAction:_action
-                                                      withPaperSign:_isPaperSign];
+    _navigationBar.topItem.title = NSLocalizedString(_action, @"");
 
     if ([_action isEqualToString:@"SIGNATURE"] && !_isPaperSign) {
         _navigationBar.topItem.rightBarButtonItem.enabled = NO;

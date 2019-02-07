@@ -46,50 +46,6 @@
 }
 
 
-+ (NSString *)actionNameForAction:(NSString *)action {
-	
-	return [self actionNameForAction:action
-					   withPaperSign:NO];
-}
-
-
-+ (NSString *)actionNameForAction:(NSString *)action
-					withPaperSign:(BOOL)isPaperSign {
-	
-	if ([action isEqualToString:@"VISA"])
-		return @"Viser";
-	
-	else if (([action isEqualToString:@"SIGNATURE"]) && (!isPaperSign))
-		return @"Signer";
-	
-	else if (([action isEqualToString:@"SIGNATURE"]) && (isPaperSign))
-		return @"Signature papier";
-	
-	else if ([action isEqualToString:@"TDT"])
-		return @"Envoyer au Tdt";
-	
-	else if ([action isEqualToString:@"MAILSEC"])
-		return @"Envoyer par mail sécurisé";
-	
-	else if ([action isEqualToString:@"ARCHIVER"] || [action isEqualToString:@"ARCHIVAGE"])
-		return @"Archiver";
-	
-	else if ([action isEqualToString:@"SECRETARIAT"])
-		return @"Envoyer au secrétariat";
-	
-	else if ([action isEqualToString:@"SUPPRIMER"])
-		return @"Supprimer";
-	
-	else if ([action isEqualToString:@"REJET"])
-		return @"Rejeter";
-	
-	else if ([action isEqualToString:@"REMORD"])
-		return @"Récupérer";
-	
-	return [NSString stringWithFormat:@"Non supporté : %@", action];
-}
-
-
 + (NSString *)cleanupServerName:(NSString *)url {
 
 	// Removing space
