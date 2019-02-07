@@ -232,12 +232,6 @@ import os
                                            title: "Impossible de signer avec ce certificat")
                         return
                     }
-
-                    if (signatureToDo.value.mSignatureAlgorithm != .sha256WithRsa) {
-                        ViewUtils.logError(message: "Les certificat sélectionné ne permet que la signature en SHA256",
-                                           title: "Impossible de signer avec ce certificat")
-                        return
-                    }
                 }
 
                 let jsonDecoder = JSONDecoder()
@@ -406,9 +400,9 @@ import os
                 let givenPassword = alertView.textField(at: 0)!.text!
 
                 for (_, hasher) in signaturesToDo {
-                    try? CryptoUtils.signWithP12(hasher: hasher,
-                                                 certificate: selectedCertificate!,
-                                                 password: givenPassword)
+                    CryptoUtils.signWithP12(hasher: hasher,
+                                            certificate: selectedCertificate!,
+                                            password: givenPassword)
                 }
             }
         }

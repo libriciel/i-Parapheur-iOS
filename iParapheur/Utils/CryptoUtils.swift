@@ -263,7 +263,9 @@ extension Notification.Name {
                                                  in: .userDomainMask,
                                                  appropriateFor: nil,
                                                  create: true) else {
-            throw NSError(domain: "Impossible de récupérer le certificat", code: 0, userInfo: nil)
+            ViewUtils.logError(message: "Impossible de récupérer le certificat",
+                               title: "Erreur à la signature")
+            return
         }
 
         let jsonDecoder = JSONDecoder()
@@ -279,24 +281,29 @@ extension Notification.Name {
 
                     var signedHashList: [Data] = []
                     let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
-                    for dataToSign in dataToSignList {
+                    do {
+                        for dataToSign in dataToSignList {
 
-                        let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
-                        var signedHash = try? CryptoUtils.rsaSign(data: data as NSData,
-                                                                  keyFileUrl: p12FinalUrl,
-                                                                  signatureAlgorithm: hasher.mSignatureAlgorithm,
-                                                                  password: password)
+                            let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
+                            var signedHash = try CryptoUtils.rsaSign(data: data as NSData,
+                                                                     keyFileUrl: p12FinalUrl,
+                                                                     signatureAlgorithm: hasher.mSignatureAlgorithm,
+                                                                     password: password)
 
-                        signedHash = signedHash!.replacingOccurrences(of: "\n", with: "")
-                        signedHashList.append(Data(base64Encoded: signedHash!)!)
+                            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
+                            signedHashList.append(Data(base64Encoded: signedHash)!)
+
+                            NotificationCenter.default.post(name: .signatureResult,
+                                                            object: nil,
+                                                            userInfo: [
+                                                                NOTIF_SIGNEDDATA: signedHashList,
+                                                                NOTIF_DOSSIERID: hasher.mDossier.identifier
+                                                            ])
+                        }
+                    } catch let error {
+                        ViewUtils.logError(message: error.localizedDescription as NSString,
+                                           title: "Erreur à la signature")
                     }
-
-                    NotificationCenter.default.post(name: .signatureResult,
-                                                    object: nil,
-                                                    userInfo: [
-                                                        NOTIF_SIGNEDDATA: signedHashList,
-                                                        NOTIF_DOSSIERID: hasher.mDossier.identifier
-                                                    ])
                 },
                 onError: {
                     (error: Error) in
