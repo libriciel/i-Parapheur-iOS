@@ -71,17 +71,23 @@ extension Notification.Name {
     }
 
 
-    @objc class func sign(hashes: [Data], certificateId: String) {
+    @objc class func sign(hashes: [Data], certificateId: String, signatureAlgorithm: SignatureAlgorithm) {
 
+        let mechanism = (signatureAlgorithm == .sha1WithRsa) ? "rsa" : "sha256rsa"
         var hashesJsonList: [String] = []
         for hash in hashes {
 
-            let hex = CryptoUtils.hex(data: hash)
+            var hexDataToSign: String
+            if (signatureAlgorithm == .sha1WithRsa) {
+                hexDataToSign = "\(CryptoUtils.PKCS15_ASN1_HEX_PREFIX)\(CryptoUtils.hex(data: hash.sha1()))"
+            } else {
+                hexDataToSign = CryptoUtils.hex(data: hash)
+            }
 
             hashesJsonList.append("""
                                       {
                                           "certificateId" : " \(certificateId) ",
-                                          "data" : " \(hex) "
+                                          "data" : " \(hexDataToSign) "
                                       }
                                   """)
         }
@@ -90,7 +96,7 @@ extension Notification.Name {
                             inmiddleware://sign/ {
 
                                 "responseScheme" : "iparapheur",
-                                "mechanism" : "sha256rsa",
+                                "mechanism" : "\(mechanism)",
                                 "values" : [
                                     \(hashesJsonList.joined(separator: ","))
                                 ]

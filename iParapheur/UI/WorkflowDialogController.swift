@@ -248,8 +248,10 @@ import os
                 hasher.generateHashToSign(onResponse:
                                           {
                                               (result: DataToSign) in
+
                                               InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
-                                                                certificateId: certificateId)
+                                                                certificateId: certificateId,
+                                                                signatureAlgorithm: Array(self.signaturesToDo.values)[0].mSignatureAlgorithm)
                                           },
                                           onError:
                                           {
@@ -382,7 +384,7 @@ import os
 
 
     private func dismissWithRefresh() {
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Notification.Name("actionOnDossierComplete"),

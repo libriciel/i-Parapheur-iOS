@@ -53,6 +53,7 @@ extension Notification.Name {
     static public let NOTIF_SIGNEDDATA = "signedData"
     static public let NOTIF_SIGNATUREINDEX = "signatureIndex"
     static public let NOTIF_DOSSIERID = "dossierId"
+    static public let PKCS15_ASN1_HEX_PREFIX = "3021300906052B0E03021A05000414"
 
     static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
     static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
@@ -253,7 +254,7 @@ extension Notification.Name {
 
     class func signWithP12(hasher: RemoteHasher,
                            certificate: Certificate,
-                           password: String) throws {
+                           password: String) {
 
         // Retrieving signature certificate
 
@@ -315,12 +316,6 @@ extension Notification.Name {
 
                 case "xades":
 
-//                    let xadesHasher = XadesSha1EnvHasher(signInfo: signInfo,
-//                                                         hashIndex: hashIndex,
-//                                                         publicKey: certificate.publicKey!.base64EncodedString(),
-//                                                         caName: certificate.caName!,
-//                                                         serialNumber: certificate.serialNumber!)
-//                    hashers.append(xadesHasher)
                     throw NSError(domain: "Ce format (\(signInfo.format)) est obsolète", code: 0, userInfo: nil)
 
 
