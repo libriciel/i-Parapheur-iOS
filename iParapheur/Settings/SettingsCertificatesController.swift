@@ -173,6 +173,8 @@ import os
     }
 
     @objc func onCertificateImport() {
+        certificateList = ModelsDataController.fetchCertificates()
+        certificatesTableView.reloadData()
     }
 
 }
