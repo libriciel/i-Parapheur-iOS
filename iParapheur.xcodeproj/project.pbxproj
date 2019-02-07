@@ -70,7 +70,6 @@
 		B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */; };
 		B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B3643C1611A4ED0051420F /* ADLSingletonState.m */; };
 		B4D2F89B162AADF700D8A1DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E5ECB7153AF65F00BD514D /* Main.storyboard */; };
-		B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D79258153FEC5700CEE89C /* TableViewPaperBackground.png */; };
 		B4E5ECAF153AF65F00BD514D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECAE153AF65F00BD514D /* main.m */; };
 		B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */; };
 		B4E5ECBF153AF65F00BD514D /* RGMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBE153AF65F00BD514D /* RGMasterViewController.m */; };
@@ -281,7 +280,6 @@
 		B4A221A816299B9400474A18 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B4B3643B1611A4ED0051420F /* ADLSingletonState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLSingletonState.h; sourceTree = "<group>"; };
 		B4B3643C1611A4ED0051420F /* ADLSingletonState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLSingletonState.m; sourceTree = "<group>"; };
-		B4D79258153FEC5700CEE89C /* TableViewPaperBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TableViewPaperBackground.png; path = ../TableViewPaperBackground.png; sourceTree = "<group>"; };
 		B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADLNotifications.h; sourceTree = "<group>"; };
 		B4E5EC9E153AF65F00BD514D /* iParapheur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iParapheur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4E5ECAA153AF65F00BD514D /* iParapheur-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iParapheur-Info.plist"; sourceTree = "<group>"; };
@@ -730,7 +728,6 @@
 				C58CB29D1AB71A2900C79A97 /* iw-visa@2x.png */,
 				B4082A7E162D48CB000B0E26 /* logo-new5.png */,
 				B4E5ECAE153AF65F00BD514D /* main.m */,
-				B4D79258153FEC5700CEE89C /* TableViewPaperBackground.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1000,7 +997,6 @@
 				C5065EFE1D88053C008FE301 /* Images.xcassets in Resources */,
 				C58CB29B1AB71A1C00C79A97 /* iw-tdt@2x.png in Resources */,
 				C58CB28B1AB719D700C79A97 /* ir-archivage@2x.png in Resources */,
-				B4D79259153FEC5700CEE89C /* TableViewPaperBackground.png in Resources */,
 				C58CB2921AB719F600C79A97 /* ir-visa.png in Resources */,
 				C50A87401D1AD07000025074 /* Settings.storyboard in Resources */,
 				C58CB2861AB719C300C79A97 /* ip-visa.png in Resources */,
