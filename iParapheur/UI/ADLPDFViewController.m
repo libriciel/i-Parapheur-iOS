@@ -39,7 +39,6 @@
 #import "RGDossierDetailViewController.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
-#import "StringUtils.h"
 #import "iParapheur-Swift.h"
 #import "RGWorkflowDialogViewController.h"
 

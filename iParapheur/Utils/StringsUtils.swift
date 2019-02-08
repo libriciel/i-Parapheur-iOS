@@ -85,10 +85,8 @@ class StringsUtils: NSObject {
         //			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
-        guard let regex = try? NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
-                                                   options: .caseInsensitive) else {
-            return ""
-        }
+        let regex = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
+                                             options: .caseInsensitive)
 
         let match = regex.firstMatch(in: result,
                                      options: [],
@@ -184,6 +182,14 @@ class StringsUtils: NSObject {
 
         return base64List
     }
+
+
+    @objc class func decodeUrlString(encodedString: String) -> String {
+        var result = encodedString.replacingOccurrences(of: "+", with: " ")
+        result = result.removingPercentEncoding!
+        return result
+    }
+
 
     /**
         For some reason, the commonName, sometimes, isn't parsed.

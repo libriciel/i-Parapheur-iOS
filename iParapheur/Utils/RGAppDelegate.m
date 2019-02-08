@@ -35,7 +35,6 @@
 #import "RGAppDelegate.h"
 #import "ADLCertificateAlertView.h"
 #import "ADLRestClient.h"
-#import "StringUtils.h"
 #import "iParapheur-Swift.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -325,9 +324,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 		NSString *nextSubString = [urlString substringWithRange:nextRange];
 
 		if ([subString isEqualToString:@"iOsUrl"])
-			certificateUrl = [StringUtils decodeUrlString:nextSubString];
+			certificateUrl = [StringsUtils decodeUrlStringWithEncodedString:nextSubString];
 		else if ([subString isEqualToString:@"iOsPwd"])
-			certificatePassword = [StringUtils decodeUrlString:nextSubString];
+			certificatePassword = [StringsUtils decodeUrlStringWithEncodedString:nextSubString];
 	}
 
 	// Build result

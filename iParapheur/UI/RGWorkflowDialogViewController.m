@@ -35,7 +35,6 @@
  */
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
-#import "StringUtils.h"
 #import "ADLSingletonState.h"
 #import "LGViewHUD.h"
 #import "iParapheur-Swift.h"

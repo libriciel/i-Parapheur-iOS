@@ -122,4 +122,27 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertEqual(resultLong, ["12345", "67890", "12345", "6789"])
     }
 
+
+    func testDecodeUrlString() {
+        XCTAssertEqual(StringsUtils.decodeUrlString(encodedString: ""), "")
+        XCTAssertEqual(StringsUtils.decodeUrlString(encodedString: "test%20with%20%28foo_bar%3Awhee%29"), "test with (foo_bar:whee)")
+    }
+
+
+    func testToDataList_ToBase64List() {
+
+        let startList = ["dGVzdA==", "Zm9v", "YmFy"]
+        let dataList = StringsUtils.toDataList(base64StringList: startList)
+
+        XCTAssertEqual(dataList.count, 3)
+
+        let base64List = StringsUtils.toBase64List(dataList: dataList)
+
+        XCTAssertEqual(base64List[0], "dGVzdA==")
+        XCTAssertEqual(base64List[1], "Zm9v")
+        XCTAssertEqual(base64List[2], "YmFy")
+
+        XCTAssertEqual(StringsUtils.toDataList(base64StringList: []), [])
+    }
+
 }
