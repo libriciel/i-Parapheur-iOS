@@ -115,7 +115,7 @@ import os
 
         // Cleanup URL
 
-        let properServerUrl: String = String(StringUtils.cleanupServerName(serverUrlTextField.text))
+        let properServerUrl = StringsUtils.cleanupServerName(url: serverUrlTextField.text!)
         serverUrlTextField.text = properServerUrl
 
         // Check fields
@@ -163,7 +163,7 @@ import os
             restClient!.cancelAllOperations()
         }
 
-        restClient = RestClient(baseUrl: StringUtils.cleanupServerName(serverUrlTextField.text)! as NSString,
+        restClient = RestClient(baseUrl: StringsUtils.cleanupServerName(url: serverUrlTextField.text!) as NSString,
                                 login: loginTextField.text! as NSString,
                                 password: passwordTextField.text! as NSString)
 

@@ -58,6 +58,23 @@ class Utils_StringsUtils_Tests: XCTestCase {
     }
 
 
+    func testCleanupServerName() {
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "m-truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "m.truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "M-truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "http://truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "http://m.truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "http://M-TRUC.FR"), "TRUC.FR")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "http://m-truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "https://truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "https://m.truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "https://M-TRUC.FR"), "TRUC.FR")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "https://m-truc.fr"), "truc.fr")
+        XCTAssertEqual(StringsUtils.cleanupServerName(url: "https://m.truc-truc.m.truc.fr"), "truc-truc.m.truc.fr")
+    }
+
+
     func testAnnotationDate() {
 
         let stringBefore = "2018-03-15T17:22:19Z"
@@ -75,23 +92,23 @@ class Utils_StringsUtils_Tests: XCTestCase {
         XCTAssertEqual(StringsUtils.trim(string: plopString), "plop")
 
         let plopMultiline = """
-                 p
-                 l
-                 o
-                 p
-        """
+                                     p
+                                     l
+                                     o
+                                     p
+                            """
         XCTAssertEqual(StringsUtils.trim(string: plopMultiline), "plop")
     }
 
-    
-    func testprettyPrintDate() {
-        
+
+    func testPrettyPrintDate() {
+
         let stringBefore = "2018-03-15T17:22:19Z"
         let date = StringsUtils.deserializeAnnotationDate(string: stringBefore)
-    
+
         XCTAssertEqual(StringsUtils.prettyPrint(date: date), "le 15/22/2018 à 17h22")
     }
-    
+
 
     func testSplit() {
 

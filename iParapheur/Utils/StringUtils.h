@@ -39,6 +39,4 @@
 
 + (NSString *)decodeUrlString:(NSString *)encodedString;
 
-+ (NSString *)cleanupServerName:(NSString *)url;
-
 @end
