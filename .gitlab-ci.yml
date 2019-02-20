@@ -1,3 +1,4 @@
+
 stages:
   - build
 
@@ -6,5 +7,6 @@ build_project:
   script:
     - pod install
     - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
-    - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -enableCodeCoverage YES -quiet
-    # - slather coverage -s --workspace iParapheur.xcworkspace --scheme iParapheur iParapheur.xcodeproj
+    - rm -rf /tmp/GitLabRunner_derivedData
+    - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -derivedDataPath /tmp/GitLabRunner_derivedData/ -enableCodeCoverage YES -quiet
+    - xcrun xccov view /tmp/GitLabRunner_derivedData/Logs/Test/*.xcresult/1_Test/action.xccovreport --only-targets
