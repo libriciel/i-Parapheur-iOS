@@ -1,14 +1,24 @@
 
 stages:
   - build
+  - test
+
 
 build_project:
   stage: build
+  retry: 3
+  coverage: '^\d+\s+iParapheur\.app\s+\d\d\s+(\d+\.\d+)\%'
   script:
     - pod install
     - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
+
+
+test_project:
+  stage: test
+  retry: 3
+  coverage: '^\d+\s+iParapheur\.app\s+\d\d\s+(\d+\.\d+)\%'
+  script:
     - rm -rf /tmp/GitLabRunner_derivedData
     - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -derivedDataPath /tmp/GitLabRunner_derivedData/ -enableCodeCoverage YES -quiet
-    # Regex to retrieve the code coverage (should be set in Project Settings) : ^\d+\s+iParapheur\.app\s+\d\d\s+(\d+\.\d+)\%
     - xcrun xccov view /tmp/GitLabRunner_derivedData/Logs/Test/*.xcresult/1_Test/action.xccovreport --only-targets
 
