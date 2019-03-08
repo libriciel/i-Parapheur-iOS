@@ -1,15 +1,6 @@
 
 stages:
-  - build
   - test
-
-
-build_project:
-  stage: build
-  retry: 2
-  script:
-    - pod install
-    - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
 
 
 test_project:
@@ -17,6 +8,8 @@ test_project:
   retry: 2
   coverage: '/^\d+\s+iParapheur\.app\s+\d\d\s+(\d+\.\d+)\%/'
   script:
+    - pod install
+    - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
     - rm -rf /tmp/GitLabRunner_derivedData
     - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -derivedDataPath /tmp/GitLabRunner_derivedData/ -enableCodeCoverage YES -quiet
     - xcrun xccov view /tmp/GitLabRunner_derivedData/Logs/Test/*.xcresult/1_Test/action.xccovreport --only-targets
