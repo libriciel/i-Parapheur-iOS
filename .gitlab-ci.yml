@@ -1,4 +1,3 @@
-
 stages:
   - test
 
@@ -21,4 +20,4 @@ sonarqube:
     - develop
   script:
     # Dependancies to install on the runner : https://github.com/Backelite/sonar-swift
-    - sonar-scanner -Dsonar.projectKey=iParapheur-iOS -Dsonar.host.url=https://sonarqube.libriciel.fr -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=.
+    - ./run-sonar-swift.sh
