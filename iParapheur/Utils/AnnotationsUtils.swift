@@ -36,7 +36,7 @@
 import Foundation
 
 
-@objc class AnnotationsUtils: NSObject {
+class AnnotationsUtils: NSObject {
 
 
     class func parse(string: String) -> [Annotation] {
@@ -51,7 +51,7 @@ import Foundation
         var result = [Annotation]()
         let decoder = JSONDecoder()
         let parsedData = try? decoder.decode([[String: [Int: [Annotation]]]].self, from: string.data(using: .utf8)!)
-        
+
         if (parsedData == nil) {
             return result
         }
@@ -80,7 +80,7 @@ import Foundation
         if (parsedData == nil) {
             return result
         }
-        
+
         for stepDict in parsedData! {
             for pageDict in stepDict {
                 for annotation in pageDict.value {

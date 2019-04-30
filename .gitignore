@@ -9,3 +9,9 @@ iParapheur.xcworkspace
 
 builds/*
 build/*
+
+\.scannerwork/
+
+sonar-reports/
+
+xcodebuild\.log
