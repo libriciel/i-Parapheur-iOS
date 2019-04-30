@@ -2,14 +2,17 @@ stages:
   - test
 
 
+before_script:
+  - pod install
+  - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
+  - rm -rf /tmp/GitLabRunner_derivedData
+
+
 xctest:
   stage: test
   retry: 2
   coverage: '/^\d+\s+iParapheur\.app\s+\d\d\s+(\d+\.\d+)\%/'
   script:
-    - pod install
-    - xcodebuild clean -workspace iParapheur.xcworkspace -scheme iParapheur -quiet
-    - rm -rf /tmp/GitLabRunner_derivedData
     - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -derivedDataPath /tmp/GitLabRunner_derivedData/ -enableCodeCoverage YES -quiet
     - xcrun xccov view /tmp/GitLabRunner_derivedData/Logs/Test/*.xcresult/1_Test/action.xccovreport --only-targets
 
@@ -20,5 +23,4 @@ sonarqube:
     - develop
   script:
     # Dependancies to install on the runner : https://github.com/Backelite/sonar-swift
-    - ls -l
     - ./run-sonar-swift.sh
