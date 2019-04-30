@@ -20,4 +20,5 @@ sonarqube:
     - develop
   script:
     # Dependancies to install on the runner : https://github.com/Backelite/sonar-swift
+    - ls -l
     - ./run-sonar-swift.sh
