@@ -914,6 +914,7 @@
 				B4E5EC9B153AF65F00BD514D /* Frameworks */,
 				B4E5EC9C153AF65F00BD514D /* Resources */,
 				B8873AE2EAD8273EBB0820CD /* [CP] Embed Pods Frameworks */,
+				7AD4A2CA22E6079800E1D231 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1082,6 +1083,23 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		7AD4A2CA22E6079800E1D231 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/bin//bash -l";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which sentry-cli >/dev/null; then\n    export SENTRY_ORG=libriciel\n    export SENTRY_PROJECT=i-parapheur-ios\n    export SENTRY_AUTH_TOKEN=$SENTRY_TOKEN\n    export SENTRY_URL=https://sentry.libriciel.fr/\n    export SENTRY_LOG_LEVEL=debug\n    ERROR=$(sentry-cli upload-dif \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\n    if [ ! $? -eq 0 ]; then\n        echo \"warning: sentry-cli - $ERROR\"\n    fi\nelse\n    echo \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
 		};
 		B8873AE2EAD8273EBB0820CD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
