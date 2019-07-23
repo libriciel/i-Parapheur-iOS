@@ -35,7 +35,6 @@
 #import <SCNetworkReachability/SCNetworkStatus.h>
 #import "RGMasterViewController.h"
 #import "iParapheur-Swift.h"
-#import "StringUtils.h"
 #import <SCNetworkReachability/SCNetworkReachability.h>
 #import "iParapheur-Swift.h"
 

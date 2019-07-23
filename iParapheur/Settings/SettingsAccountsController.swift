@@ -148,7 +148,7 @@ import os
     @objc func onAccountSaved(notification: NSNotification) {
 
         let account: Account! = notification.object as! Account
-        let accountIndex = accountList.index(of: account)
+        let accountIndex = accountList.firstIndex(of: account)
 
         if (accountIndex == nil) {
 

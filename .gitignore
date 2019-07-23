@@ -9,3 +9,11 @@ iParapheur.xcworkspace
 
 builds/*
 build/*
+
+\.scannerwork/
+
+sonar-reports/
+
+xcodebuild\.log
+
+compile_commands\.json

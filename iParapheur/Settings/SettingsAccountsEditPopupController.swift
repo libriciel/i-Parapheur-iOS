@@ -103,7 +103,7 @@ import os
 
         // Cleanup
 
-        urlTextView.text = StringUtils.cleanupServerName(urlTextView.text!)
+        urlTextView.text = StringsUtils.cleanupServerName(url: urlTextView.text!)
 
         //
 
@@ -131,7 +131,7 @@ import os
 
         // Cleanup
 
-        urlTextView.text = StringUtils.cleanupServerName(urlTextView.text!)
+        urlTextView.text = StringsUtils.cleanupServerName(url: urlTextView.text!)
 
         // Update model
 

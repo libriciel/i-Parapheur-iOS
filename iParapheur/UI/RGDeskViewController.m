@@ -37,7 +37,6 @@
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
 #import "iParapheur-Swift.h"
-#import "StringUtils.h"
 
 
 @interface RGDeskViewController () {

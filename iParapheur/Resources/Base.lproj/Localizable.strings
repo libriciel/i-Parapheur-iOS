@@ -32,18 +32,17 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import <Foundation/Foundation.h>
 
 
-@interface StringUtils : NSObject
+// Actions
 
-+ (NSString *)decodeUrlString:(NSString *)encodedString;
-
-+ (NSString*) actionNameForAction:(NSString*) action;
-
-+ (NSString*) actionNameForAction:(NSString*) action
-					withPaperSign:(BOOL)isPaperSign;
-
-+ (NSString *)cleanupServerName:(NSString *)url;
-
-@end
+"VISA" = "Viser";
+"SIGNATURE" = "Signer";
+"TDT" = "Envoyer au Tdt";
+"MAILSEC" = "Envoyer par mail sécurisé";
+"ARCHIVAGE" = "Archiver";
+"ARCHIVER" = "Archiver";
+"SECRETARIAT" = "Envoyer au secrétariat";
+"SUPPRIMER" = "Supprimer";
+"REJET" = "Rejeter";
+"REMORD" = "Récupérer";

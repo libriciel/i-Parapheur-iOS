@@ -36,7 +36,8 @@
 import Foundation
 import SwiftMessages
 
-@objc class StringsUtils: NSObject {
+class StringsUtils: NSObject {
+
 
     static let ANNOTATION_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     static let ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
@@ -69,6 +70,33 @@ import SwiftMessages
             default:
                 return error.localizedDescription as NSString
         }
+    }
+
+
+    @objc class func cleanupServerName(url: String) -> String {
+
+        // Removing space
+        // TODO Adrien : add special character restrictions tests ?
+
+        var result = url.replacingOccurrences(of: " ", with: "")
+
+        // Getting the server name
+        // Regex :	- ignore everything before "://" (if exists)					^(?:.*:\/\/)*
+        //			- then ignore following "m-" or "m." (if exists)				(?:m[-\\.])*
+        //			- then catch every char but "/"									([^\/]*)
+        //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
+        let regex = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
+                                             options: .caseInsensitive)
+
+        let match = regex.firstMatch(in: result,
+                                     options: [],
+                                     range: NSMakeRange(0, result.count))
+
+        if (match != nil) {
+            result = String(result[Range(match!.range(at: 1), in: result)!])
+        }
+
+        return result;
     }
 
 
@@ -154,6 +182,14 @@ import SwiftMessages
 
         return base64List
     }
+
+
+    @objc class func decodeUrlString(encodedString: String) -> String {
+        var result = encodedString.replacingOccurrences(of: "+", with: " ")
+        result = result.removingPercentEncoding!
+        return result
+    }
+
 
     /**
         For some reason, the commonName, sometimes, isn't parsed.
