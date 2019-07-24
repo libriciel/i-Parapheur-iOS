@@ -37,9 +37,9 @@ import UIKit
 import os
 
 
-@objc class FirstLoginPopupController: UIViewController {
+class FirstLoginPopupController: UIViewController {
 
-    @objc static let Segue: NSString! = "FirstLoginPopupSegue"
+    static let Segue = "FirstLoginPopupSegue"
     @objc static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
@@ -149,7 +149,8 @@ import os
             textField.layer.borderWidth = 1.0;
             textField.layer.borderColor = ColorUtils.DarkOrange.cgColor
             textField.backgroundColor = ColorUtils.DarkOrange.withAlphaComponent(0.1)
-        } else {
+        }
+        else {
             textField.layer.borderColor = UIColor.clear.cgColor
             textField.backgroundColor = UIColor.clear
         }
@@ -196,7 +197,8 @@ import os
                                       if (error.code == -1011) {
                                           self.setBorderOnTextField(textField: self.loginTextField, alert: true)
                                           self.setBorderOnTextField(textField: self.passwordTextField, alert: true)
-                                      } else {
+                                      }
+                                      else {
                                           self.setBorderOnTextField(textField: self.serverUrlTextField, alert: true)
                                       }
 
@@ -206,7 +208,8 @@ import os
 
                                       if (error.localizedDescription == localizedDescription as String) {
                                           self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code))"
-                                      } else {
+                                      }
+                                      else {
                                           self.errorLabel.text = String(localizedDescription)
                                       }
                                   }

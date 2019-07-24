@@ -33,13 +33,13 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-#import "RGMasterViewController.h"
 #import "ADLNotifications.h"
 #import "iParapheur-Swift.h"
+#import "RGDossierDetailViewController.h"
 
 
 @interface RGDossierDetailViewController () {
-	NSMutableArray *_objects;
+    NSMutableArray *_objects;
 }
 @end
 
@@ -56,137 +56,136 @@
 
 - (void)awakeFromNib {
 
-	documents = [NSArray new];
-	[super awakeFromNib];
+    documents = [NSArray new];
+    [super awakeFromNib];
 }
 
 
 - (void)viewDidLoad {
 
-	[super viewDidLoad];
-	NSLog(@"View Loaded : RGDossierDetailViewController");
+    [super viewDidLoad];
+    NSLog(@"View Loaded : RGDossierDetailViewController");
 
-	_restClient = ADLRestClient.sharedManager;
+    _restClient = ADLRestClient.sharedManager;
 
-	self.navigationItem.rightBarButtonItem = nil;
-	_objects = NSMutableArray.new;
+    self.navigationItem.rightBarButtonItem = nil;
+    _objects = NSMutableArray.new;
 
-	[self hidesEveryThing];
-	self.navigationBar.topItem.title = _dossier[@"titre"];
-	self.typeLabel.text = _dossier[@"type"];
-	self.sousTypeLabel.text = _dossier[@"sousType"];
-	documents = _dossier[@"documents"];
+    [self hidesEveryThing];
+    self.navigationBar.topItem.title = _dossier[@"titre"];
+    self.typeLabel.text = _dossier[@"type"];
+    self.sousTypeLabel.text = _dossier[@"sousType"];
+    documents = _dossier[@"documents"];
 
-	if ([ADLRestClient.sharedManager getRestApiVersion].intValue >= 3) {
-		__weak typeof(self) weakSelf = self;
-		[_restClient getCircuit:dossierRef
-		                success:^(Circuit *retrievedCircuit) {
-			                __strong typeof(weakSelf) strongSelf = weakSelf;
-			                if (strongSelf) {
-				                [strongSelf refreshCircuits:retrievedCircuit.etapes];
-			                }
-		                }
-		                failure:^(NSError *error) {
-			                NSLog(@"getCircuit error : %@", error);
-		                }];
-	}
-	else {
-		dossierRef = _dossier[@"dossierRef"];
-	}
+    if ([ADLRestClient.sharedManager getRestApiVersion].intValue >= 3) {
+        __weak typeof(self) weakSelf = self;
+        [_restClient getCircuit:dossierRef
+                        success:^(Circuit *retrievedCircuit) {
+                            __strong typeof(weakSelf) strongSelf = weakSelf;
+                            if (strongSelf) {
+                                [strongSelf refreshCircuits:retrievedCircuit.etapes];
+                            }
+                        }
+                        failure:^(NSError *error) {
+                            NSLog(@"getCircuit error : %@", error);
+                        }];
+    } else {
+        dossierRef = _dossier[@"dossierRef"];
+    }
 
-	[self showsEveryThing];
+    [self showsEveryThing];
 }
 
 
 - (void)viewDidAppear:(BOOL)animated {
 
-	[super viewDidAppear:animated];
+    [super viewDidAppear:animated];
 
-	if (![self.view.window.gestureRecognizers containsObject:self.tapRecognizer]) {
-		self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-		                                                             action:@selector(handleTapBehind:)];
-		[self.tapRecognizer setNumberOfTapsRequired:1];
-		self.tapRecognizer.cancelsTouchesInView = NO; //So the user can still interact with controls in the modal view
-		[self.view.window addGestureRecognizer:self.tapRecognizer];
+    if (![self.view.window.gestureRecognizers containsObject:self.tapRecognizer]) {
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                     action:@selector(handleTapBehind:)];
+        [self.tapRecognizer setNumberOfTapsRequired:1];
+        self.tapRecognizer.cancelsTouchesInView = NO; //So the user can still interact with controls in the modal view
+        [self.view.window addGestureRecognizer:self.tapRecognizer];
 
-	}
+    }
 }
 
 
 - (void)didReceiveMemoryWarning {
 
-	[self setCircuitTable:nil];
-	[NSNotificationCenter.defaultCenter removeObserver:self];
+    [self setCircuitTable:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 
-	[super didReceiveMemoryWarning];
+    [super didReceiveMemoryWarning];
 }
 
 
 // Hide the modal if tap behind it
 - (void)handleTapBehind:(UITapGestureRecognizer *)sender {
 
-	if (sender.state == UIGestureRecognizerStateEnded) {
-		CGPoint location = [sender locationInView:nil];
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        CGPoint location = [sender locationInView:nil];
 
-		if (![self.view pointInside:[self.view convertPoint:location
-		                                           fromView:self.view.window]
-		                  withEvent:nil]) {
-			[self dismissModal];
-		}
-	}
+        if (![self.view pointInside:[self.view convertPoint:location
+                                                   fromView:self.view.window]
+                          withEvent:nil]) {
+            [self dismissModal];
+        }
+    }
 }
 
 
 - (IBAction)handleClose:(id)sender {
 
-	[self dismissModal];
+    [self dismissModal];
 }
 
 
 - (void)dismissModal {
 
-	[self.view.window removeGestureRecognizer:self.tapRecognizer];
-	[self dismissViewControllerAnimated:YES
-	                         completion:NULL];
+    [self.view.window removeGestureRecognizer:self.tapRecognizer];
+    [self dismissViewControllerAnimated:YES
+                             completion:NULL];
 }
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-		return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-	} else {
-		return YES;
-	}
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    } else {
+        return YES;
+    }
 }
 
 
 - (void)setDossierRef:(NSString *)_dossierRef {
 
-	dossierRef = _dossierRef;
+    dossierRef = _dossierRef;
 
-		__weak typeof(self) weakSelf = self;
-		[_restClient getDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-		                dossier:dossierRef
-		                success:^(Dossier *responseDossier) {
-			                __strong typeof(weakSelf) strongSelf = weakSelf;
-			                if (strongSelf) {
-				                [ADLSingletonState sharedSingletonState].dossierCourantObject = responseDossier;
-				                [strongSelf getDossierDidEndWithREquestAnswer];
-			                }
-		                }
-		                failure:^(NSError *error) {
-			                NSLog(@"getDossier error %@ : ", error.localizedDescription);
-		                }];
+    __weak typeof(self) weakSelf = self;
+    [_restClient getDossier:currentDesk
+                    dossier:dossierRef
+                    success:^(Dossier *responseDossier) {
+                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                        if (strongSelf) {
+                            // FIXME [ADLSingletonState sharedSingletonState].dossierCourantObject = responseDossier;
+                            [strongSelf getDossierDidEndWithREquestAnswer];
+                        }
+                    }
+                    failure:^(NSError *error) {
+                        NSLog(@"getDossier error %@ : ", error.localizedDescription);
+                    }];
 
-	SHOW_HUD
+    SHOW_HUD
 }
 
 
 #pragma mark - Table View
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
     WorkflowStepCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CircuitCell"];
     Etape *step = _objects[(NSUInteger) indexPath.row];
@@ -195,13 +194,13 @@
     cell.userTextView.text = step.signataire;
     cell.publicAnnotationTextView.text = step.annotPub;
 
-	if (step.dateValidation != nil) {
-		cell.dateTextView.text = [StringsUtils prettyPrintWithDate:step.dateValidation];
-	} else {
+    if (step.dateValidation != nil) {
+        cell.dateTextView.text = [StringsUtils prettyPrintWithDate:step.dateValidation];
+    } else {
         cell.dateTextView.text = @"";
-	}
+    }
 
-	// Image
+    // Image
 
     NSString *imageName = [ViewUtils getImageNameWithAction:step.actionDemandee];
     UIImage *image = [UIImage imageNamed:imageName];
@@ -211,14 +210,14 @@
 
     //
 
-	return cell;
+    return cell;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
 
-	return _objects.count;
+    return _objects.count;
 }
 
 
@@ -226,14 +225,14 @@
 
 
 - (void)getDossierDidEndWithREquestAnswer {
-	//[deskArray removeAllObjects];
-	@synchronized (self) {
-		//[textView setText:[answer JSONString]];
-		//[self refreshViewWithDossier:[answer objectForKey:@"data"]];
-	}
-	[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+    //[deskArray removeAllObjects];
+    @synchronized (self) {
+        //[textView setText:[answer JSONString]];
+        //[self refreshViewWithDossier:[answer objectForKey:@"data"]];
+    }
+    [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 
-	[self showsEveryThing];
+    [self showsEveryThing];
 }
 
 
@@ -242,13 +241,13 @@
 
 - (void)refreshCircuits:(NSArray *)circuitArray {
 
-	@synchronized (self) {
-		[[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
+    @synchronized (self) {
+        [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 
-		[_objects removeAllObjects];
-		[_objects addObjectsFromArray:circuitArray];
-		[circuitTable reloadData];
-	}
+        [_objects removeAllObjects];
+        [_objects addObjectsFromArray:circuitArray];
+        [circuitTable reloadData];
+    }
 }
 
 
@@ -256,39 +255,39 @@
 
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController {
-	// do nothing for now
-	[self.splitViewController dismissViewControllerAnimated:YES
-	                                             completion:nil];
+    // do nothing for now
+    [self.splitViewController dismissViewControllerAnimated:YES
+                                                 completion:nil];
 }
 
 
 - (void)presentModalViewController:(UIViewController *)modalViewController
                           animated:(BOOL)animated {
 
-	[super presentModalViewController:modalViewController
-	                         animated:animated];
+    [super presentModalViewController:modalViewController
+                             animated:animated];
 }
 
 
 - (void)hidesEveryThing {
 
-	self.hiddenForEveryone = YES;
+    self.hiddenForEveryone = YES;
 }
 
 
 - (void)showsEveryThing {
 
-	self.hiddenForEveryone = NO;
+    self.hiddenForEveryone = NO;
 }
 
 
 - (void)setHiddenForEveryone:(BOOL)val {
 
-	dossierName.hidden = val;
-	typeLabel.hidden = val;
-	sousTypeLabel.hidden = val;
-	circuitTable.hidden = val;
-	circuitLabel.hidden = val;
+    dossierName.hidden = val;
+    typeLabel.hidden = val;
+    sousTypeLabel.hidden = val;
+    circuitTable.hidden = val;
+    circuitLabel.hidden = val;
 }
 
 
@@ -297,7 +296,7 @@
 
 - (void)shallDismissHUD:(LGViewHUD *)hud {
 
-	HIDE_HUD
+    HIDE_HUD
 }
 
 

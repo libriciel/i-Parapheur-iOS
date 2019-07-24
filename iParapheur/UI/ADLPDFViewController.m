@@ -159,6 +159,7 @@
     if ([segue.identifier isEqualToString:@"dossierDetails"]) {
 
         ((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
+        // FIXME ((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _currentDesk;
     } else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
 
         ((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;

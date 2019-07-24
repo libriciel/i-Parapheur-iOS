@@ -38,7 +38,7 @@ import Alamofire
 import os
 
 
-@objc class RestClient: NSObject {
+class RestClient: NSObject {
 
     var manager: Alamofire.SessionManager
     @objc var serverUrl: NSURL
@@ -103,6 +103,7 @@ import os
         return NSString(string: "https://m-\(urlFixed)")
     }
 
+
     // </editor-fold desc="Static methods">
 
 
@@ -145,7 +146,8 @@ import os
                             break
                     }
                 }
-            } else {
+            }
+            else {
                 errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
                                        code: 400))
             }
@@ -329,7 +331,8 @@ import os
                     let hasSomeData = (bureaux != nil)
                     if (hasSomeData) {
                         responseCallback!(bureaux! as NSArray)
-                    } else {
+                    }
+                    else {
                         errorCallback!(NSError(domain: "Invalid response",
                                                code: 999))
                     }
@@ -529,7 +532,8 @@ import os
                     let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
                     if (hasSomeData) {
                         responseCallback!(circuitWrapper!["circuit"]!)
-                    } else {
+                    }
+                    else {
                         errorCallback!(NSError(domain: "Invalid response",
                                                code: 999))
                     }
@@ -634,7 +638,8 @@ import os
                     let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
                     if (hasSomeData) {
                         responseCallback!(signInfoWrapper!["signatureInformations"]!)
-                    } else {
+                    }
+                    else {
                         errorCallback!(NSError(domain: "Invalid response",
                                                code: 999))
                     }
@@ -795,7 +800,8 @@ import os
                         break
                 }
             }
-        } else if (type == 2) {
+        }
+        else if (type == 2) {
 
             manager.request(annotationUrl,
                             method: .put,
@@ -815,7 +821,8 @@ import os
                         break
                 }
             }
-        } else if (type == 3) {
+        }
+        else if (type == 3) {
 
             manager.request(annotationUrl,
                             method: .delete,

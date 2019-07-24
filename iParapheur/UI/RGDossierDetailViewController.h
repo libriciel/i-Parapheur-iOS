@@ -40,25 +40,26 @@
 @class RGDetailViewController;
 
 @interface RGDossierDetailViewController : UIViewController <ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, UITableViewDataSource, LGViewHUDDelegate> {
-	UILabel *dossierName;
-	UILabel *typeLabel;
-	UILabel *sousTypeLabel;
-	UILabel *circuitLabel;
-	NSString *dossierRef;
-	NSArray *documents;
-	NSArray *circuit;
-	ReaderViewController *readerViewController;
+    UILabel *dossierName;
+    UILabel *typeLabel;
+    UILabel *sousTypeLabel;
+    UILabel *circuitLabel;
+    NSString *dossierRef;
+    NSArray *documents;
+    NSArray *circuit;
+    Bureau *currentDesk;
+    ReaderViewController *readerViewController;
 }
 
-@property (nonatomic, strong) ADLRestClient *restClient;
-@property (strong, nonatomic) ADLPDFViewController *detailViewController;
-@property (nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
-@property (nonatomic, strong) IBOutlet UILabel *typeLabel;
-@property (nonatomic, strong) IBOutlet UILabel *sousTypeLabel;
-@property (strong, nonatomic) IBOutlet UITableView *circuitTable;
-@property (strong, nonatomic) IBOutlet UILabel *circuitLabel;
-@property (strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property (strong, nonatomic) NSDictionary *dossier;
-@property (nonatomic, strong) NSString *dossierRef;
+@property(nonatomic, strong) ADLRestClient *restClient;
+@property(strong, nonatomic) ADLPDFViewController *detailViewController;
+@property(nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
+@property(nonatomic, strong) IBOutlet UILabel *typeLabel;
+@property(nonatomic, strong) IBOutlet UILabel *sousTypeLabel;
+@property(strong, nonatomic) IBOutlet UITableView *circuitTable;
+@property(strong, nonatomic) IBOutlet UILabel *circuitLabel;
+@property(strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property(strong, nonatomic) NSDictionary *dossier;
+@property(nonatomic, strong) NSString *dossierRef;
 
 @end

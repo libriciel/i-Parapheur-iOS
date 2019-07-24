@@ -44,7 +44,9 @@ import os
     @objc var documentList: NSArray! = NSArray()
     var docList: [Document]! = []
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="Lifecycle" MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,11 +64,17 @@ import os
                                       height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
     }
 
-    // MARK: - TableViewDelegate
+
+    // </editor-fold desc="Lifecycle" MARK: - LifeCycle
+
+
+    // <editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
+
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return docList.count
     }
+
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -84,6 +92,7 @@ import os
         return cell;
     }
 
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: false,
                 completion: {
@@ -92,5 +101,8 @@ import os
                                                     object: indexPath.row as NSNumber)
                 })
     }
+
+
+    // </editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
 
 }

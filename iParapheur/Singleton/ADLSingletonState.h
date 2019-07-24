@@ -42,11 +42,11 @@
 
 @interface ADLSingletonState : NSObject
 
-@property (strong, nonatomic) NSString* bureauCourant;
-@property (strong, nonatomic) NSString* dossierCourantReference;
-@property (strong, nonatomic) Dossier* dossierCourantObject;
-@property (strong, nonatomic) NSString* currentPrincipalDocPath;
-@property (strong, nonatomic) NSMutableDictionary *currentFilter;
+@property(strong, nonatomic) NSString *bureauCourant;
+@property(strong, nonatomic) NSString *dossierCourantReference;
+@property(strong, nonatomic) Dossier *dossierCourantObject;
+@property(strong, nonatomic) NSString *currentPrincipalDocPath;
+@property(strong, nonatomic) NSMutableDictionary *currentFilter;
 
 + (ADLSingletonState *)sharedSingletonState;
 
