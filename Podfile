@@ -6,7 +6,7 @@ target "iParapheur" do
   pod 'SCNetworkReachability', '2.0.6'
   pod 'Alamofire', '4.7.3'
   pod 'SwiftMessages', '7.0.0'
-  pod 'NSData+Base64', '1.0.0'
+  #  pod 'NSData+Base64', '1.0.0'
   pod 'OpenSSL-Universal', '1.0.2.18'
   pod 'AEXML', '4.4.0'
   pod 'SSZipArchive', '2.2.2'

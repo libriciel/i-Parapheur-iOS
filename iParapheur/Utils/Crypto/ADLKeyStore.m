@@ -38,7 +38,6 @@
 #include <openssl/pkcs12.h>
 #import <OpenSSL-Universal/openssl/x509v3.h>
 #import "iParapheur-Swift.h"
-#import "NSData+Base64.h"
 
 
 @implementation ADLKeyStore
@@ -220,7 +219,7 @@ NSData *X509_to_NSData(X509 *cert) {
                                                                 error:&jsonError];
 
         NSString *publicKeyB64 = [CryptoUtils cleanupPublicKeyWithPublicKey:x509Values[@"publicKey"]];
-        NSData *publicKeyData = [NSData dataFromBase64String:publicKeyB64];
+        NSData *publicKeyData = [[NSData alloc] initWithBase64EncodedString:publicKeyB64 options:0];
 
         newPrivateKey.payload = payloadData;
         newPrivateKey.publicKey = publicKeyData;
