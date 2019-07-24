@@ -52,7 +52,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        os_log("View Loaded : RGMasterViewController")
+        os_log("View Loaded : MasterViewController")
 
         // Patch Accounts
         ModelsDataController.loadManagedObjectContext()
