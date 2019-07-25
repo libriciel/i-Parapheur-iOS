@@ -390,22 +390,22 @@ class RestClient: NSObject {
 
                     // Retrieve delegated
 
-                    self.getDossiersDelegues(bureau: bureau,
-                                             page: 0, size: 100,
-                                             filterJson: nil,
-                                             onResponse: {
-                                                 (delegueList: [Dossier]) in
+                    self.getDelegateFolders(bureau: bureau,
+                                            page: 0, size: 100,
+                                            filterJson: nil,
+                                            onResponse: {
+                                                (delegueList: [Dossier]) in
 
-                                                 for dossierDelegue in delegueList {
-                                                     dossierDelegue.isDelegue = true;
-                                                 }
+                                                for dossierDelegue in delegueList {
+                                                    dossierDelegue.isDelegue = true;
+                                                }
 
-                                                 responseCallback!((dossierList! + delegueList))
-                                             },
-                                             onError: {
-                                                 (error: Error) in
-                                                 errorCallback!(error)
-                                             })
+                                                responseCallback!((dossierList! + delegueList))
+                                            },
+                                            onError: {
+                                                (error: Error) in
+                                                errorCallback!(error)
+                                            })
                     break
 
                 case .failure(let error):
@@ -416,12 +416,12 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getDossiersDelegues(bureau: String,
-                                   page: Int,
-                                   size: Int,
-                                   filterJson: String?,
-                                   onResponse responseCallback: (([Dossier]) -> Void)?,
-                                   onError errorCallback: ((Error) -> Void)?) {
+    func getDelegateFolders(bureau: String,
+                            page: Int,
+                            size: Int,
+                            filterJson: String?,
+                            onResponse responseCallback: (([Dossier]) -> Void)?,
+                            onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 

@@ -351,40 +351,8 @@
                         <gestureRecognizers/>
                         <color key="separatorColor" red="0.75549203157424927" green="0.75563716888427734" blue="0.75546777248382568" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="separatorInset" minX="24" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="alS-1c-Ste">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="Z1O-cw-X8C">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="44" id="IBo-iU-F1W"/>
-                                    </constraints>
-                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
-                                    <connections>
-                                        <outlet property="delegate" destination="yeg-xR-bYl" id="JPg-Nm-G16"/>
-                                    </connections>
-                                </searchBar>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyM-M2-kpB">
-                                    <rect key="frame" x="0.0" y="44" width="375" height="1"/>
-                                    <color key="backgroundColor" red="0.75549203157424927" green="0.75563716888427734" blue="0.75546777248382568" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="nyf-5d-P69"/>
-                                    </constraints>
-                                </view>
-                            </subviews>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="trailing" secondItem="vyM-M2-kpB" secondAttribute="trailing" id="8J2-Rr-MLM"/>
-                                <constraint firstItem="Z1O-cw-X8C" firstAttribute="leading" secondItem="alS-1c-Ste" secondAttribute="leading" id="Kad-EH-euP"/>
-                                <constraint firstAttribute="trailing" secondItem="Z1O-cw-X8C" secondAttribute="trailing" id="VPk-CH-vYL"/>
-                                <constraint firstItem="vyM-M2-kpB" firstAttribute="leading" secondItem="alS-1c-Ste" secondAttribute="leading" id="hDe-4M-Rws"/>
-                                <constraint firstAttribute="bottom" secondItem="vyM-M2-kpB" secondAttribute="bottom" id="uie-3M-XWl"/>
-                                <constraint firstItem="Z1O-cw-X8C" firstAttribute="top" secondItem="alS-1c-Ste" secondAttribute="top" id="zjD-bz-Kr2"/>
-                            </constraints>
-                        </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="nJQ-WW-GOX" userLabel="Footer">
-                            <rect key="frame" x="0.0" y="165" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="120" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j7j-zb-Pkt" userLabel="Separator">
@@ -399,7 +367,7 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="44" id="WoJ-zm-Gcg"/>
                                     </constraints>
-                                    <state key="normal" title="Suivant">
+                                    <state key="normal" title="Afficher plus de résultats">
                                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
@@ -419,7 +387,7 @@
                         </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FolderListCell" rowHeight="98" id="wRU-zQ-PQa" customClass="FolderListCell" customModule="iParapheur" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="67" width="375" height="98"/>
+                                <rect key="frame" x="0.0" y="22" width="375" height="98"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wRU-zQ-PQa" id="aXO-6C-7nh">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="97.5"/>

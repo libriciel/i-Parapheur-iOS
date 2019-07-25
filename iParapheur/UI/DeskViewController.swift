@@ -38,7 +38,7 @@ import UIKit
 import os
 
 
-class DeskViewController: UITableViewController {
+class DeskViewController: UITableViewController, UISearchResultsUpdating {
 
     public static let FOLDER_SELECTED = Notification.Name("folderSelected")
     private static let PAGE_SIZE = 15
@@ -51,6 +51,7 @@ class DeskViewController: UITableViewController {
     var filteredDossiers: [Dossier] = []
     var selectedDossiers: [Dossier] = []
     var currentPage = 0
+    let searchController = UISearchController(searchResultsController: nil)
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
@@ -74,8 +75,14 @@ class DeskViewController: UITableViewController {
                 action: #selector(self.refresh),
                 for: .valueChanged)
 
-        searchDisplayController?.searchResultsTableView.rowHeight = tableView.rowHeight;
-        searchDisplayController?.searchResultsTableView.register(RGFileCell.self, forCellReuseIdentifier: "dossierCell")
+        // Setup UISearchController
+
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        tableView.tableHeaderView = searchController.searchBar
+        definesPresentationContext = true
+
+        //
 
         loadDossiers(page: currentPage)
     }
@@ -150,6 +157,7 @@ class DeskViewController: UITableViewController {
     @IBAction func onFilterButtonClicked(_ sender: Any) {
     }
 
+
     @IBAction func onLoadMoreButtonClicked(_ sender: Any) {
         currentPage += 1
         loadDossiers(page: currentPage)
@@ -181,10 +189,9 @@ class DeskViewController: UITableViewController {
         if (selectedDossiers.count == 0) {
 
             var index: IndexPath? = nil
-            let displayedDossierArray = (tableView == searchDisplayController?.searchResultsTableView) ? filteredDossiers : dossiers
 
-            for i in 0..<displayedDossierArray.count {
-                if (displayedDossierArray[i].identifier == currentDossier?.identifier) {
+            for i in 0..<filteredDossiers.count {
+                if (filteredDossiers[i].identifier == currentDossier?.identifier) {
                     index = IndexPath(row: i, section: 0)
                 }
             }
@@ -332,16 +339,18 @@ class DeskViewController: UITableViewController {
 
     private func getDossierDidEndWithSuccess(newDossiers: [Dossier]) {
 
+        // Updating results
+
         if (currentPage == 0) {
             dossiers.removeAll()
         }
 
-        loadMoreButton.isHidden = (newDossiers.count != DeskViewController.PAGE_SIZE)
-
         dossiers.append(contentsOf: newDossiers)
-        filteredDossiers = dossiers
 
-        self.tableView.reloadData()
+        // Updating UI
+
+        loadMoreButton.isHidden = (newDossiers.count != DeskViewController.PAGE_SIZE)
+        updateSearchResults(for: searchController)
     }
 
 
@@ -419,17 +428,7 @@ class DeskViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let cell = tableView.cellForRow(at: indexPath) as! FolderListCell
-
-        // Get target Dossier
-
-        var dossierClicked: Dossier? = nil
-
-        if (self.tableView == self.searchDisplayController?.searchResultsTableView) {
-            dossierClicked = filteredDossiers[indexPath.row]
-        }
-        else {
-            dossierClicked = dossiers[indexPath.row]
-        }
+        var dossierClicked = filteredDossiers[indexPath.row]
 
         // Selection mode
 
@@ -437,13 +436,13 @@ class DeskViewController: UITableViewController {
 
             // Update cell
 
-            if (selectedDossiers.contains(dossierClicked!)) {
+            if (selectedDossiers.contains(dossierClicked)) {
                 selectedDossiers = selectedDossiers.filter({ $0 != dossierClicked })
                 cell.checkOnImage.isHidden = true
                 cell.checkOffImage.isHidden = false
             }
             else {
-                selectedDossiers.append(dossierClicked!)
+                selectedDossiers.append(dossierClicked)
                 cell.checkOnImage.isHidden = false
                 cell.checkOffImage.isHidden = true
             }
@@ -516,6 +515,12 @@ class DeskViewController: UITableViewController {
 
         tableView.reloadRows(at: [indexPath!], with: .none)
         updateSelectionMode()
+    }
+
+
+    func updateSearchResults(for searchController: UISearchController) {
+        filteredDossiers = dossiers.filter({ (searchController.searchBar.text! == "") || $0.title!.lowercased().contains(searchController.searchBar.text!.lowercased()) })
+        tableView.reloadData()
     }
 
 
