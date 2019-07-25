@@ -106,7 +106,7 @@ class Models_Bureau_Tests: XCTestCase {
 
         XCTAssertEqual(bureaux![0].hasSecretaire, false)
         XCTAssertEqual(bureaux![0].hasSecretaire, false)
-        XCTAssertEqual(bureaux![0].nodeRef, "workspace://SpacesStore/44abe93c-16d7-4e00-b561-f6d1b8b6c1d3")
+        XCTAssertEqual(bureaux![0].nodeRef, "44abe93c-16d7-4e00-b561-f6d1b8b6c1d3")
         XCTAssertEqual(bureaux![0].identifier, "id_01")
         XCTAssertEqual(bureaux![0].name, "Name 01 \"/%@&éè")
         XCTAssertEqual(bureaux![0].collectivite, "Collectivité 01 \"\\/%@&éè")

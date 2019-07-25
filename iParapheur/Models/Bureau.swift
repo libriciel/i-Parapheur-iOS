@@ -36,7 +36,7 @@
 import Foundation
 
 
-@objc class Bureau: NSObject, Decodable {
+class Bureau: NSObject, Decodable {
 
     let identifier: String?
     @objc let name: String
@@ -84,14 +84,15 @@ import Foundation
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
+        nodeRef = try values.decodeIfPresent(String.self, forKey: .nodeRef)?
+                .replacingOccurrences(of: "workspace://SpacesStore/", with: "", options: .literal)
+
+        identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
         name = try values.decodeIfPresent(String.self, forKey: .name) ?? "(aucun nom)"
         collectivite = try values.decodeIfPresent(String.self, forKey: .collectivite)
         desc = try values.decodeIfPresent(String.self, forKey: .desc)
-        nodeRef = try values.decodeIfPresent(String.self, forKey: .nodeRef)
         shortName = try values.decodeIfPresent(String.self, forKey: .shortName)
         // image = try values.decodeIfPresent(String.self, forKey: .image)
-        identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
-        // habilitation = try values.decodeIfPresent([String: Bool?].self, forKey: .habilitation) ?? [:]
 
         enPreparation = try values.decodeIfPresent(Int.self, forKey: .enPreparation) ?? 0
         enRetard = try values.decodeIfPresent(Int.self, forKey: .enRetard) ?? 0

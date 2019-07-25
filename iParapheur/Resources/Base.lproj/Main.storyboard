@@ -403,8 +403,7 @@
                                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </state>
                                     <connections>
-                                        <action selector="loadNextResultsPage:" destination="yeg-xR-bYl" eventType="touchUpInside" id="GBx-1D-Yv2"/>
-                                        <action selector="onLoadMoreButtonClicked:" destination="yeg-xR-bYl" eventType="touchUpInside" id="vxN-4a-SBw"/>
+                                        <action selector="onLoadMoreButtonClicked:" destination="yeg-xR-bYl" eventType="touchUpInside" id="3g1-1f-vhr"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -547,10 +546,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="bottomBarNegativeButton" destination="hhE-kz-Pgm" id="Z35-8T-cv6"/>
-                        <outlet property="bottomBarPositiveButton" destination="ll6-Kd-pW9" id="8ir-ON-XNp"/>
                         <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="sEI-WZ-3Di"/>
-                        <outlet property="searchBar" destination="Z1O-cw-X8C" id="wCO-7j-eDV"/>
                         <segue destination="2Dr-6H-2Si" kind="presentation" identifier="AVIS-TODO" modalPresentationStyle="formSheet" id="Les-T2-Xz2"/>
                         <segue destination="2Dr-6H-2Si" kind="presentation" identifier="TRANSFERT-TODO" modalPresentationStyle="formSheet" id="3XH-4w-NAP"/>
                     </connections>

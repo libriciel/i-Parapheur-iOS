@@ -75,6 +75,8 @@ class DeskViewController: UITableViewController {
 
         searchDisplayController?.searchResultsTableView.rowHeight = tableView.rowHeight;
         searchDisplayController?.searchResultsTableView.register(RGFileCell.self, forCellReuseIdentifier: "dossierCell")
+
+        loadDossiers(page: currentPage)
     }
 
 
@@ -146,7 +148,6 @@ class DeskViewController: UITableViewController {
 
     @IBAction func onFilterButtonClicked(_ sender: Any) {
     }
-
 
     @IBAction func onLoadMoreButtonClicked(_ sender: Any) {
         currentPage += 1
@@ -357,7 +358,7 @@ class DeskViewController: UITableViewController {
 
         if (filteredDossiers.count == 0) {
             let emptyView = FolderListEmptyView()
-            emptyView.filterAlertLabel.isHidden = (dossiers.count > 0)
+            // FIXME emptyView.filterAlertLabel.isHidden = (dossiers.count > 0)
 
             tableView.backgroundView = emptyView
             tableView.tableFooterView?.isHidden = true
