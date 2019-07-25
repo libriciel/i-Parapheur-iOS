@@ -41,6 +41,7 @@ import os
 class DeskViewController: UITableViewController {
 
     public static let FOLDER_SELECTED = Notification.Name("folderSelected")
+    private static let PAGE_SIZE = 15
 
     @IBOutlet weak var loadMoreButton: UIButton!
     var restClient: RestClient?
@@ -182,7 +183,7 @@ class DeskViewController: UITableViewController {
             var index: IndexPath? = nil
             let displayedDossierArray = (tableView == searchDisplayController?.searchResultsTableView) ? filteredDossiers : dossiers
 
-            for i in 0...displayedDossierArray.count {
+            for i in 0..<displayedDossierArray.count {
                 if (displayedDossierArray[i].identifier == currentDossier?.identifier) {
                     index = IndexPath(row: i, section: 0)
                 }
@@ -309,7 +310,7 @@ class DeskViewController: UITableViewController {
         else {
             restClient?.getDossiers(bureau: (currentDesk?.nodeRef)!,
                                     page: page,
-                                    size: 15,
+                                    size: DeskViewController.PAGE_SIZE,
                                     filterJson: nil,
                                     onResponse: {
                                         (newFolders: [Dossier]) in
@@ -331,20 +332,13 @@ class DeskViewController: UITableViewController {
 
     private func getDossierDidEndWithSuccess(newDossiers: [Dossier]) {
 
-        if (currentPage > 0) {
-            dossiers.removeLast()
-        }
-        else {
+        if (currentPage == 0) {
             dossiers.removeAll()
         }
 
-        // Manually filters the locked files out
+        loadMoreButton.isHidden = (newDossiers.count != DeskViewController.PAGE_SIZE)
 
-        // TODO : lock pending operations?
-        let filteredNewDossiers = newDossiers.filter({ !$0.isLocked })
-
-        dossiers.append(contentsOf: filteredNewDossiers)
-        loadMoreButton.isHidden = (newDossiers.count < 15)
+        dossiers.append(contentsOf: newDossiers)
         filteredDossiers = dossiers
 
         self.tableView.reloadData()

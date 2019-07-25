@@ -364,7 +364,7 @@ class RestClient: NSObject {
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-            "skipped": page * (size - 1),
+            "skipped": page * size,
             "sort": "cm:create"
         ]
 
@@ -434,7 +434,7 @@ class RestClient: NSObject {
             "pageSize": size,
             "corbeilleName": "dossiers-delegues",
             "pendingFile": 0,
-            "skipped": page * (size - 1),
+            "skipped": page * size,
             "sort": "cm:create"
         ]
 
