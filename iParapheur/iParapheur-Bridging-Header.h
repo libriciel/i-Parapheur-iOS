@@ -34,4 +34,5 @@
  */
 #include "ADLKeyStore.h"
 #include "RGAppDelegate.h"
+#include "RGFileCell.h"
 #import <CommonCrypto/CommonCrypto.h>

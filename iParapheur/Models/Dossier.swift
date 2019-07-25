@@ -36,7 +36,7 @@
 import Foundation
 
 
-@objc class Dossier: NSObject, Decodable {
+class Dossier: NSObject, Decodable {
 
     @objc let identifier: String
     @objc let title: String?
@@ -134,7 +134,8 @@ import Foundation
         if (emitDateInt != nil) {
             emitDateInt = emitDateInt! / 1000
             emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt!))
-        } else {
+        }
+        else {
             emitDate = nil
         }
 
@@ -142,7 +143,8 @@ import Foundation
         if (limitDateInt != nil) {
             limitDateInt = limitDateInt! / 1000
             limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt!))
-        } else {
+        }
+        else {
             limitDate = nil
         }
 
@@ -221,25 +223,29 @@ import Foundation
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    static func getPositiveAction(actions: NSArray) -> NSString! {
+    static func getPositiveAction(folders: [Dossier]) -> String? {
 
-        if (actions.contains(NSString(string: "SIGNATURE"))) {
-            return NSString(string: "SIGNATURE")
+        var possibleActions = ["SIGNATURE", "VISA"] // , "TDT", "MAILSEC", "ARCHIVER"]
+
+        for folder in folders {
+            possibleActions = possibleActions.filter({ folder.actions.contains($0) })
         }
 
-        return NSString(string: "")
+        return (possibleActions.count > 0) ? possibleActions[0] : nil
     }
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    @objc static func getNegativeAction(actions: NSArray) -> NSString! {
+    @objc static func getNegativeAction(folders: [Dossier]) -> String? {
 
-        if (actions.contains(NSString(string: "REJET"))) {
-            return NSString(string: "REJET")
+        var possibleActions = ["REJET"]
+
+        for folder in folders {
+            possibleActions = possibleActions.filter({ folder.actions.contains($0) })
         }
 
-        return NSString(string: "")
+        return (possibleActions.count > 0) ? possibleActions[0] : nil
     }
 
     class func filterActions(dossierList: NSArray) -> [String] {
@@ -270,7 +276,8 @@ import Foundation
 
         if (hasSignature) {
             result.append("SIGNATURE")
-        } else if (hasVisa) {
+        }
+        else if (hasVisa) {
             result.append("VISA")
         }
 

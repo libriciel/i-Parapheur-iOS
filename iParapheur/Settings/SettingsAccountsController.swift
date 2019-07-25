@@ -84,10 +84,6 @@ import os
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
 
     // <editor-fold desc="TableView">
 
@@ -160,7 +156,8 @@ import os
             accountTableView.insertRows(at: [newIndexPath], with: UITableView.RowAnimation.fade)
             accountTableView.endUpdates()
 
-        } else {
+        }
+        else {
 
             // Refresh UI
 

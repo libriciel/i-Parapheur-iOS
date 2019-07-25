@@ -347,12 +347,12 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getDossiers(bureau: NSString,
-                           page: NSNumber,
-                           size: NSNumber,
-                           filterJson: NSString?,
-                           onResponse responseCallback: ((NSArray) -> Void)?,
-                           onError errorCallback: ((NSError) -> Void)?) {
+    @objc func getDossiers(bureau: String,
+                           page: Int,
+                           size: Int,
+                           filterJson: String?,
+                           onResponse responseCallback: (([Dossier]) -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -364,7 +364,7 @@ class RestClient: NSObject {
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": page * size - 1,
             "sort": "cm:create"
         ]
 
@@ -388,7 +388,7 @@ class RestClient: NSObject {
                     let dossierList = try? jsonDecoder.decode([Dossier].self,
                                                               from: responseJsonData)
 
-                    // Retrieve deleguated
+                    // Retrieve delegated
 
                     self.getDossiersDelegues(bureau: bureau,
                                              page: 0, size: 100,
@@ -400,11 +400,11 @@ class RestClient: NSObject {
                                                      dossierDelegue.isDelegue = true;
                                                  }
 
-                                                 responseCallback!((dossierList! + delegueList) as NSArray)
+                                                 responseCallback!((dossierList! + delegueList))
                                              },
                                              onError: {
                                                  (error: Error) in
-                                                 errorCallback!(error as NSError)
+                                                 errorCallback!(error)
                                              })
                     break
 
@@ -416,12 +416,12 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getDossiersDelegues(bureau: NSString,
-                                   page: NSNumber,
-                                   size: NSNumber,
-                                   filterJson: NSString?,
+    @objc func getDossiersDelegues(bureau: String,
+                                   page: Int,
+                                   size: Int,
+                                   filterJson: String?,
                                    onResponse responseCallback: (([Dossier]) -> Void)?,
-                                   onError errorCallback: ((NSError) -> Void)?) {
+                                   onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -434,7 +434,7 @@ class RestClient: NSObject {
             "pageSize": size,
             "corbeilleName": "dossiers-delegues",
             "pendingFile": 0,
-            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": page * size - 1,
             "sort": "cm:create"
         ]
 
@@ -460,7 +460,7 @@ class RestClient: NSObject {
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback!(error)
                     break
             }
         }

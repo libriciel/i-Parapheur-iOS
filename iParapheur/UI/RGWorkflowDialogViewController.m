@@ -151,7 +151,7 @@
     [self hideHud];
     [self dismissViewControllerAnimated:YES
                              completion:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDossierActionComplete
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DossierActionComplete"
                                                         object:nil];
 }
 

@@ -39,10 +39,10 @@ import os
 
 
 @objc protocol ActionSelectionControllerDelegate: class {
-    @objc func onActionSelected(action: String)
+    func onActionSelected(action: String)
 }
 
-@objc class ActionSelectionController: UITableViewController {
+class ActionSelectionController: UITableViewController {
 
     @objc static let SEGUE = "showActionPopover"
 
@@ -56,6 +56,7 @@ import os
 
     // <editor-fold desc="LifeCycle">
 
+
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View loaded : ActionSelectionController", type: .debug)
@@ -66,23 +67,27 @@ import os
                                       height: ActionSelectionCell.PreferredHeight * CGFloat(actions.count))
     }
 
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == WorkflowDialogController.SEGUE {
             if let destinationWorkflowDialogController = segue.destination as? WorkflowDialogController {
-                destinationWorkflowDialogController.setDossiersToSign(objcArray: [currentDossier!] as NSArray)
+                destinationWorkflowDialogController.setDossiersToSign([currentDossier!])
                 destinationWorkflowDialogController.currentAction = pendingAction
             }
         }
     }
+
 
     // </editor-fold desc="LifeCycle">
 
 
     // <editor-fold desc="TableView">
 
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return actions.count
     }
+
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -95,21 +100,23 @@ import os
 
         if (action.isEqual(to: "REJET")) {
             cell.icon.image = UIImage(named: "ic_close_white_24dp")?.withRenderingMode(.alwaysTemplate)
-        } else {
+        }
+        else {
             cell.icon.image = UIImage(named: "ic_done_white_24dp")?.withRenderingMode(.alwaysTemplate)
         }
 
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: true, completion: {
             if (self.delegate != nil) {
                 self.delegate!.onActionSelected(action: self.actions[indexPath.row])
             }
         })
     }
+
 
     // </editor-fold desc="TableView">
 

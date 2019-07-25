@@ -36,7 +36,6 @@
 #define kDossierSelected @"dossierSelected"
 #define kSelectBureauAppeared @"selectBureauAppeared"
 #define kFilterChanged @"filterChanged"
-#define kDossierActionComplete @"actionOnDossierComplete"
 
 #define SHOW_HUD \
 LGViewHUD *hud = [LGViewHUD defaultHUD]; \

@@ -343,7 +343,7 @@
         <!--Dossiers-->
         <scene sceneID="tAQ-UO-3Yw">
             <objects>
-                <tableViewController storyboardIdentifier="DeskViewController" id="yeg-xR-bYl" customClass="RGDeskViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="DeskViewController" id="yeg-xR-bYl" customClass="DeskViewController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="98" sectionHeaderHeight="22" sectionFooterHeight="22" id="xgr-kP-uQq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1366"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -404,6 +404,7 @@
                                     </state>
                                     <connections>
                                         <action selector="loadNextResultsPage:" destination="yeg-xR-bYl" eventType="touchUpInside" id="GBx-1D-Yv2"/>
+                                        <action selector="onLoadMoreButtonClicked:" destination="yeg-xR-bYl" eventType="touchUpInside" id="vxN-4a-SBw"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -522,10 +523,16 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="o7n-KK-SfS"/>
                         <barButtonItem title="Rejeter" id="hhE-kz-Pgm">
                             <color key="tintColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="onNegativeButtonClicked:" destination="yeg-xR-bYl" id="wKv-No-U6X"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="ZQ3-hq-QQR"/>
                         <barButtonItem title="Signer" id="ll6-Kd-pW9">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="onPositiveButtonClicked:" destination="yeg-xR-bYl" id="TqC-Je-sd7"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="7Ss-jk-mkJ"/>
                     </toolbarItems>
@@ -533,6 +540,7 @@
                         <barButtonItem key="rightBarButtonItem" image="ic_filter_white_24dp.png" id="0nh-nM-mak">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
+                                <action selector="onFilterButtonClicked:" destination="yeg-xR-bYl" id="FbQ-1E-sc9"/>
                                 <segue destination="RAS-1K-jVQ" kind="presentation" identifier="filterSegue" modalPresentationStyle="formSheet" id="YcK-eQ-fnd"/>
                             </connections>
                         </barButtonItem>
@@ -541,7 +549,7 @@
                     <connections>
                         <outlet property="bottomBarNegativeButton" destination="hhE-kz-Pgm" id="Z35-8T-cv6"/>
                         <outlet property="bottomBarPositiveButton" destination="ll6-Kd-pW9" id="8ir-ON-XNp"/>
-                        <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="y8S-1e-sKB"/>
+                        <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="sEI-WZ-3Di"/>
                         <outlet property="searchBar" destination="Z1O-cw-X8C" id="wCO-7j-eDV"/>
                         <segue destination="2Dr-6H-2Si" kind="presentation" identifier="AVIS-TODO" modalPresentationStyle="formSheet" id="Les-T2-Xz2"/>
                         <segue destination="2Dr-6H-2Si" kind="presentation" identifier="TRANSFERT-TODO" modalPresentationStyle="formSheet" id="3XH-4w-NAP"/>
@@ -550,7 +558,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKB-EC-IFP" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="YeL-sI-SYw">
                     <connections>
-                        <action selector="tableViewDidLongPress:" destination="yeg-xR-bYl" id="qNF-Kd-ZK4"/>
+                        <action selector="onTableCellLongPressed:" destination="yeg-xR-bYl" id="2BZ-aZ-DpF"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>

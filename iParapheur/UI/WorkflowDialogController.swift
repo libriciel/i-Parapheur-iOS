@@ -37,9 +37,10 @@ import Foundation
 import os
 
 
-@objc class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
+class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
 
     @objc static let SEGUE = "WorkflowDialogController"
+    @objc static let ACTION_COMPLETE = Notification.Name("DossierActionComplete")
     static let ALERTVIEW_TAG_P12_PASSWORD = 1
     static let ALERTVIEW_TAG_PAPER_SIGNATURE = 2
 
@@ -196,8 +197,8 @@ import os
     // </editor-fold desc="UI Listeners">
 
 
-    @objc func setDossiersToSign(objcArray: NSArray) {
-        for dossier in objcArray as! [Dossier] {
+    func setDossiersToSign(_ dossierList: [Dossier]) {
+        for dossier in dossierList {
             signInfoMap[dossier] = nil as SignInfo?
         }
     }

@@ -77,10 +77,9 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
                 name: FirstLoginPopupController.NotifDismiss,
                 object: nil)
 
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.tintColor = ColorUtils.SelectedCellGrey
-
-        self.refreshControl?.addTarget(
+        refreshControl = UIRefreshControl()
+        refreshControl?.tintColor = ColorUtils.SelectedCellGrey
+        refreshControl?.addTarget(
                 self,
                 action: #selector(self.loadBureaux),
                 for: .valueChanged)
@@ -372,30 +371,15 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        // Cancel event if no internet
-
-//	if (![DeviceUtils isConnectedToInternet]) {
-//
-//		[tableView deselectRowAtIndexPath:indexPath
-//								 animated:YES];
-//
-//		[DeviceUtils logError:[NSError errorWithDomain:NSCocoaErrorDomain
-//														 code:kCFURLErrorNotConnectedToInternet
-//													 userInfo:nil]];
-//		return;
-//	}
-
-        // Call Desk view
-
         let bureau = bureauxArray[indexPath.row]
         os_log("Selected Desk = %@", bureau.nodeRef!)
 
-// FIXME       let controller = storyboard?.instantiateViewController(withIdentifier: "DeskViewController") as! RGDeskViewController
-// FIXME       navigationController?.pushViewController(controller, animated: true)
-//
-// FIXME       controller.desk = bureau;
-// FIXME       controller.navigationItem.title = bureau.name;
-        // [ADLSingletonState sharedSingletonState].bureauCourant = bureau.nodeRef;
+        let controller = storyboard?.instantiateViewController(withIdentifier: "DeskViewController") as! DeskViewController
+        navigationController?.pushViewController(controller, animated: true)
+
+        controller.currentDesk = bureau
+        controller.restClient = restClient
+        controller.navigationItem.title = bureau.name
     }
 
 

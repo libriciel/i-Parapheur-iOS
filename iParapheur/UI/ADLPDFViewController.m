@@ -106,7 +106,7 @@
 
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(clearDetail:)
-                                               name:kDossierActionComplete
+                                               name:WorkflowDialogController.ACTION_COMPLETE
                                              object:nil];
 
     [NSNotificationCenter.defaultCenter addObserver:self
@@ -186,7 +186,7 @@
         WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
         controller.currentAction = sender;
         controller.restClient = _restClient.restClientApi.swiftManager;
-        [controller setDossiersToSignWithObjcArray:@[_dossier]];
+        //FIXME  [controller setDossiersToSignWithObjcArray:@[_dossier]];
         controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
                                                                                                                    withString:@""];
     }

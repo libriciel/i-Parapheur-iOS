@@ -32,18 +32,19 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-@objc class FolderListCell: UITableViewCell {
+class FolderListCell: UITableViewCell {
 
-	@objc static let CellIdentifier: NSString! = "FolderListCell"
-	
-	@IBOutlet var titleLabel: UILabel!
-	@IBOutlet var typologyLabel: UILabel!
-	@IBOutlet var limitDateLabel: UILabel!
-	@IBOutlet var dot: UIImageView!
-	@IBOutlet var checkboxHandlerView: UIView!
-	@IBOutlet var checkOnImage: UIImageView!
-	@IBOutlet var checkOffImage: UIImageView!
-		
+    static let CellIdentifier = "FolderListCell"
+
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var typologyLabel: UILabel!
+    @IBOutlet var limitDateLabel: UILabel!
+    @IBOutlet var dot: UIImageView!
+    @IBOutlet var checkboxHandlerView: UIView!
+    @IBOutlet var checkOnImage: UIImageView!
+    @IBOutlet var checkOffImage: UIImageView!
+
 }
