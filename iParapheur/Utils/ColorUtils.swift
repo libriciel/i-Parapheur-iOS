@@ -54,6 +54,8 @@ class ColorUtils: NSObject {
     @objc static let Sky: UIColor = UIColor(red: 118 / 255, green: 213 / 255, blue: 255 / 255, alpha: 1)                  // #76D5FF
     @objc static let Flora: UIColor = UIColor(red: 115 / 255, green: 250 / 255, blue: 121 / 255, alpha: 1)                // #73FA79
     @objc static let LightGrey: UIColor = UIColor(red: 204 / 255, green: 204 / 255, blue: 204 / 255, alpha: 1)            // #CCCCCC
+    @objc static let VeryLightGrey: UIColor = UIColor(red: 245 / 255, green: 245 / 255, blue: 245 / 255, alpha: 1)        // #F5F5F5
+    @objc static let Blue: UIColor = UIColor(red: 62 / 255, green: 129 / 255, blue: 255 / 255, alpha: 1)                  // #F5F5F5
 
     @objc static let DefaultTintColor = Aqua
 

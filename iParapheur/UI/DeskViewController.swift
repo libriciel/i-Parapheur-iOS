@@ -69,16 +69,16 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
 
         // UI
 
-        let topBackgroundColor = UIColor.lightGray
-        let topTextColor = UIColor.white
+        let topBackgroundColor = ColorUtils.VeryLightGrey
+        let topTextColor = ColorUtils.Blue
 
-        navigationItem.backBarButtonItem?.tintColor = ColorUtils.Aqua
+        navigationItem.backBarButtonItem?.tintColor = topTextColor
 
         // Refresh control
 
         refreshControl = ColorizedRefreshControl()
         refreshControl?.backgroundColor = topBackgroundColor
-        refreshControl?.tintColor = topTextColor
+        refreshControl?.tintColor = ColorUtils.LightGrey
         refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
 
         // Setup UISearchController
