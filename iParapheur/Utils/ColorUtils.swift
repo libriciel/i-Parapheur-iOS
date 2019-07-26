@@ -32,15 +32,15 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 
-@objc class ColorUtils: NSObject {
-
+class ColorUtils: NSObject {
 
     @objc static let Teal: UIColor = UIColor(red: 50 / 255, green: 128 / 255, blue: 127 / 255, alpha: 1)                  // #32807F
     @objc static let Aqua: UIColor = UIColor(red: 67 / 255, green: 122 / 255, blue: 255 / 255, alpha: 1)                  // #437AFF
-    @objc static let Steel: UIColor = UIColor(red: 121 / 255, green: 121 / 255,blue: 121 / 255, alpha: 1)                 // #797979
+    @objc static let Steel: UIColor = UIColor(red: 121 / 255, green: 121 / 255, blue: 121 / 255, alpha: 1)                // #797979
     @objc static let DarkGreen: UIColor = UIColor(red: 11 / 255, green: 211 / 255, blue: 24 / 255, alpha: 1)              // #0BD318
     @objc static let DarkRed: UIColor = UIColor(red: 255 / 255, green: 56 / 255, blue: 36 / 255, alpha: 1)                // #FF3824
     @objc static let DarkOrange: UIColor = UIColor(red: 255 / 255, green: 150 / 255, blue: 0 / 255, alpha: 1)             // #FF9600
@@ -63,18 +63,18 @@ import Foundation
     @objc static func getColor(action: NSString) -> UIColor {
 
         switch (action) {
-            
-        case "VISA", "SIGNATURE":
-            return DarkGreen
-        
-        case "REJET":
-            return DarkRed
-        
-        case "ARCHIVER":
-            return UIKit.UIColor.black
-        
-        default:
-            return UIKit.UIColor.lightGray
+
+            case "VISA", "SIGNATURE":
+                return DarkGreen
+
+            case "REJET":
+                return DarkRed
+
+            case "ARCHIVER":
+                return UIKit.UIColor.black
+
+            default:
+                return UIKit.UIColor.lightGray
         }
     }
 }

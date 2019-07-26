@@ -67,18 +67,28 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
                 name: WorkflowDialogController.ACTION_COMPLETE,
                 object: nil)
 
+        // UI
+
+        let topBackgroundColor = UIColor.lightGray
+        let topTextColor = UIColor.white
+
         navigationItem.backBarButtonItem?.tintColor = ColorUtils.Aqua
-        refreshControl = UIRefreshControl()
-        refreshControl?.tintColor = ColorUtils.SelectedCellGrey
-        refreshControl?.addTarget(
-                self,
-                action: #selector(self.refresh),
-                for: .valueChanged)
+
+        // Refresh control
+
+        refreshControl = ColorizedRefreshControl()
+        refreshControl?.backgroundColor = topBackgroundColor
+        refreshControl?.tintColor = topTextColor
+        refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
 
         // Setup UISearchController
 
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.backgroundImage = UIImage()
+        searchController.searchBar.backgroundColor = topBackgroundColor
+        searchController.searchBar.barTintColor = topBackgroundColor
+        searchController.searchBar.tintColor = topTextColor
         tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
 
@@ -354,7 +364,7 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
     }
 
 
-    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate">  MARK: - UITableViewDataSource & UITableViewDelegate
+    // <editor-fold desc="UITableView>  MARK: - UITableView
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -524,6 +534,6 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
     }
 
 
-    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">  MARK: - UITableViewDataSource & UITableViewDelegate
+    // </editor-fold desc="UITableView">  MARK: - UITableView
 
 }

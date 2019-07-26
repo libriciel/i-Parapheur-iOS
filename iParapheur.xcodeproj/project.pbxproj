@@ -55,6 +55,7 @@
 		AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */; };
 		AB3CA541885C1CBC43D35219 /* DeskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA923329B9A25BE63953D /* DeskViewController.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
+		AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */; };
 		AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */; };
 		AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */; };
 		AB3CAD3E9A26BC332C8524F2 /* InSignedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3898C79B8ED617822B7 /* InSignedData.swift */; };
@@ -251,6 +252,7 @@
 		AB3CA2C9F890B3FCFD4970FC /* InController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
 		AB3CA35534D838DA33430B24 /* RemoteDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteDocument.swift; sourceTree = "<group>"; };
 		AB3CA3898C79B8ED617822B7 /* InSignedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InSignedData.swift; sourceTree = "<group>"; };
+		AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorizedRefreshControl.swift; sourceTree = "<group>"; };
 		AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGAppDelegate.m; sourceTree = "<group>"; };
 		AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InTokenData.swift; sourceTree = "<group>"; };
 		AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLKeyStore.h; sourceTree = "<group>"; };
@@ -899,6 +901,7 @@
 				AB3CAC62A8D8656B724F1606 /* RGAppDelegate.h */,
 				AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */,
 				AB3CAB2C0F9F4D4641FB8387 /* Crypto */,
+				AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1243,6 +1246,7 @@
 				AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */,
 				AB3CA41D2E87CF0220B521EF /* MasterViewController.swift in Sources */,
 				AB3CA541885C1CBC43D35219 /* DeskViewController.swift in Sources */,
+				AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
