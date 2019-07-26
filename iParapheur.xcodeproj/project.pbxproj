@@ -49,16 +49,22 @@
 		95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C7E1893CECA00246F7C /* ADLAnnotationButton.m */; };
 		95719C821893D50600246F7C /* ADLInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 95719C811893D50600246F7C /* ADLInfoView.m */; };
 		AB3CA19B2384EE7D819CDCD3 /* SignatureAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */; };
+		AB3CA2BD95BC68DB2A2E45B3 /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3F16BE8CAC5C63C7C45 /* FolderListCell.swift */; };
 		AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */; };
-		AB3CA41D2E87CF0220B521EF /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA10EEFA76672E5E06B3D /* MasterViewController.swift */; };
 		AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA35534D838DA33430B24 /* RemoteDocument.swift */; };
 		AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */; };
-		AB3CA541885C1CBC43D35219 /* DeskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA923329B9A25BE63953D /* DeskViewController.swift */; };
+		AB3CA7308A3156A154E82843 /* FolderListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */; };
+		AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAF227D6274311B6A5386 /* DeskListController.swift */; };
+		AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
+		AB3CAA1F924C8D67F4AA5548 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */; };
 		AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */; };
+		AB3CAA952CE46578AE384BBF /* DeskListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB3CA3AB723AF7CA4A2DF8D2 /* DeskListEmptyView.xib */; };
+		AB3CAABB3B1AACA918157A7C /* FolderListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */; };
 		AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */; };
 		AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */; };
 		AB3CAD3E9A26BC332C8524F2 /* InSignedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3898C79B8ED617822B7 /* InSignedData.swift */; };
+		AB3CAD40BDC2D560A6899368 /* FolderListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA1EC6344C41296A85365 /* FolderListController.swift */; };
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
 		AB3CAEB0D67BF4CF80F222FA /* RGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */; };
@@ -119,15 +125,10 @@
 		C54DB7931DCCA34F00B2CAFA /* DocumentSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */; };
 		C54DB7A51DCCCAE700B2CAFA /* DocumentSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */; };
 		C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54FA1EC1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift */; };
-		C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */; };
 		C5675ED21DBE74CC003FA418 /* SettingsAccountsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */; };
 		C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */ = {isa = PBXBuildFile; fileRef = C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */; };
 		C5747EAA1DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5747EA91DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib */; };
 		C5747EAC1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5747EAB1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift */; };
-		C5747EB71DD31D9800DB6A1F /* DeskListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */; };
-		C5747EB91DD31DCA00DB6A1F /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5747EB81DD31DCA00DB6A1F /* DeskListEmptyView.swift */; };
-		C5747EC91DD3264A00DB6A1F /* FolderListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5747EC81DD3264A00DB6A1F /* FolderListEmptyView.xib */; };
-		C5747ECB1DD3269200DB6A1F /* FolderListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5747ECA1DD3269200DB6A1F /* FolderListEmptyView.swift */; };
 		C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C57B636C1DABD00A005776F2 /* Models.xcdatamodeld */; };
 		C57B63741DABD36E005776F2 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */; };
 		C57E67C81A5DF21400BC4A3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803551A5D90AF00D54F7D /* CoreData.framework */; };
@@ -181,7 +182,6 @@
 		C5CED41E1FC474CE00FC15DD /* Models_Filter_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CED41D1FC474CE00FC15DD /* Models_Filter_Tests.swift */; };
 		C5CED4201FC589C800FC15DD /* SettingsFiltersEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5CED41F1FC589C800FC15DD /* SettingsFiltersEmptyView.xib */; };
 		C5CED42F1FC5C67700FC15DD /* SettingsFiltersEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CED42E1FC5C67700FC15DD /* SettingsFiltersEmptyView.swift */; };
-		C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D627651DBF5E1900208287 /* FolderListCell.swift */; };
 		C5DF831F1DB518FD00BA14BB /* ViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */; };
 		C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */; };
 		C5ECE8A81DD4D83C008659DD /* AccountSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ECE8A71DD4D83C008659DD /* AccountSelectionCell.swift */; };
@@ -247,22 +247,28 @@
 		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
-		AB3CA10EEFA76672E5E06B3D /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
+		AB3CA1EC6344C41296A85365 /* FolderListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListController.swift; sourceTree = "<group>"; };
 		AB3CA2C9F890B3FCFD4970FC /* InController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
 		AB3CA35534D838DA33430B24 /* RemoteDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteDocument.swift; sourceTree = "<group>"; };
 		AB3CA3898C79B8ED617822B7 /* InSignedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InSignedData.swift; sourceTree = "<group>"; };
+		AB3CA3AB723AF7CA4A2DF8D2 /* DeskListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeskListEmptyView.xib; sourceTree = "<group>"; };
+		AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListCell.swift; sourceTree = "<group>"; };
+		AB3CA3F16BE8CAC5C63C7C45 /* FolderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorizedRefreshControl.swift; sourceTree = "<group>"; };
 		AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGAppDelegate.m; sourceTree = "<group>"; };
+		AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InTokenData.swift; sourceTree = "<group>"; };
 		AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLKeyStore.h; sourceTree = "<group>"; };
-		AB3CA923329B9A25BE63953D /* DeskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskViewController.swift; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
 		AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteHasher.swift; sourceTree = "<group>"; };
 		AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLKeyStore.m; sourceTree = "<group>"; };
 		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
+		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
 		AB3CAC62A8D8656B724F1606 /* RGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGAppDelegate.h; sourceTree = "<group>"; };
+		AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
+		AB3CAF227D6274311B6A5386 /* DeskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListController.swift; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B9476156227BE004D57A1 /* LGViewHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGViewHUD.h; sourceTree = "<group>"; };
 		B41B9477156227BE004D57A1 /* LGViewHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGViewHUD.m; sourceTree = "<group>"; };
@@ -328,8 +334,6 @@
 		B4FF33EF1547333D006F7BF3 /* ReaderThumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderThumbView.m; sourceTree = "<group>"; };
 		B4FF33F01547333D006F7BF3 /* UIXToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIXToolbarView.h; sourceTree = "<group>"; };
 		B4FF33F11547333D006F7BF3 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
-		B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGReaderViewController.h; sourceTree = "<group>"; };
-		B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGReaderViewController.m; sourceTree = "<group>"; };
 		C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KeyStore 2.xcdatamodel"; sourceTree = "<group>"; };
 		C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSelectionCell.swift; sourceTree = "<group>"; };
 		C50326201DD090D3004F00A6 /* ActionSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSelectionController.swift; sourceTree = "<group>"; };
@@ -358,15 +362,10 @@
 		C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentSelectionController.swift; sourceTree = "<group>"; };
 		C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentSelectionCell.swift; sourceTree = "<group>"; };
 		C54FA1EC1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_CryptoUtils_Tests.swift; sourceTree = "<group>"; };
-		C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListCell.swift; sourceTree = "<group>"; };
 		C5675ED11DBE74CC003FA418 /* SettingsAccountsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsAccountsCell.swift; sourceTree = "<group>"; };
 		C56C31EC1AB8707800573345 /* adulllact_g3_mobile_public.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = adulllact_g3_mobile_public.cer; sourceTree = "<group>"; };
 		C5747EA91DD22DCE00DB6A1F /* SettingsCertificatesEmptyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsCertificatesEmptyView.xib; sourceTree = "<group>"; };
 		C5747EAB1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCertificatesEmptyView.swift; sourceTree = "<group>"; };
-		C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeskListEmptyView.xib; sourceTree = "<group>"; };
-		C5747EB81DD31DCA00DB6A1F /* DeskListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListEmptyView.swift; sourceTree = "<group>"; };
-		C5747EC81DD3264A00DB6A1F /* FolderListEmptyView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
-		C5747ECA1DD3269200DB6A1F /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		C57B636D1DABD00A005776F2 /* Models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Models.xcdatamodel; sourceTree = "<group>"; };
 		C57B63721DABD36E005776F2 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C58203BB1FBB466300B6606F /* iParapheurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iParapheurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -427,7 +426,6 @@
 		C5CED41D1FC474CE00FC15DD /* Models_Filter_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Filter_Tests.swift; sourceTree = "<group>"; };
 		C5CED41F1FC589C800FC15DD /* SettingsFiltersEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsFiltersEmptyView.xib; sourceTree = "<group>"; };
 		C5CED42E1FC5C67700FC15DD /* SettingsFiltersEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFiltersEmptyView.swift; sourceTree = "<group>"; };
-		C5D627651DBF5E1900208287 /* FolderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewUtils.swift; sourceTree = "<group>"; };
 		C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstLoginPopupController.swift; sourceTree = "<group>"; };
 		C5ECE8A71DD4D83C008659DD /* AccountSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountSelectionCell.swift; sourceTree = "<group>"; };
@@ -524,6 +522,17 @@
 			path = Buttons;
 			sourceTree = "<group>";
 		};
+		AB3CA19E020E6B485F930877 /* FolderList */ = {
+			isa = PBXGroup;
+			children = (
+				AB3CA3F16BE8CAC5C63C7C45 /* FolderListCell.swift */,
+				AB3CA1EC6344C41296A85365 /* FolderListController.swift */,
+				AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */,
+				AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */,
+			);
+			path = FolderList;
+			sourceTree = "<group>";
+		};
 		AB3CA8F47486E9DAF18C2252 /* ImprimerieNationale */ = {
 			isa = PBXGroup;
 			children = (
@@ -543,6 +552,17 @@
 				AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		AB3CAE8FB95F5B0AA7FEC012 /* DeskList */ = {
+			isa = PBXGroup;
+			children = (
+				AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */,
+				AB3CAF227D6274311B6A5386 /* DeskListController.swift */,
+				AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */,
+				AB3CA3AB723AF7CA4A2DF8D2 /* DeskListEmptyView.xib */,
+			);
+			path = DeskList;
 			sourceTree = "<group>";
 		};
 		B41B9475156227B3004D57A1 /* HUD */ = {
@@ -568,26 +588,18 @@
 				952E2E541888185E005C8D97 /* ADLFilterViewController.m */,
 				B488312515EE0F2900EC5BB3 /* ADLPDFViewController.h */,
 				B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */,
-				C5675EBF1DBE47F4003FA418 /* DeskListCell.swift */,
-				C5747EB81DD31DCA00DB6A1F /* DeskListEmptyView.swift */,
-				C5747EB61DD31D9800DB6A1F /* DeskListEmptyView.xib */,
 				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
 				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
 				7A5E08BE20D3EFD000BFBA1A /* WorkflowStepCell.swift */,
 				C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */,
-				C5D627651DBF5E1900208287 /* FolderListCell.swift */,
-				C5747ECA1DD3269200DB6A1F /* FolderListEmptyView.swift */,
-				C5747EC81DD3264A00DB6A1F /* FolderListEmptyView.xib */,
 				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
 				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
-				B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */,
-				B4FF33FF15473428006F7BF3 /* RGReaderViewController.m */,
 				B46BCC48156A855900A96560 /* RGWorkflowDialogViewController.h */,
 				B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */,
 				7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */,
 				7A56704921820EAC005553F5 /* GlobalSplitViewController.swift */,
-				AB3CA10EEFA76672E5E06B3D /* MasterViewController.swift */,
-				AB3CA923329B9A25BE63953D /* DeskViewController.swift */,
+				AB3CA19E020E6B485F930877 /* FolderList */,
+				AB3CAE8FB95F5B0AA7FEC012 /* DeskList */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -991,7 +1003,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C516EDE91AB6D96F00216E5F /* ip-signature.png in Resources */,
-				C5747EC91DD3264A00DB6A1F /* FolderListEmptyView.xib in Resources */,
 				C5065EFE1D88053C008FE301 /* Images.xcassets in Resources */,
 				C58CB29B1AB71A1C00C79A97 /* iw-tdt@2x.png in Resources */,
 				C58CB28B1AB719D700C79A97 /* ir-archivage@2x.png in Resources */,
@@ -1030,10 +1041,11 @@
 				C58CB29F1AB71A2900C79A97 /* iw-visa@2x.png in Resources */,
 				C516EDEE1AB6DD3B00216E5F /* ir-signature.png in Resources */,
 				C58CB26F1AB6EE5A00C79A97 /* iw-mailsec@2x.png in Resources */,
-				C5747EB71DD31D9800DB6A1F /* DeskListEmptyView.xib in Resources */,
 				C58CB29E1AB71A2900C79A97 /* iw-visa.png in Resources */,
 				C58CB27E1AB7198B00C79A97 /* ip-tdt.png in Resources */,
 				C56C31ED1AB8707800573345 /* adulllact_g3_mobile_public.cer in Resources */,
+				AB3CA7308A3156A154E82843 /* FolderListEmptyView.xib in Resources */,
+				AB3CAA952CE46578AE384BBF /* DeskListEmptyView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1143,7 +1155,6 @@
 				64F3483706C92BD37ED78048 /* ApiLevel.swift in Sources */,
 				64F3430EE5BFB9A06F1E75C6 /* Bureau.swift in Sources */,
 				C526D8DD1DA7FC5A00EE8BA9 /* Action.swift in Sources */,
-				C5675EC01DBE47F4003FA418 /* DeskListCell.swift in Sources */,
 				C5A7DAE71FDE96F50022A813 /* Circuit.swift in Sources */,
 				C526D8DF1DA7FC5A00EE8BA9 /* Document.swift in Sources */,
 				C50326211DD090D3004F00A6 /* ActionSelectionController.swift in Sources */,
@@ -1158,7 +1169,6 @@
 				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,
 				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
 				7A5E08BF20D3EFD000BFBA1A /* WorkflowStepCell.swift in Sources */,
-				C5747EB91DD31DCA00DB6A1F /* DeskListEmptyView.swift in Sources */,
 				C5A03D891DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
@@ -1187,7 +1197,6 @@
 				B4FF340F15473B6F006F7BF3 /* ReaderThumbRender.m in Sources */,
 				C54DB7931DCCA34F00B2CAFA /* DocumentSelectionController.swift in Sources */,
 				B4FF341015473B6F006F7BF3 /* ReaderThumbsView.m in Sources */,
-				C5747ECB1DD3269200DB6A1F /* FolderListEmptyView.swift in Sources */,
 				B4FF341115473B6F006F7BF3 /* ReaderThumbView.m in Sources */,
 				B4FF341215473B6F006F7BF3 /* UIXToolbarView.m in Sources */,
 				C524A6F01B15F4DA003DBED9 /* ADLRestClientApi4.m in Sources */,
@@ -1220,7 +1229,6 @@
 				7A56704A21820EAC005553F5 /* GlobalSplitViewController.swift in Sources */,
 				C5747EAC1DD22E8100DB6A1F /* SettingsCertificatesEmptyView.swift in Sources */,
 				C57B636E1DABD00A005776F2 /* Models.xcdatamodeld in Sources */,
-				C5D627661DBF5E1900208287 /* FolderListCell.swift in Sources */,
 				C5065EE31D82ABB2008FE301 /* SettingsCertificatesController.swift in Sources */,
 				64F34227DFBB4E139A8FFDD6 /* RestClient.swift in Sources */,
 				64F3475A8C8C052791313956 /* AccountSelectionController.swift in Sources */,
@@ -1238,9 +1246,13 @@
 				AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */,
 				AB3CA19B2384EE7D819CDCD3 /* SignatureAlgorithm.swift in Sources */,
 				AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */,
-				AB3CA41D2E87CF0220B521EF /* MasterViewController.swift in Sources */,
-				AB3CA541885C1CBC43D35219 /* DeskViewController.swift in Sources */,
 				AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */,
+				AB3CA2BD95BC68DB2A2E45B3 /* FolderListCell.swift in Sources */,
+				AB3CAD40BDC2D560A6899368 /* FolderListController.swift in Sources */,
+				AB3CAABB3B1AACA918157A7C /* FolderListEmptyView.swift in Sources */,
+				AB3CAA1F924C8D67F4AA5548 /* DeskListCell.swift in Sources */,
+				AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */,
+				AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
