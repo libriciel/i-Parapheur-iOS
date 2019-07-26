@@ -40,7 +40,7 @@ import os
 
 class DeskViewController: UITableViewController, UISearchResultsUpdating {
 
-    public static let FOLDER_SELECTED = Notification.Name("folderSelected")
+    @objc public static let FOLDER_SELECTED = Notification.Name("folderSelected")
     private static let PAGE_SIZE = 15
 
     @IBOutlet weak var loadMoreButton: UIButton!
@@ -119,7 +119,7 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
             let workflowDialogController = segue.destination as! WorkflowDialogController
             workflowDialogController.setDossiersToSign(selectedDossiers)
             workflowDialogController.currentAction = sender as! String
-            // workflowDialogController.isPaperSign = isPaperSign; //FIXME
+            // workflowDialogController.isPaperSign = isPaperSign; // FIXME
         }
     }
 

@@ -64,7 +64,6 @@
 		AB3CAEB0D67BF4CF80F222FA /* RGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
-		B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41DBD37153D942D004F1AEF /* RGDeskViewController.m */; };
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
 		B4443175160A252300C8C475 /* ADLAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316C160A230D00C8C475 /* ADLAnnotationView.m */; };
 		B4443177160A252300C8C475 /* ADLCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316E160A230D00C8C475 /* ADLCloseButton.m */; };
@@ -267,8 +266,6 @@
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B9476156227BE004D57A1 /* LGViewHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGViewHUD.h; sourceTree = "<group>"; };
 		B41B9477156227BE004D57A1 /* LGViewHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGViewHUD.m; sourceTree = "<group>"; };
-		B41DBD36153D942D004F1AEF /* RGDeskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGDeskViewController.h; sourceTree = "<group>"; };
-		B41DBD37153D942D004F1AEF /* RGDeskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGDeskViewController.m; sourceTree = "<group>"; };
 		B4443169160A230D00C8C475 /* ADLDrawingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLDrawingView.h; sourceTree = "<group>"; };
 		B444316A160A230D00C8C475 /* ADLDrawingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLDrawingView.m; sourceTree = "<group>"; };
 		B444316B160A230D00C8C475 /* ADLAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLAnnotationView.h; sourceTree = "<group>"; };
@@ -581,8 +578,6 @@
 				C5D627651DBF5E1900208287 /* FolderListCell.swift */,
 				C5747ECA1DD3269200DB6A1F /* FolderListEmptyView.swift */,
 				C5747EC81DD3264A00DB6A1F /* FolderListEmptyView.xib */,
-				B41DBD36153D942D004F1AEF /* RGDeskViewController.h */,
-				B41DBD37153D942D004F1AEF /* RGDeskViewController.m */,
 				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
 				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
 				B4FF33FE15473428006F7BF3 /* RGReaderViewController.h */,
@@ -1165,7 +1160,6 @@
 				7A5E08BF20D3EFD000BFBA1A /* WorkflowStepCell.swift in Sources */,
 				C5747EB91DD31DCA00DB6A1F /* DeskListEmptyView.swift in Sources */,
 				C5A03D891DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift in Sources */,
-				B41DBD38153D942D004F1AEF /* RGDeskViewController.m in Sources */,
 				B4FF340115473B34006F7BF3 /* ReaderConstants.m in Sources */,
 				95719C7F1893CECA00246F7C /* ADLAnnotationButton.m in Sources */,
 				B4FF340215473B37006F7BF3 /* ReaderDocument.m in Sources */,

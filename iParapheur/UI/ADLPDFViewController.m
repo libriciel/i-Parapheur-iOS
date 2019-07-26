@@ -96,7 +96,7 @@
 
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(dossierSelected:)
-                                               name:kDossierSelected
+                                               name:DeskViewController.FOLDER_SELECTED
                                              object:nil];
 
     [NSNotificationCenter.defaultCenter addObserver:self
@@ -384,7 +384,7 @@
     SHOW_HUD
 
     __weak typeof(self) weakSelf = self;
-    [_restClient getDossier:[ADLSingletonState sharedSingletonState].bureauCourant
+    [_restClient getDossier:ADLSingletonState.sharedSingletonState.bureauCourant
                     dossier:_dossierRef
                     success:^(Dossier *result) {
                         __strong typeof(weakSelf) strongSelf = weakSelf;
