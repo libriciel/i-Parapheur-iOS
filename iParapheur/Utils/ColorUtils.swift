@@ -60,8 +60,6 @@ class ColorUtils: NSObject {
     @objc static let DefaultTintColor = Aqua
 
 
-    // MARK: - Static methods
-
     @objc static func getColor(action: NSString) -> UIColor {
 
         switch (action) {
@@ -79,4 +77,5 @@ class ColorUtils: NSObject {
                 return UIKit.UIColor.lightGray
         }
     }
+
 }

@@ -48,7 +48,7 @@ extension Notification.Name {
 
 }
 
-@objc class CryptoUtils: NSObject {
+class CryptoUtils: NSObject {
 
     static public let NOTIF_SIGNEDDATA = "signedData"
     static public let NOTIF_SIGNATUREINDEX = "signatureIndex"
@@ -64,6 +64,7 @@ extension Notification.Name {
         $0
     }
 
+    
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
 
         // TODO : Check this previous version.

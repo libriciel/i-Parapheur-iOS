@@ -190,7 +190,6 @@ class StringsUtils: NSObject {
         return result
     }
 
-
     /**
         For some reason, the commonName, sometimes, isn't parsed.
         Working around the bug is way easier than fix the actual ASN1 parsing.

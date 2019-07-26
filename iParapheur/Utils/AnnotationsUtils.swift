@@ -35,7 +35,6 @@
 
 import Foundation
 
-
 class AnnotationsUtils: NSObject {
 
 
@@ -45,6 +44,7 @@ class AnnotationsUtils: NSObject {
         result += AnnotationsUtils.parseApi4(string: string)
         return result
     }
+
 
     class func parseApi4(string: String) -> [Annotation] {
 
@@ -70,6 +70,7 @@ class AnnotationsUtils: NSObject {
 
         return result
     }
+
 
     class func parseApi3(string: String) -> [Annotation] {
 

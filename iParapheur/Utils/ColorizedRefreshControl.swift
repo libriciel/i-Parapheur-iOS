@@ -41,6 +41,7 @@ import Foundation
  */
 class ColorizedRefreshControl: UIRefreshControl {
 
+
     override var isHidden: Bool {
         get {
             return super.isHidden
@@ -57,6 +58,7 @@ class ColorizedRefreshControl: UIRefreshControl {
         }
     }
 
+
     override var frame: CGRect {
         didSet {
             if frame.origin.y < 0 {
@@ -68,9 +70,11 @@ class ColorizedRefreshControl: UIRefreshControl {
         }
     }
 
+
     override func layoutSubviews() {
         super.layoutSubviews()
         let originalFrame = frame
         frame = originalFrame
     }
+
 }

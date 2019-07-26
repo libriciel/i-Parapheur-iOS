@@ -57,6 +57,7 @@
 		AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAF227D6274311B6A5386 /* DeskListController.swift */; };
 		AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
+		AB3CA9D7E0617661FBB3458C /* RGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5B59D574C28C40AE909 /* RGAppDelegate.m */; };
 		AB3CAA1F924C8D67F4AA5548 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */; };
 		AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */; };
 		AB3CAA952CE46578AE384BBF /* DeskListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB3CA3AB723AF7CA4A2DF8D2 /* DeskListEmptyView.xib */; };
@@ -67,7 +68,6 @@
 		AB3CAD40BDC2D560A6899368 /* FolderListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA1EC6344C41296A85365 /* FolderListController.swift */; };
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
-		AB3CAEB0D67BF4CF80F222FA /* RGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
@@ -255,8 +255,8 @@
 		AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListCell.swift; sourceTree = "<group>"; };
 		AB3CA3F16BE8CAC5C63C7C45 /* FolderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorizedRefreshControl.swift; sourceTree = "<group>"; };
-		AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGAppDelegate.m; sourceTree = "<group>"; };
 		AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListEmptyView.swift; sourceTree = "<group>"; };
+		AB3CA5B59D574C28C40AE909 /* RGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGAppDelegate.m; sourceTree = "<group>"; };
 		AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InTokenData.swift; sourceTree = "<group>"; };
 		AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLKeyStore.h; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -265,9 +265,9 @@
 		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
 		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
-		AB3CAC62A8D8656B724F1606 /* RGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGAppDelegate.h; sourceTree = "<group>"; };
 		AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
+		AB3CAF0EA9B3E741548988B2 /* RGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGAppDelegate.h; sourceTree = "<group>"; };
 		AB3CAF227D6274311B6A5386 /* DeskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListController.swift; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B41B9476156227BE004D57A1 /* LGViewHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGViewHUD.h; sourceTree = "<group>"; };
@@ -691,6 +691,8 @@
 				C5ECDDBF1AB2F5D4003F13ED /* Utils */,
 				B4DF365C15F723D1007B4CD5 /* ADLNotifications.h */,
 				C50861951D5DC361009BDFD3 /* iParapheur-Bridging-header.h */,
+				AB3CAF0EA9B3E741548988B2 /* RGAppDelegate.h */,
+				AB3CA5B59D574C28C40AE909 /* RGAppDelegate.m */,
 			);
 			path = iParapheur;
 			sourceTree = "<group>";
@@ -905,8 +907,6 @@
 				C5978BCD1D8C1E7F0097AC55 /* ColorUtils.swift */,
 				C5DF831E1DB518FD00BA14BB /* ViewUtils.swift */,
 				64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */,
-				AB3CAC62A8D8656B724F1606 /* RGAppDelegate.h */,
-				AB3CA5984B79710E43BD58CA /* RGAppDelegate.m */,
 				AB3CAB2C0F9F4D4641FB8387 /* Crypto */,
 				AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */,
 			);
@@ -1238,7 +1238,6 @@
 				AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */,
 				AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */,
 				AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */,
-				AB3CAEB0D67BF4CF80F222FA /* RGAppDelegate.m in Sources */,
 				AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */,
 				AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */,
 				AB3CAD3E9A26BC332C8524F2 /* InSignedData.swift in Sources */,
@@ -1253,6 +1252,7 @@
 				AB3CAA1F924C8D67F4AA5548 /* DeskListCell.swift in Sources */,
 				AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */,
 				AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */,
+				AB3CA9D7E0617661FBB3458C /* RGAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -37,7 +37,7 @@ import Foundation
 import SwiftMessages
 
 
-@objc class ViewUtils: NSObject {
+class ViewUtils: NSObject {
 
 
     @objc class func isConnectedToDemoAccount() -> Bool {
@@ -82,6 +82,7 @@ import SwiftMessages
 
     // <editor-folds desc="Logs">
 
+
     @objc class func logError(message: NSString,
                               title: NSString?) {
 
@@ -89,6 +90,7 @@ import SwiftMessages
                              subtitle: message,
                              messageType: .error)
     }
+
 
     @objc class func logSuccess(message: NSString,
                                 title: NSString?) {
@@ -98,6 +100,7 @@ import SwiftMessages
                              messageType: .success)
     }
 
+
     @objc class func logInfo(message: NSString,
                              title: NSString?) {
 
@@ -106,6 +109,7 @@ import SwiftMessages
                              messageType: .info)
     }
 
+
     @objc class func logWarning(message: NSString,
                                 title: NSString?) {
 
@@ -113,6 +117,7 @@ import SwiftMessages
                              subtitle: message,
                              messageType: .warning)
     }
+
 
     class func logMessage(title: NSString?,
                           subtitle: NSString,
@@ -132,6 +137,7 @@ import SwiftMessages
             return view
         }
     }
+
 
     // </editor-folds desc="Logs">
 
