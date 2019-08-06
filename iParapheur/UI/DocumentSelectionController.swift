@@ -37,7 +37,7 @@ import Foundation
 import UIKit
 import os
 
-@objc class DocumentSelectionController: UITableViewController {
+class DocumentSelectionController: UITableViewController {
 
     @objc static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 

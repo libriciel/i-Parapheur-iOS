@@ -32,14 +32,15 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-@objc class AccountSelectionCell: UITableViewCell {
-	
-	static let CellId: String! = "AccountSelectionCell"
-	
-	@IBOutlet var inboxIcon: UIImageView!
-	@IBOutlet var checkIcon: UIImageView!
-	@IBOutlet var nameLabel: UILabel!
-	
+class AccountSelectionCell: UITableViewCell {
+
+    static let CellId: String! = "AccountSelectionCell"
+
+    @IBOutlet var inboxIcon: UIImageView!
+    @IBOutlet var checkIcon: UIImageView!
+    @IBOutlet var nameLabel: UILabel!
+
 }

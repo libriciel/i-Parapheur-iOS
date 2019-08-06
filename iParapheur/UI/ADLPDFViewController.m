@@ -377,7 +377,7 @@
 
 - (void)dossierSelected:(NSNotification *)notification {
 
-    NSString *dossierRef = [notification object];
+    NSString *dossierRef = notification.object;
 
     _dossierRef = dossierRef;
 
