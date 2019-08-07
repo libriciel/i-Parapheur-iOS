@@ -164,15 +164,15 @@
             </objects>
             <point key="canvasLocation" x="1059" y="-1483"/>
         </scene>
-        <!--View Controller-->
+        <!--Pdf Controller-->
         <scene sceneID="GAo-lH-CdD">
             <objects>
-                <viewController id="PJW-9b-JcM" customClass="ADLPDFViewController" sceneMemberID="viewController">
+                <viewController id="PJW-9b-JcM" customClass="PdfController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AXG-2M-5cw"/>
                         <viewControllerLayoutGuide type="bottom" id="xfI-Nv-3sK"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="1Bs-6d-UcB">
+                    <view key="view" contentMode="scaleToFill" id="1Bs-6d-UcB" customClass="PDFView">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="1296"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -183,6 +183,7 @@
                             <barButtonItem image="ic_action_white_24dp" id="fQA-eM-WHG">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
+                                    <action selector="onActionButtonClicked:" destination="PJW-9b-JcM" id="gL8-BT-DF7"/>
                                     <segue destination="KoI-Hd-Qp2" kind="popoverPresentation" identifier="showActionPopover" popoverAnchorBarButtonItem="fQA-eM-WHG" id="3cb-mM-AUJ">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
@@ -191,12 +192,14 @@
                             <barButtonItem image="ic_info_outline_white_24dp" id="UJR-Wz-2Gr">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
+                                    <action selector="onDetailButtonClicked:" destination="PJW-9b-JcM" id="cwu-Oj-bVQ"/>
                                     <segue destination="b1B-Q6-eI1" kind="presentation" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="ic_library_books_white_24dp" id="e2H-L5-DmJ">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
+                                    <action selector="onDocumentButtonClicked:" destination="PJW-9b-JcM" id="rgY-YO-1cH"/>
                                     <segue destination="XYH-uf-RCC" kind="popoverPresentation" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
@@ -205,9 +208,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="actionButton" destination="fQA-eM-WHG" id="Xhf-mY-Gcg"/>
-                        <outlet property="detailsButton" destination="UJR-Wz-2Gr" id="eG6-bZ-NSg"/>
-                        <outlet property="documentsButton" destination="e2H-L5-DmJ" id="MMx-iK-XjL"/>
+                        <outlet property="pdfView" destination="1Bs-6d-UcB" id="euJ-N6-rDl"/>
                         <segue destination="zs0-y1-eAs" kind="presentation" identifier="WorkflowDialogController" modalPresentationStyle="formSheet" id="RTg-nG-E2l"/>
                     </connections>
                 </viewController>

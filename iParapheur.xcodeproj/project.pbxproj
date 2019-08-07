@@ -68,6 +68,7 @@
 		AB3CAD40BDC2D560A6899368 /* FolderListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA1EC6344C41296A85365 /* FolderListController.swift */; };
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
+		AB3CAFE76FFE3986CD3D545B /* PdfController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABD5DDB33626D5C41D14 /* PdfController.swift */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
 		B4443173160A252300C8C475 /* ADLDrawingView.m in Sources */ = {isa = PBXBuildFile; fileRef = B444316A160A230D00C8C475 /* ADLDrawingView.m */; };
@@ -264,6 +265,7 @@
 		AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLKeyStore.m; sourceTree = "<group>"; };
 		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
+		AB3CABD5DDB33626D5C41D14 /* PdfController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfController.swift; sourceTree = "<group>"; };
 		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
 		AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
@@ -565,6 +567,14 @@
 			path = DeskList;
 			sourceTree = "<group>";
 		};
+		AB3CAECE35C362DA9EDCBEF2 /* Pdf */ = {
+			isa = PBXGroup;
+			children = (
+				AB3CABD5DDB33626D5C41D14 /* PdfController.swift */,
+			);
+			path = Pdf;
+			sourceTree = "<group>";
+		};
 		B41B9475156227B3004D57A1 /* HUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,6 +610,7 @@
 				7A56704921820EAC005553F5 /* GlobalSplitViewController.swift */,
 				AB3CA19E020E6B485F930877 /* FolderList */,
 				AB3CAE8FB95F5B0AA7FEC012 /* DeskList */,
+				AB3CAECE35C362DA9EDCBEF2 /* Pdf */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1253,6 +1264,7 @@
 				AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */,
 				AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */,
 				AB3CA9D7E0617661FBB3458C /* RGAppDelegate.m in Sources */,
+				AB3CAFE76FFE3986CD3D545B /* PdfController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -124,7 +124,7 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
     }
 
 
-    // </editor-fold desc="LifeCycle"> MARK: - LifeCycle
+    // </editor-fold desc="LifeCycle">
 
 
     // <editor-fold desc="UI Listeners"> MARK: - UI Listeners
@@ -174,7 +174,7 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
     }
 
 
-    // </editor-fold desc="UI Listeners"> MARK: - UI Listeners
+    // </editor-fold desc="UI Listeners">
 
 
     private func updateSelectionMode() {
@@ -534,6 +534,6 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
     }
 
 
-    // </editor-fold desc="UITableView">  MARK: - UITableView
+    // </editor-fold desc="UITableView">
 
 }
