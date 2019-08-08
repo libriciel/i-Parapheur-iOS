@@ -37,7 +37,7 @@ import Foundation
 import PDFKit
 
 
-protocol DrawingGestureRecognizerDelegate: class {
+protocol PdfAnnotationGestureRecognizerDelegate: class {
 
     func gestureRecognizerBegan(_ location: CGPoint)
 
@@ -45,24 +45,32 @@ protocol DrawingGestureRecognizerDelegate: class {
 
     func gestureRecognizerEnded(_ location: CGPoint)
 
+    func enterInEditAnnotationMode(_ location: CGPoint) -> Bool
 }
 
 
 class DrawingGestureRecognizer: UIGestureRecognizer {
 
 
-    weak var drawingDelegate: DrawingGestureRecognizerDelegate?
-    var isInAnnotationMode = false
+    weak var drawingDelegate: PdfAnnotationGestureRecognizerDelegate?
+    var isInCreateAnnotationMode = false
 
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
         if let touch = touches.first,
            let numberOfTouches = event?.allTouches?.count,
-           isInAnnotationMode,
            numberOfTouches == 1 {
-            state = .began
+
             let location = touch.location(in: self.view)
-            drawingDelegate?.gestureRecognizerBegan(location)
+
+            if (isInCreateAnnotationMode || (drawingDelegate?.enterInEditAnnotationMode(location) ?? false)) {
+                state = .began
+                drawingDelegate?.gestureRecognizerBegan(location)
+            }
+            else {
+                state = .failed
+            }
         }
         else {
             state = .failed
@@ -73,7 +81,9 @@ class DrawingGestureRecognizer: UIGestureRecognizer {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         state = .changed
         guard let location = touches.first?.location(in: self.view)
-                else { return }
+                else {
+            return
+        }
         drawingDelegate?.gestureRecognizerMoved(location)
     }
 
@@ -84,7 +94,7 @@ class DrawingGestureRecognizer: UIGestureRecognizer {
             state = .ended
             return
         }
-        isInAnnotationMode = false
+        isInCreateAnnotationMode = false
         drawingDelegate?.gestureRecognizerEnded(location)
         state = .ended
     }

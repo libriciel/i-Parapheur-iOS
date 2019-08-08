@@ -35,6 +35,7 @@
 
 import Foundation
 import PDFKit
+import os
 
 /**
     Largely taken from this tutorial :
@@ -43,12 +44,12 @@ import PDFKit
     I basically replace those with rectangles...
     ... But we might want to check those Bézier curves for a hand-written signature, some time.
  */
-class PDFDrawer: DrawingGestureRecognizerDelegate {
+class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
 
     weak var pdfView: PDFView!
-    private var rect: CGRect?
     private var currentAnnotation: PDFAnnotation?
+    private var rect: CGRect?
     private var currentPage: PDFPage?
 
 
@@ -62,7 +63,10 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
 
         currentPage = page
         let convertedPoint = pdfView.convert(location, to: currentPage!)
-        rect = CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
+
+        // Actual logic
+
+        rect = currentAnnotation?.bounds ?? CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
     }
 
 
@@ -71,7 +75,12 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
         guard let page = currentPage
                 else { return }
 
-        fixCurrentRectangleCoordinates(location: location, page: page)
+        let convertedPoint = pdfView.convert(location, to: page)
+
+        // Actual logic
+
+        let newSize = computeRectangleSize(location: convertedPoint, page: page)
+        rect?.size = newSize
         drawAnnotation(onPage: page)
     }
 
@@ -81,10 +90,30 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
         guard let page = currentPage
                 else { return }
 
-        fixCurrentRectangleCoordinates(location: location, page: page)
+        let convertedPoint = pdfView.convert(location, to: page)
+
+        // Actual logic
+
+        let newSize = computeRectangleSize(location: convertedPoint, page: page)
+        rect?.size = newSize
+
         drawAnnotation(onPage: page)
         currentAnnotation = nil
         rect = nil
+    }
+
+
+    func enterInEditAnnotationMode(_ location: CGPoint) -> Bool {
+
+        guard let page = pdfView.page(for: location, nearest: true)
+                else { return false }
+
+        let convertedPoint = pdfView.convert(location, to: page)
+
+        // Actual logic
+
+        currentAnnotation = page.annotation(at: convertedPoint)
+        return (currentAnnotation != nil)
     }
 
 
@@ -110,19 +139,15 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
     }
 
 
-    private func fixCurrentRectangleCoordinates(location: CGPoint, page: PDFPage) {
-
-        // Translate from view-coordinates to PDF-coordinates
-
-        let convertedPoint = pdfView.convert(location, to: page)
+    private func computeRectangleSize(location: CGPoint, page: PDFPage) -> CGSize {
 
         // Bounds into the PDF page size
 
-        var xWithBoundaries = convertedPoint.x
+        var xWithBoundaries = location.x
         xWithBoundaries = max(page.bounds(for: pdfView.displayBox).origin.x, xWithBoundaries)
         xWithBoundaries = min(page.bounds(for: pdfView.displayBox).origin.x + page.bounds(for: pdfView.displayBox).size.width, xWithBoundaries)
 
-        var yWithBoundaries = convertedPoint.y
+        var yWithBoundaries = location.y
         yWithBoundaries = max(page.bounds(for: pdfView.displayBox).origin.y, yWithBoundaries)
         yWithBoundaries = min(page.bounds(for: pdfView.displayBox).origin.y + page.bounds(for: pdfView.displayBox).size.height, yWithBoundaries)
 
@@ -131,7 +156,7 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
         let width = xWithBoundaries - rect!.origin.x
         let height = yWithBoundaries - rect!.origin.y
 
-        rect?.size = CGSize(width: width, height: height)
+        return CGSize(width: width, height: height)
     }
 
 

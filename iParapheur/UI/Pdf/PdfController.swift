@@ -41,7 +41,7 @@ import os
 class PdfController: UIViewController {
 
     @IBOutlet var pdfView: PDFView!
-    private let pdfDrawer = PDFDrawer()
+    private let pdfDrawer = PDFAnnotationDrawer()
     private let drawingGestureRecognizer = DrawingGestureRecognizer()
 
 
@@ -93,7 +93,7 @@ class PdfController: UIViewController {
 
 
     @IBAction func onDetailButtonClicked(_ sender: Any) {
-        drawingGestureRecognizer.isInAnnotationMode = !drawingGestureRecognizer.isInAnnotationMode
+        drawingGestureRecognizer.isInCreateAnnotationMode = !drawingGestureRecognizer.isInCreateAnnotationMode
     }
 
 
