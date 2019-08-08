@@ -35,11 +35,18 @@
 
 import Foundation
 import PDFKit
+import os
 
 
 class PdfController: UIViewController {
 
     @IBOutlet var pdfView: PDFView!
+    private let pdfDrawer = PDFDrawer()
+    private let drawingGestureRecognizer = DrawingGestureRecognizer()
+
+
+    // <editor-fold desc="LifeCycle"> Mark: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +54,7 @@ class PdfController: UIViewController {
         pdfView.autoScales = true
 
         if let path = Bundle.main.path(forResource: "i-Parapheur_mobile_import_certificats_v2", ofType: "pdf") {
+
             let url = URL(fileURLWithPath: path)
             if let pdfDocument = PDFDocument(url: url) {
                 pdfView.displayMode = .singlePage
@@ -56,6 +64,10 @@ class PdfController: UIViewController {
                 pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
                 pdfView.maxScaleFactor = 3
                 pdfView.usePageViewController(true)
+
+                drawingGestureRecognizer.drawingDelegate = pdfDrawer
+                pdfView.addGestureRecognizer(drawingGestureRecognizer)
+                pdfDrawer.pdfView = pdfView
             }
         }
     }
@@ -70,6 +82,9 @@ class PdfController: UIViewController {
     }
 
 
+    // </editor-fold desc="LifeCycle">
+
+
     // <editor-fold desc="Listeners"> Mark: - Listeners
 
 
@@ -78,6 +93,8 @@ class PdfController: UIViewController {
 
 
     @IBAction func onDetailButtonClicked(_ sender: Any) {
+        os_log("Detail button clicked :: %d", drawingGestureRecognizer.isInAnnotationMode)
+        drawingGestureRecognizer.isInAnnotationMode = !drawingGestureRecognizer.isInAnnotationMode
     }
 
 

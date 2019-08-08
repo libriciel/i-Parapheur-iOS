@@ -193,7 +193,6 @@
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="onDetailButtonClicked:" destination="PJW-9b-JcM" id="cwu-Oj-bVQ"/>
-                                    <segue destination="b1B-Q6-eI1" kind="presentation" identifier="dossierDetails" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="HHl-gj-6k3"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem image="ic_library_books_white_24dp" id="e2H-L5-DmJ">

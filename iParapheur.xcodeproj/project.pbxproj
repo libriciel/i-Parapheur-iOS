@@ -68,6 +68,8 @@
 		AB3CAD40BDC2D560A6899368 /* FolderListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA1EC6344C41296A85365 /* FolderListController.swift */; };
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
+		AB3CAE3B41772DF787B2D171 /* DrawingGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2978A9696F9AAD97765 /* DrawingGestureRecognizer.swift */; };
+		AB3CAFD91957D472C162138F /* PdfDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA11F1AF2E2B416CDF9CD /* PdfDrawer.swift */; };
 		AB3CAFE76FFE3986CD3D545B /* PdfController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABD5DDB33626D5C41D14 /* PdfController.swift */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B41B94791562290C004D57A1 /* LGViewHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = B41B9477156227BE004D57A1 /* LGViewHUD.m */; };
@@ -248,7 +250,9 @@
 		95719C801893D50600246F7C /* ADLInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLInfoView.h; sourceTree = "<group>"; };
 		95719C811893D50600246F7C /* ADLInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLInfoView.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
+		AB3CA11F1AF2E2B416CDF9CD /* PdfDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfDrawer.swift; sourceTree = "<group>"; };
 		AB3CA1EC6344C41296A85365 /* FolderListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListController.swift; sourceTree = "<group>"; };
+		AB3CA2978A9696F9AAD97765 /* DrawingGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingGestureRecognizer.swift; sourceTree = "<group>"; };
 		AB3CA2C9F890B3FCFD4970FC /* InController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
 		AB3CA35534D838DA33430B24 /* RemoteDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteDocument.swift; sourceTree = "<group>"; };
 		AB3CA3898C79B8ED617822B7 /* InSignedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InSignedData.swift; sourceTree = "<group>"; };
@@ -571,6 +575,8 @@
 			isa = PBXGroup;
 			children = (
 				AB3CABD5DDB33626D5C41D14 /* PdfController.swift */,
+				AB3CA2978A9696F9AAD97765 /* DrawingGestureRecognizer.swift */,
+				AB3CA11F1AF2E2B416CDF9CD /* PdfDrawer.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -1265,6 +1271,8 @@
 				AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */,
 				AB3CA9D7E0617661FBB3458C /* RGAppDelegate.m in Sources */,
 				AB3CAFE76FFE3986CD3D545B /* PdfController.swift in Sources */,
+				AB3CAE3B41772DF787B2D171 /* DrawingGestureRecognizer.swift in Sources */,
+				AB3CAFD91957D472C162138F /* PdfDrawer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
