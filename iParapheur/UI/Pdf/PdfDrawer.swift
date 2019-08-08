@@ -71,11 +71,7 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
         guard let page = currentPage
                 else { return }
 
-        let convertedPoint = pdfView.convert(location, to: page)
-        let width = convertedPoint.x - rect!.origin.x
-        let height = convertedPoint.y - rect!.origin.y
-        rect?.size = CGSize(width: width, height: height)
-
+        fixCurrentRectangleCoordinates(location: location, page: page)
         drawAnnotation(onPage: page)
     }
 
@@ -85,11 +81,7 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
         guard let page = currentPage
                 else { return }
 
-        let convertedPoint = pdfView.convert(location, to: page)
-        let width = convertedPoint.x - rect!.origin.x
-        let height = convertedPoint.y - rect!.origin.y
-        rect?.size = CGSize(width: width, height: height)
-
+        fixCurrentRectangleCoordinates(location: location, page: page)
         drawAnnotation(onPage: page)
         currentAnnotation = nil
         rect = nil
@@ -112,6 +104,31 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
         annotation.border = border
 
         return annotation
+    }
+
+
+    private func fixCurrentRectangleCoordinates(location: CGPoint, page: PDFPage) {
+
+        // Translate from view-coordinates to PDF-coordinates
+
+        let convertedPoint = pdfView.convert(location, to: page)
+
+        // Bounds into the PDF page size
+
+        var xWithBoundaries = convertedPoint.x
+        xWithBoundaries = max(page.bounds(for: pdfView.displayBox).origin.x, xWithBoundaries)
+        xWithBoundaries = min(page.bounds(for: pdfView.displayBox).origin.x + page.bounds(for: pdfView.displayBox).size.width, xWithBoundaries)
+
+        var yWithBoundaries = convertedPoint.y
+        yWithBoundaries = max(page.bounds(for: pdfView.displayBox).origin.y, yWithBoundaries)
+        yWithBoundaries = min(page.bounds(for: pdfView.displayBox).origin.y + page.bounds(for: pdfView.displayBox).size.height, yWithBoundaries)
+
+        // Setting calculated values
+
+        let width = xWithBoundaries - rect!.origin.x
+        let height = yWithBoundaries - rect!.origin.y
+
+        rect?.size = CGSize(width: width, height: height)
     }
 
 

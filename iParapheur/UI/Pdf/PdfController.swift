@@ -93,7 +93,6 @@ class PdfController: UIViewController {
 
 
     @IBAction func onDetailButtonClicked(_ sender: Any) {
-        os_log("Detail button clicked :: %d", drawingGestureRecognizer.isInAnnotationMode)
         drawingGestureRecognizer.isInAnnotationMode = !drawingGestureRecognizer.isInAnnotationMode
     }
 
