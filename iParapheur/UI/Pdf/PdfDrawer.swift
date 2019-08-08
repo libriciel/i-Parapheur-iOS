@@ -93,14 +93,17 @@ class PDFDrawer: DrawingGestureRecognizerDelegate {
 
     private func createAnnotation(rect: CGRect, page: PDFPage) -> PDFAnnotation {
 
+        let annotationColor = UIColor.red
+
         let border = PDFBorder()
-        border.lineWidth = 5.0 // Set your line width here
+        border.lineWidth = 2.0
 
         let annotation = PDFAnnotation(bounds: rect,
                                        forType: .square,
                                        withProperties: nil)
 
-        annotation.color = UIColor.red.withAlphaComponent(0.3)
+        annotation.color = annotationColor.withAlphaComponent(0.6)
+        annotation.interiorColor = annotationColor.withAlphaComponent(0.2)
         annotation.border = border
 
         return annotation
