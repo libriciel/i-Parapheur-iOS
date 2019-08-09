@@ -67,8 +67,9 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
     weak var drawingDelegate: PdfAnnotationGestureRecognizerDelegate?
     var isInCreateAnnotationMode = false
-    var longPressTimer: Timer?
-    var isLongPress = false
+
+    private var longPressTimer: Timer?
+    private var isLongPress = false
 
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -100,11 +101,8 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         longPressCanceled()
         state = .changed
-        guard let location = touches.first?.location(in: self.view)
-                else {
-            return
-        }
 
+        guard let location = touches.first?.location(in: self.view) else { return }
         drawingDelegate?.pressMoved(location, isLongPress)
     }
 
