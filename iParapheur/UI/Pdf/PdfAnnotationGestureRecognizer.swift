@@ -35,21 +35,23 @@
 
 import Foundation
 import PDFKit
+import os
 
 
 protocol PdfAnnotationGestureRecognizerDelegate: class {
 
-    func gestureRecognizerBegan(_ location: CGPoint)
+    func simplePressBegan(_ location: CGPoint)
 
-    func gestureRecognizerMoved(_ location: CGPoint)
+    func simplePressMoved(_ location: CGPoint)
 
-    func gestureRecognizerEnded(_ location: CGPoint)
+    func simplePressEnded(_ location: CGPoint)
 
-    func enterInEditAnnotationMode(_ location: CGPoint) -> Bool
+    func enterInResizeMode(_ location: CGPoint) -> Bool
+
 }
 
 
-class DrawingGestureRecognizer: UIGestureRecognizer {
+class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     weak var drawingDelegate: PdfAnnotationGestureRecognizerDelegate?
@@ -57,16 +59,15 @@ class DrawingGestureRecognizer: UIGestureRecognizer {
 
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
         if let touch = touches.first,
            let numberOfTouches = event?.allTouches?.count,
            numberOfTouches == 1 {
 
             let location = touch.location(in: self.view)
 
-            if (isInCreateAnnotationMode || (drawingDelegate?.enterInEditAnnotationMode(location) ?? false)) {
+            if (isInCreateAnnotationMode || (drawingDelegate?.enterInResizeMode(location) ?? false)) {
                 state = .began
-                drawingDelegate?.gestureRecognizerBegan(location)
+                drawingDelegate?.simplePressBegan(location)
             }
             else {
                 state = .failed
@@ -84,7 +85,7 @@ class DrawingGestureRecognizer: UIGestureRecognizer {
                 else {
             return
         }
-        drawingDelegate?.gestureRecognizerMoved(location)
+        drawingDelegate?.simplePressMoved(location)
     }
 
 
@@ -95,7 +96,7 @@ class DrawingGestureRecognizer: UIGestureRecognizer {
             return
         }
         isInCreateAnnotationMode = false
-        drawingDelegate?.gestureRecognizerEnded(location)
+        drawingDelegate?.simplePressEnded(location)
         state = .ended
     }
 

@@ -53,10 +53,10 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     private var currentPage: PDFPage?
 
 
-    // <editor-fold desc="DrawingGestureRecognizerDelegate"> Mark: - DrawingGestureRecognizerDelegate
+    // <editor-fold desc="DrawingGestureRecognizerDelegate"> MARK: - DrawingGestureRecognizerDelegate
 
 
-    func gestureRecognizerBegan(_ location: CGPoint) {
+    func simplePressBegan(_ location: CGPoint) {
 
         guard let page = pdfView.page(for: location, nearest: true)
                 else { return }
@@ -70,7 +70,7 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
-    func gestureRecognizerMoved(_ location: CGPoint) {
+    func simplePressMoved(_ location: CGPoint) {
 
         guard let page = currentPage
                 else { return }
@@ -85,7 +85,7 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
-    func gestureRecognizerEnded(_ location: CGPoint) {
+    func simplePressEnded(_ location: CGPoint) {
 
         guard let page = currentPage
                 else { return }
@@ -103,7 +103,7 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
-    func enterInEditAnnotationMode(_ location: CGPoint) -> Bool {
+    func enterInResizeMode(_ location: CGPoint) -> Bool {
 
         guard let page = pdfView.page(for: location, nearest: true)
                 else { return false }

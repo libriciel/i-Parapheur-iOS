@@ -42,7 +42,7 @@ class PdfController: UIViewController {
 
     @IBOutlet var pdfView: PDFView!
     private let pdfDrawer = PDFAnnotationDrawer()
-    private let drawingGestureRecognizer = DrawingGestureRecognizer()
+    private let simpleGestureRecognizer = PdfAnnotationGestureRecognizer()
 
 
     // <editor-fold desc="LifeCycle"> Mark: - LifeCycle
@@ -65,8 +65,9 @@ class PdfController: UIViewController {
                 pdfView.maxScaleFactor = 3
                 pdfView.usePageViewController(true)
 
-                drawingGestureRecognizer.drawingDelegate = pdfDrawer
-                pdfView.addGestureRecognizer(drawingGestureRecognizer)
+                simpleGestureRecognizer.drawingDelegate = pdfDrawer
+                pdfView.addGestureRecognizer(simpleGestureRecognizer)
+
                 pdfDrawer.pdfView = pdfView
             }
         }
@@ -93,7 +94,7 @@ class PdfController: UIViewController {
 
 
     @IBAction func onDetailButtonClicked(_ sender: Any) {
-        drawingGestureRecognizer.isInCreateAnnotationMode = !drawingGestureRecognizer.isInCreateAnnotationMode
+        simpleGestureRecognizer.isInCreateAnnotationMode = !simpleGestureRecognizer.isInCreateAnnotationMode
     }
 
 
