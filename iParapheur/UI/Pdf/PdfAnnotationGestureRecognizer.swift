@@ -46,7 +46,7 @@ protocol PdfAnnotationGestureRecognizerDelegate: class {
 
     func pressMoved(_ location: CGPoint, _ isLongPress: Bool)
 
-    func pressEnded(_ location: CGPoint)
+    func pressEnded(_ location: CGPoint, _ isLongPress: Bool)
 
     func enterInEditMode(_ location: CGPoint) -> Bool
 
@@ -116,9 +116,11 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
             state = .ended
             return
         }
+
+        drawingDelegate?.pressEnded(location, isLongPress)
+
         isInCreateAnnotationMode = false
         isLongPress = false
-        drawingDelegate?.pressEnded(location)
         state = .ended
     }
 
