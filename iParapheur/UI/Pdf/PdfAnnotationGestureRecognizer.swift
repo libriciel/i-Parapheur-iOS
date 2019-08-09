@@ -40,22 +40,35 @@ import os
 
 protocol PdfAnnotationGestureRecognizerDelegate: class {
 
-    func simplePressBegan(_ location: CGPoint)
+    func pressBegan(_ location: CGPoint)
 
-    func simplePressMoved(_ location: CGPoint)
+    func longPressBegan()
 
-    func simplePressEnded(_ location: CGPoint)
+    func pressMoved(_ location: CGPoint, _ isLongPress: Bool)
 
-    func enterInResizeMode(_ location: CGPoint) -> Bool
+    func pressEnded(_ location: CGPoint)
+
+    func enterInEditMode(_ location: CGPoint) -> Bool
 
 }
 
+/**
+    Largely taken from this tutorial :
+    https://medium.com/@artempoluektov/ios-pdfkit-ink-annotations-tutorial-4ba19b474dce
 
+    A Timer has been set to manage long presses.
+    Cumulating multliple (long and regular) GestureRecognizers won't do anything good.
+    Subclassing UILongPressGestureRecognizer neither, it won't trigger on quick moves.
+
+    Managing an isLongPress boolean is way clearer, simpler.
+ */
 class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     weak var drawingDelegate: PdfAnnotationGestureRecognizerDelegate?
     var isInCreateAnnotationMode = false
+    var longPressTimer: Timer?
+    var isLongPress = false
 
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -65,9 +78,14 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
             let location = touch.location(in: self.view)
 
-            if (isInCreateAnnotationMode || (drawingDelegate?.enterInResizeMode(location) ?? false)) {
+            if (isInCreateAnnotationMode) {
                 state = .began
-                drawingDelegate?.simplePressBegan(location)
+                drawingDelegate?.pressBegan(location)
+            }
+            else if (drawingDelegate?.enterInEditMode(location) ?? false) {
+                longPressTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(longPressTriggered), userInfo: nil, repeats: false)
+                state = .began
+                drawingDelegate?.pressBegan(location)
             }
             else {
                 state = .failed
@@ -80,29 +98,47 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        longPressCanceled()
         state = .changed
         guard let location = touches.first?.location(in: self.view)
                 else {
             return
         }
-        drawingDelegate?.simplePressMoved(location)
+
+        drawingDelegate?.pressMoved(location, isLongPress)
     }
 
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        longPressCanceled()
         guard let location = touches.first?.location(in: self.view)
                 else {
             state = .ended
             return
         }
         isInCreateAnnotationMode = false
-        drawingDelegate?.simplePressEnded(location)
+        isLongPress = false
+        drawingDelegate?.pressEnded(location)
         state = .ended
     }
 
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        longPressCanceled()
+        isLongPress = false
         state = .failed
+    }
+
+
+    @objc func longPressTriggered() {
+        isLongPress = true
+        drawingDelegate?.longPressBegan()
+    }
+
+
+    private func longPressCanceled() {
+        longPressTimer?.invalidate()
+        longPressTimer = nil
     }
 
 }

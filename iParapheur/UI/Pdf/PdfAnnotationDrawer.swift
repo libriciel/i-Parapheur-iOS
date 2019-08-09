@@ -56,11 +56,9 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     // <editor-fold desc="DrawingGestureRecognizerDelegate"> MARK: - DrawingGestureRecognizerDelegate
 
 
-    func simplePressBegan(_ location: CGPoint) {
+    func pressBegan(_ location: CGPoint) {
 
-        guard let page = pdfView.page(for: location, nearest: true)
-                else { return }
-
+        guard let page = pdfView.page(for: location, nearest: true) else { return }
         currentPage = page
         let convertedPoint = pdfView.convert(location, to: currentPage!)
 
@@ -70,7 +68,13 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
-    func simplePressMoved(_ location: CGPoint) {
+    func longPressBegan() {
+        currentAnnotation?.setValue(PDFAnnotationHighlightingMode.outline, forAnnotationKey: .highlightingMode)
+        drawAnnotation(onPage: currentPage!)
+    }
+
+
+    func pressMoved(_ location: CGPoint, _ isLongPressed: Bool) {
 
         guard let page = currentPage
                 else { return }
@@ -85,7 +89,7 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
-    func simplePressEnded(_ location: CGPoint) {
+    func pressEnded(_ location: CGPoint) {
 
         guard let page = currentPage
                 else { return }
@@ -97,13 +101,14 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         let newSize = computeRectangleSize(location: convertedPoint, page: page)
         rect?.size = newSize
 
+        currentAnnotation?.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
         drawAnnotation(onPage: page)
         currentAnnotation = nil
         rect = nil
     }
 
 
-    func enterInResizeMode(_ location: CGPoint) -> Bool {
+    func enterInEditMode(_ location: CGPoint) -> Bool {
 
         guard let page = pdfView.page(for: location, nearest: true)
                 else { return false }
@@ -120,7 +125,7 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     // </editor-fold desc="DrawingGestureRecognizerDelegate">
 
 
-    private func createAnnotation(rect: CGRect, page: PDFPage) -> PDFAnnotation {
+    private func createAnnotation(rect: CGRect, page: PDFPage, highlightingMode: PDFAnnotationHighlightingMode) -> PDFAnnotation {
 
         let annotationColor = UIColor.red
 
@@ -131,8 +136,9 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
                                        forType: .square,
                                        withProperties: nil)
 
+        annotation.setValue(highlightingMode, forAnnotationKey: .highlightingMode)
         annotation.color = annotationColor.withAlphaComponent(0.6)
-        annotation.interiorColor = annotationColor.withAlphaComponent(0.2)
+        annotation.interiorColor = annotationColor.withAlphaComponent((highlightingMode == .outline) ? 0.4 : 0.2)
         annotation.border = border
 
         return annotation
@@ -162,10 +168,11 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
     private func drawAnnotation(onPage: PDFPage) {
 
-        guard let rect = rect
-                else { return }
+        guard let rect = rect else { return }
+        let annotation = createAnnotation(rect: rect.standardized,
+                                          page: onPage,
+                                          highlightingMode: currentAnnotation?.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode ?? .none)
 
-        let annotation = createAnnotation(rect: rect.standardized, page: onPage)
         if let _ = currentAnnotation { currentAnnotation!.page?.removeAnnotation(currentAnnotation!) }
         onPage.addAnnotation(annotation)
         currentAnnotation = annotation
