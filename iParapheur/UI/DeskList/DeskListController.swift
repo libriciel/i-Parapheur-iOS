@@ -38,7 +38,7 @@ import UIKit
 import os
 import Alamofire
 
-class MasterViewController: UITableViewController, UISplitViewControllerDelegate {
+class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
     @IBOutlet weak var accountButton: UIBarButtonItem!
 
@@ -86,7 +86,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
 
 
-    // </editor-fold desc="LifeCycle"> MARK: - LifeCycle
+    // </editor-fold desc="LifeCycle">
 
 
     // <editor-fold desc="UI Listeners"> MARK: - UI Listeners
@@ -122,7 +122,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
 
 
-    // </editor-fold desc="UI Listeners"> MARK: - UI Listeners
+    // </editor-fold desc="UI Listeners">
 
 
     // <editor-fold desc="Listeners"> MARK: - Listeners
@@ -166,7 +166,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
 
 
-    // </editor-fold desc="Listeners"> MARK: - Listeners
+    // </editor-fold desc="Listeners">
 
 
     @objc func loadBureaux() {
@@ -303,7 +303,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
 
 
-    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate">  MARK: - UITableViewDataSource & UITableViewDelegate
+    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate"> MARK: - UITableViewDataSource & UITableViewDelegate
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -374,7 +374,7 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
         let bureau = bureauxArray[indexPath.row]
         os_log("Selected Desk = %@", bureau.nodeRef!)
 
-        let controller = storyboard?.instantiateViewController(withIdentifier: "DeskViewController") as! DeskViewController
+        let controller = storyboard?.instantiateViewController(withIdentifier: "DeskViewController") as! FolderListController
         navigationController?.pushViewController(controller, animated: true)
 
         controller.currentDesk = bureau
@@ -383,6 +383,6 @@ class MasterViewController: UITableViewController, UISplitViewControllerDelegate
     }
 
 
-    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">  MARK: - UITableViewDataSource & UITableViewDelegate
+    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">
 
 }

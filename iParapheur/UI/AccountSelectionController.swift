@@ -70,7 +70,7 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
     }
 
 
-    // </editor-fold desc="LifeCycle"> MARK: - LifeCycle
+    // </editor-fold desc="LifeCycle">
 
 
     // <editor-fold desc="Private methods"> MARK: - Private methods
@@ -87,7 +87,7 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
     }
 
 
-    // </editor-fold desc="Private methods"> MARK: - Private methods
+    // </editor-fold desc="Private methods">
 
 
     // <editor-fold desc="Button Listeners"> MARK: - Button Listeners
@@ -98,10 +98,10 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
     }
 
 
-    // </editor-fold desc="Button Listeners"> MARK: - Button Listeners
+    // </editor-fold desc="Button Listeners">
 
 
-    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate">  MARK: - UITableViewDataSource & UITableViewDelegate
+    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate"> MARK: - UITableViewDataSource & UITableViewDelegate
 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -138,6 +138,6 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
     }
 
 
-    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">  MARK: - UITableViewDataSource & UITableViewDelegate
+    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">
 
 }

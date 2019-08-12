@@ -156,7 +156,7 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
     }
 
 
-    // </editor-fold desc="UIGestureRecognizer"> MARK: - UIGestureRecognizer
+    // </editor-fold desc="UIGestureRecognizer">
 
 
     @objc func singlePressTriggered() {

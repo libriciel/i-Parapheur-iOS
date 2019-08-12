@@ -94,7 +94,7 @@
 
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(dossierSelected:)
-                                               name:DeskViewController.FOLDER_SELECTED
+                                               name:FolderListController.FOLDER_SELECTED
                                              object:nil];
 
     [NSNotificationCenter.defaultCenter addObserver:self

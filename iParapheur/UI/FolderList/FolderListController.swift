@@ -38,7 +38,7 @@ import UIKit
 import os
 
 
-class DeskViewController: UITableViewController, UISearchResultsUpdating {
+class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     @objc public static let FOLDER_SELECTED = Notification.Name("folderSelected")
     private static let PAGE_SIZE = 15
@@ -327,7 +327,7 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
         else {
             restClient?.getDossiers(bureau: (currentDesk?.nodeRef)!,
                                     page: page,
-                                    size: DeskViewController.PAGE_SIZE,
+                                    size: FolderListController.PAGE_SIZE,
                                     filterJson: nil,
                                     onResponse: {
                                         (newFolders: [Dossier]) in
@@ -359,12 +359,12 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
 
         // Updating UI
 
-        loadMoreButton.isHidden = (newDossiers.count != DeskViewController.PAGE_SIZE)
+        loadMoreButton.isHidden = (newDossiers.count != FolderListController.PAGE_SIZE)
         updateSearchResults(for: searchController)
     }
 
 
-    // <editor-fold desc="UITableView>  MARK: - UITableView
+    // <editor-fold desc="UITableView> MARK: - UITableView
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -480,7 +480,7 @@ class DeskViewController: UITableViewController, UISearchResultsUpdating {
         }
 
         currentDossier = dossierClicked
-        NotificationCenter.default.post(name: DeskViewController.FOLDER_SELECTED, object: dossierClicked)
+        NotificationCenter.default.post(name: FolderListController.FOLDER_SELECTED, object: dossierClicked)
     }
 
 

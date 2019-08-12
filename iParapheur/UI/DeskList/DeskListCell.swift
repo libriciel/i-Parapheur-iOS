@@ -32,16 +32,17 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-@objc class DeskListCell: UITableViewCell {
+class DeskListCell: UITableViewCell {
 
-	@objc static let CellId: NSString! = "DeskListCell"
+    @objc static let CellId: NSString! = "DeskListCell"
 
     @IBOutlet var title: UILabel!
-	@IBOutlet var foldersToDo: UILabel!
-	@IBOutlet var lateFolders: UILabel!
-	@IBOutlet var disclosureIndicator: UIImageView!
-	@IBOutlet var dot: UIImageView!
-	
+    @IBOutlet var foldersToDo: UILabel!
+    @IBOutlet var lateFolders: UILabel!
+    @IBOutlet var disclosureIndicator: UIImageView!
+    @IBOutlet var dot: UIImageView!
+
 }
