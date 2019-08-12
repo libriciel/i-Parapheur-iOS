@@ -36,7 +36,6 @@
 #import "RGWorkflowDialogViewController.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
-#import "LGViewHUD.h"
 #import "iParapheur-Swift.h"
 
 
@@ -139,16 +138,8 @@
 }
 
 
-- (void)hideHud {
-
-    LGViewHUD *hud = LGViewHUD.defaultHUD;
-    [hud hideWithAnimation:HUDAnimationHideFadeOut];
-}
-
-
 - (void)dismissDialogView {
 
-    [self hideHud];
     [self dismissViewControllerAnimated:YES
                              completion:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DossierActionComplete"

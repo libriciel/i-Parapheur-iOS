@@ -34,8 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import "ADLPDFViewController.h"
-#import "ReaderContentView.h"
-#import "ReaderContentPage.h"
 #import "RGDossierDetailViewController.h"
 #import "ADLNotifications.h"
 #import "ADLSingletonState.h"
@@ -43,7 +41,7 @@
 #import "RGWorkflowDialogViewController.h"
 
 
-@interface ADLPDFViewController () <ReaderViewControllerDelegate>
+@interface ADLPDFViewController ()
 
 @end
 
@@ -201,15 +199,15 @@
 #pragma mark - ReaderViewControllerDelegate methods
 
 
-- (void)dismissReaderViewController:(ReaderViewController *)viewController {
-
-    _readerViewController.delegate = nil;
-    _readerViewController.dataSource = nil;
-    [_readerViewController willMoveToParentViewController:nil];
-    [_readerViewController.view removeFromSuperview];
-    [_readerViewController removeFromParentViewController];
-    _readerViewController = nil;
-}
+//- (void)dismissReaderViewController:(ReaderViewController *)viewController {
+//
+//    _readerViewController.delegate = nil;
+//    _readerViewController.dataSource = nil;
+//    [_readerViewController willMoveToParentViewController:nil];
+//    [_readerViewController.view removeFromSuperview];
+//    [_readerViewController removeFromParentViewController];
+//    _readerViewController = nil;
+//}
 
 
 #pragma mark - ADLDrawingViewDataSource
@@ -327,15 +325,6 @@
 }
 
 
-#pragma mark - LGViewHUDDelegate
-
-
-- (void)shallDismissHUD:(LGViewHUD *)hud {
-
-    HIDE_HUD
-}
-
-
 #pragma mark - ADLParapheurWallDelegateProtocol
 
 
@@ -381,15 +370,12 @@
 
     _dossierRef = dossierRef;
 
-    SHOW_HUD
-
     __weak typeof(self) weakSelf = self;
     [_restClient getDossier:ADLSingletonState.sharedSingletonState.bureauCourant
                     dossier:_dossierRef
                     success:^(Dossier *result) {
                         __strong typeof(weakSelf) strongSelf = weakSelf;
                         if (strongSelf) {
-                            HIDE_HUD
                             [strongSelf getDossierDidEndWithRequestAnswer:result];
                         }
                     }
@@ -401,7 +387,6 @@
                     success:^(Circuit *circuit) {
                         __strong typeof(weakSelf) strongSelf = weakSelf;
                         if (strongSelf) {
-                            HIDE_HUD
                             strongSelf.circuit = @[circuit].mutableCopy;
                             //[strongSelf requestAnnotations];
                         }
@@ -425,7 +410,7 @@
 
 - (void)clearDetail:(NSNotification *)notification {
 
-    [self dismissReaderViewController:_readerViewController];
+//    [self dismissReaderViewController:_readerViewController];
 
     // Hide title
 
@@ -522,10 +507,10 @@
                             if (strongSelf) {
                                 strongSelf.annotations = annotations;
 
-                                for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
-                                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
-                                    [currentReaderContentView.getContentPage refreshAnnotations];
-                                }
+//                                for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
+//                                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
+//                                    [currentReaderContentView.getContentPage refreshAnnotations];
+//                                }
                             }
                         }
                         failure:^(NSError *error) {
@@ -557,40 +542,40 @@
     }
 }
 
-
-- (void)loadPdfAt:(NSString *)filePath {
-
-    _readerDocument = [ReaderDocument withDocumentFilePath:filePath
-                                                  password:nil];
-
-    if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
-    {
-        // Deleting previous child controller
-
-        _readerViewController.delegate = nil;
-        _readerViewController.dataSource = nil;
-        [_readerViewController willMoveToParentViewController:nil];
-        [_readerViewController.view removeFromSuperview];
-        [_readerViewController removeFromParentViewController];
-        _readerViewController = nil;
-
-        // Creating new child controller
-
-        _readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
-        _readerViewController.delegate = self;
-        _readerViewController.dataSource = self;
-        _readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-        _readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-        [self.view setAutoresizesSubviews:YES];
-        [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
-        [self addChildViewController:_readerViewController];
-        [self.view addSubview:_readerViewController.view];
-    } else {    // Log an error so that we know that something went wrong
-        NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:nil] failed.", __FUNCTION__, filePath);
-    }
-}
+//
+//- (void)loadPdfAt:(NSString *)filePath {
+//
+//    _readerDocument = [ReaderDocument withDocumentFilePath:filePath
+//                                                  password:nil];
+//
+//    if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
+//    {
+//        // Deleting previous child controller
+//
+//        _readerViewController.delegate = nil;
+//        _readerViewController.dataSource = nil;
+//        [_readerViewController willMoveToParentViewController:nil];
+//        [_readerViewController.view removeFromSuperview];
+//        [_readerViewController removeFromParentViewController];
+//        _readerViewController = nil;
+//
+//        // Creating new child controller
+//
+//        _readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
+//        _readerViewController.delegate = self;
+//        _readerViewController.dataSource = self;
+//        _readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+//        _readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//        [self.view setAutoresizesSubviews:YES];
+//        [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+//
+//        [self addChildViewController:_readerViewController];
+//        [self.view addSubview:_readerViewController.view];
+//    } else {    // Log an error so that we know that something went wrong
+//        NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:nil] failed.", __FUNCTION__, filePath);
+//    }
+//}
 
 
 - (void)displayDocumentAt:(NSInteger)index {
@@ -606,7 +591,7 @@
 
         NSLog(@"PDF : Cached data");
 
-        [self loadPdfAt:filePath.path];
+//        [self loadPdfAt:filePath.path];
         [self requestAnnotations];
 
         return;
@@ -616,8 +601,6 @@
 
     NSLog(@"PDF : Download data");
 
-    SHOW_HUD
-
     if (_dossier.documents) {
         bool isPdf = (bool) _document.isVisuelPdf;
 
@@ -625,12 +608,10 @@
                                 isPdf:isPdf
                                atPath:filePath
                               success:^(NSString *string) {
-                                  HIDE_HUD
-                                  [self loadPdfAt:string];
+//                                  [self loadPdfAt:string];
                                   [self requestAnnotations];
                               }
                               failure:^(NSError *error) {
-                                  HIDE_HUD
                                   [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
                                                            title:nil];
                               }];

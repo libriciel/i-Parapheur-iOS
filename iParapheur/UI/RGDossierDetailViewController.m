@@ -177,8 +177,6 @@
                     failure:^(NSError *error) {
                         NSLog(@"getDossier error %@ : ", error.localizedDescription);
                     }];
-
-    SHOW_HUD
 }
 
 
@@ -230,7 +228,6 @@
         //[textView setText:[answer JSONString]];
         //[self refreshViewWithDossier:[answer objectForKey:@"data"]];
     }
-    [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
 
     [self showsEveryThing];
 }
@@ -242,8 +239,6 @@
 - (void)refreshCircuits:(NSArray *)circuitArray {
 
     @synchronized (self) {
-        [[LGViewHUD defaultHUD] hideWithAnimation:HUDAnimationNone];
-
         [_objects removeAllObjects];
         [_objects addObjectsFromArray:circuitArray];
         [circuitTable reloadData];
@@ -254,11 +249,11 @@
 #pragma mark - IBActions
 
 
-- (void)dismissReaderViewController:(ReaderViewController *)viewController {
-    // do nothing for now
-    [self.splitViewController dismissViewControllerAnimated:YES
-                                                 completion:nil];
-}
+//- (void)dismissReaderViewController:(ReaderViewController *)viewController {
+//    // do nothing for now
+//    [self.splitViewController dismissViewControllerAnimated:YES
+//                                                 completion:nil];
+//}
 
 
 - (void)presentModalViewController:(UIViewController *)modalViewController
@@ -292,12 +287,6 @@
 
 
 #pragma mark - LGViewHUDDelegate
-
-
-- (void)shallDismissHUD:(LGViewHUD *)hud {
-
-    HIDE_HUD
-}
 
 
 @end

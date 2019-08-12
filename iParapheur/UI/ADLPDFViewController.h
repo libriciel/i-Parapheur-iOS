@@ -34,14 +34,10 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ReaderViewController.h"
-#import "LGViewHUD.h"
-#import "ADLDrawingView.h"
 #import "ADLRestClient.h"
 
 
-@interface ADLPDFViewController : UIViewController
-        <ReaderViewControllerDelegate, UIPopoverControllerDelegate, ADLDrawingViewDataSource, LGViewHUDDelegate, ActionSelectionControllerDelegate>
+@interface ADLPDFViewController : UIViewController <UIPopoverControllerDelegate, ActionSelectionControllerDelegate>
 
 @property(nonatomic, strong) ADLRestClient *restClient;
 
@@ -49,8 +45,8 @@
 @property(strong, nonatomic) Dossier *dossier;
 @property(strong, nonatomic) NSString *dossierRef;
 
-@property(strong, nonatomic) ReaderViewController *readerViewController;
-@property(strong, nonatomic) ReaderDocument *readerDocument;
+//@property(strong, nonatomic) ReaderViewController *readerViewController;
+//@property(strong, nonatomic) ReaderDocument *readerDocument;
 @property(strong, nonatomic) UIViewController *documentsPopover;
 @property(strong, nonatomic) UIViewController *actionPopover;
 

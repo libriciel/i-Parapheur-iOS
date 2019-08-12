@@ -34,12 +34,11 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ReaderViewController.h"
 #import "ADLPDFViewController.h"
 
 @class RGDetailViewController;
 
-@interface RGDossierDetailViewController : UIViewController <ReaderViewControllerDelegate, UIPopoverControllerDelegate, UITableViewDelegate, UITableViewDataSource, LGViewHUDDelegate> {
+@interface RGDossierDetailViewController : UIViewController <UIPopoverControllerDelegate, UITableViewDelegate, UITableViewDataSource> {
     UILabel *dossierName;
     UILabel *typeLabel;
     UILabel *sousTypeLabel;
@@ -48,7 +47,7 @@
     NSArray *documents;
     NSArray *circuit;
     Bureau *currentDesk;
-    ReaderViewController *readerViewController;
+//    ReaderViewController *readerViewController;
 }
 
 @property(nonatomic, strong) ADLRestClient *restClient;
