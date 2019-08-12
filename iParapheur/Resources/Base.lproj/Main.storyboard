@@ -164,10 +164,10 @@
             </objects>
             <point key="canvasLocation" x="1059" y="-1483"/>
         </scene>
-        <!--Pdf Controller-->
+        <!--Pdf Reader Controller-->
         <scene sceneID="GAo-lH-CdD">
             <objects>
-                <viewController id="PJW-9b-JcM" customClass="PdfController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="PJW-9b-JcM" customClass="PdfReaderController" customModule="iParapheur" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AXG-2M-5cw"/>
                         <viewControllerLayoutGuide type="bottom" id="xfI-Nv-3sK"/>

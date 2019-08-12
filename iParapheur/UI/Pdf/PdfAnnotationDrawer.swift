@@ -146,6 +146,11 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
+    func getCurrentAnnotation() -> PDFAnnotation? {
+        return currentAnnotation
+    }
+
+
     // </editor-fold desc="DrawingGestureRecognizerDelegate">
 
 

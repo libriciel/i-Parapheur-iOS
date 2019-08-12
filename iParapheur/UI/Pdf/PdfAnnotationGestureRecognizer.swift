@@ -38,6 +38,15 @@ import PDFKit
 import os
 
 
+protocol PdfAnnotationEventsDelegate: class {
+
+    func onAnnotationMoved(_ annotation: PDFAnnotation?)
+
+    func onAnnotationSelected(_ annotation: PDFAnnotation?)
+
+}
+
+
 protocol PdfAnnotationGestureRecognizerDelegate: class {
 
     func pressBegan(_ location: CGPoint)
@@ -49,6 +58,8 @@ protocol PdfAnnotationGestureRecognizerDelegate: class {
     func pressEnded(_ location: CGPoint, _ isLongPress: Bool)
 
     func enterInEditMode(_ location: CGPoint) -> Bool
+
+    func getCurrentAnnotation() -> PDFAnnotation?
 
 }
 
@@ -66,6 +77,8 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     weak var drawingDelegate: PdfAnnotationGestureRecognizerDelegate?
+    weak var eventsDelegate: PdfAnnotationEventsDelegate?
+
     var isInCreateAnnotationMode = false
 
     private var longPressTimer: Timer?
@@ -136,11 +149,14 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
             state = .changed
         }
         else {
+            let currentAnnotation = drawingDelegate?.getCurrentAnnotation()
             drawingDelegate?.pressEnded(location, isLongPress)
 
             isInCreateAnnotationMode = false
             doubleTapTimerCancelled()
             state = .ended
+
+            eventsDelegate?.onAnnotationMoved(currentAnnotation)
         }
 
         longPressTimerCancelled()
@@ -182,9 +198,14 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     func doubleTapTriggered() {
+
+        let currentAnnotation = drawingDelegate?.getCurrentAnnotation()
+
         doubleTapTimerCancelled()
         longPressTimerCancelled()
         isLongPress = false
+
+        eventsDelegate?.onAnnotationSelected(currentAnnotation)
     }
 
 

@@ -38,11 +38,12 @@ import PDFKit
 import os
 
 
-class PdfController: UIViewController {
+class PdfController: UIViewController, PdfAnnotationEventsDelegate {
+
 
     @IBOutlet var pdfView: PDFView!
     private let pdfDrawer = PDFAnnotationDrawer()
-    private let simpleGestureRecognizer = PdfAnnotationGestureRecognizer()
+    private let pdfAnnotationGestureRecognizer = PdfAnnotationGestureRecognizer()
 
 
     // <editor-fold desc="LifeCycle"> Mark: - LifeCycle
@@ -65,8 +66,9 @@ class PdfController: UIViewController {
                 pdfView.maxScaleFactor = 3
                 pdfView.usePageViewController(true)
 
-                simpleGestureRecognizer.drawingDelegate = pdfDrawer
-                pdfView.addGestureRecognizer(simpleGestureRecognizer)
+                pdfAnnotationGestureRecognizer.drawingDelegate = pdfDrawer
+                pdfAnnotationGestureRecognizer.eventsDelegate = self
+                pdfView.addGestureRecognizer(pdfAnnotationGestureRecognizer)
 
                 pdfDrawer.pdfView = pdfView
             }
@@ -86,22 +88,29 @@ class PdfController: UIViewController {
     // </editor-fold desc="LifeCycle">
 
 
-    // <editor-fold desc="Listeners"> Mark: - Listeners
+    // <editor-fold desc="PdfAnnotationEventsDelegate"> MARK: - PdfAnnotationEventsDelegate
 
 
-    @IBAction func onDocumentButtonClicked(_ sender: Any) {
+    func onAnnotationMoved(_ annotation: PDFAnnotation?) {
+        preconditionFailure("This method must be overridden")
     }
 
 
-    @IBAction func onDetailButtonClicked(_ sender: Any) {
-        simpleGestureRecognizer.isInCreateAnnotationMode = !simpleGestureRecognizer.isInCreateAnnotationMode
+    func onAnnotationSelected(_ annotation: PDFAnnotation?) {
+        preconditionFailure("This method must be overridden")
     }
 
 
-    @IBAction func onActionButtonClicked(_ sender: Any) {
+    // </editor-fold desc="PdfAnnotationEventsDelegate">
+
+
+    func isInCreateAnnotationMode() -> Bool {
+        return pdfAnnotationGestureRecognizer.isInCreateAnnotationMode
     }
 
 
-    // </editor-fold desc="Listeners">
+    func setCreateAnnotationMode(value: Bool) {
+        pdfAnnotationGestureRecognizer.isInCreateAnnotationMode = value
+    }
 
 }
