@@ -65,7 +65,15 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
         // Actual logic
 
-        rect = currentAnnotation?.bounds ?? CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
+        if (currentAnnotation != nil) {
+            rect = CGRect(origin: CGPoint(x: currentAnnotation!.bounds.origin.x,
+                                          y: currentAnnotation!.bounds.origin.y + currentAnnotation!.bounds.height),
+                          size: CGSize(width: currentAnnotation!.bounds.width,
+                                       height: -currentAnnotation!.bounds.height))
+        }
+        else {
+            rect = CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
+        }
     }
 
 
@@ -205,7 +213,10 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         return CGRect(x: xWithBoundaries, y: yWithBoundaries, width: currentRect.width, height: currentRect.height)
     }
 
-
+    /**
+        Due to a nasty bug (https://stackoverflow.com/a/46911395/9122113),
+        we have to remove and replace a new annotation to render it properly.
+     */
     private func drawAnnotation(onPage: PDFPage) {
 
         guard let rect = rect else { return }
