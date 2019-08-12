@@ -69,27 +69,27 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
     var isInCreateAnnotationMode = false
 
     private var longPressTimer: Timer?
+    private var singleTapTimer: Timer?
     private var isLongPress = false
 
 
+    // <editor-fold desc="UIGestureRecognizer"> MARK: - UIGestureRecognizer
+
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
         if let touch = touches.first,
            let numberOfTouches = event?.allTouches?.count,
            numberOfTouches == 1 {
 
-            let location = touch.location(in: self.view)
-
-            if (isInCreateAnnotationMode) {
-                state = .began
-                drawingDelegate?.pressBegan(location)
-            }
-            else if (drawingDelegate?.enterInEditMode(location) ?? false) {
-                longPressTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(longPressTriggered), userInfo: nil, repeats: false)
-                state = .began
-                drawingDelegate?.pressBegan(location)
+            if (singleTapTimer != nil) {
+                doubleTapTriggered()
+                state = .ended
             }
             else {
-                state = .failed
+                let location = touch.location(in: self.view)
+                singleTapTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(singlePressTriggered), userInfo: location, repeats: false)
+                state = .possible
             }
         }
         else {
@@ -99,6 +99,10 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+
+        // If we're still waiting for a double tab, we can dismiss it, ang go into a single one
+
+        singleTapTimer?.fire()
         longPressCanceled()
         state = .changed
 
@@ -109,17 +113,23 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         longPressCanceled()
-        guard let location = touches.first?.location(in: self.view)
-                else {
+
+        guard let location = touches.first?.location(in: self.view) else {
             state = .ended
             return
         }
 
-        drawingDelegate?.pressEnded(location, isLongPress)
+        if (singleTapTimer != nil) {
+            // Still waiting for a second tap
+            state = .possible
+        }
+        else {
+            drawingDelegate?.pressEnded(location, isLongPress)
 
-        isInCreateAnnotationMode = false
-        isLongPress = false
-        state = .ended
+            isInCreateAnnotationMode = false
+            isLongPress = false
+            state = .ended
+        }
     }
 
 
@@ -130,9 +140,46 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
     }
 
 
+    // </editor-fold desc="UIGestureRecognizer"> MARK: - UIGestureRecognizer
+
+
+    @objc func singlePressTriggered() {
+        guard let location = singleTapTimer?.userInfo as? CGPoint else { return }
+
+        if (isInCreateAnnotationMode) {
+            state = .began
+            drawingDelegate?.pressBegan(location)
+        }
+        else if (drawingDelegate?.enterInEditMode(location) ?? false) {
+            longPressTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(longPressTriggered), userInfo: nil, repeats: false)
+            state = .began
+            drawingDelegate?.pressBegan(location)
+        }
+        else {
+            state = .failed
+        }
+
+        // Cleanup
+
+        singleTapTimer = nil
+    }
+
+
+    func doubleTapTriggered() {
+        singleTapCanceled()
+        longPressCanceled()
+    }
+
+
     @objc func longPressTriggered() {
         isLongPress = true
         drawingDelegate?.longPressBegan()
+    }
+
+
+    private func singleTapCanceled() {
+        singleTapTimer?.invalidate()
+        singleTapTimer = nil
     }
 
 
