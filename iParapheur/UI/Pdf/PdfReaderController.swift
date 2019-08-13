@@ -114,10 +114,33 @@ class PdfReaderController: PdfController, FolderListDelegate {
     // </editor-fold desc="PdfAnnotationEventsDelegate">
 
 
-    private static func translateToPDFAnnotation(annotation: Annotation) -> PDFAnnotation {
+    private func translateToPDFAnnotation(annotation: Annotation, page: PDFPage) -> PDFAnnotation {
 
-        let result = PDFAnnotation()
-        result.bounds = ViewUtils.translateDpi(rect: annotation.rect, oldDpi: 72, newDpi: 150)
+        // Translating annotation from top-right-origin (web)
+        // to bottom-left-origin (PDFKit)
+
+        let bounds = CGRect(
+                x: annotation.rect.origin.x,
+                y: page.bounds(for: pdfView.displayBox).height - annotation.rect.origin.y,
+                width: annotation.rect.width,
+                height: -(annotation.rect.height)
+        )
+
+        let result = PDFAnnotation(bounds: bounds.standardized,
+                                   forType: .square,
+                                   withProperties: nil)
+
+        // Metadata
+
+        let annotationColor = UIColor.red
+
+        let border = PDFBorder()
+        border.lineWidth = 2.0
+
+        result.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
+        result.color = annotationColor.withAlphaComponent(0.6)
+        result.interiorColor = annotationColor.withAlphaComponent(0.2)
+        result.border = border
 
         return result
     }
@@ -220,8 +243,9 @@ class PdfReaderController: PdfController, FolderListDelegate {
                                     if let pdfDocument = PDFDocument(url: localFileDownloaded) {
 
                                         for annotation in self.currentAnnotations ?? [] {
-                                            let pdfAnnotation = PdfReaderController.translateToPDFAnnotation(annotation: annotation)
-                                            pdfDocument.page(at: annotation.page)?.addAnnotation(pdfAnnotation)
+                                            guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
+                                            let pdfAnnotation = self.translateToPDFAnnotation(annotation: annotation, page: pdfPage)
+                                            pdfPage.addAnnotation(pdfAnnotation)
                                         }
 
                                         self.pdfView.document = pdfDocument
