@@ -846,14 +846,14 @@ class RestClient: NSObject {
     // </editor-fold desc="Get methods">
 
 
-    func downloadFile(document: String,
-                      isPdf: Bool,
+    func downloadFile(document: Document,
                       path filePath: URL,
                       onResponse responseCallback: ((String) -> Void)?,
                       onError errorCallback: ((Error) -> Void)?) {
 
-        let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
-        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
+        let pdfSuffix = document.isPdfVisual ? ";ph:visuel-pdf" : ""
+        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
+        os_log("Document downloadUrl:%@", downloadFileUrl)
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }

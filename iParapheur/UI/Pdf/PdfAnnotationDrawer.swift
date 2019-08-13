@@ -229,7 +229,10 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
                                           page: onPage,
                                           highlightingMode: currentAnnotation?.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode ?? .none)
 
-        if let _ = currentAnnotation { currentAnnotation!.page?.removeAnnotation(currentAnnotation!) }
+        if let _ = currentAnnotation {
+            currentAnnotation!.page?.removeAnnotation(currentAnnotation!)
+        }
+
         onPage.addAnnotation(annotation)
         currentAnnotation = annotation
     }

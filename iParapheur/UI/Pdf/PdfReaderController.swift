@@ -45,6 +45,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
     var currentDesk: Bureau?
     var currentFolder: Dossier?
     var currentWorkflow: Circuit?
+    var currentAnnotations: [Annotation]?
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
@@ -113,6 +114,23 @@ class PdfReaderController: PdfController, FolderListDelegate {
     // </editor-fold desc="PdfAnnotationEventsDelegate">
 
 
+    private static func translateToPDFAnnotation(annotation: Annotation) -> PDFAnnotation {
+
+        let result = PDFAnnotation()
+        result.bounds = ViewUtils.translateDpi(rect: annotation.rect, oldDpi: 72, newDpi: 150)
+
+        return result
+    }
+
+
+//    private static func translateToAnnotation(pdfAnnotation: PDFAnnotation) -> Annotation {
+//
+//        let result = Annotation()
+//
+//        return result
+//    }
+
+
     private func downloadFolderMetadata() {
 
         guard let folder = currentFolder,
@@ -124,7 +142,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
                               onResponse: {
                                   (folder: Dossier) in
                                   self.currentFolder = folder
-                                  self.downloadPdf(documentIndex: 0)
+                                  self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                               },
                               onError: {
                                   (error: Error) in
@@ -136,6 +154,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
                               onResponse: {
                                   (workflow: Circuit) in
                                   self.currentWorkflow = workflow
+                                  self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                               },
                               onError: {
                                   (error: Error) in
@@ -145,45 +164,73 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
         restClient.getAnnotations(dossier: folder.identifier,
                                   onResponse: {
-                                      (annotation: [Annotation]) in
+                                      (annotations: [Annotation]) in
+                                      self.currentAnnotations = annotations
+                                      self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                                   },
                                   onError: {
                                       (error: Error) in
+                                      ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                         title: "Impossible de télécharger le dossier")
                                   })
+    }
+
+
+    private func checkIfEverythingIsSetBeforeDisplayingThePdf() {
+
+        if ((currentFolder?.documents.count ?? 0) > 0),
+           (currentWorkflow != nil),
+           (currentAnnotations != nil) {
+
+            downloadPdf(documentIndex: 0)
+        }
     }
 
 
     private func downloadPdf(documentIndex: Int) {
 
         guard let folder = currentFolder,
-              let restClient = self.restClient,
-              (documentIndex < folder.documents.count),
+              let restClient = self.restClient else { return }
+
+        let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
+
+        guard (documentIndex < pdfDocuments.count),
               (documentIndex >= 0) else { return }
 
-        let document = folder.documents[documentIndex]
+        let document = pdfDocuments[documentIndex]
 
         // Prepare
 
-        let localFileUrl: URL?
+        var localFileUrl: URL?
         do {
             localFileUrl = try getLocalFileUrl(dossierId: folder.identifier, documentName: document.identifier)
         } catch {
-            ViewUtils.logError(message: "Impossible d'écrire sur le disque", title: "Téléchargement échoué")
-            return
+            ViewUtils.logError(message: "Impossible d'écrire sur le disque",
+                               title: "Téléchargement échoué")
         }
+
+        guard let localFileDownloaded = localFileUrl else { return }
 
         // Download
 
-        restClient.downloadFile(document: document.identifier,
-                                isPdf: true,
-                                path: localFileUrl!,
+        restClient.downloadFile(document: document,
+                                path: localFileDownloaded,
                                 onResponse: {
                                     (response: String) in
-                                    os_log("Download ok : %@", response)
+                                    if let pdfDocument = PDFDocument(url: localFileDownloaded) {
+
+                                        for annotation in self.currentAnnotations ?? [] {
+                                            let pdfAnnotation = PdfReaderController.translateToPDFAnnotation(annotation: annotation)
+                                            pdfDocument.page(at: annotation.page)?.addAnnotation(pdfAnnotation)
+                                        }
+
+                                        self.pdfView.document = pdfDocument
+                                    }
                                 },
                                 onError: {
                                     (error: Error) in
-                                    ViewUtils.logError(message: error.localizedDescription as NSString, title: "Téléchargement échoué")
+                                    ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                       title: "Téléchargement échoué")
                                 }
         )
     }

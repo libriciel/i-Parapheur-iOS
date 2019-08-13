@@ -36,7 +36,7 @@
 import Foundation
 
 
-@objc class Document: NSObject, Decodable {
+class Document: NSObject, Decodable {
 
     @objc let identifier: String
     @objc let name: String
@@ -45,8 +45,8 @@ import Foundation
     let pageCount: Int
     let attestState: Int
 
-    @objc let isMainDocument: Bool
-    @objc let isVisuelPdf: Bool
+    let isMainDocument: Bool
+    let isPdfVisual: Bool
     let isLocked: Bool
     let isDeletable: Bool
 
@@ -60,7 +60,7 @@ import Foundation
         case pageCount
         case attestState
         case isMainDocument
-        case isVisuelPdf = "visuelPdf"
+        case isPdfVisual = "visuelPdf"
         case isLocked
         case isDeletable = "canDelete"
     }
@@ -76,7 +76,7 @@ import Foundation
         attestState = try values.decodeIfPresent(Int.self, forKey: .attestState) ?? 0
 
         isMainDocument = try values.decodeIfPresent(Bool.self, forKey: .isMainDocument) ?? false
-        isVisuelPdf = try values.decodeIfPresent(Bool.self, forKey: .isVisuelPdf) ?? false
+        isPdfVisual = try values.decodeIfPresent(Bool.self, forKey: .isPdfVisual) ?? false
         isLocked = try values.decodeIfPresent(Bool.self, forKey: .isLocked) ?? false
         isDeletable = try values.decodeIfPresent(Bool.self, forKey: .isDeletable) ?? false
     }

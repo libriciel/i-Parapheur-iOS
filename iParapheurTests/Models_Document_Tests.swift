@@ -73,7 +73,7 @@ class Models_Document_Tests: XCTestCase {
         XCTAssertEqual(document!.attestState, 3)
         XCTAssertEqual(document!.size, 740377)
 
-        XCTAssertTrue(document!.isVisuelPdf)
+        XCTAssertTrue(document!.isPdfVisual)
         XCTAssertTrue(document!.isDeletable)
         XCTAssertTrue(document!.isLocked)
         XCTAssertTrue(document!.isDeletable)
@@ -101,7 +101,7 @@ class Models_Document_Tests: XCTestCase {
         XCTAssertEqual(document!.attestState, 0)
         XCTAssertEqual(document!.size, -1)
 
-        XCTAssertFalse(document!.isVisuelPdf)
+        XCTAssertFalse(document!.isPdfVisual)
         XCTAssertFalse(document!.isDeletable)
         XCTAssertFalse(document!.isLocked)
         XCTAssertFalse(document!.isDeletable)

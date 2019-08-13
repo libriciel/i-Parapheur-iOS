@@ -46,33 +46,23 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
     private let pdfAnnotationGestureRecognizer = PdfAnnotationGestureRecognizer()
 
 
-    // <editor-fold desc="LifeCycle"> Mark: - LifeCycle
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        pdfView.displayMode = .singlePage
         pdfView.autoScales = true
+        pdfView.displayDirection = .horizontal
+        pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
+        pdfView.maxScaleFactor = 3
+        pdfView.usePageViewController(true)
 
-        if let path = Bundle.main.path(forResource: "i-Parapheur_mobile_import_certificats_v2", ofType: "pdf") {
-
-            let url = URL(fileURLWithPath: path)
-            if let pdfDocument = PDFDocument(url: url) {
-                pdfView.displayMode = .singlePage
-                pdfView.autoScales = true
-                pdfView.displayDirection = .horizontal
-                pdfView.document = pdfDocument
-                pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
-                pdfView.maxScaleFactor = 3
-                pdfView.usePageViewController(true)
-
-                pdfAnnotationGestureRecognizer.drawingDelegate = pdfDrawer
-                pdfAnnotationGestureRecognizer.eventsDelegate = self
-                pdfView.addGestureRecognizer(pdfAnnotationGestureRecognizer)
-
-                pdfDrawer.pdfView = pdfView
-            }
-        }
+        pdfAnnotationGestureRecognizer.drawingDelegate = pdfDrawer
+        pdfAnnotationGestureRecognizer.eventsDelegate = self
+        pdfView.addGestureRecognizer(pdfAnnotationGestureRecognizer)
+        pdfDrawer.pdfView = pdfView
     }
 
     /**
@@ -102,6 +92,13 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     // </editor-fold desc="PdfAnnotationEventsDelegate">
+
+
+    func loadPdf(pdfUrl: URL) {
+        if let pdfDocument = PDFDocument(url: pdfUrl) {
+            pdfView.document = pdfDocument
+        }
+    }
 
 
     func isInCreateAnnotationMode() -> Bool {

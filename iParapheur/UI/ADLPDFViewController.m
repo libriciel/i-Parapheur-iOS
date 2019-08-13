@@ -58,7 +58,6 @@
     NSLog(@"View loaded : ADLPDFViewController");
 
     self.definesPresentationContext = true;
-    [self deleteEveryBinFile];
     self.navigationItem.rightBarButtonItems = @[];
 
     // Build UI
@@ -119,33 +118,6 @@
 }
 
 
-- (void)viewDidAppear:(BOOL)animated {
-
-    [super viewDidAppear:animated];
-}
-
-
-- (void)viewWillDisappear:(BOOL)animated {
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewWillDisappear:animated];
-}
-
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-    else
-        return YES;
-}
-
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    // [_readerViewController updateScrollViewContentViews];
-}
-
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
 
@@ -185,24 +157,6 @@
     }
 }
 
-
-- (void)dealloc {
-    [NSNotificationCenter.defaultCenter removeObserver:self];
-}
-
-
-#pragma mark - ReaderViewControllerDelegate methods
-
-
-//- (void)dismissReaderViewController:(ReaderViewController *)viewController {
-//
-//    _readerViewController.delegate = nil;
-//    _readerViewController.dataSource = nil;
-//    [_readerViewController willMoveToParentViewController:nil];
-//    [_readerViewController.view removeFromSuperview];
-//    [_readerViewController removeFromParentViewController];
-//    _readerViewController = nil;
-//}
 
 
 #pragma mark - ADLDrawingViewDataSource
@@ -320,140 +274,6 @@
 }
 
 
-#pragma mark - ADLParapheurWallDelegateProtocol
-
-
-- (void)getDossierDidEndWithRequestAnswer:(Dossier *)dossier {
-
-    _dossier = dossier;
-
-    // Determine the first pdf file to display
-
-    for (Document *document in dossier.documents) {
-        if (document.isVisuelPdf) {
-            _document = document;
-            break;
-        }
-    }
-
-    //
-
-    [self displayDocumentAt:0];
-    self.navigationController.navigationBar.topItem.title = dossier.title;
-
-    // Refresh buttons
-
-    NSArray *buttons;
-
-    if (dossier.documents.count > 1)
-        buttons = @[_actionButton, _documentsButton, _detailsButton];
-    else
-        buttons = @[_actionButton, _detailsButton];
-
-    self.navigationItem.rightBarButtonItems = buttons;
-
-    [self requestSignInfoForDossier:dossier];
-}
-
-
-#pragma mark - NotificationCenter selectors
-
-
-- (void)showDocumentWithIndex:(NSNotification *)notification {
-
-    NSNumber *docIndex = notification.object;
-    [self displayDocumentAt:docIndex.integerValue];
-    [_documentsPopover dismissViewControllerAnimated:YES completion:nil];
-    _documentsPopover = nil;
-}
-
-
-- (void)clearDetail:(NSNotification *)notification {
-
-//    [self dismissReaderViewController:_readerViewController];
-
-    // Hide title
-
-    self.navigationController.navigationBar.topItem.title = nil;
-
-    // Hide Buttons
-
-    NSArray *buttons = @[];
-    self.navigationItem.rightBarButtonItems = buttons;
-
-    // Hide popovers
-
-    if (_documentsPopover != nil)
-        [_documentsPopover dismissViewControllerAnimated:NO completion:nil];
-
-    if (_actionPopover != nil)
-        [_actionPopover dismissViewControllerAnimated:NO completion:nil];
-}
-
-
-#pragma mark - Private methods
-
-
-- (void)deleteEveryBinFile {
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //here everything you want to perform in background
-
-        // The preferred way to get the apps documents directory
-
-        NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *docDirectory = documentsPaths[0];
-
-        // Grab all the files in the documents dir
-
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSArray *allFiles = [fileManager contentsOfDirectoryAtPath:docDirectory
-                                                             error:nil];
-
-        // Filter the array for only bin files
-
-        NSPredicate *fltr = [NSPredicate predicateWithFormat:@"self ENDSWITH '.bin'"];
-        NSArray *binFiles = [allFiles filteredArrayUsingPredicate:fltr];
-
-        // Use fast enumeration to iterate the array and delete the files
-
-        for (NSString *binFile in binFiles) {
-            NSError *error = nil;
-            [fileManager removeItemAtPath:[docDirectory stringByAppendingPathComponent:binFile]
-                                    error:&error];
-        }
-    });
-}
-
-
-- (NSURL *)getFileUrlWithDossierRef:(NSString *)dossierId
-                    andDocumentName:(NSString *)documentName {
-
-    NSURL *documentsDirectoryURL = [NSFileManager.defaultManager URLForDirectory:NSDocumentDirectory
-                                                                        inDomain:NSUserDomainMask
-                                                               appropriateForURL:nil
-                                                                          create:YES
-                                                                           error:nil];
-
-    NSString *cleanedName = [documentName stringByReplacingOccurrencesOfString:@" "
-                                                                    withString:@"_"];
-    NSString *fileName = [NSString stringWithFormat:@"%@.bin",
-                                                    cleanedName];
-
-    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:@"dossiers" isDirectory:true];
-    [NSFileManager.defaultManager createDirectoryAtPath:documentsDirectoryURL.absoluteString
-                                             attributes:nil];
-
-    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:dossierId isDirectory:true];
-    [NSFileManager.defaultManager createDirectoryAtPath:documentsDirectoryURL.absoluteString
-                                             attributes:nil];
-
-    documentsDirectoryURL = [documentsDirectoryURL URLByAppendingPathComponent:fileName];
-
-    return documentsDirectoryURL;
-}
-
-
 - (void)requestSignInfoForDossier:(Dossier *)dossier {
 
     if ([dossier.actions containsObject:@"SIGNATURE"]) {
@@ -474,46 +294,6 @@
             _visaEnabled = YES;
             _signatureFormat = nil;
         }
-    }
-}
-
-- (void)displayDocumentAt:(NSInteger)index {
-
-    _document = _dossier.documents[(NSUInteger) index];
-
-    // File cache
-
-    NSURL *filePath = [self getFileUrlWithDossierRef:_document.identifier
-                                     andDocumentName:_document.name];
-
-    if ([NSFileManager.defaultManager fileExistsAtPath:filePath.path]) {
-
-        NSLog(@"PDF : Cached data");
-
-//        [self loadPdfAt:filePath.path];
-        [self requestAnnotations];
-
-        return;
-    }
-
-    // Downloading files
-
-    NSLog(@"PDF : Download data");
-
-    if (_dossier.documents) {
-        bool isPdf = (bool) _document.isVisuelPdf;
-
-        [_restClient downloadDocument:_document.identifier
-                                isPdf:isPdf
-                               atPath:filePath
-                              success:^(NSString *string) {
-//                                  [self loadPdfAt:string];
-                                  [self requestAnnotations];
-                              }
-                              failure:^(NSError *error) {
-                                  [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-                                                           title:nil];
-                              }];
     }
 }
 
