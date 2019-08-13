@@ -296,31 +296,31 @@
 #pragma mark - Download
 
 
-- (void)downloadDocument:(NSString *)documentId
-                   isPdf:(bool)isPdf
-                  atPath:(NSURL *)filePathUrl
-                 success:(void (^)(NSString *))success
-                 failure:(void (^)(NSError *))failure {
-
-    // Cancel previous download
-
+//- (void)downloadDocument:(NSString *)documentId
+//                   isPdf:(bool)isPdf
+//                  atPath:(NSURL *)filePathUrl
+//                 success:(void (^)(NSString *))success
+//                 failure:(void (^)(NSError *))failure {
+//
+//    // Cancel previous download
+//
 //	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
 //		for (NSURLSessionTask *task in downloadTasks)
 //			[task cancel];
 //	}];
-
-    // Define download request
-
-    [_swiftManager downloadFileWithDocument:documentId
-                                      isPdf:isPdf
-                                     atPath:filePathUrl
-                                 onResponse:^(NSString *path) {
-                                     success(path);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-
+//
+//    // Define download request
+//
+//    [_swiftManager downloadFileWithDocument:documentId
+//                                      isPdf:isPdf
+//                                     path:filePathUrl
+//                                 onResponse:^(NSString *path) {
+//                                     success(path);
+//                                 }
+//                                    onError:^(NSError *error) {
+//                                        failure(error);
+//                                    }];
+//
 //	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
 //	                                                                                URLString:downloadUrlString
 //	                                                                               parameters:nil
@@ -341,7 +341,7 @@
 //	                                                                      }];
 //
 //	[downloadTask resume];
-}
+//}
 
 
 #pragma mark - Private Methods

@@ -92,10 +92,10 @@
 
     // Notifications register
 
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(dossierSelected:)
-                                               name:FolderListController.FOLDER_SELECTED
-                                             object:nil];
+//    [NSNotificationCenter.defaultCenter addObserver:self
+//                                           selector:@selector(dossierSelected:)
+//                                               name:FolderListController.FOLDER_SELECTED
+//                                             object:nil];
 
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(clearDetail:)

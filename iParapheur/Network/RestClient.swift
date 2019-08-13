@@ -847,11 +847,11 @@ class RestClient: NSObject {
     // </editor-fold desc="Get methods">
 
 
-    @objc func downloadFile(document: NSString,
-                            isPdf: Bool,
-                            atPath filePath: NSURL,
-                            onResponse responseCallback: ((NSString) -> Void)?,
-                            onError errorCallback: ((NSError) -> Void)?) {
+    func downloadFile(document: String,
+                      isPdf: Bool,
+                      path filePath: URL,
+                      onResponse responseCallback: ((String) -> Void)?,
+                      onError errorCallback: ((Error) -> Void)?) {
 
         let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
         let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
@@ -872,13 +872,13 @@ class RestClient: NSObject {
             response in
 
             if (response.error == nil) {
-                responseCallback!(response.destinationURL!.path as NSString)
+                responseCallback!(response.destinationURL!.path)
             }
             //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
             //		errorCallback!(response.error)
             //	}
             else {
-                errorCallback!(response.error! as NSError)
+                errorCallback!(response.error!)
             }
         }
     }

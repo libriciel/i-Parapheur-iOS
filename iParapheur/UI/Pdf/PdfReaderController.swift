@@ -38,7 +38,11 @@ import PDFKit
 import os
 
 
-class PdfReaderController: PdfController {
+class PdfReaderController: PdfController, FolderListDelegate {
+
+
+    var restClient: RestClient?
+    var currentFolder: Dossier?
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
@@ -53,10 +57,11 @@ class PdfReaderController: PdfController {
     // </editor-fold desc="LifeCycle">
 
 
-    // <editor-fold desc="Listeners"> MARK: - Listeners
+    // <editor-fold desc="UI listeners"> MARK: - UI listeners
 
 
     @IBAction func onDocumentButtonClicked(_ sender: Any) {
+        downloadPdf(documentIndex: 0)
     }
 
 
@@ -66,10 +71,28 @@ class PdfReaderController: PdfController {
 
 
     @IBAction func onActionButtonClicked(_ sender: Any) {
+
     }
 
 
-    // </editor-fold desc="Listeners">
+    // </editor-fold desc="UI listeners">
+
+
+    // <editor-fold desc="FolderListDelegate"> MARK: - FolderListDelegate
+
+
+    func onFolderSelected(_ folder: Dossier, restClient: RestClient) {
+        self.restClient = restClient
+        self.currentFolder = folder
+
+        downloadPdf(documentIndex: 0)
+    }
+
+
+    // </editor-fold desc="FolderListDelegate">
+
+
+    // <editor-fold desc="PdfAnnotationEventsDelegate"> MARK: - PdfAnnotationEventsDelegate
 
 
     override func onAnnotationSelected(_ annotation: PDFAnnotation?) {
@@ -79,6 +102,67 @@ class PdfReaderController: PdfController {
 
     override func onAnnotationMoved(_ annotation: PDFAnnotation?) {
         os_log("Annotation moved !! %@", annotation ?? "(nil)")
+    }
+
+
+    // </editor-fold desc="PdfAnnotationEventsDelegate">
+
+
+    private func downloadPdf(documentIndex: Int) {
+
+
+        guard let folder = currentFolder,
+              let restClient = self.restClient,
+              (documentIndex < folder.documents.count),
+              (documentIndex >= 0) else { return }
+
+        let document = folder.documents[documentIndex]
+
+        // Prepare
+
+        let localFileUrl: URL?
+        do {
+            localFileUrl = try getLocalFileUrl(dossierId: folder.identifier, documentName: document.identifier)
+        } catch {
+            ViewUtils.logError(message: "Impossible d'écrire sur le disque", title: "Téléchargement échoué")
+            return
+        }
+
+        // Download
+
+        restClient.downloadFile(document: document.identifier,
+                                isPdf: true,
+                                path: localFileUrl!,
+                                onResponse: {
+                                    (response: String) in
+                                    os_log("Download ok : %@", response)
+                                },
+                                onError: {
+                                    (error: Error) in
+                                    ViewUtils.logError(message: error.localizedDescription as NSString, title: "Téléchargement échoué")
+                                }
+        )
+    }
+
+
+    private func getLocalFileUrl(dossierId: String,
+                                 documentName: String) throws -> URL {
+
+        // Source folder
+
+        var documentsDirectoryUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent("dossiers", isDirectory: true)
+                .appendingPathComponent(dossierId, isDirectory: true)
+
+        try FileManager.default.createDirectory(at: documentsDirectoryUrl, withIntermediateDirectories: true)
+
+        // File name
+
+        var fileName = documentName.replacingOccurrences(of: " ", with: "_")
+        fileName = String(format: "%@.bin", fileName)
+
+        documentsDirectoryUrl = documentsDirectoryUrl.appendingPathComponent(fileName)
+        return documentsDirectoryUrl
     }
 
 }

@@ -38,9 +38,15 @@ import UIKit
 import os
 
 
+protocol FolderListDelegate: class {
+
+    func onFolderSelected(_ folder: Dossier, restClient: RestClient)
+
+}
+
+
 class FolderListController: UITableViewController, UISearchResultsUpdating {
 
-    @objc public static let FOLDER_SELECTED = Notification.Name("folderSelected")
     private static let PAGE_SIZE = 15
 
     @IBOutlet weak var loadMoreButton: UIButton!
@@ -438,7 +444,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let cell = tableView.cellForRow(at: indexPath) as! FolderListCell
-        var dossierClicked = filteredDossiers[indexPath.row]
+        let dossierClicked = filteredDossiers[indexPath.row]
 
         // Selection mode
 
@@ -479,8 +485,13 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             return
         }
 
+        guard let splitViewController = view.window?.rootViewController as? UISplitViewController,
+              let rightNavigationController = splitViewController.viewControllers.last as? UINavigationController,
+              let folderListDelegate = rightNavigationController.topViewController as? FolderListDelegate,
+              let currentRestClient = restClient else { return }
+
         currentDossier = dossierClicked
-        NotificationCenter.default.post(name: FolderListController.FOLDER_SELECTED, object: dossierClicked)
+        folderListDelegate.onFolderSelected(dossierClicked, restClient: currentRestClient)
     }
 
 
