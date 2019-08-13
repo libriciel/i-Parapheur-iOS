@@ -40,7 +40,7 @@ import os
 
 protocol FolderListDelegate: class {
 
-    func onFolderSelected(_ folder: Dossier, restClient: RestClient)
+    func onFolderSelected(_ folder: Dossier, desk: Bureau, restClient: RestClient)
 
 }
 
@@ -488,10 +488,11 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         guard let splitViewController = view.window?.rootViewController as? UISplitViewController,
               let rightNavigationController = splitViewController.viewControllers.last as? UINavigationController,
               let folderListDelegate = rightNavigationController.topViewController as? FolderListDelegate,
-              let currentRestClient = restClient else { return }
+              let currentRestClient = restClient,
+              let currentDesk = currentDesk else { return }
 
         currentDossier = dossierClicked
-        folderListDelegate.onFolderSelected(dossierClicked, restClient: currentRestClient)
+        folderListDelegate.onFolderSelected(dossierClicked, desk: currentDesk, restClient: currentRestClient)
     }
 
 

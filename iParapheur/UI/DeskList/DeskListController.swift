@@ -172,17 +172,17 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
     @objc func loadBureaux() {
         refreshControl?.beginRefreshing()
 
-        self.restClient?.getBureaux(
+        self.restClient?.getDesks(
                 onResponse: {
-                    (bureaux: NSArray) in
+                    (desks: [Bureau]) in
 
-                    self.bureauxArray = bureaux as! [Bureau];
+                    self.bureauxArray = desks
                     self.loading = false
                     self.refreshControl?.endRefreshing()
                     self.tableView.reloadData()
                 },
                 onError: {
-                    (error: NSError) in
+                    (error: Error) in
 
                     self.bureauxArray = [];
                     self.loading = false

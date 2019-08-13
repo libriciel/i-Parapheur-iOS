@@ -92,11 +92,6 @@
 
     // Notifications register
 
-//    [NSNotificationCenter.defaultCenter addObserver:self
-//                                           selector:@selector(dossierSelected:)
-//                                               name:FolderListController.FOLDER_SELECTED
-//                                             object:nil];
-
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(clearDetail:)
                                                name:kSelectBureauAppeared
@@ -364,41 +359,6 @@
 #pragma mark - NotificationCenter selectors
 
 
-- (void)dossierSelected:(NSNotification *)notification {
-
-    NSString *dossierRef = notification.object;
-
-    _dossierRef = dossierRef;
-
-    __weak typeof(self) weakSelf = self;
-    [_restClient getDossier:ADLSingletonState.sharedSingletonState.bureauCourant
-                    dossier:_dossierRef
-                    success:^(Dossier *result) {
-                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                        if (strongSelf) {
-                            [strongSelf getDossierDidEndWithRequestAnswer:result];
-                        }
-                    }
-                    failure:^(NSError *error) {
-                        NSLog(@"getBureau fail : %@", error.localizedDescription);
-                    }];
-
-    [_restClient getCircuit:_dossierRef
-                    success:^(Circuit *circuit) {
-                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                        if (strongSelf) {
-                            strongSelf.circuit = @[circuit].mutableCopy;
-                            //[strongSelf requestAnnotations];
-                        }
-                    }
-                    failure:^(NSError *error) {
-                        NSLog(@"getCircuit fail : %@", error.localizedDescription);
-                    }];
-
-    //[[self navigationController] popToRootViewControllerAnimated:YES];
-}
-
-
 - (void)showDocumentWithIndex:(NSNotification *)notification {
 
     NSNumber *docIndex = notification.object;
@@ -494,31 +454,6 @@
 }
 
 
-- (void)requestAnnotations {
-
-    NSString *documentId = _document.identifier;
-
-    __weak typeof(self) weakSelf = self;
-    [_restClient getAnnotations:_dossierRef
-                       document:documentId
-                        success:^(NSArray *annotations) {
-
-                            __strong typeof(weakSelf) strongSelf = weakSelf;
-                            if (strongSelf) {
-                                strongSelf.annotations = annotations;
-
-//                                for (NSNumber *contentViewIdx in strongSelf.readerViewController.getContentViews) {
-//                                    ReaderContentView *currentReaderContentView = strongSelf.readerViewController.getContentViews[contentViewIdx];
-//                                    [currentReaderContentView.getContentPage refreshAnnotations];
-//                                }
-                            }
-                        }
-                        failure:^(NSError *error) {
-                            NSLog(@"getAnnotations error");
-                        }];
-}
-
-
 - (void)requestSignInfoForDossier:(Dossier *)dossier {
 
     if ([dossier.actions containsObject:@"SIGNATURE"]) {
@@ -541,42 +476,6 @@
         }
     }
 }
-
-//
-//- (void)loadPdfAt:(NSString *)filePath {
-//
-//    _readerDocument = [ReaderDocument withDocumentFilePath:filePath
-//                                                  password:nil];
-//
-//    if (_readerDocument != nil) // Must have a valid ReaderDocument object in order to proceed with things
-//    {
-//        // Deleting previous child controller
-//
-//        _readerViewController.delegate = nil;
-//        _readerViewController.dataSource = nil;
-//        [_readerViewController willMoveToParentViewController:nil];
-//        [_readerViewController.view removeFromSuperview];
-//        [_readerViewController removeFromParentViewController];
-//        _readerViewController = nil;
-//
-//        // Creating new child controller
-//
-//        _readerViewController = [[ReaderViewController alloc] initWithReaderDocument:_readerDocument];
-//        _readerViewController.delegate = self;
-//        _readerViewController.dataSource = self;
-//        _readerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-//        _readerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//
-//        [self.view setAutoresizesSubviews:YES];
-//        [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-//
-//        [self addChildViewController:_readerViewController];
-//        [self.view addSubview:_readerViewController.view];
-//    } else {    // Log an error so that we know that something went wrong
-//        NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:nil] failed.", __FUNCTION__, filePath);
-//    }
-//}
-
 
 - (void)displayDocumentAt:(NSInteger)index {
 

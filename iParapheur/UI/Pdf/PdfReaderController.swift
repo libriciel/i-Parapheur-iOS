@@ -42,7 +42,9 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
 
     var restClient: RestClient?
+    var currentDesk: Bureau?
     var currentFolder: Dossier?
+    var currentWorkflow: Circuit?
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
@@ -81,10 +83,13 @@ class PdfReaderController: PdfController, FolderListDelegate {
     // <editor-fold desc="FolderListDelegate"> MARK: - FolderListDelegate
 
 
-    func onFolderSelected(_ folder: Dossier, restClient: RestClient) {
+    func onFolderSelected(_ folder: Dossier, desk: Bureau, restClient: RestClient) {
+
         self.restClient = restClient
         self.currentFolder = folder
+        self.currentDesk = desk
 
+        downloadFolderMetadata()
         downloadPdf(documentIndex: 0)
     }
 
@@ -108,8 +113,47 @@ class PdfReaderController: PdfController, FolderListDelegate {
     // </editor-fold desc="PdfAnnotationEventsDelegate">
 
 
-    private func downloadPdf(documentIndex: Int) {
+    private func downloadFolderMetadata() {
 
+        guard let folder = currentFolder,
+              let desk = currentDesk,
+              let restClient = self.restClient else { return }
+
+        restClient.getDossier(dossier: folder.identifier,
+                              bureau: desk.identifier,
+                              onResponse: {
+                                  (folder: Dossier) in
+                                  self.currentFolder = folder
+                                  self.downloadPdf(documentIndex: 0)
+                              },
+                              onError: {
+                                  (error: Error) in
+                                  ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                     title: "Impossible de télécharger le dossier")
+                              })
+
+        restClient.getCircuit(dossier: folder.identifier,
+                              onResponse: {
+                                  (workflow: Circuit) in
+                                  self.currentWorkflow = workflow
+                              },
+                              onError: {
+                                  (error: Error) in
+                                  ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                     title: "Impossible de télécharger le dossier")
+                              })
+
+        restClient.getAnnotations(dossier: folder.identifier,
+                                  onResponse: {
+                                      (annotation: [Annotation]) in
+                                  },
+                                  onError: {
+                                      (error: Error) in
+                                  })
+    }
+
+
+    private func downloadPdf(documentIndex: Int) {
 
         guard let folder = currentFolder,
               let restClient = self.restClient,

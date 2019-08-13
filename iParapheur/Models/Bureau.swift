@@ -38,7 +38,7 @@ import Foundation
 
 class Bureau: NSObject, Decodable {
 
-    let identifier: String?
+    let identifier: String
     @objc let name: String
     let collectivite: String?
     let desc: String?
@@ -87,7 +87,7 @@ class Bureau: NSObject, Decodable {
         nodeRef = try values.decodeIfPresent(String.self, forKey: .nodeRef)?
                 .replacingOccurrences(of: "workspace://SpacesStore/", with: "", options: .literal)
 
-        identifier = try values.decodeIfPresent(String.self, forKey: .identifier)
+        identifier = try values.decodeIfPresent(String.self, forKey: .identifier) ?? ""
         name = try values.decodeIfPresent(String.self, forKey: .name) ?? "(aucun nom)"
         collectivite = try values.decodeIfPresent(String.self, forKey: .collectivite)
         desc = try values.decodeIfPresent(String.self, forKey: .desc)

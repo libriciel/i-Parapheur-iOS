@@ -307,8 +307,8 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getDesks(onResponse responseCallback: (([Bureau]) -> Void)?,
+                  onError errorCallback: ((Error) -> Void)?) {
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
@@ -328,9 +328,8 @@ class RestClient: NSObject {
 
                     // Parsing and callback
 
-                    let hasSomeData = (bureaux != nil)
-                    if (hasSomeData) {
-                        responseCallback!(bureaux! as NSArray)
+                    if (bureaux != nil) {
+                        responseCallback!(bureaux!)
                     }
                     else {
                         errorCallback!(NSError(domain: "Invalid response",
@@ -347,12 +346,12 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getDossiers(bureau: String,
-                           page: Int,
-                           size: Int,
-                           filterJson: String?,
-                           onResponse responseCallback: (([Dossier]) -> Void)?,
-                           onError errorCallback: ((Error) -> Void)?) {
+    func getDossiers(bureau: String,
+                     page: Int,
+                     size: Int,
+                     filterJson: String?,
+                     onResponse responseCallback: (([Dossier]) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -467,10 +466,10 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getDossier(dossier: NSString,
-                          bureau: NSString,
-                          onResponse responseCallback: ((Dossier) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getDossier(dossier: String,
+                    bureau: String,
+                    onResponse responseCallback: ((Dossier) -> Void)?,
+                    onError errorCallback: ((Error) -> Void)?) {
 
         let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
 
@@ -503,9 +502,9 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getCircuit(dossier: NSString,
-                          onResponse responseCallback: ((Circuit) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getCircuit(dossier: String,
+                    onResponse responseCallback: ((Circuit) -> Void)?,
+                    onError errorCallback: ((Error) -> Void)?) {
 
         let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
 
@@ -579,9 +578,9 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getAnnotations(dossier: NSString,
-                              onResponse responseCallback: (([Annotation]) -> Void)?,
-                              onError errorCallback: ((NSError) -> Void)?) {
+    func getAnnotations(dossier: String,
+                        onResponse responseCallback: (([Annotation]) -> Void)?,
+                        onError errorCallback: ((Error) -> Void)?) {
 
         let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
 

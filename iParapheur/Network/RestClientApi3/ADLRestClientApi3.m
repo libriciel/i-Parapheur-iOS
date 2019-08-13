@@ -173,44 +173,6 @@
 }
 
 
-- (void)getBureaux:(void (^)(NSArray *))success
-           failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"bureaux"];
-
-    [_swiftManager getBureauxOnResponse:^(NSArray *response) {
-         success(response);
-     }
-                                onError:^(NSError *error) {
-                                    failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
-                                                                code:kCFURLErrorUserAuthenticationRequired
-                                                            userInfo:nil]);
-                                }];
-}
-
-
-- (void)getDossiers:(NSString *)bureau
-               page:(int)page
-               size:(int)size
-             filter:(NSString *)filterJson
-            success:(void (^)(NSArray *))success
-            failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"dossiers"];
-
-    [_swiftManager getDossiersWithBureau:bureau
-                                    page:@(page)
-                                    size:@(size)
-                              filterJson:filterJson
-                              onResponse:^(NSArray *response) {
-                                  success(response);
-                              }
-                                 onError:^(NSError *error) {
-                                     failure(error);
-                                 }];
-}
-
-
 - (void)getTypology:(NSString *)bureauId
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure {
@@ -222,22 +184,6 @@
                                    onError:^(NSError *error) {
                                        failure(error);
                                    }];
-}
-
-
-- (void)getDossier:(NSString *)bureau
-           dossier:(NSString *)dossier
-           success:(void (^)(Dossier *))success
-           failure:(void (^)(NSError *))failure {
-
-    [_swiftManager getDossierWithDossier:dossier
-                                  bureau:bureau
-                              onResponse:^(Dossier *response) {
-                                  success(response);
-                              }
-                                 onError:^(NSError *error) {
-                                     failure(error);
-                                 }];
 }
 
 
@@ -256,40 +202,6 @@
                                   onError:^(NSError *error) {
                                       failure(error);
                                   }];
-}
-
-
-- (void)getCircuit:(NSString *)dossier
-           success:(void (^)(Circuit *))success
-           failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"circuit"];
-
-    [_swiftManager getCircuitWithDossier:dossier
-                              onResponse:^(Circuit *circuit) {
-                                  success(circuit);
-                              }
-                                 onError:^(NSError *error) {
-                                     failure(error);
-                                 }];
-}
-
-
-- (void)getAnnotations:(NSString *)dossier
-              document:(NSString *)document
-               success:(void (^)(NSArray *))success
-               failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
-                                                                andDocument:document]];
-
-    [_swiftManager getAnnotationsWithDossier:dossier
-                                  onResponse:^(id annotations) {
-                                      success(annotations);
-                                  }
-                                     onError:^(NSError *error) {
-                                         failure(error);
-                                     }];
 }
 
 
