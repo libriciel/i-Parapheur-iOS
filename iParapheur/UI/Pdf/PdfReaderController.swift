@@ -66,20 +66,52 @@ class PdfReaderController: PdfController, FolderListDelegate {
         annotationItem.buttonColor = UIColor.gray
         annotationItem.title = "Annoter"
         annotationItem.icon = UIImage(named: "ic_edit_white_24dp")!
+        annotationItem.handler = {
+            item in
+            self.onCreateAnnotationFloatingButtonClicked()
+        }
 
         rejectItem.buttonColor = UIColor.red
         rejectItem.title = "Rejeter"
         rejectItem.icon = UIImage(named: "ic_close_white_24dp")!
+        rejectItem.handler = {
+            item in
+            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_REJECT)
+        }
 
         signItem.buttonColor = ColorUtils.DarkGreen
         signItem.title = "Signer"
         signItem.icon = UIImage(named: "ic_check_white_18dp")!
+        signItem.handler = {
+            item in
+            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_SIGNATURE)
+        }
 
         visaItem.buttonColor = ColorUtils.DarkGreen
         visaItem.title = "Signer"
         visaItem.icon = UIImage(named: "ic_check_white_18dp")!
+        visaItem.handler = {
+            item in
+            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_VISA)
+        }
     }
 
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+        if (segue.identifier == WorkflowDialogController.SEGUE),
+           let destinationController = segue.destination as? WorkflowDialogController,
+           let folder = currentFolder {
+
+            destinationController.currentAction = sender as? String
+            destinationController.restClient = restClient
+            destinationController.signInfoMap = [folder: nil]
+            destinationController.currentBureau = currentDesk?.identifier
+        }
+        else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
 
     // </editor-fold desc="LifeCycle">
 
@@ -93,17 +125,15 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
 
     @IBAction func onDetailButtonClicked(_ sender: Any) {
-        setCreateAnnotationMode(value: !isInCreateAnnotationMode())
     }
 
 
-    @IBAction func onActionButtonClicked(_ sender: Any) {
-
+    private func onCreateAnnotationFloatingButtonClicked() {
+        setCreateAnnotationMode(value: true)
     }
 
-
-    @objc func btnFloatingButtonTapped(floatingButton: UIButton) {
-        os_log("FAB !!")
+    private func onFolderActionFloatingButtonClicked(action: String) {
+        performSegue(withIdentifier: WorkflowDialogController.SEGUE, sender: action)
     }
 
 

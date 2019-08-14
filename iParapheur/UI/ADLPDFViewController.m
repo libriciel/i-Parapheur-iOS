@@ -52,72 +52,6 @@
 #pragma mark - UIViewController
 
 
-- (void)viewDidLoad {
-
-    [super viewDidLoad];
-    NSLog(@"View loaded : ADLPDFViewController");
-
-    self.definesPresentationContext = true;
-    self.navigationItem.rightBarButtonItems = @[];
-
-    // Build UI
-
-    self.navigationController.navigationBar.tintColor = ColorUtils.Aqua;
-    self.navigationItem.rightBarButtonItem = nil;
-
-    if (UIDevice.currentDevice.systemVersion.floatValue > 8.0) {
-        UISplitViewController *uiSplitView = (UISplitViewController *) UIApplication.sharedApplication.delegate.window.rootViewController;
-        UIBarButtonItem *backButton = uiSplitView.displayModeButtonItem;
-
-        self.navigationItem.leftBarButtonItem = backButton;
-        self.navigationItem.leftItemsSupplementBackButton = YES;
-
-        @try {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [backButton.target performSelector:backButton.action];
-#pragma clang diagnostic pop
-        }
-        @catch (NSException *e) {}
-    }
-
-    _restClient = ADLRestClient.sharedManager;
-}
-
-
-- (void)viewWillAppear:(BOOL)animated {
-
-    [super viewWillAppear:animated];
-
-    // Notifications register
-
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(clearDetail:)
-                                               name:kSelectBureauAppeared
-                                             object:nil];
-
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(clearDetail:)
-                                               name:WorkflowDialogController.ACTION_COMPLETE
-                                             object:nil];
-
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(clearDetail:)
-                                               name:kFilterChanged
-                                             object:nil];
-
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(showDocumentWithIndex:)
-                                               name:DocumentSelectionController.NotifShowDocument
-                                             object:nil];
-
-    //
-
-    [self.navigationController setNavigationBarHidden:NO
-                                             animated:animated];
-}
-
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
 
@@ -146,17 +80,8 @@
             ((ActionSelectionController *) _actionPopover).signatureEnabled = @1;
         else if (_visaEnabled)
             ((ActionSelectionController *) _actionPopover).visaEnabled = @1;
-
-    } else if ([segue.identifier isEqualToString:WorkflowDialogController.SEGUE]) {
-        WorkflowDialogController *controller = ((WorkflowDialogController *) segue.destinationViewController);
-        controller.currentAction = sender;
-        controller.restClient = _restClient.restClientApi.swiftManager;
-        //FIXME  [controller setDossiersToSignWithObjcArray:@[_dossier]];
-        controller.currentBureau = [ADLSingletonState.sharedSingletonState.bureauCourant stringByReplacingOccurrencesOfString:@"workspace://SpacesStore/"
-                                                                                                                   withString:@""];
     }
 }
-
 
 
 #pragma mark - ADLDrawingViewDataSource

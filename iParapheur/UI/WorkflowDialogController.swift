@@ -41,6 +41,11 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
     @objc static let SEGUE = "WorkflowDialogController"
     @objc static let ACTION_COMPLETE = Notification.Name("DossierActionComplete")
+
+    static let ACTION_SIGNATURE = "SIGNATURE"
+    static let ACTION_VISA = "VISA"
+    static let ACTION_REJECT = "REJET"
+
     static let ALERTVIEW_TAG_P12_PASSWORD = 1
     static let ALERTVIEW_TAG_PAPER_SIGNATURE = 2
 
@@ -66,14 +71,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         os_log("View loaded : WorkflowDialogController", type: .debug)
 
-        self.certificateLayout.isHidden = !(currentAction == "SIGNATURE")
+        self.certificateLayout.isHidden = !(currentAction == WorkflowDialogController.ACTION_SIGNATURE)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
                                                name: .signatureResult,
                                                object: nil)
 
-        if (currentAction == "SIGNATURE") {
+        if (currentAction == WorkflowDialogController.ACTION_SIGNATURE) {
             for dossier in signInfoMap.keys {
 
                 restClient?.getSignInfo(dossier: dossier,
@@ -147,12 +152,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         switch currentAction {
 
 
-            case "SIGNATURE":
+            case WorkflowDialogController.ACTION_SIGNATURE:
 
                 signature()
 
 
-            case "VISA":
+            case WorkflowDialogController.ACTION_VISA:
 
                 restClient?.visa(dossier: Array(signInfoMap.keys)[0],
                                  bureauId: currentBureau!,
@@ -169,7 +174,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                  })
 
 
-            case "REJET":
+            case WorkflowDialogController.ACTION_REJECT:
 
                 restClient?.reject(dossier: Array(signInfoMap.keys)[0],
                                    bureauId: currentBureau!,
