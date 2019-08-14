@@ -162,50 +162,6 @@
 #pragma mark - ADLDrawingViewDataSource
 
 
-- (NSArray *)annotationsForPage:(NSInteger)page {
-
-    // Get current step
-
-    int currentStep = 0;
-
-    if (_circuit && (_circuit.count > 0)) {
-        for (NSUInteger i = 0; i < _circuit.count; i++) {
-
-            Circuit *circuit = _circuit[i];
-            NSArray *steps = circuit.etapes;
-            for (NSUInteger j = 0; j < steps.count; j++) {
-
-                Etape *step = steps[j];
-                if (step.approved) {
-                    // If this step was approved, the current step might be the next one
-                    currentStep = j + 1;
-                }
-            }
-        }
-    }
-
-    // Updating annotations
-
-    for (Annotation *annotation in _annotations) {
-        bool isEditable = (annotation.step >= currentStep);
-        annotation.editable = isEditable;
-    }
-
-    // Filtering annotations
-
-    NSArray *result = [_annotations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
-
-        bool isPage = ((Annotation *) object).page == page;
-        bool isDoc = [((Annotation *) object).identifier isEqualToString:_document.identifier];
-        bool isApi3 = [((Annotation *) object).identifier isEqualToString:@"*"];
-
-        return isPage && (isDoc || isApi3);
-    }]];
-
-    return result;
-}
-
-
 - (void)updateAnnotation:(Annotation *)annotation {
 
     [_restClient updateAnnotation:annotation
@@ -216,20 +172,6 @@
                           failure:^(NSError *error) {
                               [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
                                                        title:@"Erreur à la sauvegarde de l'annotation"];
-                          }];
-}
-
-
-- (void)removeAnnotation:(Annotation *)annotation {
-
-    [_restClient removeAnnotation:annotation
-                       forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-                          success:^(NSArray *result) {
-                              NSLog(@"deleteAnnotation success");
-                          }
-                          failure:^(NSError *error) {
-                              [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-                                                       title:@"Erreur à la suppression de l'annotation"];
                           }];
 }
 
@@ -300,10 +242,12 @@
 
 // <editor-fold desc="ActionSelectionControllerDelegate">
 
+
 - (void)onActionSelectedWithAction:(NSString *)action {
     [self performSegueWithIdentifier:WorkflowDialogController.SEGUE
                               sender:action];
 }
+
 
 // </editor-fold desc="ActionSelectionControllerDelegate">
 

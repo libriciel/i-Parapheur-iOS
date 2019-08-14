@@ -132,15 +132,20 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
         // Metadata
 
-        let annotationColor = UIColor.red
+        let annotationColor = annotation.isEditable ? ColorUtils.DarkBlue : UIColor.darkGray
+
+        result.setValue(annotationColor, forAnnotationKey: PDFAnnotationKey.color)
+        result.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
+        result.setValue(annotation.author, forAnnotationKey: .name)
+        result.setValue(annotation.isEditable ? PdfAnnotationDrawer.FLAG_LOCKED : PdfAnnotationDrawer.FLAG_NORMAL, forAnnotationKey: .flags)
+
+        // View
 
         let border = PDFBorder()
         border.lineWidth = 2.0
-
-        result.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
-        result.color = annotationColor.withAlphaComponent(0.6)
-        result.interiorColor = annotationColor.withAlphaComponent(0.2)
         result.border = border
+        result.color = annotationColor.withAlphaComponent(0.6)
+        result.interiorColor = annotationColor.withAlphaComponent(0.1)
 
         return result
     }

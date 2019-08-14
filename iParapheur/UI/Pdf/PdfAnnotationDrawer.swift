@@ -44,7 +44,11 @@ import os
     I basically replace those with rectangles...
     ... But we might want to check those Bézier curves for a hand-written signature, some time.
  */
-class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
+class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
+
+    // PDF 1.7 Standards
+    static let FLAG_NORMAL = 0
+    static let FLAG_LOCKED = 8
 
 
     weak var pdfView: PDFView!
@@ -154,9 +158,7 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     // </editor-fold desc="DrawingGestureRecognizerDelegate">
 
 
-    private func createAnnotation(rect: CGRect, page: PDFPage, highlightingMode: PDFAnnotationHighlightingMode) -> PDFAnnotation {
-
-        let annotationColor = UIColor.red
+    class func createAnnotation(rect: CGRect, page: PDFPage, recycledAnnotation: PDFAnnotation?) -> PDFAnnotation {
 
         let border = PDFBorder()
         border.lineWidth = 2.0
@@ -165,9 +167,24 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
                                        forType: .square,
                                        withProperties: nil)
 
-        annotation.setValue(highlightingMode, forAnnotationKey: .highlightingMode)
-        annotation.color = annotationColor.withAlphaComponent(0.6)
-        annotation.interiorColor = annotationColor.withAlphaComponent((highlightingMode == .outline) ? 0.4 : 0.2)
+        // Passing metadata
+
+        let highlightMode: PDFAnnotationHighlightingMode = recycledAnnotation?.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode ?? .none
+        annotation.setValue(highlightMode, forAnnotationKey: .highlightingMode)
+
+        let color: UIColor = recycledAnnotation?.value(forAnnotationKey: .color) as? UIColor ?? ColorUtils.DarkBlue
+        annotation.setValue(color, forAnnotationKey: .color)
+
+        let author: String = recycledAnnotation?.value(forAnnotationKey: .name) as? String ?? ""
+        annotation.setValue(author, forAnnotationKey: .name)
+
+        let flags: Int = recycledAnnotation?.value(forAnnotationKey: .flags) as? Int ?? PdfAnnotationDrawer.FLAG_NORMAL
+        annotation.setValue(flags, forAnnotationKey: .flags)
+
+        // Setting view's attributes
+
+        annotation.color = color.withAlphaComponent(0.6)
+        annotation.interiorColor = color.withAlphaComponent((highlightMode == .outline) ? 0.4 : 0.1)
         annotation.border = border
 
         return annotation
@@ -225,9 +242,9 @@ class PDFAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     private func drawAnnotation(onPage: PDFPage) {
 
         guard let rect = rect else { return }
-        let annotation = createAnnotation(rect: rect.standardized,
-                                          page: onPage,
-                                          highlightingMode: currentAnnotation?.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode ?? .none)
+        let annotation = PdfAnnotationDrawer.createAnnotation(rect: rect.standardized,
+                                                              page: onPage,
+                                                              recycledAnnotation: currentAnnotation)
 
         if let _ = currentAnnotation {
             currentAnnotation!.page?.removeAnnotation(currentAnnotation!)

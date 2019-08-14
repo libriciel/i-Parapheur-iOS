@@ -42,7 +42,7 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     @IBOutlet var pdfView: PDFView!
-    private let pdfDrawer = PDFAnnotationDrawer()
+    private let pdfDrawer = PdfAnnotationDrawer()
     private let pdfAnnotationGestureRecognizer = PdfAnnotationGestureRecognizer()
 
 

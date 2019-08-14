@@ -42,7 +42,7 @@ class Annotation: NSObject, Decodable {
     @objc var identifier: String
     @objc var text: String
     @objc let date: Date
-    let secretaire: Bool
+    let isSecretary: Bool
     @objc var rect: CGRect
 
     let fillColor: String?
@@ -52,7 +52,7 @@ class Annotation: NSObject, Decodable {
     @objc var step: Int
     @objc var page: Int
     @objc var documentId: String?
-    @objc var editable: Bool
+    @objc var isEditable: Bool
 
 
     @objc init?(currentPage: NSNumber) {
@@ -66,13 +66,13 @@ class Annotation: NSObject, Decodable {
         type = "rect"
 
         date = Date()
-        secretaire = false
+        isSecretary = false
         rect = ViewUtils.translateDpi(rect: CGRect(origin: .zero,
                                                    size: CGSize(width: 150, height: 150)),
                                       oldDpi: 150,
                                       newDpi: 72)
         step = 0
-        editable = false
+        isEditable = false
         documentId = ""
         page = currentPage.intValue
     }
@@ -86,7 +86,7 @@ class Annotation: NSObject, Decodable {
         case fillColor
         case penColor
         case date
-        case secretaire
+        case secretary = "secretaire"
         case text
         case type
         case rect
@@ -115,10 +115,10 @@ class Annotation: NSObject, Decodable {
         // Secretary, may be string or bool
 
         do {
-            secretaire = try values.decodeIfPresent(Bool.self, forKey: .secretaire) ?? false
+            isSecretary = try values.decodeIfPresent(Bool.self, forKey: .secretary) ?? false
         } catch DecodingError.typeMismatch {
-            let secretaireString = try values.decodeIfPresent(String.self, forKey: .secretaire) ?? "false"
-            secretaire = Bool(secretaireString)!
+            let secretaireString = try values.decodeIfPresent(String.self, forKey: .secretary) ?? "false"
+            isSecretary = Bool(secretaireString)!
         }
 
         // Date, cropping milliseconds
@@ -149,7 +149,7 @@ class Annotation: NSObject, Decodable {
         page = -1
         documentId = ""
         step = 0
-        editable = true
+        isEditable = true
     }
 
     // </editor-fold desc="Json methods">
