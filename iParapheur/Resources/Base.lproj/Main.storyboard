@@ -172,10 +172,34 @@
                         <viewControllerLayoutGuide type="top" id="AXG-2M-5cw"/>
                         <viewControllerLayoutGuide type="bottom" id="xfI-Nv-3sK"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="1Bs-6d-UcB" customClass="PDFView">
+                    <view key="view" contentMode="scaleToFill" id="1Bs-6d-UcB" userLabel="Container">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="1296"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vfD-0D-dDn" userLabel="PDF View" customClass="PDFView">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="1296"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJU-LU-sBn" customClass="MDCFloatingButton">
+                                <rect key="frame" x="908" y="1184" width="64" height="64"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="0lf-5q-5HE"/>
+                                    <constraint firstAttribute="height" constant="64" id="b2I-df-F9V"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="xfI-Nv-3sK" firstAttribute="top" secondItem="fJU-LU-sBn" secondAttribute="bottom" constant="48" id="1V1-mS-nk3"/>
+                            <constraint firstItem="vfD-0D-dDn" firstAttribute="leading" secondItem="1Bs-6d-UcB" secondAttribute="leading" id="JrC-po-klv"/>
+                            <constraint firstItem="fJU-LU-sBn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1Bs-6d-UcB" secondAttribute="leading" constant="20" symbolic="YES" id="QYf-t8-Xqb"/>
+                            <constraint firstAttribute="trailing" secondItem="vfD-0D-dDn" secondAttribute="trailing" id="VE7-vi-l9r"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fJU-LU-sBn" secondAttribute="trailing" constant="32" id="XHV-xm-iOZ"/>
+                            <constraint firstItem="xfI-Nv-3sK" firstAttribute="top" secondItem="vfD-0D-dDn" secondAttribute="bottom" id="gSD-kB-E9e"/>
+                            <constraint firstItem="vfD-0D-dDn" firstAttribute="top" secondItem="AXG-2M-5cw" secondAttribute="bottom" id="i58-kI-tNi"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="J5X-aU-lB4">
@@ -207,13 +231,14 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="pdfView" destination="1Bs-6d-UcB" id="euJ-N6-rDl"/>
+                        <outlet property="floatingActionButton" destination="fJU-LU-sBn" id="8So-PH-x5a"/>
+                        <outlet property="pdfView" destination="vfD-0D-dDn" id="DmY-4c-uFd"/>
                         <segue destination="zs0-y1-eAs" kind="presentation" identifier="WorkflowDialogController" modalPresentationStyle="formSheet" id="RTg-nG-E2l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qKv-cp-dPo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="228" y="-767"/>
+            <point key="canvasLocation" x="227.92968749999997" y="-767.34992679355776"/>
         </scene>
         <!--Bureaux-->
         <scene sceneID="fiw-Dl-fUJ">

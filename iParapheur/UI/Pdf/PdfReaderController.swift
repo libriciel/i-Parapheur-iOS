@@ -35,11 +35,14 @@
 
 import Foundation
 import PDFKit
+import MaterialComponents.MaterialButtons
 import os
 
 
 class PdfReaderController: PdfController, FolderListDelegate {
 
+
+    @IBOutlet weak var floatingActionButton: MDCFloatingButton!
 
     var restClient: RestClient?
     var currentDesk: Bureau?
@@ -54,6 +57,13 @@ class PdfReaderController: PdfController, FolderListDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View Loaded : PdfReaderController")
+
+        floatingActionButton.collapse(false) { self.floatingActionButton.isHidden = true }
+        floatingActionButton.backgroundColor = ColorUtils.Aqua
+        floatingActionButton.setElevation(ShadowElevation(rawValue: 6), for: .normal)
+        floatingActionButton.setElevation(ShadowElevation(rawValue: 12), for: .highlighted)
+        floatingActionButton.addTarget(self, action: #selector(btnFloatingButtonTapped(floatingButton:)), for: .touchUpInside)
+        floatingActionButton.setImage(UIImage(named: "ic_baseline_add_white_24dp")!.withRenderingMode(.alwaysTemplate), for: .normal)
     }
 
 
@@ -75,6 +85,11 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
     @IBAction func onActionButtonClicked(_ sender: Any) {
 
+    }
+
+
+    @objc func btnFloatingButtonTapped(floatingButton: MDCFloatingButton) {
+        os_log("FAB !!")
     }
 
 
@@ -108,6 +123,21 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
     override func onAnnotationMoved(_ annotation: PDFAnnotation?) {
         os_log("Annotation moved !! %@", annotation ?? "(nil)")
+    }
+
+
+    override func onDocumentLoaded(document: PDFDocument?) {
+
+        if ((document != nil) && floatingActionButton.isHidden) {
+            floatingActionButton.isHidden = false
+            floatingActionButton.expand(true)
+        }
+
+        if ((document == nil) && !floatingActionButton.isHidden) {
+            floatingActionButton.expand(true) {
+                self.floatingActionButton.isHidden = true
+            }
+        }
     }
 
 
@@ -254,10 +284,15 @@ class PdfReaderController: PdfController, FolderListDelegate {
                                         }
 
                                         self.pdfView.document = pdfDocument
+                                        self.onDocumentLoaded(document: pdfDocument)
                                     }
                                 },
                                 onError: {
                                     (error: Error) in
+
+                                    self.pdfView.document = nil
+                                    self.onDocumentLoaded(document: nil)
+
                                     ViewUtils.logError(message: error.localizedDescription as NSString,
                                                        title: "Téléchargement échoué")
                                 }
