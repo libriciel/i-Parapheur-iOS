@@ -180,23 +180,26 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="1296"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJU-LU-sBn" customClass="MDCFloatingButton">
-                                <rect key="frame" x="908" y="1184" width="64" height="64"/>
-                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aiP-8P-Ur4" customClass="Floaty" customModule="Floaty">
+                                <rect key="frame" x="912" y="1204" width="56" height="56"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="0lf-5q-5HE"/>
-                                    <constraint firstAttribute="height" constant="64" id="b2I-df-F9V"/>
+                                    <constraint firstAttribute="width" constant="56" id="6ns-Zu-Tjy"/>
+                                    <constraint firstAttribute="height" constant="56" id="OT1-kH-mum"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                            </button>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="plusColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="xfI-Nv-3sK" firstAttribute="top" secondItem="fJU-LU-sBn" secondAttribute="bottom" constant="48" id="1V1-mS-nk3"/>
+                            <constraint firstItem="xfI-Nv-3sK" firstAttribute="top" secondItem="aiP-8P-Ur4" secondAttribute="bottom" constant="36" id="170-Of-mPZ"/>
                             <constraint firstItem="vfD-0D-dDn" firstAttribute="leading" secondItem="1Bs-6d-UcB" secondAttribute="leading" id="JrC-po-klv"/>
-                            <constraint firstItem="fJU-LU-sBn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1Bs-6d-UcB" secondAttribute="leading" constant="20" symbolic="YES" id="QYf-t8-Xqb"/>
                             <constraint firstAttribute="trailing" secondItem="vfD-0D-dDn" secondAttribute="trailing" id="VE7-vi-l9r"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="fJU-LU-sBn" secondAttribute="trailing" constant="32" id="XHV-xm-iOZ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aiP-8P-Ur4" secondAttribute="trailing" constant="36" id="dOd-Bv-PDq"/>
                             <constraint firstItem="xfI-Nv-3sK" firstAttribute="top" secondItem="vfD-0D-dDn" secondAttribute="bottom" id="gSD-kB-E9e"/>
                             <constraint firstItem="vfD-0D-dDn" firstAttribute="top" secondItem="AXG-2M-5cw" secondAttribute="bottom" id="i58-kI-tNi"/>
                         </constraints>
@@ -231,7 +234,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="floatingActionButton" destination="fJU-LU-sBn" id="8So-PH-x5a"/>
+                        <outlet property="floatingActionButton" destination="aiP-8P-Ur4" id="Ime-iq-62r"/>
                         <outlet property="pdfView" destination="vfD-0D-dDn" id="DmY-4c-uFd"/>
                         <segue destination="zs0-y1-eAs" kind="presentation" identifier="WorkflowDialogController" modalPresentationStyle="formSheet" id="RTg-nG-E2l"/>
                     </connections>

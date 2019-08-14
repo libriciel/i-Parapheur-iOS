@@ -11,7 +11,7 @@ target "iParapheur" do
   pod 'SSZipArchive', '2.2.2'
   pod 'CryptoSwift', '1.0.0'
   pod 'Sentry', :git => 'https://github.com/getsentry/sentry-cocoa.git', :tag => '4.4.0'
-  pod 'MaterialComponents/Buttons', '85.12.0'
+  pod 'Floaty', '4.2.0'
 
   target 'iParapheurTests' do
     inherit! :search_paths

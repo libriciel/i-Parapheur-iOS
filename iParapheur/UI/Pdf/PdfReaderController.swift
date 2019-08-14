@@ -35,14 +35,19 @@
 
 import Foundation
 import PDFKit
-import MaterialComponents.MaterialButtons
+import Floaty
 import os
 
 
 class PdfReaderController: PdfController, FolderListDelegate {
 
 
-    @IBOutlet weak var floatingActionButton: MDCFloatingButton!
+    @IBOutlet weak var floatingActionButton: Floaty!
+
+    let annotationItem = FloatyItem()
+    let rejectItem = FloatyItem()
+    let signItem = FloatyItem()
+    let visaItem = FloatyItem()
 
     var restClient: RestClient?
     var currentDesk: Bureau?
@@ -58,12 +63,21 @@ class PdfReaderController: PdfController, FolderListDelegate {
         super.viewDidLoad()
         os_log("View Loaded : PdfReaderController")
 
-        floatingActionButton.collapse(false) { self.floatingActionButton.isHidden = true }
-        floatingActionButton.backgroundColor = ColorUtils.Aqua
-        floatingActionButton.setElevation(ShadowElevation(rawValue: 6), for: .normal)
-        floatingActionButton.setElevation(ShadowElevation(rawValue: 12), for: .highlighted)
-        floatingActionButton.addTarget(self, action: #selector(btnFloatingButtonTapped(floatingButton:)), for: .touchUpInside)
-        floatingActionButton.setImage(UIImage(named: "ic_baseline_add_white_24dp")!.withRenderingMode(.alwaysTemplate), for: .normal)
+        annotationItem.buttonColor = UIColor.gray
+        annotationItem.title = "Annoter"
+        annotationItem.icon = UIImage(named: "ic_edit_white_24dp")!
+
+        rejectItem.buttonColor = UIColor.red
+        rejectItem.title = "Rejeter"
+        rejectItem.icon = UIImage(named: "ic_close_white_24dp")!
+
+        signItem.buttonColor = ColorUtils.DarkGreen
+        signItem.title = "Signer"
+        signItem.icon = UIImage(named: "ic_check_white_18dp")!
+
+        visaItem.buttonColor = ColorUtils.DarkGreen
+        visaItem.title = "Signer"
+        visaItem.icon = UIImage(named: "ic_check_white_18dp")!
     }
 
 
@@ -88,7 +102,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
     }
 
 
-    @objc func btnFloatingButtonTapped(floatingButton: MDCFloatingButton) {
+    @objc func btnFloatingButtonTapped(floatingButton: UIButton) {
         os_log("FAB !!")
     }
 
@@ -123,21 +137,6 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
     override func onAnnotationMoved(_ annotation: PDFAnnotation?) {
         os_log("Annotation moved !! %@", annotation ?? "(nil)")
-    }
-
-
-    override func onDocumentLoaded(document: PDFDocument?) {
-
-        if ((document != nil) && floatingActionButton.isHidden) {
-            floatingActionButton.isHidden = false
-            floatingActionButton.expand(true)
-        }
-
-        if ((document == nil) && !floatingActionButton.isHidden) {
-            floatingActionButton.expand(true) {
-                self.floatingActionButton.isHidden = true
-            }
-        }
     }
 
 
@@ -284,19 +283,47 @@ class PdfReaderController: PdfController, FolderListDelegate {
                                         }
 
                                         self.pdfView.document = pdfDocument
-                                        self.onDocumentLoaded(document: pdfDocument)
+                                        self.refreshFloatingActionButton(documentLoaded: pdfDocument)
                                     }
                                 },
                                 onError: {
                                     (error: Error) in
 
                                     self.pdfView.document = nil
-                                    self.onDocumentLoaded(document: nil)
+                                    self.refreshFloatingActionButton(documentLoaded: nil)
 
                                     ViewUtils.logError(message: error.localizedDescription as NSString,
                                                        title: "Téléchargement échoué")
                                 }
         )
+    }
+
+
+    private func refreshFloatingActionButton(documentLoaded: PDFDocument?) {
+
+        floatingActionButton.removeItem(item: annotationItem)
+        floatingActionButton.removeItem(item: visaItem)
+        floatingActionButton.removeItem(item: signItem)
+        floatingActionButton.removeItem(item: rejectItem)
+
+        if (currentFolder != nil) {
+
+            let positiveAction = Dossier.getPositiveAction(folders: [currentFolder!])
+            let negativeAction = Dossier.getNegativeAction(folders: [currentFolder!])
+
+            if (positiveAction == "SIGNATURE") { floatingActionButton.addItem(item: signItem) }
+            if (positiveAction == "VISA") { floatingActionButton.addItem(item: visaItem) }
+            if (negativeAction == "REJET") { floatingActionButton.addItem(item: rejectItem) }
+            floatingActionButton.addItem(item: annotationItem)
+        }
+
+        if ((documentLoaded != nil) && floatingActionButton.isHidden) {
+            floatingActionButton.isHidden = false
+        }
+
+        if ((documentLoaded == nil) && !floatingActionButton.isHidden) {
+            self.floatingActionButton.isHidden = true
+        }
     }
 
 

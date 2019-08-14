@@ -72,7 +72,8 @@ class Dossier: NSObject, Decodable {
     @objc var isDelegue: Bool
 
 
-    // <editor-fold desc="Json methods">
+    // <editor-fold desc="Json methods"> MARK: - Json methods
+
 
     enum CodingKeys: String, CodingKey {
 
@@ -107,6 +108,7 @@ class Dossier: NSObject, Decodable {
         case isXemEnabled
         case isReadingMandatory = "readingMandatory"
     }
+
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -168,57 +170,11 @@ class Dossier: NSObject, Decodable {
         }
     }
 
+
     // </editor-fold desc="Json methods">
 
 
-    // MARK: - Glossy
-
-//    required init?(json: JSON) {
-//        identifier = ("id" <~~ json) ?? ""
-//        title = ("title" <~~ json) ?? "(vide)"
-//        bureauName = ("bureauName" <~~ json) ?? "(vide)"
-//        banetteName = ("banetteName" <~~ json) ?? ""
-//        visibility = ("visibility" <~~ json) ?? ""
-//        status = ("status" <~~ json) ?? ""
-//
-//        type = ("type" <~~ json) ?? ""
-//        subType = ("sousType" <~~ json) ?? ""
-//        protocole = ("protocole" <~~ json) ?? ""
-//        nomTdT = ("nomTdT" <~~ json) ?? ""
-//        xPathSignature = ("xPathSignature" <~~ json) ?? ""
-//
-//        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
-//        actions = ("actions" <~~ json) ?? []
-//        documents = ("documents" <~~ json) ?? []
-//        acteursVariables = ("acteursVariables" <~~ json) ?? []
-//        metadatas = ("metadatas" <~~ json) ?? [:]
-//        emitDate = ("dateEmission" <~~ json) ?? -1
-//        limitDate = ("dateLimite" <~~ json) ?? 0
-//
-//        hasRead = ("hasRead" <~~ json) ?? false
-//        includeAnnexes = ("includeAnnexes" <~~ json) ?? false
-//        isRead = ("isRead" <~~ json) ?? false
-//        isSent = ("isSent" <~~ json) ?? false
-//        canAdd = ("canAdd" <~~ json) ?? false
-//        isLocked = ("locked" <~~ json) ?? false
-//        isSignPapier = ("isSignPapier" <~~ json) ?? false
-//        isXemEnabled = ("isXemEnabled" <~~ json) ?? false
-//        isReadingMandatory = ("readingMandatory" <~~ json) ?? false
-//
-//        isDelegue = false
-//
-//        // Sometimes it happens
-//        if (!(actions.contains(actionDemandee))) {
-//            actions.append(actionDemandee)
-//        }
-//    }
-//
-//    func toJSON() -> JSON? {
-//        return nil /* Not used */
-//    }
-
-
-    // MARK: - Static utils
+    // <editor-fold desc="Static utils"> MARK: - Static utils
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
@@ -247,6 +203,7 @@ class Dossier: NSObject, Decodable {
 
         return (possibleActions.count > 0) ? possibleActions[0] : nil
     }
+
 
     class func filterActions(dossierList: NSArray) -> [String] {
 
@@ -291,4 +248,8 @@ class Dossier: NSObject, Decodable {
 
         return result
     }
+
+
+    // </editor-fold desc="Static utils">
+
 }
