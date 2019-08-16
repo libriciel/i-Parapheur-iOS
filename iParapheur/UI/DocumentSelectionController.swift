@@ -39,10 +39,11 @@ import os
 
 class DocumentSelectionController: UITableViewController {
 
+
+    static let SEGUE = "showDocumentPopover"
     @objc static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
-    @objc var documentList: NSArray! = NSArray()
-    var docList: [Document]! = []
+    var documentList: [Document] = []
 
 
     // <editor-fold desc="Lifecycle" MARK: - LifeCycle
@@ -52,16 +53,8 @@ class DocumentSelectionController: UITableViewController {
         super.viewDidLoad()
         os_log("View loaded : DocumentSelectionController", type: .debug)
 
-        // Parse ObjC array
-
-        for doc in (documentList as! [Document]) {
-            docList.append(doc)
-        }
-
-        //
-
         preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
-                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
+                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(documentList.count))
     }
 
 
@@ -72,7 +65,7 @@ class DocumentSelectionController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return docList.count
+        return documentList.count
     }
 
 
@@ -81,7 +74,7 @@ class DocumentSelectionController: UITableViewController {
         let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
                                                                         for: indexPath as IndexPath) as! DocumentSelectionCell
 
-        let document: Document = docList[indexPath.row]
+        let document: Document = documentList[indexPath.row]
 
         cell.annexeIcon.image = cell.annexeIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.annexeIcon.isHidden = (indexPath.row == 0) || document.isMainDocument

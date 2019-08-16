@@ -209,14 +209,10 @@
                         <rightBarButtonItems>
                             <barButtonItem image="ic_info_outline_white_24dp" id="UJR-Wz-2Gr">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <action selector="onDetailButtonClicked:" destination="PJW-9b-JcM" id="cwu-Oj-bVQ"/>
-                                </connections>
                             </barButtonItem>
                             <barButtonItem image="ic_library_books_white_24dp" id="e2H-L5-DmJ">
                                 <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
-                                    <action selector="onDocumentButtonClicked:" destination="PJW-9b-JcM" id="rgY-YO-1cH"/>
                                     <segue destination="XYH-uf-RCC" kind="popoverPresentation" identifier="showDocumentPopover" popoverAnchorBarButtonItem="e2H-L5-DmJ" id="5gh-81-srY">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                     </segue>
@@ -225,6 +221,8 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="detailsButton" destination="UJR-Wz-2Gr" id="wai-t4-5LV"/>
+                        <outlet property="documentsButton" destination="e2H-L5-DmJ" id="b5a-XD-M9Z"/>
                         <outlet property="floatingActionButton" destination="aiP-8P-Ur4" id="Ime-iq-62r"/>
                         <outlet property="pdfView" destination="vfD-0D-dDn" id="DmY-4c-uFd"/>
                         <segue destination="zs0-y1-eAs" kind="presentation" identifier="WorkflowDialogController" modalPresentationStyle="formSheet" id="RTg-nG-E2l"/>

@@ -55,19 +55,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
 
-    if ([segue.identifier isEqualToString:@"dossierDetails"]) {
-
-        ((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _dossierRef;
-        // FIXME ((RGDossierDetailViewController *) segue.destinationViewController).dossierRef = _currentDesk;
-    } else if ([segue.identifier isEqualToString:@"showDocumentPopover"]) {
-
-        ((DocumentSelectionController *) segue.destinationViewController).documentList = _dossier.documents;
-        if (_documentsPopover != nil)
-            [_documentsPopover dismissViewControllerAnimated:NO completion:nil];
-
-        _documentsPopover = segue.destinationViewController;
-
-    } else if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
+    if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
 
         if (_actionPopover != nil)
             [_actionPopover dismissViewControllerAnimated:NO completion:nil];

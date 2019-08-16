@@ -43,6 +43,8 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
 
     @IBOutlet weak var floatingActionButton: Floaty!
+    @IBOutlet weak var documentsButton: UIBarButtonItem!
+    @IBOutlet weak var detailsButton: UIBarButtonItem!
 
     let annotationItem = FloatyItem()
     let rejectItem = FloatyItem()
@@ -62,6 +64,8 @@ class PdfReaderController: PdfController, FolderListDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View Loaded : PdfReaderController")
+
+        // Prepare Floaty items
 
         annotationItem.buttonColor = UIColor.gray
         annotationItem.title = "Annoter"
@@ -94,14 +98,38 @@ class PdfReaderController: PdfController, FolderListDelegate {
             item in
             self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_VISA)
         }
+
+        // UI fine tuning
+
+        documentsButton.isEnabled = false
+        detailsButton.isEnabled = false
+
+        // Observers
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onDocumentSelected(_:)),
+                                               name: DocumentSelectionController.NotifShowDocument,
+                                               object: nil)
     }
 
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override func prepare(for segue: UIStoryboardSegue,
+                          sender: Any?) {
 
-        if (segue.identifier == WorkflowDialogController.SEGUE),
-           let destinationController = segue.destination as? WorkflowDialogController,
+//        if (segue.identifier == "dossierDetails"),
+//           let destinationController = segue.destination as? RGDossierDetailViewController {
+//            destinationController.dossierRef = currentFolder.identifier
+//        }
+        if (segue.identifier == DocumentSelectionController.SEGUE),
+           let destinationController = segue.destination as? DocumentSelectionController,
            let folder = currentFolder {
+
+            let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
+            destinationController.documentList = pdfDocuments
+        }
+        else if (segue.identifier == WorkflowDialogController.SEGUE),
+                let destinationController = segue.destination as? WorkflowDialogController,
+                let folder = currentFolder {
 
             destinationController.currentAction = sender as? String
             destinationController.restClient = restClient
@@ -113,27 +141,31 @@ class PdfReaderController: PdfController, FolderListDelegate {
         }
     }
 
+
     // </editor-fold desc="LifeCycle">
 
 
     // <editor-fold desc="UI listeners"> MARK: - UI listeners
 
 
-    @IBAction func onDocumentButtonClicked(_ sender: Any) {
-        downloadPdf(documentIndex: 0)
-    }
-
-
-    @IBAction func onDetailButtonClicked(_ sender: Any) {
-    }
-
-
     private func onCreateAnnotationFloatingButtonClicked() {
         setCreateAnnotationMode(value: true)
     }
 
+
     private func onFolderActionFloatingButtonClicked(action: String) {
         performSegue(withIdentifier: WorkflowDialogController.SEGUE, sender: action)
+    }
+
+
+    @objc func onDocumentSelected(_ notification: NSNotification) {
+
+        if let documentIndex = notification.object as? NSNumber,
+           documentIndex.intValue < (currentFolder?.documents.count ?? 0),
+           documentIndex.intValue >= 0 {
+
+            downloadPdf(documentIndex: documentIndex.intValue)
+        }
     }
 
 
@@ -265,9 +297,17 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
     private func checkIfEverythingIsSetBeforeDisplayingThePdf() {
 
-        if ((currentFolder?.documents.count ?? 0) > 0),
-           (currentWorkflow != nil),
-           (currentAnnotations != nil) {
+        if (currentFolder?.documents.count ?? 0) > 0,
+           currentWorkflow != nil,
+           currentAnnotations != nil,
+           let folder = currentFolder {
+
+            detailsButton.isEnabled = true
+
+            let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
+            if (pdfDocuments.count > 1) {
+                documentsButton.isEnabled = true
+            }
 
             downloadPdf(documentIndex: 0)
         }
@@ -298,23 +338,19 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
         guard let localFileDownloaded = localFileUrl else { return }
 
+        if (FileManager.default.fileExists(atPath: localFileDownloaded.absoluteString)) {
+            loadPdf(documentPath: localFileDownloaded)
+            return
+        }
+
         // Download
 
         restClient.downloadFile(document: document,
                                 path: localFileDownloaded,
                                 onResponse: {
                                     (response: String) in
-                                    if let pdfDocument = PDFDocument(url: localFileDownloaded) {
 
-                                        for annotation in self.currentAnnotations ?? [] {
-                                            guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
-                                            let pdfAnnotation = self.translateToPDFAnnotation(annotation: annotation, page: pdfPage)
-                                            pdfPage.addAnnotation(pdfAnnotation)
-                                        }
-
-                                        self.pdfView.document = pdfDocument
-                                        self.refreshFloatingActionButton(documentLoaded: pdfDocument)
-                                    }
+                                    self.loadPdf(documentPath: localFileDownloaded)
                                 },
                                 onError: {
                                     (error: Error) in
@@ -326,6 +362,25 @@ class PdfReaderController: PdfController, FolderListDelegate {
                                                        title: "Téléchargement échoué")
                                 }
         )
+    }
+
+
+    private func loadPdf(documentPath: URL) {
+        if let pdfDocument = PDFDocument(url: documentPath) {
+
+            for annotation in self.currentAnnotations ?? [] {
+                guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
+                let pdfAnnotation = self.translateToPDFAnnotation(annotation: annotation, page: pdfPage)
+                pdfPage.addAnnotation(pdfAnnotation)
+            }
+
+            self.pdfView.document = pdfDocument
+            self.refreshFloatingActionButton(documentLoaded: pdfDocument)
+        }
+        else {
+            try? FileManager.default.removeItem(at: documentPath)
+            ViewUtils.logError(message: "Veuillez réessayer", title: "Erreur au chargement du fichier")
+        }
     }
 
 

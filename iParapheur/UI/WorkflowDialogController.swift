@@ -321,7 +321,6 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                 })
     }
 
-
     /**
         Here, we want to display the certificate list if everything is set
     */
@@ -387,13 +386,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Notification.Name("actionOnDossierComplete"),
+                NotificationCenter.default.post(name: WorkflowDialogController.ACTION_COMPLETE,
                                                 object: "")
             }
         }
 
         self.dismiss(animated: true)
     }
+
 
     // <editor-fold desc="UIAlertViewDelegate">
 
