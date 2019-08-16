@@ -206,7 +206,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
         let fixedAnnotation = PdfReaderController.translateToAnnotation(currentAnnotation,
                                                                         pageNumber: pageNumber,
-                                                                        displayBox: pdfView.displayBox)
+                                                                        pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
         restClient?.updateAnnotation(fixedAnnotation,
                                      folderId: folderId,
@@ -225,7 +225,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
     // </editor-fold desc="PdfAnnotationEventsDelegate">
 
 
-    class func translateToPdfAnnotation(_ annotation: Annotation, page: PDFPage, displayBox: PDFDisplayBox) -> PDFAnnotation {
+    class func translateToPdfAnnotation(_ annotation: Annotation, pageHeight: CGFloat) -> PDFAnnotation {
 
         // Translating annotation from top-right-origin (web)
         // to bottom-left-origin (PDFKit)
@@ -233,7 +233,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
         let rect = ViewUtils.translateDpi(rect: annotation.rect, oldDpi: 150, newDpi: 72)
         let bounds = CGRect(
                 x: rect.origin.x,
-                y: page.bounds(for: displayBox).height - rect.origin.y,
+                y: pageHeight - rect.origin.y,
                 width: rect.width,
                 height: -(rect.height)
         )
@@ -244,9 +244,10 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
         // Metadata
 
-        let annotationColor = annotation.isEditable ? ColorUtils.DarkBlue : UIColor.darkGray
-
-        result.setValue(annotationColor, forAnnotationKey: PDFAnnotationKey.color)
+//        let annotationColor: UIColor = annotation.isEditable ? ColorUtils.DarkBlue : UIColor.darkGray
+//
+//        result.setValue(annotationColor.withAlphaComponent(0.6), forAnnotationKey: .interiorColor)
+//        result.setValue(annotationColor.withAlphaComponent(0.1), forAnnotationKey: .color)
         result.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
         result.setValue(annotation.author, forAnnotationKey: .name)
         result.setValue(annotation.text, forAnnotationKey: .textLabel)
@@ -259,24 +260,23 @@ class PdfReaderController: PdfController, FolderListDelegate {
         let border = PDFBorder()
         border.lineWidth = 2.0
         result.border = border
-        result.color = annotationColor.withAlphaComponent(0.6)
-        result.interiorColor = annotationColor.withAlphaComponent(0.1)
+//        result.color = annotationColor.withAlphaComponent(0.6)
+//        result.interiorColor = annotationColor.withAlphaComponent(0.1)
 
         return result
     }
 
 
-    class func translateToAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, displayBox: PDFDisplayBox) -> Annotation {
+    class func translateToAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, pageHeight: CGFloat) -> Annotation {
 
         let result = Annotation(currentPage: pageNumber)!
-        let page = pdfAnnotation.page!
 
         // Translating annotation bottom-left-origin (PDFKit)
         // to from top-right-origin (web)
 
         let rect = CGRect(
                 x: pdfAnnotation.bounds.origin.x,
-                y: page.bounds(for: displayBox).height - pdfAnnotation.bounds.origin.y,
+                y: pageHeight - pdfAnnotation.bounds.origin.y,
                 width: pdfAnnotation.bounds.width,
                 height: -(pdfAnnotation.bounds.height)
         )
@@ -414,7 +414,9 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
             for annotation in self.currentAnnotations ?? [] {
                 guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
-                let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, page: pdfPage, displayBox: pdfView.displayBox)
+                let pageHeight = pdfPage.bounds(for: pdfView.displayBox).height
+                let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, pageHeight: pageHeight)
+
                 pdfPage.addAnnotation(pdfAnnotation)
             }
 

@@ -173,7 +173,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         annotation.setValue(highlightMode, forAnnotationKey: .highlightingMode)
 
         let color: UIColor = recycledAnnotation?.value(forAnnotationKey: .color) as? UIColor ?? ColorUtils.DarkBlue
-        annotation.setValue(color, forAnnotationKey: .color)
+        annotation.setValue(color, forAnnotationKey: .interiorColor)
 
         let author: String = recycledAnnotation?.value(forAnnotationKey: .name) as? String ?? ""
         annotation.setValue(author, forAnnotationKey: .name)
