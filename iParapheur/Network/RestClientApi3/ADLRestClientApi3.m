@@ -259,69 +259,35 @@
 #pragma mark - Private Methods
 
 
-- (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
-
-    NSMutableDictionary *result = NSMutableDictionary.new;
-
-//	result[@"author"] = annotation.unwrappedAuthor;
-    result[@"text"] = annotation.text;
-    result[@"type"] = annotation.type;
-    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
-//	result[@"uuid"] = annotation.unwrappedId;
-
-    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
-                                           oldDpi:72
-                                           newDpi:150];
-    NSDictionary *annotationRectTopLeft = @{
-            @"x": @(rect.origin.x),
-            @"y": @(rect.origin.y)
-    };
-    NSDictionary *annotationRectBottomRight = @{
-            @"x": @(rect.origin.x + rect.size.width),
-            @"y": @(rect.origin.y + rect.size.height)
-    };
-
-    result[@"rect"] = @{
-            @"topLeft": annotationRectTopLeft,
-            @"bottomRight": annotationRectBottomRight
-    };
-
-    return result;
-}
-
-
-- (NSMutableDictionary *)createAnnotationDictionary:(Annotation *)annotation {
-
-    NSMutableDictionary *result = [NSMutableDictionary new];
-
-    // Fixme : send every other data form annotation
-
-    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
-    result[@"text"] = annotation.text;
-    result[@"type"] = annotation.type;
-    result[@"uuid"] = annotation.identifier;
-    result[@"id"] = annotation.identifier;
-
-    CGRect rectData = [ViewUtils translateDpiWithRect:annotation.rect
-                                               oldDpi:72
-                                               newDpi:150];
-
-    NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-    resultTopLeft[@"x"] = @(rectData.origin.x);
-    resultTopLeft[@"y"] = @(rectData.origin.y);
-
-    NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-    resultBottomRight[@"x"] = @(rectData.origin.x + rectData.size.width);
-    resultBottomRight[@"y"] = @(rectData.origin.y + rectData.size.height);
-
-    NSMutableDictionary *rect = [NSMutableDictionary new];
-    rect[@"bottomRight"] = resultBottomRight;
-    rect[@"topLeft"] = resultTopLeft;
-
-    result[@"rect"] = rect;
-
-    return result;
-}
+//- (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
+//
+//    NSMutableDictionary *result = NSMutableDictionary.new;
+//
+////	result[@"author"] = annotation.unwrappedAuthor;
+//    result[@"text"] = annotation.text;
+//    result[@"type"] = annotation.type;
+//    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
+////	result[@"uuid"] = annotation.unwrappedId;
+//
+//    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
+//                                           oldDpi:72
+//                                           newDpi:150];
+//    NSDictionary *annotationRectTopLeft = @{
+//            @"x": @(rect.origin.x),
+//            @"y": @(rect.origin.y)
+//    };
+//    NSDictionary *annotationRectBottomRight = @{
+//            @"x": @(rect.origin.x + rect.size.width),
+//            @"y": @(rect.origin.y + rect.size.height)
+//    };
+//
+//    result[@"rect"] = @{
+//            @"topLeft": annotationRectTopLeft,
+//            @"bottomRight": annotationRectBottomRight
+//    };
+//
+//    return result;
+//}
 
 
 - (NSString *)getAnnotationsUrlForDossier:(NSString *)dossier
@@ -371,79 +337,54 @@
 }
 
 
-- (void)actionAddAnnotation:(Annotation *)annotation
-                 forDossier:(NSString *)dossierId
-                    success:(void (^)(NSArray *))success
-                    failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(1)
-                                        url:[self getAnnotationsUrlForDossier:dossierId
-                                                                  andDocument:annotation.documentId]
-                                       args:argumentDictionary
-                                 onResponse:^(NSNumber *result) {
-                                     success(NSArray.new);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
-
-
-- (void)actionUpdateAnnotation:(Annotation *)annotation
-                    forDossier:(NSString *)dossierId
-                       success:(void (^)(NSArray *))success
-                       failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(2)
-                                        url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.documentId
-                                                             andAnnotationId:annotation.identifier]
-                                       args:argumentDictionary
-                                 onResponse:^(NSNumber *result) {
-                                     success(NSArray.new);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
+//- (void)actionAddAnnotation:(Annotation *)annotation
+//                 forDossier:(NSString *)dossierId
+//                    success:(void (^)(NSArray *))success
+//                    failure:(void (^)(NSError *))failure {
+//
+//    // Create arguments dictionary
+//
+//    NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
+//
+//    // Send request
+//
+//    [_swiftManager sendSimpleActionWithType:@(1)
+//                                        url:[self getAnnotationsUrlForDossier:dossierId
+//                                                                  andDocument:annotation.documentId]
+//                                       args:argumentDictionary
+//                                 onResponse:^(NSNumber *result) {
+//                                     success(NSArray.new);
+//                                 }
+//                                    onError:^(NSError *error) {
+//                                        failure(error);
+//                                    }];
+//}
 
 
-- (void)actionRemoveAnnotation:(Annotation *)annotation
-                    forDossier:(NSString *)dossierId
-                       success:(void (^)(NSArray *))success
-                       failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-
-    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(3)
-                                        url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.documentId
-                                                             andAnnotationId:annotation.identifier]
-                                       args:argumentDictionary
-                                 onResponse:^(id result) {
-                                     success(NSArray.new);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
+//- (void)actionRemoveAnnotation:(Annotation *)annotation
+//                    forDossier:(NSString *)dossierId
+//                       success:(void (^)(NSArray *))success
+//                       failure:(void (^)(NSError *))failure {
+//
+//    // Create arguments dictionary
+//
+//
+//    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
+//
+//    // Send request
+//
+//    [_swiftManager sendSimpleActionWithType:@(3)
+//                                        url:[self getAnnotationUrlForDossier:dossierId
+//                                                                 andDocument:annotation.documentId
+//                                                             andAnnotationId:annotation.identifier]
+//                                       args:argumentDictionary
+//                                 onResponse:^(id result) {
+//                                     success(NSArray.new);
+//                                 }
+//                                    onError:^(NSError *error) {
+//                                        failure(error);
+//                                    }];
+//}
 
 
 @end

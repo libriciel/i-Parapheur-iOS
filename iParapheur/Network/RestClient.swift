@@ -104,6 +104,11 @@ class RestClient: NSObject {
     }
 
 
+    class func getAnnotationsUrl(folderId: String, documentId: String) -> String {
+        return String(format: "/parapheur/dossiers/%@/%@/annotations", folderId, documentId)
+    }
+
+
     // </editor-fold desc="Static methods">
 
 
@@ -671,8 +676,8 @@ class RestClient: NSObject {
         // Send request
 
         self.sendSimpleAction(type: 1,
-                              url: "/parapheur/dossiers/\(dossierId)/signature" as NSString,
-                              args: argumentDictionary as NSDictionary,
+                              url: "/parapheur/dossiers/\(dossierId)/signature",
+                              args: argumentDictionary,
                               onResponse: {
                                   id in
                                   responseCallback!(1);
@@ -764,26 +769,62 @@ class RestClient: NSObject {
     }
 
 
+    // </editor-fold desc="Get methods">
+
+
+    // <editor-fold desc="Annotations"> MARK: - Annotations
+
+
+    func updateAnnotation(_ annotation: Annotation,
+                          folderId: String,
+                          responseCallback: (() -> Void)?,
+                          errorCallback: ((Error) -> Void)?) {
+
+        // Check arguments
+
+        let jsonEncoder = JSONEncoder()
+        guard let annotationData = try? jsonEncoder.encode(annotation),
+              let annotationDict = try? JSONSerialization.jsonObject(with: annotationData, options: []) as? [String: Any] else {
+            errorCallback?(RuntimeError("Impossible de créer l'annotation"))
+            return
+        }
+
+        guard let documentId = annotation.documentId else { return }
+
+        // Send request
+
+        self.sendSimpleAction(type: 2,
+                              url: String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier),
+                              args: annotationDict,
+                              onResponse: {
+                                  (result: NSNumber) in
+                                  responseCallback?()
+                              },
+                              onError: {
+                                  (error: Error) in
+                                  errorCallback?(error)
+                              }
+        )
+    }
+
+
+    // </editor-fold desc="Annotations">
+
+
     @objc func sendSimpleAction(type: NSNumber,
-                                url: NSString,
-                                args: NSDictionary,
+                                url: String,
+                                args: Parameters,
                                 onResponse responseCallback: ((NSNumber) -> Void)?,
                                 onError errorCallback: ((NSError) -> Void)?) {
 
-        // Conversions ObjC -> Swift
-
         let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
-        var parameters: Parameters = [:]
-        for arg in args {
-            parameters[arg.key as! String] = arg.value
-        }
 
         // Request
 
         if (type == 1) {
             manager.request(annotationUrl,
                             method: .post,
-                            parameters: parameters,
+                            parameters: args,
                             encoding: JSONEncoding.default).validate().responseString {
                 response in
 
@@ -794,7 +835,7 @@ class RestClient: NSObject {
                         break
 
                     case .failure(let error):
-                        errorCallback!(error as NSError)
+                        errorCallback?(error as NSError)
                         print(error.localizedDescription)
                         break
                 }
@@ -804,7 +845,7 @@ class RestClient: NSObject {
 
             manager.request(annotationUrl,
                             method: .put,
-                            parameters: parameters,
+                            parameters: args,
                             encoding: JSONEncoding.default).validate().responseString {
                 response in
 
@@ -815,7 +856,7 @@ class RestClient: NSObject {
                         break
 
                     case .failure(let error):
-                        errorCallback!(error as NSError)
+                        errorCallback?(error as NSError)
                         print(error.localizedDescription)
                         break
                 }
@@ -825,7 +866,7 @@ class RestClient: NSObject {
 
             manager.request(annotationUrl,
                             method: .delete,
-                            parameters: parameters).validate().responseString {
+                            parameters: args).validate().responseString {
                 response in
 
                 switch (response.result) {
@@ -835,15 +876,12 @@ class RestClient: NSObject {
                         break
 
                     case .failure(let error):
-                        errorCallback!(error as NSError)
+                        errorCallback?(error as NSError)
                         break
                 }
             }
         }
     }
-
-
-    // </editor-fold desc="Get methods">
 
 
     func downloadFile(document: Document,
@@ -874,10 +912,10 @@ class RestClient: NSObject {
                 responseCallback!(response.destinationURL!.path)
             }
             //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
-            //		errorCallback!(response.error)
+            //		errorCallback?(response.error)
             //	}
             else {
-                errorCallback!(response.error!)
+                errorCallback?(response.error!)
             }
         }
     }

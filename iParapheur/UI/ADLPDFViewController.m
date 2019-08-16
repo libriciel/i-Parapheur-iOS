@@ -49,46 +49,6 @@
 @implementation ADLPDFViewController
 
 
-#pragma mark - UIViewController
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender {
-
-    if ([segue.identifier isEqualToString:ActionSelectionController.SEGUE]) {
-
-        if (_actionPopover != nil)
-            [_actionPopover dismissViewControllerAnimated:NO completion:nil];
-
-        _actionPopover = segue.destinationViewController;
-        ((ActionSelectionController *) _actionPopover).currentDossier = _dossier;
-        ((ActionSelectionController *) _actionPopover).delegate = self;
-
-        if ([_signatureFormat isEqualToString:@"CMS"])
-            ((ActionSelectionController *) _actionPopover).signatureEnabled = @1;
-        else if (_visaEnabled)
-            ((ActionSelectionController *) _actionPopover).visaEnabled = @1;
-    }
-}
-
-
-#pragma mark - ADLDrawingViewDataSource
-
-
-- (void)updateAnnotation:(Annotation *)annotation {
-
-    [_restClient updateAnnotation:annotation
-                       forDossier:[ADLSingletonState sharedSingletonState].dossierCourantReference
-                          success:^(NSArray *result) {
-                              NSLog(@"updateAnnotation success");
-                          }
-                          failure:^(NSError *error) {
-                              [ViewUtils logErrorWithMessage:[StringsUtils getMessageWithError:error]
-                                                       title:@"Erreur à la sauvegarde de l'annotation"];
-                          }];
-}
-
-
 - (void)addAnnotation:(Annotation *)annotation {
 
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];

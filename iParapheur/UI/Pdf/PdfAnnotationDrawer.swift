@@ -181,6 +181,15 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         let flags: Int = recycledAnnotation?.value(forAnnotationKey: .flags) as? Int ?? PdfAnnotationDrawer.FLAG_NORMAL
         annotation.setValue(flags, forAnnotationKey: .flags)
 
+        let identifier: String = recycledAnnotation?.value(forAnnotationKey: .parent) as? String ?? "_new"
+        annotation.setValue(identifier, forAnnotationKey: .parent)
+
+        let date: Date = recycledAnnotation?.value(forAnnotationKey: .date) as? Date ?? Date()
+        annotation.setValue(date, forAnnotationKey: .date)
+
+        let text: String = recycledAnnotation?.value(forAnnotationKey: .textLabel) as? String ?? ""
+        annotation.setValue(text, forAnnotationKey: .textLabel)
+
         // Setting view's attributes
 
         annotation.color = color.withAlphaComponent(0.6)

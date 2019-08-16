@@ -198,23 +198,44 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
 
     override func onAnnotationMoved(_ annotation: PDFAnnotation?) {
-        os_log("Annotation moved !! %@", annotation ?? "(nil)")
+
+        guard let folderId = currentFolder?.identifier,
+              let currentAnnotation = annotation,
+              let currentPage = currentAnnotation.page,
+              let pageNumber = pdfView.document?.index(for: currentPage) else { return }
+
+        let fixedAnnotation = PdfReaderController.translateToAnnotation(currentAnnotation,
+                                                                        pageNumber: pageNumber,
+                                                                        displayBox: pdfView.displayBox)
+
+        restClient?.updateAnnotation(fixedAnnotation,
+                                     folderId: folderId,
+                                     responseCallback: {
+                                         os_log("updateAnnotation success")
+                                     },
+                                     errorCallback: {
+                                         (error: Error) in
+                                         ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
+                                                            title: "Erreur à la sauvegarde de l'annotation")
+                                     }
+        )
     }
 
 
     // </editor-fold desc="PdfAnnotationEventsDelegate">
 
 
-    private func translateToPDFAnnotation(annotation: Annotation, page: PDFPage) -> PDFAnnotation {
+    class func translateToPdfAnnotation(_ annotation: Annotation, page: PDFPage, displayBox: PDFDisplayBox) -> PDFAnnotation {
 
         // Translating annotation from top-right-origin (web)
         // to bottom-left-origin (PDFKit)
 
+        let rect = ViewUtils.translateDpi(rect: annotation.rect, oldDpi: 150, newDpi: 72)
         let bounds = CGRect(
-                x: annotation.rect.origin.x,
-                y: page.bounds(for: pdfView.displayBox).height - annotation.rect.origin.y,
-                width: annotation.rect.width,
-                height: -(annotation.rect.height)
+                x: rect.origin.x,
+                y: page.bounds(for: displayBox).height - rect.origin.y,
+                width: rect.width,
+                height: -(rect.height)
         )
 
         let result = PDFAnnotation(bounds: bounds.standardized,
@@ -228,6 +249,9 @@ class PdfReaderController: PdfController, FolderListDelegate {
         result.setValue(annotationColor, forAnnotationKey: PDFAnnotationKey.color)
         result.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
         result.setValue(annotation.author, forAnnotationKey: .name)
+        result.setValue(annotation.text, forAnnotationKey: .textLabel)
+        result.setValue(annotation.date, forAnnotationKey: .date)
+        result.setValue(annotation.identifier, forAnnotationKey: .parent)
         result.setValue(annotation.isEditable ? PdfAnnotationDrawer.FLAG_LOCKED : PdfAnnotationDrawer.FLAG_NORMAL, forAnnotationKey: .flags)
 
         // View
@@ -242,12 +266,32 @@ class PdfReaderController: PdfController, FolderListDelegate {
     }
 
 
-//    private static func translateToAnnotation(pdfAnnotation: PDFAnnotation) -> Annotation {
-//
-//        let result = Annotation()
-//
-//        return result
-//    }
+    class func translateToAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, displayBox: PDFDisplayBox) -> Annotation {
+
+        let result = Annotation(currentPage: pageNumber)!
+        let page = pdfAnnotation.page!
+
+        // Translating annotation bottom-left-origin (PDFKit)
+        // to from top-right-origin (web)
+
+        let rect = CGRect(
+                x: pdfAnnotation.bounds.origin.x,
+                y: page.bounds(for: displayBox).height - pdfAnnotation.bounds.origin.y,
+                width: pdfAnnotation.bounds.width,
+                height: -(pdfAnnotation.bounds.height)
+        )
+
+        result.rect = ViewUtils.translateDpi(rect: rect, oldDpi: 72, newDpi: 150)
+
+        // Metadata
+
+        result.author = pdfAnnotation.value(forAnnotationKey: .name) as? String ?? ""
+        result.text = pdfAnnotation.value(forAnnotationKey: .textLabel) as? String ?? ""
+        result.date = pdfAnnotation.value(forAnnotationKey: .date) as? Date ?? Date()
+        result.identifier = pdfAnnotation.value(forAnnotationKey: .parent) as? String ?? "_new"
+
+        return result
+    }
 
 
     private func downloadFolderMetadata() {
@@ -370,7 +414,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
             for annotation in self.currentAnnotations ?? [] {
                 guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
-                let pdfAnnotation = self.translateToPDFAnnotation(annotation: annotation, page: pdfPage)
+                let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, page: pdfPage, displayBox: pdfView.displayBox)
                 pdfPage.addAnnotation(pdfAnnotation)
             }
 
