@@ -32,45 +32,91 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import XCTest
+import os
 @testable import iParapheur
 
 
 class Models_Annotation_Tests: XCTestCase {
-    
-    
+
+
+    func testEncodeFull() {
+
+        let annotation = Annotation(currentPage: 99)!
+        annotation.identifier = "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f"
+        annotation.author = "Administrator Admin"
+        annotation.fillColor = "undefined"
+        annotation.penColor = "undefined"
+        annotation.isSecretary = true
+        //StringsUtils.serializeAnnotationDate(date: annotation.date), "2018-03-15T17:22:19Z")
+        annotation.text = "plop"
+        annotation.type = "rect"
+        annotation.date = Date(timeIntervalSince1970: 1546344000)
+        annotation.rect = CGRect(x: 15, y: 30, width: 150, height: 300)
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        let annotationJson = try! jsonEncoder.encode(annotation)
+        let annotationString = String(data: annotationJson, encoding: .utf8)!
+
+        XCTAssertEqual(annotationString, """
+                                         {
+                                           "author" : "Administrator Admin",
+                                           "id" : "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
+                                           "penColor" : "undefined",
+                                           "fillColor" : "undefined",
+                                           "date" : "2019-01-01T13:00:00Z",
+                                           "secretaire" : true,
+                                           "rect" : {
+                                             "topLeft" : {
+                                               "x" : 31.25,
+                                               "y" : 62.5
+                                             },
+                                             "bottomRight" : {
+                                               "x" : 343.75,
+                                               "y" : 687.5
+                                             }
+                                           },
+                                           "type" : "rect",
+                                           "text" : "plop"
+                                         }
+                                         """)
+    }
+
+
     func testDecodeFull() {
-        
+
         let annotationJsonString = """
-            {
-                "author": "Administrator Admin",
-                "date": "2018-03-15T17:22:19Z",
-                "fillColor": "undefined",
-                "id": "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
-                "penColor": "undefined",
-                "rect": {
-                    "bottomRight": {
-                        "x": "275.625",
-                        "y": "307.8409090909091" 
-                    },
-                    "topLeft": {
-                        "x": 10,
-                        "y": 15
-                    }
-                },
-                "secretaire": true,
-                "text": "plop",
-                "type": "rect"
-            }
-        """
+                                       {
+                                           "author": "Administrator Admin",
+                                           "date": "2018-03-15T17:22:19Z",
+                                           "fillColor": "undefined",
+                                           "id": "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
+                                           "penColor": "undefined",
+                                           "rect": {
+                                               "bottomRight": {
+                                                   "x": "275.625",
+                                                   "y": "307.8409090909091" 
+                                               },
+                                               "topLeft": {
+                                                   "x": 10,
+                                                   "y": 15
+                                               }
+                                           },
+                                           "secretaire": true,
+                                           "text": "plop",
+                                           "type": "rect"
+                                       }
+                                   """
         let annotationJsonData = annotationJsonString.data(using: .utf8)!
-        
+
         let jsonDecoder = JSONDecoder()
         let annotation = try! jsonDecoder.decode(Annotation.self,
-                                                 from:annotationJsonData)
-        
+                                                 from: annotationJsonData)
+
         // Checks
-        
+
         XCTAssertNotNil(annotation)
 
         XCTAssertEqual(annotation.identifier, "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f")
@@ -87,6 +133,6 @@ class Models_Annotation_Tests: XCTestCase {
         XCTAssertEqual(annotation.rect.origin.x, 4.8, accuracy: 0.1)
         XCTAssertEqual(annotation.rect.origin.y, 7.2, accuracy: 0.1)
     }
-    
+
 }
 

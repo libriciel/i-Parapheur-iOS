@@ -59,6 +59,7 @@
 		AB3CAA1F924C8D67F4AA5548 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */; };
 		AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */; };
 		AB3CAA952CE46578AE384BBF /* DeskListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB3CA3AB723AF7CA4A2DF8D2 /* DeskListEmptyView.xib */; };
+		AB3CAAB3D342336A4E5244A9 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAC904FE5E3EBA0E382CB /* RuntimeError.swift */; };
 		AB3CAABB3B1AACA918157A7C /* FolderListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */; };
 		AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */; };
 		AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */; };
@@ -240,6 +241,7 @@
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
 		AB3CABD5DDB33626D5C41D14 /* PdfController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfController.swift; sourceTree = "<group>"; };
 		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
+		AB3CAC904FE5E3EBA0E382CB /* RuntimeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
 		AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfReaderController.swift; sourceTree = "<group>"; };
 		AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
@@ -741,6 +743,7 @@
 				64F34B92237FDEFCDA05C9EB /* CryptoUtils.swift */,
 				AB3CAB2C0F9F4D4641FB8387 /* Crypto */,
 				AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */,
+				AB3CAC904FE5E3EBA0E382CB /* RuntimeError.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1063,6 +1066,7 @@
 				AB3CAE3B41772DF787B2D171 /* PdfAnnotationGestureRecognizer.swift in Sources */,
 				AB3CAFD91957D472C162138F /* PdfAnnotationDrawer.swift in Sources */,
 				AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */,
+				AB3CAAB3D342336A4E5244A9 /* RuntimeError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
