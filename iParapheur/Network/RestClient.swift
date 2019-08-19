@@ -852,7 +852,7 @@ class RestClient: NSObject {
                 switch (response.result) {
 
                     case .success:
-                        responseCallback!(NSNumber(value: 1))
+                        responseCallback?(1)
                         break
 
                     case .failure(let error):
@@ -872,7 +872,7 @@ class RestClient: NSObject {
                 switch (response.result) {
 
                     case .success:
-                        responseCallback!(NSNumber(value: 1))
+                        responseCallback?(1)
                         break
 
                     case .failure(let error):

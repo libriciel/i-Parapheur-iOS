@@ -113,8 +113,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
     }
 
 
-    override func prepare(for segue: UIStoryboardSegue,
-                          sender: Any?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
 //        if (segue.identifier == "dossierDetails"),
 //           let destinationController = segue.destination as? RGDossierDetailViewController {
@@ -192,8 +191,17 @@ class PdfReaderController: PdfController, FolderListDelegate {
     // <editor-fold desc="PdfAnnotationEventsDelegate"> MARK: - PdfAnnotationEventsDelegate
 
 
-    override func onAnnotationSelected(_ annotation: PDFAnnotation?) {
-        os_log("Annotation selected !! %@", annotation ?? "(nil)")
+    override func onAnnotationSelected(_ pdfAnnotation: PDFAnnotation?) {
+
+        guard let currentPdfAnnotation = pdfAnnotation,
+              let currentPage = currentPdfAnnotation.page,
+              let pageNumber = pdfView.document?.index(for: currentPage) else { return }
+
+        let annotation = PdfReaderController.translateToAnnotation(currentPdfAnnotation,
+                                                                   pageNumber: pageNumber,
+                                                                   pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
+
+        os_log("Annotation selected !! %@", annotation)
     }
 
 
