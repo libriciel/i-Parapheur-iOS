@@ -50,6 +50,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     static let FLAG_NORMAL = 0
     static let FLAG_LOCKED = 8
 
+    static var DEFAULT_COLOR = ColorUtils.DarkBlue
 
     weak var pdfView: PDFView!
     private var currentAnnotation: PDFAnnotation?
@@ -77,6 +78,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         }
         else {
             rect = CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
+            currentAnnotation = PdfAnnotationDrawer.createAnnotation(rect: rect!, page: page, color: PdfAnnotationDrawer.DEFAULT_COLOR)
         }
     }
 
@@ -158,7 +160,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     // </editor-fold desc="DrawingGestureRecognizerDelegate">
 
 
-    class func createAnnotation(rect: CGRect, page: PDFPage, recycledAnnotation: PDFAnnotation?) -> PDFAnnotation {
+    class func createAnnotation(rect: CGRect, page: PDFPage, color: UIColor) -> PDFAnnotation {
 
         let border = PDFBorder()
         border.lineWidth = 2.0
@@ -167,34 +169,21 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
                                        forType: .square,
                                        withProperties: nil)
 
-        // Passing metadata
+        // Metadata
 
-        let highlightMode: PDFAnnotationHighlightingMode = recycledAnnotation?.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode ?? .none
-        annotation.setValue(highlightMode, forAnnotationKey: .highlightingMode)
-
-        let color: UIColor = recycledAnnotation?.value(forAnnotationKey: .color) as? UIColor ?? ColorUtils.DarkBlue
-        annotation.setValue(color, forAnnotationKey: .interiorColor)
-
-        let author: String = recycledAnnotation?.value(forAnnotationKey: .name) as? String ?? ""
-        annotation.setValue(author, forAnnotationKey: .name)
-
-        let flags: Int = recycledAnnotation?.value(forAnnotationKey: .flags) as? Int ?? PdfAnnotationDrawer.FLAG_NORMAL
-        annotation.setValue(flags, forAnnotationKey: .flags)
-
-        let identifier: String = recycledAnnotation?.value(forAnnotationKey: .parent) as? String ?? "_new"
-        annotation.setValue(identifier, forAnnotationKey: .parent)
-
-        let date: Date = recycledAnnotation?.value(forAnnotationKey: .date) as? Date ?? Date()
-        annotation.setValue(date, forAnnotationKey: .date)
-
-        let text: String = recycledAnnotation?.value(forAnnotationKey: .textLabel) as? String ?? ""
-        annotation.setValue(text, forAnnotationKey: .textLabel)
+        annotation.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
+        annotation.setValue(Date(), forAnnotationKey: .date)
+        annotation.setValue("_new", forAnnotationKey: .parent)
+        // annotation.setValue("me", forAnnotationKey: .name)
 
         // Setting view's attributes
 
-        annotation.color = color.withAlphaComponent(0.6)
-        annotation.interiorColor = color.withAlphaComponent((highlightMode == .outline) ? 0.4 : 0.1)
         annotation.border = border
+        annotation.color = color.withAlphaComponent(0.6)
+
+        if (PDFAnnotation.instancesRespond(to: #selector(setter: PDFAnnotation.interiorColor))) { // iOS 11 bugfix
+            annotation.interiorColor = color.withAlphaComponent(0.1)
+        }
 
         return annotation
     }
@@ -246,21 +235,23 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
     /**
         Due to a nasty bug (https://stackoverflow.com/a/46911395/9122113),
-        we have to remove and replace a new annotation to render it properly.
+        we have to remove and replace the annotation to render it properly.
      */
     private func drawAnnotation(onPage: PDFPage) {
 
-        guard let rect = rect else { return }
-        let annotation = PdfAnnotationDrawer.createAnnotation(rect: rect.standardized,
-                                                              page: onPage,
-                                                              recycledAnnotation: currentAnnotation)
+        guard let rect = rect,
+              let annotation = currentAnnotation else { return }
 
-        if let _ = currentAnnotation {
-            currentAnnotation!.page?.removeAnnotation(currentAnnotation!)
+        annotation.page?.removeAnnotation(currentAnnotation!)
+
+        annotation.bounds = rect.standardized
+
+        let highlightingMode = (annotation.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode) ?? .none
+        if (PDFAnnotation.instancesRespond(to: #selector(setter: PDFAnnotation.interiorColor))) { // iOS 11 bugfix
+            annotation.interiorColor = PdfAnnotationDrawer.DEFAULT_COLOR.withAlphaComponent((highlightingMode == .outline) ? 0.4 : 0.1)
         }
 
         onPage.addAnnotation(annotation)
-        currentAnnotation = annotation
     }
 
 }

@@ -35,6 +35,7 @@
 
 import XCTest
 import os
+import PDFKit
 @testable import iParapheur
 
 
@@ -47,8 +48,8 @@ class UI_PdfReaderController_Tests: XCTestCase {
         annotation.text = "Text"
         annotation.author = "Author"
         annotation.date = Date(timeIntervalSince1970: 1546344000)
-        
-        let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, pageHeight: 1080)
+
+        let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, pageHeight: 1080, pdfPage: PDFPage(image: UIImage())!)
         let parsedAnnotation = PdfReaderController.translateToAnnotation(pdfAnnotation, pageNumber: annotation.page, pageHeight: 1080)
 
         XCTAssertEqual(parsedAnnotation.text, "Text")
