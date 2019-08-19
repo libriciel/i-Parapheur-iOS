@@ -46,14 +46,19 @@ class UI_PdfReaderController_Tests: XCTestCase {
 
         let annotation = Annotation(currentPage: 5)!
         annotation.text = "Text"
+        annotation.identifier = "Id"
         annotation.author = "Author"
+        annotation.fillColor = "red"
         annotation.date = Date(timeIntervalSince1970: 1546344000)
 
         let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, pageHeight: 1080, pdfPage: PDFPage(image: UIImage())!)
         let parsedAnnotation = PdfReaderController.translateToAnnotation(pdfAnnotation, pageNumber: annotation.page, pageHeight: 1080)
 
         XCTAssertEqual(parsedAnnotation.text, "Text")
+        XCTAssertEqual(parsedAnnotation.text, "Text")
         XCTAssertEqual(parsedAnnotation.author, "Author")
+        XCTAssertEqual(parsedAnnotation.identifier, "Id")
+        XCTAssertEqual(parsedAnnotation.fillColor, "red")
         XCTAssertEqual(parsedAnnotation.date.timeIntervalSince1970, 1546344000)
     }
 

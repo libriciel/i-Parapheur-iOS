@@ -169,15 +169,9 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
                                        forType: .square,
                                        withProperties: nil)
 
-        // Metadata
-
-        annotation.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
-        annotation.setValue(Date(), forAnnotationKey: .date)
-        annotation.setValue("_new", forAnnotationKey: .parent)
-        // annotation.setValue("me", forAnnotationKey: .name)
-
         // Setting view's attributes
 
+        annotation.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
         annotation.border = border
         annotation.color = color.withAlphaComponent(0.6)
 
@@ -248,7 +242,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
         let highlightingMode = (annotation.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode) ?? .none
         if (PDFAnnotation.instancesRespond(to: #selector(setter: PDFAnnotation.interiorColor))) { // iOS 11 bugfix
-            annotation.interiorColor = PdfAnnotationDrawer.DEFAULT_COLOR.withAlphaComponent((highlightingMode == .outline) ? 0.4 : 0.1)
+            annotation.interiorColor = annotation.color.withAlphaComponent((highlightingMode == .outline) ? 0.4 : 0.1)
         }
 
         onPage.addAnnotation(annotation)

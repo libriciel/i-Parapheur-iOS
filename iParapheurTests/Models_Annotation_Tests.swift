@@ -70,12 +70,12 @@ class Models_Annotation_Tests: XCTestCase {
                                            "secretaire" : true,
                                            "rect" : {
                                              "topLeft" : {
-                                               "x" : 31.25,
-                                               "y" : 62.5
+                                               "x" : 15,
+                                               "y" : 30
                                              },
                                              "bottomRight" : {
-                                               "x" : 343.75,
-                                               "y" : 687.5
+                                               "x" : 165,
+                                               "y" : 330
                                              }
                                            },
                                            "type" : "rect",
@@ -96,8 +96,8 @@ class Models_Annotation_Tests: XCTestCase {
                                            "penColor": "undefined",
                                            "rect": {
                                                "bottomRight": {
-                                                   "x": "275.625",
-                                                   "y": "307.8409090909091" 
+                                                   "x": "127.5",
+                                                   "y": "140.5"
                                                },
                                                "topLeft": {
                                                    "x": 10,
@@ -128,10 +128,10 @@ class Models_Annotation_Tests: XCTestCase {
         XCTAssertEqual(annotation.text, "plop")
         XCTAssertEqual(annotation.type, "rect")
 
-        XCTAssertEqual(annotation.rect.width, 127.5, accuracy: 0.1)
-        XCTAssertEqual(annotation.rect.height, 140.56, accuracy: 0.1)
-        XCTAssertEqual(annotation.rect.origin.x, 4.8, accuracy: 0.1)
-        XCTAssertEqual(annotation.rect.origin.y, 7.2, accuracy: 0.1)
+        XCTAssertEqual(annotation.rect.width, 117.5, accuracy: 0.1)
+        XCTAssertEqual(annotation.rect.height, 125.5, accuracy: 0.1)
+        XCTAssertEqual(annotation.rect.origin.x, 10, accuracy: 0.1)
+        XCTAssertEqual(annotation.rect.origin.y, 15, accuracy: 0.1)
     }
 
 }

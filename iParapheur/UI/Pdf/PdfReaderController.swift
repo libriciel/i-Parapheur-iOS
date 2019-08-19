@@ -242,12 +242,13 @@ class PdfReaderController: PdfController, FolderListDelegate {
                                                           page: pdfPage,
                                                           color: PdfAnnotationDrawer.DEFAULT_COLOR)
 
-        // Metadata
+        // Metadata payload
 
-        result.setValue(annotation.author, forAnnotationKey: .name)
-        result.setValue(annotation.text, forAnnotationKey: .textLabel)
-        result.setValue(annotation.date, forAnnotationKey: .date)
-        result.setValue(annotation.identifier, forAnnotationKey: .parent)
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        let annotationJson = try! jsonEncoder.encode(annotation)
+        let annotationString = String(data: annotationJson, encoding: .utf8)!
+        result.setValue(annotationString, forAnnotationKey: .widgetValue)
 
         return result
     }
@@ -255,7 +256,9 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
     class func translateToAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, pageHeight: CGFloat) -> Annotation {
 
-        let result = Annotation(currentPage: pageNumber)!
+        let jsonDecoder = JSONDecoder()
+        let annotationJsonString = pdfAnnotation.value(forAnnotationKey: .widgetValue) as! String
+        let result = try! jsonDecoder.decode(Annotation.self, from: annotationJsonString.data(using: .utf8)!)
 
         // Translating annotation bottom-left-origin (PDFKit)
         // to from top-right-origin (web)
@@ -268,13 +271,6 @@ class PdfReaderController: PdfController, FolderListDelegate {
         )
 
         result.rect = ViewUtils.translateDpi(rect: rect, oldDpi: 72, newDpi: 150)
-
-        // Metadata
-
-        result.author = pdfAnnotation.value(forAnnotationKey: .name) as? String ?? ""
-        result.text = pdfAnnotation.value(forAnnotationKey: .textLabel) as? String ?? ""
-        result.date = pdfAnnotation.value(forAnnotationKey: .date) as? Date ?? Date()
-        result.identifier = pdfAnnotation.value(forAnnotationKey: .parent) as? String ?? "_new"
 
         return result
     }
