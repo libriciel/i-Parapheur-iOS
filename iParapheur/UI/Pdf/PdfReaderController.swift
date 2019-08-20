@@ -66,6 +66,10 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         super.viewDidLoad()
         os_log("View Loaded : PdfReaderController")
 
+        // Bugfix on keyboard showing https://github.com/kciter/Floaty/issues/79
+
+        floatingActionButton.sticky = true
+
         // Prepare Floaty items
 
         annotationItem.buttonColor = UIColor.gray
@@ -185,12 +189,30 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
     // <editor-fold desc="AnnotationDetailsControllerDelegate"> MARK: - AnnotationDetailsControllerDelegate
 
 
-    func onAnnotationDeleted(annotation: Annotation) {
-        self.pdfDrawer.deleteCurrentAnnotation()
+    func onAnnotationChanged(annotation: Annotation) {
+
+        guard let currentPage = pdfView.document?.page(at: annotation.page) else { return }
+
+        for pdfAnnotation in currentPage.annotations {
+
+            let testAnnotation = PdfReaderController.translateToAnnotation(pdfAnnotation,
+                                                                           pageNumber: annotation.page,
+                                                                           pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
+
+            if (testAnnotation.identifier == annotation.identifier) {
+                PdfReaderController.updatePdfAnnotationMetadata(pdfAnnotation: pdfAnnotation, annotation: annotation)
+            }
+        }
     }
 
 
-    // <editor-fold desc="AnnotationDetailsControllerDelegate">
+    func onAnnotationDeleted(annotation: Annotation) {
+        guard let annotation = self.pdfDrawer.getCurrentAnnotation() else { return }
+        annotation.page?.removeAnnotation(annotation)
+    }
+
+
+    // </editor-fold desc="AnnotationDetailsControllerDelegate">
 
 
     // <editor-fold desc="FolderListDelegate"> MARK: - FolderListDelegate
@@ -237,22 +259,44 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
             return
         }
 
+
         let fixedAnnotation = PdfReaderController.translateToAnnotation(currentAnnotation,
                                                                         pageNumber: pageNumber,
                                                                         pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
-        restClient?.updateAnnotation(fixedAnnotation,
-                                     folderId: folderId,
-                                     documentId: documentId,
-                                     responseCallback: {
-                                         os_log("updateAnnotation success")
-                                     },
-                                     errorCallback: {
-                                         (error: Error) in
-                                         ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
-                                                            title: "Erreur à la sauvegarde de l'annotation")
-                                     }
-        )
+        if (fixedAnnotation.identifier == "_new") {
+            restClient?.createAnnotation(fixedAnnotation,
+                                         folderId: folderId,
+                                         documentId: documentId,
+                                         responseCallback: {
+                                             (newId: String) in
+
+                                             os_log("createAnnotation success id:%@", newId)
+                                             fixedAnnotation.identifier = newId
+                                             fixedAnnotation.author = "(Utilisateur courant)"
+                                             PdfReaderController.updatePdfAnnotationMetadata(pdfAnnotation: currentAnnotation, annotation: fixedAnnotation)
+                                             self.performSegue(withIdentifier: AnnotationDetailsController.SEGUE, sender: fixedAnnotation)
+                                         },
+                                         errorCallback: {
+                                             (error: Error) in
+
+                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
+                                                                title: "Erreur à la sauvegarde de l'annotation")
+                                         })
+        }
+        else {
+            restClient?.updateAnnotation(fixedAnnotation,
+                                         folderId: folderId,
+                                         documentId: documentId,
+                                         responseCallback: {
+                                             os_log("updateAnnotation success")
+                                         },
+                                         errorCallback: {
+                                             (error: Error) in
+                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
+                                                                title: "Erreur à la sauvegarde de l'annotation")
+                                         })
+        }
     }
 
 
@@ -276,23 +320,29 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                                                           page: pdfPage,
                                                           color: PdfAnnotationDrawer.DEFAULT_COLOR)
 
-        // Metadata payload
+        PdfReaderController.updatePdfAnnotationMetadata(pdfAnnotation: result, annotation: annotation)
+
+        return result
+    }
+
+
+    class func updatePdfAnnotationMetadata(pdfAnnotation: PDFAnnotation, annotation: Annotation) {
 
         let jsonEncoder = JSONEncoder()
         jsonEncoder.outputFormatting = .prettyPrinted
+
         let annotationJson = try! jsonEncoder.encode(annotation)
         let annotationString = String(data: annotationJson, encoding: .utf8)!
-        result.setValue(annotationString, forAnnotationKey: .widgetValue)
 
-        return result
+        pdfAnnotation.setValue(annotationString, forAnnotationKey: .widgetValue)
     }
 
 
     class func translateToAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, pageHeight: CGFloat) -> Annotation {
 
         let jsonDecoder = JSONDecoder()
-        let annotationJsonString = pdfAnnotation.value(forAnnotationKey: .widgetValue) as! String
-        let result = try! jsonDecoder.decode(Annotation.self, from: annotationJsonString.data(using: .utf8)!)
+        let annotationJsonString = pdfAnnotation.value(forAnnotationKey: .widgetValue) as? String ?? ""
+        let result = (try? jsonDecoder.decode(Annotation.self, from: annotationJsonString.data(using: .utf8)!)) ?? Annotation(currentPage: pageNumber)!
 
         // Translating annotation bottom-left-origin (PDFKit)
         // to from top-right-origin (web)
@@ -427,6 +477,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     private func loadPdf(documentPath: URL) {
+
         if let pdfDocument = PDFDocument(url: documentPath) {
 
             for annotation in self.currentAnnotations ?? [] {
@@ -471,7 +522,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         }
 
         if ((documentLoaded == nil) && !floatingActionButton.isHidden) {
-            self.floatingActionButton.isHidden = true
+            floatingActionButton.isHidden = true
         }
     }
 

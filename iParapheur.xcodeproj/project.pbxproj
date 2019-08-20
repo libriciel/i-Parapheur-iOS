@@ -64,18 +64,17 @@
 		AB3CAABB3B1AACA918157A7C /* FolderListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */; };
 		AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */; };
 		AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */; };
+		AB3CACDF2D4B17C412D4B8CB /* AnnotationDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA81C79AD314BF8B41525 /* AnnotationDetailsController.swift */; };
 		AB3CAD3E9A26BC332C8524F2 /* InSignedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3898C79B8ED617822B7 /* InSignedData.swift */; };
 		AB3CAD40BDC2D560A6899368 /* FolderListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA1EC6344C41296A85365 /* FolderListController.swift */; };
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
 		AB3CAE3B41772DF787B2D171 /* PdfAnnotationGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2978A9696F9AAD97765 /* PdfAnnotationGestureRecognizer.swift */; };
-		AB3CAE6BAB2C49B35D2A5D5E /* AnnotationDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAB716816C8E1E24235E /* AnnotationDetailsController.swift */; };
 		AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */; };
 		AB3CAFD91957D472C162138F /* PdfAnnotationDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA11F1AF2E2B416CDF9CD /* PdfAnnotationDrawer.swift */; };
 		AB3CAFE76FFE3986CD3D545B /* PdfController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABD5DDB33626D5C41D14 /* PdfController.swift */; };
 		B4082A7F162D48CB000B0E26 /* logo-new5.png in Resources */ = {isa = PBXBuildFile; fileRef = B4082A7E162D48CB000B0E26 /* logo-new5.png */; };
 		B46BCC4A156A855900A96560 /* RGWorkflowDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */; };
-		B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */; };
 		B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B3643C1611A4ED0051420F /* ADLSingletonState.m */; };
 		B4D2F89B162AADF700D8A1DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E5ECB7153AF65F00BD514D /* Main.storyboard */; };
 		B4E5ECAF153AF65F00BD514D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECAE153AF65F00BD514D /* main.m */; };
@@ -237,11 +236,11 @@
 		AB3CA5B59D574C28C40AE909 /* RGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGAppDelegate.m; sourceTree = "<group>"; };
 		AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InTokenData.swift; sourceTree = "<group>"; };
 		AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLKeyStore.h; sourceTree = "<group>"; };
+		AB3CA81C79AD314BF8B41525 /* AnnotationDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationDetailsController.swift; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
 		AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteHasher.swift; sourceTree = "<group>"; };
 		AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLKeyStore.m; sourceTree = "<group>"; };
 		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
-		AB3CAAB716816C8E1E24235E /* AnnotationDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationDetailsController.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
 		AB3CABD5DDB33626D5C41D14 /* PdfController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfController.swift; sourceTree = "<group>"; };
 		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
@@ -254,8 +253,6 @@
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
 		B46BCC48156A855900A96560 /* RGWorkflowDialogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGWorkflowDialogViewController.h; sourceTree = "<group>"; };
 		B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RGWorkflowDialogViewController.m; sourceTree = "<group>"; };
-		B488312515EE0F2900EC5BB3 /* ADLPDFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLPDFViewController.h; sourceTree = "<group>"; };
-		B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLPDFViewController.m; sourceTree = "<group>"; };
 		B4A221A816299B9400474A18 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B4B3643B1611A4ED0051420F /* ADLSingletonState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLSingletonState.h; sourceTree = "<group>"; };
 		B4B3643C1611A4ED0051420F /* ADLSingletonState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLSingletonState.m; sourceTree = "<group>"; };
@@ -491,6 +488,7 @@
 				AB3CA2978A9696F9AAD97765 /* PdfAnnotationGestureRecognizer.swift */,
 				AB3CA11F1AF2E2B416CDF9CD /* PdfAnnotationDrawer.swift */,
 				AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */,
+				AB3CA81C79AD314BF8B41525 /* AnnotationDetailsController.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -505,8 +503,6 @@
 				C50326201DD090D3004F00A6 /* ActionSelectionController.swift */,
 				952E2E531888185E005C8D97 /* ADLFilterViewController.h */,
 				952E2E541888185E005C8D97 /* ADLFilterViewController.m */,
-				B488312515EE0F2900EC5BB3 /* ADLPDFViewController.h */,
-				B488312615EE0F2900EC5BB3 /* ADLPDFViewController.m */,
 				C54DB7A41DCCCAE700B2CAFA /* DocumentSelectionCell.swift */,
 				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
 				7A5E08BE20D3EFD000BFBA1A /* WorkflowStepCell.swift */,
@@ -520,7 +516,6 @@
 				AB3CA19E020E6B485F930877 /* FolderList */,
 				AB3CAE8FB95F5B0AA7FEC012 /* DeskList */,
 				AB3CAECE35C362DA9EDCBEF2 /* Pdf */,
-				AB3CAAB716816C8E1E24235E /* AnnotationDetailsController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1030,7 +1025,6 @@
 				C526D8E01DA7FC5A00EE8BA9 /* Dossier.swift in Sources */,
 				C5065EDF1D82A844008FE301 /* SettingsLicencesController.swift in Sources */,
 				C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */,
-				B488312715EE0F2900EC5BB3 /* ADLPDFViewController.m in Sources */,
 				C5A7DAE91FDECCD30022A813 /* Etape.swift in Sources */,
 				B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */,
 				C5065EE51D82ABCD008FE301 /* SettingsAccountsController.swift in Sources */,
@@ -1073,7 +1067,7 @@
 				AB3CAFD91957D472C162138F /* PdfAnnotationDrawer.swift in Sources */,
 				AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */,
 				AB3CAAB3D342336A4E5244A9 /* RuntimeError.swift in Sources */,
-				AB3CAE6BAB2C49B35D2A5D5E /* AnnotationDetailsController.swift in Sources */,
+				AB3CACDF2D4B17C412D4B8CB /* AnnotationDetailsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -775,6 +775,57 @@ class RestClient: NSObject {
     // <editor-fold desc="Annotations"> MARK: - Annotations
 
 
+    func createAnnotation(_ annotation: Annotation,
+                          folderId: String,
+                          documentId: String,
+                          responseCallback: ((String) -> Void)?,
+                          errorCallback: ((Error) -> Void)?) {
+
+        // Check arguments
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        guard let annotationData = try? jsonEncoder.encode(annotation) else {
+            errorCallback?(RuntimeError("Impossible de créer l'annotation"))
+            return
+        }
+
+        // Send request. Using directly JSON in the body.
+        // Casting/passing it through a Parameter object doen't work well.
+
+        let annotationUrlSuffix = RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId)
+        let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
+
+        var request = URLRequest(url: URL(string: annotationUrl)!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = annotationData
+
+        manager.request(request).responseJSON {
+            (response) in
+
+            switch (response.result) {
+
+                case .success:
+
+                    guard let jsonResult = response.value as? [String: String],
+                          let idString = jsonResult["id"] else {
+                        errorCallback?(RuntimeError("impossible de parser le résultat"))
+                        return
+                    }
+
+                    responseCallback?(idString)
+
+                case .failure(let error):
+
+                    errorCallback?(error)
+                    print(error.localizedDescription)
+            }
+        }
+    }
+
+
     func updateAnnotation(_ annotation: Annotation,
                           folderId: String,
                           documentId: String,

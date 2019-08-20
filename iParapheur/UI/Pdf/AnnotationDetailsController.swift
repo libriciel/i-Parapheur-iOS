@@ -41,6 +41,8 @@ import os
 
     func onAnnotationDeleted(annotation: Annotation)
 
+    func onAnnotationChanged(annotation: Annotation)
+
 }
 
 
@@ -117,9 +119,25 @@ class AnnotationDetailsController: UIViewController {
 
 
     @IBAction func onSaveButtonClicked(_ sender: Any) {
-        guard let annotation = currentAnnotation else { return }
+
+        guard let folderId = currentFolder?.identifier,
+              let documentId = currentDocument?.identifier,
+              let annotation = currentAnnotation else { return }
+
         annotation.text = mainTextView.text
-        // TODO : Save and dismiss
+
+        restClient?.updateAnnotation(annotation,
+                                     folderId: folderId,
+                                     documentId: documentId,
+                                     responseCallback: {
+                                         self.delegate?.onAnnotationChanged(annotation: annotation)
+                                         self.dismiss(animated: true)
+                                     },
+                                     errorCallback: {
+                                         (error: Error) in
+                                         ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                            title: "Impossible de mettre à jour l'annotation")
+                                     })
     }
 
 
