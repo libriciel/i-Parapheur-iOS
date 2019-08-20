@@ -37,6 +37,13 @@ import UIKit
 import os
 
 
+@objc protocol AnnotationDetailsControllerDelegate: class {
+
+    func onAnnotationDeleted(annotation: Annotation)
+
+}
+
+
 class AnnotationDetailsController: UIViewController {
 
     public static let SEGUE = "annotationDetails"
@@ -46,6 +53,7 @@ class AnnotationDetailsController: UIViewController {
     @IBOutlet weak var dateTextField: UITextField!
     @IBOutlet weak var mainTextView: UITextView!
 
+    weak var delegate: AnnotationDetailsControllerDelegate?
     var currentAnnotation: Annotation?
     var currentFolder: Dossier?
     var currentDocument: Document?
@@ -90,12 +98,13 @@ class AnnotationDetailsController: UIViewController {
 
         guard let folderId = currentFolder?.identifier,
               let documentId = currentDocument?.identifier,
-              let annotationId = currentAnnotation?.identifier else { return }
+              let annotation = currentAnnotation else { return }
 
-        restClient?.deleteAnnotation(annotationId: annotationId,
+        restClient?.deleteAnnotation(annotationId: annotation.identifier,
                                      folderId: folderId,
                                      documentId: documentId,
                                      onResponse: {
+                                         self.delegate?.onAnnotationDeleted(annotation: annotation)
                                          self.dismiss(animated: true)
                                      },
                                      onError: {

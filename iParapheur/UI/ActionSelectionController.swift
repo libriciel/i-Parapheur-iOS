@@ -39,7 +39,9 @@ import os
 
 
 @objc protocol ActionSelectionControllerDelegate: class {
+
     func onActionSelected(action: String)
+
 }
 
 class ActionSelectionController: UITableViewController {

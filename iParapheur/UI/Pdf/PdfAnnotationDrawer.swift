@@ -236,8 +236,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         guard let rect = rect,
               let annotation = currentAnnotation else { return }
 
-        annotation.page?.removeAnnotation(currentAnnotation!)
-
+        deleteCurrentAnnotation()
         annotation.bounds = rect.standardized
 
         let highlightingMode = (annotation.value(forAnnotationKey: .highlightingMode) as? PDFAnnotationHighlightingMode) ?? .none
@@ -246,6 +245,12 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         }
 
         onPage.addAnnotation(annotation)
+    }
+
+
+    func deleteCurrentAnnotation() {
+        guard let annotation = currentAnnotation else { return }
+        annotation.page?.removeAnnotation(annotation)
     }
 
 }

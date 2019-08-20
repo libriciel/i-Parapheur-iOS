@@ -39,7 +39,7 @@ import Floaty
 import os
 
 
-class PdfReaderController: PdfController, FolderListDelegate {
+class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsControllerDelegate {
 
 
     @IBOutlet weak var floatingActionButton: Floaty!
@@ -144,6 +144,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
             destinationController.currentFolder = currentFolder
             destinationController.currentDocument = currentDocument
             destinationController.restClient = restClient
+            destinationController.delegate = self
         }
         else {
             super.prepare(for: segue, sender: sender)
@@ -179,6 +180,17 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
 
     // </editor-fold desc="UI listeners">
+
+
+    // <editor-fold desc="AnnotationDetailsControllerDelegate"> MARK: - AnnotationDetailsControllerDelegate
+
+
+    func onAnnotationDeleted(annotation: Annotation) {
+        self.pdfDrawer.deleteCurrentAnnotation()
+    }
+
+
+    // <editor-fold desc="AnnotationDetailsControllerDelegate">
 
 
     // <editor-fold desc="FolderListDelegate"> MARK: - FolderListDelegate

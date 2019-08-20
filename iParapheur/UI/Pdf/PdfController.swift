@@ -42,8 +42,8 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     @IBOutlet var pdfView: PDFView!
-    private let pdfDrawer = PdfAnnotationDrawer()
-    private let pdfAnnotationGestureRecognizer = PdfAnnotationGestureRecognizer()
+    let pdfDrawer = PdfAnnotationDrawer()
+    let pdfAnnotationGestureRecognizer = PdfAnnotationGestureRecognizer()
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
