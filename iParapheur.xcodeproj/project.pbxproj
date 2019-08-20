@@ -56,6 +56,7 @@
 		AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAF227D6274311B6A5386 /* DeskListController.swift */; };
 		AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */; };
 		AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */; };
+		AB3CA9939BE192F448FB540F /* FolderDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA18D9FCC951FC8A578C3 /* FolderDetailsController.swift */; };
 		AB3CA9D7E0617661FBB3458C /* RGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5B59D574C28C40AE909 /* RGAppDelegate.m */; };
 		AB3CAA1F924C8D67F4AA5548 /* DeskListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3D3C0BD74DA2D762A9E /* DeskListCell.swift */; };
 		AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA52ABAE8A9517E32CA20 /* ColorizedRefreshControl.swift */; };
@@ -78,7 +79,6 @@
 		B4B3643D1611A4ED0051420F /* ADLSingletonState.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B3643C1611A4ED0051420F /* ADLSingletonState.m */; };
 		B4D2F89B162AADF700D8A1DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E5ECB7153AF65F00BD514D /* Main.storyboard */; };
 		B4E5ECAF153AF65F00BD514D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECAE153AF65F00BD514D /* main.m */; };
-		B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */; };
 		C503261F1DD08ECC004F00A6 /* ActionSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */; };
 		C50326211DD090D3004F00A6 /* ActionSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50326201DD090D3004F00A6 /* ActionSelectionController.swift */; };
 		C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5065EDC1D8157FF008FE301 /* SettingsAboutController.swift */; };
@@ -223,6 +223,7 @@
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
 		A876E0F495C8E58F1B11AB27 /* Pods-iParapheurTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iParapheurTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iParapheurTests/Pods-iParapheurTests.release.xcconfig"; sourceTree = "<group>"; };
 		AB3CA11F1AF2E2B416CDF9CD /* PdfAnnotationDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfAnnotationDrawer.swift; sourceTree = "<group>"; };
+		AB3CA18D9FCC951FC8A578C3 /* FolderDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderDetailsController.swift; sourceTree = "<group>"; };
 		AB3CA1EC6344C41296A85365 /* FolderListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListController.swift; sourceTree = "<group>"; };
 		AB3CA2978A9696F9AAD97765 /* PdfAnnotationGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfAnnotationGestureRecognizer.swift; sourceTree = "<group>"; };
 		AB3CA2C9F890B3FCFD4970FC /* InController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InController.swift; sourceTree = "<group>"; };
@@ -261,8 +262,6 @@
 		B4E5ECAA153AF65F00BD514D /* iParapheur-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iParapheur-Info.plist"; sourceTree = "<group>"; };
 		B4E5ECAE153AF65F00BD514D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B4E5ECB0153AF65F00BD514D /* iParapheur-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iParapheur-Prefix.pch"; sourceTree = "<group>"; };
-		B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGDossierDetailViewController.h; sourceTree = "<group>"; };
-		B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGDossierDetailViewController.m; sourceTree = "<group>"; };
 		C50194911DA2B75D000EB564 /* KeyStore 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "KeyStore 2.xcdatamodel"; sourceTree = "<group>"; };
 		C503261E1DD08ECC004F00A6 /* ActionSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSelectionCell.swift; sourceTree = "<group>"; };
 		C50326201DD090D3004F00A6 /* ActionSelectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionSelectionController.swift; sourceTree = "<group>"; };
@@ -489,6 +488,7 @@
 				AB3CA11F1AF2E2B416CDF9CD /* PdfAnnotationDrawer.swift */,
 				AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */,
 				AB3CA81C79AD314BF8B41525 /* AnnotationDetailsController.swift */,
+				AB3CA18D9FCC951FC8A578C3 /* FolderDetailsController.swift */,
 			);
 			path = Pdf;
 			sourceTree = "<group>";
@@ -507,8 +507,6 @@
 				C54DB7921DCCA34F00B2CAFA /* DocumentSelectionController.swift */,
 				7A5E08BE20D3EFD000BFBA1A /* WorkflowStepCell.swift */,
 				C5ECE8A51DD472DE008659DD /* FirstLoginPopupController.swift */,
-				B4E5ECBA153AF65F00BD514D /* RGDossierDetailViewController.h */,
-				B4E5ECBB153AF65F00BD514D /* RGDossierDetailViewController.m */,
 				B46BCC48156A855900A96560 /* RGWorkflowDialogViewController.h */,
 				B46BCC49156A855900A96560 /* RGWorkflowDialogViewController.m */,
 				7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */,
@@ -1003,7 +1001,6 @@
 				C5978BCE1D8C1E7F0097AC55 /* ColorUtils.swift in Sources */,
 				C5ECE8A61DD472DE008659DD /* FirstLoginPopupController.swift in Sources */,
 				B4E5ECAF153AF65F00BD514D /* main.m in Sources */,
-				B4E5ECBC153AF65F00BD514D /* RGDossierDetailViewController.m in Sources */,
 				C50A87441D1AD0FE00025074 /* SettingsTableViewController.swift in Sources */,
 				7A5E08BF20D3EFD000BFBA1A /* WorkflowStepCell.swift in Sources */,
 				C5A03D891DAE7023003CBA4B /* SettingsAccountsEditPopupController.swift in Sources */,
@@ -1068,6 +1065,7 @@
 				AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */,
 				AB3CAAB3D342336A4E5244A9 /* RuntimeError.swift in Sources */,
 				AB3CACDF2D4B17C412D4B8CB /* AnnotationDetailsController.swift in Sources */,
+				AB3CA9939BE192F448FB540F /* FolderDetailsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
