@@ -60,21 +60,16 @@ class ColorUtils: NSObject {
     @objc static let DefaultTintColor = Aqua
 
 
-    @objc static func getColor(action: NSString) -> UIColor {
-
+    static func getColor(action: String) -> UIColor {
         switch (action) {
-
             case "VISA", "SIGNATURE":
                 return DarkGreen
-
             case "REJET":
                 return DarkRed
-
             case "ARCHIVER":
-                return UIKit.UIColor.black
-
+                return UIColor.black
             default:
-                return UIKit.UIColor.lightGray
+                return UIColor.lightGray
         }
     }
 

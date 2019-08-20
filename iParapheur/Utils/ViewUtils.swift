@@ -70,7 +70,7 @@ class ViewUtils: NSObject {
     }
 
 
-    @objc class func getImageName(action: String) -> String {
+    class func getImageName(action: String) -> String {
 
         switch (action) {
             case "REJET": return "ic_close_white_24dp"

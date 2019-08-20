@@ -120,13 +120,15 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-//        if (segue.identifier == "dossierDetails"),
-//           let destinationController = segue.destination as? RGDossierDetailViewController {
-//            destinationController.dossierRef = currentFolder.identifier
-//        }
-        if (segue.identifier == DocumentSelectionController.SEGUE),
-           let destinationController = segue.destination as? DocumentSelectionController,
-           let folder = currentFolder {
+        if (segue.identifier == FolderDetailsController.SEGUE),
+           let destinationController = segue.destination as? FolderDetailsController {
+
+            destinationController.currentFolder = currentFolder
+            destinationController.currentWorkflow = currentWorkflow
+        }
+        else if (segue.identifier == DocumentSelectionController.SEGUE),
+                let destinationController = segue.destination as? DocumentSelectionController,
+                let folder = currentFolder {
 
             let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
             destinationController.documentList = pdfDocuments
