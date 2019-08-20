@@ -54,6 +54,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
     var restClient: RestClient?
     var currentDesk: Bureau?
     var currentFolder: Dossier?
+    var currentDocument: Document?
     var currentWorkflow: Circuit?
     var currentAnnotations: [Annotation]?
 
@@ -210,7 +211,10 @@ class PdfReaderController: PdfController, FolderListDelegate {
         guard let folderId = currentFolder?.identifier,
               let currentAnnotation = annotation,
               let currentPage = currentAnnotation.page,
-              let pageNumber = pdfView.document?.index(for: currentPage) else { return }
+              let documentId = currentDocument?.identifier,
+              let pageNumber = pdfView.document?.index(for: currentPage) else {
+            return
+        }
 
         let fixedAnnotation = PdfReaderController.translateToAnnotation(currentAnnotation,
                                                                         pageNumber: pageNumber,
@@ -218,6 +222,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
 
         restClient?.updateAnnotation(fixedAnnotation,
                                      folderId: folderId,
+                                     documentId: documentId,
                                      responseCallback: {
                                          os_log("updateAnnotation success")
                                      },
@@ -238,7 +243,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
         // Translating annotation from top-right-origin (web)
         // to bottom-left-origin (PDFKit)
 
-        let rect = ViewUtils.translateDpi(rect: annotation.rect, oldDpi: 150, newDpi: 72)
+        let rect = ViewUtils.translateDpi(rect: annotation.rect.standardized, oldDpi: 150, newDpi: 72)
         let bounds = CGRect(
                 x: rect.origin.x,
                 y: pageHeight - rect.origin.y,
@@ -359,6 +364,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
               (documentIndex >= 0) else { return }
 
         let document = pdfDocuments[documentIndex]
+        currentDocument = document
 
         // Prepare
 
@@ -403,6 +409,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
         if let pdfDocument = PDFDocument(url: documentPath) {
 
             for annotation in self.currentAnnotations ?? [] {
+
                 guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
                 let pageHeight = pdfPage.bounds(for: pdfView.displayBox).height
                 let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, pageHeight: pageHeight, pdfPage: pdfPage)

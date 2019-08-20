@@ -89,6 +89,8 @@ class Annotation: NSObject, Codable {
         case text
         case type
         case rect
+        case page
+        case uuid
     }
 
 
@@ -113,6 +115,7 @@ class Annotation: NSObject, Codable {
         fillColor = try values.decodeIfPresent(String.self, forKey: .fillColor) ?? "undefined"
         penColor = try values.decodeIfPresent(String.self, forKey: .penColor) ?? "undefined"
         type = try values.decodeIfPresent(String.self, forKey: .type) ?? "rect"
+        page = try values.decodeIfPresent(Int.self, forKey: .page) ?? -1
 
         // Secretary, may be string or bool
 
@@ -144,7 +147,6 @@ class Annotation: NSObject, Codable {
                       size: CGSize(width: CGFloat(bottomRightX) - CGFloat(topLeftX),
                                    height: CGFloat(bottomRightY) - CGFloat(topLeftY)))
 
-        page = -1
         documentId = ""
         step = 0
         isEditable = true
@@ -172,13 +174,11 @@ class Annotation: NSObject, Codable {
         // try container.encode(page, forKey: .page)
         try container.encode(text, forKey: .text)
         try container.encode(type, forKey: .type)
-        try container.encode(StringsUtils.serializeAnnotationDate(date: date), forKey: .date)
+        try container.encode(StringsUtils.serializeAnnotationDate(date: date).replacingOccurrences(of: "Z", with: ""), forKey: .date)
         try container.encode(identifier, forKey: .identifier)
-        try container.encode(isSecretary, forKey: .secretary)
-        try container.encode(penColor, forKey: .penColor)
-        try container.encode(fillColor, forKey: .fillColor)
+        try container.encode(identifier, forKey: .uuid)
         try container.encode(author, forKey: .author)
-        try container.encode(author, forKey: .author)
+        try container.encode(page, forKey: .page)
     }
 
 

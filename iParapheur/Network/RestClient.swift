@@ -777,34 +777,45 @@ class RestClient: NSObject {
 
     func updateAnnotation(_ annotation: Annotation,
                           folderId: String,
+                          documentId: String,
                           responseCallback: (() -> Void)?,
                           errorCallback: ((Error) -> Void)?) {
 
         // Check arguments
 
         let jsonEncoder = JSONEncoder()
-        guard let annotationData = try? jsonEncoder.encode(annotation),
-              let annotationDict = try? JSONSerialization.jsonObject(with: annotationData, options: []) as? [String: Any] else {
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        guard let annotationData = try? jsonEncoder.encode(annotation) else {
             errorCallback?(RuntimeError("Impossible de créer l'annotation"))
             return
         }
 
-        guard let documentId = annotation.documentId else { return }
-
         // Send request
 
-        self.sendSimpleAction(type: 2,
-                              url: String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier),
-                              args: annotationDict,
-                              onResponse: {
-                                  (result: NSNumber) in
-                                  responseCallback?()
-                              },
-                              onError: {
-                                  (error: Error) in
-                                  errorCallback?(error)
-                              }
-        )
+        let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier)
+        let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
+
+        var request = URLRequest(url: URL(string: annotationUrl)!)
+        request.httpMethod = HTTPMethod.put.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = annotationData
+
+        manager.request(request).responseString {
+            (response) in
+
+            switch (response.result) {
+
+                case .success:
+                    responseCallback?()
+                    break
+
+                case .failure(let error):
+                    errorCallback?(error)
+                    print(error.localizedDescription)
+                    break
+            }
+        }
     }
 
 

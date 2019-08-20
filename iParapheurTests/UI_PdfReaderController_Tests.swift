@@ -58,7 +58,7 @@ class UI_PdfReaderController_Tests: XCTestCase {
         XCTAssertEqual(parsedAnnotation.text, "Text")
         XCTAssertEqual(parsedAnnotation.author, "Author")
         XCTAssertEqual(parsedAnnotation.identifier, "Id")
-        XCTAssertEqual(parsedAnnotation.fillColor, "red")
+        XCTAssertEqual(parsedAnnotation.page, 5)
         XCTAssertEqual(parsedAnnotation.date.timeIntervalSince1970, 1546344000)
     }
 

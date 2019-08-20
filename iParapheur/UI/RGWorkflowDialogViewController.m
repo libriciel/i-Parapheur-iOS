@@ -147,63 +147,6 @@
 }
 
 /**
-* APIv3 response
-*/
-- (void)getSignInfoDidEndWithSuccess:(SignInfo *)signInfo
-                             dossier:(NSString *)dossierId {
-
-    // Compute signature(s)
-
-    NSError *error = nil;
-//    NSString *signatureResult = [CryptoUtils signWithSignInfo:signInfo
-//                                                    dossierId:dossierId
-//                                                   privateKey:_currentPKey
-//                                                     password:_p12password
-//                                                        error:&error];
-//
-//    Certificate *certificate = [ModelsDataController fetchCertificates][1];
-//    NSString *dataToSign = signInfo.hashesToSign[0];
-//
-//    [InController signWithHashes:@[dataToSign]
-//                   certificateId:certificate.serialNumber];
-//
-//    if (error != nil) {
-//        [ViewUtils logErrorWithMessage:error.domain
-//                                 title:@"Erreur à la signature"];
-//        return;
-//    }
-//
-//    // Sending back result
-//
-//    [self showHud];
-//
-//    __weak typeof(self) weakSelf = self;
-//    [_restClient actionSignerForDossier:dossierId
-//                              forBureau:_bureauCourant
-//                   withPublicAnnotation:_annotationPublique.text
-//                  withPrivateAnnotation:_annotationPrivee.text
-//                          withSignature:signatureResult
-//                                success:^(NSArray *array) {
-//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-//                                    if (strongSelf) {
-//                                        NSLog(@"Signature success");
-//                                        [strongSelf dismissDialogView];
-//                                    }
-//                                }
-//                                failure:^(NSError *restError) {
-//                                    __strong typeof(weakSelf) strongSelf = weakSelf;
-//                                    if (strongSelf) {
-//                                        NSLog(@"Signature fail");
-//                                        [[UIAlertView.alloc initWithTitle:@"Erreur"
-//                                                                  message:@"Une erreur est survenue lors de l'envoi de la requête"
-//                                                                 delegate:nil
-//                                                        cancelButtonTitle:@"Fermer"
-//                                                        otherButtonTitles:nil] show];
-//                                    }
-//                                }];
-}
-
-/**
  * Retrieve every circuit, to fetch isDigitalSignatureMandatory value.
  * We can't launch every request at the same time, a new one will cancel the previous.
  * That's why we have to reccursively call this method, with incremented index, to fetch every circuit.
@@ -346,31 +289,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)   alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex {
 
-    if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PASSWORD_SIGNATURE) {
-        if (buttonIndex == 1) {
-            UITextField *passwordTextField = [alertView textFieldAtIndex:0];
-            _p12password = passwordTextField.text;
-
-            for (Dossier *dossier in _dossiers) {
-                __weak typeof(self) weakSelf = self;
-                [_restClient getSignInfoForDossier:dossier
-                                         andBureau:_bureauCourant
-                                           success:^(SignInfo *signInfo) {
-                                               __strong typeof(weakSelf) strongSelf = weakSelf;
-                                               if (strongSelf)
-                                                   [strongSelf getSignInfoDidEndWithSuccess:signInfo
-                                                                                    dossier:dossier.identifier];
-                                           }
-                                           failure:^(NSError *error) {
-                                               NSLog(@"Error on getSignInfo %@", error.localizedDescription);
-                                           }];
-            }
-        }
-    } else if (alertView.tag == RGWORKFLOWDIALOGVIEWCONTROLLER_POPUP_TAG_PAPER_SIGNATURE) {
-
-        if (buttonIndex == 1)
-            [self switchToPaperSigntureForDocumentAtIndex:0];
-    }
 }
 
 
