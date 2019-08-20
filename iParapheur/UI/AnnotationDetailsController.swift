@@ -47,6 +47,9 @@ class AnnotationDetailsController: UIViewController {
     @IBOutlet weak var mainTextView: UITextView!
 
     var currentAnnotation: Annotation?
+    var currentFolder: Dossier?
+    var currentDocument: Document?
+    var restClient: RestClient?
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
@@ -84,7 +87,23 @@ class AnnotationDetailsController: UIViewController {
 
 
     @IBAction func onDeleteButtonClicked(_ sender: Any) {
-        // TODO : Delete and dismiss
+
+        guard let folderId = currentFolder?.identifier,
+              let documentId = currentDocument?.identifier,
+              let annotationId = currentAnnotation?.identifier else { return }
+
+        restClient?.deleteAnnotation(annotationId: annotationId,
+                                     folderId: folderId,
+                                     documentId: documentId,
+                                     onResponse: {
+                                         self.dismiss(animated: true)
+                                     },
+                                     onError: {
+                                         (error: Error) in
+                                         ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                            title: "Impossible de supprimer l'annotation")
+                                     }
+        )
     }
 
 

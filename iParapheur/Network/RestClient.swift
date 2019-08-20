@@ -791,7 +791,8 @@ class RestClient: NSObject {
             return
         }
 
-        // Send request
+        // Send request. Using directly JSON in the body.
+        // Casting/passing it through a Parameter object doen't work well.
 
         let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier)
         let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
@@ -819,12 +820,34 @@ class RestClient: NSObject {
     }
 
 
+    func deleteAnnotation(annotationId: String,
+                          folderId: String,
+                          documentId: String,
+                          onResponse responseCallback: (() -> Void)?,
+                          onError errorCallback: ((Error) -> Void)?) {
+
+        let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotationId)
+
+        sendSimpleAction(type: 3,
+                         url: annotationUrlSuffix,
+                         args: nil,
+                         onResponse: {
+                             response in
+                             responseCallback?()
+                         },
+                         onError: {
+                             (error: NSError) in
+                             errorCallback?(error as Error)
+                         })
+    }
+
+
     // </editor-fold desc="Annotations">
 
 
     @objc func sendSimpleAction(type: NSNumber,
                                 url: String,
-                                args: Parameters,
+                                args: Parameters?,
                                 onResponse responseCallback: ((NSNumber) -> Void)?,
                                 onError errorCallback: ((NSError) -> Void)?) {
 

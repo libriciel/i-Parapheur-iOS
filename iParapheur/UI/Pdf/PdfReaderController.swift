@@ -141,6 +141,9 @@ class PdfReaderController: PdfController, FolderListDelegate {
                 let annotation = sender as? Annotation {
 
             destinationController.currentAnnotation = annotation
+            destinationController.currentFolder = currentFolder
+            destinationController.currentDocument = currentDocument
+            destinationController.restClient = restClient
         }
         else {
             super.prepare(for: segue, sender: sender)

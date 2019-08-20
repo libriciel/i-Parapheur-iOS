@@ -259,37 +259,6 @@
 #pragma mark - Private Methods
 
 
-//- (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
-//
-//    NSMutableDictionary *result = NSMutableDictionary.new;
-//
-////	result[@"author"] = annotation.unwrappedAuthor;
-//    result[@"text"] = annotation.text;
-//    result[@"type"] = annotation.type;
-//    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
-////	result[@"uuid"] = annotation.unwrappedId;
-//
-//    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
-//                                           oldDpi:72
-//                                           newDpi:150];
-//    NSDictionary *annotationRectTopLeft = @{
-//            @"x": @(rect.origin.x),
-//            @"y": @(rect.origin.y)
-//    };
-//    NSDictionary *annotationRectBottomRight = @{
-//            @"x": @(rect.origin.x + rect.size.width),
-//            @"y": @(rect.origin.y + rect.size.height)
-//    };
-//
-//    result[@"rect"] = @{
-//            @"topLeft": annotationRectTopLeft,
-//            @"bottomRight": annotationRectBottomRight
-//    };
-//
-//    return result;
-//}
-
-
 - (NSString *)getAnnotationsUrlForDossier:(NSString *)dossier
                               andDocument:(NSString *)document {
 
@@ -309,7 +278,6 @@
 
 
 #pragma mark - Simple actions
-// TODO : MailSecretaire
 
 
 - (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
@@ -360,31 +328,6 @@
 //                                    }];
 //}
 
-
-//- (void)actionRemoveAnnotation:(Annotation *)annotation
-//                    forDossier:(NSString *)dossierId
-//                       success:(void (^)(NSArray *))success
-//                       failure:(void (^)(NSError *))failure {
-//
-//    // Create arguments dictionary
-//
-//
-//    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-//
-//    // Send request
-//
-//    [_swiftManager sendSimpleActionWithType:@(3)
-//                                        url:[self getAnnotationUrlForDossier:dossierId
-//                                                                 andDocument:annotation.documentId
-//                                                             andAnnotationId:annotation.identifier]
-//                                       args:argumentDictionary
-//                                 onResponse:^(id result) {
-//                                     success(NSArray.new);
-//                                 }
-//                                    onError:^(NSError *error) {
-//                                        failure(error);
-//                                    }];
-//}
 
 
 @end
