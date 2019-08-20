@@ -69,6 +69,7 @@
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
 		AB3CAE3B41772DF787B2D171 /* PdfAnnotationGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2978A9696F9AAD97765 /* PdfAnnotationGestureRecognizer.swift */; };
+		AB3CAE6BAB2C49B35D2A5D5E /* AnnotationDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAB716816C8E1E24235E /* AnnotationDetailsController.swift */; };
 		AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */; };
 		AB3CAFD91957D472C162138F /* PdfAnnotationDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA11F1AF2E2B416CDF9CD /* PdfAnnotationDrawer.swift */; };
 		AB3CAFE76FFE3986CD3D545B /* PdfController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CABD5DDB33626D5C41D14 /* PdfController.swift */; };
@@ -240,6 +241,7 @@
 		AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteHasher.swift; sourceTree = "<group>"; };
 		AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLKeyStore.m; sourceTree = "<group>"; };
 		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
+		AB3CAAB716816C8E1E24235E /* AnnotationDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationDetailsController.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
 		AB3CABD5DDB33626D5C41D14 /* PdfController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfController.swift; sourceTree = "<group>"; };
 		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
@@ -518,6 +520,7 @@
 				AB3CA19E020E6B485F930877 /* FolderList */,
 				AB3CAE8FB95F5B0AA7FEC012 /* DeskList */,
 				AB3CAECE35C362DA9EDCBEF2 /* Pdf */,
+				AB3CAAB716816C8E1E24235E /* AnnotationDetailsController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1070,6 +1073,7 @@
 				AB3CAFD91957D472C162138F /* PdfAnnotationDrawer.swift in Sources */,
 				AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */,
 				AB3CAAB3D342336A4E5244A9 /* RuntimeError.swift in Sources */,
+				AB3CAE6BAB2C49B35D2A5D5E /* AnnotationDetailsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

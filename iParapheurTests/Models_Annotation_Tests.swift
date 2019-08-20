@@ -64,10 +64,8 @@ class Models_Annotation_Tests: XCTestCase {
                                          {
                                            "author" : "Administrator Admin",
                                            "id" : "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
-                                           "penColor" : "undefined",
-                                           "fillColor" : "undefined",
-                                           "date" : "2019-01-01T13:00:00Z",
-                                           "secretaire" : true,
+                                           "date" : "2019-01-01T13:00:00",
+                                           "uuid" : "a2cdc8f6-d39f-4a4a-8d68-ee50b42c0a2f",
                                            "rect" : {
                                              "topLeft" : {
                                                "x" : 15,
@@ -79,7 +77,8 @@ class Models_Annotation_Tests: XCTestCase {
                                              }
                                            },
                                            "type" : "rect",
-                                           "text" : "plop"
+                                           "text" : "plop",
+                                           "page" : 99
                                          }
                                          """)
     }

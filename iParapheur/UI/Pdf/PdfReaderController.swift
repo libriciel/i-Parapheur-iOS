@@ -136,6 +136,12 @@ class PdfReaderController: PdfController, FolderListDelegate {
             destinationController.signInfoMap = [folder: nil]
             destinationController.currentBureau = currentDesk?.identifier
         }
+        else if (segue.identifier == AnnotationDetailsController.SEGUE),
+                let destinationController = segue.destination as? AnnotationDetailsController,
+                let annotation = sender as? Annotation {
+
+            destinationController.currentAnnotation = annotation
+        }
         else {
             super.prepare(for: segue, sender: sender)
         }
@@ -202,7 +208,7 @@ class PdfReaderController: PdfController, FolderListDelegate {
                                                                    pageNumber: pageNumber,
                                                                    pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
-        os_log("Annotation selected !! %@", annotation)
+        performSegue(withIdentifier: AnnotationDetailsController.SEGUE, sender: annotation)
     }
 
 
