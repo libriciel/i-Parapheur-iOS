@@ -39,22 +39,26 @@ import os
 
 class FirstLoginPopupController: UIViewController {
 
+
     static let Segue = "FirstLoginPopupSegue"
     @objc static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
+
 
     @IBOutlet var saveButton: UIBarButtonItem!
     @IBOutlet var serverUrlTextField: UITextField!
     @IBOutlet var loginTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var spinnerView: UIActivityIndicatorView!
-    @IBOutlet var errorLabel: UITextView!
+
 
     var restClient: RestClient?
     var currentAccount: Account?
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,9 +95,8 @@ class FirstLoginPopupController: UIViewController {
             loginTextField.text = currentAccount!.login
             passwordTextField.text = currentAccount!.password
         }
-
-        //
     }
+
 
     deinit {
         serverUrlTextField.removeTarget(self,
@@ -109,7 +112,9 @@ class FirstLoginPopupController: UIViewController {
                                        for: UIControl.Event.editingChanged)
     }
 
-    // MARK: - Private methods
+
+    // </editor-fold desc="LifeCycle">
+
 
     func validateTextFields() -> Bool! {
 
@@ -141,6 +146,7 @@ class FirstLoginPopupController: UIViewController {
         return (isServerTextFieldValid && isLoginTextFieldValid && isPasswordTextFieldValid);
     }
 
+
     func setBorderOnTextField(textField: UITextField, alert: Bool) {
 
         if (alert) {
@@ -156,6 +162,7 @@ class FirstLoginPopupController: UIViewController {
         }
     }
 
+
     func testConnection() {
 
         // Setup rest client
@@ -170,7 +177,7 @@ class FirstLoginPopupController: UIViewController {
 
         // Test request
 
-        enableInterface(enabled: false)
+        enableInterface(isEnabled: false)
 
         restClient!.getApiVersion(onResponse: {
             (level: NSNumber) in
@@ -182,13 +189,13 @@ class FirstLoginPopupController: UIViewController {
 
             // UI refresh
 
-            self.enableInterface(enabled: true)
+            self.enableInterface(isEnabled: true)
             self.dismissWithSuccess(success: true)
         },
                                   onError: {
                                       (error: NSError) in
 
-                                      self.enableInterface(enabled: true)
+                                      self.enableInterface(isEnabled: true)
 
                                       // Warn with orange fields
 
@@ -205,26 +212,21 @@ class FirstLoginPopupController: UIViewController {
                                       // Setup error message
 
                                       let localizedDescription = StringsUtils.getMessage(error: error)
-
-                                      if (error.localizedDescription == localizedDescription as String) {
-                                          self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code))"
-                                      }
-                                      else {
-                                          self.errorLabel.text = String(localizedDescription)
-                                      }
+                                      ViewUtils.logError(message: localizedDescription, title: "La connexion au serveur a échoué")
                                   }
         )
     }
 
-    func enableInterface(enabled: Bool) {
 
-        loginTextField.isEnabled = enabled
-        passwordTextField.isEnabled = enabled
-        serverUrlTextField.isEnabled = enabled
-        errorLabel.isHidden = !enabled
+    func enableInterface(isEnabled: Bool) {
 
-        enabled ? spinnerView.stopAnimating() : spinnerView.startAnimating()
+        loginTextField.isEnabled = isEnabled
+        passwordTextField.isEnabled = isEnabled
+        serverUrlTextField.isEnabled = isEnabled
+
+        isEnabled ? spinnerView.stopAnimating() : spinnerView.startAnimating()
     }
+
 
     func dismissWithSuccess(success: Bool) {
 
@@ -241,19 +243,25 @@ class FirstLoginPopupController: UIViewController {
                                         userInfo: userInfo)
     }
 
-    // MARK: - TextField listeners
+
+    // <editor-fold desc="TextField listeners"> MARK: - TextField listeners
+
 
     @objc func onTextFieldValueChanged(sender: AnyObject) {
-
-        errorLabel.text = ""
         setBorderOnTextField(textField: sender as! UITextField, alert: false)
     }
 
-    // MARK: - Buttons listeners
+
+    // </editor-fold desc="TextField listeners">
+
+
+    // <editor-fold desc="Buttons listeners"> MARK: - Buttons listeners
+
 
     @IBAction func onCancelButtonClicked(_ sender: Any) {
         dismissWithSuccess(success: false)
     }
+
 
     @IBAction func onSaveButtonClicked(_ sender: Any) {
 
@@ -280,4 +288,8 @@ class FirstLoginPopupController: UIViewController {
             testConnection()
         }
     }
+
+
+    // </editor-fold desc="Buttons listeners"> MARK: - Buttons listeners
+
 }

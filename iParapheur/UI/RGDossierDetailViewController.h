@@ -34,7 +34,6 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <UIKit/UIKit.h>
-#import "ADLPDFViewController.h"
 
 @class RGDetailViewController;
 
@@ -50,8 +49,6 @@
 //    ReaderViewController *readerViewController;
 }
 
-@property(nonatomic, strong) ADLRestClient *restClient;
-@property(strong, nonatomic) ADLPDFViewController *detailViewController;
 @property(nonatomic, strong) UITapGestureRecognizer *tapRecognizer;
 @property(nonatomic, strong) IBOutlet UILabel *typeLabel;
 @property(nonatomic, strong) IBOutlet UILabel *sousTypeLabel;

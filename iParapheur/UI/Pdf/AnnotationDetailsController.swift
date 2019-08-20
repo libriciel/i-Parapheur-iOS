@@ -67,6 +67,7 @@ class AnnotationDetailsController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        os_log("View loaded : AnnotationDetailsController", type: .debug)
 
         // UITextView border like UITextField
 
