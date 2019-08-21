@@ -225,6 +225,8 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
     func onFolderSelected(_ folder: Dossier, desk: Bureau, restClient: RestClient) {
 
         showSpinner()
+        documentsButton.isEnabled = false
+        detailsButton.isEnabled = false
 
         self.restClient = restClient
         self.currentFolder = folder
@@ -363,7 +365,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
             detailsButton.isEnabled = true
 
-            let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
+            let pdfDocuments = folder.documents.filter({ ($0.isMainDocument || $0.isPdfVisual) })
             if (pdfDocuments.count > 1) {
                 documentsButton.isEnabled = true
             }
@@ -427,28 +429,33 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
     private func loadPdf(documentPath: URL) {
 
-        if let pdfDocument = PDFDocument(url: documentPath) {
+        guard let pdfDocument = PDFDocument(url: documentPath),
+              let document = currentDocument,
+              let folder = currentFolder else {
 
-            var annotations: [Annotation] = (currentAnnotations ?? [])
-            annotations = annotations.filter({ $0.documentId == currentDocument?.identifier })
-
-            for annotation in annotations {
-
-                guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
-                let pageHeight = pdfPage.bounds(for: pdfView.displayBox).height
-                let pdfAnnotation = AnnotationsUtils.toPdfAnnotation(annotation, pageHeight: pageHeight, pdfPage: pdfPage)
-
-                pdfPage.addAnnotation(pdfAnnotation)
-            }
-
-            self.pdfView.document = pdfDocument
-            self.refreshFloatingActionButton(documentLoaded: pdfDocument)
-            self.hideSpinner()
-        }
-        else {
             try? FileManager.default.removeItem(at: documentPath)
             ViewUtils.logError(message: "Veuillez réessayer", title: "Erreur au chargement du fichier")
+            return
         }
+
+        var annotations: [Annotation] = (currentAnnotations ?? [])
+        annotations = annotations.filter({ $0.documentId == document.identifier })
+
+        for annotation in annotations {
+
+            guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
+            let pageHeight = pdfPage.bounds(for: pdfView.displayBox).height
+            let pdfAnnotation = AnnotationsUtils.toPdfAnnotation(annotation, pageHeight: pageHeight, pdfPage: pdfPage)
+
+            pdfPage.addAnnotation(pdfAnnotation)
+        }
+
+        pdfView.document = pdfDocument
+        refreshFloatingActionButton(documentLoaded: pdfDocument)
+
+        hideSpinner()
+        documentsButton.isEnabled = folder.documents.filter({ ($0.isMainDocument || $0.isPdfVisual) }).count > 1
+        detailsButton.isEnabled = true
     }
 
 
