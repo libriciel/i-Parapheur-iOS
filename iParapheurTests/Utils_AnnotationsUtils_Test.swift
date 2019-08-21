@@ -34,6 +34,7 @@
  */
 
 import XCTest
+import PDFKit
 @testable import iParapheur
 
 
@@ -137,8 +138,8 @@ class Utils_AnnotationsUtils_Tests: XCTestCase {
         annotation.fillColor = "red"
         annotation.date = Date(timeIntervalSince1970: 1546344000)
 
-        let pdfAnnotation = AnnotationUtils.toPdfAnnotation(annotation, pageHeight: 1080, pdfPage: PDFPage(image: UIImage())!)
-        let parsedAnnotation = AnnotationUtils.fromPdfAnnotation(pdfAnnotation, pageNumber: annotation.page, pageHeight: 1080)
+        let pdfAnnotation = AnnotationsUtils.toPdfAnnotation(annotation, pageHeight: 1080, pdfPage: PDFPage(image: UIImage())!)
+        let parsedAnnotation = AnnotationsUtils.fromPdfAnnotation(pdfAnnotation, pageNumber: annotation.page, pageHeight: 1080)
 
         XCTAssertEqual(parsedAnnotation.text, "Text")
         XCTAssertEqual(parsedAnnotation.text, "Text")
