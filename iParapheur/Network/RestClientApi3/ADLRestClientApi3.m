@@ -44,10 +44,10 @@
     // Fetch selected Account Id
 
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
+    NSString *selectedAccountId = [preferences objectForKey:[Account preferenceKeySelectedAccount]];
 
     if (selectedAccountId.length == 0)
-        selectedAccountId = Account.DEMO_ID;
+        selectedAccountId = Account.demoId;
 
     // Fetch Account model values
 

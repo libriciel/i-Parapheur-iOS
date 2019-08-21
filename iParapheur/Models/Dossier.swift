@@ -231,18 +231,18 @@ class Dossier: NSObject, Decodable {
 
         // Build result
 
-        if (hasSignature) {
+        if hasSignature {
             result.append("SIGNATURE")
         }
-        else if (hasVisa) {
+        else if hasVisa {
             result.append("VISA")
         }
 
-        if (hasRejet) {
+        if hasRejet {
             result.append("REJET")
         }
 
-        if (hasTDT) {
+        if hasTDT {
             result.append("TDT")
         }
 

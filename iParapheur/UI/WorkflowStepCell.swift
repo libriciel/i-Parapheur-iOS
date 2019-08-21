@@ -37,7 +37,7 @@ import Foundation
 
 class WorkflowStepCell: UITableViewCell {
 
-    static let CELL_IDENTIFIER = "CircuitCell"
+    static let cellIdentifier = "CircuitCell"
 
 
     @IBOutlet var deskTextView: UILabel!

@@ -39,9 +39,9 @@ import SwiftMessages
 class StringsUtils: NSObject {
 
 
-    static let ANNOTATION_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-    static let ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
-    static let PRETTY_PRINT_TIME_FORMAT = "'le 'dd/mm/yyyy' à 'HH'h'mm";
+    static let dateFormatAnnotation = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    static let dateFormatIso8601 = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
+    static let dateFormatPrettyPrint = "'le 'dd/mm/yyyy' à 'HH'h'mm";
 
 
     @objc class func getMessage(error: NSError) -> NSString {
@@ -108,14 +108,14 @@ class StringsUtils: NSObject {
 
     class func serializeAnnotationDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
+        dateFormatter.dateFormat = dateFormatAnnotation
         return dateFormatter.string(from: date)
     }
 
 
     class func deserializeAnnotationDate(string: String) -> Date {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = ANNOTATION_TIME_FORMAT
+        dateFormatter.dateFormat = dateFormatAnnotation
         return dateFormatter.date(from: string)!
     }
 
@@ -138,7 +138,7 @@ class StringsUtils: NSObject {
 
     @objc class func prettyPrint(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = PRETTY_PRINT_TIME_FORMAT
+        dateFormatter.dateFormat = dateFormatPrettyPrint
         return dateFormatter.string(from: date)
     }
 

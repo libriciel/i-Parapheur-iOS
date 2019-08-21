@@ -48,8 +48,8 @@ import os
 
 class AnnotationDetailsController: UIViewController {
 
-    public static let SEGUE = "annotationDetails"
 
+    public static let segue = "annotationDetails"
 
     @IBOutlet weak var authorTextField: UITextField!
     @IBOutlet weak var dateTextField: UITextField!

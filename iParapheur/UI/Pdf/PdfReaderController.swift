@@ -85,23 +85,23 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         rejectItem.icon = UIImage(named: "ic_close_white_24dp")!
         rejectItem.handler = {
             item in
-            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_REJECT)
+            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionReject)
         }
 
-        signItem.buttonColor = ColorUtils.DarkGreen
+        signItem.buttonColor = ColorUtils.darkGreen
         signItem.title = "Signer"
         signItem.icon = UIImage(named: "ic_check_white_18dp")!
         signItem.handler = {
             item in
-            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_SIGNATURE)
+            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionSignature)
         }
 
-        visaItem.buttonColor = ColorUtils.DarkGreen
+        visaItem.buttonColor = ColorUtils.darkGreen
         visaItem.title = "Signer"
         visaItem.icon = UIImage(named: "ic_check_white_18dp")!
         visaItem.handler = {
             item in
-            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.ACTION_VISA)
+            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionVisa)
         }
 
         // UI fine tuning
@@ -120,20 +120,20 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-        if (segue.identifier == FolderDetailsController.SEGUE),
+        if (segue.identifier == FolderDetailsController.segue),
            let destinationController = segue.destination as? FolderDetailsController {
 
             destinationController.currentFolder = currentFolder
             destinationController.currentWorkflow = currentWorkflow
         }
-        else if (segue.identifier == DocumentSelectionController.SEGUE),
+        else if (segue.identifier == DocumentSelectionController.segue),
                 let destinationController = segue.destination as? DocumentSelectionController,
                 let folder = currentFolder {
 
             let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
             destinationController.documentList = pdfDocuments
         }
-        else if (segue.identifier == WorkflowDialogController.SEGUE),
+        else if (segue.identifier == WorkflowDialogController.segue),
                 let destinationController = segue.destination as? WorkflowDialogController,
                 let folder = currentFolder {
 
@@ -142,7 +142,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
             destinationController.signInfoMap = [folder: nil]
             destinationController.currentBureau = currentDesk?.identifier
         }
-        else if (segue.identifier == AnnotationDetailsController.SEGUE),
+        else if (segue.identifier == AnnotationDetailsController.segue),
                 let destinationController = segue.destination as? AnnotationDetailsController,
                 let annotation = sender as? Annotation {
 
@@ -170,7 +170,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     private func onFolderActionFloatingButtonClicked(action: String) {
-        performSegue(withIdentifier: WorkflowDialogController.SEGUE, sender: action)
+        performSegue(withIdentifier: WorkflowDialogController.segue, sender: action)
     }
 
 
@@ -251,7 +251,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                                                             pageNumber: pageNumber,
                                                             pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
-        performSegue(withIdentifier: AnnotationDetailsController.SEGUE, sender: annotation)
+        performSegue(withIdentifier: AnnotationDetailsController.segue, sender: annotation)
     }
 
 
@@ -281,7 +281,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                                              fixedAnnotation.identifier = newId
                                              fixedAnnotation.author = "(Utilisateur courant)"
                                              AnnotationsUtils.updatePdfMetadata(pdfAnnotation: currentAnnotation, annotation: fixedAnnotation)
-                                             self.performSegue(withIdentifier: AnnotationDetailsController.SEGUE, sender: fixedAnnotation)
+                                             self.performSegue(withIdentifier: AnnotationDetailsController.segue, sender: fixedAnnotation)
                                          },
                                          errorCallback: {
                                              (error: Error) in

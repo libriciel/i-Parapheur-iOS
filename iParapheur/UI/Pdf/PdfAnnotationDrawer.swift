@@ -47,10 +47,10 @@ import os
 class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
     // PDF 1.7 Standards
-    static let FLAG_NORMAL = 0
-    static let FLAG_LOCKED = 8
+    static let flagNormal = 0
+    static let flagLocked = 8
 
-    static var DEFAULT_COLOR = ColorUtils.DarkBlue
+    static var defaultColor = ColorUtils.darkBlue
 
     weak var pdfView: PDFView!
     private var currentAnnotation: PDFAnnotation?
@@ -78,7 +78,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         }
         else {
             rect = CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
-            currentAnnotation = PdfAnnotationDrawer.createAnnotation(rect: rect!, page: page, color: PdfAnnotationDrawer.DEFAULT_COLOR)
+            currentAnnotation = PdfAnnotationDrawer.createAnnotation(rect: rect!, page: page, color: PdfAnnotationDrawer.defaultColor)
         }
     }
 

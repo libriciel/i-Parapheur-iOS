@@ -38,17 +38,17 @@ import Foundation
 
 enum State: String {
 
-    case EN_PREPARATION = "en-preparation"
-    case A_TRAITER = "a-traiter"
-    case EN_FIN_DE_CIRCUIT = "a-archiver"
-    case RETOURNES = "retournes"
-    case EN_COURS = "en-cours"
-    case A_VENIR = "a-venir"
-    case RECUPERABLE = "recuperables"
-    case EN_RETARD = "en-retard"
-    case TRAITES = "traites"
-    case DOSSIERS_DELEGUES = "dossiers-delegues"
-    case TOUTES_LES_BANETTES = "no-corbeille"
-    case TOUT_IPARAPHEUR = "no-bureau"
+    case draft = "en-preparation"
+    case toDo = "a-traiter"
+    case workflowEnded = "a-archiver"
+    case refused = "retournes"
+    case pending = "en-cours"
+    case incoming = "a-venir"
+    case retrievable = "recuperables"
+    case late = "en-retard"
+    case done = "traites"
+    case delegated = "dossiers-delegues"
+    case allStates = "no-corbeille"
+    case all = "no-bureau"
 
 }

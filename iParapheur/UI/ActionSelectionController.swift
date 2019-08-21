@@ -46,7 +46,7 @@ import os
 
 class ActionSelectionController: UITableViewController {
 
-    @objc static let SEGUE = "showActionPopover"
+    @objc static let segue = "showActionPopover"
 
     var actions: [String] = []
     @objc var currentDossier: Dossier?
@@ -71,7 +71,7 @@ class ActionSelectionController: UITableViewController {
 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == WorkflowDialogController.SEGUE {
+        if segue.identifier == WorkflowDialogController.segue {
             if let destinationWorkflowDialogController = segue.destination as? WorkflowDialogController {
                 destinationWorkflowDialogController.setDossiersToSign([currentDossier!])
                 destinationWorkflowDialogController.currentAction = pendingAction

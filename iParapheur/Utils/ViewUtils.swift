@@ -43,9 +43,9 @@ class ViewUtils: NSObject {
     @objc class func isConnectedToDemoAccount() -> Bool {
 
         let preferences = UserDefaults.standard
-        let selectedId = preferences.object(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT) as? String
+        let selectedId = preferences.object(forKey: Account.preferenceKeySelectedAccount) as? String
 
-        return Account.DEMO_ID == selectedId
+        return Account.demoId == selectedId
     }
 
     /**

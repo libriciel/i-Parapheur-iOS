@@ -47,7 +47,8 @@ protocol FolderListDelegate: class {
 
 class FolderListController: UITableViewController, UISearchResultsUpdating {
 
-    private static let PAGE_SIZE = 15
+
+    private static let pageSize = 15
 
     @IBOutlet weak var loadMoreButton: UIButton!
     var restClient: RestClient?
@@ -70,13 +71,13 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(self.refresh),
-                name: WorkflowDialogController.ACTION_COMPLETE,
+                name: WorkflowDialogController.notificationActionComplete,
                 object: nil)
 
         // UI
 
-        let topBackgroundColor = ColorUtils.VeryLightGrey
-        let topTextColor = ColorUtils.Blue
+        let topBackgroundColor = ColorUtils.veryLightGrey
+        let topTextColor = ColorUtils.blue
 
         navigationItem.backBarButtonItem?.tintColor = topTextColor
 
@@ -84,7 +85,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         refreshControl = ColorizedRefreshControl()
         refreshControl?.backgroundColor = topBackgroundColor
-        refreshControl?.tintColor = ColorUtils.LightGrey
+        refreshControl?.tintColor = ColorUtils.lightGrey
         refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
 
         // Setup UISearchController
@@ -224,7 +225,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             let exitButton = UIBarButtonItem()
             exitButton.title = "Exit";
             exitButton.image = UIImage(named: "ic_close_white.png")
-            exitButton.tintColor = ColorUtils.Aqua
+            exitButton.tintColor = ColorUtils.aqua
             exitButton.style = .plain
             exitButton.target = self
             exitButton.action = #selector(self.exitSelection)
@@ -237,7 +238,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         else {
             self.navigationItem.leftBarButtonItem = nil;
             self.navigationItem.rightBarButtonItem?.isEnabled = true;
-            self.navigationItem.rightBarButtonItem?.tintColor = ColorUtils.Aqua;
+            self.navigationItem.rightBarButtonItem?.tintColor = ColorUtils.aqua;
             self.navigationItem.title = currentDesk?.name;
         }
     }
@@ -333,7 +334,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         else {
             restClient?.getDossiers(bureau: (currentDesk?.nodeRef)!,
                                     page: page,
-                                    size: FolderListController.PAGE_SIZE,
+                                    size: FolderListController.pageSize,
                                     filterJson: nil,
                                     onResponse: {
                                         (newFolders: [Dossier]) in
@@ -365,7 +366,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Updating UI
 
-        loadMoreButton.isHidden = (newDossiers.count != FolderListController.PAGE_SIZE)
+        loadMoreButton.isHidden = (newDossiers.count != FolderListController.pageSize)
         updateSearchResults(for: searchController)
     }
 
@@ -393,7 +394,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: FolderListCell.CELL_IDENTIFIER) as! FolderListCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: FolderListCell.cellIdentifier) as! FolderListCell
         let dossier = filteredDossiers[indexPath.row]
 
         // UI fix
@@ -416,7 +417,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Adapter
 
-        cell.dot.tintColor = dossier.isDelegue ? ColorUtils.DarkPurple : ColorUtils.LightGrey;
+        cell.dot.tintColor = dossier.isDelegue ? ColorUtils.darkPurple : ColorUtils.lightGrey;
         cell.titleLabel.text = dossier.title;
         cell.typologyLabel.text = String(format: "%@ / %@", dossier.type, dossier.subType)
 
@@ -434,7 +435,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             let datePrint = isLate ? "en retard depuis le %@" : "à rendre avant le %@"
             cell.limitDateLabel.text = String(format: datePrint, outputFormatter.string(from: dossier.limitDate!))
 
-            cell.limitDateLabel.textColor = isLate ? ColorUtils.Salmon : ColorUtils.BlueGreySeparator;
+            cell.limitDateLabel.textColor = isLate ? ColorUtils.salmon : ColorUtils.blueGreySeparator;
         }
 
         return cell

@@ -85,7 +85,7 @@ class FirstLoginPopupController: UIViewController {
 
         let accountList: [Account] = ModelsDataController.fetchAccounts()
         for account in accountList {
-            if (account.id == Account.LEGACY_ID) {
+            if (account.id == Account.legacyId) {
                 currentAccount = account
             }
         }
@@ -153,8 +153,8 @@ class FirstLoginPopupController: UIViewController {
             textField.layer.cornerRadius = 6.0;
             textField.layer.masksToBounds = true;
             textField.layer.borderWidth = 1.0;
-            textField.layer.borderColor = ColorUtils.DarkOrange.cgColor
-            textField.backgroundColor = ColorUtils.DarkOrange.withAlphaComponent(0.1)
+            textField.layer.borderColor = ColorUtils.darkOrange.cgColor
+            textField.backgroundColor = ColorUtils.darkOrange.withAlphaComponent(0.1)
         }
         else {
             textField.layer.borderColor = UIColor.clear.cgColor
@@ -185,7 +185,7 @@ class FirstLoginPopupController: UIViewController {
             // Register new account as selected
 
             let preferences: UserDefaults = UserDefaults.standard
-            preferences.set(self.currentAccount!.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+            preferences.set(self.currentAccount!.id, forKey: Account.preferenceKeySelectedAccount as String)
 
             // UI refresh
 
@@ -268,10 +268,10 @@ class FirstLoginPopupController: UIViewController {
         // Saving data
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                  into: ModelsDataController.context!) as? Account
 
-            currentAccount!.id = Account.LEGACY_ID
+            currentAccount!.id = Account.legacyId
             currentAccount!.isVisible = true
         }
 

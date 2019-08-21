@@ -39,15 +39,14 @@ import CoreData
 
 extension Account {
 
-    static let ENTITY_NAME = "Account"
-
-    @objc static let PREFERENCE_KEY_SELECTED_ACCOUNT = "selected_account"
-    static let LEGACY_ID = "FirstAccountId"
-    @objc static let DEMO_ID = "DemoAccountId"
-    static let DEMO_TITLE = "iParapheur demo"
-    static let DEMO_URL = "iparapheur-partenaires.libriciel.fr"
-    static let DEMO_LOGIN = "admin@demo"
-    static let DEMO_PASSWORD = "admin"
+    static let entityName = "Account"
+    @objc static let preferenceKeySelectedAccount = "selected_account"
+    static let legacyId = "FirstAccountId"
+    @objc static let demoId = "DemoAccountId"
+    static let demoTitle = "iParapheur demo"
+    static let demoUrl = "iparapheur-partenaires.libriciel.fr"
+    static let demoLogin = "admin@demo"
+    static let demoPass = "admin"
 
     @NSManaged var id: String?
     @NSManaged var isVisible: NSNumber?

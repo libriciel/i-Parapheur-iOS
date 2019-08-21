@@ -40,7 +40,7 @@ import os
 class DocumentSelectionController: UITableViewController {
 
 
-    static let SEGUE = "showDocumentPopover"
+    static let segue = "showDocumentPopover"
     @objc static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
     var documentList: [Document] = []

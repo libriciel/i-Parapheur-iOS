@@ -39,10 +39,10 @@ import CoreData
 
 extension Certificate {
 
-    @objc static let ENTITY_NAME = "Certificate"
+    @objc static let entityName = "Certificate"
 
-    static let PAYLOAD_EXTERNAL_CERTIFICATE_ID = "ExternalCertificateId"
-    @objc static let PAYLOAD_P12_FILENAME = "CertificateP12FileName"
+    static let payloadExternalCertificateId = "ExternalCertificateId"
+    @objc static let payloadP12FileName = "CertificateP12FileName"
 
 
     @NSManaged public var caName: String?

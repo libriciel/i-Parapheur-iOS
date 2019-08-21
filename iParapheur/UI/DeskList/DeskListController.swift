@@ -78,7 +78,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
                 object: nil)
 
         refreshControl = UIRefreshControl()
-        refreshControl?.tintColor = ColorUtils.SelectedCellGrey
+        refreshControl?.tintColor = ColorUtils.selectedCellGrey
         refreshControl?.addTarget(
                 self,
                 action: #selector(self.loadBureaux),
@@ -110,7 +110,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
     @IBAction func onAccountButtonClicked(_ sender: Any) {
         os_log("onAccountButtonClicked")
 
-        let selectedAccountId = UserDefaults.standard.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT)
+        let selectedAccountId = UserDefaults.standard.string(forKey: Account.preferenceKeySelectedAccount)
         let areSettingsSet = (selectedAccountId != nil)
 
         if (areSettingsSet) {
@@ -134,7 +134,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
         // Settings check
 
-        let selectedAccountId = UserDefaults.standard.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT)
+        let selectedAccountId = UserDefaults.standard.string(forKey: Account.preferenceKeySelectedAccount)
         let areSettingsSet = (selectedAccountId != nil)
 
         refreshAccountIcon(isAccountSet: areSettingsSet)
@@ -156,7 +156,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
         // Popup response
 
         let preferences = UserDefaults.standard
-        let selectedAccountId = preferences.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT)
+        let selectedAccountId = preferences.string(forKey: Account.preferenceKeySelectedAccount)
         let areSettingsSet = selectedAccountId != nil
 
         // Check
@@ -196,7 +196,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
     private func initRestClient() {
 
-        let accountSelectedId = UserDefaults.standard.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String) ?? Account.DEMO_ID
+        let accountSelectedId = UserDefaults.standard.string(forKey: Account.preferenceKeySelectedAccount as String) ?? Account.demoId
         let accounts = ModelsDataController.fetchAccounts()
         let selectedAccount = accounts.filter { $0.id == accountSelectedId }[0]
 
@@ -293,7 +293,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
 
     private func refreshAccountIcon(isAccountSet: Bool) {
-        accountButton.tintColor = isAccountSet ? ColorUtils.Aqua : ColorUtils.Salmon
+        accountButton.tintColor = isAccountSet ? ColorUtils.aqua : ColorUtils.salmon
     }
 
 

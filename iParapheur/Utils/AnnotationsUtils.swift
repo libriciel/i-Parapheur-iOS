@@ -112,7 +112,7 @@ class AnnotationsUtils: NSObject {
 
         let result = PdfAnnotationDrawer.createAnnotation(rect: bounds.standardized,
                                                           page: pdfPage,
-                                                          color: PdfAnnotationDrawer.DEFAULT_COLOR)
+                                                          color: PdfAnnotationDrawer.defaultColor)
 
         AnnotationsUtils.updatePdfMetadata(pdfAnnotation: result, annotation: annotation)
 

@@ -41,11 +41,12 @@ import os
 */
 class RemoteHasher {
 
-    static public let PAYLOAD_KEY_PES_SIGNATURE_DATE_TIME = "signaturedate";
-    static public let PAYLOAD_KEY_PES_CLAIMED_ROLE = "pesclaimedrole";
-    static public let PAYLOAD_KEY_PES_POSTAL_CODE = "pespostalcode";
-    static public let PAYLOAD_KEY_PES_COUNTRY_NAME = "pescountryname";
-    static public let PAYLOAD_KEY_PES_CITY = "pescity";
+
+    static public let payloakKeyPesSignatureDateTime = "signaturedate";
+    static public let payloakKeyPesClaimedRole = "pesclaimedrole";
+    static public let payloakKeyPesPostalCode = "pespostalcode";
+    static public let payloakKeyPesCountryName = "pescountryname";
+    static public let payloakKeyPesCity = "pescity";
 
 
     let mSignatureAlgorithm: SignatureAlgorithm
@@ -144,6 +145,7 @@ class RemoteHasher {
                                           errorCallback!(error)
                                       })
     }
+
 
     // </editor-fold desc="Hasher">
 

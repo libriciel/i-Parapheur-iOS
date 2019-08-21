@@ -70,12 +70,12 @@ class Models_Storage_ModelsDataController_Tests: XCTestCase {
 
         XCTAssertEqual(ModelsDataController.fetchCertificates().count, 0)
 
-        _ = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Certificate.entityName, into: managedObjectContext)
 
         XCTAssertEqual(ModelsDataController.fetchCertificates().count, 1)
 
-        _ = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: managedObjectContext)
-        _ = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Certificate.entityName, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Certificate.entityName, into: managedObjectContext)
 
         XCTAssertEqual(ModelsDataController.fetchCertificates().count, 3)
     }
@@ -86,12 +86,12 @@ class Models_Storage_ModelsDataController_Tests: XCTestCase {
 
         XCTAssertEqual(ModelsDataController.fetchAccounts().count, 0)
 
-        _ = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Account.entityName, into: managedObjectContext)
 
         XCTAssertEqual(ModelsDataController.fetchAccounts().count, 1)
 
-        _ = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME, into: managedObjectContext)
-        _ = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Account.entityName, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Account.entityName, into: managedObjectContext)
 
         XCTAssertEqual(ModelsDataController.fetchAccounts().count, 3)
     }
@@ -102,12 +102,12 @@ class Models_Storage_ModelsDataController_Tests: XCTestCase {
 
         XCTAssertEqual(ModelsDataController.fetchFilters().count, 0)
 
-        _ = NSEntityDescription.insertNewObject(forEntityName: Filter.ENTITY_NAME, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Filter.entityName, into: managedObjectContext)
 
         XCTAssertEqual(ModelsDataController.fetchFilters().count, 1)
 
-        _ = NSEntityDescription.insertNewObject(forEntityName: Filter.ENTITY_NAME, into: managedObjectContext)
-        _ = NSEntityDescription.insertNewObject(forEntityName: Filter.ENTITY_NAME, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Filter.entityName, into: managedObjectContext)
+        _ = NSEntityDescription.insertNewObject(forEntityName: Filter.entityName, into: managedObjectContext)
 
         XCTAssertEqual(ModelsDataController.fetchFilters().count, 3)
     }
@@ -130,7 +130,7 @@ class Models_Storage_ModelsDataController_Tests: XCTestCase {
         ModelsDataController.cleanupAccounts(preferences: userDefaults!)
 
         XCTAssertEqual(ModelsDataController.fetchAccounts().count, 1)
-        ModelsDataController.fetchAccounts()[0].id = Account.DEMO_ID
+        ModelsDataController.fetchAccounts()[0].id = Account.demoId
 
         // Adding legacy Account in previous storage position.
 
@@ -141,7 +141,7 @@ class Models_Storage_ModelsDataController_Tests: XCTestCase {
         ModelsDataController.cleanupAccounts(preferences: userDefaults!)
 
         XCTAssertEqual(ModelsDataController.fetchAccounts().count, 2)
-        ModelsDataController.fetchAccounts()[1].id = Account.LEGACY_ID
+        ModelsDataController.fetchAccounts()[1].id = Account.legacyId
         ModelsDataController.fetchAccounts()[1].url = "legacy_url"
         ModelsDataController.fetchAccounts()[1].login = "legacy_login"
         ModelsDataController.fetchAccounts()[1].password = "legacy_password"

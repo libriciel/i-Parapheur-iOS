@@ -66,7 +66,7 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
         backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
         let preferences: UserDefaults = UserDefaults.standard
-        selectedAccountId = preferences.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+        selectedAccountId = preferences.string(forKey: Account.preferenceKeySelectedAccount as String)
     }
 
 
@@ -129,7 +129,7 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
 
         let accountSelected: Account = accountList[indexPath.row]
         let preferences: UserDefaults = UserDefaults.standard
-        preferences.set(accountSelected.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+        preferences.set(accountSelected.id, forKey: Account.preferenceKeySelectedAccount as String)
 
         NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
                                         object: nil,

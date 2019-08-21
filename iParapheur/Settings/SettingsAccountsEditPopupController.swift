@@ -136,7 +136,7 @@ import os
         // Update model
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                  into: ModelsDataController.context!) as? Account
 
             currentAccount!.id = NSUUID().uuidString

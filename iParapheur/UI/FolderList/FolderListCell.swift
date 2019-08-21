@@ -37,7 +37,7 @@ import Foundation
 
 class FolderListCell: UITableViewCell {
 
-    static let CELL_IDENTIFIER = "FolderListCell"
+    static let cellIdentifier = "FolderListCell"
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var typologyLabel: UILabel!
