@@ -122,20 +122,25 @@ class ViewUtils: NSObject {
     class func logMessage(title: NSString?,
                           subtitle: NSString,
                           messageType: Theme) {
+        logMessage(title: title, subtitle: subtitle, messageType: messageType, config: SwiftMessages.defaultConfig)
+    }
+
+
+    class func logMessage(title: NSString?,
+                          subtitle: NSString,
+                          messageType: Theme,
+                          config: SwiftMessages.Config) {
+
+        let view = MessageView.viewFromNib(layout: .cardView)
+        view.button!.isHidden = true
+
+        view.configureTheme(messageType)
+        view.configureDropShadow()
+        view.configureContent(title: (title == nil ? subtitle : title!) as String,
+                              body: (title == nil ? "" : subtitle as String))
 
         // Call back to main queue
-        SwiftMessages.show {
-
-            let view = MessageView.viewFromNib(layout: .cardView)
-            view.button!.isHidden = true
-
-            view.configureTheme(messageType)
-            view.configureDropShadow()
-            view.configureContent(title: (title == nil ? subtitle : title!) as String,
-                                  body: (title == nil ? "" : subtitle as String))
-
-            return view
-        }
+        SwiftMessages.show(config: config, view: view)
     }
 
 

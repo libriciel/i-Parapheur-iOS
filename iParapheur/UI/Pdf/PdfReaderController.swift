@@ -36,6 +36,7 @@
 import Foundation
 import PDFKit
 import Floaty
+import SwiftMessages
 import os
 
 
@@ -165,6 +166,23 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     private func onCreateAnnotationFloatingButtonClicked() {
+
+        let firstLaunch = true // TODO : Fetch user settings
+
+        if (firstLaunch) {
+            var config = SwiftMessages.defaultConfig
+            config.duration = .seconds(seconds: 8)
+
+            ViewUtils.logMessage(title: "Mode annotation",
+                                 subtitle: """
+                                           - Créer : Glissez votre doigt sur une zone vide
+                                           - Redimmensionner : Glissez rapidement un coin bas-droit
+                                           - Déplacer : Pressez longuement et glissez une annotation
+                                           """,
+                                 messageType: .info,
+                                 config: config)
+        }
+
         setCreateAnnotationMode(value: true)
     }
 
@@ -267,6 +285,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
             return
         }
 
+        checkFirstAnnotation()
 
         let fixedAnnotation = AnnotationsUtils.fromPdfAnnotation(currentAnnotation,
                                                                  pageNumber: pageNumber,
@@ -450,6 +469,10 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
             pdfPage.addAnnotation(pdfAnnotation)
         }
 
+        if (annotations.count > 0) {
+            checkFirstAnnotation()
+        }
+
         pdfView.document = pdfDocument
         refreshFloatingActionButton(documentLoaded: pdfDocument)
 
@@ -489,6 +512,25 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         if ((documentLoaded == nil) && !floatingActionButton.isHidden) {
             floatingActionButton.isHidden = true
+        }
+    }
+
+
+    private func checkFirstAnnotation() {
+
+        let firstLaunch = true // TODO : Fetch user settings
+
+        if (firstLaunch) {
+            var config = SwiftMessages.defaultConfig
+            config.duration = .seconds(seconds: 12)
+
+            ViewUtils.logMessage(title: "Une annotation est visible sur ce document",
+                                 subtitle: """
+                                           - Voir ou modifier son contenu : Double-tappez dessus
+                                           - La déplacer : Passez en mode annotation avec le bouton +
+                                           """,
+                                 messageType: .info,
+                                 config: config)
         }
     }
 
