@@ -38,6 +38,7 @@ import Foundation
 
 class Document: NSObject, Decodable {
 
+
     @objc let identifier: String
     @objc let name: String
 
@@ -53,6 +54,7 @@ class Document: NSObject, Decodable {
 
     // <editor-fold desc="Json methods">
 
+
     enum CodingKeys: String, CodingKey {
         case identifier = "id"
         case name
@@ -64,6 +66,7 @@ class Document: NSObject, Decodable {
         case isLocked
         case isDeletable = "canDelete"
     }
+
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -80,6 +83,7 @@ class Document: NSObject, Decodable {
         isLocked = try values.decodeIfPresent(Bool.self, forKey: .isLocked) ?? false
         isDeletable = try values.decodeIfPresent(Bool.self, forKey: .isDeletable) ?? false
     }
+
 
     // </editor-fold desc="Json methods">
 

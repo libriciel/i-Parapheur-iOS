@@ -182,6 +182,8 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
             downloadPdf(documentIndex: documentIndex.intValue)
         }
+
+        showSpinner()
     }
 
 
@@ -197,12 +199,12 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         for pdfAnnotation in currentPage.annotations {
 
-            let testAnnotation = PdfReaderController.translateToAnnotation(pdfAnnotation,
-                                                                           pageNumber: annotation.page,
-                                                                           pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
+            let testAnnotation = AnnotationsUtils.fromPdfAnnotation(pdfAnnotation,
+                                                                    pageNumber: annotation.page,
+                                                                    pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
             if (testAnnotation.identifier == annotation.identifier) {
-                PdfReaderController.updatePdfAnnotationMetadata(pdfAnnotation: pdfAnnotation, annotation: annotation)
+                AnnotationsUtils.updatePdfMetadata(pdfAnnotation: pdfAnnotation, annotation: annotation)
             }
         }
     }
@@ -221,6 +223,8 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     func onFolderSelected(_ folder: Dossier, desk: Bureau, restClient: RestClient) {
+
+        showSpinner()
 
         self.restClient = restClient
         self.currentFolder = folder
@@ -243,9 +247,9 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
               let currentPage = currentPdfAnnotation.page,
               let pageNumber = pdfView.document?.index(for: currentPage) else { return }
 
-        let annotation = PdfReaderController.translateToAnnotation(currentPdfAnnotation,
-                                                                   pageNumber: pageNumber,
-                                                                   pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
+        let annotation = AnnotationsUtils.fromPdfAnnotation(currentPdfAnnotation,
+                                                            pageNumber: pageNumber,
+                                                            pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
         performSegue(withIdentifier: AnnotationDetailsController.SEGUE, sender: annotation)
     }
@@ -262,9 +266,9 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         }
 
 
-        let fixedAnnotation = PdfReaderController.translateToAnnotation(currentAnnotation,
-                                                                        pageNumber: pageNumber,
-                                                                        pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
+        let fixedAnnotation = AnnotationsUtils.fromPdfAnnotation(currentAnnotation,
+                                                                 pageNumber: pageNumber,
+                                                                 pageHeight: currentPage.bounds(for: pdfView.displayBox).height)
 
         if (fixedAnnotation.identifier == "_new") {
             restClient?.createAnnotation(fixedAnnotation,
@@ -276,7 +280,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                                              os_log("createAnnotation success id:%@", newId)
                                              fixedAnnotation.identifier = newId
                                              fixedAnnotation.author = "(Utilisateur courant)"
-                                             PdfReaderController.updatePdfAnnotationMetadata(pdfAnnotation: currentAnnotation, annotation: fixedAnnotation)
+                                             AnnotationsUtils.updatePdfMetadata(pdfAnnotation: currentAnnotation, annotation: fixedAnnotation)
                                              self.performSegue(withIdentifier: AnnotationDetailsController.SEGUE, sender: fixedAnnotation)
                                          },
                                          errorCallback: {
@@ -303,63 +307,6 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     // </editor-fold desc="PdfAnnotationEventsDelegate">
-
-
-    class func translateToPdfAnnotation(_ annotation: Annotation, pageHeight: CGFloat, pdfPage: PDFPage) -> PDFAnnotation {
-
-        // Translating annotation from top-right-origin (web)
-        // to bottom-left-origin (PDFKit)
-
-        let rect = ViewUtils.translateDpi(rect: annotation.rect.standardized, oldDpi: 150, newDpi: 72)
-        let bounds = CGRect(
-                x: rect.origin.x,
-                y: pageHeight - rect.origin.y,
-                width: rect.width,
-                height: -(rect.height)
-        )
-
-        let result = PdfAnnotationDrawer.createAnnotation(rect: bounds.standardized,
-                                                          page: pdfPage,
-                                                          color: PdfAnnotationDrawer.DEFAULT_COLOR)
-
-        PdfReaderController.updatePdfAnnotationMetadata(pdfAnnotation: result, annotation: annotation)
-
-        return result
-    }
-
-
-    class func updatePdfAnnotationMetadata(pdfAnnotation: PDFAnnotation, annotation: Annotation) {
-
-        let jsonEncoder = JSONEncoder()
-        jsonEncoder.outputFormatting = .prettyPrinted
-
-        let annotationJson = try! jsonEncoder.encode(annotation)
-        let annotationString = String(data: annotationJson, encoding: .utf8)!
-
-        pdfAnnotation.setValue(annotationString, forAnnotationKey: .widgetValue)
-    }
-
-
-    class func translateToAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, pageHeight: CGFloat) -> Annotation {
-
-        let jsonDecoder = JSONDecoder()
-        let annotationJsonString = pdfAnnotation.value(forAnnotationKey: .widgetValue) as? String ?? ""
-        let result = (try? jsonDecoder.decode(Annotation.self, from: annotationJsonString.data(using: .utf8)!)) ?? Annotation(currentPage: pageNumber)!
-
-        // Translating annotation bottom-left-origin (PDFKit)
-        // to from top-right-origin (web)
-
-        let rect = CGRect(
-                x: pdfAnnotation.bounds.origin.x,
-                y: pageHeight - pdfAnnotation.bounds.origin.y,
-                width: pdfAnnotation.bounds.width,
-                height: -(pdfAnnotation.bounds.height)
-        )
-
-        result.rect = ViewUtils.translateDpi(rect: rect, oldDpi: 72, newDpi: 150)
-
-        return result
-    }
 
 
     private func downloadFolderMetadata() {
@@ -443,7 +390,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         var localFileUrl: URL?
         do {
-            localFileUrl = try getLocalFileUrl(dossierId: folder.identifier, documentName: document.identifier)
+            localFileUrl = try Dossier.getLocalFileUrl(dossierId: folder.identifier, documentName: document.identifier)
         } catch {
             ViewUtils.logError(message: "Impossible d'écrire sur le disque",
                                title: "Téléchargement échoué")
@@ -482,17 +429,21 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         if let pdfDocument = PDFDocument(url: documentPath) {
 
-            for annotation in self.currentAnnotations ?? [] {
+            var annotations: [Annotation] = (currentAnnotations ?? [])
+            annotations = annotations.filter({ $0.documentId == currentDocument?.identifier })
+
+            for annotation in annotations {
 
                 guard let pdfPage = pdfDocument.page(at: annotation.page) else { return }
                 let pageHeight = pdfPage.bounds(for: pdfView.displayBox).height
-                let pdfAnnotation = PdfReaderController.translateToPdfAnnotation(annotation, pageHeight: pageHeight, pdfPage: pdfPage)
+                let pdfAnnotation = AnnotationsUtils.toPdfAnnotation(annotation, pageHeight: pageHeight, pdfPage: pdfPage)
 
                 pdfPage.addAnnotation(pdfAnnotation)
             }
 
             self.pdfView.document = pdfDocument
             self.refreshFloatingActionButton(documentLoaded: pdfDocument)
+            self.hideSpinner()
         }
         else {
             try? FileManager.default.removeItem(at: documentPath)
@@ -513,9 +464,15 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
             let positiveAction = Dossier.getPositiveAction(folders: [currentFolder!])
             let negativeAction = Dossier.getNegativeAction(folders: [currentFolder!])
 
-            if (positiveAction == "SIGNATURE") { floatingActionButton.addItem(item: signItem) }
-            if (positiveAction == "VISA") { floatingActionButton.addItem(item: visaItem) }
-            if (negativeAction == "REJET") { floatingActionButton.addItem(item: rejectItem) }
+            if (positiveAction == "SIGNATURE") {
+                floatingActionButton.addItem(item: signItem)
+            }
+            if (positiveAction == "VISA") {
+                floatingActionButton.addItem(item: visaItem)
+            }
+            if (negativeAction == "REJET") {
+                floatingActionButton.addItem(item: rejectItem)
+            }
             floatingActionButton.addItem(item: annotationItem)
         }
 
@@ -526,27 +483,6 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         if ((documentLoaded == nil) && !floatingActionButton.isHidden) {
             floatingActionButton.isHidden = true
         }
-    }
-
-
-    private func getLocalFileUrl(dossierId: String,
-                                 documentName: String) throws -> URL {
-
-        // Source folder
-
-        var documentsDirectoryUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                .appendingPathComponent("dossiers", isDirectory: true)
-                .appendingPathComponent(dossierId, isDirectory: true)
-
-        try FileManager.default.createDirectory(at: documentsDirectoryUrl, withIntermediateDirectories: true)
-
-        // File name
-
-        var fileName = documentName.replacingOccurrences(of: " ", with: "_")
-        fileName = String(format: "%@.bin", fileName)
-
-        documentsDirectoryUrl = documentsDirectoryUrl.appendingPathComponent(fileName)
-        return documentsDirectoryUrl
     }
 
 }

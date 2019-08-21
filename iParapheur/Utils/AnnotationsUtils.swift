@@ -34,6 +34,7 @@
  */
 
 import Foundation
+import PDFKit
 
 class AnnotationsUtils: NSObject {
 
@@ -93,6 +94,63 @@ class AnnotationsUtils: NSObject {
         }
 
         return result
+    }
+
+
+    class func toPdfAnnotation(_ annotation: Annotation, pageHeight: CGFloat, pdfPage: PDFPage) -> PDFAnnotation {
+
+        // Translating annotation from top-right-origin (web)
+        // to bottom-left-origin (PDFKit)
+
+        let rect = ViewUtils.translateDpi(rect: annotation.rect.standardized, oldDpi: 150, newDpi: 72)
+        let bounds = CGRect(
+                x: rect.origin.x,
+                y: pageHeight - rect.origin.y,
+                width: rect.width,
+                height: -(rect.height)
+        )
+
+        let result = PdfAnnotationDrawer.createAnnotation(rect: bounds.standardized,
+                                                          page: pdfPage,
+                                                          color: PdfAnnotationDrawer.DEFAULT_COLOR)
+
+        AnnotationsUtils.updatePdfMetadata(pdfAnnotation: result, annotation: annotation)
+
+        return result
+    }
+
+
+    class func fromPdfAnnotation(_ pdfAnnotation: PDFAnnotation, pageNumber: Int, pageHeight: CGFloat) -> Annotation {
+
+        let jsonDecoder = JSONDecoder()
+        let annotationJsonString = pdfAnnotation.value(forAnnotationKey: .widgetValue) as? String ?? ""
+        let result = (try? jsonDecoder.decode(Annotation.self, from: annotationJsonString.data(using: .utf8)!)) ?? Annotation(currentPage: pageNumber)!
+
+        // Translating annotation bottom-left-origin (PDFKit)
+        // to from top-right-origin (web)
+
+        let rect = CGRect(
+                x: pdfAnnotation.bounds.origin.x,
+                y: pageHeight - pdfAnnotation.bounds.origin.y,
+                width: pdfAnnotation.bounds.width,
+                height: -(pdfAnnotation.bounds.height)
+        )
+
+        result.rect = ViewUtils.translateDpi(rect: rect, oldDpi: 72, newDpi: 150)
+
+        return result
+    }
+
+
+    class func updatePdfMetadata(pdfAnnotation: PDFAnnotation, annotation: Annotation) {
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        let annotationJson = try! jsonEncoder.encode(annotation)
+        let annotationString = String(data: annotationJson, encoding: .utf8)!
+
+        pdfAnnotation.setValue(annotationString, forAnnotationKey: .widgetValue)
     }
 
 }

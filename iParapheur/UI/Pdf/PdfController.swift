@@ -42,8 +42,10 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     @IBOutlet var pdfView: PDFView!
+
     let pdfDrawer = PdfAnnotationDrawer()
     let pdfAnnotationGestureRecognizer = PdfAnnotationGestureRecognizer()
+    var currentSpinner: UIView?
 
 
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
@@ -92,6 +94,32 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     // </editor-fold desc="PdfAnnotationEventsDelegate">
+
+
+    func showSpinner() {
+
+        let spinnerView = UIView(frame: view.bounds)
+        spinnerView.backgroundColor = pdfView.backgroundColor
+
+        let activityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicatorView.startAnimating()
+        activityIndicatorView.center = spinnerView.center
+
+        DispatchQueue.main.async {
+            spinnerView.addSubview(activityIndicatorView)
+            self.view.addSubview(spinnerView)
+        }
+
+        currentSpinner = spinnerView
+    }
+
+
+    func hideSpinner() {
+        DispatchQueue.main.async {
+            self.currentSpinner?.removeFromSuperview()
+            self.currentSpinner = nil
+        }
+    }
 
 
     func loadPdf(pdfUrl: URL) {

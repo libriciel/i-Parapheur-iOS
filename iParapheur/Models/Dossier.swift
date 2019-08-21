@@ -250,6 +250,27 @@ class Dossier: NSObject, Decodable {
     }
 
 
+    class func getLocalFileUrl(dossierId: String,
+                               documentName: String) throws -> URL? {
+
+        // Source folder
+
+        var documentsDirectoryUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent("dossiers", isDirectory: true)
+                .appendingPathComponent(dossierId, isDirectory: true)
+
+        try FileManager.default.createDirectory(at: documentsDirectoryUrl, withIntermediateDirectories: true)
+
+        // File name
+
+        var fileName = documentName.replacingOccurrences(of: " ", with: "_")
+        fileName = String(format: "%@.bin", fileName)
+
+        documentsDirectoryUrl = documentsDirectoryUrl.appendingPathComponent(fileName)
+        return documentsDirectoryUrl
+    }
+
+
     // </editor-fold desc="Static utils">
 
 }
