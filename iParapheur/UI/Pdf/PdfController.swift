@@ -130,12 +130,12 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     func isInCreateAnnotationMode() -> Bool {
-        return pdfAnnotationGestureRecognizer.isInCreateAnnotationMode
+        return pdfAnnotationGestureRecognizer.isInEditAnnotationMode
     }
 
 
     func setCreateAnnotationMode(value: Bool) {
-        pdfAnnotationGestureRecognizer.isInCreateAnnotationMode = value
+        pdfAnnotationGestureRecognizer.isInEditAnnotationMode = value
     }
 
 }

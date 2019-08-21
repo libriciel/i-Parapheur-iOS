@@ -49,15 +49,15 @@ protocol PdfAnnotationEventsDelegate: class {
 
 protocol PdfAnnotationGestureRecognizerDelegate: class {
 
-    func pressBegan(_ location: CGPoint)
+    func pressBeganInCreateMode(_ location: CGPoint)
 
-    func longPressBegan()
+    func pressBeganInEditMode(pdfAnnotation: PDFAnnotation, insideHit: CGPoint, forceRedraw: Bool)
 
     func pressMoved(_ location: CGPoint, _ isLongPress: Bool)
 
     func pressEnded(_ location: CGPoint, _ isLongPress: Bool)
 
-    func enterInEditMode(_ location: CGPoint) -> Bool
+    func targetedAnnotation(_ location: CGPoint) -> (PDFAnnotation, CGPoint)?
 
     func getCurrentAnnotation() -> PDFAnnotation?
 
@@ -79,7 +79,7 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
     weak var drawingDelegate: PdfAnnotationGestureRecognizerDelegate?
     weak var eventsDelegate: PdfAnnotationEventsDelegate?
 
-    var isInCreateAnnotationMode = false
+    var isInEditAnnotationMode = false
 
     private var longPressTimer: Timer?
     private var doubleTapTimer: Timer?
@@ -91,25 +91,58 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
-        if let touch = touches.first,
-           let numberOfTouches = event?.allTouches?.count,
-           numberOfTouches == 1 {
+        guard let touch = touches.first,
+              let numberOfTouches = event?.allTouches?.count,
+              numberOfTouches == 1 else {
 
-            let location = touch.location(in: self.view)
+            doubleTapTimerCancelled()
+            longPressTimerCancelled()
+            isLongPress = false
+            state = .failed
+            return
+        }
 
-            if (doubleTapTimer != nil) {
-                doubleTapTriggered()
-                state = .ended
-            }
-            else if (isInCreateAnnotationMode || (drawingDelegate?.enterInEditMode(location) ?? false)) {
-                doubleTapTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(singlePressTriggered), userInfo: location, repeats: false)
-                state = .began
+        let location = touch.location(in: self.view)
+        let targetedAnnotation = drawingDelegate?.targetedAnnotation(location)
+
+        if (state == .changed) { // That was a missed double tap. Dismissing...
+            doubleTapTimerCancelled()
+            longPressTimerCancelled()
+            isLongPress = false
+            state = .failed
+        }
+        else if (isInEditAnnotationMode) {
+
+            if (targetedAnnotation != nil) {
+                drawingDelegate?.pressBeganInEditMode(pdfAnnotation: targetedAnnotation!.0, insideHit: targetedAnnotation!.1, forceRedraw: false)
+                doubleTapTimerCancelled()
+                longPressTimer = Timer.scheduledTimer(timeInterval: 0.4,
+                                                      target: self,
+                                                      selector: #selector(longPressTriggered),
+                                                      userInfo: targetedAnnotation,
+                                                      repeats: false)
             }
             else {
+                drawingDelegate?.pressBeganInCreateMode(location)
                 doubleTapTimerCancelled()
                 longPressTimerCancelled()
-                isLongPress = false
-                state = .failed
+            }
+
+            state = .began
+        }
+        else if (targetedAnnotation != nil) {
+
+            if (doubleTapTimer != nil) {
+                doubleTapTriggered(annotation: targetedAnnotation!.0)
+                state = .ended
+            }
+            else {
+                doubleTapTimer = Timer.scheduledTimer(timeInterval: 0.5,
+                                                      target: self,
+                                                      selector: #selector(doubleTapTimerCancelled),
+                                                      userInfo: nil,
+                                                      repeats: false)
+                state = .possible
             }
         }
         else {
@@ -127,7 +160,6 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
         // and already considering a single press action
         doubleTapTimer?.fire()
         doubleTapTimerCancelled()
-
         longPressTimerCancelled()
 
         state = .changed
@@ -152,7 +184,7 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
             let currentAnnotation = drawingDelegate?.getCurrentAnnotation()
             drawingDelegate?.pressEnded(location, isLongPress)
 
-            isInCreateAnnotationMode = false
+            isInEditAnnotationMode = false
             doubleTapTimerCancelled()
             state = .ended
 
@@ -165,6 +197,7 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+
         doubleTapTimerCancelled()
         longPressTimerCancelled()
         isLongPress = false
@@ -175,47 +208,29 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
     // </editor-fold desc="UIGestureRecognizer">
 
 
-    @objc func singlePressTriggered() {
-        guard let location = doubleTapTimer?.userInfo as? CGPoint else { return }
-        doubleTapTimerCancelled()
-
-        if (state == .changed) { // That was a missed double tap. Dismissing...
-            state = .failed
-        }
-        else if (isInCreateAnnotationMode) {
-            state = .began
-            drawingDelegate?.pressBegan(location)
-        }
-        else if (drawingDelegate?.enterInEditMode(location) ?? false) {
-            longPressTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(longPressTriggered), userInfo: nil, repeats: false)
-            state = .began
-            drawingDelegate?.pressBegan(location)
-        }
-        else {
-            state = .failed
-        }
-    }
-
-
-    func doubleTapTriggered() {
-
-        let currentAnnotation = drawingDelegate?.getCurrentAnnotation()
+    private func doubleTapTriggered(annotation: PDFAnnotation) {
 
         doubleTapTimerCancelled()
         longPressTimerCancelled()
         isLongPress = false
 
-        eventsDelegate?.onAnnotationSelected(currentAnnotation)
+        eventsDelegate?.onAnnotationSelected(annotation)
     }
 
 
-    @objc func longPressTriggered() {
+    @objc private func longPressTriggered(sender: Timer) {
+
+        guard let annotation = (sender.userInfo as? (PDFAnnotation, CGPoint))?.0,
+              let insideHit = (sender.userInfo as? (PDFAnnotation, CGPoint))?.1 else { return }
+
+        longPressTimerCancelled()
         isLongPress = true
-        drawingDelegate?.longPressBegan()
+
+        drawingDelegate?.pressBeganInEditMode(pdfAnnotation: annotation, insideHit: insideHit, forceRedraw: true)
     }
 
 
-    private func doubleTapTimerCancelled() {
+    @objc private func doubleTapTimerCancelled() {
         doubleTapTimer?.invalidate()
         doubleTapTimer = nil
     }
