@@ -43,6 +43,8 @@ import os
 
     func onAnnotationChanged(annotation: Annotation)
 
+    func onAnnotationPopupDismissed()
+
 }
 
 
@@ -93,6 +95,7 @@ class AnnotationDetailsController: UIViewController {
 
 
     @IBAction func onCancelButtonClicked(_ sender: Any) {
+        delegate?.onAnnotationPopupDismissed()
         dismiss(animated: true)
     }
 
@@ -132,6 +135,7 @@ class AnnotationDetailsController: UIViewController {
                                      documentId: documentId,
                                      responseCallback: {
                                          self.delegate?.onAnnotationChanged(annotation: annotation)
+                                         self.delegate?.onAnnotationPopupDismissed()
                                          self.dismiss(animated: true)
                                      },
                                      errorCallback: {

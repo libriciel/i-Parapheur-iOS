@@ -43,6 +43,9 @@ import os
 class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsControllerDelegate {
 
 
+    static let preferencesKeyAnnotationInfosAlreadySeen = "annotationInfosAlreadySeen"
+    static let preferencesKeyAnnotationEditModeInfosAlreadySeen = "annotationEditModeInfosAlreadySeen"
+
     @IBOutlet weak var floatingActionButton: Floaty!
     @IBOutlet weak var documentsButton: UIBarButtonItem!
     @IBOutlet weak var detailsButton: UIBarButtonItem!
@@ -167,17 +170,19 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
     private func onCreateAnnotationFloatingButtonClicked() {
 
-        let firstLaunch = true // TODO : Fetch user settings
+        let preferences = UserDefaults.standard
+        let alreadySeen = preferences.bool(forKey: PdfReaderController.preferencesKeyAnnotationEditModeInfosAlreadySeen)
+        preferences.set(true, forKey: PdfReaderController.preferencesKeyAnnotationEditModeInfosAlreadySeen)
 
-        if (firstLaunch) {
+        if (!alreadySeen) {
             var config = SwiftMessages.defaultConfig
-            config.duration = .seconds(seconds: 8)
+            config.duration = .seconds(seconds: 12)
 
             ViewUtils.logMessage(title: "Mode annotation",
                                  subtitle: """
                                            - Créer : Glissez votre doigt sur une zone vide
-                                           - Redimmensionner : Glissez rapidement un coin bas-droit
-                                           - Déplacer : Pressez longuement et glissez une annotation
+                                           - Redimmensionner : Glissez le coin bas-droit de l'annotation
+                                           - Déplacer : Pressez longuement et glissez l'annotation 
                                            """,
                                  messageType: .info,
                                  config: config)
@@ -228,8 +233,13 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
     }
 
 
+    func onAnnotationPopupDismissed() {
+        checkFirstAnnotation()
+    }
+
+
     func onAnnotationDeleted(annotation: Annotation) {
-        guard let annotation = self.pdfDrawer.getCurrentAnnotation() else { return }
+        guard let annotation = pdfDrawer.getCurrentAnnotation() else { return }
         annotation.page?.removeAnnotation(annotation)
     }
 
@@ -284,8 +294,6 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
               let pageNumber = pdfView.document?.index(for: currentPage) else {
             return
         }
-
-        checkFirstAnnotation()
 
         let fixedAnnotation = AnnotationsUtils.fromPdfAnnotation(currentAnnotation,
                                                                  pageNumber: pageNumber,
@@ -518,15 +526,17 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
     private func checkFirstAnnotation() {
 
-        let firstLaunch = true // TODO : Fetch user settings
+        let preferences = UserDefaults.standard
+        let alreadySeen = preferences.bool(forKey: PdfReaderController.preferencesKeyAnnotationInfosAlreadySeen)
+        preferences.set(true, forKey: PdfReaderController.preferencesKeyAnnotationInfosAlreadySeen)
 
-        if (firstLaunch) {
+        if (!alreadySeen) {
             var config = SwiftMessages.defaultConfig
             config.duration = .seconds(seconds: 12)
 
             ViewUtils.logMessage(title: "Une annotation est visible sur ce document",
                                  subtitle: """
-                                           - Voir ou modifier son contenu : Double-tappez dessus
+                                           - Voir ou modifier son contenu : Double-tapez dessus
                                            - La déplacer : Passez en mode annotation avec le bouton +
                                            """,
                                  messageType: .info,
