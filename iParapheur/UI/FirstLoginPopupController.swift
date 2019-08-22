@@ -180,8 +180,7 @@ class FirstLoginPopupController: UIViewController {
         enableInterface(isEnabled: false)
 
         restClient!.getApiVersion(onResponse:
-                                  {
-                                      (level: NSNumber) in
+                                  { (level: NSNumber) in
 
                                       // Register new account as selected
 
@@ -193,9 +192,7 @@ class FirstLoginPopupController: UIViewController {
                                       self.enableInterface(isEnabled: true)
                                       self.dismissWithSuccess(success: true)
                                   },
-                                  onError:
-                                  {
-                                      (error: Error) in
+                                  onError: { (error: Error) in
 
                                       let nsError = error as NSError
                                       self.enableInterface(isEnabled: true)

@@ -129,33 +129,33 @@ class RestClient: NSObject {
     @objc func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
                              onError errorCallback: ((Error) -> Void)?) {
 
-        checkCertificate(onResponse: {
-            (result: Bool) in
+        checkCertificate(onResponse: { (result: Bool) in
 
             if result {
                 let apiVersionUrl = "\(self.serverUrl.absoluteString!)/parapheur/api/getApiLevel"
 
-                self.manager.request(apiVersionUrl).validate().responseString {
-                    response in
+                self.manager.request(apiVersionUrl)
+                        .validate()
+                        .responseString { response in
 
-                    switch response.result {
+                            switch response.result {
 
-                        case .success:
-                            let decoder = JSONDecoder()
+                                case .success:
+                                    let decoder = JSONDecoder()
 
-                            guard let jsonData = response.value?.data(using: .utf8),
-                                  let apiLevelWrapper = try? decoder.decode(ApiLevel.self, from: jsonData),
-                                  let apiLevel = apiLevelWrapper.level else {
-                                errorCallback?(RuntimeError("Réponse du serveur invalide"))
-                                return
+                                    guard let jsonData = response.value?.data(using: .utf8),
+                                          let apiLevelWrapper = try? decoder.decode(ApiLevel.self, from: jsonData),
+                                          let apiLevel = apiLevelWrapper.level else {
+                                        errorCallback?(RuntimeError("Réponse du serveur invalide"))
+                                        return
+                                    }
+
+                                    responseCallback?(NSNumber(value: apiLevel))
+
+                                case .failure(let error):
+                                    errorCallback?(error)
                             }
-
-                            responseCallback?(NSNumber(value: apiLevel))
-
-                        case .failure(let error):
-                            errorCallback?(error)
-                    }
-                }
+                        }
             }
             else {
                 errorCallback?(NSError(domain: "kCFErrorDomainCFNetwork",
@@ -174,18 +174,18 @@ class RestClient: NSObject {
         // Cleanup
 
         try? FileManager.default.removeItem(at: filePathUrl)
-        let destination: DownloadRequest.DownloadFileDestination = {
-            _, _ in
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
         }
 
         // Request
 
-        manager.download(downloadFileUrl, to: destination).validate().responseData {
-            response in
-            let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
-            responseCallback?(isAcValid)
-        }
+        manager.download(downloadFileUrl, to: destination)
+                .validate()
+                .responseData { response in
+                    let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
+                    responseCallback?(isAcValid)
+                }
     }
 
 
@@ -226,28 +226,29 @@ class RestClient: NSObject {
         // Request
 
         os_log("getDataToSign request sent with parameters %@", type: .debug, parameters)
-        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
-            response in
+        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            os_log("getDataToSign response...", type: .debug)
-            switch response.result {
+                    os_log("getDataToSign response...", type: .debug)
+                    switch response.result {
 
-                case .success:
-                    let jsonDecoder = JSONDecoder()
-                    guard let responseJsonData = response.value?.data(using: .utf8),
-                          let dataToSign = try? jsonDecoder.decode(DataToSign.self, from: responseJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dataToSign = try? jsonDecoder.decode(DataToSign.self, from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            os_log("getDataToSign response : %@", type: .debug, dataToSign)
+                            responseCallback?(dataToSign)
+
+                        case .failure(let error):
+                            os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
+                            errorCallback?(error)
                     }
-
-                    os_log("getDataToSign response : %@", type: .debug, dataToSign)
-                    responseCallback?(dataToSign)
-
-                case .failure(let error):
-                    os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
-                    errorCallback?(error)
-            }
-        }
+                }
     }
 
 
@@ -289,27 +290,28 @@ class RestClient: NSObject {
         // Request
 
         os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
-        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
-            response in
+        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let jsonDecoder = JSONDecoder()
-                    guard let responseJsonData = response.value?.data(using: .utf8),
-                          let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
-                                                                       from: responseJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
+                                                                               from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
+
+                        case .failure(let error):
+                            errorCallback?(error)
                     }
-
-                    responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
-
-                case .failure(let error):
-                    errorCallback?(error)
-            }
-        }
+                }
     }
 
 
@@ -318,26 +320,27 @@ class RestClient: NSObject {
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl).validate().responseString {
-            response in
-            switch response.result {
+        manager.request(getBureauxUrl)
+                .validate()
+                .responseString { response in
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let jsonDecoder = JSONDecoder()
-                    guard let getBureauxJsonData = response.value?.data(using: .utf8),
-                          let bureaux = try? jsonDecoder.decode([Bureau].self,
-                                                                from: getBureauxJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            let jsonDecoder = JSONDecoder()
+                            guard let getBureauxJsonData = response.value?.data(using: .utf8),
+                                  let bureaux = try? jsonDecoder.decode([Bureau].self,
+                                                                        from: getBureauxJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(bureaux)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    responseCallback?(bureaux)
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -368,46 +371,45 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
-            response in
+        manager.request(getDossiersUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    // Prepare
+                            // Prepare
 
-                    let jsonDecoder = JSONDecoder()
-                    guard let responseJsonData = response.value?.data(using: .utf8),
-                          let dossierList = try? jsonDecoder.decode([Dossier].self,
-                                                                    from: responseJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dossierList = try? jsonDecoder.decode([Dossier].self,
+                                                                            from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            // Retrieve delegated
+
+                            self.getDelegateFolders(bureau: bureau,
+                                                    page: 0, size: 100,
+                                                    filterJson: nil,
+                                                    onResponse: { (delegueList: [Dossier]) in
+
+                                                        for dossierDelegue in delegueList {
+                                                            dossierDelegue.isDelegue = true;
+                                                        }
+
+                                                        responseCallback?((dossierList + delegueList))
+                                                    },
+                                                    onError: { (error: Error) in
+                                                        errorCallback?(error)
+                                                    })
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    // Retrieve delegated
-
-                    self.getDelegateFolders(bureau: bureau,
-                                            page: 0, size: 100,
-                                            filterJson: nil,
-                                            onResponse: {
-                                                (delegueList: [Dossier]) in
-
-                                                for dossierDelegue in delegueList {
-                                                    dossierDelegue.isDelegue = true;
-                                                }
-
-                                                responseCallback?((dossierList + delegueList))
-                                            },
-                                            onError: {
-                                                (error: Error) in
-                                                errorCallback?(error)
-                                            })
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -439,26 +441,27 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
-            response in
-            switch response.result {
+        manager.request(getDossiersUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let jsonDecoder = JSONDecoder()
-                    guard let responseJsonData = response.value?.data(using: .utf8),
-                          let dossierList = try? jsonDecoder.decode([Dossier].self,
-                                                                    from: responseJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dossierList = try? jsonDecoder.decode([Dossier].self,
+                                                                            from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(dossierList)
+
+                        case .failure(let error):
+                            errorCallback?(error)
                     }
-
-                    responseCallback?(dossierList)
-
-                case .failure(let error):
-                    errorCallback?(error)
-            }
-        }
+                }
     }
 
 
@@ -475,26 +478,27 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getDossierUrl, parameters: parameters).validate().responseString {
-            response in
+        manager.request(getDossierUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let jsonDecoder = JSONDecoder()
-                    guard let responseJsonData = response.value?.data(using: .utf8),
-                          let dossier = try? jsonDecoder.decode(Dossier.self, from: responseJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dossier = try? jsonDecoder.decode(Dossier.self, from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(dossier)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    responseCallback?(dossier)
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -506,28 +510,29 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getCircuitUrl).validate().responseString {
-            response in
+        manager.request(getCircuitUrl)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
-                    let jsonDecoder = JSONDecoder()
-                    jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
+                            jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
 
-                    guard let getCircuitJsonData = response.value?.data(using: .utf8),
-                          let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self, from: getCircuitJsonData),
-                          let data = circuitWrapper["circuit"] else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            guard let getCircuitJsonData = response.value?.data(using: .utf8),
+                                  let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self, from: getCircuitJsonData),
+                                  let data = circuitWrapper["circuit"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(data)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    responseCallback?(data)
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -539,27 +544,28 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getTypologyUrl).validate().responseString {
-            response in
+        manager.request(getTypologyUrl)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let decoder = JSONDecoder()
-                    guard let jsonData = response.value?.data(using: .utf8),
-                          let typeList = try? decoder.decode([ParapheurType].self,
-                                                             from: jsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
-                        return
+                            let decoder = JSONDecoder()
+                            guard let jsonData = response.value?.data(using: .utf8),
+                                  let typeList = try? decoder.decode([ParapheurType].self,
+                                                                     from: jsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                return
+                            }
+
+                            responseCallback?(typeList as NSArray)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    responseCallback?(typeList as NSArray)
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -571,23 +577,24 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getTypologyUrl).validate().responseString {
-            response in
+        manager.request(getTypologyUrl)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
-                    guard let responseValue = response.value else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                        case .success:
+                            guard let responseValue = response.value else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+                            let parsedAnnotations = AnnotationsUtils.parse(string: responseValue)
+                            responseCallback?(parsedAnnotations)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-                    let parsedAnnotations = AnnotationsUtils.parse(string: responseValue)
-                    responseCallback?(parsedAnnotations)
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -604,27 +611,28 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.request(getSignInfoUrl, parameters: parameters).validate().responseString {
-            response in
+        manager.request(getSignInfoUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
-                    let jsonDecoder = JSONDecoder()
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
 
-                    guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
-                          let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
-                          let data = signInfoWrapper["signatureInformations"] else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
-                        return
+                            guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
+                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let data = signInfoWrapper["signatureInformations"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                return
+                            }
+
+                            responseCallback?(data)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    responseCallback?(data)
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-            }
-        }
+                }
     }
 
 
@@ -648,12 +656,10 @@ class RestClient: NSObject {
         self.sendSimpleAction(type: 1,
                               url: "/parapheur/dossiers/\(dossierId)/signature",
                               args: argumentDictionary,
-                              onResponse: {
-                                  id in
+                              onResponse: { id in
                                   responseCallback?(1);
                               },
-                              onError: {
-                                  error in
+                              onError: { error in
                                   errorCallback?(error as NSError);
                               })
     }
@@ -680,20 +686,20 @@ class RestClient: NSObject {
         manager.request(visaUrl,
                         method: .post,
                         parameters: argumentDictionary,
-                        encoding: JSONEncoding.default).validate().responseString {
+                        encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            response in
+                    switch response.result {
 
-            switch response.result {
+                        case .success:
+                            responseCallback?(NSNumber(value: 1))
 
-                case .success:
-                    responseCallback?(NSNumber(value: 1))
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-                    print(error.localizedDescription)
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            print(error.localizedDescription)
+                    }
+                }
     }
 
 
@@ -718,20 +724,20 @@ class RestClient: NSObject {
         manager.request(rejectUrl,
                         method: .post,
                         parameters: argumentDictionary,
-                        encoding: JSONEncoding.default).validate().responseString {
+                        encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            response in
+                    switch response.result {
 
-            switch response.result {
+                        case .success:
+                            responseCallback?(NSNumber(value: 1))
 
-                case .success:
-                    responseCallback?(NSNumber(value: 1))
-
-                case .failure(let error):
-                    errorCallback?(error as NSError)
-                    print(error.localizedDescription)
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            print(error.localizedDescription)
+                    }
+                }
     }
 
 
@@ -768,27 +774,27 @@ class RestClient: NSObject {
         request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = annotationData
 
-        manager.request(request).responseJSON {
-            response in
+        manager.request(request)
+                .responseJSON { response in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    guard let jsonResult = response.value as? [String: String],
-                          let idString = jsonResult["id"] else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                        return
+                            guard let jsonResult = response.value as? [String: String],
+                                  let idString = jsonResult["id"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(idString)
+
+                        case .failure(let error):
+
+                            errorCallback?(error)
+                            print(error.localizedDescription)
                     }
-
-                    responseCallback?(idString)
-
-                case .failure(let error):
-
-                    errorCallback?(error)
-                    print(error.localizedDescription)
-            }
-        }
+                }
     }
 
 
@@ -819,19 +825,19 @@ class RestClient: NSObject {
         request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = annotationData
 
-        manager.request(request).responseString {
-            (response) in
+        manager.request(request)
+                .responseString { (response) in
 
-            switch response.result {
+                    switch response.result {
 
-                case .success:
-                    responseCallback?()
+                        case .success:
+                            responseCallback?()
 
-                case .failure(let error):
-                    errorCallback?(error)
-                    print(error.localizedDescription)
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error)
+                            print(error.localizedDescription)
+                    }
+                }
     }
 
 
@@ -846,12 +852,10 @@ class RestClient: NSObject {
         sendSimpleAction(type: 3,
                          url: annotationUrlSuffix,
                          args: nil,
-                         onResponse: {
-                             response in
+                         onResponse: { response in
                              responseCallback?()
                          },
-                         onError: {
-                             (error: NSError) in
+                         onError: { (error: NSError) in
                              errorCallback?(error as Error)
                          })
     }
@@ -876,53 +880,56 @@ class RestClient: NSObject {
                 manager.request(annotationUrl,
                                 method: .post,
                                 parameters: args,
-                                encoding: JSONEncoding.default).validate().responseString {
-                    response in
+                                encoding: JSONEncoding.default)
+                        .validate()
+                        .responseString { response in
 
-                    switch response.result {
+                            switch response.result {
 
-                        case .success:
-                            responseCallback?(NSNumber(value: 1))
+                                case .success:
+                                    responseCallback?(NSNumber(value: 1))
 
-                        case .failure(let error):
-                            errorCallback?(error as NSError)
-                            print(error.localizedDescription)
-                    }
-                }
+                                case .failure(let error):
+                                    errorCallback?(error as NSError)
+                                    print(error.localizedDescription)
+                            }
+                        }
 
             case 2:
                 manager.request(annotationUrl,
                                 method: .put,
                                 parameters: args,
-                                encoding: JSONEncoding.default).validate().responseString {
-                    response in
+                                encoding: JSONEncoding.default)
+                        .validate()
+                        .responseString { response in
 
-                    switch response.result {
+                            switch response.result {
 
-                        case .success:
-                            responseCallback?(1)
+                                case .success:
+                                    responseCallback?(1)
 
-                        case .failure(let error):
-                            errorCallback?(error as NSError)
-                            print(error.localizedDescription)
-                    }
-                }
+                                case .failure(let error):
+                                    errorCallback?(error as NSError)
+                                    print(error.localizedDescription)
+                            }
+                        }
 
             case 3:
                 manager.request(annotationUrl,
                                 method: .delete,
-                                parameters: args).validate().responseString {
-                    response in
+                                parameters: args)
+                        .validate()
+                        .responseString { response in
 
-                    switch response.result {
+                            switch response.result {
 
-                        case .success:
-                            responseCallback?(1)
+                                case .success:
+                                    responseCallback?(1)
 
-                        case .failure(let error):
-                            errorCallback?(error as NSError)
-                    }
-                }
+                                case .failure(let error):
+                                    errorCallback?(error as NSError)
+                            }
+                        }
 
             default:
                 os_log("Wrong argument here", type: .error)
@@ -939,8 +946,7 @@ class RestClient: NSObject {
         let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
         os_log("Document downloadUrl:%@", downloadFileUrl)
 
-        let destination: DownloadRequest.DownloadFileDestination = {
-            _, _ in
+        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }
 
@@ -953,19 +959,20 @@ class RestClient: NSObject {
 
         // Request
 
-        manager.download(downloadFileUrl, to: destination).validate().response {
-            response in
+        manager.download(downloadFileUrl, to: destination)
+                .validate()
+                .response { response in
 
-            if let responseError = response.error {
-                errorCallback?(responseError)
-            }
-            //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
-            //		errorCallback?(response.error)
-            //	}
-            else {
-                responseCallback?(response.destinationURL!.path)
-            }
-        }
+                    if let responseError = response.error {
+                        errorCallback?(responseError)
+                    }
+                    //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
+                    //		errorCallback?(response.error)
+                    //	}
+                    else {
+                        responseCallback?(response.destinationURL!.path)
+                    }
+                }
     }
 
 }

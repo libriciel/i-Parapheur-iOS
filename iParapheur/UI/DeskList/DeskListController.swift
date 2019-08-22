@@ -214,13 +214,12 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
         restClient = RestClient(baseUrl: url as NSString, login: login as NSString, password: password as NSString)
         restClient?.getApiVersion(
-                onResponse: {
-                    (number: NSNumber) in
+                onResponse:
+                { (number: NSNumber) in
 
                     self.loadBureaux()
                 },
-                onError: {
-                    (error: Error) in
+                onError: { (error: Error) in
 
                     let nsError = error as NSError
                     self.refreshControl?.endRefreshing()
@@ -244,8 +243,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
         let manager = NetworkReachabilityManager(host: "www.apple.com")
 
-        manager?.listener = {
-            status in
+        manager?.listener = { status in
 
             switch status {
 

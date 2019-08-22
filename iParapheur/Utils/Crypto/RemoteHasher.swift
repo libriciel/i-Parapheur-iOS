@@ -98,14 +98,13 @@ class RemoteHasher {
                                   publicKeyBase64: mPublicKeyBase64,
                                   signatureFormat: mSignInfo.format,
                                   payload: mPayload,
-                                  onResponse: {
-                                      (response: DataToSign) in
+                                  onResponse:
+                                  { (response: DataToSign) in
                                       os_log("mRestClient#getDataToSign hashes : %@", type: .debug, response.dataToSignBase64List)
                                       self.mDataToSign = response
                                       responseCallback?(response)
                                   },
-                                  onError: {
-                                      (error: Error) in
+                                  onError: { (error: Error) in
                                       os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
                                       errorCallback?(error)
                                   })
@@ -135,12 +134,11 @@ class RemoteHasher {
                                       signatureDateTime: mDataToSign!.signatureDateTime,
                                       signatureFormat: mSignInfo.format,
                                       payload: mPayload,
-                                      onResponse: {
-                                          (response: [Data]) in
+                                      onResponse:
+                                      { (response: [Data]) in
                                           responseCallback?(response)
                                       },
-                                      onError: {
-                                          (error: Error) in
+                                      onError: { (error: Error) in
                                           os_log("RemoteHasher#buildDataToReturn error : %@", type: .error, error.localizedDescription)
                                           errorCallback?(error)
                                       })

@@ -115,13 +115,12 @@ import os
                                        login: NSString(string: loginTextView.text!),
                                        password: NSString(string: passwordTextView.text!))
 
-        currentRestClient!.getApiVersion(onResponse: {
-            (result: NSNumber) in
-            ViewUtils.logSuccess(message: "Connexion réussie",
-                                 title: nil)
-        },
-                                         onError: {
-                                             (error: Error) in
+        currentRestClient!.getApiVersion(onResponse:
+                                         { (result: NSNumber) in
+                                             ViewUtils.logSuccess(message: "Connexion réussie",
+                                                                  title: nil)
+                                         },
+                                         onError: { (error: Error) in
                                              ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
                                                                 title: nil)
                                          })

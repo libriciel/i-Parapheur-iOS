@@ -79,32 +79,28 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         annotationItem.buttonColor = UIColor.gray
         annotationItem.title = "Annoter"
         annotationItem.icon = UIImage(named: "ic_edit_white_24dp")!
-        annotationItem.handler = {
-            item in
+        annotationItem.handler = { item in
             self.onCreateAnnotationFloatingButtonClicked()
         }
 
         rejectItem.buttonColor = UIColor.red
         rejectItem.title = "Rejeter"
         rejectItem.icon = UIImage(named: "ic_close_white_24dp")!
-        rejectItem.handler = {
-            item in
+        rejectItem.handler = { item in
             self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionReject)
         }
 
         signItem.buttonColor = ColorUtils.darkGreen
         signItem.title = "Signer"
         signItem.icon = UIImage(named: "ic_check_white_18dp")!
-        signItem.handler = {
-            item in
+        signItem.handler = { item in
             self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionSignature)
         }
 
         visaItem.buttonColor = ColorUtils.darkGreen
         visaItem.title = "Viser"
         visaItem.icon = UIImage(named: "ic_check_white_18dp")!
-        visaItem.handler = {
-            item in
+        visaItem.handler = { item in
             self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionVisa)
         }
 
@@ -312,8 +308,8 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
             restClient?.createAnnotation(fixedAnnotation,
                                          folderId: folderId,
                                          documentId: documentId,
-                                         responseCallback: {
-                                             (newId: String) in
+                                         responseCallback:
+                                         { (newId: String) in
 
                                              os_log("createAnnotation success id:%@", newId)
                                              fixedAnnotation.identifier = newId
@@ -321,8 +317,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                                              AnnotationsUtils.updatePdfMetadata(pdfAnnotation: currentAnnotation, annotation: fixedAnnotation)
                                              self.performSegue(withIdentifier: AnnotationDetailsController.segue, sender: fixedAnnotation)
                                          },
-                                         errorCallback: {
-                                             (error: Error) in
+                                         errorCallback: { (error: Error) in
 
                                              ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
                                                                 title: "Erreur à la sauvegarde de l'annotation")
@@ -335,8 +330,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                                          responseCallback: {
                                              os_log("updateAnnotation success")
                                          },
-                                         errorCallback: {
-                                             (error: Error) in
+                                         errorCallback: { (error: Error) in
                                              ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
                                                                 title: "Erreur à la sauvegarde de l'annotation")
                                          })
@@ -355,37 +349,34 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         restClient.getDossier(dossier: folder.identifier,
                               bureau: desk.identifier,
-                              onResponse: {
-                                  (folder: Dossier) in
+                              onResponse:
+                              { (folder: Dossier) in
                                   self.currentFolder = folder
                                   self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                               },
-                              onError: {
-                                  (error: Error) in
+                              onError: { (error: Error) in
                                   ViewUtils.logError(message: error.localizedDescription as NSString,
                                                      title: "Impossible de télécharger le dossier")
                               })
 
         restClient.getCircuit(dossier: folder.identifier,
-                              onResponse: {
-                                  (workflow: Circuit) in
+                              onResponse:
+                              { (workflow: Circuit) in
                                   self.currentWorkflow = workflow
                                   self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                               },
-                              onError: {
-                                  (error: Error) in
+                              onError: { (error: Error) in
                                   ViewUtils.logError(message: error.localizedDescription as NSString,
                                                      title: "Impossible de télécharger le dossier")
                               })
 
         restClient.getAnnotations(dossier: folder.identifier,
-                                  onResponse: {
-                                      (annotations: [Annotation]) in
+                                  onResponse:
+                                  { (annotations: [Annotation]) in
                                       self.currentAnnotations = annotations
                                       self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                                   },
-                                  onError: {
-                                      (error: Error) in
+                                  onError: { (error: Error) in
                                       ViewUtils.logError(message: error.localizedDescription as NSString,
                                                          title: "Impossible de télécharger le dossier")
                                   })
@@ -442,13 +433,11 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         restClient.downloadFile(document: document,
                                 path: localFileUrl,
-                                onResponse: {
-                                    (response: String) in
-
+                                onResponse:
+                                { (response: String) in
                                     self.loadPdf(documentPath: localFileUrl)
                                 },
-                                onError: {
-                                    (error: Error) in
+                                onError: { (error: Error) in
 
                                     self.pdfView.document = nil
                                     self.refreshFloatingActionButton(documentLoaded: nil)

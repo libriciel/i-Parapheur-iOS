@@ -138,8 +138,7 @@ class AnnotationDetailsController: UIViewController {
                                          self.delegate?.onAnnotationPopupDismissed()
                                          self.dismiss(animated: true)
                                      },
-                                     errorCallback: {
-                                         (error: Error) in
+                                     errorCallback: { (error: Error) in
                                          ViewUtils.logError(message: error.localizedDescription as NSString,
                                                             title: "Impossible de mettre à jour l'annotation")
                                      })

@@ -339,15 +339,14 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
                                     page: page,
                                     size: FolderListController.pageSize,
                                     filterJson: nil,
-                                    onResponse: {
-                                        (newFolders: [Dossier]) in
+                                    onResponse:
+                                    { (newFolders: [Dossier]) in
 
                                         os_log("getDossiers success : %d", newFolders.count)
                                         self.refreshControl?.endRefreshing()
                                         self.getDossierDidEndWithSuccess(newDossiers: newFolders)
                                     },
-                                    onError: {
-                                        (error: Error) in
+                                    onError: { (error: Error) in
 
                                         ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError), title: nil)
                                         self.refreshControl?.endRefreshing()

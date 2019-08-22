@@ -42,7 +42,7 @@ extension Notification.Name {
 }
 
 
-@objc class InController: NSObject {
+class InController: NSObject {
 
 
     class func getTokenData() {
@@ -63,11 +63,12 @@ extension Notification.Name {
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
-        UIApplication.shared.open(url, completionHandler: { (result) in
-            if result {
-                print("Result OK")
-            }
-        })
+        UIApplication.shared.open(url,
+                                  completionHandler: { (result) in
+                                      if result {
+                                          print("Result OK")
+                                      }
+                                  })
     }
 
 
@@ -80,7 +81,8 @@ extension Notification.Name {
             var hexDataToSign: String
             if (signatureAlgorithm == .sha1WithRsa) {
                 hexDataToSign = "\(CryptoUtils.pkcs15Asn1HexPrefix)\(CryptoUtils.hex(data: hash.sha1()))"
-            } else {
+            }
+            else {
                 hexDataToSign = CryptoUtils.hex(data: hash)
             }
 
@@ -109,11 +111,13 @@ extension Notification.Name {
         let url = URL(string: urlEncodedString)!
 
         print("Request sent :: \(url.absoluteString)")
-        UIApplication.shared.open(url, completionHandler: { (result) in
-            if result {
-                print("Result OK")
-            }
-        })
+
+        UIApplication.shared.open(url,
+                                  completionHandler: { (result) in
+                                      if result {
+                                          print("Result OK")
+                                      }
+                                  })
     }
 
 

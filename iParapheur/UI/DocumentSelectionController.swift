@@ -88,8 +88,8 @@ class DocumentSelectionController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: false,
-                completion: {
-                    () -> Void in
+                completion:
+                { () -> Void in
                     NotificationCenter.default.post(name: DocumentSelectionController.NotifShowDocument,
                                                     object: indexPath.row as NSNumber)
                 })
