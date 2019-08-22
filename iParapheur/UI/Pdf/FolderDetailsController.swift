@@ -108,7 +108,7 @@ class FolderDetailsController: UIViewController, UITableViewDataSource, UITableV
         // Other fields
 
         cell.deskTextView.text = (step.signataire != nil) ? String(format: "%@ (par %@)", step.parapheurName, step.signataire!) : step.parapheurName
-        cell.publicAnnotationTextView.text = step.annotPub;
+        cell.publicAnnotationTextView.text = step.annotPub
         cell.dateTextView.text = isAlreadyDone ? StringsUtils.prettyPrint(date: step.dateValidation!) : ""
 
         return cell

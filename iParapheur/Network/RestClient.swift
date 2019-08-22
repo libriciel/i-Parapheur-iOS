@@ -397,7 +397,7 @@ class RestClient: NSObject {
                                                     onResponse: { (delegueList: [Dossier]) in
 
                                                         for dossierDelegue in delegueList {
-                                                            dossierDelegue.isDelegue = true;
+                                                            dossierDelegue.isDelegue = true
                                                         }
 
                                                         responseCallback?((dossierList + delegueList))
@@ -657,10 +657,10 @@ class RestClient: NSObject {
                               url: "/parapheur/dossiers/\(dossierId)/signature",
                               args: argumentDictionary,
                               onResponse: { id in
-                                  responseCallback?(1);
+                                  responseCallback?(1)
                               },
                               onError: { error in
-                                  errorCallback?(error as NSError);
+                                  errorCallback?(error as NSError)
                               })
     }
 

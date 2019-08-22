@@ -98,7 +98,7 @@ class ActionSelectionController: UITableViewController {
 
         let action: NSString = actions[indexPath.row] as NSString
 
-        cell.actionLabel.text = NSLocalizedString(action as String, comment: "");
+        cell.actionLabel.text = NSLocalizedString(action as String, comment: "")
 
         if (action.isEqual(to: "REJET")) {
             cell.icon.image = UIImage(named: "ic_close_white_24dp")?.withRenderingMode(.alwaysTemplate)

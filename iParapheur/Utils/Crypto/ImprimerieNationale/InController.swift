@@ -165,7 +165,7 @@ class InController: NSObject {
             return true
         }
 
-        return false;
+        return false
     }
 
 

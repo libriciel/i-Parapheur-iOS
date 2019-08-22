@@ -42,11 +42,11 @@ import os
 class RemoteHasher {
 
 
-    static public let payloakKeyPesSignatureDateTime = "signaturedate";
-    static public let payloakKeyPesClaimedRole = "pesclaimedrole";
-    static public let payloakKeyPesPostalCode = "pespostalcode";
-    static public let payloakKeyPesCountryName = "pescountryname";
-    static public let payloakKeyPesCity = "pescity";
+    static public let payloakKeyPesSignatureDateTime = "signaturedate"
+    static public let payloakKeyPesClaimedRole = "pesclaimedrole"
+    static public let payloakKeyPesPostalCode = "pespostalcode"
+    static public let payloakKeyPesCountryName = "pescountryname"
+    static public let payloakKeyPesCity = "pescity"
 
 
     let mSignatureAlgorithm: SignatureAlgorithm

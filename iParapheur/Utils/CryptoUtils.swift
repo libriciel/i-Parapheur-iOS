@@ -162,7 +162,7 @@ class CryptoUtils: NSObject {
         print("dataToBase64String << \(pollutedSignature!)")
         print("dataToBase64String >> \(cleanedSignature)")
 
-        return cleanedSignature as NSString;
+        return cleanedSignature as NSString
     }
 
 

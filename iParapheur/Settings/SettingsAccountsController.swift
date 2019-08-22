@@ -81,8 +81,8 @@ class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
             let senderButton = sender as? UIButton
             if (senderButton !== addAccountUIButton) {
-                let buttonPosition: CGPoint = senderButton!.convert(CGPoint.zero, to: accountTableView);
-                let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
+                let buttonPosition: CGPoint = senderButton!.convert(CGPoint.zero, to: accountTableView)
+                let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
                 editViewController.currentAccount = accountList[indexPath.row]
             }
         }
@@ -185,8 +185,8 @@ class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
     @objc func onDeleteButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
-        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView)
+        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
         let accountToDelete: Account = accountList[indexPath.row]
 
         // Delete from local DB
@@ -222,8 +222,8 @@ class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
     @objc func onVisibilityButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
-        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView)
+        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
 
         // Keeping user from hiding the last Account
 

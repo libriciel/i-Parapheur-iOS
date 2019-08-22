@@ -82,7 +82,7 @@ class DocumentSelectionController: UITableViewController {
         cell.mainDocIcon.isHidden = (indexPath.row != 0) || !document.isMainDocument
         cell.titleLabel.text = document.name
 
-        return cell;
+        return cell
     }
 
 

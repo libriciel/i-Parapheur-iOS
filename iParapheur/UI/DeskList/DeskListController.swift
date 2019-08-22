@@ -173,18 +173,17 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
         refreshControl?.beginRefreshing()
 
         self.restClient?.getDesks(
-                onResponse: {
-                    (desks: [Bureau]) in
+                onResponse:
+                { (desks: [Bureau]) in
 
                     self.bureauxArray = desks
                     self.loading = false
                     self.refreshControl?.endRefreshing()
                     self.tableView.reloadData()
                 },
-                onError: {
-                    (error: Error) in
+                onError: { (error: Error) in
 
-                    self.bureauxArray = [];
+                    self.bureauxArray = []
                     self.loading = false
                     self.refreshControl?.endRefreshing()
                     self.tableView.reloadData()
@@ -279,7 +278,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
         dateFormatter.dateFormat = "H"
 
         let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal;
+        numberFormatter.numberStyle = .decimal
 
         let hour = numberFormatter.number(from: dateFormatter.string(from: currentDate)) ?? 0
 
@@ -308,15 +307,15 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (bureauxArray.count == 0) {
             tableView.backgroundView = DeskListEmptyView.instanceFromNib()
-            tableView.tableFooterView?.isHidden = true;
+            tableView.tableFooterView?.isHidden = true
         }
 
         else {
-            tableView.backgroundView = nil;
-            tableView.tableFooterView?.isHidden = false;
+            tableView.backgroundView = nil
+            tableView.tableFooterView?.isHidden = false
         }
 
-        return bureauxArray.count;
+        return bureauxArray.count
     }
 
     /**
@@ -364,7 +363,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
         cell.disclosureIndicator.image = cell.disclosureIndicator.image?.withRenderingMode(.alwaysTemplate)
         cell.dot.image = cell.dot.image?.withRenderingMode(.alwaysTemplate)
 
-        return cell;
+        return cell
     }
 
 

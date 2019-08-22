@@ -297,7 +297,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                   onError: {
                                       (error: Error) in
                                       print(error.localizedDescription)
-                                  });
+                                  })
     }
 
 

@@ -67,7 +67,7 @@ import os
         os_log("View loaded : SettingsAccountsEditPopupController", type: .debug)
 
         self.preferredContentSize = CGSize(width: SettingsAccountsEditPopupController.PreferredWidth,
-                                           height: SettingsAccountsEditPopupController.PreferredHeight);
+                                           height: SettingsAccountsEditPopupController.PreferredHeight)
 
         // Values
 

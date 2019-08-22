@@ -40,8 +40,8 @@ class StringsUtils: NSObject {
 
 
     static let dateFormatAnnotation = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-    static let dateFormatIso8601 = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
-    static let dateFormatPrettyPrint = "'le 'dd/mm/yyyy' à 'HH'h'mm";
+    static let dateFormatIso8601 = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+    static let dateFormatPrettyPrint = "'le 'dd/mm/yyyy' à 'HH'h'mm"
 
 
     @objc class func getMessage(error: NSError) -> NSString {
@@ -96,7 +96,7 @@ class StringsUtils: NSObject {
             result = String(result[Range(match!.range(at: 1), in: result)!])
         }
 
-        return result;
+        return result
     }
 
 
@@ -206,7 +206,7 @@ class StringsUtils: NSObject {
 
                 if let match = matches?.first {
                     if let swiftRange = Range(match.range(at: 1), in: issuerName) {
-                        result["commonName"] = issuerName[swiftRange];
+                        result["commonName"] = issuerName[swiftRange]
                     }
                 }
             }

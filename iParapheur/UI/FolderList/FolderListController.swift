@@ -70,7 +70,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        os_log("View Loaded : DeskViewController");
+        os_log("View Loaded : DeskViewController")
 
         NotificationCenter.default.addObserver(
                 self,
@@ -222,25 +222,25 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         if selectedDossiers.count != 0 {
 
             let exitButton = UIBarButtonItem()
-            exitButton.title = "Exit";
+            exitButton.title = "Exit"
             exitButton.image = UIImage(named: "ic_close_white.png")
             exitButton.tintColor = ColorUtils.aqua
             exitButton.style = .plain
             exitButton.target = self
             exitButton.action = #selector(self.exitSelection)
 
-            navigationItem.leftBarButtonItem = exitButton;
-            navigationItem.rightBarButtonItem?.isEnabled = false;
-            navigationItem.rightBarButtonItem?.tintColor = UIColor.clear;
-            navigationItem.title = "1 dossier sélectionné";
+            navigationItem.leftBarButtonItem = exitButton
+            navigationItem.rightBarButtonItem?.isEnabled = false
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.clear
+            navigationItem.title = "1 dossier sélectionné"
 
             folderListDelegate?.onFolderMultipleSelectionStarted()
         }
         else {
-            navigationItem.leftBarButtonItem = nil;
-            navigationItem.rightBarButtonItem?.isEnabled = true;
-            navigationItem.rightBarButtonItem?.tintColor = ColorUtils.aqua;
-            navigationItem.title = currentDesk?.name;
+            navigationItem.leftBarButtonItem = nil
+            navigationItem.rightBarButtonItem?.isEnabled = true
+            navigationItem.rightBarButtonItem?.tintColor = ColorUtils.aqua
+            navigationItem.title = currentDesk?.name
 
             folderListDelegate?.onFolderMultipleSelectionEnded()
         }
@@ -419,8 +419,8 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Adapter
 
-        cell.dot.tintColor = dossier.isDelegue ? ColorUtils.darkPurple : ColorUtils.lightGrey;
-        cell.titleLabel.text = dossier.title;
+        cell.dot.tintColor = dossier.isDelegue ? ColorUtils.darkPurple : ColorUtils.lightGrey
+        cell.titleLabel.text = dossier.title
         cell.typologyLabel.text = String(format: "%@ / %@", dossier.type, dossier.subType)
 
         // Date
@@ -437,7 +437,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             let datePrint = isLate ? "en retard depuis le %@" : "à rendre avant le %@"
             cell.limitDateLabel.text = String(format: datePrint, outputFormatter.string(from: dossier.limitDate!))
 
-            cell.limitDateLabel.textColor = isLate ? ColorUtils.salmon : ColorUtils.blueGreySeparator;
+            cell.limitDateLabel.textColor = isLate ? ColorUtils.salmon : ColorUtils.blueGreySeparator
         }
 
         return cell
@@ -479,7 +479,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
                 updateSelectionMode()
             }
 
-            return;
+            return
         }
 
         // Check re-selection, and throw event

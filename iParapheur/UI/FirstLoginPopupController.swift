@@ -65,7 +65,7 @@ class FirstLoginPopupController: UIViewController {
         os_log("View loaded : FirstLoginPopupController", type: .debug)
 
         self.preferredContentSize = CGSize(width: FirstLoginPopupController.PreferredWidth,
-                                           height: FirstLoginPopupController.PreferredHeight);
+                                           height: FirstLoginPopupController.PreferredHeight)
 
         // Change value events
 
@@ -125,9 +125,9 @@ class FirstLoginPopupController: UIViewController {
 
         // Check fields
 
-        let isServerTextFieldValid: Bool = (serverUrlTextField.text!.count != 0);
+        let isServerTextFieldValid: Bool = (serverUrlTextField.text!.count != 0)
         let isLoginTextFieldValid: Bool = (loginTextField.text!.count != 0)
-        let isPasswordTextFieldValid: Bool = (passwordTextField.text!.count != 0);
+        let isPasswordTextFieldValid: Bool = (passwordTextField.text!.count != 0)
 
         // Set orange background on text fields.
         // only on connection event, not on change value events
@@ -143,16 +143,16 @@ class FirstLoginPopupController: UIViewController {
 
         //
 
-        return (isServerTextFieldValid && isLoginTextFieldValid && isPasswordTextFieldValid);
+        return (isServerTextFieldValid && isLoginTextFieldValid && isPasswordTextFieldValid)
     }
 
 
     func setBorderOnTextField(textField: UITextField, alert: Bool) {
 
         if (alert) {
-            textField.layer.cornerRadius = 6.0;
-            textField.layer.masksToBounds = true;
-            textField.layer.borderWidth = 1.0;
+            textField.layer.cornerRadius = 6.0
+            textField.layer.masksToBounds = true
+            textField.layer.borderWidth = 1.0
             textField.layer.borderColor = ColorUtils.darkOrange.cgColor
             textField.backgroundColor = ColorUtils.darkOrange.withAlphaComponent(0.1)
         }
