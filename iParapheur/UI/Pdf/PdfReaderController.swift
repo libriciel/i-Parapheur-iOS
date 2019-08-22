@@ -101,7 +101,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         }
 
         visaItem.buttonColor = ColorUtils.darkGreen
-        visaItem.title = "Signer"
+        visaItem.title = "Viser"
         visaItem.icon = UIImage(named: "ic_check_white_18dp")!
         visaItem.handler = {
             item in
