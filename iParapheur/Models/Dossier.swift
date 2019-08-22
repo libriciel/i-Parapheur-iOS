@@ -52,7 +52,7 @@ class Dossier: NSObject, Decodable {
     let xPathSignature: String?
 
     @objc let actionDemandee: String
-    @objc var actions: Array<String>
+    @objc var actions: [String]
     @objc let documents: [Document]
     let acteursVariables: [String]
     // TODO let metadatas: [String: Any]
@@ -133,7 +133,7 @@ class Dossier: NSObject, Decodable {
         // TODO metadatas = try values.decodeIfPresent([String: Any].self, forKey: .metadatas) ?? [:]
 
         if var emitDateInt = try? values.decodeIfPresent(Int.self, forKey: .emitDate) {
-            emitDateInt = emitDateInt / 1000
+            emitDateInt /= 1000
             emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt))
         }
         else {
@@ -141,7 +141,7 @@ class Dossier: NSObject, Decodable {
         }
 
         if var limitDateInt = try? values.decodeIfPresent(Int.self, forKey: .limitDate) {
-            limitDateInt = limitDateInt / 1000
+            limitDateInt /= 1000
             limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt))
         }
         else {
@@ -181,7 +181,7 @@ class Dossier: NSObject, Decodable {
         var possibleActions = ["VISA", "SIGNATURE"] // , "TDT", "MAILSEC", "ARCHIVER"]
 
         for folder in folders {
-            possibleActions = possibleActions.filter({ folder.actions.contains($0) })
+            possibleActions = possibleActions.filter { folder.actions.contains($0) }
         }
 
         return possibleActions.first
@@ -194,7 +194,7 @@ class Dossier: NSObject, Decodable {
         var possibleActions = ["REJET"]
 
         for folder in folders {
-            possibleActions = possibleActions.filter({ folder.actions.contains($0) })
+            possibleActions = possibleActions.filter { folder.actions.contains($0) }
         }
 
         return possibleActions.first

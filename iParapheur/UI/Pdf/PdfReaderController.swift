@@ -416,29 +416,26 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         // Prepare
 
-        var localFileUrl: URL?
-        do {
-            localFileUrl = try Dossier.getLocalFileUrl(dossierId: folder.identifier, documentName: document.identifier)
-        } catch {
+        guard let localFileUrl = try? Dossier.getLocalFileUrl(dossierId: folder.identifier,
+                                                              documentName: document.identifier) else {
             ViewUtils.logError(message: "Impossible d'écrire sur le disque",
                                title: "Téléchargement échoué")
+            return
         }
 
-        guard let localFileDownloaded = localFileUrl else { return }
-
-        if (FileManager.default.fileExists(atPath: localFileDownloaded.absoluteString)) {
-            loadPdf(documentPath: localFileDownloaded)
+        if FileManager.default.fileExists(atPath: localFileUrl.absoluteString) {
+            loadPdf(documentPath: localFileUrl)
             return
         }
 
         // Download
 
         restClient.downloadFile(document: document,
-                                path: localFileDownloaded,
+                                path: localFileUrl,
                                 onResponse: {
                                     (response: String) in
 
-                                    self.loadPdf(documentPath: localFileDownloaded)
+                                    self.loadPdf(documentPath: localFileUrl)
                                 },
                                 onError: {
                                     (error: Error) in

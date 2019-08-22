@@ -459,7 +459,7 @@ class RestClient: NSObject {
             "sort": "cm:create"
         ]
 
-        if (filterJson != nil) {
+        if filterJson != nil {
             parameters["filter"] = filterJson
         }
 
@@ -542,35 +542,20 @@ class RestClient: NSObject {
             switch response.result {
 
                 case .success:
-
-                    // Prepare
-
                     let jsonDecoder = JSONDecoder()
                     jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
 
                     guard let getCircuitJsonData = response.value?.data(using: .utf8),
-                          let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
-                                                                       from: getCircuitJsonData) else {
+                          let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self, from: getCircuitJsonData),
+                          let data = circuitWrapper["circuit"] else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                         return
                     }
 
-                    // Parsing and callback
-
-                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper["circuit"] != nil)
-                    if (hasSomeData) {
-                        responseCallback?(circuitWrapper["circuit"]!)
-                    }
-                    else {
-                        errorCallback?(NSError(domain: "Invalid response",
-                                               code: 999))
-                    }
-
-                    break
+                    responseCallback?(data)
 
                 case .failure(let error):
                     errorCallback?(error as NSError)
-                    break
             }
         }
     }
@@ -654,32 +639,19 @@ class RestClient: NSObject {
             switch response.result {
 
                 case .success:
-
-                    // Prepare
-
                     let jsonDecoder = JSONDecoder()
+
                     guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
-                          let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
-                                                                        from: getSignInfoJsonData) else {
+                          let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
+                          let data = signInfoWrapper["signatureInformations"] else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
                         return
                     }
 
-                    // Parsing and callback
-
-                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper["signatureInformations"] != nil)
-                    if (hasSomeData) {
-                        responseCallback?(signInfoWrapper["signatureInformations"]!)
-                    }
-                    else {
-                        errorCallback?(NSError(domain: "Invalid response", code: 999))
-                    }
-
-                    break
+                    responseCallback?(data)
 
                 case .failure(let error):
                     errorCallback?(error as NSError)
-                    break
             }
         }
     }
@@ -933,65 +905,68 @@ class RestClient: NSObject {
 
         // Request
 
-        if (type == 1) {
-            manager.request(annotationUrl,
-                            method: .post,
-                            parameters: args,
-                            encoding: JSONEncoding.default).validate().responseString {
-                response in
+        switch type {
 
-                switch response.result {
+            case 1:
+                manager.request(annotationUrl,
+                                method: .post,
+                                parameters: args,
+                                encoding: JSONEncoding.default).validate().responseString {
+                    response in
 
-                    case .success:
-                        responseCallback?(NSNumber(value: 1))
-                        break
+                    switch response.result {
 
-                    case .failure(let error):
-                        errorCallback?(error as NSError)
-                        print(error.localizedDescription)
-                        break
+                        case .success:
+                            responseCallback?(NSNumber(value: 1))
+                            break
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            print(error.localizedDescription)
+                            break
+                    }
                 }
-            }
-        }
-        else if (type == 2) {
 
-            manager.request(annotationUrl,
-                            method: .put,
-                            parameters: args,
-                            encoding: JSONEncoding.default).validate().responseString {
-                response in
+            case 2:
+                manager.request(annotationUrl,
+                                method: .put,
+                                parameters: args,
+                                encoding: JSONEncoding.default).validate().responseString {
+                    response in
 
-                switch response.result {
+                    switch response.result {
 
-                    case .success:
-                        responseCallback?(1)
-                        break
+                        case .success:
+                            responseCallback?(1)
+                            break
 
-                    case .failure(let error):
-                        errorCallback?(error as NSError)
-                        print(error.localizedDescription)
-                        break
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            print(error.localizedDescription)
+                            break
+                    }
                 }
-            }
-        }
-        else if (type == 3) {
 
-            manager.request(annotationUrl,
-                            method: .delete,
-                            parameters: args).validate().responseString {
-                response in
+            case 3:
+                manager.request(annotationUrl,
+                                method: .delete,
+                                parameters: args).validate().responseString {
+                    response in
 
-                switch response.result {
+                    switch response.result {
 
-                    case .success:
-                        responseCallback?(1)
-                        break
+                        case .success:
+                            responseCallback?(1)
+                            break
 
-                    case .failure(let error):
-                        errorCallback?(error as NSError)
-                        break
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            break
+                    }
                 }
-            }
+
+            default:
+                os_log("Wrong argument here", type: .error)
         }
     }
 
@@ -1020,14 +995,14 @@ class RestClient: NSObject {
         manager.download(downloadFileUrl, to: destination).validate().response {
             response in
 
-            if (response.error == nil) {
-                responseCallback?(response.destinationURL!.path)
+            if let responseError = response.error {
+                errorCallback?(responseError)
             }
             //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
             //		errorCallback?(response.error)
             //	}
             else {
-                errorCallback?(response.error!)
+                responseCallback?(response.destinationURL!.path)
             }
         }
     }
