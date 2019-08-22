@@ -56,7 +56,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     weak var pdfView: PDFView!
 
     private var currentAnnotation: PDFAnnotation?
-    private var rect: CGRect?
+    private var currentRect: CGRect?
     private var currentPage: PDFPage?
     private var currentInsideHit: CGPoint?
 
@@ -71,10 +71,10 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         currentAnnotation?.setValue(PDFAnnotationHighlightingMode.outline, forAnnotationKey: .highlightingMode)
         currentInsideHit = insideHit
 
-        rect = CGRect(origin: CGPoint(x: currentAnnotation!.bounds.origin.x,
-                                      y: currentAnnotation!.bounds.origin.y + currentAnnotation!.bounds.height),
-                      size: CGSize(width: currentAnnotation!.bounds.width,
-                                   height: -currentAnnotation!.bounds.height))
+        currentRect = CGRect(origin: CGPoint(x: currentAnnotation!.bounds.origin.x,
+                                             y: currentAnnotation!.bounds.origin.y + currentAnnotation!.bounds.height),
+                             size: CGSize(width: currentAnnotation!.bounds.width,
+                                          height: -currentAnnotation!.bounds.height))
 
         if forceRedraw {
             drawAnnotation(onPage: currentPage!)
@@ -90,8 +90,8 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
         // Actual logic
 
-        rect = CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
-        currentAnnotation = PdfAnnotationDrawer.createAnnotation(rect: rect!, page: page, color: PdfAnnotationDrawer.defaultColor)
+        currentRect = CGRect(origin: convertedPoint, size: CGSize(width: 0, height: 0))
+        currentAnnotation = PdfAnnotationDrawer.createAnnotation(rect: currentRect!, page: page, color: PdfAnnotationDrawer.defaultColor)
         currentInsideHit = nil
     }
 
@@ -104,12 +104,12 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         // Actual logic
 
         if (isLongPress) {
-            let newRect = computeMovedRectangle(location: convertedPoint, page: page)
-            rect = newRect
+            guard let newRect = computeMovedRectangle(location: convertedPoint, page: page) else { return }
+            currentRect = newRect
         }
         else {
-            let newSize = computeResizedRectangleSize(location: convertedPoint, page: page)
-            rect?.size = newSize
+            guard let newSize = computeResizedRectangleSize(location: convertedPoint, page: page) else { return }
+            currentRect?.size = newSize
         }
 
         drawAnnotation(onPage: page)
@@ -123,13 +123,15 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
         // Actual logic
 
-        if (isLongPress) {
-            let newRect = computeMovedRectangle(location: convertedPoint, page: page)
-            rect = newRect
+        if isLongPress {
+            if let newRect = computeMovedRectangle(location: convertedPoint, page: page) {
+                currentRect = newRect
+            }
         }
         else {
-            let newSize = computeResizedRectangleSize(location: convertedPoint, page: page)
-            rect?.size = newSize
+            if let newSize = computeResizedRectangleSize(location: convertedPoint, page: page) {
+                currentRect?.size = newSize
+            }
         }
 
         currentAnnotation?.setValue(PDFAnnotationHighlightingMode.none, forAnnotationKey: .highlightingMode)
@@ -137,7 +139,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
         drawAnnotation(onPage: page)
         currentAnnotation = nil
         currentInsideHit = nil
-        rect = nil
+        currentRect = nil
     }
 
 
@@ -188,8 +190,9 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
     }
 
 
-    private func computeResizedRectangleSize(location: CGPoint, page: PDFPage) -> CGSize {
+    private func computeResizedRectangleSize(location: CGPoint, page: PDFPage) -> CGSize? {
 
+        guard let currentRect = currentRect else { return nil }
         let pageBounds = page.bounds(for: pdfView.displayBox)
 
         // Bounds into the PDF page size
@@ -204,32 +207,33 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
 
         // Setting calculated values
 
-        let width = xWithBoundaries - rect!.origin.x
-        let height = yWithBoundaries - rect!.origin.y
+        let width = xWithBoundaries - currentRect.origin.x
+        let height = yWithBoundaries - currentRect.origin.y
 
         return CGSize(width: width, height: height)
     }
 
 
-    private func computeMovedRectangle(location: CGPoint, page: PDFPage) -> CGRect {
+    private func computeMovedRectangle(location: CGPoint, page: PDFPage) -> CGRect? {
 
-        let insideHit = currentInsideHit!
-        let currentRect = rect!
+        guard let insideHit = currentInsideHit,
+              let rect = currentRect else { return nil }
+
         let pageBounds = page.bounds(for: pdfView.displayBox)
 
         // Bounds into the PDF page size
 
         var xWithBoundaries = location.x - insideHit.x
         xWithBoundaries = max(pageBounds.origin.x, xWithBoundaries)
-        xWithBoundaries = min(pageBounds.origin.x + pageBounds.size.width - currentRect.width, xWithBoundaries)
+        xWithBoundaries = min(pageBounds.origin.x + pageBounds.size.width - rect.width, xWithBoundaries)
 
         var yWithBoundaries = location.y - insideHit.y
         yWithBoundaries = max(pageBounds.origin.y, yWithBoundaries)
-        yWithBoundaries = min(pageBounds.origin.y + pageBounds.size.height - currentRect.height, yWithBoundaries)
+        yWithBoundaries = min(pageBounds.origin.y + pageBounds.size.height - rect.height, yWithBoundaries)
 
         // Setting calculated values
 
-        return CGRect(x: xWithBoundaries, y: yWithBoundaries, width: currentRect.width, height: currentRect.height)
+        return CGRect(x: xWithBoundaries, y: yWithBoundaries, width: rect.width, height: rect.height)
     }
 
     /**
@@ -238,7 +242,7 @@ class PdfAnnotationDrawer: PdfAnnotationGestureRecognizerDelegate {
      */
     private func drawAnnotation(onPage: PDFPage) {
 
-        guard let rect = rect,
+        guard let rect = currentRect,
               let annotation = currentAnnotation else { return }
 
         annotation.page?.removeAnnotation(annotation)

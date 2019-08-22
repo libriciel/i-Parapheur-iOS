@@ -156,6 +156,13 @@ class PdfAnnotationGestureRecognizer: UIGestureRecognizer {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 
+        // Swipe inside an annotation
+
+        if (state == .possible) {
+            state = .failed
+            return
+        }
+
         // If we're still waiting for a double tab, we can dismiss the timer,
         // and already considering a single press action
         doubleTapTimer?.fire()
