@@ -264,6 +264,16 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
     }
 
 
+    func onFolderMultipleSelectionStarted() {
+        floatingActionButton.isHidden = true
+    }
+
+
+    func onFolderMultipleSelectionEnded() {
+        floatingActionButton.isHidden = false
+    }
+
+
     // </editor-fold desc="FolderListDelegate">
 
 

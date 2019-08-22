@@ -42,6 +42,10 @@ protocol FolderListDelegate: class {
 
     func onFolderSelected(_ folder: Dossier, desk: Bureau, restClient: RestClient)
 
+    func onFolderMultipleSelectionStarted()
+
+    func onFolderMultipleSelectionEnded()
+
 }
 
 
@@ -209,7 +213,11 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             }
         }
 
-        // Update TopBar
+        // Update UI
+
+        let splitViewController = view.window?.rootViewController as? UISplitViewController
+        let rightNavigationController = splitViewController?.viewControllers.last as? UINavigationController
+        let folderListDelegate = rightNavigationController?.topViewController as? FolderListDelegate
 
         if selectedDossiers.count != 0 {
 
@@ -221,16 +229,20 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             exitButton.target = self
             exitButton.action = #selector(self.exitSelection)
 
-            self.navigationItem.leftBarButtonItem = exitButton;
-            self.navigationItem.rightBarButtonItem?.isEnabled = false;
-            self.navigationItem.rightBarButtonItem?.tintColor = UIColor.clear;
-            self.navigationItem.title = "1 dossier sélectionné";
+            navigationItem.leftBarButtonItem = exitButton;
+            navigationItem.rightBarButtonItem?.isEnabled = false;
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.clear;
+            navigationItem.title = "1 dossier sélectionné";
+
+            folderListDelegate?.onFolderMultipleSelectionStarted()
         }
         else {
-            self.navigationItem.leftBarButtonItem = nil;
-            self.navigationItem.rightBarButtonItem?.isEnabled = true;
-            self.navigationItem.rightBarButtonItem?.tintColor = ColorUtils.aqua;
-            self.navigationItem.title = currentDesk?.name;
+            navigationItem.leftBarButtonItem = nil;
+            navigationItem.rightBarButtonItem?.isEnabled = true;
+            navigationItem.rightBarButtonItem?.tintColor = ColorUtils.aqua;
+            navigationItem.title = currentDesk?.name;
+
+            folderListDelegate?.onFolderMultipleSelectionEnded()
         }
     }
 
@@ -477,14 +489,15 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             return
         }
 
-        guard let splitViewController = view.window?.rootViewController as? UISplitViewController,
-              let rightNavigationController = splitViewController.viewControllers.last as? UINavigationController,
-              let folderListDelegate = rightNavigationController.topViewController as? FolderListDelegate,
-              let currentRestClient = restClient,
+        let splitViewController = view.window?.rootViewController as? UISplitViewController
+        let rightNavigationController = splitViewController?.viewControllers.last as? UINavigationController
+        let folderListDelegate = rightNavigationController?.topViewController as? FolderListDelegate
+
+        guard let currentRestClient = restClient,
               let currentDesk = currentDesk else { return }
 
         currentDossier = dossierClicked
-        folderListDelegate.onFolderSelected(dossierClicked, desk: currentDesk, restClient: currentRestClient)
+        folderListDelegate?.onFolderSelected(dossierClicked, desk: currentDesk, restClient: currentRestClient)
     }
 
 
