@@ -121,8 +121,8 @@ import os
                                  title: nil)
         },
                                          onError: {
-                                             (error: NSError) in
-                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error),
+                                             (error: Error) in
+                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
                                                                 title: nil)
                                          })
     }

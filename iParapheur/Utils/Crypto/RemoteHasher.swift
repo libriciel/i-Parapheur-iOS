@@ -102,12 +102,12 @@ class RemoteHasher {
                                       (response: DataToSign) in
                                       os_log("mRestClient#getDataToSign hashes : %@", type: .debug, response.dataToSignBase64List)
                                       self.mDataToSign = response
-                                      responseCallback!(response)
+                                      responseCallback?(response)
                                   },
                                   onError: {
                                       (error: Error) in
                                       os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
-                                      errorCallback!(error)
+                                      errorCallback?(error)
                                   })
     }
 
@@ -137,12 +137,12 @@ class RemoteHasher {
                                       payload: mPayload,
                                       onResponse: {
                                           (response: [Data]) in
-                                          responseCallback!(response)
+                                          responseCallback?(response)
                                       },
                                       onError: {
                                           (error: Error) in
                                           os_log("RemoteHasher#buildDataToReturn error : %@", type: .error, error.localizedDescription)
-                                          errorCallback!(error)
+                                          errorCallback?(error)
                                       })
     }
 

@@ -127,7 +127,7 @@ class RestClient: NSObject {
 
 
     @objc func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
-                             onError errorCallback: ((NSError) -> Void)?) {
+                             onError errorCallback: ((Error) -> Void)?) {
 
         checkCertificate(onResponse: {
             (result: Bool) in
@@ -141,19 +141,23 @@ class RestClient: NSObject {
 
                         case .success:
                             let decoder = JSONDecoder()
-                            let jsonData = response.value?.data(using: .utf8)!
-                            let apiLevel = try? decoder.decode(ApiLevel.self, from: jsonData!)
-                            responseCallback!(NSNumber(value: (apiLevel?.level)!))
+
+                            guard let jsonData = response.value?.data(using: .utf8),
+                                  let apiLevel = try? decoder.decode(ApiLevel.self, from: jsonData) else {
+                                errorCallback?(RuntimeError("Réponse du serveur invalide"))
+                            }
+
+                            responseCallback?(NSNumber(value: (apiLevel?.level)!))
                             break
 
                         case .failure(let error):
-                            errorCallback!(error as NSError)
+                            errorCallback?(error)
                             break
                     }
                 }
             }
             else {
-                errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
+                errorCallback?(NSError(domain: "kCFErrorDomainCFNetwork",
                                        code: 400))
             }
 
@@ -178,7 +182,7 @@ class RestClient: NSObject {
         manager.download(downloadFileUrl, to: destination).validate().responseData {
             response in
             let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
-            responseCallback!(isAcValid)
+            responseCallback?(isAcValid)
         }
     }
 
@@ -236,12 +240,12 @@ class RestClient: NSObject {
                                                              from: responseJsonData)
 
                     os_log("getDataToSign response : %@", type: .debug, dataToSign!)
-                    responseCallback!(dataToSign!)
+                    responseCallback?(dataToSign!)
                     break
 
                 case .failure(let error):
                     os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
-                    errorCallback!(error)
+                    errorCallback?(error)
                     break
             }
         }
@@ -300,11 +304,11 @@ class RestClient: NSObject {
                     let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
                                                                  from: responseJsonData)
 
-                    responseCallback!(StringsUtils.toDataList(base64StringList: finalSignature!.signatureResultBase64List))
+                    responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature!.signatureResultBase64List))
                     break
 
                 case .failure(let error):
-                    errorCallback!(error)
+                    errorCallback?(error)
 
                     break
             }
@@ -334,17 +338,17 @@ class RestClient: NSObject {
                     // Parsing and callback
 
                     if (bureaux != nil) {
-                        responseCallback!(bureaux!)
+                        responseCallback?(bureaux!)
                     }
                     else {
-                        errorCallback!(NSError(domain: "Invalid response",
+                        errorCallback?(NSError(domain: "Invalid response",
                                                code: 999))
                     }
 
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -404,16 +408,16 @@ class RestClient: NSObject {
                                                     dossierDelegue.isDelegue = true;
                                                 }
 
-                                                responseCallback!((dossierList! + delegueList))
+                                                responseCallback?((dossierList! + delegueList))
                                             },
                                             onError: {
                                                 (error: Error) in
-                                                errorCallback!(error)
+                                                errorCallback?(error)
                                             })
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -460,11 +464,11 @@ class RestClient: NSObject {
                     let dossierList = try? jsonDecoder.decode([Dossier].self,
                                                               from: responseJsonData)
 
-                    responseCallback!(dossierList!)
+                    responseCallback?(dossierList!)
                     break
 
                 case .failure(let error):
-                    errorCallback!(error)
+                    errorCallback?(error)
                     break
             }
         }
@@ -496,11 +500,11 @@ class RestClient: NSObject {
                     let dossier = try? jsonDecoder.decode(Dossier.self,
                                                           from: responseJsonData)
 
-                    responseCallback!(dossier!)
+                    responseCallback?(dossier!)
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -535,17 +539,17 @@ class RestClient: NSObject {
 
                     let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
                     if (hasSomeData) {
-                        responseCallback!(circuitWrapper!["circuit"]!)
+                        responseCallback?(circuitWrapper!["circuit"]!)
                     }
                     else {
-                        errorCallback!(NSError(domain: "Invalid response",
+                        errorCallback?(NSError(domain: "Invalid response",
                                                code: 999))
                     }
 
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -572,11 +576,11 @@ class RestClient: NSObject {
                     let typeList = try? decoder.decode([ParapheurType].self,
                                                        from: jsonData!)
 
-                    responseCallback!(typeList! as NSArray)
+                    responseCallback?(typeList! as NSArray)
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -598,11 +602,11 @@ class RestClient: NSObject {
 
                 case .success:
                     let parsedAnnotations = AnnotationsUtils.parse(string: response.value!)
-                    responseCallback!(parsedAnnotations)
+                    responseCallback?(parsedAnnotations)
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -641,17 +645,17 @@ class RestClient: NSObject {
 
                     let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
                     if (hasSomeData) {
-                        responseCallback!(signInfoWrapper!["signatureInformations"]!)
+                        responseCallback?(signInfoWrapper!["signatureInformations"]!)
                     }
                     else {
-                        errorCallback!(NSError(domain: "Invalid response",
+                        errorCallback?(NSError(domain: "Invalid response",
                                                code: 999))
                     }
 
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     break
             }
         }
@@ -680,11 +684,11 @@ class RestClient: NSObject {
                               args: argumentDictionary,
                               onResponse: {
                                   id in
-                                  responseCallback!(1);
+                                  responseCallback?(1);
                               },
                               onError: {
                                   error in
-                                  errorCallback!(error as NSError);
+                                  errorCallback?(error as NSError);
                               })
     }
 
@@ -717,11 +721,11 @@ class RestClient: NSObject {
             switch (response.result) {
 
                 case .success:
-                    responseCallback!(NSNumber(value: 1))
+                    responseCallback?(NSNumber(value: 1))
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     print(error.localizedDescription)
                     break
             }
@@ -757,11 +761,11 @@ class RestClient: NSObject {
             switch (response.result) {
 
                 case .success:
-                    responseCallback!(NSNumber(value: 1))
+                    responseCallback?(NSNumber(value: 1))
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback?(error as NSError)
                     print(error.localizedDescription)
                     break
             }
@@ -916,7 +920,7 @@ class RestClient: NSObject {
                 switch (response.result) {
 
                     case .success:
-                        responseCallback!(NSNumber(value: 1))
+                        responseCallback?(NSNumber(value: 1))
                         break
 
                     case .failure(let error):
@@ -994,7 +998,7 @@ class RestClient: NSObject {
             response in
 
             if (response.error == nil) {
-                responseCallback!(response.destinationURL!.path)
+                responseCallback?(response.destinationURL!.path)
             }
             //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
             //		errorCallback?(response.error)

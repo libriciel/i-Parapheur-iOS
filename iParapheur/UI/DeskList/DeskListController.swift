@@ -220,19 +220,20 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
                     self.loadBureaux()
                 },
                 onError: {
-                    (error: NSError) in
+                    (error: Error) in
 
+                    let nsError = error as NSError
                     self.refreshControl?.endRefreshing()
                     self.bureauxArray = []
                     self.tableView?.reloadData()
 
                     // New test when network retrieved
-                    if (error.code == NSURLErrorNotConnectedToInternet) {
+                    if (nsError.code == NSURLErrorNotConnectedToInternet) {
                         self.setNewConnectionTryOnNetworkRetrieved()
                         ViewUtils.logInfo(message: "Une connexion Internet est nécessaire au lancement de l'application.", title: nil)
                     }
                     else {
-                        ViewUtils.logError(message: StringsUtils.getMessage(error: error), title: nil)
+                        ViewUtils.logError(message: StringsUtils.getMessage(error: nsError), title: nil)
                     }
                 }
         )
