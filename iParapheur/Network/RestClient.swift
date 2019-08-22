@@ -176,8 +176,9 @@ class RestClient: NSObject {
         // Cleanup
 
         try? FileManager.default.removeItem(at: filePathUrl)
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-            return (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
+        let destination: DownloadRequest.DownloadFileDestination = {
+            _, _ in
+            (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
         }
 
         // Request
@@ -347,7 +348,7 @@ class RestClient: NSObject {
 
                     // Parsing and callback
 
-                    if (bureaux != nil) {
+                    if bureaux != nil {
                         responseCallback?(bureaux)
                     }
                     else {
@@ -386,7 +387,7 @@ class RestClient: NSObject {
             "sort": "cm:create"
         ]
 
-        if (filterJson != nil) {
+        if filterJson != nil {
             parameters["filter"] = filterJson
         }
 
@@ -979,8 +980,10 @@ class RestClient: NSObject {
         let pdfSuffix = document.isPdfVisual ? ";ph:visuel-pdf" : ""
         let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
         os_log("Document downloadUrl:%@", downloadFileUrl)
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-            return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
+
+        let destination: DownloadRequest.DownloadFileDestination = {
+            _, _ in
+            (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }
 
         // Cancel previous download

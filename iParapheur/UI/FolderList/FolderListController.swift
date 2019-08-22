@@ -107,7 +107,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-        if (segue.identifier == "filterSegue") {
+        if segue.identifier == "filterSegue" {
             // FIXME ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
         }
         else {
@@ -116,7 +116,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
             var isPaperSign = true
             for dossier in selectedDossiers {
-                if (!dossier.isSignPapier) {
+                if !dossier.isSignPapier {
                     isPaperSign = false
                 }
             }
@@ -139,35 +139,26 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     @IBAction func onPositiveButtonClicked(_ sender: Any) {
 
-        // Computing the possible action
-
-        let possibleAction = Dossier.getPositiveAction(folders: selectedDossiers)
-
-        // Starting popup
-
-        if (possibleAction != nil) {
-            performSegue(withIdentifier: possibleAction!, sender: self)
+        guard let possibleAction = Dossier.getPositiveAction(folders: selectedDossiers) else {
+            ViewUtils.logError(message: "Vous ne pouvez pas effectuer cette action sur tablette.",
+                               title: "Action impossible")
+            return
         }
-        else {
-            ViewUtils.logError(message: "Vous ne pouvez pas effectuer cette action sur tablette.", title: "Action impossible")
-        }
+
+        performSegue(withIdentifier: possibleAction, sender: self)
+
     }
 
 
     @IBAction func onNegativeButtonClicked(_ sender: Any) {
 
-        // Computing the possible action
-
-        let negativeAction = Dossier.getNegativeAction(folders: selectedDossiers)
-
-        // Starting popup
-
-        if (negativeAction != nil) {
-            performSegue(withIdentifier: negativeAction!, sender: self)
+        guard let negativeAction = Dossier.getNegativeAction(folders: selectedDossiers) else {
+            ViewUtils.logError(message: "Vous ne pouvez pas effectuer cette action sur tablette.",
+                               title: "Action impossible")
+            return
         }
-        else {
-            ViewUtils.logError(message: "Vous ne pouvez pas effectuer cette action sur tablette.", title: "Action impossible")
-        }
+
+        performSegue(withIdentifier: negativeAction, sender: self)
     }
 
 
@@ -195,7 +186,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
             // Seems useless, but fixes a cell recycle UI problem,
             // when the selection mode is icon-exited and re-activated.
-            if (selectedDossiers.count == 0) {
+            if selectedDossiers.count == 0 {
                 cell.checkOnImage.isHidden = true
                 cell.checkOffImage.isHidden = false
             }
@@ -203,24 +194,24 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Re-select previously selected cell
 
-        if (selectedDossiers.count == 0) {
+        if selectedDossiers.count == 0 {
 
             var index: IndexPath? = nil
 
             for i in 0..<filteredDossiers.count {
-                if (filteredDossiers[i].identifier == currentDossier?.identifier) {
+                if filteredDossiers[i].identifier == currentDossier?.identifier {
                     index = IndexPath(row: i, section: 0)
                 }
             }
 
-            if (index != nil) {
+            if index != nil {
                 tableView.selectRow(at: index, animated: false, scrollPosition: .none)
             }
         }
 
         // Update TopBar
 
-        if (selectedDossiers.count != 0) {
+        if selectedDossiers.count != 0 {
 
             let exitButton = UIBarButtonItem()
             exitButton.title = "Exit";
@@ -262,7 +253,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         // FIXME NSDictionary *currentFilter = ADLSingletonState.sharedSingletonState.currentFilter;
         let currentFilter: [String: String]? = nil
 
-        if (currentFilter != nil) {
+        if currentFilter != nil {
 // FIXME
 //            let types = []
 //            for (NSString *type in currentFilter["types"])
@@ -358,7 +349,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Updating results
 
-        if (currentPage == 0) {
+        if currentPage == 0 {
             dossiers.removeAll()
         }
 
@@ -376,7 +367,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        if (filteredDossiers.count == 0) {
+        if filteredDossiers.count == 0 {
             let emptyView = FolderListEmptyView()
             // FIXME emptyView.filterAlertLabel.isHidden = (dossiers.count > 0)
 
@@ -399,7 +390,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // UI fix
 
-        if (cell.dot.image?.renderingMode != .alwaysTemplate) {
+        if cell.dot.image?.renderingMode != .alwaysTemplate {
             cell.checkOffImage.image = cell.checkOffImage.image?.withRenderingMode(.alwaysTemplate)
             cell.checkOnImage.image = cell.checkOnImage.image?.withRenderingMode(.alwaysTemplate)
             cell.dot.image = cell.dot.image?.withRenderingMode(.alwaysTemplate)
@@ -425,7 +416,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         cell.limitDateLabel.isHidden = (dossier.limitDate == nil)
 
-        if (dossier.limitDate != nil) {
+        if dossier.limitDate != nil {
             let isLate = (dossier.limitDate?.compare(Date()) == .orderedAscending)
 
             let outputFormatter = DateFormatter()
@@ -449,12 +440,12 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Selection mode
 
-        if (selectedDossiers.count != 0) {
+        if selectedDossiers.count != 0 {
 
             // Update cell
 
-            if (selectedDossiers.contains(dossierClicked)) {
-                selectedDossiers = selectedDossiers.filter({ $0 != dossierClicked })
+            if selectedDossiers.contains(dossierClicked) {
+                selectedDossiers = selectedDossiers.filter { $0 != dossierClicked }
                 cell.checkOnImage.isHidden = true
                 cell.checkOffImage.isHidden = false
             }
@@ -466,14 +457,14 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
             // Update UI
 
-            if (selectedDossiers.count == 1) {
+            if selectedDossiers.count == 1 {
                 navigationItem.title = "1 dossier sélectionné"
             }
             else {
                 navigationItem.title = String(format: "%d dossiers sélectionnés", selectedDossiers.count)
             }
 
-            if (selectedDossiers.count == 0) {
+            if selectedDossiers.count == 0 {
                 updateSelectionMode()
             }
 
@@ -482,7 +473,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Check re-selection, and throw event
 
-        if (dossierClicked == currentDossier) {
+        if dossierClicked == currentDossier {
             return
         }
 
@@ -499,7 +490,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     @IBAction func onTableCellLongPressed(_ sender: UILongPressGestureRecognizer) {
 
-        if (sender.state != .began) {
+        if sender.state != .began {
             return
         }
 
@@ -508,7 +499,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // Long press on table view but not on a row
 
-        if (indexPath == nil) {
+        if indexPath == nil {
             return
         }
 
@@ -527,8 +518,8 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         let dossier = filteredDossiers[indexPath!.row]
 
-        if (selectedDossiers.contains(dossier)) {
-            selectedDossiers = selectedDossiers.filter({ $0 != dossier })
+        if selectedDossiers.contains(dossier) {
+            selectedDossiers = selectedDossiers.filter { $0 != dossier }
         }
         else {
             selectedDossiers.append(dossier)
