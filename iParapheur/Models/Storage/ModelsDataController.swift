@@ -42,14 +42,15 @@ import os
     https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/
         -> InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
 */
-@objc class ModelsDataController: NSObject {
+class ModelsDataController: NSObject {
 
 
-    @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
+    @objc static let notificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
     @objc static var context: NSManagedObjectContext? = nil
 
 
     // <editor-fold desc="Utils">
+
 
     @objc static func loadManagedObjectContext() {
 
@@ -97,13 +98,14 @@ import os
                 // Callback on UI thread
                 DispatchQueue.global(qos: .default).async {
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: ModelsDataController.NotificationModelsDataControllerLoaded,
+                        NotificationCenter.default.post(name: ModelsDataController.notificationModelsDataControllerLoaded,
                                                         object: ["success": true])
                     }
                 }
             }
         }
     }
+
 
     @objc static func save() {
         do {
@@ -112,6 +114,7 @@ import os
             os_log("Could not save %@, %@", type: .error, error, error.userInfo)
         }
     }
+
 
     // </editor-fold desc="Utils">
 
@@ -130,33 +133,30 @@ import os
         return result
     }
 
-    @objc static func fetchCertificates() -> [Certificate] {
-        var result: [Certificate] = []
 
-        do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.entityName)
-            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Certificate]
-        } catch {
+    @objc static func fetchCertificates() -> [Certificate] {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.entityName)
+
+        guard let result = try? ModelsDataController.context!.fetch(fetchRequest) as? [Certificate] else {
             os_log("Could not fetch Certificate", type: .error)
-            return result
+            return []
         }
 
         return result
     }
+
 
     static func fetchFilters() -> [Filter] {
-        var result: [Filter] = []
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.entityName)
 
-        do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.entityName)
-            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Filter]
-        } catch {
+        guard let result = try? ModelsDataController.context!.fetch(fetchRequest) as? [Filter] else {
             os_log("Could not fetch Filters", type: .error)
-            return result
+            return []
         }
 
         return result
     }
+
 
     @objc static func cleanupAccounts(preferences: UserDefaults) {
 
@@ -181,7 +181,7 @@ import os
 
         // Backup legacy settings
 
-        if (preferences.string(forKey: "settings_login") != nil) {
+        if preferences.string(forKey: "settings_login") != nil {
             let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                     into: ModelsDataController.context!) as! Account
             legacyAccount.id = Account.legacyId
@@ -217,7 +217,7 @@ import os
     */
     static func cleanupCertificates() {
 
-        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
+        let appDelegate: RGAppDelegate = UIApplication.shared.delegate as! RGAppDelegate
         let oldKeystore: ADLKeyStore = appDelegate.keyStore
         for oldPrivateKey in oldKeystore.listPrivateKeys() as! [NSManagedObject] {
 

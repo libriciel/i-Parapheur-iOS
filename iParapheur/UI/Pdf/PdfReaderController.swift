@@ -217,7 +217,6 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     func onAnnotationChanged(annotation: Annotation) {
-
         guard let currentPage = pdfView.document?.page(at: annotation.page) else { return }
 
         for pdfAnnotation in currentPage.annotations {
@@ -497,22 +496,24 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         floatingActionButton.removeItem(item: signItem)
         floatingActionButton.removeItem(item: rejectItem)
 
-        if (currentFolder != nil) {
-
-            let positiveAction = Dossier.getPositiveAction(folders: [currentFolder!])
-            let negativeAction = Dossier.getNegativeAction(folders: [currentFolder!])
-
-            if (positiveAction == "SIGNATURE") {
-                floatingActionButton.addItem(item: signItem)
-            }
-            if (positiveAction == "VISA") {
-                floatingActionButton.addItem(item: visaItem)
-            }
-            if (negativeAction == "REJET") {
-                floatingActionButton.addItem(item: rejectItem)
-            }
-            floatingActionButton.addItem(item: annotationItem)
+        guard let folder = currentFolder else {
+            return
         }
+
+        let positiveAction = Dossier.getPositiveAction(folders: [folder])
+        let negativeAction = Dossier.getNegativeAction(folders: [folder])
+
+        if (positiveAction == "SIGNATURE") {
+            floatingActionButton.addItem(item: signItem)
+        }
+        if (positiveAction == "VISA") {
+            floatingActionButton.addItem(item: visaItem)
+        }
+        if (negativeAction == "REJET") {
+            floatingActionButton.addItem(item: rejectItem)
+        }
+
+        floatingActionButton.addItem(item: annotationItem)
 
         if ((documentLoaded != nil) && floatingActionButton.isHidden) {
             floatingActionButton.isHidden = false

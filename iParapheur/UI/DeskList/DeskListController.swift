@@ -62,7 +62,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
         NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(self.onModelsCoreDataLoaded),
-                name: ModelsDataController.NotificationModelsDataControllerLoaded,
+                name: ModelsDataController.notificationModelsDataControllerLoaded,
                 object: nil)
 
         NotificationCenter.default.addObserver(

@@ -39,13 +39,16 @@ import Foundation
 import os
 
 
-@objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
+class SettingsAccountsController: UIViewController, UITableViewDataSource {
+
 
     @IBOutlet var addAccountUIButton: UIButton!
     @IBOutlet var accountTableView: UITableView!
     var accountList: [Account] = []
 
-    // MARK: - Life cycle
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +73,7 @@ import os
                                      for: .touchUpInside)
     }
 
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if (segue.identifier == SettingsAccountsEditPopupController.Segue) {
@@ -85,11 +89,16 @@ import os
     }
 
 
-    // <editor-fold desc="TableView">
+    // </editor-fold desc="LifeCycle">
+
+
+    // <editor-fold desc="TableView"> MARK: - TableView
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
     }
+
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -98,7 +107,7 @@ import os
 
         // Compute data
 
-        let account: Account = accountList[indexPath.row]
+        let account = accountList[indexPath.row]
 
         let titlePrint: String = (account.title!.count != 0) ? account.title! : "(Aucun titre)"
         let loginPrint: String = (account.login!.count != 0) ? account.login! : "(Aucun login)"
@@ -136,43 +145,43 @@ import os
         return cell
     }
 
+
     // </editor-fold desc="TableView">
 
 
-    // MARK: - Listeners
+    // <editor-fold desc="Listeners"> MARK: - Listeners
+
 
     @objc func onAccountSaved(notification: NSNotification) {
 
-        let account: Account! = notification.object as! Account
-        let accountIndex = accountList.firstIndex(of: account)
-
-        if (accountIndex == nil) {
+        guard let account = notification.object as? Account else { return }
+        guard let accountIndex = accountList.firstIndex(of: account) else {
 
             // Add to UI
 
             accountList.append(account)
             let newIndexPath = IndexPath(row: accountList.count - 1, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.insertRows(at: [newIndexPath], with: UITableView.RowAnimation.fade)
+            accountTableView.insertRows(at: [newIndexPath], with: .fade)
             accountTableView.endUpdates()
-
-        }
-        else {
-
-            // Refresh UI
-
-            let accountIndexPath = IndexPath(row: accountIndex!, section: 0)
-            accountTableView.beginUpdates()
-            accountTableView.reloadRows(at: [accountIndexPath], with: UITableView.RowAnimation.none)
-            accountTableView.endUpdates()
+            ModelsDataController.save()
+            return
         }
 
+        // Refresh UI
+
+        let accountIndexPath = IndexPath(row: accountIndex, section: 0)
+        accountTableView.beginUpdates()
+        accountTableView.reloadRows(at: [accountIndexPath], with: .none)
+        accountTableView.endUpdates()
         ModelsDataController.save()
     }
+
 
     @objc func onAddAccountButtonClicked(sender: UIBarButtonItem) {
         performSegue(withIdentifier: SettingsAccountsEditPopupController.Segue, sender: sender)
     }
+
 
     @objc func onDeleteButtonClicked(sender: UIButton) {
 
@@ -205,9 +214,11 @@ import os
         ModelsDataController.save()
     }
 
+
     @objc func onEditButtonClicked(sender: UIButton) {
         performSegue(withIdentifier: SettingsAccountsEditPopupController.Segue, sender: sender)
     }
+
 
     @objc func onVisibilityButtonClicked(sender: UIButton) {
 
@@ -231,4 +242,8 @@ import os
 //                                 title: nil,
 //                                 viewController: self)
     }
+
+
+    // <editor-fold desc="Listeners">
+
 }

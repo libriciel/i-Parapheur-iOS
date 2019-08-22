@@ -95,7 +95,7 @@ class RestClient: NSObject {
                                                             options: NSRegularExpression.MatchingOptions.anchored,
                                                             range: NSMakeRange(0, urlFixed.count))
 
-        if (match != nil) {
+        if match != nil {
             let swiftRange = Range(match!.range(at: 1), in: urlFixed)
             urlFixed = String(urlFixed[swiftRange!])
         }
@@ -132,12 +132,13 @@ class RestClient: NSObject {
         checkCertificate(onResponse: {
             (result: Bool) in
 
-            if (result) {
+            if result {
                 let apiVersionUrl = "\(self.serverUrl.absoluteString!)/parapheur/api/getApiLevel"
 
                 self.manager.request(apiVersionUrl).validate().responseString {
                     response in
-                    switch (response.result) {
+
+                    switch response.result {
 
                         case .success:
                             let decoder = JSONDecoder()
@@ -230,7 +231,7 @@ class RestClient: NSObject {
             response in
 
             os_log("getDataToSign response...", type: .debug)
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -297,7 +298,7 @@ class RestClient: NSObject {
         manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -330,7 +331,7 @@ class RestClient: NSObject {
 
         manager.request(getBureauxUrl).validate().responseString {
             response in
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -393,7 +394,8 @@ class RestClient: NSObject {
 
         manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
             response in
-            switch (response.result) {
+
+            switch response.result {
 
                 case .success:
 
@@ -465,7 +467,7 @@ class RestClient: NSObject {
 
         manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
             response in
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -503,7 +505,8 @@ class RestClient: NSObject {
 
         manager.request(getDossierUrl, parameters: parameters).validate().responseString {
             response in
-            switch (response.result) {
+
+            switch response.result {
 
                 case .success:
 
@@ -536,7 +539,7 @@ class RestClient: NSObject {
         manager.request(getCircuitUrl).validate().responseString {
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -584,7 +587,7 @@ class RestClient: NSObject {
         manager.request(getTypologyUrl).validate().responseString {
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -615,7 +618,7 @@ class RestClient: NSObject {
         manager.request(getTypologyUrl).validate().responseString {
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
                     guard let responseValue = response.value else {
@@ -648,7 +651,7 @@ class RestClient: NSObject {
         manager.request(getSignInfoUrl, parameters: parameters).validate().responseString {
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -738,7 +741,7 @@ class RestClient: NSObject {
 
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
                     responseCallback?(NSNumber(value: 1))
@@ -778,7 +781,7 @@ class RestClient: NSObject {
 
             response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
                     responseCallback?(NSNumber(value: 1))
@@ -827,9 +830,9 @@ class RestClient: NSObject {
         request.httpBody = annotationData
 
         manager.request(request).responseJSON {
-            (response) in
+            response in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
 
@@ -880,7 +883,7 @@ class RestClient: NSObject {
         manager.request(request).responseString {
             (response) in
 
-            switch (response.result) {
+            switch response.result {
 
                 case .success:
                     responseCallback?()
@@ -937,7 +940,7 @@ class RestClient: NSObject {
                             encoding: JSONEncoding.default).validate().responseString {
                 response in
 
-                switch (response.result) {
+                switch response.result {
 
                     case .success:
                         responseCallback?(NSNumber(value: 1))
@@ -958,7 +961,7 @@ class RestClient: NSObject {
                             encoding: JSONEncoding.default).validate().responseString {
                 response in
 
-                switch (response.result) {
+                switch response.result {
 
                     case .success:
                         responseCallback?(1)
@@ -978,7 +981,7 @@ class RestClient: NSObject {
                             parameters: args).validate().responseString {
                 response in
 
-                switch (response.result) {
+                switch response.result {
 
                     case .success:
                         responseCallback?(1)

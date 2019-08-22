@@ -132,19 +132,17 @@ class Dossier: NSObject, Decodable {
         acteursVariables = try values.decodeIfPresent([String].self, forKey: .acteursVariables) ?? []
         // TODO metadatas = try values.decodeIfPresent([String: Any].self, forKey: .metadatas) ?? [:]
 
-        var emitDateInt = try values.decodeIfPresent(Int.self, forKey: .emitDate)
-        if (emitDateInt != nil) {
-            emitDateInt = emitDateInt! / 1000
-            emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt!))
+        if var emitDateInt = try? values.decodeIfPresent(Int.self, forKey: .emitDate) {
+            emitDateInt = emitDateInt / 1000
+            emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt))
         }
         else {
             emitDate = nil
         }
 
-        var limitDateInt = try values.decodeIfPresent(Int.self, forKey: .limitDate)
-        if (limitDateInt != nil) {
-            limitDateInt = limitDateInt! / 1000
-            limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt!))
+        if var limitDateInt = try? values.decodeIfPresent(Int.self, forKey: .limitDate) {
+            limitDateInt = limitDateInt / 1000
+            limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt))
         }
         else {
             limitDate = nil
@@ -165,7 +163,7 @@ class Dossier: NSObject, Decodable {
         isDelegue = false
 
         // Sometimes it happens
-        if (!(actions.contains(actionDemandee))) {
+        if !(actions.contains(actionDemandee)) {
             actions.append(actionDemandee)
         }
     }
@@ -180,28 +178,26 @@ class Dossier: NSObject, Decodable {
         Returns the main negative {@link Action} available, by coherent priority.
     */
     static func getPositiveAction(folders: [Dossier]) -> String? {
-
-        var possibleActions = ["SIGNATURE", "VISA"] // , "TDT", "MAILSEC", "ARCHIVER"]
+        var possibleActions = ["VISA", "SIGNATURE"] // , "TDT", "MAILSEC", "ARCHIVER"]
 
         for folder in folders {
             possibleActions = possibleActions.filter({ folder.actions.contains($0) })
         }
 
-        return (possibleActions.count > 0) ? possibleActions[0] : nil
+        return possibleActions.first
     }
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
     @objc static func getNegativeAction(folders: [Dossier]) -> String? {
-
         var possibleActions = ["REJET"]
 
         for folder in folders {
             possibleActions = possibleActions.filter({ folder.actions.contains($0) })
         }
 
-        return (possibleActions.count > 0) ? possibleActions[0] : nil
+        return possibleActions.first
     }
 
 
@@ -214,7 +210,7 @@ class Dossier: NSObject, Decodable {
         var hasVisa: Bool = true
         var hasSignature: Bool = true
         var hasOnlyVisa: Bool = true
-        var hasRejet: Bool = true
+        var hasReject: Bool = true
         var hasTDT: Bool = true
 
         for dossierItem in dossierList {
@@ -222,7 +218,7 @@ class Dossier: NSObject, Decodable {
                 hasVisa = hasVisa && dossier.actions.contains("VISA")
                 hasSignature = hasSignature && (dossier.actions.contains("SIGNATURE") || dossier.actions.contains("VISA"))
                 hasOnlyVisa = hasOnlyVisa && !dossier.actions.contains("SIGNATURE")
-                hasRejet = hasRejet && dossier.actions.contains("REJET")
+                hasReject = hasReject && dossier.actions.contains("REJET")
                 hasTDT = hasTDT && dossier.actions.contains("TDT")
             }
         }
@@ -238,7 +234,7 @@ class Dossier: NSObject, Decodable {
             result.append("VISA")
         }
 
-        if hasRejet {
+        if hasReject {
             result.append("REJET")
         }
 
