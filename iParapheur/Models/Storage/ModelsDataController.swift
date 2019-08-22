@@ -120,7 +120,7 @@ import os
         var result: [Account] = []
 
         do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.ENTITY_NAME)
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.entityName)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Account]
         } catch {
             os_log("Could not fetch Accounts", type: .error)
@@ -134,7 +134,7 @@ import os
         var result: [Certificate] = []
 
         do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.ENTITY_NAME)
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.entityName)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Certificate]
         } catch {
             os_log("Could not fetch Certificate", type: .error)
@@ -148,7 +148,7 @@ import os
         var result: [Filter] = []
 
         do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.ENTITY_NAME)
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.entityName)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Filter]
         } catch {
             os_log("Could not fetch Filters", type: .error)
@@ -167,13 +167,13 @@ import os
         let result: [Account] = fetchAccounts()
         if result.count == 0 {
 
-            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                   into: ModelsDataController.context!) as! Account
-            demoAccount.id = Account.DEMO_ID as String
-            demoAccount.title = Account.DEMO_TITLE
-            demoAccount.url = Account.DEMO_URL
-            demoAccount.login = Account.DEMO_LOGIN
-            demoAccount.password = Account.DEMO_PASSWORD
+            demoAccount.id = Account.demoId as String
+            demoAccount.title = Account.demoTitle
+            demoAccount.url = Account.demoUrl
+            demoAccount.login = Account.demoLogin
+            demoAccount.password = Account.demoPass
             demoAccount.isVisible = true
 
             isSaveNeeded = true
@@ -182,16 +182,16 @@ import os
         // Backup legacy settings
 
         if (preferences.string(forKey: "settings_login") != nil) {
-            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                     into: ModelsDataController.context!) as! Account
-            legacyAccount.id = Account.LEGACY_ID
+            legacyAccount.id = Account.legacyId
             legacyAccount.title = preferences.string(forKey: "settings_login")
             legacyAccount.url = preferences.string(forKey: "settings_server_url")
             legacyAccount.login = preferences.string(forKey: "settings_login")
             legacyAccount.password = preferences.string(forKey: "settings_password")
             legacyAccount.isVisible = true
 
-            preferences.set(legacyAccount.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+            preferences.set(legacyAccount.id, forKey: Account.preferenceKeySelectedAccount as String)
             preferences.removeObject(forKey: "settings_login")
             preferences.removeObject(forKey: "settings_password")
             preferences.removeObject(forKey: "settings_server_url")
@@ -221,7 +221,7 @@ import os
         let oldKeystore: ADLKeyStore = appDelegate.keyStore
         for oldPrivateKey in oldKeystore.listPrivateKeys() as! [NSManagedObject] {
 
-            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME,
+            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.entityName,
                                                                      into: context!) as! Certificate
 
             print("Legacy PrivateKey found = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
@@ -231,7 +231,7 @@ import os
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
 
             var payload: [String: String] = [:]
-            payload[Certificate.PAYLOAD_P12_FILENAME] = oldPrivateKey.value(forKey: "p12Filename") as? String
+            payload[Certificate.payloadP12FileName] = oldPrivateKey.value(forKey: "p12Filename") as? String
             let jsonEncoder = JSONEncoder()
             let payloadData = try? jsonEncoder.encode(payload)
 

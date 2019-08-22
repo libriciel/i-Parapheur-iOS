@@ -35,7 +35,7 @@
 
 import Foundation
 
-@objc class ActionSelectionCell: UITableViewCell {
+class ActionSelectionCell: UITableViewCell {
 
     static let CellId: String! = "ActionSelectionCell"
     static let PreferredHeight: CGFloat! = 44

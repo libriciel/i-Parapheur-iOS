@@ -37,10 +37,10 @@ import Foundation
 import UIKit
 import os
 
-@objc class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class AccountSelectionController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @objc static let NotifSelected = Notification.Name("AccountSelectionControllerAccountSelectionController")
-    @objc static let Segue: NSString! = "AccountListSegue"
+    static let Segue = "AccountListSegue"
 
     @IBOutlet var backButton: UIBarButtonItem!
     @IBOutlet var accountTableView: UITableView!
@@ -49,7 +49,8 @@ import os
     var selectedAccountId: String?
 
 
-    // MARK: - LifeCycle
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,11 +66,15 @@ import os
         backButton.action = #selector(AccountSelectionController.onBackButtonClicked)
 
         let preferences: UserDefaults = UserDefaults.standard
-        selectedAccountId = preferences.string(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+        selectedAccountId = preferences.string(forKey: Account.preferenceKeySelectedAccount as String)
     }
 
 
-    // MARK: - Private methods
+    // </editor-fold desc="LifeCycle">
+
+
+    // <editor-fold desc="Private methods"> MARK: - Private methods
+
 
     func loadAccountList() -> Array<Account> {
 
@@ -82,18 +87,27 @@ import os
     }
 
 
-    // MARK: - Button Listeners
+    // </editor-fold desc="Private methods">
+
+
+    // <editor-fold desc="Button Listeners"> MARK: - Button Listeners
+
 
     @objc func onBackButtonClicked() {
         self.dismiss(animated: true, completion: nil)
     }
 
 
-    // MARK: - UITableViewDataSource & UITableViewDelegate
+    // </editor-fold desc="Button Listeners">
+
+
+    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate"> MARK: - UITableViewDataSource & UITableViewDelegate
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
     }
+
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -110,16 +124,20 @@ import os
         return cell
     }
 
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let accountSelected: Account = accountList[indexPath.row]
         let preferences: UserDefaults = UserDefaults.standard
-        preferences.set(accountSelected.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+        preferences.set(accountSelected.id, forKey: Account.preferenceKeySelectedAccount as String)
 
         NotificationCenter.default.post(name: AccountSelectionController.NotifSelected,
                                         object: nil,
                                         userInfo: ["success": true])
         onBackButtonClicked()
     }
+
+
+    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">
 
 }

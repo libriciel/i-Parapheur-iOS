@@ -35,12 +35,14 @@
 
 import Foundation
 
-@objc class WorkflowStepCell: UITableViewCell {
+class WorkflowStepCell: UITableViewCell {
+
+    static let cellIdentifier = "CircuitCell"
+
 
     @IBOutlet var deskTextView: UILabel!
     @IBOutlet var stepIconImageView: UIImageView!
     @IBOutlet var dateTextView: UILabel!
-    @IBOutlet var userTextView: UILabel!
     @IBOutlet var publicAnnotationTextView: UILabel!
 
 }

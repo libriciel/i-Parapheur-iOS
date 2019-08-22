@@ -4,7 +4,7 @@
  * contact@libriciel.coop
  *
  * This software is a computer program whose purpose is to manage and sign
- * digital documents on an authorized iParapheur.
+ * digital documxents on an authorized iParapheur.
  *
  * This software is governed by the CeCILL license under French law and
  * abiding by the rules of distribution of free software.  You can  use,
@@ -32,18 +32,14 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import XCTest
+import os
+import PDFKit
 @testable import iParapheur
 
 
-class Utils_ColorUtils_Tests: XCTestCase {
+class UI_PdfReaderController_Tests: XCTestCase {
 
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.getColor(action: "VISA"), ColorUtils.darkGreen)
-		XCTAssertEqual(ColorUtils.getColor(action: "SIGNATURE"), ColorUtils.darkGreen)
-		XCTAssertEqual(ColorUtils.getColor(action: "REJET"), ColorUtils.darkRed)
-		XCTAssertEqual(ColorUtils.getColor(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.getColor(action: "PLOP"), UIKit.UIColor.lightGray)
-    }
 
 }

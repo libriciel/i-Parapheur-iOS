@@ -32,18 +32,19 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import XCTest
-@testable import iParapheur
 
+import Foundation
 
-class Utils_ColorUtils_Tests: XCTestCase {
+class FolderListCell: UITableViewCell {
 
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.getColor(action: "VISA"), ColorUtils.darkGreen)
-		XCTAssertEqual(ColorUtils.getColor(action: "SIGNATURE"), ColorUtils.darkGreen)
-		XCTAssertEqual(ColorUtils.getColor(action: "REJET"), ColorUtils.darkRed)
-		XCTAssertEqual(ColorUtils.getColor(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.getColor(action: "PLOP"), UIKit.UIColor.lightGray)
-    }
+    static let cellIdentifier = "FolderListCell"
+
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var typologyLabel: UILabel!
+    @IBOutlet var limitDateLabel: UILabel!
+    @IBOutlet var dot: UIImageView!
+    @IBOutlet var checkboxHandlerView: UIView!
+    @IBOutlet var checkOnImage: UIImageView!
+    @IBOutlet var checkOffImage: UIImageView!
 
 }

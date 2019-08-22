@@ -37,11 +37,17 @@ import Foundation
 import os
 
 
-@objc class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
+class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
 
-    @objc static let SEGUE = "WorkflowDialogController"
-    static let ALERTVIEW_TAG_P12_PASSWORD = 1
-    static let ALERTVIEW_TAG_PAPER_SIGNATURE = 2
+    @objc static let segue = "WorkflowDialogController"
+    @objc static let notificationActionComplete = Notification.Name("DossierActionComplete")
+
+    static let actionSignature = "SIGNATURE"
+    static let actionVisa = "VISA"
+    static let actionReject = "REJET"
+
+    static let alertViewTagP12Pass = 1
+    static let alertViewTagPaperSignature = 2
 
     @IBOutlet var certificateLayout: UIStackView!
     @IBOutlet var certificateTableView: UITableView!
@@ -65,14 +71,14 @@ import os
         super.viewDidLoad()
         os_log("View loaded : WorkflowDialogController", type: .debug)
 
-        self.certificateLayout.isHidden = !(currentAction == "SIGNATURE")
+        self.certificateLayout.isHidden = !(currentAction == WorkflowDialogController.actionSignature)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
                                                name: .signatureResult,
                                                object: nil)
 
-        if (currentAction == "SIGNATURE") {
+        if (currentAction == WorkflowDialogController.actionSignature) {
             for dossier in signInfoMap.keys {
 
                 restClient?.getSignInfo(dossier: dossier,
@@ -146,12 +152,12 @@ import os
         switch currentAction {
 
 
-            case "SIGNATURE":
+            case WorkflowDialogController.actionSignature:
 
                 signature()
 
 
-            case "VISA":
+            case WorkflowDialogController.actionVisa:
 
                 restClient?.visa(dossier: Array(signInfoMap.keys)[0],
                                  bureauId: currentBureau!,
@@ -168,7 +174,7 @@ import os
                                  })
 
 
-            case "REJET":
+            case WorkflowDialogController.actionReject:
 
                 restClient?.reject(dossier: Array(signInfoMap.keys)[0],
                                    bureauId: currentBureau!,
@@ -196,8 +202,8 @@ import os
     // </editor-fold desc="UI Listeners">
 
 
-    @objc func setDossiersToSign(objcArray: NSArray) {
-        for dossier in objcArray as! [Dossier] {
+    func setDossiersToSign(_ dossierList: [Dossier]) {
+        for dossier in dossierList {
             signInfoMap[dossier] = nil as SignInfo?
         }
     }
@@ -236,7 +242,7 @@ import os
 
                 let jsonDecoder = JSONDecoder()
                 let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
-                let certificateId = payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID]!
+                let certificateId = payload[Certificate.payloadExternalCertificateId]!
                 let hasher: RemoteHasher = Array(signaturesToDo.values)[0]
 
                 hasher.generateHashToSign(onResponse:
@@ -269,9 +275,9 @@ import os
 
     @objc func onSignatureResult(notification: Notification) {
 
-        let signedDataList = notification.userInfo![CryptoUtils.NOTIF_SIGNEDDATA] as! [Data]
-        let dossierId: String? = notification.userInfo![CryptoUtils.NOTIF_DOSSIERID] as? String
-        let signatureIndex: Int? = notification.userInfo![CryptoUtils.NOTIF_SIGNATUREINDEX] as? Int
+        let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as! [Data]
+        let dossierId: String? = notification.userInfo![CryptoUtils.notifFolderId] as? String
+        let signatureIndex: Int? = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int
 
         var hasher: RemoteHasher? = nil
         if (dossierId != nil) {
@@ -315,7 +321,6 @@ import os
                                 })
     }
 
-
     /**
         Here, we want to display the certificate list if everything is set
     */
@@ -346,7 +351,7 @@ import os
 
         alertView.alertViewStyle = .plainTextInput
         alertView.textField(at: 0)!.isSecureTextEntry = true
-        alertView.tag = WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD
+        alertView.tag = WorkflowDialogController.alertViewTagP12Pass
         alertView.show()
     }
 
@@ -381,7 +386,7 @@ import os
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Notification.Name("actionOnDossierComplete"),
+                NotificationCenter.default.post(name: WorkflowDialogController.notificationActionComplete,
                                                 object: "")
             }
         }
@@ -389,12 +394,13 @@ import os
         self.dismiss(animated: true)
     }
 
+
     // <editor-fold desc="UIAlertViewDelegate">
 
 
     func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
 
-        if (alertView.tag == WorkflowDialogController.ALERTVIEW_TAG_P12_PASSWORD) {
+        if (alertView.tag == WorkflowDialogController.alertViewTagP12Pass) {
             if (buttonIndex == 1) {
 
                 let givenPassword = alertView.textField(at: 0)!.text!

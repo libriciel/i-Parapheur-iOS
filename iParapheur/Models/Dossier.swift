@@ -36,7 +36,7 @@
 import Foundation
 
 
-@objc class Dossier: NSObject, Decodable {
+class Dossier: NSObject, Decodable {
 
     @objc let identifier: String
     @objc let title: String?
@@ -72,7 +72,8 @@ import Foundation
     @objc var isDelegue: Bool
 
 
-    // <editor-fold desc="Json methods">
+    // <editor-fold desc="Json methods"> MARK: - Json methods
+
 
     enum CodingKeys: String, CodingKey {
 
@@ -108,6 +109,7 @@ import Foundation
         case isReadingMandatory = "readingMandatory"
     }
 
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -134,7 +136,8 @@ import Foundation
         if (emitDateInt != nil) {
             emitDateInt = emitDateInt! / 1000
             emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt!))
-        } else {
+        }
+        else {
             emitDate = nil
         }
 
@@ -142,7 +145,8 @@ import Foundation
         if (limitDateInt != nil) {
             limitDateInt = limitDateInt! / 1000
             limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt!))
-        } else {
+        }
+        else {
             limitDate = nil
         }
 
@@ -166,81 +170,40 @@ import Foundation
         }
     }
 
+
     // </editor-fold desc="Json methods">
 
 
-    // MARK: - Glossy
-
-//    required init?(json: JSON) {
-//        identifier = ("id" <~~ json) ?? ""
-//        title = ("title" <~~ json) ?? "(vide)"
-//        bureauName = ("bureauName" <~~ json) ?? "(vide)"
-//        banetteName = ("banetteName" <~~ json) ?? ""
-//        visibility = ("visibility" <~~ json) ?? ""
-//        status = ("status" <~~ json) ?? ""
-//
-//        type = ("type" <~~ json) ?? ""
-//        subType = ("sousType" <~~ json) ?? ""
-//        protocole = ("protocole" <~~ json) ?? ""
-//        nomTdT = ("nomTdT" <~~ json) ?? ""
-//        xPathSignature = ("xPathSignature" <~~ json) ?? ""
-//
-//        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
-//        actions = ("actions" <~~ json) ?? []
-//        documents = ("documents" <~~ json) ?? []
-//        acteursVariables = ("acteursVariables" <~~ json) ?? []
-//        metadatas = ("metadatas" <~~ json) ?? [:]
-//        emitDate = ("dateEmission" <~~ json) ?? -1
-//        limitDate = ("dateLimite" <~~ json) ?? 0
-//
-//        hasRead = ("hasRead" <~~ json) ?? false
-//        includeAnnexes = ("includeAnnexes" <~~ json) ?? false
-//        isRead = ("isRead" <~~ json) ?? false
-//        isSent = ("isSent" <~~ json) ?? false
-//        canAdd = ("canAdd" <~~ json) ?? false
-//        isLocked = ("locked" <~~ json) ?? false
-//        isSignPapier = ("isSignPapier" <~~ json) ?? false
-//        isXemEnabled = ("isXemEnabled" <~~ json) ?? false
-//        isReadingMandatory = ("readingMandatory" <~~ json) ?? false
-//
-//        isDelegue = false
-//
-//        // Sometimes it happens
-//        if (!(actions.contains(actionDemandee))) {
-//            actions.append(actionDemandee)
-//        }
-//    }
-//
-//    func toJSON() -> JSON? {
-//        return nil /* Not used */
-//    }
-
-
-    // MARK: - Static utils
+    // <editor-fold desc="Static utils"> MARK: - Static utils
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    static func getPositiveAction(actions: NSArray) -> NSString! {
+    static func getPositiveAction(folders: [Dossier]) -> String? {
 
-        if (actions.contains(NSString(string: "SIGNATURE"))) {
-            return NSString(string: "SIGNATURE")
+        var possibleActions = ["SIGNATURE", "VISA"] // , "TDT", "MAILSEC", "ARCHIVER"]
+
+        for folder in folders {
+            possibleActions = possibleActions.filter({ folder.actions.contains($0) })
         }
 
-        return NSString(string: "")
+        return (possibleActions.count > 0) ? possibleActions[0] : nil
     }
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    @objc static func getNegativeAction(actions: NSArray) -> NSString! {
+    @objc static func getNegativeAction(folders: [Dossier]) -> String? {
 
-        if (actions.contains(NSString(string: "REJET"))) {
-            return NSString(string: "REJET")
+        var possibleActions = ["REJET"]
+
+        for folder in folders {
+            possibleActions = possibleActions.filter({ folder.actions.contains($0) })
         }
 
-        return NSString(string: "")
+        return (possibleActions.count > 0) ? possibleActions[0] : nil
     }
+
 
     class func filterActions(dossierList: NSArray) -> [String] {
 
@@ -268,20 +231,46 @@ import Foundation
 
         // Build result
 
-        if (hasSignature) {
+        if hasSignature {
             result.append("SIGNATURE")
-        } else if (hasVisa) {
+        }
+        else if hasVisa {
             result.append("VISA")
         }
 
-        if (hasRejet) {
+        if hasRejet {
             result.append("REJET")
         }
 
-        if (hasTDT) {
+        if hasTDT {
             result.append("TDT")
         }
 
         return result
     }
+
+
+    class func getLocalFileUrl(dossierId: String,
+                               documentName: String) throws -> URL? {
+
+        // Source folder
+
+        var documentsDirectoryUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent("dossiers", isDirectory: true)
+                .appendingPathComponent(dossierId, isDirectory: true)
+
+        try FileManager.default.createDirectory(at: documentsDirectoryUrl, withIntermediateDirectories: true)
+
+        // File name
+
+        var fileName = documentName.replacingOccurrences(of: " ", with: "_")
+        fileName = String(format: "%@.bin", fileName)
+
+        documentsDirectoryUrl = documentsDirectoryUrl.appendingPathComponent(fileName)
+        return documentsDirectoryUrl
+    }
+
+
+    // </editor-fold desc="Static utils">
+
 }

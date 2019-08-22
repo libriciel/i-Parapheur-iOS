@@ -48,21 +48,20 @@ extension Notification.Name {
 
 }
 
-@objc class CryptoUtils: NSObject {
+class CryptoUtils: NSObject {
 
-    static public let NOTIF_SIGNEDDATA = "signedData"
-    static public let NOTIF_SIGNATUREINDEX = "signatureIndex"
-    static public let NOTIF_DOSSIERID = "dossierId"
-    static public let PKCS15_ASN1_HEX_PREFIX = "3021300906052B0E03021A05000414"
+    static public let notifSignedData = "signedData"
+    static public let notifSignatureIndex = "signatureIndex"
+    static public let notifFolderId = "dossierId"
+    static public let pkcs15Asn1HexPrefix = "3021300906052B0E03021A05000414"
 
-    static private let CERTIFICATE_TEMP_SUB_DIRECTORY = "Certificate_temp/"
-    static private let PUBLIC_KEY_BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----"
-    static private let PUBLIC_KEY_END_CERTIFICATE = "-----END CERTIFICATE-----"
-    static private let PKCS7_BEGIN = "-----BEGIN PKCS7-----"
-    static private let PKCS7_END = "-----END PKCS7-----"
-    static private let HEX_ALPHABET = "0123456789abcdef".unicodeScalars.map {
-        $0
-    }
+    static private let certificateTempSubDirectory = "Certificate_temp/"
+    static private let publicKeyBeginCertificate = "-----BEGIN CERTIFICATE-----"
+    static private let publicKeyEndCertificate = "-----END CERTIFICATE-----"
+    static private let pkcs7Begin = "-----BEGIN PKCS7-----"
+    static private let pkcs7End = "-----END PKCS7-----"
+    static private let hexAlphabet = "0123456789abcdef".unicodeScalars.map { $0 }
+
 
     class func checkCertificate(pendingDerFile: URL!) -> Bool {
 
@@ -126,7 +125,7 @@ extension Notification.Name {
 
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
-        let tempDir = documentsDirectory.appendingPathComponent(CryptoUtils.CERTIFICATE_TEMP_SUB_DIRECTORY,
+        let tempDir = documentsDirectory.appendingPathComponent(CryptoUtils.certificateTempSubDirectory,
                                                                 isDirectory: true)
 
         try? FileManager.default.createDirectory(atPath: tempDir.path,
@@ -173,11 +172,11 @@ extension Notification.Name {
         result = result.trimmingCharacters(in: CharacterSet.newlines)
         result = result.replacingOccurrences(of: "\n", with: "")
 
-        if let index = result.range(of: PUBLIC_KEY_BEGIN_CERTIFICATE)?.upperBound {
+        if let index = result.range(of: publicKeyBeginCertificate)?.upperBound {
             result = String(result.suffix(from: index))
         }
 
-        if let index = result.range(of: PUBLIC_KEY_END_CERTIFICATE)?.lowerBound {
+        if let index = result.range(of: publicKeyEndCertificate)?.lowerBound {
             result = String(result.prefix(upTo: index))
         }
 
@@ -192,11 +191,11 @@ extension Notification.Name {
         result = result.trimmingCharacters(in: CharacterSet.newlines)
         result = result.replacingOccurrences(of: "\n", with: "")
 
-        if let index = result.range(of: PKCS7_BEGIN)?.upperBound {
+        if let index = result.range(of: pkcs7Begin)?.upperBound {
             result = String(result.suffix(from: index))
         }
 
-        if let index = result.range(of: PKCS7_END)?.lowerBound {
+        if let index = result.range(of: pkcs7End)?.lowerBound {
             result = String(result.prefix(upTo: index))
         }
 
@@ -210,11 +209,11 @@ extension Notification.Name {
         let cleanedString = cleanupPublicKey(publicKey: publicKey)
 
         var result = ""
-        result.append("\(PUBLIC_KEY_BEGIN_CERTIFICATE)\n")
+        result.append("\(publicKeyBeginCertificate)\n")
         for split in StringsUtils.split(string: cleanedString, length: 64) {
             result.append("\(split)\n")
         }
-        result.append("\(PUBLIC_KEY_END_CERTIFICATE)")
+        result.append("\(publicKeyEndCertificate)")
         return result
     }
 
@@ -224,11 +223,11 @@ extension Notification.Name {
         let cleanedString = cleanupPkcs7(signature: pkcs7)
 
         var result = ""
-        result.append("\(PKCS7_BEGIN)\n")
+        result.append("\(pkcs7Begin)\n")
         for split in StringsUtils.split(string: cleanedString, length: 64) {
             result.append("\(split)\n")
         }
-        result.append("\(PKCS7_END)")
+        result.append("\(pkcs7End)")
         return result
     }
 
@@ -239,11 +238,11 @@ extension Notification.Name {
         result = result.trimmingCharacters(in: CharacterSet.newlines)
         result = result.replacingOccurrences(of: "\n", with: "")
 
-        if let index = result.range(of: PKCS7_BEGIN)?.upperBound {
+        if let index = result.range(of: pkcs7Begin)?.upperBound {
             result = String(result.suffix(from: index))
         }
 
-        if let index = result.range(of: PKCS7_END)?.lowerBound {
+        if let index = result.range(of: pkcs7End)?.lowerBound {
             result = String(result.prefix(upTo: index))
         }
 
@@ -270,7 +269,7 @@ extension Notification.Name {
 
         let jsonDecoder = JSONDecoder()
         let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: certificate.payload! as Data)
-        let p12Name = payload[Certificate.PAYLOAD_P12_FILENAME]!
+        let p12Name = payload[Certificate.payloadP12FileName]!
         let p12FinalUrl = pathURL.appendingPathComponent(p12Name)
 
         // Building signature response
@@ -296,8 +295,8 @@ extension Notification.Name {
                             NotificationCenter.default.post(name: .signatureResult,
                                                             object: nil,
                                                             userInfo: [
-                                                                NOTIF_SIGNEDDATA: signedHashList,
-                                                                NOTIF_DOSSIERID: hasher.mDossier.identifier
+                                                                notifSignedData: signedHashList,
+                                                                notifFolderId: hasher.mDossier.identifier
                                                             ])
                         }
                     } catch let error {
@@ -479,8 +478,8 @@ extension Notification.Name {
 
     class func hex(data: Data) -> String {
         return String(data.reduce(into: "".unicodeScalars, { (result, value) in
-            result.append(HEX_ALPHABET[Int(value / 16)])
-            result.append(HEX_ALPHABET[Int(value % 16)])
+            result.append(hexAlphabet[Int(value / 16)])
+            result.append(hexAlphabet[Int(value % 16)])
         }))
     }
 

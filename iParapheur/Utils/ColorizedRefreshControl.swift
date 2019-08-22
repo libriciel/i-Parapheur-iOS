@@ -32,18 +32,49 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
-import XCTest
-@testable import iParapheur
+
+import Foundation
+
+/**
+    Fixes the white line between the SearchController bar and the RefreshController
+    Taken from there : https://stackoverflow.com/a/50670500/9122113
+ */
+class ColorizedRefreshControl: UIRefreshControl {
 
 
-class Utils_ColorUtils_Tests: XCTestCase {
+    override var isHidden: Bool {
+        get {
+            return super.isHidden
+        }
+        set(hiding) {
+            if hiding {
+                guard frame.origin.y >= 0 else { return }
+                super.isHidden = hiding
+            }
+            else {
+                guard frame.origin.y < 0 else { return }
+                super.isHidden = hiding
+            }
+        }
+    }
 
-    func testColorForAction() {
-		XCTAssertEqual(ColorUtils.getColor(action: "VISA"), ColorUtils.darkGreen)
-		XCTAssertEqual(ColorUtils.getColor(action: "SIGNATURE"), ColorUtils.darkGreen)
-		XCTAssertEqual(ColorUtils.getColor(action: "REJET"), ColorUtils.darkRed)
-		XCTAssertEqual(ColorUtils.getColor(action: "ARCHIVER"), UIKit.UIColor.black)
-		XCTAssertEqual(ColorUtils.getColor(action: "PLOP"), UIKit.UIColor.lightGray)
+
+    override var frame: CGRect {
+        didSet {
+            if frame.origin.y < 0 {
+                isHidden = false
+            }
+            else {
+                isHidden = true
+            }
+        }
+    }
+
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let originalFrame = frame
+        frame = originalFrame
     }
 
 }

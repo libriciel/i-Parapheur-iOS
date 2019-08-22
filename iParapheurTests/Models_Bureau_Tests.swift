@@ -106,7 +106,7 @@ class Models_Bureau_Tests: XCTestCase {
 
         XCTAssertEqual(bureaux![0].hasSecretaire, false)
         XCTAssertEqual(bureaux![0].hasSecretaire, false)
-        XCTAssertEqual(bureaux![0].nodeRef, "workspace://SpacesStore/44abe93c-16d7-4e00-b561-f6d1b8b6c1d3")
+        XCTAssertEqual(bureaux![0].nodeRef, "44abe93c-16d7-4e00-b561-f6d1b8b6c1d3")
         XCTAssertEqual(bureaux![0].identifier, "id_01")
         XCTAssertEqual(bureaux![0].name, "Name 01 \"/%@&éè")
         XCTAssertEqual(bureaux![0].collectivite, "Collectivité 01 \"\\/%@&éè")
@@ -124,7 +124,7 @@ class Models_Bureau_Tests: XCTestCase {
 
         XCTAssertEqual(bureaux![1].hasSecretaire, true)
         XCTAssertEqual(bureaux![1].nodeRef, "id_02")
-        XCTAssertNil(bureaux![1].identifier)
+        XCTAssertEqual(bureaux![1].identifier, "")
         XCTAssertEqual(bureaux![1].name, "Name 02 \"%@&éè")
         XCTAssertEqual(bureaux![1].collectivite, "Collectivité 02 \"/%@&éè")
         XCTAssertEqual(bureaux![1].desc, "Description 02 \"/%@&éè")
@@ -156,7 +156,7 @@ class Models_Bureau_Tests: XCTestCase {
 
         XCTAssertEqual(bureau!.hasSecretaire, false)
         XCTAssertEqual(bureau!.isSecretaire, false)
-        XCTAssertNil(bureau!.identifier)
+        XCTAssertEqual(bureau!.identifier, "")
         XCTAssertNil(bureau!.nodeRef)
         XCTAssertEqual(bureau!.name, "(aucun nom)")
         XCTAssertNil(bureau!.shortName)

@@ -37,24 +37,28 @@ import UIKit
 import os
 
 
-@objc class FirstLoginPopupController: UIViewController {
+class FirstLoginPopupController: UIViewController {
 
-    @objc static let Segue: NSString! = "FirstLoginPopupSegue"
+
+    static let Segue = "FirstLoginPopupSegue"
     @objc static let NotifDismiss = Notification.Name("FirstLoginPopupControllerNotifDismiss")
     static let PreferredWidth: CGFloat! = 550
     static let PreferredHeight: CGFloat! = 340
+
 
     @IBOutlet var saveButton: UIBarButtonItem!
     @IBOutlet var serverUrlTextField: UITextField!
     @IBOutlet var loginTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var spinnerView: UIActivityIndicatorView!
-    @IBOutlet var errorLabel: UITextView!
+
 
     var restClient: RestClient?
     var currentAccount: Account?
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +85,7 @@ import os
 
         let accountList: [Account] = ModelsDataController.fetchAccounts()
         for account in accountList {
-            if (account.id == Account.LEGACY_ID) {
+            if (account.id == Account.legacyId) {
                 currentAccount = account
             }
         }
@@ -91,9 +95,8 @@ import os
             loginTextField.text = currentAccount!.login
             passwordTextField.text = currentAccount!.password
         }
-
-        //
     }
+
 
     deinit {
         serverUrlTextField.removeTarget(self,
@@ -109,7 +112,9 @@ import os
                                        for: UIControl.Event.editingChanged)
     }
 
-    // MARK: - Private methods
+
+    // </editor-fold desc="LifeCycle">
+
 
     func validateTextFields() -> Bool! {
 
@@ -141,19 +146,22 @@ import os
         return (isServerTextFieldValid && isLoginTextFieldValid && isPasswordTextFieldValid);
     }
 
+
     func setBorderOnTextField(textField: UITextField, alert: Bool) {
 
         if (alert) {
             textField.layer.cornerRadius = 6.0;
             textField.layer.masksToBounds = true;
             textField.layer.borderWidth = 1.0;
-            textField.layer.borderColor = ColorUtils.DarkOrange.cgColor
-            textField.backgroundColor = ColorUtils.DarkOrange.withAlphaComponent(0.1)
-        } else {
+            textField.layer.borderColor = ColorUtils.darkOrange.cgColor
+            textField.backgroundColor = ColorUtils.darkOrange.withAlphaComponent(0.1)
+        }
+        else {
             textField.layer.borderColor = UIColor.clear.cgColor
             textField.backgroundColor = UIColor.clear
         }
     }
+
 
     func testConnection() {
 
@@ -169,7 +177,7 @@ import os
 
         // Test request
 
-        enableInterface(enabled: false)
+        enableInterface(isEnabled: false)
 
         restClient!.getApiVersion(onResponse: {
             (level: NSNumber) in
@@ -177,17 +185,17 @@ import os
             // Register new account as selected
 
             let preferences: UserDefaults = UserDefaults.standard
-            preferences.set(self.currentAccount!.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+            preferences.set(self.currentAccount!.id, forKey: Account.preferenceKeySelectedAccount as String)
 
             // UI refresh
 
-            self.enableInterface(enabled: true)
+            self.enableInterface(isEnabled: true)
             self.dismissWithSuccess(success: true)
         },
                                   onError: {
                                       (error: NSError) in
 
-                                      self.enableInterface(enabled: true)
+                                      self.enableInterface(isEnabled: true)
 
                                       // Warn with orange fields
 
@@ -196,32 +204,29 @@ import os
                                       if (error.code == -1011) {
                                           self.setBorderOnTextField(textField: self.loginTextField, alert: true)
                                           self.setBorderOnTextField(textField: self.passwordTextField, alert: true)
-                                      } else {
+                                      }
+                                      else {
                                           self.setBorderOnTextField(textField: self.serverUrlTextField, alert: true)
                                       }
 
                                       // Setup error message
 
                                       let localizedDescription = StringsUtils.getMessage(error: error)
-
-                                      if (error.localizedDescription == localizedDescription as String) {
-                                          self.errorLabel.text = "La connexion au serveur a échoué (code \(error.code))"
-                                      } else {
-                                          self.errorLabel.text = String(localizedDescription)
-                                      }
+                                      ViewUtils.logError(message: localizedDescription, title: "La connexion au serveur a échoué")
                                   }
         )
     }
 
-    func enableInterface(enabled: Bool) {
 
-        loginTextField.isEnabled = enabled
-        passwordTextField.isEnabled = enabled
-        serverUrlTextField.isEnabled = enabled
-        errorLabel.isHidden = !enabled
+    func enableInterface(isEnabled: Bool) {
 
-        enabled ? spinnerView.stopAnimating() : spinnerView.startAnimating()
+        loginTextField.isEnabled = isEnabled
+        passwordTextField.isEnabled = isEnabled
+        serverUrlTextField.isEnabled = isEnabled
+
+        isEnabled ? spinnerView.stopAnimating() : spinnerView.startAnimating()
     }
+
 
     func dismissWithSuccess(success: Bool) {
 
@@ -238,29 +243,35 @@ import os
                                         userInfo: userInfo)
     }
 
-    // MARK: - TextField listeners
+
+    // <editor-fold desc="TextField listeners"> MARK: - TextField listeners
+
 
     @objc func onTextFieldValueChanged(sender: AnyObject) {
-
-        errorLabel.text = ""
         setBorderOnTextField(textField: sender as! UITextField, alert: false)
     }
 
-    // MARK: - Buttons listeners
+
+    // </editor-fold desc="TextField listeners">
+
+
+    // <editor-fold desc="Buttons listeners"> MARK: - Buttons listeners
+
 
     @IBAction func onCancelButtonClicked(_ sender: Any) {
         dismissWithSuccess(success: false)
     }
+
 
     @IBAction func onSaveButtonClicked(_ sender: Any) {
 
         // Saving data
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                  into: ModelsDataController.context!) as? Account
 
-            currentAccount!.id = Account.LEGACY_ID
+            currentAccount!.id = Account.legacyId
             currentAccount!.isVisible = true
         }
 
@@ -277,4 +288,8 @@ import os
             testConnection()
         }
     }
+
+
+    // </editor-fold desc="Buttons listeners"> MARK: - Buttons listeners
+
 }

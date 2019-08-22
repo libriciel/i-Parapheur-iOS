@@ -37,43 +37,44 @@ import Foundation
 import UIKit
 import os
 
-@objc class DocumentSelectionController: UITableViewController {
+class DocumentSelectionController: UITableViewController {
 
+
+    static let segue = "showDocumentPopover"
     @objc static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
-    @objc var documentList: NSArray! = NSArray()
-    var docList: [Document]! = []
+    var documentList: [Document] = []
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="Lifecycle" MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View loaded : DocumentSelectionController", type: .debug)
 
-        // Parse ObjC array
-
-        for doc in (documentList as! [Document]) {
-            docList.append(doc)
-        }
-
-        //
-
         preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
-                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
+                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(documentList.count))
     }
 
-    // MARK: - TableViewDelegate
+
+    // </editor-fold desc="Lifecycle" MARK: - LifeCycle
+
+
+    // <editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
+
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return docList.count
+        return documentList.count
     }
+
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
                                                                         for: indexPath as IndexPath) as! DocumentSelectionCell
 
-        let document: Document = docList[indexPath.row]
+        let document: Document = documentList[indexPath.row]
 
         cell.annexeIcon.image = cell.annexeIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.annexeIcon.isHidden = (indexPath.row == 0) || document.isMainDocument
@@ -84,6 +85,7 @@ import os
         return cell;
     }
 
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: false,
                 completion: {
@@ -92,5 +94,8 @@ import os
                                                     object: indexPath.row as NSNumber)
                 })
     }
+
+
+    // </editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
 
 }

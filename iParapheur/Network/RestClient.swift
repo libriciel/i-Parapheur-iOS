@@ -38,7 +38,7 @@ import Alamofire
 import os
 
 
-@objc class RestClient: NSObject {
+class RestClient: NSObject {
 
     var manager: Alamofire.SessionManager
     @objc var serverUrl: NSURL
@@ -103,6 +103,12 @@ import os
         return NSString(string: "https://m-\(urlFixed)")
     }
 
+
+    class func getAnnotationsUrl(folderId: String, documentId: String) -> String {
+        return String(format: "/parapheur/dossiers/%@/%@/annotations", folderId, documentId)
+    }
+
+
     // </editor-fold desc="Static methods">
 
 
@@ -145,7 +151,8 @@ import os
                             break
                     }
                 }
-            } else {
+            }
+            else {
                 errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
                                        code: 400))
             }
@@ -305,8 +312,8 @@ import os
     }
 
 
-    @objc func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getDesks(onResponse responseCallback: (([Bureau]) -> Void)?,
+                  onError errorCallback: ((Error) -> Void)?) {
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
@@ -326,10 +333,10 @@ import os
 
                     // Parsing and callback
 
-                    let hasSomeData = (bureaux != nil)
-                    if (hasSomeData) {
-                        responseCallback!(bureaux! as NSArray)
-                    } else {
+                    if (bureaux != nil) {
+                        responseCallback!(bureaux!)
+                    }
+                    else {
                         errorCallback!(NSError(domain: "Invalid response",
                                                code: 999))
                     }
@@ -344,12 +351,12 @@ import os
     }
 
 
-    @objc func getDossiers(bureau: NSString,
-                           page: NSNumber,
-                           size: NSNumber,
-                           filterJson: NSString?,
-                           onResponse responseCallback: ((NSArray) -> Void)?,
-                           onError errorCallback: ((NSError) -> Void)?) {
+    func getDossiers(bureau: String,
+                     page: Int,
+                     size: Int,
+                     filterJson: String?,
+                     onResponse responseCallback: (([Dossier]) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -361,7 +368,7 @@ import os
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": page * size,
             "sort": "cm:create"
         ]
 
@@ -385,24 +392,24 @@ import os
                     let dossierList = try? jsonDecoder.decode([Dossier].self,
                                                               from: responseJsonData)
 
-                    // Retrieve deleguated
+                    // Retrieve delegated
 
-                    self.getDossiersDelegues(bureau: bureau,
-                                             page: 0, size: 100,
-                                             filterJson: nil,
-                                             onResponse: {
-                                                 (delegueList: [Dossier]) in
+                    self.getDelegateFolders(bureau: bureau,
+                                            page: 0, size: 100,
+                                            filterJson: nil,
+                                            onResponse: {
+                                                (delegueList: [Dossier]) in
 
-                                                 for dossierDelegue in delegueList {
-                                                     dossierDelegue.isDelegue = true;
-                                                 }
+                                                for dossierDelegue in delegueList {
+                                                    dossierDelegue.isDelegue = true;
+                                                }
 
-                                                 responseCallback!((dossierList! + delegueList) as NSArray)
-                                             },
-                                             onError: {
-                                                 (error: Error) in
-                                                 errorCallback!(error as NSError)
-                                             })
+                                                responseCallback!((dossierList! + delegueList))
+                                            },
+                                            onError: {
+                                                (error: Error) in
+                                                errorCallback!(error)
+                                            })
                     break
 
                 case .failure(let error):
@@ -413,12 +420,12 @@ import os
     }
 
 
-    @objc func getDossiersDelegues(bureau: NSString,
-                                   page: NSNumber,
-                                   size: NSNumber,
-                                   filterJson: NSString?,
-                                   onResponse responseCallback: (([Dossier]) -> Void)?,
-                                   onError errorCallback: ((NSError) -> Void)?) {
+    func getDelegateFolders(bureau: String,
+                            page: Int,
+                            size: Int,
+                            filterJson: String?,
+                            onResponse responseCallback: (([Dossier]) -> Void)?,
+                            onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -431,7 +438,7 @@ import os
             "pageSize": size,
             "corbeilleName": "dossiers-delegues",
             "pendingFile": 0,
-            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": page * size,
             "sort": "cm:create"
         ]
 
@@ -457,17 +464,17 @@ import os
                     break
 
                 case .failure(let error):
-                    errorCallback!(error as NSError)
+                    errorCallback!(error)
                     break
             }
         }
     }
 
 
-    @objc func getDossier(dossier: NSString,
-                          bureau: NSString,
-                          onResponse responseCallback: ((Dossier) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getDossier(dossier: String,
+                    bureau: String,
+                    onResponse responseCallback: ((Dossier) -> Void)?,
+                    onError errorCallback: ((Error) -> Void)?) {
 
         let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
 
@@ -500,9 +507,9 @@ import os
     }
 
 
-    @objc func getCircuit(dossier: NSString,
-                          onResponse responseCallback: ((Circuit) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getCircuit(dossier: String,
+                    onResponse responseCallback: ((Circuit) -> Void)?,
+                    onError errorCallback: ((Error) -> Void)?) {
 
         let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
 
@@ -529,7 +536,8 @@ import os
                     let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
                     if (hasSomeData) {
                         responseCallback!(circuitWrapper!["circuit"]!)
-                    } else {
+                    }
+                    else {
                         errorCallback!(NSError(domain: "Invalid response",
                                                code: 999))
                     }
@@ -575,9 +583,9 @@ import os
     }
 
 
-    @objc func getAnnotations(dossier: NSString,
-                              onResponse responseCallback: (([Annotation]) -> Void)?,
-                              onError errorCallback: ((NSError) -> Void)?) {
+    func getAnnotations(dossier: String,
+                        onResponse responseCallback: (([Annotation]) -> Void)?,
+                        onError errorCallback: ((Error) -> Void)?) {
 
         let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
 
@@ -634,7 +642,8 @@ import os
                     let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
                     if (hasSomeData) {
                         responseCallback!(signInfoWrapper!["signatureInformations"]!)
-                    } else {
+                    }
+                    else {
                         errorCallback!(NSError(domain: "Invalid response",
                                                code: 999))
                     }
@@ -667,8 +676,8 @@ import os
         // Send request
 
         self.sendSimpleAction(type: 1,
-                              url: "/parapheur/dossiers/\(dossierId)/signature" as NSString,
-                              args: argumentDictionary as NSDictionary,
+                              url: "/parapheur/dossiers/\(dossierId)/signature",
+                              args: argumentDictionary,
                               onResponse: {
                                   id in
                                   responseCallback!(1);
@@ -760,26 +769,147 @@ import os
     }
 
 
+    // </editor-fold desc="Get methods">
+
+
+    // <editor-fold desc="Annotations"> MARK: - Annotations
+
+
+    func createAnnotation(_ annotation: Annotation,
+                          folderId: String,
+                          documentId: String,
+                          responseCallback: ((String) -> Void)?,
+                          errorCallback: ((Error) -> Void)?) {
+
+        // Check arguments
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        guard let annotationData = try? jsonEncoder.encode(annotation) else {
+            errorCallback?(RuntimeError("Impossible de créer l'annotation"))
+            return
+        }
+
+        // Send request. Using directly JSON in the body.
+        // Casting/passing it through a Parameter object doen't work well.
+
+        let annotationUrlSuffix = RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId)
+        let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
+
+        var request = URLRequest(url: URL(string: annotationUrl)!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = annotationData
+
+        manager.request(request).responseJSON {
+            (response) in
+
+            switch (response.result) {
+
+                case .success:
+
+                    guard let jsonResult = response.value as? [String: String],
+                          let idString = jsonResult["id"] else {
+                        errorCallback?(RuntimeError("impossible de parser le résultat"))
+                        return
+                    }
+
+                    responseCallback?(idString)
+
+                case .failure(let error):
+
+                    errorCallback?(error)
+                    print(error.localizedDescription)
+            }
+        }
+    }
+
+
+    func updateAnnotation(_ annotation: Annotation,
+                          folderId: String,
+                          documentId: String,
+                          responseCallback: (() -> Void)?,
+                          errorCallback: ((Error) -> Void)?) {
+
+        // Check arguments
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        guard let annotationData = try? jsonEncoder.encode(annotation) else {
+            errorCallback?(RuntimeError("Impossible de créer l'annotation"))
+            return
+        }
+
+        // Send request. Using directly JSON in the body.
+        // Casting/passing it through a Parameter object doen't work well.
+
+        let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier)
+        let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
+
+        var request = URLRequest(url: URL(string: annotationUrl)!)
+        request.httpMethod = HTTPMethod.put.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = annotationData
+
+        manager.request(request).responseString {
+            (response) in
+
+            switch (response.result) {
+
+                case .success:
+                    responseCallback?()
+                    break
+
+                case .failure(let error):
+                    errorCallback?(error)
+                    print(error.localizedDescription)
+                    break
+            }
+        }
+    }
+
+
+    func deleteAnnotation(annotationId: String,
+                          folderId: String,
+                          documentId: String,
+                          onResponse responseCallback: (() -> Void)?,
+                          onError errorCallback: ((Error) -> Void)?) {
+
+        let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotationId)
+
+        sendSimpleAction(type: 3,
+                         url: annotationUrlSuffix,
+                         args: nil,
+                         onResponse: {
+                             response in
+                             responseCallback?()
+                         },
+                         onError: {
+                             (error: NSError) in
+                             errorCallback?(error as Error)
+                         })
+    }
+
+
+    // </editor-fold desc="Annotations">
+
+
     @objc func sendSimpleAction(type: NSNumber,
-                                url: NSString,
-                                args: NSDictionary,
+                                url: String,
+                                args: Parameters?,
                                 onResponse responseCallback: ((NSNumber) -> Void)?,
                                 onError errorCallback: ((NSError) -> Void)?) {
 
-        // Conversions ObjC -> Swift
-
         let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
-        var parameters: Parameters = [:]
-        for arg in args {
-            parameters[arg.key as! String] = arg.value
-        }
 
         // Request
 
         if (type == 1) {
             manager.request(annotationUrl,
                             method: .post,
-                            parameters: parameters,
+                            parameters: args,
                             encoding: JSONEncoding.default).validate().responseString {
                 response in
 
@@ -790,46 +920,48 @@ import os
                         break
 
                     case .failure(let error):
-                        errorCallback!(error as NSError)
+                        errorCallback?(error as NSError)
                         print(error.localizedDescription)
                         break
                 }
             }
-        } else if (type == 2) {
+        }
+        else if (type == 2) {
 
             manager.request(annotationUrl,
                             method: .put,
-                            parameters: parameters,
+                            parameters: args,
                             encoding: JSONEncoding.default).validate().responseString {
                 response in
 
                 switch (response.result) {
 
                     case .success:
-                        responseCallback!(NSNumber(value: 1))
+                        responseCallback?(1)
                         break
 
                     case .failure(let error):
-                        errorCallback!(error as NSError)
+                        errorCallback?(error as NSError)
                         print(error.localizedDescription)
                         break
                 }
             }
-        } else if (type == 3) {
+        }
+        else if (type == 3) {
 
             manager.request(annotationUrl,
                             method: .delete,
-                            parameters: parameters).validate().responseString {
+                            parameters: args).validate().responseString {
                 response in
 
                 switch (response.result) {
 
                     case .success:
-                        responseCallback!(NSNumber(value: 1))
+                        responseCallback?(1)
                         break
 
                     case .failure(let error):
-                        errorCallback!(error as NSError)
+                        errorCallback?(error as NSError)
                         break
                 }
             }
@@ -837,17 +969,14 @@ import os
     }
 
 
-    // </editor-fold desc="Get methods">
+    func downloadFile(document: Document,
+                      path filePath: URL,
+                      onResponse responseCallback: ((String) -> Void)?,
+                      onError errorCallback: ((Error) -> Void)?) {
 
-
-    @objc func downloadFile(document: NSString,
-                            isPdf: Bool,
-                            atPath filePath: NSURL,
-                            onResponse responseCallback: ((NSString) -> Void)?,
-                            onError errorCallback: ((NSError) -> Void)?) {
-
-        let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
-        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
+        let pdfSuffix = document.isPdfVisual ? ";ph:visuel-pdf" : ""
+        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
+        os_log("Document downloadUrl:%@", downloadFileUrl)
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }
@@ -865,13 +994,13 @@ import os
             response in
 
             if (response.error == nil) {
-                responseCallback!(response.destinationURL!.path as NSString)
+                responseCallback!(response.destinationURL!.path)
             }
             //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
-            //		errorCallback!(response.error)
+            //		errorCallback?(response.error)
             //	}
             else {
-                errorCallback!(response.error! as NSError)
+                errorCallback?(response.error!)
             }
         }
     }

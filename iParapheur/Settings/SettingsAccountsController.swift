@@ -84,10 +84,6 @@ import os
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
 
     // <editor-fold desc="TableView">
 
@@ -113,17 +109,17 @@ import os
         cell.titleLabel.text = titlePrint
         cell.infoLabel.text = "\(loginPrint) @ \(urlPrint)"
 
-        cell.deleteButton.isHidden = (account.id! == Account.DEMO_ID)
+        cell.deleteButton.isHidden = (account.id! == Account.demoId)
         cell.deleteButton.addTarget(self,
                                     action: #selector(onDeleteButtonClicked),
                                     for: .touchUpInside)
 
-        cell.editButton.isHidden = (account.id! == Account.DEMO_ID)
+        cell.editButton.isHidden = (account.id! == Account.demoId)
         cell.editButton.addTarget(self,
                                   action: #selector(onEditButtonClicked),
                                   for: .touchUpInside)
 
-        cell.visibilityButton.isHidden = (account.id != Account.DEMO_ID)
+        cell.visibilityButton.isHidden = (account.id != Account.demoId)
         cell.visibilityButton.isSelected = (account.isVisible!.boolValue || (accountList.count == 1))
 
         let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.withRenderingMode(.alwaysTemplate)
@@ -131,7 +127,7 @@ import os
 
         cell.visibilityButton.setImage(imageOff, for: .normal)
         cell.visibilityButton.setImage(imageOn, for: .selected)
-        cell.visibilityButton.tintColor = ColorUtils.Aqua
+        cell.visibilityButton.tintColor = ColorUtils.aqua
 
         cell.visibilityButton.addTarget(self,
                                         action: #selector(onVisibilityButtonClicked),
@@ -160,7 +156,8 @@ import os
             accountTableView.insertRows(at: [newIndexPath], with: UITableView.RowAnimation.fade)
             accountTableView.endUpdates()
 
-        } else {
+        }
+        else {
 
             // Refresh UI
 
