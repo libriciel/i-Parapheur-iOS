@@ -179,29 +179,32 @@ class FirstLoginPopupController: UIViewController {
 
         enableInterface(isEnabled: false)
 
-        restClient!.getApiVersion(onResponse: {
-            (level: NSNumber) in
+        restClient!.getApiVersion(onResponse:
+                                  {
+                                      (level: NSNumber) in
 
-            // Register new account as selected
+                                      // Register new account as selected
 
-            let preferences: UserDefaults = UserDefaults.standard
-            preferences.set(self.currentAccount!.id, forKey: Account.preferenceKeySelectedAccount as String)
+                                      let preferences: UserDefaults = UserDefaults.standard
+                                      preferences.set(self.currentAccount!.id, forKey: Account.preferenceKeySelectedAccount as String)
 
-            // UI refresh
+                                      // UI refresh
 
-            self.enableInterface(isEnabled: true)
-            self.dismissWithSuccess(success: true)
-        },
-                                  onError: {
-                                      (error: NSError) in
+                                      self.enableInterface(isEnabled: true)
+                                      self.dismissWithSuccess(success: true)
+                                  },
+                                  onError:
+                                  {
+                                      (error: Error) in
 
+                                      let nsError = error as NSError
                                       self.enableInterface(isEnabled: true)
 
                                       // Warn with orange fields
 
                                       // TODO : find kCFURLErrorUserAuthenticationRequired swift constant
 
-                                      if (error.code == -1011) {
+                                      if (nsError.code == -1011) {
                                           self.setBorderOnTextField(textField: self.loginTextField, alert: true)
                                           self.setBorderOnTextField(textField: self.passwordTextField, alert: true)
                                       }
@@ -211,7 +214,7 @@ class FirstLoginPopupController: UIViewController {
 
                                       // Setup error message
 
-                                      let localizedDescription = StringsUtils.getMessage(error: error)
+                                      let localizedDescription = StringsUtils.getMessage(error: nsError)
                                       ViewUtils.logError(message: localizedDescription, title: "La connexion au serveur a échoué")
                                   }
         )

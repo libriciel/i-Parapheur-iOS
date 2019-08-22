@@ -59,9 +59,9 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     var selectedCertificate: Certificate?
     var signInfoMap: [Dossier: SignInfo?] = [:]
     var signaturesToDo: [String: RemoteHasher] = [:]
-    @objc var restClient: RestClient?
-    @objc var currentAction: String?
-    @objc var currentBureau: String?
+    var restClient: RestClient?
+    var currentAction: String?
+    var currentBureau: String?
 
 
     // <editor-fold desc="LifeCycle">
@@ -326,9 +326,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     */
     private func refreshCertificateListVisibility() {
 
-        if (!signInfoMap.values.contains {
-            $0 == nil
-        }) {
+        if (!signInfoMap.values.contains { $0 == nil }) {
             certificateList = ModelsDataController.fetchCertificates()
             certificateTableView.reloadData()
         }

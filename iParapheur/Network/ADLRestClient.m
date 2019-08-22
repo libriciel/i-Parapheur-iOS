@@ -62,11 +62,7 @@ static NSNumber *PARAPHEUR_API_VERSION;
 - (void)resetClient {
 
     _restClientApi = nil;
-
-    if (PARAPHEUR_API_VERSION.intValue == 4)
-        _restClientApi = [[ADLRestClientApi4 alloc] init];
-    else
-        _restClientApi = [[ADLRestClientApi3 alloc] init];
+    _restClientApi = [[ADLRestClientApi3 alloc] init];
 }
 
 

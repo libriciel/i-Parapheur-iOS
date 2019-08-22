@@ -33,7 +33,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 #import <Foundation/Foundation.h>
-#import "ADLRestClientApi4.h"
+#import "ADLRestClientApi3.h"
 
 
 @interface ADLRestClient : NSObject
@@ -55,7 +55,7 @@
 
 
 - (void)getTypology:(NSString *)bureauId
-			success:(void (^)(NSArray *))success
+            success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure;
 
 

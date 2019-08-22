@@ -143,11 +143,13 @@ class RestClient: NSObject {
                             let decoder = JSONDecoder()
 
                             guard let jsonData = response.value?.data(using: .utf8),
-                                  let apiLevel = try? decoder.decode(ApiLevel.self, from: jsonData) else {
+                                  let apiLevelWrapper = try? decoder.decode(ApiLevel.self, from: jsonData),
+                                  let apiLevel = apiLevelWrapper.level else {
                                 errorCallback?(RuntimeError("Réponse du serveur invalide"))
+                                return
                             }
 
-                            responseCallback?(NSNumber(value: apiLevel.level))
+                            responseCallback?(NSNumber(value: apiLevel))
                             break
 
                         case .failure(let error):
@@ -238,6 +240,7 @@ class RestClient: NSObject {
                     guard let responseJsonData = response.value?.data(using: .utf8),
                           let dataToSign = try? jsonDecoder.decode(DataToSign.self, from: responseJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
                     os_log("getDataToSign response : %@", type: .debug, dataToSign)
@@ -305,9 +308,10 @@ class RestClient: NSObject {
                           let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
                                                                        from: responseJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
-                    responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature!.signatureResultBase64List))
+                    responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
                     break
 
                 case .failure(let error):
@@ -337,12 +341,13 @@ class RestClient: NSObject {
                           let bureaux = try? jsonDecoder.decode([Bureau].self,
                                                                 from: getBureauxJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
                     // Parsing and callback
 
                     if (bureaux != nil) {
-                        responseCallback?(bureaux!)
+                        responseCallback?(bureaux)
                     }
                     else {
                         errorCallback?(NSError(domain: "Invalid response",
@@ -399,6 +404,7 @@ class RestClient: NSObject {
                           let dossierList = try? jsonDecoder.decode([Dossier].self,
                                                                     from: responseJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
                     // Retrieve delegated
@@ -413,7 +419,7 @@ class RestClient: NSObject {
                                                     dossierDelegue.isDelegue = true;
                                                 }
 
-                                                responseCallback?((dossierList! + delegueList))
+                                                responseCallback?((dossierList + delegueList))
                                             },
                                             onError: {
                                                 (error: Error) in
@@ -468,6 +474,7 @@ class RestClient: NSObject {
                           let dossierList = try? jsonDecoder.decode([Dossier].self,
                                                                     from: responseJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
                     responseCallback?(dossierList)
@@ -504,9 +511,10 @@ class RestClient: NSObject {
                     guard let responseJsonData = response.value?.data(using: .utf8),
                           let dossier = try? jsonDecoder.decode(Dossier.self, from: responseJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
-                    responseCallback?(dossier!)
+                    responseCallback?(dossier)
                     break
 
                 case .failure(let error):
@@ -541,13 +549,14 @@ class RestClient: NSObject {
                           let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
                                                                        from: getCircuitJsonData) else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
 
                     // Parsing and callback
 
-                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
+                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper["circuit"] != nil)
                     if (hasSomeData) {
-                        responseCallback?(circuitWrapper!["circuit"]!)
+                        responseCallback?(circuitWrapper["circuit"]!)
                     }
                     else {
                         errorCallback?(NSError(domain: "Invalid response",
@@ -611,6 +620,7 @@ class RestClient: NSObject {
                 case .success:
                     guard let responseValue = response.value else {
                         errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        return
                     }
                     let parsedAnnotations = AnnotationsUtils.parse(string: responseValue)
                     responseCallback?(parsedAnnotations)
@@ -648,18 +658,18 @@ class RestClient: NSObject {
                     guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
                           let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
                                                                         from: getSignInfoJsonData) else {
-                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                        errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                        return
                     }
 
                     // Parsing and callback
 
-                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
+                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper["signatureInformations"] != nil)
                     if (hasSomeData) {
-                        responseCallback?(signInfoWrapper!["signatureInformations"]!)
+                        responseCallback?(signInfoWrapper["signatureInformations"]!)
                     }
                     else {
-                        errorCallback?(NSError(domain: "Invalid response",
-                                               code: 999))
+                        errorCallback?(NSError(domain: "Invalid response", code: 999))
                     }
 
                     break
