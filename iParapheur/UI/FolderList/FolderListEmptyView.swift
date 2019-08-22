@@ -35,17 +35,20 @@
 
 import Foundation
 
-@objc class FolderListEmptyView: UIView {
-	
-	@IBOutlet var icon: UIImageView!
-	@IBOutlet var filterAlertLabel: UILabel!
+class FolderListEmptyView: UIView {
 
-	@objc class func instanceFromNib() -> FolderListEmptyView {
-		
-		let view: FolderListEmptyView = UINib(nibName: "FolderListEmptyView",
-			bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! FolderListEmptyView
-		
-		view.icon.image = view.icon.image!.withRenderingMode(.alwaysTemplate)
-		return view
-	}
+
+    @IBOutlet var icon: UIImageView!
+    @IBOutlet var filterAlertLabel: UILabel!
+
+
+    @objc class func instanceFromNib() -> FolderListEmptyView {
+
+        let view = UINib(nibName: "FolderListEmptyView", bundle: nil)
+                .instantiate(withOwner: nil, options: nil).first as! FolderListEmptyView
+
+        view.icon.image = view.icon.image?.withRenderingMode(.alwaysTemplate)
+        return view
+    }
+
 }

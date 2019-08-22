@@ -102,7 +102,7 @@ class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.CellIdentifier,
+        let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.cellIdentifier,
                                                                        for: indexPath as IndexPath) as! SettingsAccountsCell
 
         // Compute data

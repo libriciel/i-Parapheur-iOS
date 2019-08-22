@@ -32,16 +32,17 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 class SettingsTableViewHeaderFooterView: UITableViewHeaderFooterView {
 
-	static let PreferredHeight: CGFloat! = 36
-	static let CellId: String! = "SettingsTableViewHeader"
+    static let preferredHeight: CGFloat = 36
+    static let cellId = "SettingsTableViewHeader"
 
-	@IBOutlet var label: UILabel!
-	@IBOutlet var upSeparator: UIView!
-	@IBOutlet var downSeparator: UIView!
-	
+    @IBOutlet var label: UILabel!
+    @IBOutlet var upSeparator: UIView!
+    @IBOutlet var downSeparator: UIView!
+
 }
 

@@ -38,7 +38,7 @@ import CoreData
 
 
 extension Filter {
-    
+
     static let entityName = "Filter"
 
     @NSManaged public var beginDate: NSDate?

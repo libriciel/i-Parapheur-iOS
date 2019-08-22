@@ -71,7 +71,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
+        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.cellId)
     }
 
     // MARK: - Listeners
@@ -91,7 +91,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.cellId) as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
         header.upSeparator.isHidden = (section == 0)
 
@@ -100,7 +100,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return SettingsTableViewHeaderFooterView.PreferredHeight
+        return SettingsTableViewHeaderFooterView.preferredHeight
     }
 
 
