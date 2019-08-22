@@ -150,7 +150,6 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         }
 
         performSegue(withIdentifier: possibleAction, sender: self)
-
     }
 
 
@@ -373,7 +372,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
     }
 
 
-    // <editor-fold desc="UITableView> MARK: - UITableView
+    // <editor-fold desc="UITableView"> MARK: - UITableView
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

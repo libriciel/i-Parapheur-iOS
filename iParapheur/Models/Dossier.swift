@@ -163,8 +163,13 @@ class Dossier: NSObject, Decodable {
         isDelegue = false
 
         // Sometimes it happens
+
         if !(actions.contains(actionDemandee)) {
             actions.append(actionDemandee)
+        }
+
+        if (actions.contains("SIGNATURE")) {
+            actions = actions.filter { $0 != "VISA" }
         }
     }
 

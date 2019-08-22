@@ -349,8 +349,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
         restClient.getDossier(dossier: folder.identifier,
                               bureau: desk.identifier,
-                              onResponse:
-                              { (folder: Dossier) in
+                              onResponse: { (folder: Dossier) in
                                   self.currentFolder = folder
                                   self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                               },
@@ -360,8 +359,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                               })
 
         restClient.getCircuit(dossier: folder.identifier,
-                              onResponse:
-                              { (workflow: Circuit) in
+                              onResponse: { (workflow: Circuit) in
                                   self.currentWorkflow = workflow
                                   self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                               },
@@ -371,8 +369,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                               })
 
         restClient.getAnnotations(dossier: folder.identifier,
-                                  onResponse:
-                                  { (annotations: [Annotation]) in
+                                  onResponse: { (annotations: [Annotation]) in
                                       self.currentAnnotations = annotations
                                       self.checkIfEverythingIsSetBeforeDisplayingThePdf()
                                   },
@@ -392,8 +389,8 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
             detailsButton.isEnabled = true
 
-            let pdfDocuments = folder.documents.filter({ ($0.isMainDocument || $0.isPdfVisual) })
-            if (pdfDocuments.count > 1) {
+            let pdfDocuments = folder.documents.filter { ($0.isMainDocument || $0.isPdfVisual) }
+            if pdfDocuments.count > 1 {
                 documentsButton.isEnabled = true
             }
 
