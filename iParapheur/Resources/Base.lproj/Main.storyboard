@@ -577,8 +577,9 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="loadMoreButton" destination="tpX-u5-kGi" id="sEI-WZ-3Di"/>
-                        <segue destination="2Dr-6H-2Si" kind="presentation" identifier="AVIS-TODO" modalPresentationStyle="formSheet" id="Les-T2-Xz2"/>
-                        <segue destination="2Dr-6H-2Si" kind="presentation" identifier="TRANSFERT-TODO" modalPresentationStyle="formSheet" id="3XH-4w-NAP"/>
+                        <outlet property="negativeToolbarButton" destination="hhE-kz-Pgm" id="VcU-SK-pwG"/>
+                        <outlet property="positiveToolbarButton" destination="ll6-Kd-pW9" id="r9s-zC-Qgz"/>
+                        <segue destination="zs0-y1-eAs" kind="presentation" identifier="WorkflowDialogController" modalPresentationStyle="formSheet" id="0AT-yd-Hxf"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eKB-EC-IFP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -865,25 +866,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1694" y="-767"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="1GW-4K-Vsd">
-            <objects>
-                <viewController id="2Dr-6H-2Si" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="MEE-7X-KOI"/>
-                        <viewControllerLayoutGuide type="bottom" id="VNs-D6-uXT"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="qhw-Dd-7tv">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </view>
-                    <toolbarItems/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mcg-OM-EJ9" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1416" y="727"/>
         </scene>
         <!--Annotation Details Controller-->
         <scene sceneID="vb6-nv-MDg">
@@ -1231,7 +1213,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-o7-ybk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-270.703125" y="557.3938506588579"/>
+            <point key="canvasLocation" x="5" y="471"/>
         </scene>
         <!--Sélection de compte-->
         <scene sceneID="Tr0-La-JXU">
@@ -1342,7 +1324,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zv2-Ua-lIv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="564" y="875"/>
+            <point key="canvasLocation" x="454" y="733"/>
         </scene>
         <!--Global Split View Controller-->
         <scene sceneID="18">
@@ -1397,7 +1379,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="62J-N8-HVF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="564" y="526"/>
+            <point key="canvasLocation" x="454" y="463"/>
         </scene>
     </scenes>
     <resources>
@@ -1419,6 +1401,6 @@
         <image name="ic_settings_white_24dp" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Les-T2-Xz2"/>
+        <segue reference="0AT-yd-Hxf"/>
     </inferredMetricsTieBreakers>
 </document>

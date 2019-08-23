@@ -62,7 +62,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     var signaturesToDo: [String: RemoteHasher] = [:]
     var restClient: RestClient?
     var currentAction: String?
-    var currentBureau: String?
+    var currentDeskId: String?
 
 
     // <editor-fold desc="LifeCycle">
@@ -84,7 +84,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             for dossier in signInfoMap.keys {
 
                 restClient?.getSignInfo(folder: dossier,
-                                        bureau: currentBureau! as NSString,
+                                        bureau: currentDeskId! as NSString,
                                         onResponse: { signInfo in
                                             self.signInfoMap[dossier] = signInfo
                                             self.refreshCertificateListVisibility()
@@ -160,7 +160,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             case WorkflowDialogController.actionVisa:
 
                 restClient?.visa(folder: Array(signInfoMap.keys)[0],
-                                 bureauId: currentBureau!,
+                                 bureauId: currentDeskId!,
                                  publicAnnotation: publicAnnotationTextView.text,
                                  privateAnnotation: privateAnnotationTextView.text,
                                  responseCallback: { number in
@@ -175,7 +175,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             case WorkflowDialogController.actionReject:
 
                 restClient?.reject(folder: Array(signInfoMap.keys)[0],
-                                   bureauId: currentBureau!,
+                                   bureauId: currentDeskId!,
                                    publicAnnotation: publicAnnotationTextView.text,
                                    privateAnnotation: privateAnnotationTextView.text,
                                    responseCallback: { number in
@@ -296,7 +296,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         let signatureConcat = signature.joined(separator: ",")
 
         restClient?.signDossier(dossierId: dossierId,
-                                bureauId: currentBureau!,
+                                bureauId: currentDeskId!,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
                                 signature: signatureConcat,

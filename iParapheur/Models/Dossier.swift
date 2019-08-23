@@ -168,8 +168,12 @@ class Dossier: NSObject, Decodable {
             actions.append(actionDemandee)
         }
 
-        if (actions.contains("SIGNATURE")) {
+        if actions.contains("SIGNATURE") {
             actions = actions.filter { $0 != "VISA" }
+        }
+
+        if actions.contains("VISA") {
+            actions.append("SIGNATURE")
         }
     }
 
@@ -185,9 +189,14 @@ class Dossier: NSObject, Decodable {
     static func getPositiveAction(folders: [Dossier]) -> String? {
         var possibleActions = ["VISA", "SIGNATURE"] // , "TDT", "MAILSEC", "ARCHIVER"]
 
+        print("folders \(folders.map { $0.actions })")
+        print("possible actions ? \(possibleActions)")
+
         for folder in folders {
             possibleActions = possibleActions.filter { folder.actions.contains($0) }
         }
+
+        print("possible actions : \(possibleActions)")
 
         return possibleActions.first
     }

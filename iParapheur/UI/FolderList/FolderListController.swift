@@ -54,7 +54,10 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     private static let pageSize = 15
 
+    @IBOutlet weak var negativeToolbarButton: UIBarButtonItem!
+    @IBOutlet weak var positiveToolbarButton: UIBarButtonItem!
     @IBOutlet weak var loadMoreButton: UIButton!
+
     var restClient: RestClient?
     var currentDesk: Bureau?
     var currentDossier: Dossier?
@@ -111,26 +114,26 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-        if segue.identifier == "filterSegue" {
-            // FIXME ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
-        }
-        else {
+//        if segue.identifier == "filterSegue" {
+//            // FIXME ((ADLFilterViewController *) segue.destinationViewController).delegate = self;
+//        }
 
-            // Paper signature is just a Visa, actually
+        if segue.identifier == WorkflowDialogController.segue,
+           let destinationController = segue.destination as? WorkflowDialogController,
+           let action = sender as? String,
+           let desk = currentDesk {
 
-            var isPaperSign = true
-            for dossier in selectedDossiers {
-                if !dossier.isSignPapier {
-                    isPaperSign = false
-                }
-            }
+            // let isPaperSign = selectedDossiers.allSatisfy { $0.isSignPapier == true }
+            var dataToSignMap: [Dossier: SignInfo?] = [:]
+            selectedDossiers.forEach { dataToSignMap[$0] = nil }
 
             // Launch popup
 
-            let workflowDialogController = segue.destination as! WorkflowDialogController
-            workflowDialogController.setDossiersToSign(selectedDossiers)
-            workflowDialogController.currentAction = sender as! String
-            // workflowDialogController.isPaperSign = isPaperSign; // FIXME
+            destinationController.setDossiersToSign(selectedDossiers)
+            destinationController.restClient = restClient
+            destinationController.currentAction = action
+            destinationController.signInfoMap = dataToSignMap
+            destinationController.currentDeskId = desk.identifier
         }
     }
 
@@ -149,7 +152,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             return
         }
 
-        performSegue(withIdentifier: possibleAction, sender: self)
+        performSegue(withIdentifier: WorkflowDialogController.segue, sender: possibleAction)
     }
 
 
@@ -161,7 +164,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             return
         }
 
-        performSegue(withIdentifier: negativeAction, sender: self)
+        performSegue(withIdentifier: WorkflowDialogController.segue, sender: negativeAction)
     }
 
 
@@ -234,6 +237,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             navigationItem.title = "1 dossier sélectionné"
 
             folderListDelegate?.onFolderMultipleSelectionStarted()
+            navigationController?.setToolbarHidden(false, animated: true)
         }
         else {
             navigationItem.leftBarButtonItem = nil
@@ -242,6 +246,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             navigationItem.title = currentDesk?.name
 
             folderListDelegate?.onFolderMultipleSelectionEnded()
+            navigationController?.setToolbarHidden(true, animated: true)
         }
     }
 
@@ -473,6 +478,15 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             else {
                 navigationItem.title = String(format: "%d dossiers sélectionnés", selectedDossiers.count)
             }
+
+            let positiveAction = Dossier.getPositiveAction(folders: selectedDossiers)
+            let negativeAction = Dossier.getNegativeAction(folders: selectedDossiers)
+
+            positiveToolbarButton.isEnabled = positiveAction != nil
+            negativeToolbarButton.isEnabled = negativeAction != nil
+
+            positiveToolbarButton.title = positiveAction ?? WorkflowDialogController.actionVisa
+            negativeToolbarButton.title = negativeAction ?? WorkflowDialogController.actionReject
 
             if selectedDossiers.count == 0 {
                 updateSelectionMode()
