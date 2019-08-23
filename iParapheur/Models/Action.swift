@@ -42,7 +42,7 @@ enum Action: Codable {
     case sign
     case reject
     case secretariat
-    case complementaryVisa
+    case secondOpinion
     case signatureTransfer
     case addSignature
     case mail
@@ -76,7 +76,7 @@ enum Action: Codable {
             case "VISA": self = .visa
             case "SECRETARIAT": self = .secretariat
             case "REMORD": self = .remorse
-            case "AVIS_COMPLEMENTAIRE": self = .complementaryVisa
+            case "AVIS_COMPLEMENTAIRE": self = .secondOpinion
             case "TRANSFERT_SIGNATURE": self = .signatureTransfer
             case "AJOUT_SIGNATURE": self = .addSignature
             case "EMAIL": self = .mail
@@ -109,7 +109,7 @@ enum Action: Codable {
             case .visa: try container.encode("VISA")
             case .secretariat: try container.encode("SECRETARIAT")
             case .remorse: try container.encode("REMORD")
-            case .complementaryVisa: try container.encode("AVIS_COMPLEMENTAIRE")
+            case .secondOpinion: try container.encode("AVIS_COMPLEMENTAIRE")
             case .signatureTransfer: try container.encode("TRANSFERT_SIGNATURE")
             case .addSignature: try container.encode("AJOUT_SIGNATURE")
             case .mail: try container.encode("EMAIL")

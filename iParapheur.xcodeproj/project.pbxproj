@@ -44,6 +44,7 @@
 		7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift */; };
 		7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */; };
 		7ADE3D103991447F45E984F8 /* Pods_iParapheurTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3386C8EB30BEDEB75F3942 /* Pods_iParapheurTests.framework */; };
+		7AE010B0231052D30031B866 /* Models_Action_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE010AF231052D30031B866 /* Models_Action_Tests.swift */; };
 		7AF3389E2077C58A00DE5F61 /* WorkflowDialogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
@@ -214,6 +215,7 @@
 		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
 		7ACBEE18206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_INTokenData.swift; sourceTree = "<group>"; };
 		7AD7FFD1206E7C690004A8DF /* Models_ApiLevel_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_ApiLevel_Tests.swift; sourceTree = "<group>"; };
+		7AE010AF231052D30031B866 /* Models_Action_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_Action_Tests.swift; sourceTree = "<group>"; };
 		7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowDialogController.swift; sourceTree = "<group>"; };
 		952E2E531888185E005C8D97 /* ADLFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLFilterViewController.h; sourceTree = "<group>"; };
 		952E2E541888185E005C8D97 /* ADLFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLFilterViewController.m; sourceTree = "<group>"; };
@@ -674,6 +676,7 @@
 		C58203BC1FBB466300B6606F /* iParapheurTests */ = {
 			isa = PBXGroup;
 			children = (
+				7AE010AF231052D30031B866 /* Models_Action_Tests.swift */,
 				7A4C70182306FDC50020ABF0 /* UI_PdfReaderController_Tests.swift */,
 				7A43289220CBE739004F0B2C /* Models_Document_Tests.swift */,
 				7A8556F220CAE9650083BFA6 /* Models_Dossier_Tests.swift */,
@@ -1055,6 +1058,7 @@
 				7A8556F320CAE9650083BFA6 /* Models_Dossier_Tests.swift in Sources */,
 				7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */,
 				7ACBEE19206E8A14000618DC /* Crypto_ImprimerieNationale_INTokenData.swift in Sources */,
+				7AE010B0231052D30031B866 /* Models_Action_Tests.swift in Sources */,
 				C54FA1ED1FCCE82100ED2D08 /* Utils_CryptoUtils_Tests.swift in Sources */,
 				7AD7FFD2206E7C690004A8DF /* Models_ApiLevel_Tests.swift in Sources */,
 				C5A7DAEB1FDECDC70022A813 /* Models_Etape_Tests.swift in Sources */,
