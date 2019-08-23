@@ -32,15 +32,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
 
-@objc public class Circuit: NSObject, Decodable {
+public class Circuit: NSObject, Decodable {
 
 
-    @objc let etapes: [Etape]
+    let etapes: [Etape]
     let annotPriv: String?
-    @objc let isDigitalSignatureMandatory: Bool
+    let isDigitalSignatureMandatory: Bool
     let isMultiDocument: Bool
     let hasSelectionScript: Bool
     let sigFormat: String?
@@ -48,6 +49,7 @@ import Foundation
 
 
     // <editor-fold desc="Json methods">
+
 
     enum CodingKeys: String, CodingKey {
         case etapes
@@ -58,6 +60,7 @@ import Foundation
         case sigFormat
         case signatureProtocol = "protocol"
     }
+
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -70,6 +73,7 @@ import Foundation
         sigFormat = try values.decodeIfPresent(String.self, forKey: .sigFormat)
         signatureProtocol = try values.decodeIfPresent(String.self, forKey: .signatureProtocol)
     }
+
 
     // </editor-fold desc="Json methods">
 

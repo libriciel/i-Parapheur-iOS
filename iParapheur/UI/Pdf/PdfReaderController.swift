@@ -54,6 +54,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
     let rejectItem = FloatyItem()
     let signItem = FloatyItem()
     let visaItem = FloatyItem()
+    let paperSignItem = FloatyItem()
 
     var restClient: RestClient?
     var currentDesk: Bureau?
@@ -102,6 +103,13 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         visaItem.icon = UIImage(named: "ic_check_white_18dp")!
         visaItem.handler = { item in
             self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionVisa)
+        }
+
+        paperSignItem.buttonColor = UIColor.gray
+        paperSignItem.title = "Transformer en signature papier"
+        paperSignItem.icon = UIImage(named: "outline_description_white_24dp")!
+        paperSignItem.handler = { item in
+            self.onPaperSignFloatingButtonClicked()
         }
 
         // UI fine tuning
@@ -190,6 +198,26 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
     private func onFolderActionFloatingButtonClicked(action: String) {
         performSegue(withIdentifier: WorkflowDialogController.segue, sender: action)
+    }
+
+
+    private func onPaperSignFloatingButtonClicked() {
+
+        guard let currentRestClient = self.restClient,
+              let folder = currentFolder,
+              let desk = currentDesk else { return }
+
+        currentRestClient.switchToPaperSignature(folder: folder,
+                                                 desk: desk,
+                                                 responseCallback: {
+                                                     self.currentFolder?.isSignPapier = true
+                                                     self.refreshFloatingActionButton(documentLoaded: self.pdfView.document)
+                                                 },
+                                                 errorCallback: { error in
+                                                     ViewUtils.logError(message: StringsUtils.getMessage(error: error),
+                                                                        title: "Erreur à la conversion en signature papier")
+                                                 })
+
     }
 
 
@@ -347,28 +375,28 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
               let desk = currentDesk,
               let restClient = self.restClient else { return }
 
-        restClient.getDossier(dossier: folder.identifier,
-                              bureau: desk.identifier,
-                              onResponse: { (folder: Dossier) in
-                                  self.currentFolder = folder
-                                  self.checkIfEverythingIsSetBeforeDisplayingThePdf()
-                              },
-                              onError: { (error: Error) in
-                                  ViewUtils.logError(message: error.localizedDescription as NSString,
-                                                     title: "Impossible de télécharger le dossier")
-                              })
+        restClient.getFolder(folder: folder.identifier,
+                             desk: desk.identifier,
+                             onResponse: { (folder: Dossier) in
+                                 self.currentFolder = folder
+                                 self.checkIfEverythingIsSetBeforeDisplayingThePdf()
+                             },
+                             onError: { (error: Error) in
+                                 ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                    title: "Impossible de télécharger le dossier")
+                             })
 
-        restClient.getCircuit(dossier: folder.identifier,
-                              onResponse: { (workflow: Circuit) in
-                                  self.currentWorkflow = workflow
-                                  self.checkIfEverythingIsSetBeforeDisplayingThePdf()
-                              },
-                              onError: { (error: Error) in
-                                  ViewUtils.logError(message: error.localizedDescription as NSString,
-                                                     title: "Impossible de télécharger le dossier")
-                              })
+        restClient.getWorkflow(folder: folder.identifier,
+                               onResponse: { (workflow: Circuit) in
+                                   self.currentWorkflow = workflow
+                                   self.checkIfEverythingIsSetBeforeDisplayingThePdf()
+                               },
+                               onError: { (error: Error) in
+                                   ViewUtils.logError(message: error.localizedDescription as NSString,
+                                                      title: "Impossible de télécharger le dossier")
+                               })
 
-        restClient.getAnnotations(dossier: folder.identifier,
+        restClient.getAnnotations(folder: folder.identifier,
                                   onResponse: { (annotations: [Annotation]) in
                                       self.currentAnnotations = annotations
                                       self.checkIfEverythingIsSetBeforeDisplayingThePdf()
@@ -488,33 +516,23 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         floatingActionButton.removeItem(item: visaItem)
         floatingActionButton.removeItem(item: signItem)
         floatingActionButton.removeItem(item: rejectItem)
+        floatingActionButton.removeItem(item: paperSignItem)
 
-        guard let folder = currentFolder else {
-            return
-        }
+        guard let folder = currentFolder else { return }
 
         let positiveAction = Dossier.getPositiveAction(folders: [folder])
         let negativeAction = Dossier.getNegativeAction(folders: [folder])
+        let digitalSignatureMandatory = currentWorkflow?.isDigitalSignatureMandatory ?? true
 
-        if (positiveAction == "SIGNATURE") {
-            floatingActionButton.addItem(item: signItem)
-        }
-        if (positiveAction == "VISA") {
-            floatingActionButton.addItem(item: visaItem)
-        }
-        if (negativeAction == "REJET") {
-            floatingActionButton.addItem(item: rejectItem)
-        }
+        if (positiveAction == "SIGNATURE") { floatingActionButton.addItem(item: signItem) }
+        if (positiveAction == "VISA") { floatingActionButton.addItem(item: visaItem) }
+        if (negativeAction == "REJET") { floatingActionButton.addItem(item: rejectItem) }
+        if (!digitalSignatureMandatory && !folder.isSignPapier) { floatingActionButton.addItem(item: paperSignItem) }
 
         floatingActionButton.addItem(item: annotationItem)
 
-        if ((documentLoaded != nil) && floatingActionButton.isHidden) {
-            floatingActionButton.isHidden = false
-        }
-
-        if ((documentLoaded == nil) && !floatingActionButton.isHidden) {
-            floatingActionButton.isHidden = true
-        }
+        if ((documentLoaded != nil) && floatingActionButton.isHidden) { floatingActionButton.isHidden = false }
+        if ((documentLoaded == nil) && !floatingActionButton.isHidden) { floatingActionButton.isHidden = true }
     }
 
 

@@ -140,12 +140,12 @@
 
     [self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-    [_swiftManager getSignInfoWithDossier:dossier
-                                   bureau:bureauId
-                               onResponse:^(SignInfo *response) {
+    [_swiftManager getSignInfoWithFolder:dossier
+                                  bureau:bureauId
+                              onResponse:^(SignInfo *response) {
                                    success(response);
                                }
-                                  onError:^(NSError *error) {
+                                 onError:^(NSError *error) {
                                       failure(error);
                                   }];
 }
@@ -153,30 +153,6 @@
 
 #pragma mark - Simple actions
 
-
-- (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
-                                     forBureau:(NSString *)bureauId
-                                       success:(void (^)(NSArray *))success
-                                       failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
-    argumentDictionary[@"bureauCourant"] = bureauId;
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(1)
-                                        url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
-                                                                       dossierId]
-                                       args:argumentDictionary
-                                 onResponse:^(id result) {
-                                     success(nil);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
 
 
 @end

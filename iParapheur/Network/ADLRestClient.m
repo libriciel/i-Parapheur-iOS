@@ -66,17 +66,6 @@ static NSNumber *PARAPHEUR_API_VERSION;
 }
 
 
-- (NSString *)fixBureauId:(NSString *)dossierId {
-
-    NSString *prefixToRemove = @"workspace://SpacesStore/";
-
-    if ([dossierId hasPrefix:prefixToRemove])
-        return [dossierId substringFromIndex:prefixToRemove.length];
-    else
-        return dossierId;
-}
-
-
 - (NSError *)downloadCertificateUrlWithUrl:(NSString *)url
                                     onPath:(NSString *)localPath {
 
@@ -118,52 +107,6 @@ static NSNumber *PARAPHEUR_API_VERSION;
                         failure:^(NSError *error) {
                             failure(error);
                         }];
-}
-
-
-- (void)getCircuit:(NSString *)dossier
-           success:(void (^)(Circuit *))success
-           failure:(void (^)(NSError *))failure {
-
-    [_restClientApi getCircuit:dossier
-                       success:^(Circuit *circuit) {
-                           success(circuit);
-                       }
-                       failure:^(NSError *error) {
-                           failure(error);
-                       }];
-}
-
-
-- (void)getSignInfoForDossier:(Dossier *)dossier
-                    andBureau:(NSString *)bureauId
-                      success:(void (^)(SignInfo *))success
-                      failure:(void (^)(NSError *))failure {
-
-    [_restClientApi getSignInfoForDossier:dossier
-                                andBureau:[self fixBureauId:bureauId]
-                                  success:^(SignInfo *signInfo) {
-                                      success(signInfo);
-                                  }
-                                  failure:^(NSError *error) {
-                                      failure(error);
-                                  }];
-}
-
-
-- (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
-                                     forBureau:(NSString *)bureauId
-                                       success:(void (^)(NSArray *))success
-                                       failure:(void (^)(NSError *))failure {
-
-    [_restClientApi actionSwitchToPaperSignatureForDossier:dossierId
-                                                 forBureau:[self fixBureauId:bureauId]
-                                                   success:^(NSArray *result) {
-                                                       success(result);
-                                                   }
-                                                   failure:^(NSError *error) {
-                                                       failure(error);
-                                                   }];
 }
 
 

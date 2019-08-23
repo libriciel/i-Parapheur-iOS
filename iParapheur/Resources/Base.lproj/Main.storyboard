@@ -135,7 +135,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="454" translatesAutoresizingMaskIntoConstraints="NO" id="B4S-bT-Peq">
-                                                    <rect key="frame" x="54" y="39" width="270" height="17"/>
+                                                    <rect key="frame" x="54" y="41.5" width="270" height="17"/>
                                                     <string key="text">Annotation publique déposée lors du passage de l'étape. Reste vide si l'étape n'est pas passée. Deux lignes affichées au maximum.</string>
                                                     <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -787,22 +787,18 @@
                                         <rect key="frame" x="0.0" y="364" width="508" height="174"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tlA-48-TVb" userLabel="Certificate Label Layout">
-                                                <rect key="frame" x="0.0" y="0.0" width="508" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="508" height="20.5"/>
                                                 <subviews>
                                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" text="Sélection du certificat" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVu-0w-Fhk">
-                                                        <rect key="frame" x="0.0" y="0.0" width="395" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="508" height="20.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aqz-4E-SWr">
-                                                        <rect key="frame" x="395" y="0.0" width="113" height="30"/>
-                                                        <state key="normal" title="Signature papier"/>
-                                                    </button>
                                                 </subviews>
                                             </stackView>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="57" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="yYh-fW-UKe">
-                                                <rect key="frame" x="0.0" y="38" width="508" height="136"/>
+                                                <rect key="frame" x="0.0" y="28.5" width="508" height="145.5"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <prototypes>
                                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="CertificateCell" rowHeight="57" id="9ow-14-BA6">
@@ -862,7 +858,6 @@
                     <connections>
                         <outlet property="certificateLayout" destination="mph-hb-Tib" id="CvP-wv-ikT"/>
                         <outlet property="certificateTableView" destination="yYh-fW-UKe" id="oeM-jv-qUt"/>
-                        <outlet property="paperSignatureButton" destination="aqz-4E-SWr" id="5rB-nh-mg3"/>
                         <outlet property="privateAnnotationTextView" destination="34E-II-hCb" id="Dug-Ey-4Np"/>
                         <outlet property="publicAnnotationTextView" destination="Gh8-sQ-Ge1" id="WSl-TM-tTm"/>
                     </connections>

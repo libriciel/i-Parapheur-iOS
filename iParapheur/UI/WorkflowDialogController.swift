@@ -39,6 +39,7 @@ import os
 
 class WorkflowDialogController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate {
 
+
     @objc static let segue = "WorkflowDialogController"
     @objc static let notificationActionComplete = Notification.Name("DossierActionComplete")
 
@@ -79,17 +80,16 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                                object: nil)
 
         if (currentAction == WorkflowDialogController.actionSignature) {
+
             for dossier in signInfoMap.keys {
 
-                restClient?.getSignInfo(dossier: dossier,
+                restClient?.getSignInfo(folder: dossier,
                                         bureau: currentBureau! as NSString,
-                                        onResponse: {
-                                            signInfo in
+                                        onResponse: { signInfo in
                                             self.signInfoMap[dossier] = signInfo
                                             self.refreshCertificateListVisibility()
                                         },
-                                        onError: {
-                                            error in
+                                        onError: { error in
                                             ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
                                                                title: "Erreur à la récupération des données à signer")
                                         }
@@ -159,16 +159,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
             case WorkflowDialogController.actionVisa:
 
-                restClient?.visa(dossier: Array(signInfoMap.keys)[0],
+                restClient?.visa(folder: Array(signInfoMap.keys)[0],
                                  bureauId: currentBureau!,
                                  publicAnnotation: publicAnnotationTextView.text,
                                  privateAnnotation: privateAnnotationTextView.text,
-                                 responseCallback: {
-                                     number in
+                                 responseCallback: { number in
                                      self.dismissWithRefresh()
                                  },
-                                 errorCallback: {
-                                     error in
+                                 errorCallback: { error in
                                      ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
                                                         title: "Erreur à l'envoi du visa")
                                  })
@@ -176,16 +174,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
             case WorkflowDialogController.actionReject:
 
-                restClient?.reject(dossier: Array(signInfoMap.keys)[0],
+                restClient?.reject(folder: Array(signInfoMap.keys)[0],
                                    bureauId: currentBureau!,
                                    publicAnnotation: publicAnnotationTextView.text,
                                    privateAnnotation: privateAnnotationTextView.text,
-                                   responseCallback: {
-                                       number in
+                                   responseCallback: { number in
                                        self.dismissWithRefresh()
                                    },
-                                   errorCallback: {
-                                       error in
+                                   errorCallback: { error in
                                        ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
                                                           title: "Erreur à l'envoi du rejet")
                                    })
@@ -246,16 +242,13 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                 let hasher: RemoteHasher = Array(signaturesToDo.values)[0]
 
                 hasher.generateHashToSign(onResponse:
-                                          {
-                                              (result: DataToSign) in
+                                          { (result: DataToSign) in
 
                                               InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
                                                                 certificateId: certificateId,
                                                                 signatureAlgorithm: Array(self.signaturesToDo.values)[0].mSignatureAlgorithm)
                                           },
-                                          onError:
-                                          {
-                                              (error: Error) in
+                                          onError: { (error: Error) in
                                               ViewUtils.logError(message: "Vérifier le réseau",
                                                                  title: "Erreur à la récupération du hash à signer")
                                           }
@@ -288,14 +281,11 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         }
 
         hasher!.buildDataToReturn(signatureList: signedDataList,
-                                  onResponse: {
-                                      (result: [Data]) in
-
+                                  onResponse: { (result: [Data]) in
                                       let resultBase64List = StringsUtils.toBase64List(dataList: result)
                                       self.sendFinalSignatureResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
                                   },
-                                  onError: {
-                                      (error: Error) in
+                                  onError: { (error: Error) in
                                       print(error.localizedDescription)
                                   })
     }
@@ -310,12 +300,10 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
                                 signature: signatureConcat,
-                                responseCallback: {
-                                    number in
+                                responseCallback: { number in
                                     self.dismissWithRefresh()
                                 },
-                                errorCallback: {
-                                    error in
+                                errorCallback: { error in
                                     ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
                                                        title: "Erreur à l'envoi de la signature")
                                 })

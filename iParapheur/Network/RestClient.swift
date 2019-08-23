@@ -123,9 +123,6 @@ class RestClient: NSObject {
     // </editor-fold desc="Utils">
 
 
-    // <editor-fold desc="Get methods">
-
-
     @objc func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
                              onError errorCallback: ((Error) -> Void)?) {
 
@@ -465,16 +462,16 @@ class RestClient: NSObject {
     }
 
 
-    func getDossier(dossier: String,
-                    bureau: String,
-                    onResponse responseCallback: ((Dossier) -> Void)?,
-                    onError errorCallback: ((Error) -> Void)?) {
+    func getFolder(folder: String,
+                   desk: String,
+                   onResponse responseCallback: ((Dossier) -> Void)?,
+                   onError errorCallback: ((Error) -> Void)?) {
 
-        let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
+        let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder)"
 
         // Parameters
 
-        let parameters: Parameters = ["bureauCourant": bureau]
+        let parameters: Parameters = ["bureauCourant": desk]
 
         // Request
 
@@ -502,11 +499,11 @@ class RestClient: NSObject {
     }
 
 
-    func getCircuit(dossier: String,
-                    onResponse responseCallback: ((Circuit) -> Void)?,
-                    onError errorCallback: ((Error) -> Void)?) {
+    func getWorkflow(folder: String,
+                     onResponse responseCallback: ((Circuit) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
 
-        let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
+        let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder)/circuit"
 
         // Request
 
@@ -569,11 +566,11 @@ class RestClient: NSObject {
     }
 
 
-    func getAnnotations(dossier: String,
+    func getAnnotations(folder: String,
                         onResponse responseCallback: (([Annotation]) -> Void)?,
                         onError errorCallback: ((Error) -> Void)?) {
 
-        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
+        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder)/annotations"
 
         // Request
 
@@ -598,12 +595,12 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getSignInfo(dossier: Dossier,
+    @objc func getSignInfo(folder: Dossier,
                            bureau: NSString,
                            onResponse responseCallback: ((SignInfo) -> Void)?,
                            onError errorCallback: ((NSError) -> Void)?) {
 
-        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/getSignInfo"
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
 
         // Parameters
 
@@ -665,14 +662,14 @@ class RestClient: NSObject {
     }
 
 
-    func visa(dossier: Dossier,
+    func visa(folder: Dossier,
               bureauId: String,
               publicAnnotation: String?,
               privateAnnotation: String?,
               responseCallback: ((NSNumber) -> Void)?,
               errorCallback: ((NSError) -> Void)?) {
 
-        let visaUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/visa"
+        let visaUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/visa"
 
         // Create arguments dictionary
 
@@ -703,14 +700,14 @@ class RestClient: NSObject {
     }
 
 
-    func reject(dossier: Dossier,
+    func reject(folder: Dossier,
                 bureauId: String,
                 publicAnnotation: String?,
                 privateAnnotation: String?,
                 responseCallback: ((NSNumber) -> Void)?,
                 errorCallback: ((NSError) -> Void)?) {
 
-        let rejectUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/rejet"
+        let rejectUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/rejet"
 
         // Create arguments dictionary
 
@@ -741,7 +738,28 @@ class RestClient: NSObject {
     }
 
 
-    // </editor-fold desc="Get methods">
+    func switchToPaperSignature(folder: Dossier,
+                                desk: Bureau,
+                                responseCallback: (() -> Void)?,
+                                errorCallback: ((NSError) -> Void)?) {
+
+        // Creating arguments dictionary
+
+        var argumentDictionary = Parameters()
+        argumentDictionary["bureauCourant"] = desk.identifier
+
+        // Send request
+
+        sendSimpleAction(type: 1,
+                         url: String(format: "/parapheur/dossiers/%@/signPapier", folder.identifier),
+                         args: argumentDictionary,
+                         onResponse: { result in
+                             responseCallback?()
+                         },
+                         onError: { (error: NSError) in
+                             errorCallback?(error)
+                         })
+    }
 
 
     // <editor-fold desc="Annotations"> MARK: - Annotations

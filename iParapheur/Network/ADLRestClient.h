@@ -59,15 +59,4 @@
             failure:(void (^)(NSError *))failure;
 
 
-- (void)getCircuit:(NSString *)dossier
-           success:(void (^)(Circuit *))circuit
-           failure:(void (^)(NSError *))failure;
-
-
-- (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
-                                     forBureau:(NSString *)bureauId
-                                       success:(void (^)(NSArray *))success
-                                       failure:(void (^)(NSError *))failure;
-
-
 @end

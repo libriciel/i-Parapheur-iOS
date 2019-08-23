@@ -65,7 +65,7 @@ class Dossier: NSObject, Decodable {
     let isSent: Bool
     let canAdd: Bool
     @objc let isLocked: Bool
-    @objc let isSignPapier: Bool
+    var isSignPapier: Bool
     let isXemEnabled: Bool
     let isReadingMandatory: Bool
 
