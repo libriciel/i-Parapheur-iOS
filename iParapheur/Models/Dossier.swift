@@ -51,8 +51,8 @@ class Dossier: NSObject, Decodable {
     let nomTdT: String?
     let xPathSignature: String?
 
-    @objc let actionDemandee: String
-    @objc var actions: [String]
+    let actionDemandee: Action
+    var actions: [Action]
     @objc let documents: [Document]
     let acteursVariables: [String]
     // TODO let metadatas: [String: Any]
@@ -126,8 +126,8 @@ class Dossier: NSObject, Decodable {
         nomTdT = try values.decodeIfPresent(String.self, forKey: .nomTdT) ?? ""
         xPathSignature = try values.decodeIfPresent(String.self, forKey: .xPathSignature) ?? ""
 
-        actionDemandee = try values.decodeIfPresent(String.self, forKey: .actionDemandee) ?? "VISA"
-        actions = try values.decodeIfPresent([String].self, forKey: .actions) ?? []
+        actionDemandee = try values.decodeIfPresent(Action.self, forKey: .actionDemandee) ?? .visa
+        actions = try values.decodeIfPresent([Action].self, forKey: .actions) ?? []
         documents = try values.decodeIfPresent([Document].self, forKey: .documents) ?? []
         acteursVariables = try values.decodeIfPresent([String].self, forKey: .acteursVariables) ?? []
         // TODO metadatas = try values.decodeIfPresent([String: Any].self, forKey: .metadatas) ?? [:]
@@ -168,12 +168,12 @@ class Dossier: NSObject, Decodable {
             actions.append(actionDemandee)
         }
 
-        if actions.contains("SIGNATURE") {
-            actions = actions.filter { $0 != "VISA" }
+        if actions.contains(.sign) {
+            actions = actions.filter { $0 != .visa }
         }
 
-        if actions.contains("VISA") {
-            actions.append("SIGNATURE")
+        if actions.contains(.visa) {
+            actions.append(.sign)
         }
     }
 
@@ -186,17 +186,12 @@ class Dossier: NSObject, Decodable {
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    static func getPositiveAction(folders: [Dossier]) -> String? {
-        var possibleActions = ["VISA", "SIGNATURE"] // , "TDT", "MAILSEC", "ARCHIVER"]
-
-        print("folders \(folders.map { $0.actions })")
-        print("possible actions ? \(possibleActions)")
+    static func getPositiveAction(folders: [Dossier]) -> Action? {
+        var possibleActions: [Action] = [.visa, .sign] // , "TDT", "MAILSEC", "ARCHIVER"]
 
         for folder in folders {
             possibleActions = possibleActions.filter { folder.actions.contains($0) }
         }
-
-        print("possible actions : \(possibleActions)")
 
         return possibleActions.first
     }
@@ -204,8 +199,8 @@ class Dossier: NSObject, Decodable {
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    @objc static func getNegativeAction(folders: [Dossier]) -> String? {
-        var possibleActions = ["REJET"]
+    static func getNegativeAction(folders: [Dossier]) -> Action? {
+        var possibleActions: [Action] = [.reject]
 
         for folder in folders {
             possibleActions = possibleActions.filter { folder.actions.contains($0) }
@@ -215,9 +210,9 @@ class Dossier: NSObject, Decodable {
     }
 
 
-    class func filterActions(dossierList: NSArray) -> [String] {
+    class func filterActions(dossierList: [Action]) -> [Action] {
 
-        var result: [String] = []
+        var result: [Action] = []
 
         // Compute values
 
@@ -229,11 +224,11 @@ class Dossier: NSObject, Decodable {
 
         for dossierItem in dossierList {
             if let dossier = dossierItem as? Dossier {
-                hasVisa = hasVisa && dossier.actions.contains("VISA")
-                hasSignature = hasSignature && (dossier.actions.contains("SIGNATURE") || dossier.actions.contains("VISA"))
-                hasOnlyVisa = hasOnlyVisa && !dossier.actions.contains("SIGNATURE")
-                hasReject = hasReject && dossier.actions.contains("REJET")
-                hasTDT = hasTDT && dossier.actions.contains("TDT")
+                hasVisa = hasVisa && dossier.actions.contains(.visa)
+                hasSignature = hasSignature && (dossier.actions.contains(.sign) || dossier.actions.contains(.visa))
+                hasOnlyVisa = hasOnlyVisa && !dossier.actions.contains(.sign)
+                hasReject = hasReject && dossier.actions.contains(.reject)
+                hasTDT = hasTDT && dossier.actions.contains(.tdt)
             }
         }
 
@@ -242,18 +237,18 @@ class Dossier: NSObject, Decodable {
         // Build result
 
         if hasSignature {
-            result.append("SIGNATURE")
+            result.append(.sign)
         }
         else if hasVisa {
-            result.append("VISA")
+            result.append(.visa)
         }
 
         if hasReject {
-            result.append("REJET")
+            result.append(.reject)
         }
 
         if hasTDT {
-            result.append("TDT")
+            result.append(.tdt)
         }
 
         return result

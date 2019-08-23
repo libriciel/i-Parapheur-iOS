@@ -85,24 +85,24 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         }
 
         rejectItem.buttonColor = UIColor.red
-        rejectItem.title = "Rejeter"
+        rejectItem.title = Action.prettyPrint(.reject)
         rejectItem.icon = UIImage(named: "ic_close_white_24dp")!
         rejectItem.handler = { item in
-            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionReject)
+            self.onFolderActionFloatingButtonClicked(action: .reject)
         }
 
         signItem.buttonColor = ColorUtils.darkGreen
-        signItem.title = "Signer"
+        signItem.title = Action.prettyPrint(.sign)
         signItem.icon = UIImage(named: "ic_check_white_18dp")!
         signItem.handler = { item in
-            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionSignature)
+            self.onFolderActionFloatingButtonClicked(action: .sign)
         }
 
         visaItem.buttonColor = ColorUtils.darkGreen
-        visaItem.title = "Viser"
+        visaItem.title = Action.prettyPrint(.visa)
         visaItem.icon = UIImage(named: "ic_check_white_18dp")!
         visaItem.handler = { item in
-            self.onFolderActionFloatingButtonClicked(action: WorkflowDialogController.actionVisa)
+            self.onFolderActionFloatingButtonClicked(action: .visa)
         }
 
         paperSignItem.buttonColor = UIColor.gray
@@ -143,9 +143,10 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         }
         else if (segue.identifier == WorkflowDialogController.segue),
                 let destinationController = segue.destination as? WorkflowDialogController,
+                let action = sender as? Action,
                 let folder = currentFolder {
 
-            destinationController.currentAction = sender as? String
+            destinationController.currentAction = action
             destinationController.restClient = restClient
             destinationController.signInfoMap = [folder: nil]
             destinationController.currentDeskId = currentDesk?.identifier
@@ -196,7 +197,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
     }
 
 
-    private func onFolderActionFloatingButtonClicked(action: String) {
+    private func onFolderActionFloatingButtonClicked(action: Action) {
         performSegue(withIdentifier: WorkflowDialogController.segue, sender: action)
     }
 
@@ -524,9 +525,9 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         let negativeAction = Dossier.getNegativeAction(folders: [folder])
         let digitalSignatureMandatory = currentWorkflow?.isDigitalSignatureMandatory ?? true
 
-        if (positiveAction == "SIGNATURE") { floatingActionButton.addItem(item: signItem) }
-        if (positiveAction == "VISA") { floatingActionButton.addItem(item: visaItem) }
-        if (negativeAction == "REJET") { floatingActionButton.addItem(item: rejectItem) }
+        if (positiveAction == .sign) { floatingActionButton.addItem(item: signItem) }
+        if (positiveAction == .visa) { floatingActionButton.addItem(item: visaItem) }
+        if (negativeAction == .reject) { floatingActionButton.addItem(item: rejectItem) }
         if (!digitalSignatureMandatory && !folder.isSignPapier) { floatingActionButton.addItem(item: paperSignItem) }
 
         floatingActionButton.addItem(item: annotationItem)

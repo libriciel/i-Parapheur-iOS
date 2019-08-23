@@ -43,10 +43,6 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     @objc static let segue = "WorkflowDialogController"
     @objc static let notificationActionComplete = Notification.Name("DossierActionComplete")
 
-    static let actionSignature = "SIGNATURE"
-    static let actionVisa = "VISA"
-    static let actionReject = "REJET"
-
     static let alertViewTagP12Pass = 1
     static let alertViewTagPaperSignature = 2
 
@@ -61,7 +57,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     var signInfoMap: [Dossier: SignInfo?] = [:]
     var signaturesToDo: [String: RemoteHasher] = [:]
     var restClient: RestClient?
-    var currentAction: String?
+    var currentAction: Action?
     var currentDeskId: String?
 
 
@@ -72,14 +68,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         os_log("View loaded : WorkflowDialogController", type: .debug)
 
-        self.certificateLayout.isHidden = !(currentAction == WorkflowDialogController.actionSignature)
+        self.certificateLayout.isHidden = !(currentAction == .sign)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
                                                name: .signatureResult,
                                                object: nil)
 
-        if (currentAction == WorkflowDialogController.actionSignature) {
+        if currentAction == .sign {
 
             for dossier in signInfoMap.keys {
 
@@ -149,15 +145,16 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
-        switch currentAction {
 
+        guard let action = currentAction else { return }
+        switch action {
 
-            case WorkflowDialogController.actionSignature:
+            case .sign:
 
                 signature()
 
 
-            case WorkflowDialogController.actionVisa:
+            case .visa:
 
                 restClient?.visa(folder: Array(signInfoMap.keys)[0],
                                  bureauId: currentDeskId!,
@@ -172,7 +169,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                  })
 
 
-            case WorkflowDialogController.actionReject:
+            case .reject:
 
                 restClient?.reject(folder: Array(signInfoMap.keys)[0],
                                    bureauId: currentDeskId!,

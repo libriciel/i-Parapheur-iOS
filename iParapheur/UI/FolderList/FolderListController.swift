@@ -120,7 +120,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         if segue.identifier == WorkflowDialogController.segue,
            let destinationController = segue.destination as? WorkflowDialogController,
-           let action = sender as? String,
+           let action = sender as? Action,
            let desk = currentDesk {
 
             // let isPaperSign = selectedDossiers.allSatisfy { $0.isSignPapier == true }
@@ -181,6 +181,26 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
     // </editor-fold desc="UI Listeners">
 
 
+    private func refreshSelectionUI() {
+
+        if selectedDossiers.count == 1 {
+            navigationItem.title = "1 dossier sélectionné"
+        }
+        else {
+            navigationItem.title = String(format: "%d dossiers sélectionnés", selectedDossiers.count)
+        }
+
+        let positiveAction = Dossier.getPositiveAction(folders: selectedDossiers)
+        let negativeAction = Dossier.getNegativeAction(folders: selectedDossiers)
+
+        positiveToolbarButton.isEnabled = positiveAction != nil
+        negativeToolbarButton.isEnabled = negativeAction != nil
+
+        positiveToolbarButton.title = Action.prettyPrint(positiveAction ?? .visa)
+        negativeToolbarButton.title = Action.prettyPrint(negativeAction ?? .reject)
+    }
+
+
     private func updateSelectionMode() {
 
         // Fetch cells and toggle dot/check
@@ -224,7 +244,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         if selectedDossiers.count != 0 {
 
             let exitButton = UIBarButtonItem()
-            exitButton.title = "Exit"
+            exitButton.title = "Annuler"
             exitButton.image = UIImage(named: "ic_close_white.png")
             exitButton.tintColor = ColorUtils.aqua
             exitButton.style = .plain
@@ -234,7 +254,6 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
             navigationItem.leftBarButtonItem = exitButton
             navigationItem.rightBarButtonItem?.isEnabled = false
             navigationItem.rightBarButtonItem?.tintColor = UIColor.clear
-            navigationItem.title = "1 dossier sélectionné"
 
             folderListDelegate?.onFolderMultipleSelectionStarted()
             navigationController?.setToolbarHidden(false, animated: true)
@@ -472,21 +491,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
             // Update UI
 
-            if selectedDossiers.count == 1 {
-                navigationItem.title = "1 dossier sélectionné"
-            }
-            else {
-                navigationItem.title = String(format: "%d dossiers sélectionnés", selectedDossiers.count)
-            }
-
-            let positiveAction = Dossier.getPositiveAction(folders: selectedDossiers)
-            let negativeAction = Dossier.getNegativeAction(folders: selectedDossiers)
-
-            positiveToolbarButton.isEnabled = positiveAction != nil
-            negativeToolbarButton.isEnabled = negativeAction != nil
-
-            positiveToolbarButton.title = positiveAction ?? WorkflowDialogController.actionVisa
-            negativeToolbarButton.title = negativeAction ?? WorkflowDialogController.actionReject
+            refreshSelectionUI()
 
             if selectedDossiers.count == 0 {
                 updateSelectionMode()
@@ -553,6 +558,8 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
         // Refresh UI
 
         tableView.reloadRows(at: [indexPath!], with: .none)
+
+        refreshSelectionUI()
         updateSelectionMode()
     }
 
