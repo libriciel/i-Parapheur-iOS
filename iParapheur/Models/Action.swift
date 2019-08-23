@@ -50,12 +50,12 @@ enum Action: Codable {
     case suppress
     case journal
     case remorse
-    case securizedMail
+    case secureMail
     case archive
     case tdtHelios
     case tdtActes
     case tdt
-    case actionTransfert
+    case transfer
     case getAttest
     case reset
     case edit
@@ -83,11 +83,11 @@ enum Action: Codable {
             case "ENREGISTRER": self = .save
             case "SUPPRESSION": self = .suppress
             case "JOURNAL": self = .journal
-            case "MAILSEC": self = .securizedMail
+            case "MAILSEC": self = .secureMail
             case "TDT": self = .tdt
             case "TDT_ACTES": self = .tdtActes
             case "TDT_HELIOS": self = .tdtHelios
-            case "TRANSFERT_ACTION": self = .actionTransfert
+            case "TRANSFERT_ACTION": self = .transfer
             case "GET_ATTEST": self = .getAttest
             case "RAZ": self = .reset
             case "EDITION": self = .edit
@@ -116,11 +116,11 @@ enum Action: Codable {
             case .save: try container.encode("ENREGISTRER")
             case .suppress: try container.encode("SUPPRESSION")
             case .journal: try container.encode("JOURNAL")
-            case .securizedMail: try container.encode("MAILSEC")
+            case .secureMail: try container.encode("MAILSEC")
             case .tdt: try container.encode("TDT")
             case .tdtActes: try container.encode("TDT_ACTES")
             case .tdtHelios: try container.encode("TDT_HELIOS")
-            case .actionTransfert: try container.encode("TRANSFERT_ACTION")
+            case .transfer: try container.encode("TRANSFERT_ACTION")
             case .getAttest: try container.encode("GET_ATTEST")
             case .reset: try container.encode("RAZ")
             case .edit: try container.encode("EDITION")

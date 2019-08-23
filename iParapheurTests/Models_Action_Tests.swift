@@ -73,7 +73,7 @@ class Models_Action_Tests: XCTestCase {
 
         let expectedArray: [Action] = [.sign, .reject, .visa, .secretariat, .remorse, .secondOpinion,
                                        .signatureTransfer, .addSignature, .mail, .save, .suppress,
-                                       .journal, .securizedMail, .tdt, .tdtActes, .tdtHelios, .actionTransfert,
+                                       .journal, .secureMail, .tdt, .tdtActes, .tdtHelios, .transfer,
                                        .getAttest, .reset, .edit, .chainWorkflow, .archive]
         XCTAssertEqual(actionList, expectedArray)
 
