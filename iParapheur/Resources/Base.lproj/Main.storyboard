@@ -381,14 +381,12 @@
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="onAccountButtonClicked:" destination="TGh-sj-pLc" id="LtB-TS-pfl"/>
-                                <segue destination="nxB-H0-cxL" kind="presentation" identifier="AccountListSegue" modalPresentationStyle="currentContext" id="GrA-mP-kF0"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="ic_settings_white_24dp" id="XVu-qm-8t4">
                             <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="onSettingsButtonClicked:" destination="TGh-sj-pLc" id="C3f-6e-x3o"/>
-                                <segue destination="0Rw-5c-KLL" kind="presentation" identifier="FirstLoginPopupSegue" modalPresentationStyle="formSheet" id="391-AD-jqw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -396,6 +394,8 @@
                     <connections>
                         <outlet property="accountButton" destination="Cjo-Ew-HTT" id="pTF-Yl-f8X"/>
                         <segue destination="yeg-xR-bYl" kind="show" identifier="showBureau" id="vpv-XF-h7P"/>
+                        <segue destination="0Rw-5c-KLL" kind="presentation" identifier="FirstLoginPopupSegue" modalPresentationStyle="formSheet" id="7Mj-q4-JHC"/>
+                        <segue destination="nxB-H0-cxL" kind="presentation" identifier="AccountListSegue" modalPresentationStyle="currentContext" id="4Ow-fP-BEV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jCe-hd-WDm" userLabel="First Responder" sceneMemberID="firstResponder"/>
