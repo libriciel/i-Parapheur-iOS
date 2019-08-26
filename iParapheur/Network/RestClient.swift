@@ -633,14 +633,13 @@ class RestClient: NSObject {
     }
 
 
-    @objc func signDossier(dossierId: String,
-                           bureauId: String,
-                           publicAnnotation: String?,
-                           privateAnnotation: String?,
-                           signature: String,
-                           responseCallback: ((NSNumber) -> Void)?,
-                           errorCallback: ((NSError) -> Void)?) {
-
+    func signDossier(dossierId: String,
+                     bureauId: String,
+                     publicAnnotation: String?,
+                     privateAnnotation: String?,
+                     signature: String,
+                     responseCallback: ((NSNumber) -> Void)?,
+                     errorCallback: ((Error) -> Void)?) {
 
         var argumentDictionary: [String: String] = [:]
         argumentDictionary["bureauCourant"] = bureauId
@@ -657,7 +656,7 @@ class RestClient: NSObject {
                                   responseCallback?(1)
                               },
                               onError: { error in
-                                  errorCallback?(error as NSError)
+                                  errorCallback?(error)
                               })
     }
 

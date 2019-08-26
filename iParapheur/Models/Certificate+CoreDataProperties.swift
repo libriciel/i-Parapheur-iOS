@@ -55,4 +55,20 @@ extension Certificate {
     @NSManaged public var sourceType: CertificateType
     @NSManaged public var payload: NSData?
 
+
+    convenience init(id: String, type: CertificateType) {
+        self.init()
+
+        identifier = id
+        sourceType = type
+
+        caName = nil
+        commonName = nil
+        notAfter = nil
+        notBefore = nil
+        publicKey = nil
+        serialNumber = nil
+        payload = nil
+    }
+
 }

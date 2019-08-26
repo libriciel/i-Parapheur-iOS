@@ -58,6 +58,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     var actionsToPerform: [ActionToPerform] = []
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
+    var currentPassword: String?
 
 
     // <editor-fold desc="LifeCycle">
@@ -162,6 +163,17 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             }
         }
 
+        // Special case on P12 password request
+
+        if selectedCertificate?.sourceType == .p12File,
+           signaturesToPerform.count > 0,
+           currentPassword == nil {
+
+            // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
+            displayPasswordAlert()
+            return
+        }
+
         // Starting requests
 
         for actionToPerform in actionsToPerform {
@@ -216,6 +228,49 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     // </editor-fold desc="UI Listeners">
 
 
+    // <editor-fold desc="UIAlertViewDelegate">
+
+    /**
+        Yes, UIAlertView are deprecated, but UIAlertController can't be overlapped.
+        Since we already are in a popup, we can't show another one to prompt the password.
+        This has to stay an UIAlertView, until iOS has a proper replacement.
+    */
+    private func displayPasswordAlert() {
+
+        // Prepare Popup
+
+        print("displayPasswordAlert called")
+        let alertView = UIAlertView(title: "Entrer le mot de passe du certificat",
+                                    message: "",
+                                    delegate: self,
+                                    cancelButtonTitle: "Annuler",
+                                    otherButtonTitles: "OK")
+
+        alertView.alertViewStyle = .plainTextInput
+        alertView.textField(at: 0)!.isSecureTextEntry = true
+        alertView.tag = WorkflowDialogController.alertViewTagP12Pass
+        alertView.show()
+    }
+
+
+    func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
+
+        if (alertView.tag == WorkflowDialogController.alertViewTagP12Pass) {
+            if (buttonIndex == 1) {
+
+                guard let textField = alertView.textField(at: 0),
+                      let givenPassword = textField.text else { return }
+
+                currentPassword = givenPassword
+                signature()
+            }
+        }
+    }
+
+
+    // </editor-fold desc="UIAlertViewDelegate">
+
+
     func signature() {
 
         let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
@@ -237,6 +292,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
                 hasher.generateHashToSign(onResponse:
                                           { (result: DataToSign) in
+                                              os_log("signing with IN", type: .debug)
                                               InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
                                                                 certificateId: certificateId,
                                                                 signatureAlgorithm: hasher.signatureAlgorithm)
@@ -244,39 +300,63 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                           onError: { (error: Error) in
                                               signatureToPerform.isDone = true
                                               signatureToPerform.error = RuntimeError("Erreur à la récupération du hash à signer")
+                                              self.checkAndDismissPopup()
                                           }
                 )
 
             default:
 
                 for signatureToPerform in signaturesToPerform {
-                    print(signatureToPerform)
 
-                    // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
-                    self.displayPasswordAlert()
+                    guard let pass = currentPassword,
+                          let hasher = signatureToPerform.remoteHasher else { return }
+
+                    os_log("signing with p12", type: .debug)
+                    CryptoUtils.signWithP12(hasher: hasher,
+                                            certificate: certificate,
+                                            password: pass)
                 }
         }
     }
 
 
     @objc func onSignatureResult(notification: Notification) {
+        os_log("onSignatureResult", type: .debug)
 
-        guard let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as? [Data],
-              let signatureIndex = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int,
-              signatureIndex < actionsToPerform.count,
-              signatureIndex >= 0,
-              let hasher = actionsToPerform[signatureIndex].remoteHasher else { return }
+        // Retrieving the signed document, with available information
 
-        hasher.buildDataToReturn(signatureList: signedDataList,
-                                 onResponse: { (result: [Data]) in
-                                     let resultBase64List = StringsUtils.toBase64List(dataList: result)
-                                     self.sendFinalSignatureResult(actionToPerform: self.actionsToPerform[signatureIndex],
-                                                                   signature: resultBase64List)
-                                 },
-                                 onError: { (error: Error) in
-                                     self.actionsToPerform[signatureIndex].isDone = true
-                                     self.actionsToPerform[signatureIndex].error = error
-                                 })
+        var actionToPerform: ActionToPerform?
+
+        if let signatureIndex = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int,
+           signatureIndex < actionsToPerform.count,
+           signatureIndex >= 0 {
+            actionToPerform = actionsToPerform[signatureIndex]
+        }
+
+        if let folderId = notification.userInfo![CryptoUtils.notifFolderId] as? String,
+           let currentActionToPerform = actionsToPerform.filter({ $0.folder.identifier == folderId }).first {
+            actionToPerform = currentActionToPerform
+        }
+
+        // Throwing back result
+
+        guard let currentAtp = actionToPerform,
+              let currentHasher = currentAtp.remoteHasher,
+              let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as? [Data] else { return }
+
+        os_log("Folder signed:%@ data:%@", currentAtp.folder.title ?? currentAtp.folder.identifier, signedDataList)
+
+        currentHasher.buildDataToReturn(signatureList: signedDataList,
+                                        onResponse: { (result: [Data]) in
+                                            let resultBase64List = StringsUtils.toBase64List(dataList: result)
+                                            self.sendFinalSignatureResult(actionToPerform: currentAtp,
+                                                                          signature: resultBase64List)
+                                        },
+                                        onError: { (error: Error) in
+                                            currentAtp.isDone = true
+                                            currentAtp.error = error
+                                            self.checkAndDismissPopup()
+                                        })
     }
 
 
@@ -297,6 +377,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                 errorCallback: { error in
                                     actionToPerform.isDone = true
                                     actionToPerform.error = error
+                                    self.checkAndDismissPopup()
                                 })
     }
 
@@ -304,32 +385,11 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         Here, we want to display the certificate list if everything is set
     */
     private func refreshCertificateListVisibility() {
-
-        if actionsToPerform.contains(where: { ($0.action == .sign) && ($0.signInfo == nil) }) {
+        let signatureToPerform = actionsToPerform.filter { $0.action == .sign }
+        if signatureToPerform.allSatisfy({ $0.signInfo != nil }) {
             certificateList = ModelsDataController.fetchCertificates()
             certificateTableView.reloadData()
         }
-    }
-
-    /**
-        Yes, UIAlertView are deprecated, but UIAlertController can't be overlapped.
-        Since we already are in a popup, we can't show another one to prompt the password.
-        This has to stay an UIAlertView, until iOS has a proper replacement.
-    */
-    private func displayPasswordAlert() {
-
-        // Prepare Popup
-
-        let alertView = UIAlertView(title: "Entrer le mot de passe du certificat",
-                                    message: "",
-                                    delegate: self,
-                                    cancelButtonTitle: "Annuler",
-                                    otherButtonTitles: "OK")
-
-        alertView.alertViewStyle = .plainTextInput
-        alertView.textField(at: 0)!.isSecureTextEntry = true
-        alertView.tag = WorkflowDialogController.alertViewTagP12Pass
-        alertView.show()
     }
 
 
@@ -353,33 +413,5 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                title: "Erreur lors de l'envoi de l'action")
         }
     }
-
-
-    // <editor-fold desc="UIAlertViewDelegate">
-
-
-    func alertView(_ alertView: UIAlertView, clickedButtonAt buttonIndex: Int) {
-
-        if (alertView.tag == WorkflowDialogController.alertViewTagP12Pass) {
-            if (buttonIndex == 1) {
-
-                guard let textField = alertView.textField(at: 0),
-                      let givenPassword = textField.text,
-                      let certificate = selectedCertificate else { return }
-
-                let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
-                for signatureToPerform in signaturesToPerform {
-
-                    guard let hasher = signatureToPerform.remoteHasher else { return }
-                    CryptoUtils.signWithP12(hasher: hasher,
-                                            certificate: certificate,
-                                            password: givenPassword)
-                }
-            }
-        }
-    }
-
-
-    // </editor-fold desc="UIAlertViewDelegate">
 
 }

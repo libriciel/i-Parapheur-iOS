@@ -41,12 +41,14 @@ import PDFKit
 
 class RestClientMock: RestClient {
 
+
     override func getSignInfo(folder: Dossier,
                               bureau: NSString,
                               onResponse responseCallback: ((SignInfo) -> Void)?,
                               onError errorCallback: ((NSError) -> Void)?) {
         responseCallback?(SignInfo(format: "PES", hashesToSign: ["hashToSign_01_\(folder.identifier)", "hashToSign_02_\(folder.identifier)"]))
     }
+
 
     override func getDataToSign(remoteDocumentList: [RemoteDocument],
                                 publicKeyBase64: String,
@@ -58,6 +60,16 @@ class RestClientMock: RestClient {
         remoteDocumentList.forEach { dataToSign.append("dataToSign_\($0.id)") }
         responseCallback?(DataToSign(dataToSignBase64: dataToSign, signatureDateTime: 999, payload: payload))
     }
+
+    override func signDossier(dossierId: String,
+                              bureauId: String,
+                              publicAnnotation: String?,
+                              privateAnnotation: String?,
+                              signature: String,
+                              responseCallback: ((NSNumber) -> Void)?,
+                              errorCallback: ((Error) -> Void)?) {
+        errorCallback?(RuntimeError("Cancelled before final sign"))
+    }
 }
 
 
@@ -67,12 +79,6 @@ class UI_WorkflowDialogController_Tests: XCTestCase {
     func testSignature_emptyList() {
 
         let controller = WorkflowDialogController()
-
-//        let folder = Dossier(identifier: "folder_01", action: .sign, type: "Type 01", subType: "Type 02")
-
-//        controller.selectedCertificate = Certificate()
-//        controller.selectedCertificate?.sourceType = .p12File
-
         controller.restClient = RestClientMock(baseUrl: "https://iparapaheur", login: "log", password: "pass")
         controller.actionsToPerform = []
         controller.currentDeskId = "desk_01"
