@@ -38,38 +38,37 @@ import Foundation
 
 class Dossier: NSObject, Decodable {
 
-    @objc let identifier: String
-    @objc let title: String?
+    let identifier: String
+    let title: String?
     let bureauName: String?
     let banetteName: String?
     let visibility: String?
     let status: String?
 
-    @objc let type: String
-    @objc let subType: String
+    let type: String
+    let subType: String
     let protocole: String?
     let nomTdT: String?
     let xPathSignature: String?
 
     let actionDemandee: Action
     var actions: [Action]
-    @objc let documents: [Document]
+    let documents: [Document]
     let acteursVariables: [String]
     // TODO let metadatas: [String: Any]
     let emitDate: Date?
-    @objc let limitDate: Date?
+    let limitDate: Date?
 
     let hasRead: Bool
     let includeAnnexes: Bool
     let isRead: Bool
     let isSent: Bool
     let canAdd: Bool
-    @objc let isLocked: Bool
+    let isLocked: Bool
     var isSignPapier: Bool
     let isXemEnabled: Bool
     let isReadingMandatory: Bool
-
-    @objc var isDelegue: Bool
+    var isDelegue: Bool
 
 
     // <editor-fold desc="Json methods"> MARK: - Json methods
@@ -107,6 +106,38 @@ class Dossier: NSObject, Decodable {
         case isSignPapier
         case isXemEnabled
         case isReadingMandatory = "readingMandatory"
+    }
+
+
+    public init(identifier: String, action: Action, type: String, subType: String) {
+        self.identifier = identifier
+        self.actionDemandee = action
+        self.actions = [action]
+        self.type = type
+        self.subType = subType
+
+        title = nil
+        bureauName = nil
+        banetteName = nil
+        visibility = nil
+        status = nil
+        protocole = nil
+        nomTdT = nil
+        xPathSignature = nil
+        documents = []
+        acteursVariables = []
+        emitDate = nil
+        limitDate = nil
+        hasRead = false
+        includeAnnexes = false
+        isRead = false
+        isSent = false
+        canAdd = false
+        isLocked = false
+        isSignPapier = false
+        isXemEnabled = false
+        isReadingMandatory = false
+        isDelegue = false
     }
 
 
