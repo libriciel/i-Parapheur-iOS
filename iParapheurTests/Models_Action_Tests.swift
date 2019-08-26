@@ -39,6 +39,7 @@ import XCTest
 
 class Models_Action_Tests: XCTestCase {
 
+
     func testCodable() {
 
         let jsonString = """
@@ -83,6 +84,36 @@ class Models_Action_Tests: XCTestCase {
         let newJsonString = String(data: newJsonData, encoding: .utf8)!
 
         XCTAssertEqual(jsonString, newJsonString)
+    }
+
+
+    func testCodable_fail() {
+
+        let jsonString = """
+                         ["NOPE, NOT A REAL ACTION"]
+                         """
+
+        let jsonDecoder = JSONDecoder()
+        let actionList = try! jsonDecoder.decode([Action].self, from: jsonString.data(using: .utf8)!)
+
+        let expectedArray: [Action] = [.unknown]
+        XCTAssertEqual(actionList, expectedArray)
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        do {
+            _ = try jsonEncoder.encode(actionList)
+        } catch let error {
+            XCTAssertTrue(error is RuntimeError)
+        }
+    }
+
+
+    func testPrettyPrint() {
+        XCTAssertEqual(Action.prettyPrint(.visa), "Viser")
+        XCTAssertEqual(Action.prettyPrint(.sign), "Signer")
+        XCTAssertEqual(Action.prettyPrint(.reject), "Rejeter")
+        XCTAssertEqual(Action.prettyPrint(.unknown), "Action inconnue")
     }
 
 }

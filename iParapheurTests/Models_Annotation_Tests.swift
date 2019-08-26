@@ -134,4 +134,3 @@ class Models_Annotation_Tests: XCTestCase {
     }
 
 }
-
