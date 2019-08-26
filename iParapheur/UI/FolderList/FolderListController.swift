@@ -123,16 +123,14 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
            let action = sender as? Action,
            let desk = currentDesk {
 
-            // let isPaperSign = selectedDossiers.allSatisfy { $0.isSignPapier == true }
-            var dataToSignMap: [Dossier: SignInfo?] = [:]
-            selectedDossiers.forEach { dataToSignMap[$0] = nil }
+            var actionsToPerform: [ActionToPerform] = []
+            selectedDossiers.forEach { actionsToPerform.append(ActionToPerform(folder: $0, action: action)) }
 
             // Launch popup
 
-            destinationController.setDossiersToSign(selectedDossiers)
             destinationController.restClient = restClient
             destinationController.currentAction = action
-            destinationController.signInfoMap = dataToSignMap
+            destinationController.actionsToPerform = actionsToPerform
             destinationController.currentDeskId = desk.identifier
         }
     }

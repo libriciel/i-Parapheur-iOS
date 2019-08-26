@@ -52,13 +52,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet var publicAnnotationTextView: UITextView!
     @IBOutlet var paperSignatureButton: UIButton!
 
-    var certificateList: [Certificate] = []
-    var selectedCertificate: Certificate?
-    var signInfoMap: [Dossier: SignInfo?] = [:]
-    var signaturesToDo: [String: RemoteHasher] = [:]
     var restClient: RestClient?
     var currentAction: Action?
     var currentDeskId: String?
+    var actionsToPerform: [ActionToPerform] = []
+    var certificateList: [Certificate] = []
+    var selectedCertificate: Certificate?
 
 
     // <editor-fold desc="LifeCycle">
@@ -75,22 +74,18 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                                name: .signatureResult,
                                                object: nil)
 
-        if currentAction == .sign {
-
-            for dossier in signInfoMap.keys {
-
-                restClient?.getSignInfo(folder: dossier,
-                                        bureau: currentDeskId! as NSString,
-                                        onResponse: { signInfo in
-                                            self.signInfoMap[dossier] = signInfo
-                                            self.refreshCertificateListVisibility()
-                                        },
-                                        onError: { error in
-                                            ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-                                                               title: "Erreur à la récupération des données à signer")
-                                        }
-                )
-            }
+        for signatureToPerform in actionsToPerform.filter({ $0.action == .sign }) {
+            restClient?.getSignInfo(folder: signatureToPerform.folder,
+                                    bureau: currentDeskId! as NSString,
+                                    onResponse: { signInfo in
+                                        signatureToPerform.signInfo = signInfo
+                                        self.refreshCertificateListVisibility()
+                                    },
+                                    onError: { error in
+                                        signatureToPerform.error = error
+                                        signatureToPerform.isDone = true
+                                    }
+            )
         }
     }
 
@@ -146,48 +141,74 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
 
-        guard let action = currentAction else { return }
-        switch action {
+        // Default cases
 
-            case .sign:
+        guard let deskId = currentDeskId,
+              let currentRestClient = restClient else { return }
 
-                signature()
+        let signaturesToPerform = actionsToPerform.filter { ($0.action as Action) == .sign }
+        signaturesToPerform.forEach { $0.generateRemoteHasher(restClient: currentRestClient, certificate: self.selectedCertificate) }
 
+        if selectedCertificate?.sourceType == .imprimerieNationale {
 
-            case .visa:
+            let signatureCount = signaturesToPerform.reduce(into: 0) { count, atp in
+                count += atp.signInfo?.hashesToSign.count ?? 0
+            }
 
-                restClient?.visa(folder: Array(signInfoMap.keys)[0],
-                                 bureauId: currentDeskId!,
-                                 publicAnnotation: publicAnnotationTextView.text,
-                                 privateAnnotation: privateAnnotationTextView.text,
-                                 responseCallback: { number in
-                                     self.dismissWithRefresh()
-                                 },
-                                 errorCallback: { error in
-                                     ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-                                                        title: "Erreur à l'envoi du visa")
-                                 })
+            if signatureCount > 1 {
+                ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
+                                   title: "Impossible de signer avec ce certificat")
+                return
+            }
+        }
 
+        // Starting requests
 
-            case .reject:
+        for actionToPerform in actionsToPerform {
 
-                restClient?.reject(folder: Array(signInfoMap.keys)[0],
-                                   bureauId: currentDeskId!,
-                                   publicAnnotation: publicAnnotationTextView.text,
-                                   privateAnnotation: privateAnnotationTextView.text,
-                                   responseCallback: { number in
-                                       self.dismissWithRefresh()
-                                   },
-                                   errorCallback: { error in
-                                       ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-                                                          title: "Erreur à l'envoi du rejet")
-                                   })
+            // Sending actual action
 
+            switch actionToPerform.action {
 
-            default:
+                case .sign:
+                    signature()
 
-                ViewUtils.logError(message: "Cette action n'est pas disponible sur cette version du client i-Parapheur",
-                                   title: "Action impossible")
+                case .visa:
+                    restClient?.visa(folder: actionToPerform.folder,
+                                     bureauId: deskId,
+                                     publicAnnotation: publicAnnotationTextView.text,
+                                     privateAnnotation: privateAnnotationTextView.text,
+                                     responseCallback: { number in
+                                         actionToPerform.isDone = true
+                                         self.checkAndDismissPopup()
+                                     },
+                                     errorCallback: { error in
+                                         actionToPerform.isDone = true
+                                         actionToPerform.error = error
+                                         ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                            title: "Erreur à l'envoi du visa")
+                                     })
+
+                case .reject:
+                    restClient?.reject(folder: actionToPerform.folder,
+                                       bureauId: deskId,
+                                       publicAnnotation: publicAnnotationTextView.text,
+                                       privateAnnotation: privateAnnotationTextView.text,
+                                       responseCallback: { number in
+                                           actionToPerform.isDone = true
+                                           self.checkAndDismissPopup()
+                                       },
+                                       errorCallback: { error in
+                                           actionToPerform.isDone = true
+                                           actionToPerform.error = error
+                                           ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
+                                                              title: "Erreur à l'envoi du rejet")
+                                       })
+
+                default:
+                    ViewUtils.logError(message: "Cette action n'est pas disponible sur cette version du client i-Parapheur",
+                                       title: "Action impossible")
+            }
         }
     }
 
@@ -195,66 +216,41 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     // </editor-fold desc="UI Listeners">
 
 
-    func setDossiersToSign(_ dossierList: [Dossier]) {
-        for dossier in dossierList {
-            signInfoMap[dossier] = nil as SignInfo?
-        }
-    }
-
-
     private func signature() {
 
-        if (selectedCertificate == nil) {
-            return
-        }
+        let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
+        guard let certificate = selectedCertificate,
+              signaturesToPerform.count > 0 else { return }
 
-        signaturesToDo = generateHasherWrappers()
-        if (signaturesToDo.isEmpty) {
-            return
-        }
-
-        switch (selectedCertificate!.sourceType) {
+        switch (certificate.sourceType) {
 
             case .imprimerieNationale:
 
-                if ((signaturesToDo.count != 1) || (signaturesToDo.values.count > 1)) {
-                    ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
-                                       title: "Impossible de signer avec ce certificat")
+                let jsonDecoder = JSONDecoder()
+                guard let signatureToPerform = signaturesToPerform.first,
+                      let hasher = signatureToPerform.remoteHasher,
+                      let certificatePayload = certificate.payload as Data?,
+                      let payload: [String: String] = try? jsonDecoder.decode([String: String].self, from: certificatePayload),
+                      let certificateId = payload[Certificate.payloadExternalCertificateId] else {
                     return
                 }
 
-                for signatureToDo in signaturesToDo {
-                    print(signatureToDo)
-
-                    if ((signatureToDo.value.mSignInfo.hashesToSign.count != 1) || (signatureToDo.value.mSignInfo.hashesToSign.count > 1)) {
-                        ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
-                                           title: "Impossible de signer avec ce certificat")
-                        return
-                    }
-                }
-
-                let jsonDecoder = JSONDecoder()
-                let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: selectedCertificate!.payload! as Data)
-                let certificateId = payload[Certificate.payloadExternalCertificateId]!
-                let hasher: RemoteHasher = Array(signaturesToDo.values)[0]
-
                 hasher.generateHashToSign(onResponse:
                                           { (result: DataToSign) in
-
                                               InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
                                                                 certificateId: certificateId,
-                                                                signatureAlgorithm: Array(self.signaturesToDo.values)[0].mSignatureAlgorithm)
+                                                                signatureAlgorithm: hasher.signatureAlgorithm)
                                           },
                                           onError: { (error: Error) in
-                                              ViewUtils.logError(message: "Vérifier le réseau",
-                                                                 title: "Erreur à la récupération du hash à signer")
+                                              signatureToPerform.isDone = true
+                                              signatureToPerform.error = RuntimeError("Erreur à la récupération du hash à signer")
                                           }
                 )
 
             default:
 
-                for signatureToDo in signaturesToDo {
-                    print(signatureToDo)
+                for signatureToPerform in signaturesToPerform {
+                    print(signatureToPerform)
 
                     // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
                     self.displayPasswordAlert()
@@ -265,44 +261,42 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
     @objc func onSignatureResult(notification: Notification) {
 
-        let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as! [Data]
-        let dossierId: String? = notification.userInfo![CryptoUtils.notifFolderId] as? String
-        let signatureIndex: Int? = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int
+        guard let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as? [Data],
+              let signatureIndex = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int,
+              signatureIndex < actionsToPerform.count,
+              signatureIndex >= 0,
+              let hasher = actionsToPerform[signatureIndex].remoteHasher else { return }
 
-        var hasher: RemoteHasher? = nil
-        if (dossierId != nil) {
-            hasher = signaturesToDo[dossierId!]
-        }
-        if (signatureIndex != nil) {
-            hasher = Array(signaturesToDo.values)[signatureIndex!]
-        }
-
-        hasher!.buildDataToReturn(signatureList: signedDataList,
-                                  onResponse: { (result: [Data]) in
-                                      let resultBase64List = StringsUtils.toBase64List(dataList: result)
-                                      self.sendFinalSignatureResult(dossierId: Array(self.signaturesToDo.keys)[0], signature: resultBase64List)
-                                  },
-                                  onError: { (error: Error) in
-                                      print(error.localizedDescription)
-                                  })
+        hasher.buildDataToReturn(signatureList: signedDataList,
+                                 onResponse: { (result: [Data]) in
+                                     let resultBase64List = StringsUtils.toBase64List(dataList: result)
+                                     self.sendFinalSignatureResult(actionToPerform: self.actionsToPerform[signatureIndex],
+                                                                   signature: resultBase64List)
+                                 },
+                                 onError: { (error: Error) in
+                                     self.actionsToPerform[signatureIndex].isDone = true
+                                     self.actionsToPerform[signatureIndex].error = error
+                                 })
     }
 
 
-    private func sendFinalSignatureResult(dossierId: String, signature: [String]) {
+    private func sendFinalSignatureResult(actionToPerform: ActionToPerform, signature: [String]) {
 
+        guard let deskId = currentDeskId else { return }
         let signatureConcat = signature.joined(separator: ",")
 
-        restClient?.signDossier(dossierId: dossierId,
-                                bureauId: currentDeskId!,
+        restClient?.signDossier(dossierId: actionToPerform.folder.identifier,
+                                bureauId: deskId,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
                                 signature: signatureConcat,
                                 responseCallback: { number in
-                                    self.dismissWithRefresh()
+                                    actionToPerform.isDone = true
+                                    self.checkAndDismissPopup()
                                 },
                                 errorCallback: { error in
-                                    ViewUtils.logError(message: "\(error.localizedDescription)" as NSString,
-                                                       title: "Erreur à l'envoi de la signature")
+                                    actionToPerform.isDone = true
+                                    actionToPerform.error = error
                                 })
     }
 
@@ -311,7 +305,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     */
     private func refreshCertificateListVisibility() {
 
-        if (!signInfoMap.values.contains { $0 == nil }) {
+        if actionsToPerform.contains(where: { ($0.action == .sign) && ($0.signInfo == nil) }) {
             certificateList = ModelsDataController.fetchCertificates()
             certificateTableView.reloadData()
         }
@@ -339,42 +333,25 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     }
 
 
-    private func generateHasherWrappers() -> [String: RemoteHasher] {
+    private func checkAndDismissPopup() {
+        if actionsToPerform.allSatisfy({ $0.isDone }) {
 
-        do {
-            // Compute signature(s) hash(es)
+            guard let error = actionsToPerform.first(where: { $0.error != nil }) else {
 
-            var hashersMap: [String: RemoteHasher] = [:]
-            for (dossier, signInfo) in signInfoMap {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: WorkflowDialogController.notificationActionComplete,
+                                                        object: "")
+                    }
+                }
 
-                let hasher = try CryptoUtils.generateHasherWrappers(signInfo: signInfo!,
-                                                                    dossier: dossier,
-                                                                    certificate: self.selectedCertificate!,
-                                                                    restClient: restClient!)
-
-                hashersMap[dossier.identifier] = hasher
+                self.dismiss(animated: true)
+                return
             }
 
-            return hashersMap
-
-        } catch {
-            ViewUtils.logError(message: error.localizedDescription as NSString,
-                               title: "Erreur à la signature")
-            return [:]
+            ViewUtils.logError(message: (error.error?.localizedDescription ?? "") as NSString,
+                               title: "Erreur lors de l'envoi de l'action")
         }
-    }
-
-
-    private func dismissWithRefresh() {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: WorkflowDialogController.notificationActionComplete,
-                                                object: "")
-            }
-        }
-
-        self.dismiss(animated: true)
     }
 
 
@@ -386,11 +363,16 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         if (alertView.tag == WorkflowDialogController.alertViewTagP12Pass) {
             if (buttonIndex == 1) {
 
-                let givenPassword = alertView.textField(at: 0)!.text!
+                guard let textField = alertView.textField(at: 0),
+                      let givenPassword = textField.text,
+                      let certificate = selectedCertificate else { return }
 
-                for (_, hasher) in signaturesToDo {
+                let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
+                for signatureToPerform in signaturesToPerform {
+
+                    guard let hasher = signatureToPerform.remoteHasher else { return }
                     CryptoUtils.signWithP12(hasher: hasher,
-                                            certificate: selectedCertificate!,
+                                            certificate: certificate,
                                             password: givenPassword)
                 }
             }

@@ -38,9 +38,6 @@
 @implementation ADLRestClient
 
 
-static NSNumber *PARAPHEUR_API_VERSION;
-
-
 + (id)sharedManager {
 
     static ADLRestClient *sharedMyManager = nil;

@@ -37,9 +37,9 @@ import Foundation
 import CoreData
 
 
-@objc public class SignInfo: NSObject, Decodable {
+public class SignInfo: NSObject, Decodable {
 
-    @objc let format: String!
+    @objc let format: String
     @objc let hashesToSign: [String]
     let p7s: String?
     let pesCity: String?
@@ -94,14 +94,16 @@ import CoreData
 
         if let hashesString = try values.decodeIfPresent(String.self, forKey: .hashToSign) {
             hashesToSign = hashesString.components(separatedBy: ",")
-        } else {
+        }
+        else {
             hashesToSign = []
         }
 
 
         if let pesIdsString = try values.decodeIfPresent(String.self, forKey: .pesId) {
             pesIds = pesIdsString.components(separatedBy: ",")
-        } else {
+        }
+        else {
             pesIds = []
         }
     }

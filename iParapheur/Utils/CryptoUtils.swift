@@ -283,10 +283,10 @@ class CryptoUtils: NSObject {
                     do {
                         for dataToSign in dataToSignList {
 
-                            let data = hasher.mSignatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
+                            let data = hasher.signatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
                             var signedHash = try CryptoUtils.rsaSign(data: data as NSData,
                                                                      keyFileUrl: p12FinalUrl,
-                                                                     signatureAlgorithm: hasher.mSignatureAlgorithm,
+                                                                     signatureAlgorithm: hasher.signatureAlgorithm,
                                                                      password: password)
 
                             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
@@ -296,7 +296,7 @@ class CryptoUtils: NSObject {
                                                             object: nil,
                                                             userInfo: [
                                                                 notifSignedData: signedHashList,
-                                                                notifFolderId: hasher.mDossier.identifier
+                                                                notifFolderId: hasher.dossier.identifier
                                                             ])
                         }
                     } catch let error {

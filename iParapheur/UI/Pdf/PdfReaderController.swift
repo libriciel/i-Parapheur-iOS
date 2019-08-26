@@ -148,7 +148,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
             destinationController.currentAction = action
             destinationController.restClient = restClient
-            destinationController.signInfoMap = [folder: nil]
+            destinationController.actionsToPerform = [ActionToPerform(folder: folder, action: action)]
             destinationController.currentDeskId = currentDesk?.identifier
         }
         else if (segue.identifier == AnnotationDetailsController.segue),
