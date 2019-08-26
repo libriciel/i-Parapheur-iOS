@@ -39,8 +39,8 @@ import CoreData
 
 public class SignInfo: NSObject, Decodable {
 
-    @objc let format: String
-    @objc let hashesToSign: [String]
+    let format: String
+    let hashesToSign: [String]
     let p7s: String?
     let pesCity: String?
     let pesClaimedRole: String?
@@ -70,6 +70,23 @@ public class SignInfo: NSObject, Decodable {
         case pesPolicyId = "pespolicyid"
         case pesPostalCode = "pespostalcode"
         case pesSpuri = "pesspuri"
+    }
+
+
+    public init(format: String, hashesToSign: [String]) {
+        self.format = format
+        self.hashesToSign = hashesToSign
+        p7s = nil
+        pesCity = nil
+        pesClaimedRole = nil
+        pesCountryName = nil
+        pesEncoding = nil
+        pesIds = []
+        pesPolicyDesc = nil
+        pesPolicyHash = nil
+        pesPolicyId = nil
+        pesPostalCode = nil
+        pesSpuri = nil
     }
 
 

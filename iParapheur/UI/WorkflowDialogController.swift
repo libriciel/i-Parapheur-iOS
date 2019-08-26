@@ -216,7 +216,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     // </editor-fold desc="UI Listeners">
 
 
-    private func signature() {
+    func signature() {
 
         let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
         guard let certificate = selectedCertificate,
