@@ -37,7 +37,6 @@
 		7A8556F320CAE9650083BFA6 /* Models_Dossier_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8556F220CAE9650083BFA6 /* Models_Dossier_Tests.swift */; };
 		7A8D21902076126100D9D481 /* Certificate+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */; };
 		7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */; };
-		7AAE06A423141C7F000BDA8F /* UI_WorkflowDialogController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAE06A323141C7F000BDA8F /* UI_WorkflowDialogController_Tests.swift */; };
 		7AAE06A623141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAE06A523141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift */; };
 		7AB3CA3420936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */; };
 		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */; };
@@ -166,13 +165,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7AAE069E23141C75000BDA8F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B4E5EC95153AF65E00BD514D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B4E5EC9D153AF65F00BD514D;
-			remoteInfo = iParapheur;
-		};
 		C58203C01FBB466300B6606F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B4E5EC95153AF65E00BD514D /* Project object */;
@@ -219,9 +211,6 @@
 		7A8D218D207611A400D9D481 /* Models 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Models 2.xcdatamodel"; sourceTree = "<group>"; };
 		7A8D218E2076126100D9D481 /* Certificate+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		7AAE069923141C75000BDA8F /* iParapheurUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iParapheurUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7AAE069D23141C75000BDA8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7AAE06A323141C7F000BDA8F /* UI_WorkflowDialogController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI_WorkflowDialogController_Tests.swift; sourceTree = "<group>"; };
 		7AAE06A523141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI_WorkflowDialogController_Tests.swift; sourceTree = "<group>"; };
 		7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InSignedData_Test.swift; sourceTree = "<group>"; };
 		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InController_Test.swift; sourceTree = "<group>"; };
@@ -366,13 +355,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		7AAE069623141C75000BDA8F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B4E5EC9B153AF65F00BD514D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -439,15 +421,6 @@
 				AB3CA20B6CD290FE65CBEB5F /* ActionToPerform.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		7AAE069A23141C75000BDA8F /* iParapheurUITests */ = {
-			isa = PBXGroup;
-			children = (
-				7AAE06A323141C7F000BDA8F /* UI_WorkflowDialogController_Tests.swift */,
-				7AAE069D23141C75000BDA8F /* Info.plist */,
-			);
-			path = iParapheurUITests;
 			sourceTree = "<group>";
 		};
 		95168E39403D0D99E2243D04 /* Pods */ = {
@@ -553,7 +526,6 @@
 				B4E5ECA8153AF65F00BD514D /* iParapheur */,
 				B4FF33FB15473378006F7BF3 /* Resources */,
 				C58203BC1FBB466300B6606F /* iParapheurTests */,
-				7AAE069A23141C75000BDA8F /* iParapheurUITests */,
 				B4E5ECA1153AF65F00BD514D /* Frameworks */,
 				B4E5EC9F153AF65F00BD514D /* Products */,
 				95168E39403D0D99E2243D04 /* Pods */,
@@ -565,7 +537,6 @@
 			children = (
 				B4E5EC9E153AF65F00BD514D /* iParapheur.app */,
 				C58203BB1FBB466300B6606F /* iParapheurTests.xctest */,
-				7AAE069923141C75000BDA8F /* iParapheurUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -764,24 +735,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		7AAE069823141C75000BDA8F /* iParapheurUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7AAE06A223141C75000BDA8F /* Build configuration list for PBXNativeTarget "iParapheurUITests" */;
-			buildPhases = (
-				7AAE069523141C75000BDA8F /* Sources */,
-				7AAE069623141C75000BDA8F /* Frameworks */,
-				7AAE069723141C75000BDA8F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7AAE069F23141C75000BDA8F /* PBXTargetDependency */,
-			);
-			name = iParapheurUITests;
-			productName = iParapheurUITests;
-			productReference = 7AAE069923141C75000BDA8F /* iParapheurUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		B4E5EC9D153AF65F00BD514D /* iParapheur */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B4E5ECD7153AF65F00BD514D /* Build configuration list for PBXNativeTarget "iParapheur" */;
@@ -831,12 +784,6 @@
 				LastSwiftUpdateCheck = 1030;
 				LastUpgradeCheck = 1020;
 				TargetAttributes = {
-					7AAE069823141C75000BDA8F = {
-						CreatedOnToolsVersion = 10.3;
-						DevelopmentTeam = WG6RXYLAQX;
-						ProvisioningStyle = Automatic;
-						TestTargetID = B4E5EC9D153AF65F00BD514D;
-					};
 					B4E5EC9D153AF65F00BD514D = {
 						DevelopmentTeam = WG6RXYLAQX;
 						LastSwiftMigration = 1020;
@@ -865,19 +812,11 @@
 			targets = (
 				B4E5EC9D153AF65F00BD514D /* iParapheur */,
 				C58203BA1FBB466300B6606F /* iParapheurTests */,
-				7AAE069823141C75000BDA8F /* iParapheurUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		7AAE069723141C75000BDA8F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B4E5EC9C153AF65F00BD514D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1027,14 +966,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		7AAE069523141C75000BDA8F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7AAE06A423141C7F000BDA8F /* UI_WorkflowDialogController_Tests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B4E5EC9A153AF65F00BD514D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1152,11 +1083,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7AAE069F23141C75000BDA8F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B4E5EC9D153AF65F00BD514D /* iParapheur */;
-			targetProxy = 7AAE069E23141C75000BDA8F /* PBXContainerItemProxy */;
-		};
 		C58203C11FBB466300B6606F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B4E5EC9D153AF65F00BD514D /* iParapheur */;
@@ -1193,74 +1119,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		7AAE06A023141C75000BDA8F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = WG6RXYLAQX;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = iParapheurUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = fr.iparapheur.iParapheurUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = iParapheur;
-			};
-			name = Debug;
-		};
-		7AAE06A123141C75000BDA8F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = WG6RXYLAQX;
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = iParapheurUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = fr.iparapheur.iParapheurUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = iParapheur;
-			};
-			name = Release;
-		};
 		B4E5ECD5153AF65F00BD514D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1506,15 +1364,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7AAE06A223141C75000BDA8F /* Build configuration list for PBXNativeTarget "iParapheurUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7AAE06A023141C75000BDA8F /* Debug */,
-				7AAE06A123141C75000BDA8F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		B4E5EC98153AF65E00BD514D /* Build configuration list for PBXProject "iParapheur" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

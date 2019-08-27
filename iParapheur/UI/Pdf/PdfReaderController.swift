@@ -295,7 +295,9 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
 
 
     func onFolderMultipleSelectionEnded() {
-        floatingActionButton.isHidden = false
+        if pdfView.document != nil {
+            floatingActionButton.isHidden = false
+        }
     }
 
 
