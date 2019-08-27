@@ -53,18 +53,7 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        pdfView.displayMode = .singlePage
-        pdfView.autoScales = true
-        pdfView.displayDirection = .horizontal
-        pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
-        pdfView.maxScaleFactor = 3
-        pdfView.usePageViewController(true)
-
-        pdfAnnotationGestureRecognizer.drawingDelegate = pdfDrawer
-        pdfAnnotationGestureRecognizer.eventsDelegate = self
-        pdfView.addGestureRecognizer(pdfAnnotationGestureRecognizer)
-        pdfDrawer.pdfView = pdfView
+        setupPdfView(pdfView)
     }
 
     /**
@@ -122,9 +111,25 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
     }
 
 
+    func setupPdfView(_ pdfView: PDFView) {
+        pdfView.displayMode = .singlePage
+        pdfView.autoScales = true
+        pdfView.displayDirection = .horizontal
+        pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
+        pdfView.maxScaleFactor = 3
+        pdfView.usePageViewController(true)
+
+        pdfAnnotationGestureRecognizer.drawingDelegate = pdfDrawer
+        pdfAnnotationGestureRecognizer.eventsDelegate = self
+        pdfView.addGestureRecognizer(pdfAnnotationGestureRecognizer)
+        pdfDrawer.pdfView = pdfView
+    }
+
+
     func loadPdf(pdfUrl: URL) {
         if let pdfDocument = PDFDocument(url: pdfUrl) {
             pdfView.document = pdfDocument
+            setupPdfView(pdfView)
         }
     }
 

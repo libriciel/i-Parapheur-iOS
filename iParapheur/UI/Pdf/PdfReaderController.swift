@@ -508,6 +508,8 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         }
 
         pdfView.document = pdfDocument
+        setupPdfView(pdfView)
+
         refreshFloatingActionButton(documentLoaded: pdfDocument)
 
         hideSpinner()
