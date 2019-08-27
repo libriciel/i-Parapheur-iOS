@@ -37,7 +37,7 @@ import Foundation
 
 class AccountSelectionCell: UITableViewCell {
 
-    static let CellId: String! = "AccountSelectionCell"
+    static let cellId: String! = "AccountSelectionCell"
 
     @IBOutlet var inboxIcon: UIImageView!
     @IBOutlet var checkIcon: UIImageView!

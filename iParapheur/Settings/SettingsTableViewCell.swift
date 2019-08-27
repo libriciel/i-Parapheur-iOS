@@ -36,7 +36,7 @@ import Foundation
 
 class SettingsTableViewCell: UITableViewCell {
 
-	static let CellId: String! = "SettingsTableViewCell"
+	static let cellId: String! = "SettingsTableViewCell"
 
 	@IBOutlet var label: UILabel!
 	@IBOutlet var iconImage: UIImageView!

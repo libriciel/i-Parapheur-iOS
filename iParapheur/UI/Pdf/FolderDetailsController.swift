@@ -95,7 +95,8 @@ class FolderDetailsController: UIViewController, UITableViewDataSource, UITableV
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: WorkflowStepCell.cellIdentifier) as! WorkflowStepCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: WorkflowStepCell.cellIdentifier,
+                                                 for: indexPath) as! WorkflowStepCell
         guard let step = currentWorkflow?.etapes[indexPath.row] else { return cell }
         let isAlreadyDone = (step.dateValidation != nil)
 

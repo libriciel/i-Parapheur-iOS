@@ -37,7 +37,7 @@ import Foundation
 
 class DeskListCell: UITableViewCell {
 
-    @objc static let CellId: NSString! = "DeskListCell"
+    static let cellId = "DeskListCell"
 
     @IBOutlet var title: UILabel!
     @IBOutlet var foldersToDo: UILabel!

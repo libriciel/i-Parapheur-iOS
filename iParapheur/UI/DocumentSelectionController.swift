@@ -53,8 +53,8 @@ class DocumentSelectionController: UITableViewController {
         super.viewDidLoad()
         os_log("View loaded : DocumentSelectionController", type: .debug)
 
-        preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
-                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(documentList.count))
+        preferredContentSize = CGSize(width: DocumentSelectionCell.preferredWidth,
+                                      height: DocumentSelectionCell.preferredHeight * CGFloat(documentList.count))
     }
 
 
@@ -71,10 +71,9 @@ class DocumentSelectionController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
-                                                                        for: indexPath as IndexPath) as! DocumentSelectionCell
-
         let document: Document = documentList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.cellId,
+                                                 for: indexPath as IndexPath) as! DocumentSelectionCell
 
         cell.annexeIcon.image = cell.annexeIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.annexeIcon.isHidden = (indexPath.row == 0) || document.isMainDocument

@@ -417,8 +417,9 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: FolderListCell.cellIdentifier) as! FolderListCell
         let dossier = filteredDossiers[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: FolderListCell.cellIdentifier,
+                                                 for: indexPath) as! FolderListCell
 
         // UI fix
 

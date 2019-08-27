@@ -33,15 +33,16 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-import Foundation
+import UIKit
+import os
 
-class DocumentSelectionCell: UITableViewCell {
 
-    static let cellId: String! = "DocumentSelectionCell"
-    static let preferredHeight: CGFloat! = 44
-    static let preferredWidth: CGFloat! = 350
+class SettingsLicencesTableViewCell: UITableViewCell {
 
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var mainDocIcon: UIImageView!
-    @IBOutlet var annexeIcon: UIImageView!
+    static let cellId = "SettingsLicencesTableViewCell"
+
+
+    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var content: UILabel!
+
 }

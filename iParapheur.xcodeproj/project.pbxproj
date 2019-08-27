@@ -73,6 +73,7 @@
 		AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2C9F890B3FCFD4970FC /* InController.swift */; };
 		AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA78D4EEE20F620CF9B01 /* InTokenData.swift */; };
 		AB3CAE3B41772DF787B2D171 /* PdfAnnotationGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA2978A9696F9AAD97765 /* PdfAnnotationGestureRecognizer.swift */; };
+		AB3CAEC12541100C9611D719 /* SettingsLicencesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAF0924513933931E34F9 /* SettingsLicencesTableViewCell.swift */; };
 		AB3CAF7D43A4A1B275659B5E /* ActionToPerform.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA20B6CD290FE65CBEB5F /* ActionToPerform.swift */; };
 		AB3CAF9DC98FE48701CCFE47 /* PdfReaderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */; };
 		AB3CAFD91957D472C162138F /* PdfAnnotationDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA11F1AF2E2B416CDF9CD /* PdfAnnotationDrawer.swift */; };
@@ -251,6 +252,7 @@
 		AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfReaderController.swift; sourceTree = "<group>"; };
 		AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
+		AB3CAF0924513933931E34F9 /* SettingsLicencesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsLicencesTableViewCell.swift; sourceTree = "<group>"; };
 		AB3CAF0EA9B3E741548988B2 /* RGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGAppDelegate.h; sourceTree = "<group>"; };
 		AB3CAF227D6274311B6A5386 /* DeskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListController.swift; sourceTree = "<group>"; };
 		B4082A7E162D48CB000B0E26 /* logo-new5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-new5.png"; sourceTree = "<group>"; };
@@ -659,6 +661,7 @@
 				C5CED42E1FC5C67700FC15DD /* SettingsFiltersEmptyView.swift */,
 				C5CED41F1FC589C800FC15DD /* SettingsFiltersEmptyView.xib */,
 				C5065EE01D82AB89008FE301 /* SettingsFiltersController.swift */,
+				AB3CAF0924513933931E34F9 /* SettingsLicencesTableViewCell.swift */,
 				C5065EDE1D82A844008FE301 /* SettingsLicencesController.swift */,
 				C50FC42A1DCCDA7400887B8D /* SettingsTableViewCell.swift */,
 				C50A87431D1AD0FE00025074 /* SettingsTableViewController.swift */,
@@ -1048,6 +1051,7 @@
 				AB3CACDF2D4B17C412D4B8CB /* AnnotationDetailsController.swift in Sources */,
 				AB3CA9939BE192F448FB540F /* FolderDetailsController.swift in Sources */,
 				AB3CAF7D43A4A1B275659B5E /* ActionToPerform.swift in Sources */,
+				AB3CAEC12541100C9611D719 /* SettingsLicencesTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -111,9 +111,9 @@ class AccountSelectionController: UIViewController, UITableViewDataSource, UITab
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: AccountSelectionCell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.CellId,
-                                                                       for: indexPath) as! AccountSelectionCell
         let account = accountList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: AccountSelectionCell.cellId,
+                                                 for: indexPath) as! AccountSelectionCell
 
         cell.inboxIcon.image = cell.inboxIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.nameLabel.text = account.title

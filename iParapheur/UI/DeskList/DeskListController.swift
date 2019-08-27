@@ -325,8 +325,9 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: DeskListCell.CellId as String) as! DeskListCell
         let bureau = bureauxArray[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: DeskListCell.cellId,
+                                                 for: indexPath) as! DeskListCell
 
         // Folders to do
 

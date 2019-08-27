@@ -111,10 +111,9 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: SettingsTableViewCell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.CellId,
-                                                                        for: indexPath as IndexPath) as! SettingsTableViewCell
-
         let element = menuElements[indexPath.section].elements[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.cellId,
+                                                 for: indexPath) as! SettingsTableViewCell
 
         cell.iconImage.image = UIImage(named: element.icon)?.withRenderingMode(.alwaysTemplate)
         cell.iconImage.highlightedImage = UIImage(named: element.iconHighlight)?.withRenderingMode(.alwaysTemplate)

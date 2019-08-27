@@ -102,12 +102,11 @@ class SettingsAccountsController: UIViewController, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.cellIdentifier,
-                                                                       for: indexPath as IndexPath) as! SettingsAccountsCell
+        let account = accountList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.cellIdentifier,
+                                                 for: indexPath as IndexPath) as! SettingsAccountsCell
 
         // Compute data
-
-        let account = accountList[indexPath.row]
 
         let titlePrint: String = (account.title!.count != 0) ? account.title! : "(Aucun titre)"
         let loginPrint: String = (account.login!.count != 0) ? account.login! : "(Aucun login)"
