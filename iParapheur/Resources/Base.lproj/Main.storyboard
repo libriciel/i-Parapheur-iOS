@@ -733,7 +733,7 @@
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XGz-TV-tza">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="50"/>
                                 <items>
-                                    <navigationItem title="Title" id="pAD-vI-msa">
+                                    <navigationItem id="pAD-vI-msa">
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="G4K-dr-tYl">
                                             <connections>
                                                 <action selector="onCancelButtonClicked:" destination="zs0-y1-eAs" id="BQW-xm-dX2"/>

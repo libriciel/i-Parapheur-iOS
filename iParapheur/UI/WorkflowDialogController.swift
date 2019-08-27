@@ -163,6 +163,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             }
         }
 
+        // Cannot reject without reason
+
+        if (currentAction == .reject) && (publicAnnotationTextView.text.count < 3) {
+            ViewUtils.logWarning(message: "Veuillez renseigner une raison en annotation publique.",
+                                 title: "Impossible de rejeter le dossier")
+            return
+        }
+
         // Special case on P12 password request
 
         if selectedCertificate?.sourceType == .p12File,
@@ -174,11 +182,9 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             return
         }
 
-        // Starting requests
+        // Sending actual action
 
         for actionToPerform in actionsToPerform {
-
-            // Sending actual action
 
             switch actionToPerform.action {
 

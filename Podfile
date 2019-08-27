@@ -3,8 +3,8 @@ target "iParapheur" do
   inhibit_all_warnings!
   use_frameworks!
 
-  pod 'SCNetworkReachability', '2.0.6'
   pod 'Alamofire', '4.7.3'
+  pod 'SCNetworkReachability', '2.0.6'
   pod 'SwiftMessages', '7.0.0'
   pod 'OpenSSL-Universal', '1.0.2.18'
   pod 'AEXML', '4.4.0'

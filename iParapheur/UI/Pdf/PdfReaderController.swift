@@ -146,9 +146,12 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
                 let action = sender as? Action,
                 let folder = currentFolder {
 
-            destinationController.currentAction = action
+            // Computing action before, to manage paper signature
+            let actionToPerform = ActionToPerform(folder: folder, action: action)
+
+            destinationController.currentAction = actionToPerform.action
             destinationController.restClient = restClient
-            destinationController.actionsToPerform = [ActionToPerform(folder: folder, action: action)]
+            destinationController.actionsToPerform = [actionToPerform]
             destinationController.currentDeskId = currentDesk?.identifier
         }
         else if (segue.identifier == AnnotationDetailsController.segue),
