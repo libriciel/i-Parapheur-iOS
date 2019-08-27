@@ -68,7 +68,8 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         os_log("View loaded : WorkflowDialogController", type: .debug)
 
-        self.certificateLayout.isHidden = !(currentAction == .sign)
+        let hasSignature = actionsToPerform.contains(where: { ($0.action == .sign) && !($0.folder.isSignPapier) })
+        certificateLayout.isHidden = !hasSignature
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(onSignatureResult),
@@ -190,15 +191,29 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             return
         }
 
-        // Special case on P12 password request
+        // Special case with P12 password
 
         if selectedCertificate?.sourceType == .p12File,
-           signaturesToPerform.count > 0,
-           currentPassword == nil {
+           signaturesToPerform.count > 0 {
 
-            // P12 signature, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
-            displayPasswordAlert()
-            return
+            // Asking for the p12 password, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
+            // That will re-call onValidateButtonClicked, and continue...
+            if currentPassword == nil {
+                displayPasswordAlert()
+                return
+            }
+            // Checking the given password. May interrupt everything if it is wrong
+            else {
+                guard let certificate = selectedCertificate,
+                      let certificateUrl = CryptoUtils.p12LocalUrl(certificate: certificate),
+                      let _ = CryptoUtils.pkcs12ReadKey(path: certificateUrl,
+                                                        password: currentPassword) else {
+                    currentPassword = nil
+                    ViewUtils.logError(message: "Erreur de mot de passe ?",
+                                       title: "Impossible de récupérer le certificat")
+                    return
+                }
+            }
         }
 
         // Sending actual action
@@ -208,7 +223,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             switch actionToPerform.action {
 
                 case .sign:
-                    signature()
+                    signature(signatureToPerform: actionToPerform)
 
                 case .visa:
                     restClient?.visa(folder: actionToPerform.folder,
@@ -287,7 +302,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                       let givenPassword = textField.text else { return }
 
                 currentPassword = givenPassword
-                signature()
+                onValidateButtonClicked("")
             }
         }
     }
@@ -296,7 +311,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     // </editor-fold desc="UIAlertViewDelegate">
 
 
-    func signature() {
+    func signature(signatureToPerform: ActionToPerform) {
 
         let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
         guard let certificate = selectedCertificate,
@@ -331,16 +346,13 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
             default:
 
-                for signatureToPerform in signaturesToPerform {
+                guard let pass = currentPassword,
+                      let hasher = signatureToPerform.remoteHasher else { return }
 
-                    guard let pass = currentPassword,
-                          let hasher = signatureToPerform.remoteHasher else { return }
-
-                    os_log("signing with p12", type: .debug)
-                    CryptoUtils.signWithP12(hasher: hasher,
-                                            certificate: certificate,
-                                            password: pass)
-                }
+                os_log("signing with p12", type: .debug)
+                CryptoUtils.signWithP12(hasher: hasher,
+                                        certificate: certificate,
+                                        password: pass)
         }
     }
 

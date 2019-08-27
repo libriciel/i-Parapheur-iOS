@@ -251,9 +251,7 @@ class CryptoUtils: NSObject {
     }
 
 
-    class func signWithP12(hasher: RemoteHasher,
-                           certificate: Certificate,
-                           password: String) {
+    class func p12LocalUrl(certificate: Certificate) -> URL? {
 
         // Retrieving signature certificate
 
@@ -262,15 +260,26 @@ class CryptoUtils: NSObject {
                                                  in: .userDomainMask,
                                                  appropriateFor: nil,
                                                  create: true) else {
-            ViewUtils.logError(message: "Impossible de récupérer le certificat",
-                               title: "Erreur à la signature")
-            return
+            return nil
         }
 
         let jsonDecoder = JSONDecoder()
         let payload: [String: String] = try! jsonDecoder.decode([String: String].self, from: certificate.payload! as Data)
         let p12Name = payload[Certificate.payloadP12FileName]!
-        let p12FinalUrl = pathURL.appendingPathComponent(p12Name)
+
+        return pathURL.appendingPathComponent(p12Name)
+    }
+
+
+    class func signWithP12(hasher: RemoteHasher,
+                           certificate: Certificate,
+                           password: String) {
+
+        guard let p12Url = p12LocalUrl(certificate: certificate) else {
+            ViewUtils.logError(message: "Impossible de récupérer le certificat",
+                               title: "Erreur à la signature")
+            return
+        }
 
         // Building signature response
 
@@ -285,7 +294,7 @@ class CryptoUtils: NSObject {
 
                             let data = hasher.signatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
                             var signedHash = try CryptoUtils.rsaSign(data: data as NSData,
-                                                                     keyFileUrl: p12FinalUrl,
+                                                                     keyFileUrl: p12Url,
                                                                      signatureAlgorithm: hasher.signatureAlgorithm,
                                                                      password: password)
 
