@@ -95,19 +95,19 @@ class RemoteHasher {
         }
 
         restClient.getDataToSign(remoteDocumentList: remoteDocumentList,
-                                  publicKeyBase64: publicKeyBase64,
-                                  signatureFormat: signInfo.format,
-                                  payload: payload,
-                                  onResponse:
-                                  { (response: DataToSign) in
-                                      os_log("mRestClient#getDataToSign hashes : %@", type: .debug, response.dataToSignBase64List)
-                                      self.dataToSign = response
-                                      responseCallback?(response)
-                                  },
-                                  onError: { (error: Error) in
-                                      os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
-                                      errorCallback?(error)
-                                  })
+                                 publicKeyBase64: publicKeyBase64,
+                                 signatureFormat: signInfo.format,
+                                 payload: payload,
+                                 onResponse:
+                                 { (response: DataToSign) in
+                                     os_log("mRestClient#getDataToSign hashes : %@", type: .debug, response.dataToSignBase64List)
+                                     self.dataToSign = response
+                                     responseCallback?(response)
+                                 },
+                                 onError: { (error: Error) in
+                                     os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
+                                     errorCallback?(error)
+                                 })
     }
 
 
@@ -130,18 +130,17 @@ class RemoteHasher {
         }
 
         restClient.getFinalSignature(remoteDocumentList: remoteDocumentList,
-                                      publicKeyBase64: publicKeyBase64,
-                                      signatureDateTime: dataToSign!.signatureDateTime,
-                                      signatureFormat: signInfo.format,
-                                      payload: payload,
-                                      onResponse:
-                                      { (response: [Data]) in
-                                          responseCallback?(response)
-                                      },
-                                      onError: { (error: Error) in
-                                          os_log("RemoteHasher#buildDataToReturn error : %@", type: .error, error.localizedDescription)
-                                          errorCallback?(error)
-                                      })
+                                     publicKeyBase64: publicKeyBase64,
+                                     signatureDateTime: dataToSign!.signatureDateTime,
+                                     signatureFormat: signInfo.format,
+                                     payload: payload,
+                                     onResponse: { (response: [Data]) in
+                                         responseCallback?(response)
+                                     },
+                                     onError: { (error: Error) in
+                                         os_log("RemoteHasher#buildDataToReturn error : %@", type: .error, error.localizedDescription)
+                                         errorCallback?(error)
+                                     })
     }
 
 

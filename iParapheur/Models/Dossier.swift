@@ -53,7 +53,7 @@ class Dossier: NSObject, Decodable {
 
     let actionDemandee: Action
     var actions: [Action]
-    let documents: [Document]
+    var documents: [Document]
     let acteursVariables: [String]
     // TODO let metadatas: [String: Any]
     let emitDate: Date?

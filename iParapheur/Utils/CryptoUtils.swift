@@ -291,14 +291,14 @@ class CryptoUtils: NSObject {
 
                             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
                             signedHashList.append(Data(base64Encoded: signedHash)!)
-
-                            NotificationCenter.default.post(name: .signatureResult,
-                                                            object: nil,
-                                                            userInfo: [
-                                                                notifSignedData: signedHashList,
-                                                                notifFolderId: hasher.dossier.identifier
-                                                            ])
                         }
+
+                        NotificationCenter.default.post(name: .signatureResult,
+                                                        object: nil,
+                                                        userInfo: [
+                                                            notifSignedData: signedHashList,
+                                                            notifFolderId: hasher.dossier.identifier
+                                                        ])
                     } catch let error {
                         ViewUtils.logError(message: error.localizedDescription as NSString,
                                            title: "Erreur à la signature")

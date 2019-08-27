@@ -76,6 +76,25 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                                object: nil)
 
         for signatureToPerform in actionsToPerform.filter({ $0.action == .sign }) {
+
+            // If we come from a multi-selection list, the folder is not properly set
+            // It misses the document list. That's what we fetch here.
+
+            if signatureToPerform.folder.documents.count == 0 {
+                restClient?.getFolder(folder: signatureToPerform.folder.identifier,
+                                      desk: currentDeskId ?? "",
+                                      onResponse: { folder in
+                                          signatureToPerform.folder.documents = folder.documents
+                                          self.refreshCertificateListVisibility()
+                                      },
+                                      onError: { error in
+                                          signatureToPerform.error = error
+                                          signatureToPerform.isDone = true
+                                      })
+            }
+
+            // Retrieving SignInfo
+
             restClient?.getSignInfo(folder: signatureToPerform.folder,
                                     bureau: currentDeskId! as NSString,
                                     onResponse: { signInfo in
@@ -392,7 +411,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     */
     private func refreshCertificateListVisibility() {
         let signatureToPerform = actionsToPerform.filter { $0.action == .sign }
-        if signatureToPerform.allSatisfy({ $0.signInfo != nil }) {
+        if signatureToPerform.allSatisfy({ ($0.signInfo != nil) && ($0.folder.documents.count > 0) }) {
             certificateList = ModelsDataController.fetchCertificates()
             certificateTableView.reloadData()
         }
