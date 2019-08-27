@@ -83,7 +83,7 @@ class UI_WorkflowDialogController_Tests: XCTestCase {
         controller.actionsToPerform = []
         controller.currentDeskId = "desk_01"
 
-        controller.signature()
+//        controller.signature()
     }
 
 }
