@@ -36,17 +36,19 @@
 import UIKit
 
 class GlobalSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
-    
+
+
     override func viewDidLoad() {
-        super.viewDidLoad()        
+        super.viewDidLoad()
         self.delegate = self
         self.preferredDisplayMode = .automatic
     }
-    
+
+
     func splitViewController(_ splitViewController: UISplitViewController,
                              collapseSecondary secondaryViewController: UIViewController,
                              onto primaryViewController: UIViewController) -> Bool {
         return true
     }
-    
+
 }

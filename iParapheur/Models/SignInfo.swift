@@ -37,10 +37,10 @@ import Foundation
 import CoreData
 
 
-@objc public class SignInfo: NSObject, Decodable {
+public class SignInfo: NSObject, Decodable {
 
-    @objc let format: String!
-    @objc let hashesToSign: [String]
+    let format: String
+    let hashesToSign: [String]
     let p7s: String?
     let pesCity: String?
     let pesClaimedRole: String?
@@ -73,6 +73,23 @@ import CoreData
     }
 
 
+    public init(format: String, hashesToSign: [String]) {
+        self.format = format
+        self.hashesToSign = hashesToSign
+        p7s = nil
+        pesCity = nil
+        pesClaimedRole = nil
+        pesCountryName = nil
+        pesEncoding = nil
+        pesIds = []
+        pesPolicyDesc = nil
+        pesPolicyHash = nil
+        pesPolicyId = nil
+        pesPostalCode = nil
+        pesSpuri = nil
+    }
+
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -94,14 +111,16 @@ import CoreData
 
         if let hashesString = try values.decodeIfPresent(String.self, forKey: .hashToSign) {
             hashesToSign = hashesString.components(separatedBy: ",")
-        } else {
+        }
+        else {
             hashesToSign = []
         }
 
 
         if let pesIdsString = try values.decodeIfPresent(String.self, forKey: .pesId) {
             pesIds = pesIdsString.components(separatedBy: ",")
-        } else {
+        }
+        else {
             pesIds = []
         }
     }

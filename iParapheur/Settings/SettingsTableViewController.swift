@@ -71,7 +71,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.CellId)
+        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.cellId)
     }
 
     // MARK: - Listeners
@@ -91,7 +91,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.CellId) as! SettingsTableViewHeaderFooterView
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingsTableViewHeaderFooterView.cellId) as! SettingsTableViewHeaderFooterView
         header.label.text = menuElements[section].title
         header.upSeparator.isHidden = (section == 0)
 
@@ -100,7 +100,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return SettingsTableViewHeaderFooterView.PreferredHeight
+        return SettingsTableViewHeaderFooterView.preferredHeight
     }
 
 
@@ -111,10 +111,9 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: SettingsTableViewCell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.CellId,
-                                                                        for: indexPath as IndexPath) as! SettingsTableViewCell
-
         let element = menuElements[indexPath.section].elements[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.cellId,
+                                                 for: indexPath) as! SettingsTableViewCell
 
         cell.iconImage.image = UIImage(named: element.icon)?.withRenderingMode(.alwaysTemplate)
         cell.iconImage.highlightedImage = UIImage(named: element.iconHighlight)?.withRenderingMode(.alwaysTemplate)

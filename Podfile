@@ -1,16 +1,17 @@
 target "iParapheur" do
   platform :ios, '10.0'
+  inhibit_all_warnings!
   use_frameworks!
 
-  pod 'SCNetworkReachability', '2.0.6'
+  pod 'AEXML', '4.4.0'
   pod 'Alamofire', '4.7.3'
-  pod 'SwiftMessages', '6.0.2'
-  pod 'NSData+Base64', '1.0.0'
-  pod 'OpenSSL-Universal', '1.0.2.13'
-  pod 'AEXML', '4.3.3'
-  pod 'SSZipArchive', '2.1.4'
-  pod 'CryptoSwift', '0.13.1'
-  pod 'Sentry', :git => 'https://github.com/getsentry/sentry-cocoa.git', :tag => '4.3.1'
+  pod 'CryptoSwift', '1.0.0'
+  pod 'Floaty', '4.2.0'
+  pod 'OpenSSL-Universal', '1.0.2.18'
+  pod 'SCNetworkReachability', '2.0.6'
+  pod 'Sentry', :git => 'https://github.com/getsentry/sentry-cocoa.git', :tag => '4.4.0'
+  pod 'SSZipArchive', '2.2.2'
+  pod 'SwiftMessages', '7.0.0'
 
   target 'iParapheurTests' do
     inherit! :search_paths

@@ -32,16 +32,17 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import Foundation
 
-@objc class SettingsAccountsCell: UITableViewCell {
-	
-	static let CellIdentifier: String! = "SettingsAccountCell"
-	
-	@IBOutlet var titleLabel: UILabel!
-	@IBOutlet var infoLabel: UILabel!
-	@IBOutlet var deleteButton: UIButton!
-	@IBOutlet var visibilityButton: UIButton!
-	@IBOutlet var editButton: UIButton!
-	
+class SettingsAccountsCell: UITableViewCell {
+
+    static let cellIdentifier = "SettingsAccountCell"
+
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var infoLabel: UILabel!
+    @IBOutlet var deleteButton: UIButton!
+    @IBOutlet var visibilityButton: UIButton!
+    @IBOutlet var editButton: UIButton!
+
 }

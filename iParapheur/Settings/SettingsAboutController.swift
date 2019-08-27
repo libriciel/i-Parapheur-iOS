@@ -32,20 +32,27 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL license and that you accept its terms.
  */
+
 import UIKit
 import os
 
 class SettingsAboutController: UIViewController {
-	
-	@IBOutlet var versionLabel: UILabel!
-	
-	// MARK: - Life cycle
-	
+
+    @IBOutlet var versionLabel: UILabel!
+
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
+
     override func viewDidLoad() {
-		super.viewDidLoad()
-		os_log("View loaded : SettingsAboutController", type: .debug)
-		
-		let appVersionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-		versionLabel.text = versionLabel.text?.replacingOccurrences(of: ":version:", with: appVersionString)
+        super.viewDidLoad()
+        os_log("View loaded : SettingsAboutController", type: .debug)
+
+        let appVersionString: String = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+        versionLabel.text = versionLabel.text?.replacingOccurrences(of: ":version:", with: appVersionString)
     }
+
+
+    // <editor-fold desc="LifeCycle">
+
 }

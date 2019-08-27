@@ -38,7 +38,7 @@ import Alamofire
 import os
 
 
-@objc class RestClient: NSObject {
+class RestClient: NSObject {
 
     var manager: Alamofire.SessionManager
     @objc var serverUrl: NSURL
@@ -95,13 +95,19 @@ import os
                                                             options: NSRegularExpression.MatchingOptions.anchored,
                                                             range: NSMakeRange(0, urlFixed.count))
 
-        if (match != nil) {
+        if match != nil {
             let swiftRange = Range(match!.range(at: 1), in: urlFixed)
             urlFixed = String(urlFixed[swiftRange!])
         }
 
         return NSString(string: "https://m-\(urlFixed)")
     }
+
+
+    class func getAnnotationsUrl(folderId: String, documentId: String) -> String {
+        return String(format: "/parapheur/dossiers/%@/%@/annotations", folderId, documentId)
+    }
+
 
     // </editor-fold desc="Static methods">
 
@@ -117,36 +123,39 @@ import os
     // </editor-fold desc="Utils">
 
 
-    // <editor-fold desc="Get methods">
-
-
     @objc func getApiVersion(onResponse responseCallback: ((NSNumber) -> Void)?,
-                             onError errorCallback: ((NSError) -> Void)?) {
+                             onError errorCallback: ((Error) -> Void)?) {
 
-        checkCertificate(onResponse: {
-            (result: Bool) in
+        checkCertificate(onResponse: { (result: Bool) in
 
-            if (result) {
+            if result {
                 let apiVersionUrl = "\(self.serverUrl.absoluteString!)/parapheur/api/getApiLevel"
 
-                self.manager.request(apiVersionUrl).validate().responseString {
-                    response in
-                    switch (response.result) {
+                self.manager.request(apiVersionUrl)
+                        .validate()
+                        .responseString { response in
 
-                        case .success:
-                            let decoder = JSONDecoder()
-                            let jsonData = response.value?.data(using: .utf8)!
-                            let apiLevel = try? decoder.decode(ApiLevel.self, from: jsonData!)
-                            responseCallback!(NSNumber(value: (apiLevel?.level)!))
-                            break
+                            switch response.result {
 
-                        case .failure(let error):
-                            errorCallback!(error as NSError)
-                            break
-                    }
-                }
-            } else {
-                errorCallback!(NSError(domain: "kCFErrorDomainCFNetwork",
+                                case .success:
+                                    let decoder = JSONDecoder()
+
+                                    guard let jsonData = response.value?.data(using: .utf8),
+                                          let apiLevelWrapper = try? decoder.decode(ApiLevel.self, from: jsonData),
+                                          let apiLevel = apiLevelWrapper.level else {
+                                        errorCallback?(RuntimeError("Réponse du serveur invalide"))
+                                        return
+                                    }
+
+                                    responseCallback?(NSNumber(value: apiLevel))
+
+                                case .failure(let error):
+                                    errorCallback?(error)
+                            }
+                        }
+            }
+            else {
+                errorCallback?(NSError(domain: "kCFErrorDomainCFNetwork",
                                        code: 400))
             }
 
@@ -163,16 +172,17 @@ import os
 
         try? FileManager.default.removeItem(at: filePathUrl)
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-            return (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
+            (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
         }
 
         // Request
 
-        manager.download(downloadFileUrl, to: destination).validate().responseData {
-            response in
-            let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
-            responseCallback!(isAcValid)
-        }
+        manager.download(downloadFileUrl, to: destination)
+                .validate()
+                .responseData { response in
+                    let isAcValid = CryptoUtils.checkCertificate(pendingDerFile: filePathUrl)
+                    responseCallback?(isAcValid)
+                }
     }
 
 
@@ -213,31 +223,29 @@ import os
         // Request
 
         os_log("getDataToSign request sent with parameters %@", type: .debug, parameters)
-        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
-            response in
+        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            os_log("getDataToSign response...", type: .debug)
-            switch (response.result) {
+                    os_log("getDataToSign response...", type: .debug)
+                    switch response.result {
 
-                case .success:
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dataToSign = try? jsonDecoder.decode(DataToSign.self, from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    // Prepare
+                            os_log("getDataToSign response : %@", type: .debug, dataToSign)
+                            responseCallback?(dataToSign)
 
-                    let responseJsonData = response.value!.data(using: .utf8)!
-                    let jsonDecoder = JSONDecoder()
-                    let dataToSign = try? jsonDecoder.decode(DataToSign.self,
-                                                             from: responseJsonData)
-
-                    os_log("getDataToSign response : %@", type: .debug, dataToSign!)
-                    responseCallback!(dataToSign!)
-                    break
-
-                case .failure(let error):
-                    os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
-                    errorCallback!(error)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
+                            errorCallback?(error)
+                    }
+                }
     }
 
 
@@ -279,77 +287,66 @@ import os
         // Request
 
         os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
-        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default).validate().responseString {
-            response in
+        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            switch (response.result) {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    // Prepare
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
+                                                                               from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    let responseJsonData = response.value!.data(using: .utf8)!
-                    let jsonDecoder = JSONDecoder()
-                    let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
-                                                                 from: responseJsonData)
+                            responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
 
-                    responseCallback!(StringsUtils.toDataList(base64StringList: finalSignature!.signatureResultBase64List))
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error)
-
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error)
+                    }
+                }
     }
 
 
-    @objc func getBureaux(onResponse responseCallback: ((NSArray) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getDesks(onResponse responseCallback: (([Bureau]) -> Void)?,
+                  onError errorCallback: ((Error) -> Void)?) {
 
         let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl).validate().responseString {
-            response in
-            switch (response.result) {
+        manager.request(getBureauxUrl)
+                .validate()
+                .responseString { response in
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    // Prepare
+                            let jsonDecoder = JSONDecoder()
+                            guard let getBureauxJsonData = response.value?.data(using: .utf8),
+                                  let bureaux = try? jsonDecoder.decode([Bureau].self,
+                                                                        from: getBureauxJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    let getBureauxJsonData = response.value!.data(using: .utf8)!
+                            responseCallback?(bureaux)
 
-                    let jsonDecoder = JSONDecoder()
-                    let bureaux = try? jsonDecoder.decode([Bureau].self,
-                                                          from: getBureauxJsonData)
-
-                    // Parsing and callback
-
-                    let hasSomeData = (bureaux != nil)
-                    if (hasSomeData) {
-                        responseCallback!(bureaux! as NSArray)
-                    } else {
-                        errorCallback!(NSError(domain: "Invalid response",
-                                               code: 999))
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                }
     }
 
 
-    @objc func getDossiers(bureau: NSString,
-                           page: NSNumber,
-                           size: NSNumber,
-                           filterJson: NSString?,
-                           onResponse responseCallback: ((NSArray) -> Void)?,
-                           onError errorCallback: ((NSError) -> Void)?) {
+    func getDossiers(bureau: String,
+                     page: Int,
+                     size: Int,
+                     filterJson: String?,
+                     onResponse responseCallback: (([Dossier]) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -361,64 +358,64 @@ import os
             "page": page,
             "pageSize": size,
             "pendingFile": 0,
-            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": page * size,
             "sort": "cm:create"
         ]
 
-        if (filterJson != nil) {
+        if filterJson != nil {
             parameters["filter"] = filterJson
         }
 
         // Request
 
-        manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
-            response in
-            switch (response.result) {
+        manager.request(getDossiersUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
 
-                case .success:
+                    switch response.result {
 
-                    // Prepare
+                        case .success:
 
-                    let responseJsonData = response.value!.data(using: .utf8)!
+                            // Prepare
 
-                    let jsonDecoder = JSONDecoder()
-                    let dossierList = try? jsonDecoder.decode([Dossier].self,
-                                                              from: responseJsonData)
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dossierList = try? jsonDecoder.decode([Dossier].self,
+                                                                            from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    // Retrieve deleguated
+                            // Retrieve delegated
 
-                    self.getDossiersDelegues(bureau: bureau,
-                                             page: 0, size: 100,
-                                             filterJson: nil,
-                                             onResponse: {
-                                                 (delegueList: [Dossier]) in
+                            self.getDelegateFolders(bureau: bureau,
+                                                    page: 0, size: 100,
+                                                    filterJson: nil,
+                                                    onResponse: { (delegueList: [Dossier]) in
 
-                                                 for dossierDelegue in delegueList {
-                                                     dossierDelegue.isDelegue = true;
-                                                 }
+                                                        for dossierDelegue in delegueList {
+                                                            dossierDelegue.isDelegue = true
+                                                        }
 
-                                                 responseCallback!((dossierList! + delegueList) as NSArray)
-                                             },
-                                             onError: {
-                                                 (error: Error) in
-                                                 errorCallback!(error as NSError)
-                                             })
-                    break
+                                                        responseCallback?((dossierList + delegueList))
+                                                    },
+                                                    onError: { (error: Error) in
+                                                        errorCallback?(error)
+                                                    })
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                    }
+                }
     }
 
 
-    @objc func getDossiersDelegues(bureau: NSString,
-                                   page: NSNumber,
-                                   size: NSNumber,
-                                   filterJson: NSString?,
-                                   onResponse responseCallback: (([Dossier]) -> Void)?,
-                                   onError errorCallback: ((NSError) -> Void)?) {
+    func getDelegateFolders(bureau: String,
+                            page: Int,
+                            size: Int,
+                            filterJson: String?,
+                            onResponse responseCallback: (([Dossier]) -> Void)?,
+                            onError errorCallback: ((Error) -> Void)?) {
 
         let getDossiersUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers"
 
@@ -431,116 +428,108 @@ import os
             "pageSize": size,
             "corbeilleName": "dossiers-delegues",
             "pendingFile": 0,
-            "skipped": Double(truncating: page) * (Double(truncating: size) - 1),
+            "skipped": page * size,
             "sort": "cm:create"
         ]
 
-        if (filterJson != nil) {
+        if filterJson != nil {
             parameters["filter"] = filterJson
         }
 
         // Request
 
-        manager.request(getDossiersUrl, parameters: parameters).validate().responseString {
-            response in
-            switch (response.result) {
+        manager.request(getDossiersUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let responseJsonData = response.value!.data(using: .utf8)!
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dossierList = try? jsonDecoder.decode([Dossier].self,
+                                                                            from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    let jsonDecoder = JSONDecoder()
-                    let dossierList = try? jsonDecoder.decode([Dossier].self,
-                                                              from: responseJsonData)
+                            responseCallback?(dossierList)
 
-                    responseCallback!(dossierList!)
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error)
+                    }
+                }
     }
 
 
-    @objc func getDossier(dossier: NSString,
-                          bureau: NSString,
-                          onResponse responseCallback: ((Dossier) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getFolder(folder: String,
+                   desk: String,
+                   onResponse responseCallback: ((Dossier) -> Void)?,
+                   onError errorCallback: ((Error) -> Void)?) {
 
-        let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)"
+        let getDossierUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder)"
 
         // Parameters
 
-        let parameters: Parameters = ["bureauCourant": bureau]
+        let parameters: Parameters = ["bureauCourant": desk]
 
         // Request
 
-        manager.request(getDossierUrl, parameters: parameters).validate().responseString {
-            response in
-            switch (response.result) {
+        manager.request(getDossierUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
 
-                case .success:
+                    switch response.result {
 
-                    let responseJsonData = response.value!.data(using: .utf8)!
+                        case .success:
 
-                    let jsonDecoder = JSONDecoder()
-                    let dossier = try? jsonDecoder.decode(Dossier.self,
-                                                          from: responseJsonData)
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dossier = try? jsonDecoder.decode(Dossier.self, from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    responseCallback!(dossier!)
-                    break
+                            responseCallback?(dossier)
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                    }
+                }
     }
 
 
-    @objc func getCircuit(dossier: NSString,
-                          onResponse responseCallback: ((Circuit) -> Void)?,
-                          onError errorCallback: ((NSError) -> Void)?) {
+    func getWorkflow(folder: String,
+                     onResponse responseCallback: ((Circuit) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
 
-        let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/circuit"
+        let getCircuitUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder)/circuit"
 
         // Request
 
-        manager.request(getCircuitUrl).validate().responseString {
-            response in
+        manager.request(getCircuitUrl)
+                .validate()
+                .responseString { response in
 
-            switch (response.result) {
+                    switch response.result {
 
-                case .success:
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
+                            jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
 
-                    // Prepare
+                            guard let getCircuitJsonData = response.value?.data(using: .utf8),
+                                  let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self, from: getCircuitJsonData),
+                                  let data = circuitWrapper["circuit"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
 
-                    let getCircuitJsonData = response.value!.data(using: .utf8)!
+                            responseCallback?(data)
 
-                    let jsonDecoder = JSONDecoder()
-                    jsonDecoder.dateDecodingStrategy = .millisecondsSince1970
-                    let circuitWrapper = try? jsonDecoder.decode([String: Circuit].self,
-                                                                 from: getCircuitJsonData)
-
-                    // Parsing and callback
-
-                    let hasSomeData = (circuitWrapper != nil) && (circuitWrapper!["circuit"] != nil)
-                    if (hasSomeData) {
-                        responseCallback!(circuitWrapper!["circuit"]!)
-                    } else {
-                        errorCallback!(NSError(domain: "Invalid response",
-                                               code: 999))
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                }
     }
 
 
@@ -552,61 +541,66 @@ import os
 
         // Request
 
-        manager.request(getTypologyUrl).validate().responseString {
-            response in
+        manager.request(getTypologyUrl)
+                .validate()
+                .responseString { response in
 
-            switch (response.result) {
+                    switch response.result {
 
-                case .success:
+                        case .success:
 
-                    let decoder = JSONDecoder()
-                    let jsonData = response.value?.data(using: .utf8)!
-                    let typeList = try? decoder.decode([ParapheurType].self,
-                                                       from: jsonData!)
+                            let decoder = JSONDecoder()
+                            guard let jsonData = response.value?.data(using: .utf8),
+                                  let typeList = try? decoder.decode([ParapheurType].self,
+                                                                     from: jsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                return
+                            }
 
-                    responseCallback!(typeList! as NSArray)
-                    break
+                            responseCallback?(typeList as NSArray)
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                    }
+                }
     }
 
 
-    @objc func getAnnotations(dossier: NSString,
-                              onResponse responseCallback: (([Annotation]) -> Void)?,
-                              onError errorCallback: ((NSError) -> Void)?) {
+    func getAnnotations(folder: String,
+                        onResponse responseCallback: (([Annotation]) -> Void)?,
+                        onError errorCallback: ((Error) -> Void)?) {
 
-        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier)/annotations"
+        let getTypologyUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder)/annotations"
 
         // Request
 
-        manager.request(getTypologyUrl).validate().responseString {
-            response in
+        manager.request(getTypologyUrl)
+                .validate()
+                .responseString { response in
 
-            switch (response.result) {
+                    switch response.result {
 
-                case .success:
-                    let parsedAnnotations = AnnotationsUtils.parse(string: response.value!)
-                    responseCallback!(parsedAnnotations)
-                    break
+                        case .success:
+                            guard let responseValue = response.value else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+                            let parsedAnnotations = AnnotationsUtils.parse(string: responseValue)
+                            responseCallback?(parsedAnnotations)
 
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                    }
+                }
     }
 
 
-    @objc func getSignInfo(dossier: Dossier,
+    @objc func getSignInfo(folder: Dossier,
                            bureau: NSString,
                            onResponse responseCallback: ((SignInfo) -> Void)?,
                            onError errorCallback: ((NSError) -> Void)?) {
 
-        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/getSignInfo"
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
 
         // Parameters
 
@@ -614,49 +608,38 @@ import os
 
         // Request
 
-        manager.request(getSignInfoUrl, parameters: parameters).validate().responseString {
-            response in
+        manager.request(getSignInfoUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
 
-            switch (response.result) {
+                    switch response.result {
 
-                case .success:
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
 
-                    // Prepare
+                            guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
+                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let data = signInfoWrapper["signatureInformations"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                return
+                            }
 
-                    let getSignInfoJsonData = response.result.value!.data(using: .utf8)!
+                            responseCallback?(data)
 
-                    let jsonDecoder = JSONDecoder()
-                    let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self,
-                                                                  from: getSignInfoJsonData)
-
-                    // Parsing and callback
-
-                    let hasSomeData = (signInfoWrapper != nil) && (signInfoWrapper!["signatureInformations"] != nil)
-                    if (hasSomeData) {
-                        responseCallback!(signInfoWrapper!["signatureInformations"]!)
-                    } else {
-                        errorCallback!(NSError(domain: "Invalid response",
-                                               code: 999))
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
-
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    break
-            }
-        }
+                }
     }
 
 
-    @objc func signDossier(dossierId: String,
-                           bureauId: String,
-                           publicAnnotation: String?,
-                           privateAnnotation: String?,
-                           signature: String,
-                           responseCallback: ((NSNumber) -> Void)?,
-                           errorCallback: ((NSError) -> Void)?) {
-
+    func signDossier(dossierId: String,
+                     bureauId: String,
+                     publicAnnotation: String?,
+                     privateAnnotation: String?,
+                     signature: String,
+                     responseCallback: ((NSNumber) -> Void)?,
+                     errorCallback: ((Error) -> Void)?) {
 
         var argumentDictionary: [String: String] = [:]
         argumentDictionary["bureauCourant"] = bureauId
@@ -667,27 +650,25 @@ import os
         // Send request
 
         self.sendSimpleAction(type: 1,
-                              url: "/parapheur/dossiers/\(dossierId)/signature" as NSString,
-                              args: argumentDictionary as NSDictionary,
-                              onResponse: {
-                                  id in
-                                  responseCallback!(1);
+                              url: "/parapheur/dossiers/\(dossierId)/signature",
+                              args: argumentDictionary,
+                              onResponse: { id in
+                                  responseCallback?(1)
                               },
-                              onError: {
-                                  error in
-                                  errorCallback!(error as NSError);
+                              onError: { error in
+                                  errorCallback?(error)
                               })
     }
 
 
-    func visa(dossier: Dossier,
+    func visa(folder: Dossier,
               bureauId: String,
               publicAnnotation: String?,
               privateAnnotation: String?,
               responseCallback: ((NSNumber) -> Void)?,
               errorCallback: ((NSError) -> Void)?) {
 
-        let visaUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/visa"
+        let visaUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/visa"
 
         // Create arguments dictionary
 
@@ -701,33 +682,31 @@ import os
         manager.request(visaUrl,
                         method: .post,
                         parameters: argumentDictionary,
-                        encoding: JSONEncoding.default).validate().responseString {
+                        encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            response in
+                    switch response.result {
 
-            switch (response.result) {
+                        case .success:
+                            responseCallback?(NSNumber(value: 1))
 
-                case .success:
-                    responseCallback!(NSNumber(value: 1))
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    print(error.localizedDescription)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            print(error.localizedDescription)
+                    }
+                }
     }
 
 
-    func reject(dossier: Dossier,
+    func reject(folder: Dossier,
                 bureauId: String,
                 publicAnnotation: String?,
                 privateAnnotation: String?,
                 responseCallback: ((NSNumber) -> Void)?,
                 errorCallback: ((NSError) -> Void)?) {
 
-        let rejectUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossier.identifier)/rejet"
+        let rejectUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/rejet"
 
         // Create arguments dictionary
 
@@ -741,115 +720,251 @@ import os
         manager.request(rejectUrl,
                         method: .post,
                         parameters: argumentDictionary,
-                        encoding: JSONEncoding.default).validate().responseString {
+                        encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
 
-            response in
+                    switch response.result {
 
-            switch (response.result) {
+                        case .success:
+                            responseCallback?(NSNumber(value: 1))
 
-                case .success:
-                    responseCallback!(NSNumber(value: 1))
-                    break
-
-                case .failure(let error):
-                    errorCallback!(error as NSError)
-                    print(error.localizedDescription)
-                    break
-            }
-        }
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
+                            print(error.localizedDescription)
+                    }
+                }
     }
+
+
+    func switchToPaperSignature(folder: Dossier,
+                                desk: Bureau,
+                                responseCallback: (() -> Void)?,
+                                errorCallback: ((NSError) -> Void)?) {
+
+        // Creating arguments dictionary
+
+        var argumentDictionary = Parameters()
+        argumentDictionary["bureauCourant"] = desk.identifier
+
+        // Send request
+
+        sendSimpleAction(type: 1,
+                         url: String(format: "/parapheur/dossiers/%@/signPapier", folder.identifier),
+                         args: argumentDictionary,
+                         onResponse: { result in
+                             responseCallback?()
+                         },
+                         onError: { (error: NSError) in
+                             errorCallback?(error)
+                         })
+    }
+
+
+    // <editor-fold desc="Annotations"> MARK: - Annotations
+
+
+    func createAnnotation(_ annotation: Annotation,
+                          folderId: String,
+                          documentId: String,
+                          responseCallback: ((String) -> Void)?,
+                          errorCallback: ((Error) -> Void)?) {
+
+        // Check arguments
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        guard let annotationData = try? jsonEncoder.encode(annotation) else {
+            errorCallback?(RuntimeError("Impossible de créer l'annotation"))
+            return
+        }
+
+        // Send request. Using directly JSON in the body.
+        // Casting/passing it through a Parameter object doen't work well.
+
+        let annotationUrlSuffix = RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId)
+        let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
+
+        var request = URLRequest(url: URL(string: annotationUrl)!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = annotationData
+
+        manager.request(request)
+                .responseJSON { response in
+
+                    switch response.result {
+
+                        case .success:
+
+                            guard let jsonResult = response.value as? [String: String],
+                                  let idString = jsonResult["id"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(idString)
+
+                        case .failure(let error):
+
+                            errorCallback?(error)
+                            print(error.localizedDescription)
+                    }
+                }
+    }
+
+
+    func updateAnnotation(_ annotation: Annotation,
+                          folderId: String,
+                          documentId: String,
+                          responseCallback: (() -> Void)?,
+                          errorCallback: ((Error) -> Void)?) {
+
+        // Check arguments
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+
+        guard let annotationData = try? jsonEncoder.encode(annotation) else {
+            errorCallback?(RuntimeError("Impossible de créer l'annotation"))
+            return
+        }
+
+        // Send request. Using directly JSON in the body.
+        // Casting/passing it through a Parameter object doen't work well.
+
+        let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier)
+        let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
+
+        var request = URLRequest(url: URL(string: annotationUrl)!)
+        request.httpMethod = HTTPMethod.put.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = annotationData
+
+        manager.request(request)
+                .responseString { (response) in
+
+                    switch response.result {
+
+                        case .success:
+                            responseCallback?()
+
+                        case .failure(let error):
+                            errorCallback?(error)
+                            print(error.localizedDescription)
+                    }
+                }
+    }
+
+
+    func deleteAnnotation(annotationId: String,
+                          folderId: String,
+                          documentId: String,
+                          onResponse responseCallback: (() -> Void)?,
+                          onError errorCallback: ((Error) -> Void)?) {
+
+        let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotationId)
+
+        sendSimpleAction(type: 3,
+                         url: annotationUrlSuffix,
+                         args: nil,
+                         onResponse: { response in
+                             responseCallback?()
+                         },
+                         onError: { (error: NSError) in
+                             errorCallback?(error as Error)
+                         })
+    }
+
+
+    // </editor-fold desc="Annotations">
 
 
     @objc func sendSimpleAction(type: NSNumber,
-                                url: NSString,
-                                args: NSDictionary,
+                                url: String,
+                                args: Parameters?,
                                 onResponse responseCallback: ((NSNumber) -> Void)?,
                                 onError errorCallback: ((NSError) -> Void)?) {
 
-        // Conversions ObjC -> Swift
-
         let annotationUrl = "\(serverUrl.absoluteString!)\(url)"
-        var parameters: Parameters = [:]
-        for arg in args {
-            parameters[arg.key as! String] = arg.value
-        }
 
         // Request
 
-        if (type == 1) {
-            manager.request(annotationUrl,
-                            method: .post,
-                            parameters: parameters,
-                            encoding: JSONEncoding.default).validate().responseString {
-                response in
+        switch type {
 
-                switch (response.result) {
+            case 1:
+                manager.request(annotationUrl,
+                                method: .post,
+                                parameters: args,
+                                encoding: JSONEncoding.default)
+                        .validate()
+                        .responseString { response in
 
-                    case .success:
-                        responseCallback!(NSNumber(value: 1))
-                        break
+                            switch response.result {
 
-                    case .failure(let error):
-                        errorCallback!(error as NSError)
-                        print(error.localizedDescription)
-                        break
-                }
-            }
-        } else if (type == 2) {
+                                case .success:
+                                    responseCallback?(NSNumber(value: 1))
 
-            manager.request(annotationUrl,
-                            method: .put,
-                            parameters: parameters,
-                            encoding: JSONEncoding.default).validate().responseString {
-                response in
+                                case .failure(let error):
+                                    errorCallback?(error as NSError)
+                                    print(error.localizedDescription)
+                            }
+                        }
 
-                switch (response.result) {
+            case 2:
+                manager.request(annotationUrl,
+                                method: .put,
+                                parameters: args,
+                                encoding: JSONEncoding.default)
+                        .validate()
+                        .responseString { response in
 
-                    case .success:
-                        responseCallback!(NSNumber(value: 1))
-                        break
+                            switch response.result {
 
-                    case .failure(let error):
-                        errorCallback!(error as NSError)
-                        print(error.localizedDescription)
-                        break
-                }
-            }
-        } else if (type == 3) {
+                                case .success:
+                                    responseCallback?(1)
 
-            manager.request(annotationUrl,
-                            method: .delete,
-                            parameters: parameters).validate().responseString {
-                response in
+                                case .failure(let error):
+                                    errorCallback?(error as NSError)
+                                    print(error.localizedDescription)
+                            }
+                        }
 
-                switch (response.result) {
+            case 3:
+                manager.request(annotationUrl,
+                                method: .delete,
+                                parameters: args)
+                        .validate()
+                        .responseString { response in
 
-                    case .success:
-                        responseCallback!(NSNumber(value: 1))
-                        break
+                            switch response.result {
 
-                    case .failure(let error):
-                        errorCallback!(error as NSError)
-                        break
-                }
-            }
+                                case .success:
+                                    responseCallback?(1)
+
+                                case .failure(let error):
+                                    errorCallback?(error as NSError)
+                            }
+                        }
+
+            default:
+                os_log("Wrong argument here", type: .error)
         }
     }
 
 
-    // </editor-fold desc="Get methods">
+    func downloadFile(document: Document,
+                      path filePath: URL,
+                      onResponse responseCallback: ((String) -> Void)?,
+                      onError errorCallback: ((Error) -> Void)?) {
 
+        let pdfSuffix = document.isPdfVisual ? ";ph:visuel-pdf" : ""
+        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
+        os_log("Document downloadUrl:%@", downloadFileUrl)
 
-    @objc func downloadFile(document: NSString,
-                            isPdf: Bool,
-                            atPath filePath: NSURL,
-                            onResponse responseCallback: ((NSString) -> Void)?,
-                            onError errorCallback: ((NSError) -> Void)?) {
-
-        let pdfSuffix = isPdf ? ";ph:visuel-pdf" : ""
-        let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document)/content\(pdfSuffix)"
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
-            return (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
+            (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }
 
         // Cancel previous download
@@ -861,19 +976,20 @@ import os
 
         // Request
 
-        manager.download(downloadFileUrl, to: destination).validate().response {
-            response in
+        manager.download(downloadFileUrl, to: destination)
+                .validate()
+                .response { response in
 
-            if (response.error == nil) {
-                responseCallback!(response.destinationURL!.path as NSString)
-            }
-            //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
-            //		errorCallback!(response.error)
-            //	}
-            else {
-                errorCallback!(response.error! as NSError)
-            }
-        }
+                    if let responseError = response.error {
+                        errorCallback?(responseError)
+                    }
+                    //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
+                    //		errorCallback?(response.error)
+                    //	}
+                    else {
+                        responseCallback?(response.destinationURL!.path)
+                    }
+                }
     }
 
 }

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="ipad11_0rounded" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="FolderListEmptyView" customModule="iParapheur" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="349" height="387"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ocv-Nl-qbZ">
+                    <rect key="frame" x="16" y="116" width="317" height="156"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_folder_open_white_48dp.png" translatesAutoresizingMaskIntoConstraints="NO" id="vZl-HI-Asl">
+                            <rect key="frame" x="135" y="8" width="48" height="48"/>
+                            <color key="tintColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="48" id="7su-RY-1vB"/>
+                                <constraint firstAttribute="height" constant="48" id="Hh3-h1-pww"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vos dossiers s'afficheront ici" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6fj-yO-rZv">
+                            <rect key="frame" x="0.0" y="64" width="317" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Désactivez le filtre pour obtenir plus de résultats" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1mZ-hJ-44k">
+                            <rect key="frame" x="0.0" y="93" width="317" height="41"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="6fj-yO-rZv" secondAttribute="trailing" id="7r1-OI-tRH"/>
+                        <constraint firstItem="1mZ-hJ-44k" firstAttribute="leading" secondItem="Ocv-Nl-qbZ" secondAttribute="leading" id="CbS-ln-rgK"/>
+                        <constraint firstItem="vZl-HI-Asl" firstAttribute="centerX" secondItem="6fj-yO-rZv" secondAttribute="centerX" id="DMf-qX-gNM"/>
+                        <constraint firstItem="6fj-yO-rZv" firstAttribute="top" secondItem="vZl-HI-Asl" secondAttribute="bottom" constant="8" symbolic="YES" id="DTn-pC-Pw6"/>
+                        <constraint firstItem="1mZ-hJ-44k" firstAttribute="top" secondItem="6fj-yO-rZv" secondAttribute="bottom" constant="8" id="M4p-YG-YRj"/>
+                        <constraint firstAttribute="trailing" secondItem="1mZ-hJ-44k" secondAttribute="trailing" id="WKK-zV-ch9"/>
+                        <constraint firstItem="vZl-HI-Asl" firstAttribute="centerX" secondItem="Ocv-Nl-qbZ" secondAttribute="centerX" id="Y4v-Sa-VVV"/>
+                        <constraint firstAttribute="height" constant="156" id="YA0-K8-nwX"/>
+                        <constraint firstItem="6fj-yO-rZv" firstAttribute="leading" secondItem="Ocv-Nl-qbZ" secondAttribute="leading" id="cgJ-wd-e7R"/>
+                        <constraint firstItem="vZl-HI-Asl" firstAttribute="top" secondItem="Ocv-Nl-qbZ" secondAttribute="top" constant="8" id="xh9-P6-hh4"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="DMf-qX-gNM"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Ocv-Nl-qbZ" secondAttribute="trailing" constant="16" id="2F2-xM-wbq"/>
+                <constraint firstItem="Ocv-Nl-qbZ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="9A8-6G-3lT"/>
+                <constraint firstItem="Ocv-Nl-qbZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="fob-L3-hfg"/>
+                <constraint firstItem="Ocv-Nl-qbZ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="nct-tx-6el"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="filterAlertLabel" destination="1mZ-hJ-44k" id="oan-Qg-E2C"/>
+                <outlet property="icon" destination="vZl-HI-Asl" id="p6L-Ut-v9s"/>
+            </connections>
+            <point key="canvasLocation" x="232.5" y="210.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_folder_open_white_48dp.png" width="48" height="48"/>
+    </resources>
+</document>

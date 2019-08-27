@@ -44,10 +44,10 @@
     // Fetch selected Account Id
 
     NSUserDefaults *preferences = [NSUserDefaults standardUserDefaults];
-    NSString *selectedAccountId = [preferences objectForKey:[Account PREFERENCE_KEY_SELECTED_ACCOUNT]];
+    NSString *selectedAccountId = [preferences objectForKey:[Account preferenceKeySelectedAccount]];
 
     if (selectedAccountId.length == 0)
-        selectedAccountId = Account.DEMO_ID;
+        selectedAccountId = Account.demoId;
 
     // Fetch Account model values
 
@@ -78,18 +78,6 @@
     [self initRestClientWithLogin:loginSettings
                          password:passwordSettings
                               url:urlSettings];
-
-    return self;
-}
-
-
-- (id)initWithLogin:(NSString *)login
-           password:(NSString *)password
-                url:(NSString *)url {
-
-    [self initRestClientWithLogin:login
-                         password:password
-                              url:url];
 
     return self;
 }
@@ -128,87 +116,7 @@
 }
 
 
-- (void)cancelTasksInArray:(NSArray *)tasksArray
-                  withPath:(NSString *)path {
-
-    for (NSURLSessionTask *task in tasksArray) {
-        NSRange range = [[[[task currentRequest] URL] absoluteString] rangeOfString:path];
-        if (range.location != NSNotFound) {
-            [task cancel];
-        }
-    }
-}
-
-
-- (NSString *)getDownloadUrl:(NSString *)dossierId
-                      forPdf:(bool)isPdf {
-
-    NSString *result = [NSString stringWithFormat:@"/api/node/workspace/SpacesStore/%@/content",
-                                                  dossierId];
-
-    if (isPdf)
-        result = [NSString stringWithFormat:@"%@;ph:visuel-pdf",
-                                            result];
-
-    return result;
-}
-
-
 #pragma mark - Requests
-
-
-- (void)getApiLevel:(void (^)(NSNumber *))success
-            failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"getApiLevel"];
-
-    [_swiftManager getApiVersionOnResponse:^(NSNumber *level) {
-         success(level);
-     }
-                                   onError:^(NSError *error) {
-                                       failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
-                                                                   code:kCFURLErrorUserAuthenticationRequired
-                                                               userInfo:nil]);
-                                   }];
-}
-
-
-- (void)getBureaux:(void (^)(NSArray *))success
-           failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"bureaux"];
-
-    [_swiftManager getBureauxOnResponse:^(NSArray *response) {
-         success(response);
-     }
-                                onError:^(NSError *error) {
-                                    failure([NSError errorWithDomain:_swiftManager.serverUrl.absoluteString
-                                                                code:kCFURLErrorUserAuthenticationRequired
-                                                            userInfo:nil]);
-                                }];
-}
-
-
-- (void)getDossiers:(NSString *)bureau
-               page:(int)page
-               size:(int)size
-             filter:(NSString *)filterJson
-            success:(void (^)(NSArray *))success
-            failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"dossiers"];
-
-    [_swiftManager getDossiersWithBureau:bureau
-                                    page:@(page)
-                                    size:@(size)
-                              filterJson:filterJson
-                              onResponse:^(NSArray *response) {
-                                  success(response);
-                              }
-                                 onError:^(NSError *error) {
-                                     failure(error);
-                                 }];
-}
 
 
 - (void)getTypology:(NSString *)bureauId
@@ -225,22 +133,6 @@
 }
 
 
-- (void)getDossier:(NSString *)bureau
-           dossier:(NSString *)dossier
-           success:(void (^)(Dossier *))success
-           failure:(void (^)(NSError *))failure {
-
-    [_swiftManager getDossierWithDossier:dossier
-                                  bureau:bureau
-                              onResponse:^(Dossier *response) {
-                                  success(response);
-                              }
-                                 onError:^(NSError *error) {
-                                     failure(error);
-                                 }];
-}
-
-
 - (void)getSignInfoForDossier:(Dossier *)dossier
                     andBureau:(NSString *)bureauId
                       success:(void (^)(SignInfo *))success
@@ -248,289 +140,19 @@
 
     [self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
 
-    [_swiftManager getSignInfoWithDossier:dossier
-                                   bureau:bureauId
-                               onResponse:^(SignInfo *response) {
+    [_swiftManager getSignInfoWithFolder:dossier
+                                  bureau:bureauId
+                              onResponse:^(SignInfo *response) {
                                    success(response);
                                }
-                                  onError:^(NSError *error) {
+                                 onError:^(NSError *error) {
                                       failure(error);
                                   }];
 }
 
 
-- (void)getCircuit:(NSString *)dossier
-           success:(void (^)(Circuit *))success
-           failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"circuit"];
-
-    [_swiftManager getCircuitWithDossier:dossier
-                              onResponse:^(Circuit *circuit) {
-                                  success(circuit);
-                              }
-                                 onError:^(NSError *error) {
-                                     failure(error);
-                                 }];
-}
-
-
-- (void)getAnnotations:(NSString *)dossier
-              document:(NSString *)document
-               success:(void (^)(NSArray *))success
-               failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:[self getAnnotationsUrlForDossier:dossier
-                                                                andDocument:document]];
-
-    [_swiftManager getAnnotationsWithDossier:dossier
-                                  onResponse:^(id annotations) {
-                                      success(annotations);
-                                  }
-                                     onError:^(NSError *error) {
-                                         failure(error);
-                                     }];
-}
-
-
-#pragma mark - Download
-
-
-- (void)downloadDocument:(NSString *)documentId
-                   isPdf:(bool)isPdf
-                  atPath:(NSURL *)filePathUrl
-                 success:(void (^)(NSString *))success
-                 failure:(void (^)(NSError *))failure {
-
-    // Cancel previous download
-
-//	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-//		for (NSURLSessionTask *task in downloadTasks)
-//			[task cancel];
-//	}];
-
-    // Define download request
-
-    [_swiftManager downloadFileWithDocument:documentId
-                                      isPdf:isPdf
-                                     atPath:filePathUrl
-                                 onResponse:^(NSString *path) {
-                                     success(path);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-
-//	NSMutableURLRequest *request = [_swiftManager.manager.requestSerializer requestWithMethod:@"GET"
-//	                                                                                URLString:downloadUrlString
-//	                                                                               parameters:nil
-//	                                                                                    error:nil];
-//
-//	// Start download
-//
-//	NSURLSessionDownloadTask *downloadTask = [_swiftManager.manager downloadTaskWithRequest:request
-//	                                                                               progress:nil
-//	                                                                            destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-//		                                                                            return filePathUrl;
-//	                                                                            }
-//	                                                                      completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-//		                                                                      if (error == nil)
-//			                                                                      success(filePath.path);
-//		                                                                      else if (error.code != kCFURLErrorCancelled)
-//			                                                                      failure(error);
-//	                                                                      }];
-//
-//	[downloadTask resume];
-}
-
-
-#pragma mark - Private Methods
-
-
-- (NSMutableDictionary *)fixAddAnnotationDictionary:(Annotation *)annotation {
-
-    NSMutableDictionary *result = NSMutableDictionary.new;
-
-//	result[@"author"] = annotation.unwrappedAuthor;
-    result[@"text"] = annotation.text;
-    result[@"type"] = annotation.type;
-    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
-//	result[@"uuid"] = annotation.unwrappedId;
-
-    CGRect rect = [ViewUtils translateDpiWithRect:annotation.rect
-                                           oldDpi:72
-                                           newDpi:150];
-    NSDictionary *annotationRectTopLeft = @{
-            @"x": @(rect.origin.x),
-            @"y": @(rect.origin.y)
-    };
-    NSDictionary *annotationRectBottomRight = @{
-            @"x": @(rect.origin.x + rect.size.width),
-            @"y": @(rect.origin.y + rect.size.height)
-    };
-
-    result[@"rect"] = @{
-            @"topLeft": annotationRectTopLeft,
-            @"bottomRight": annotationRectBottomRight
-    };
-
-    return result;
-}
-
-
-- (NSMutableDictionary *)createAnnotationDictionary:(Annotation *)annotation {
-
-    NSMutableDictionary *result = [NSMutableDictionary new];
-
-    // Fixme : send every other data form annotation
-
-    result[@"page"] = [NSString stringWithFormat:@"%ld", (long) annotation.page];
-    result[@"text"] = annotation.text;
-    result[@"type"] = annotation.type;
-    result[@"uuid"] = annotation.identifier;
-    result[@"id"] = annotation.identifier;
-
-    CGRect rectData = [ViewUtils translateDpiWithRect:annotation.rect
-                                               oldDpi:72
-                                               newDpi:150];
-
-    NSMutableDictionary *resultTopLeft = [NSMutableDictionary new];
-    resultTopLeft[@"x"] = @(rectData.origin.x);
-    resultTopLeft[@"y"] = @(rectData.origin.y);
-
-    NSMutableDictionary *resultBottomRight = [NSMutableDictionary new];
-    resultBottomRight[@"x"] = @(rectData.origin.x + rectData.size.width);
-    resultBottomRight[@"y"] = @(rectData.origin.y + rectData.size.height);
-
-    NSMutableDictionary *rect = [NSMutableDictionary new];
-    rect[@"bottomRight"] = resultBottomRight;
-    rect[@"topLeft"] = resultTopLeft;
-
-    result[@"rect"] = rect;
-
-    return result;
-}
-
-
-- (NSString *)getAnnotationsUrlForDossier:(NSString *)dossier
-                              andDocument:(NSString *)document {
-
-    return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations",
-                                      dossier];
-}
-
-
-- (NSString *)getAnnotationUrlForDossier:(NSString *)dossier
-                             andDocument:(NSString *)document
-                         andAnnotationId:(NSString *)annotationId {
-
-    return [NSString stringWithFormat:@"/parapheur/dossiers/%@/annotations/%@",
-                                      dossier,
-                                      annotationId];
-}
-
-
 #pragma mark - Simple actions
-// TODO : MailSecretaire
 
-
-- (void)actionSwitchToPaperSignatureForDossier:(NSString *)dossierId
-                                     forBureau:(NSString *)bureauId
-                                       success:(void (^)(NSArray *))success
-                                       failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [NSMutableDictionary new];
-    argumentDictionary[@"bureauCourant"] = bureauId;
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(1)
-                                        url:[NSString stringWithFormat:@"/parapheur/dossiers/%@/signPapier",
-                                                                       dossierId]
-                                       args:argumentDictionary
-                                 onResponse:^(id result) {
-                                     success(nil);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
-
-
-- (void)actionAddAnnotation:(Annotation *)annotation
-                 forDossier:(NSString *)dossierId
-                    success:(void (^)(NSArray *))success
-                    failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [self fixAddAnnotationDictionary:annotation];
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(1)
-                                        url:[self getAnnotationsUrlForDossier:dossierId
-                                                                  andDocument:annotation.documentId]
-                                       args:argumentDictionary
-                                 onResponse:^(NSNumber *result) {
-                                     success(NSArray.new);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
-
-
-- (void)actionUpdateAnnotation:(Annotation *)annotation
-                    forDossier:(NSString *)dossierId
-                       success:(void (^)(NSArray *))success
-                       failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(2)
-                                        url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.documentId
-                                                             andAnnotationId:annotation.identifier]
-                                       args:argumentDictionary
-                                 onResponse:^(NSNumber *result) {
-                                     success(NSArray.new);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
-
-
-- (void)actionRemoveAnnotation:(Annotation *)annotation
-                    forDossier:(NSString *)dossierId
-                       success:(void (^)(NSArray *))success
-                       failure:(void (^)(NSError *))failure {
-
-    // Create arguments dictionary
-
-    NSMutableDictionary *argumentDictionary = [self createAnnotationDictionary:annotation];
-
-    // Send request
-
-    [_swiftManager sendSimpleActionWithType:@(3)
-                                        url:[self getAnnotationUrlForDossier:dossierId
-                                                                 andDocument:annotation.documentId
-                                                             andAnnotationId:annotation.identifier]
-                                       args:argumentDictionary
-                                 onResponse:^(id result) {
-                                     success(NSArray.new);
-                                 }
-                                    onError:^(NSError *error) {
-                                        failure(error);
-                                    }];
-}
 
 
 @end

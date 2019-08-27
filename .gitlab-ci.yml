@@ -23,5 +23,4 @@ sonarqube:
     - develop
   script:
     # Dependancies to install on the runner : https://github.com/Backelite/sonar-swift
-    - xcodebuild test -workspace iParapheur.xcworkspace -scheme iParapheur -destination 'platform=iOS Simulator,name=iPad Air 2,OS=11.1' -derivedDataPath /tmp/GitLabRunner_derivedData/ -enableCodeCoverage YES -quiet
     - ./run-sonar-swift.sh

@@ -36,26 +36,27 @@
 import Foundation
 
 
-@objc class Annotation: NSObject, Decodable {
+class Annotation: NSObject, Codable {
+
 
     @objc var author: String
     @objc var identifier: String
     @objc var text: String
-    @objc let date: Date
-    let secretaire: Bool
+    @objc var date: Date
+    var isSecretary: Bool
     @objc var rect: CGRect
 
-    let fillColor: String?
-    let penColor: String?
-    @objc let type: String
+    var fillColor: String?
+    var penColor: String?
+    @objc var type: String
 
     @objc var step: Int
     @objc var page: Int
     @objc var documentId: String?
-    @objc var editable: Bool
+    @objc var isEditable: Bool
 
 
-    @objc init?(currentPage: NSNumber) {
+    @objc init?(currentPage: Int) {
 
         author = ""
         identifier = "_new"
@@ -66,19 +67,17 @@ import Foundation
         type = "rect"
 
         date = Date()
-        secretaire = false
-        rect = ViewUtils.translateDpi(rect: CGRect(origin: .zero,
-                                                   size: CGSize(width: 150, height: 150)),
-                                      oldDpi: 150,
-                                      newDpi: 72)
+        isSecretary = false
+        rect = CGRect(origin: .zero, size: CGSize(width: 150, height: 150))
         step = 0
-        editable = false
+        isEditable = false
         documentId = ""
-        page = currentPage.intValue
+        page = currentPage
     }
 
 
     // <editor-fold desc="Json methods">
+
 
     enum CodingKeys: String, CodingKey {
         case author
@@ -86,21 +85,26 @@ import Foundation
         case fillColor
         case penColor
         case date
-        case secretaire
+        case secretary = "secretaire"
         case text
         case type
         case rect
+        case page
+        case uuid
     }
+
 
     enum RectKeys: String, CodingKey {
         case topLeft
         case bottomRight
     }
 
+
     enum RectCornersKeys: String, CodingKey {
         case x
         case y
     }
+
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -111,14 +115,15 @@ import Foundation
         fillColor = try values.decodeIfPresent(String.self, forKey: .fillColor) ?? "undefined"
         penColor = try values.decodeIfPresent(String.self, forKey: .penColor) ?? "undefined"
         type = try values.decodeIfPresent(String.self, forKey: .type) ?? "rect"
+        page = try values.decodeIfPresent(Int.self, forKey: .page) ?? -1
 
         // Secretary, may be string or bool
 
         do {
-            secretaire = try values.decodeIfPresent(Bool.self, forKey: .secretaire) ?? false
+            isSecretary = try values.decodeIfPresent(Bool.self, forKey: .secretary) ?? false
         } catch DecodingError.typeMismatch {
-            let secretaireString = try values.decodeIfPresent(String.self, forKey: .secretaire) ?? "false"
-            secretaire = Bool(secretaireString)!
+            let secretaryString = try values.decodeIfPresent(String.self, forKey: .secretary) ?? "false"
+            isSecretary = Bool(secretaryString) ?? false
         }
 
         // Date, cropping milliseconds
@@ -137,20 +142,45 @@ import Foundation
         let bottomRightX = StringsUtils.parseNumberOrString(container: bottomRightContainer, key: RectCornersKeys.x)
         let bottomRightY = StringsUtils.parseNumberOrString(container: bottomRightContainer, key: RectCornersKeys.y)
 
-        let tempRect = CGRect(origin: CGPoint(x: CGFloat(topLeftX),
-                                              y: CGFloat(topLeftY)),
-                              size: CGSize(width: CGFloat(bottomRightX) - CGFloat(topLeftX),
-                                           height: CGFloat(bottomRightY) - CGFloat(topLeftY)))
+        rect = CGRect(origin: CGPoint(x: CGFloat(topLeftX),
+                                      y: CGFloat(topLeftY)),
+                      size: CGSize(width: CGFloat(bottomRightX) - CGFloat(topLeftX),
+                                   height: CGFloat(bottomRightY) - CGFloat(topLeftY)))
 
-        rect = ViewUtils.translateDpi(rect: tempRect,
-                                      oldDpi: 150,
-                                      newDpi: 72)
-
-        page = -1
         documentId = ""
         step = 0
-        editable = true
+        isEditable = true
     }
+
+
+    func encode(to encoder: Encoder) throws {
+
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        // Rect
+
+        var rectContainer = container.nestedContainer(keyedBy: RectKeys.self, forKey: .rect)
+
+        var rectTopLeftContainer = rectContainer.nestedContainer(keyedBy: RectCornersKeys.self, forKey: .topLeft)
+        try rectTopLeftContainer.encode(rect.origin.x, forKey: .x)
+        try rectTopLeftContainer.encode(rect.origin.y, forKey: .y)
+
+        var rectBottomRightContainer = rectContainer.nestedContainer(keyedBy: RectCornersKeys.self, forKey: .bottomRight)
+        try rectBottomRightContainer.encode(rect.origin.x + rect.size.width, forKey: .x)
+        try rectBottomRightContainer.encode(rect.origin.y + rect.size.height, forKey: .y)
+
+        // Other values
+
+        // try container.encode(page, forKey: .page)
+        try container.encode(text, forKey: .text)
+        try container.encode(type, forKey: .type)
+        try container.encode(StringsUtils.serializeAnnotationDate(date: date).replacingOccurrences(of: "Z", with: ""), forKey: .date)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(identifier, forKey: .uuid)
+        try container.encode(author, forKey: .author)
+        try container.encode(page, forKey: .page)
+    }
+
 
     // </editor-fold desc="Json methods">
 

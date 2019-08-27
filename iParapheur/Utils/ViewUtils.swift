@@ -37,15 +37,15 @@ import Foundation
 import SwiftMessages
 
 
-@objc class ViewUtils: NSObject {
+class ViewUtils: NSObject {
 
 
     @objc class func isConnectedToDemoAccount() -> Bool {
 
         let preferences = UserDefaults.standard
-        let selectedId = preferences.object(forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT) as? String
+        let selectedId = preferences.object(forKey: Account.preferenceKeySelectedAccount) as? String
 
-        return Account.DEMO_ID == selectedId
+        return Account.demoId == selectedId
     }
 
     /**
@@ -70,7 +70,7 @@ import SwiftMessages
     }
 
 
-    @objc class func getImageName(action: String) -> String {
+    class func getImageName(action: String) -> String {
 
         switch (action) {
             case "REJET": return "ic_close_white_24dp"
@@ -82,6 +82,7 @@ import SwiftMessages
 
     // <editor-folds desc="Logs">
 
+
     @objc class func logError(message: NSString,
                               title: NSString?) {
 
@@ -89,6 +90,7 @@ import SwiftMessages
                              subtitle: message,
                              messageType: .error)
     }
+
 
     @objc class func logSuccess(message: NSString,
                                 title: NSString?) {
@@ -98,6 +100,7 @@ import SwiftMessages
                              messageType: .success)
     }
 
+
     @objc class func logInfo(message: NSString,
                              title: NSString?) {
 
@@ -105,6 +108,7 @@ import SwiftMessages
                              subtitle: message,
                              messageType: .info)
     }
+
 
     @objc class func logWarning(message: NSString,
                                 title: NSString?) {
@@ -114,24 +118,31 @@ import SwiftMessages
                              messageType: .warning)
     }
 
+
     class func logMessage(title: NSString?,
                           subtitle: NSString,
                           messageType: Theme) {
+        logMessage(title: title, subtitle: subtitle, messageType: messageType, config: SwiftMessages.defaultConfig)
+    }
+
+
+    class func logMessage(title: NSString?,
+                          subtitle: NSString,
+                          messageType: Theme,
+                          config: SwiftMessages.Config) {
+
+        let view = MessageView.viewFromNib(layout: .cardView)
+        view.button!.isHidden = true
+
+        view.configureTheme(messageType)
+        view.configureDropShadow()
+        view.configureContent(title: (title == nil ? subtitle : title!) as String,
+                              body: (title == nil ? "" : subtitle as String))
 
         // Call back to main queue
-        SwiftMessages.show {
-
-            let view = MessageView.viewFromNib(layout: .cardView)
-            view.button!.isHidden = true
-
-            view.configureTheme(messageType)
-            view.configureDropShadow()
-            view.configureContent(title: (title == nil ? subtitle : title!) as String,
-                                  body: (title == nil ? "" : subtitle as String))
-
-            return view
-        }
+        SwiftMessages.show(config: config, view: view)
     }
+
 
     // </editor-folds desc="Logs">
 

@@ -37,8 +37,8 @@ import Foundation
 
 
 @objc public enum CertificateType: Int32 {
-    
+
     case p12File = 0
     case imprimerieNationale = 1
-    
+
 }

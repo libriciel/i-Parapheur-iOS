@@ -36,14 +36,22 @@
 import Foundation
 
 
-@objc public class DataToSign: NSObject, Decodable {
+public class DataToSign: NSObject, Decodable {
 
     let dataToSignBase64List: [String]
     let signatureDateTime: Int
     let payload: [String: String]
 
 
+    public init(dataToSignBase64: [String], signatureDateTime: Int, payload: [String: String]) {
+        self.dataToSignBase64List = dataToSignBase64
+        self.signatureDateTime = signatureDateTime
+        self.payload = payload
+    }
+
+
     // <editor-fold desc="Json methods">
+
 
     enum CodingKeys: String, CodingKey {
         case dataToSignBase64List
@@ -51,11 +59,13 @@ import Foundation
         case payload
     }
 
+
     public init(dataToSignBase64 dataToSignB64: [String], signatureDateTime: Int) {
         self.dataToSignBase64List = dataToSignB64
         self.signatureDateTime = signatureDateTime
         self.payload = [:]
     }
+
 
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -64,6 +74,7 @@ import Foundation
         signatureDateTime = try values.decodeIfPresent(Int.self, forKey: .signatureDateTime) ?? -1
         payload = try values.decodeIfPresent([String: String].self, forKey: .payload) ?? [:]
     }
+
 
     // </editor-fold desc="Json methods">
 

@@ -37,9 +37,9 @@ import Foundation
 
 
 @objc public enum SignatureAlgorithm: Int32 {
-    
+
     case unknown = 0
     case sha1WithRsa = 1
     case sha256WithRsa = 2
-    
+
 }

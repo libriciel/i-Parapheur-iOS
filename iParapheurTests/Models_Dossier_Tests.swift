@@ -111,8 +111,8 @@ class Models_Dossier_Tests: XCTestCase {
         XCTAssertEqual(dossiers![0].nomTdT, "S2LOW")
         XCTAssertEqual(dossiers![0].xPathSignature, "//Bordereau")
 
-        XCTAssertEqual(dossiers![0].actionDemandee, "SIGNATURE")
-        XCTAssertEqual(dossiers![0].actions, ["ENREGISTRER", "EMAIL", "SIGNATURE"])
+        XCTAssertEqual(dossiers![0].actionDemandee, .sign)
+        XCTAssertEqual(dossiers![0].actions, [.save, .mail, .sign])
         XCTAssertEqual(dossiers![0].documents, [])
         XCTAssertTrue(dossiers![0].acteursVariables.isEmpty)
         // XCTAssertTrue(dossiers![0].metadatas.isEmpty)
@@ -146,8 +146,8 @@ class Models_Dossier_Tests: XCTestCase {
         XCTAssertEqual(dossiers![1].nomTdT, "")
         XCTAssertEqual(dossiers![1].xPathSignature, "")
 
-        XCTAssertEqual(dossiers![1].actionDemandee, "VISA")
-        XCTAssertEqual(dossiers![1].actions, ["VISA"])
+        XCTAssertEqual(dossiers![1].actionDemandee, .visa)
+        XCTAssertEqual(dossiers![1].actions, [.visa, .sign])
         XCTAssertEqual(dossiers![1].documents, [])
         XCTAssertTrue(dossiers![1].acteursVariables.isEmpty)
         // XCTAssertTrue(dossiers![1].metadatas.isEmpty)

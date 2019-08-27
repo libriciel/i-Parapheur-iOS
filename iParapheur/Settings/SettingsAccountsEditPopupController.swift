@@ -67,7 +67,7 @@ import os
         os_log("View loaded : SettingsAccountsEditPopupController", type: .debug)
 
         self.preferredContentSize = CGSize(width: SettingsAccountsEditPopupController.PreferredWidth,
-                                           height: SettingsAccountsEditPopupController.PreferredHeight);
+                                           height: SettingsAccountsEditPopupController.PreferredHeight)
 
         // Values
 
@@ -115,14 +115,13 @@ import os
                                        login: NSString(string: loginTextView.text!),
                                        password: NSString(string: passwordTextView.text!))
 
-        currentRestClient!.getApiVersion(onResponse: {
-            (result: NSNumber) in
-            ViewUtils.logSuccess(message: "Connexion réussie",
-                                 title: nil)
-        },
-                                         onError: {
-                                             (error: NSError) in
-                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error),
+        currentRestClient!.getApiVersion(onResponse:
+                                         { (result: NSNumber) in
+                                             ViewUtils.logSuccess(message: "Connexion réussie",
+                                                                  title: nil)
+                                         },
+                                         onError: { (error: Error) in
+                                             ViewUtils.logError(message: StringsUtils.getMessage(error: error as NSError),
                                                                 title: nil)
                                          })
     }
@@ -136,7 +135,7 @@ import os
         // Update model
 
         if (currentAccount == nil) {
-            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            currentAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                  into: ModelsDataController.context!) as? Account
 
             currentAccount!.id = NSUUID().uuidString

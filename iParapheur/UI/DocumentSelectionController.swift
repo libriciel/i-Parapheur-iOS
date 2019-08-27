@@ -37,43 +37,43 @@ import Foundation
 import UIKit
 import os
 
-@objc class DocumentSelectionController: UITableViewController {
+class DocumentSelectionController: UITableViewController {
 
+
+    static let segue = "showDocumentPopover"
     @objc static let NotifShowDocument = Notification.Name("DocumentSelectionControllerNotifShowDocument")
 
-    @objc var documentList: NSArray! = NSArray()
-    var docList: [Document]! = []
+    var documentList: [Document] = []
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="Lifecycle" MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View loaded : DocumentSelectionController", type: .debug)
 
-        // Parse ObjC array
-
-        for doc in (documentList as! [Document]) {
-            docList.append(doc)
-        }
-
-        //
-
-        preferredContentSize = CGSize(width: DocumentSelectionCell.PreferredWidth,
-                                      height: DocumentSelectionCell.PreferredHeight * CGFloat(docList.count))
+        preferredContentSize = CGSize(width: DocumentSelectionCell.preferredWidth,
+                                      height: DocumentSelectionCell.preferredHeight * CGFloat(documentList.count))
     }
 
-    // MARK: - TableViewDelegate
+
+    // </editor-fold desc="Lifecycle" MARK: - LifeCycle
+
+
+    // <editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
+
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return docList.count
+        return documentList.count
     }
+
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: DocumentSelectionCell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.CellId,
-                                                                        for: indexPath as IndexPath) as! DocumentSelectionCell
-
-        let document: Document = docList[indexPath.row]
+        let document: Document = documentList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: DocumentSelectionCell.cellId,
+                                                 for: indexPath as IndexPath) as! DocumentSelectionCell
 
         cell.annexeIcon.image = cell.annexeIcon.image!.withRenderingMode(.alwaysTemplate)
         cell.annexeIcon.isHidden = (indexPath.row == 0) || document.isMainDocument
@@ -81,16 +81,20 @@ import os
         cell.mainDocIcon.isHidden = (indexPath.row != 0) || !document.isMainDocument
         cell.titleLabel.text = document.name
 
-        return cell;
+        return cell
     }
+
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: false,
-                completion: {
-                    () -> Void in
+                completion:
+                { () -> Void in
                     NotificationCenter.default.post(name: DocumentSelectionController.NotifShowDocument,
                                                     object: indexPath.row as NSNumber)
                 })
     }
+
+
+    // </editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
 
 }

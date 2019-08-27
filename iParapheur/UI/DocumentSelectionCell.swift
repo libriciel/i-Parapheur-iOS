@@ -35,11 +35,11 @@
 
 import Foundation
 
-@objc class DocumentSelectionCell: UITableViewCell {
+class DocumentSelectionCell: UITableViewCell {
 
-    static let CellId: String! = "DocumentSelectionCell"
-    static let PreferredHeight: CGFloat! = 44
-    static let PreferredWidth: CGFloat! = 350
+    static let cellId: String! = "DocumentSelectionCell"
+    static let preferredHeight: CGFloat! = 44
+    static let preferredWidth: CGFloat! = 350
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var mainDocIcon: UIImageView!

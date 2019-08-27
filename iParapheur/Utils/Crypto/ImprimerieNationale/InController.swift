@@ -42,7 +42,7 @@ extension Notification.Name {
 }
 
 
-@objc class InController: NSObject {
+class InController: NSObject {
 
 
     class func getTokenData() {
@@ -63,11 +63,12 @@ extension Notification.Name {
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
-        UIApplication.shared.open(url, completionHandler: { (result) in
-            if result {
-                print("Result OK")
-            }
-        })
+        UIApplication.shared.open(url,
+                                  completionHandler: { (result) in
+                                      if result {
+                                          print("Result OK")
+                                      }
+                                  })
     }
 
 
@@ -79,8 +80,9 @@ extension Notification.Name {
 
             var hexDataToSign: String
             if (signatureAlgorithm == .sha1WithRsa) {
-                hexDataToSign = "\(CryptoUtils.PKCS15_ASN1_HEX_PREFIX)\(CryptoUtils.hex(data: hash.sha1()))"
-            } else {
+                hexDataToSign = "\(CryptoUtils.pkcs15Asn1HexPrefix)\(CryptoUtils.hex(data: hash.sha1()))"
+            }
+            else {
                 hexDataToSign = CryptoUtils.hex(data: hash)
             }
 
@@ -109,11 +111,13 @@ extension Notification.Name {
         let url = URL(string: urlEncodedString)!
 
         print("Request sent :: \(url.absoluteString)")
-        UIApplication.shared.open(url, completionHandler: { (result) in
-            if result {
-                print("Result OK")
-            }
-        })
+
+        UIApplication.shared.open(url,
+                                  completionHandler: { (result) in
+                                      if result {
+                                          print("Result OK")
+                                      }
+                                  })
     }
 
 
@@ -155,13 +159,13 @@ extension Notification.Name {
             NotificationCenter.default.post(name: .signatureResult,
                                             object: nil,
                                             userInfo: [
-                                                CryptoUtils.NOTIF_SIGNEDDATA: [signedData],
-                                                CryptoUtils.NOTIF_SIGNATUREINDEX: 0
+                                                CryptoUtils.notifSignedData: [signedData],
+                                                CryptoUtils.notifSignatureIndex: 0
                                             ])
             return true
         }
 
-        return false;
+        return false
     }
 
 
@@ -170,7 +174,7 @@ extension Notification.Name {
         for (externalId, publicKey) in token.certificates {
 
             let context = ModelsDataController.context!
-            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME, into: context) as! Certificate
+            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.entityName, into: context) as! Certificate
 
             let x509 = ADLKeyStore.x509(fromPem: publicKey.base64EncodedString())
             let x509Values = ADLKeyStore.parseX509Values(x509) as! [String: AnyObject]
@@ -187,7 +191,7 @@ extension Notification.Name {
             // Payload
 
             var payload: [String: String] = [:]
-            payload[Certificate.PAYLOAD_EXTERNAL_CERTIFICATE_ID] = externalId
+            payload[Certificate.payloadExternalCertificateId] = externalId
 
             let jsonEncoder = JSONEncoder()
             let jsonData = try? jsonEncoder.encode(payload)

@@ -61,7 +61,7 @@ import os
         dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.none
-        dateFormatter.locale = NSLocale.current;
+        dateFormatter.locale = NSLocale.current
 
         NotificationCenter.default.addObserver(self, selector: #selector(onCertificateImport),
                                                name: .imprimerieNationaleCertificateImport,
@@ -74,13 +74,14 @@ import os
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         if (certificateList.count == 0) {
-            let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib();
+            let emptyView: SettingsCertificatesEmptyView = SettingsCertificatesEmptyView.instanceFromNib()
             emptyView.downloadDocButton.addTarget(self,
                                                   action: #selector(downloadDocButton),
                                                   for: UIControl.Event.touchUpInside)
-            tableView.backgroundView = emptyView;
-        } else {
-            tableView.backgroundView = nil;
+            tableView.backgroundView = emptyView
+        }
+        else {
+            tableView.backgroundView = nil
         }
 
         return certificateList.count
@@ -132,7 +133,7 @@ import os
     // MARK: - Listeners
 
     @IBAction func onImprimerieNationaleImportButtonClicked(_ sender: UIButton) {
-        InController.getTokenData();
+        InController.getTokenData()
     }
 
     @objc func downloadDocButton(sender: UIButton) {
@@ -146,8 +147,8 @@ import os
 
     @objc func onDeleteButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(.zero, to: certificatesTableView);
-        let indexPath: IndexPath = certificatesTableView.indexPathForRow(at: buttonPosition)!;
+        let buttonPosition: CGPoint = sender.convert(.zero, to: certificatesTableView)
+        let indexPath: IndexPath = certificatesTableView.indexPathForRow(at: buttonPosition)!
 
         // Find from NSManagedObjectContext
 

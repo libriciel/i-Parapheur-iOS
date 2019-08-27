@@ -38,7 +38,6 @@
 #include <openssl/pkcs12.h>
 #import <OpenSSL-Universal/openssl/x509v3.h>
 #import "iParapheur-Swift.h"
-#import "NSData+Base64.h"
 
 
 @implementation ADLKeyStore
@@ -209,18 +208,18 @@ NSData *X509_to_NSData(X509 *cert) {
 
         // generate an entry for the new Key
 
-        Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:Certificate.ENTITY_NAME
+        Certificate *newPrivateKey = [NSEntityDescription insertNewObjectForEntityForName:Certificate.entityName
                                                                    inManagedObjectContext:ModelsDataController.context];
 
         NSString *p12FileName = [NSString stringWithFormat:@"coop.adullact-projet.iparapheur/%@", newPath.lastPathComponent];
-        NSDictionary *payload = @{Certificate.PAYLOAD_P12_FILENAME: p12FileName};
+        NSDictionary *payload = @{Certificate.payloadP12FileName: p12FileName};
         NSError *jsonError = nil;
         NSData *payloadData = [NSJSONSerialization dataWithJSONObject:payload
                                                               options:NSJSONWritingPrettyPrinted
                                                                 error:&jsonError];
 
         NSString *publicKeyB64 = [CryptoUtils cleanupPublicKeyWithPublicKey:x509Values[@"publicKey"]];
-        NSData *publicKeyData = [NSData dataFromBase64String:publicKeyB64];
+        NSData *publicKeyData = [[NSData alloc] initWithBase64EncodedString:publicKeyB64 options:0];
 
         newPrivateKey.payload = payloadData;
         newPrivateKey.publicKey = publicKeyData;

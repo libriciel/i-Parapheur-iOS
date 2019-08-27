@@ -36,43 +36,43 @@
 import Foundation
 
 
-@objc class Dossier: NSObject, Decodable {
+class Dossier: NSObject, Decodable {
 
-    @objc let identifier: String
-    @objc let title: String?
+    let identifier: String
+    let title: String?
     let bureauName: String?
     let banetteName: String?
     let visibility: String?
     let status: String?
 
-    @objc let type: String
-    @objc let subType: String
+    let type: String
+    let subType: String
     let protocole: String?
     let nomTdT: String?
     let xPathSignature: String?
 
-    @objc let actionDemandee: String
-    @objc var actions: Array<String>
-    @objc let documents: [Document]
+    let actionDemandee: Action
+    var actions: [Action]
+    var documents: [Document]
     let acteursVariables: [String]
     // TODO let metadatas: [String: Any]
     let emitDate: Date?
-    @objc let limitDate: Date?
+    let limitDate: Date?
 
     let hasRead: Bool
     let includeAnnexes: Bool
     let isRead: Bool
     let isSent: Bool
     let canAdd: Bool
-    @objc let isLocked: Bool
-    @objc let isSignPapier: Bool
+    let isLocked: Bool
+    var isSignPapier: Bool
     let isXemEnabled: Bool
     let isReadingMandatory: Bool
+    var isDelegue: Bool
 
-    @objc var isDelegue: Bool
 
+    // <editor-fold desc="Json methods"> MARK: - Json methods
 
-    // <editor-fold desc="Json methods">
 
     enum CodingKeys: String, CodingKey {
 
@@ -108,6 +108,39 @@ import Foundation
         case isReadingMandatory = "readingMandatory"
     }
 
+
+    public init(identifier: String, action: Action, type: String, subType: String) {
+        self.identifier = identifier
+        self.actionDemandee = action
+        self.actions = [action]
+        self.type = type
+        self.subType = subType
+
+        title = nil
+        bureauName = nil
+        banetteName = nil
+        visibility = nil
+        status = nil
+        protocole = nil
+        nomTdT = nil
+        xPathSignature = nil
+        documents = []
+        acteursVariables = []
+        emitDate = nil
+        limitDate = nil
+        hasRead = false
+        includeAnnexes = false
+        isRead = false
+        isSent = false
+        canAdd = false
+        isLocked = false
+        isSignPapier = false
+        isXemEnabled = false
+        isReadingMandatory = false
+        isDelegue = false
+    }
+
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -124,25 +157,25 @@ import Foundation
         nomTdT = try values.decodeIfPresent(String.self, forKey: .nomTdT) ?? ""
         xPathSignature = try values.decodeIfPresent(String.self, forKey: .xPathSignature) ?? ""
 
-        actionDemandee = try values.decodeIfPresent(String.self, forKey: .actionDemandee) ?? "VISA"
-        actions = try values.decodeIfPresent([String].self, forKey: .actions) ?? []
+        actionDemandee = try values.decodeIfPresent(Action.self, forKey: .actionDemandee) ?? .visa
+        actions = try values.decodeIfPresent([Action].self, forKey: .actions) ?? []
         documents = try values.decodeIfPresent([Document].self, forKey: .documents) ?? []
         acteursVariables = try values.decodeIfPresent([String].self, forKey: .acteursVariables) ?? []
         // TODO metadatas = try values.decodeIfPresent([String: Any].self, forKey: .metadatas) ?? [:]
 
-        var emitDateInt = try values.decodeIfPresent(Int.self, forKey: .emitDate)
-        if (emitDateInt != nil) {
-            emitDateInt = emitDateInt! / 1000
-            emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt!))
-        } else {
+        if var emitDateInt = try? values.decodeIfPresent(Int.self, forKey: .emitDate) {
+            emitDateInt /= 1000
+            emitDate = Date(timeIntervalSince1970: TimeInterval(emitDateInt))
+        }
+        else {
             emitDate = nil
         }
 
-        var limitDateInt = try values.decodeIfPresent(Int.self, forKey: .limitDate)
-        if (limitDateInt != nil) {
-            limitDateInt = limitDateInt! / 1000
-            limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt!))
-        } else {
+        if var limitDateInt = try? values.decodeIfPresent(Int.self, forKey: .limitDate) {
+            limitDateInt /= 1000
+            limitDate = Date(timeIntervalSince1970: TimeInterval(limitDateInt))
+        }
+        else {
             limitDate = nil
         }
 
@@ -161,127 +194,74 @@ import Foundation
         isDelegue = false
 
         // Sometimes it happens
-        if (!(actions.contains(actionDemandee))) {
+
+        if !(actions.contains(actionDemandee)) {
             actions.append(actionDemandee)
         }
+
+        if actions.contains(.sign) {
+            actions = actions.filter { $0 != .visa }
+        }
+
+        if actions.contains(.visa) {
+            actions.append(.sign)
+        }
     }
+
 
     // </editor-fold desc="Json methods">
 
 
-    // MARK: - Glossy
-
-//    required init?(json: JSON) {
-//        identifier = ("id" <~~ json) ?? ""
-//        title = ("title" <~~ json) ?? "(vide)"
-//        bureauName = ("bureauName" <~~ json) ?? "(vide)"
-//        banetteName = ("banetteName" <~~ json) ?? ""
-//        visibility = ("visibility" <~~ json) ?? ""
-//        status = ("status" <~~ json) ?? ""
-//
-//        type = ("type" <~~ json) ?? ""
-//        subType = ("sousType" <~~ json) ?? ""
-//        protocole = ("protocole" <~~ json) ?? ""
-//        nomTdT = ("nomTdT" <~~ json) ?? ""
-//        xPathSignature = ("xPathSignature" <~~ json) ?? ""
-//
-//        actionDemandee = ("actionDemandee" <~~ json) ?? "VISA"
-//        actions = ("actions" <~~ json) ?? []
-//        documents = ("documents" <~~ json) ?? []
-//        acteursVariables = ("acteursVariables" <~~ json) ?? []
-//        metadatas = ("metadatas" <~~ json) ?? [:]
-//        emitDate = ("dateEmission" <~~ json) ?? -1
-//        limitDate = ("dateLimite" <~~ json) ?? 0
-//
-//        hasRead = ("hasRead" <~~ json) ?? false
-//        includeAnnexes = ("includeAnnexes" <~~ json) ?? false
-//        isRead = ("isRead" <~~ json) ?? false
-//        isSent = ("isSent" <~~ json) ?? false
-//        canAdd = ("canAdd" <~~ json) ?? false
-//        isLocked = ("locked" <~~ json) ?? false
-//        isSignPapier = ("isSignPapier" <~~ json) ?? false
-//        isXemEnabled = ("isXemEnabled" <~~ json) ?? false
-//        isReadingMandatory = ("readingMandatory" <~~ json) ?? false
-//
-//        isDelegue = false
-//
-//        // Sometimes it happens
-//        if (!(actions.contains(actionDemandee))) {
-//            actions.append(actionDemandee)
-//        }
-//    }
-//
-//    func toJSON() -> JSON? {
-//        return nil /* Not used */
-//    }
-
-
-    // MARK: - Static utils
+    // <editor-fold desc="Static utils"> MARK: - Static utils
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    static func getPositiveAction(actions: NSArray) -> NSString! {
+    static func getPositiveAction(folders: [Dossier]) -> Action? {
+        var possibleActions: [Action] = [.visa, .sign] // , "TDT", "MAILSEC", "ARCHIVER"]
 
-        if (actions.contains(NSString(string: "SIGNATURE"))) {
-            return NSString(string: "SIGNATURE")
+        for folder in folders {
+            possibleActions = possibleActions.filter { folder.actions.contains($0) }
         }
 
-        return NSString(string: "")
+        return possibleActions.first
     }
 
     /**
         Returns the main negative {@link Action} available, by coherent priority.
     */
-    @objc static func getNegativeAction(actions: NSArray) -> NSString! {
+    static func getNegativeAction(folders: [Dossier]) -> Action? {
+        var possibleActions: [Action] = [.reject]
 
-        if (actions.contains(NSString(string: "REJET"))) {
-            return NSString(string: "REJET")
+        for folder in folders {
+            possibleActions = possibleActions.filter { folder.actions.contains($0) }
         }
 
-        return NSString(string: "")
+        return possibleActions.first
     }
 
-    class func filterActions(dossierList: NSArray) -> [String] {
 
-        var result: [String] = []
+    class func getLocalFileUrl(dossierId: String,
+                               documentName: String) throws -> URL? {
 
-        // Compute values
+        // Source folder
 
-        var hasVisa: Bool = true
-        var hasSignature: Bool = true
-        var hasOnlyVisa: Bool = true
-        var hasRejet: Bool = true
-        var hasTDT: Bool = true
+        var documentsDirectoryUrl = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent("dossiers", isDirectory: true)
+                .appendingPathComponent(dossierId, isDirectory: true)
 
-        for dossierItem in dossierList {
-            if let dossier = dossierItem as? Dossier {
-                hasVisa = hasVisa && dossier.actions.contains("VISA")
-                hasSignature = hasSignature && (dossier.actions.contains("SIGNATURE") || dossier.actions.contains("VISA"))
-                hasOnlyVisa = hasOnlyVisa && !dossier.actions.contains("SIGNATURE")
-                hasRejet = hasRejet && dossier.actions.contains("REJET")
-                hasTDT = hasTDT && dossier.actions.contains("TDT")
-            }
-        }
+        try FileManager.default.createDirectory(at: documentsDirectoryUrl, withIntermediateDirectories: true)
 
-        hasSignature = hasSignature && !hasOnlyVisa
+        // File name
 
-        // Build result
+        var fileName = documentName.replacingOccurrences(of: " ", with: "_")
+        fileName = String(format: "%@.bin", fileName)
 
-        if (hasSignature) {
-            result.append("SIGNATURE")
-        } else if (hasVisa) {
-            result.append("VISA")
-        }
-
-        if (hasRejet) {
-            result.append("REJET")
-        }
-
-        if (hasTDT) {
-            result.append("TDT")
-        }
-
-        return result
+        documentsDirectoryUrl = documentsDirectoryUrl.appendingPathComponent(fileName)
+        return documentsDirectoryUrl
     }
+
+
+    // </editor-fold desc="Static utils">
+
 }

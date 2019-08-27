@@ -39,13 +39,16 @@ import Foundation
 import os
 
 
-@objc class SettingsAccountsController: UIViewController, UITableViewDataSource {
+class SettingsAccountsController: UIViewController, UITableViewDataSource {
+
 
     @IBOutlet var addAccountUIButton: UIButton!
     @IBOutlet var accountTableView: UITableView!
     var accountList: [Account] = []
 
-    // MARK: - Life cycle
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +73,7 @@ import os
                                      for: .touchUpInside)
     }
 
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if (segue.identifier == SettingsAccountsEditPopupController.Segue) {
@@ -77,32 +81,32 @@ import os
 
             let senderButton = sender as? UIButton
             if (senderButton !== addAccountUIButton) {
-                let buttonPosition: CGPoint = senderButton!.convert(CGPoint.zero, to: accountTableView);
-                let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
+                let buttonPosition: CGPoint = senderButton!.convert(CGPoint.zero, to: accountTableView)
+                let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
                 editViewController.currentAccount = accountList[indexPath.row]
             }
         }
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+
+    // </editor-fold desc="LifeCycle">
 
 
-    // <editor-fold desc="TableView">
+    // <editor-fold desc="TableView"> MARK: - TableView
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return accountList.count
     }
 
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell: SettingsAccountsCell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.CellIdentifier,
-                                                                       for: indexPath as IndexPath) as! SettingsAccountsCell
+        let account = accountList[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsAccountsCell.cellIdentifier,
+                                                 for: indexPath as IndexPath) as! SettingsAccountsCell
 
         // Compute data
-
-        let account: Account = accountList[indexPath.row]
 
         let titlePrint: String = (account.title!.count != 0) ? account.title! : "(Aucun titre)"
         let loginPrint: String = (account.login!.count != 0) ? account.login! : "(Aucun login)"
@@ -113,17 +117,17 @@ import os
         cell.titleLabel.text = titlePrint
         cell.infoLabel.text = "\(loginPrint) @ \(urlPrint)"
 
-        cell.deleteButton.isHidden = (account.id! == Account.DEMO_ID)
+        cell.deleteButton.isHidden = (account.id! == Account.demoId)
         cell.deleteButton.addTarget(self,
                                     action: #selector(onDeleteButtonClicked),
                                     for: .touchUpInside)
 
-        cell.editButton.isHidden = (account.id! == Account.DEMO_ID)
+        cell.editButton.isHidden = (account.id! == Account.demoId)
         cell.editButton.addTarget(self,
                                   action: #selector(onEditButtonClicked),
                                   for: .touchUpInside)
 
-        cell.visibilityButton.isHidden = (account.id != Account.DEMO_ID)
+        cell.visibilityButton.isHidden = (account.id != Account.demoId)
         cell.visibilityButton.isSelected = (account.isVisible!.boolValue || (accountList.count == 1))
 
         let imageOff = UIImage(named: "ic_visibility_off_white_24dp")?.withRenderingMode(.alwaysTemplate)
@@ -131,7 +135,7 @@ import os
 
         cell.visibilityButton.setImage(imageOff, for: .normal)
         cell.visibilityButton.setImage(imageOn, for: .selected)
-        cell.visibilityButton.tintColor = ColorUtils.Aqua
+        cell.visibilityButton.tintColor = ColorUtils.aqua
 
         cell.visibilityButton.addTarget(self,
                                         action: #selector(onVisibilityButtonClicked),
@@ -140,47 +144,48 @@ import os
         return cell
     }
 
+
     // </editor-fold desc="TableView">
 
 
-    // MARK: - Listeners
+    // <editor-fold desc="Listeners"> MARK: - Listeners
+
 
     @objc func onAccountSaved(notification: NSNotification) {
 
-        let account: Account! = notification.object as! Account
-        let accountIndex = accountList.firstIndex(of: account)
-
-        if (accountIndex == nil) {
+        guard let account = notification.object as? Account else { return }
+        guard let accountIndex = accountList.firstIndex(of: account) else {
 
             // Add to UI
 
             accountList.append(account)
             let newIndexPath = IndexPath(row: accountList.count - 1, section: 0)
             accountTableView.beginUpdates()
-            accountTableView.insertRows(at: [newIndexPath], with: UITableView.RowAnimation.fade)
+            accountTableView.insertRows(at: [newIndexPath], with: .fade)
             accountTableView.endUpdates()
-
-        } else {
-
-            // Refresh UI
-
-            let accountIndexPath = IndexPath(row: accountIndex!, section: 0)
-            accountTableView.beginUpdates()
-            accountTableView.reloadRows(at: [accountIndexPath], with: UITableView.RowAnimation.none)
-            accountTableView.endUpdates()
+            ModelsDataController.save()
+            return
         }
 
+        // Refresh UI
+
+        let accountIndexPath = IndexPath(row: accountIndex, section: 0)
+        accountTableView.beginUpdates()
+        accountTableView.reloadRows(at: [accountIndexPath], with: .none)
+        accountTableView.endUpdates()
         ModelsDataController.save()
     }
+
 
     @objc func onAddAccountButtonClicked(sender: UIBarButtonItem) {
         performSegue(withIdentifier: SettingsAccountsEditPopupController.Segue, sender: sender)
     }
 
+
     @objc func onDeleteButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
-        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView)
+        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
         let accountToDelete: Account = accountList[indexPath.row]
 
         // Delete from local DB
@@ -208,14 +213,16 @@ import os
         ModelsDataController.save()
     }
 
+
     @objc func onEditButtonClicked(sender: UIButton) {
         performSegue(withIdentifier: SettingsAccountsEditPopupController.Segue, sender: sender)
     }
 
+
     @objc func onVisibilityButtonClicked(sender: UIButton) {
 
-        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView);
-        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath;
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: accountTableView)
+        let indexPath: NSIndexPath = accountTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
 
         // Keeping user from hiding the last Account
 
@@ -234,4 +241,8 @@ import os
 //                                 title: nil,
 //                                 viewController: self)
     }
+
+
+    // <editor-fold desc="Listeners">
+
 }

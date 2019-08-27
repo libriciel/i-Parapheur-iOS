@@ -36,6 +36,6 @@
 import Foundation
 
 
-@objc class Filter: NSManagedObject {
-    
+class Filter: NSManagedObject {
+
 }

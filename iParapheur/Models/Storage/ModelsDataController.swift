@@ -42,14 +42,15 @@ import os
     https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreData/
         -> InitializingtheCoreDataStack.html#//apple_ref/doc/uid/TP40001075-CH4-SW1
 */
-@objc class ModelsDataController: NSObject {
+class ModelsDataController: NSObject {
 
 
-    @objc static let NotificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
+    @objc static let notificationModelsDataControllerLoaded = Notification.Name("ModelsDataController_loaded")
     @objc static var context: NSManagedObjectContext? = nil
 
 
     // <editor-fold desc="Utils">
+
 
     @objc static func loadManagedObjectContext() {
 
@@ -97,13 +98,14 @@ import os
                 // Callback on UI thread
                 DispatchQueue.global(qos: .default).async {
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: ModelsDataController.NotificationModelsDataControllerLoaded,
+                        NotificationCenter.default.post(name: ModelsDataController.notificationModelsDataControllerLoaded,
                                                         object: ["success": true])
                     }
                 }
             }
         }
     }
+
 
     @objc static func save() {
         do {
@@ -113,6 +115,7 @@ import os
         }
     }
 
+
     // </editor-fold desc="Utils">
 
 
@@ -120,7 +123,7 @@ import os
         var result: [Account] = []
 
         do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.ENTITY_NAME)
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Account.entityName)
             result = try ModelsDataController.context!.fetch(fetchRequest) as! [Account]
         } catch {
             os_log("Could not fetch Accounts", type: .error)
@@ -130,33 +133,30 @@ import os
         return result
     }
 
-    @objc static func fetchCertificates() -> [Certificate] {
-        var result: [Certificate] = []
 
-        do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.ENTITY_NAME)
-            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Certificate]
-        } catch {
+    @objc static func fetchCertificates() -> [Certificate] {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Certificate.entityName)
+
+        guard let result = try? ModelsDataController.context!.fetch(fetchRequest) as? [Certificate] else {
             os_log("Could not fetch Certificate", type: .error)
-            return result
+            return []
         }
 
         return result
     }
+
 
     static func fetchFilters() -> [Filter] {
-        var result: [Filter] = []
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.entityName)
 
-        do {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Filter.ENTITY_NAME)
-            result = try ModelsDataController.context!.fetch(fetchRequest) as! [Filter]
-        } catch {
+        guard let result = try? ModelsDataController.context!.fetch(fetchRequest) as? [Filter] else {
             os_log("Could not fetch Filters", type: .error)
-            return result
+            return []
         }
 
         return result
     }
+
 
     @objc static func cleanupAccounts(preferences: UserDefaults) {
 
@@ -167,13 +167,13 @@ import os
         let result: [Account] = fetchAccounts()
         if result.count == 0 {
 
-            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+            let demoAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                   into: ModelsDataController.context!) as! Account
-            demoAccount.id = Account.DEMO_ID as String
-            demoAccount.title = Account.DEMO_TITLE
-            demoAccount.url = Account.DEMO_URL
-            demoAccount.login = Account.DEMO_LOGIN
-            demoAccount.password = Account.DEMO_PASSWORD
+            demoAccount.id = Account.demoId as String
+            demoAccount.title = Account.demoTitle
+            demoAccount.url = Account.demoUrl
+            demoAccount.login = Account.demoLogin
+            demoAccount.password = Account.demoPass
             demoAccount.isVisible = true
 
             isSaveNeeded = true
@@ -181,17 +181,17 @@ import os
 
         // Backup legacy settings
 
-        if (preferences.string(forKey: "settings_login") != nil) {
-            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.ENTITY_NAME,
+        if preferences.string(forKey: "settings_login") != nil {
+            let legacyAccount = NSEntityDescription.insertNewObject(forEntityName: Account.entityName,
                                                                     into: ModelsDataController.context!) as! Account
-            legacyAccount.id = Account.LEGACY_ID
+            legacyAccount.id = Account.legacyId
             legacyAccount.title = preferences.string(forKey: "settings_login")
             legacyAccount.url = preferences.string(forKey: "settings_server_url")
             legacyAccount.login = preferences.string(forKey: "settings_login")
             legacyAccount.password = preferences.string(forKey: "settings_password")
             legacyAccount.isVisible = true
 
-            preferences.set(legacyAccount.id, forKey: Account.PREFERENCE_KEY_SELECTED_ACCOUNT as String)
+            preferences.set(legacyAccount.id, forKey: Account.preferenceKeySelectedAccount as String)
             preferences.removeObject(forKey: "settings_login")
             preferences.removeObject(forKey: "settings_password")
             preferences.removeObject(forKey: "settings_server_url")
@@ -217,11 +217,11 @@ import os
     */
     static func cleanupCertificates() {
 
-        let appDelegate: RGAppDelegate = (UIApplication.shared.delegate as! RGAppDelegate)
+        let appDelegate: RGAppDelegate = UIApplication.shared.delegate as! RGAppDelegate
         let oldKeystore: ADLKeyStore = appDelegate.keyStore
         for oldPrivateKey in oldKeystore.listPrivateKeys() as! [NSManagedObject] {
 
-            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.ENTITY_NAME,
+            let newCertificate = NSEntityDescription.insertNewObject(forEntityName: Certificate.entityName,
                                                                      into: context!) as! Certificate
 
             print("Legacy PrivateKey found = \(String(describing: oldPrivateKey.value(forKey: "caName")))")
@@ -231,7 +231,7 @@ import os
             newCertificate.notAfter = oldPrivateKey.value(forKey: "notAfter") as? NSDate
 
             var payload: [String: String] = [:]
-            payload[Certificate.PAYLOAD_P12_FILENAME] = oldPrivateKey.value(forKey: "p12Filename") as? String
+            payload[Certificate.payloadP12FileName] = oldPrivateKey.value(forKey: "p12Filename") as? String
             let jsonEncoder = JSONEncoder()
             let payloadData = try? jsonEncoder.encode(payload)
 
