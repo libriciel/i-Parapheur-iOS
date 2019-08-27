@@ -527,10 +527,10 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         let negativeAction = Dossier.getNegativeAction(folders: [folder])
         let digitalSignatureMandatory = currentWorkflow?.isDigitalSignatureMandatory ?? true
 
-        if (positiveAction == .sign) { floatingActionButton.addItem(item: signItem) }
-        if (positiveAction == .visa) { floatingActionButton.addItem(item: visaItem) }
-        if (negativeAction == .reject) { floatingActionButton.addItem(item: rejectItem) }
-        if (!digitalSignatureMandatory && !folder.isSignPapier) { floatingActionButton.addItem(item: paperSignItem) }
+        if positiveAction == .sign { floatingActionButton.addItem(item: signItem) }
+        if positiveAction == .visa { floatingActionButton.addItem(item: visaItem) }
+        if negativeAction == .reject { floatingActionButton.addItem(item: rejectItem) }
+        if positiveAction == .sign && (!digitalSignatureMandatory) && !folder.isSignPapier { floatingActionButton.addItem(item: paperSignItem) }
 
         floatingActionButton.addItem(item: annotationItem)
 

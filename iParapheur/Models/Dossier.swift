@@ -241,51 +241,6 @@ class Dossier: NSObject, Decodable {
     }
 
 
-    class func filterActions(dossierList: [Action]) -> [Action] {
-
-        var result: [Action] = []
-
-        // Compute values
-
-        var hasVisa: Bool = true
-        var hasSignature: Bool = true
-        var hasOnlyVisa: Bool = true
-        var hasReject: Bool = true
-        var hasTDT: Bool = true
-
-        for dossierItem in dossierList {
-            if let dossier = dossierItem as? Dossier {
-                hasVisa = hasVisa && dossier.actions.contains(.visa)
-                hasSignature = hasSignature && (dossier.actions.contains(.sign) || dossier.actions.contains(.visa))
-                hasOnlyVisa = hasOnlyVisa && !dossier.actions.contains(.sign)
-                hasReject = hasReject && dossier.actions.contains(.reject)
-                hasTDT = hasTDT && dossier.actions.contains(.tdt)
-            }
-        }
-
-        hasSignature = hasSignature && !hasOnlyVisa
-
-        // Build result
-
-        if hasSignature {
-            result.append(.sign)
-        }
-        else if hasVisa {
-            result.append(.visa)
-        }
-
-        if hasReject {
-            result.append(.reject)
-        }
-
-        if hasTDT {
-            result.append(.tdt)
-        }
-
-        return result
-    }
-
-
     class func getLocalFileUrl(dossierId: String,
                                documentName: String) throws -> URL? {
 
