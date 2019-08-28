@@ -39,7 +39,7 @@ import os
 
 class SettingsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    @IBOutlet var backButton: UIBarButtonItem!
+
     @IBOutlet var menuTableView: UITableView!
 
     let menuElements: [(title: String, elements: [(name: String, segue: String, icon: String, iconHighlight: String)])] = [
@@ -50,7 +50,8 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
                       ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
 
 
     override func viewWillAppear(_ animated: Bool) {
@@ -65,23 +66,44 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
         super.viewDidLoad()
         os_log("View loaded : SettingsTableViewController", type: .debug)
 
-        backButton.target = self
-        backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
-
         // Registering cells
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
         menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.cellId)
     }
 
-    // MARK: - Listeners
+
+    // </editor-fold desc="LifeCycle">
 
 
-    @objc func onBackButtonClicked() {
-        self.dismiss(animated: true, completion: nil)
+    // <editor-fold desc="UI Listeners"> MARK: - UI Listeners
+
+
+    @IBAction func onBackButtonClicked(_ sender: Any) {
+        switch UIDevice.current.orientation {
+
+            case .portrait,
+                 .portraitUpsideDown:
+
+                // Fold left panel, then dismiss
+                UIView.animate(withDuration: 0.3,
+                               animations: {
+                                   self.splitViewController?.preferredDisplayMode = .primaryHidden
+                               },
+                               completion: { _ in
+                                   self.splitViewController?.dismiss(animated: true)
+                               })
+
+            default:
+                dismiss(animated: true)
+        }
     }
 
-    // MARK: - UITableViewDataSource & UITableViewDelegate
+
+    // </editor-fold desc="UI Listeners">
+
+
+    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate"> MARK: - UITableViewDataSource & UITableViewDelegate
 
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -126,6 +148,9 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
+
+
+    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">
 
 }
 
