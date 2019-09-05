@@ -43,7 +43,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
     @IBOutlet weak var accountButton: UIBarButtonItem!
 
     var restClient: RestClient?
-    var bureauxArray: [Bureau] = []
+    var desks: [Bureau] = []
     var loading = true
 
 
@@ -81,7 +81,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
         refreshControl?.tintColor = ColorUtils.selectedCellGrey
         refreshControl?.addTarget(
                 self,
-                action: #selector(self.loadBureaux),
+                action: #selector(self.loadDesks),
                 for: .valueChanged)
     }
 
@@ -163,27 +163,34 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
         refreshAccountIcon(isAccountSet: areSettingsSet)
         initRestClient()
+
+        // Force drawer on portrait mode
+
+        if (UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown),
+           let toggleButton = self.splitViewController?.displayModeButtonItem {
+            UIApplication.shared.sendAction(toggleButton.action!, to: toggleButton.target, from: nil, for: nil)
+        }
     }
 
 
     // </editor-fold desc="Listeners">
 
 
-    @objc func loadBureaux() {
+    @objc func loadDesks() {
         refreshControl?.beginRefreshing()
 
         self.restClient?.getDesks(
                 onResponse:
                 { (desks: [Bureau]) in
 
-                    self.bureauxArray = desks
+                    self.desks = desks
                     self.loading = false
                     self.refreshControl?.endRefreshing()
                     self.tableView.reloadData()
                 },
                 onError: { (error: Error) in
 
-                    self.bureauxArray = []
+                    self.desks = []
                     self.loading = false
                     self.refreshControl?.endRefreshing()
                     self.tableView.reloadData()
@@ -216,13 +223,13 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
                 onResponse:
                 { (number: NSNumber) in
 
-                    self.loadBureaux()
+                    self.loadDesks()
                 },
                 onError: { (error: Error) in
 
                     let nsError = error as NSError
                     self.refreshControl?.endRefreshing()
-                    self.bureauxArray = []
+                    self.desks = []
                     self.tableView?.reloadData()
 
                     // New test when network retrieved
@@ -305,7 +312,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (bureauxArray.count == 0) {
+        if (desks.count == 0) {
             tableView.backgroundView = DeskListEmptyView.instanceFromNib()
             tableView.tableFooterView?.isHidden = true
         }
@@ -315,7 +322,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
             tableView.tableFooterView?.isHidden = false
         }
 
-        return bureauxArray.count
+        return desks.count
     }
 
     /**
@@ -325,7 +332,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
     */
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let bureau = bureauxArray[indexPath.row]
+        let bureau = desks[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: DeskListCell.cellId,
                                                  for: indexPath) as! DeskListCell
 
@@ -370,7 +377,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        let bureau = bureauxArray[indexPath.row]
+        let bureau = desks[indexPath.row]
         os_log("Selected Desk = %@", bureau.nodeRef!)
 
         let controller = storyboard?.instantiateViewController(withIdentifier: "DeskViewController") as! FolderListController
