@@ -46,7 +46,7 @@ class DocumentSelectionController: UITableViewController {
     var documentList: [Document] = []
 
 
-    // <editor-fold desc="Lifecycle" MARK: - LifeCycle
+    // <editor-fold desc="Lifecycle"> MARK: - LifeCycle
 
 
     override func viewDidLoad() {
@@ -58,10 +58,10 @@ class DocumentSelectionController: UITableViewController {
     }
 
 
-    // </editor-fold desc="Lifecycle" MARK: - LifeCycle
+    // </editor-fold desc="Lifecycle">
 
 
-    // <editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
+    // <editor-fold desc="TableViewDelegate"> MARK: - TableViewDelegate
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -87,14 +87,13 @@ class DocumentSelectionController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         dismiss(animated: false,
-                completion:
-                { () -> Void in
+                completion: { () -> Void in
                     NotificationCenter.default.post(name: DocumentSelectionController.NotifShowDocument,
                                                     object: indexPath.row as NSNumber)
                 })
     }
 
 
-    // </editor-fold desc="TableViewDelegate" MARK: - TableViewDelegate
+    // </editor-fold desc="TableViewDelegate">
 
 }

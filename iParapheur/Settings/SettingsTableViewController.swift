@@ -39,7 +39,7 @@ import os
 
 class SettingsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    @IBOutlet var backButton: UIBarButtonItem!
+
     @IBOutlet var menuTableView: UITableView!
 
     let menuElements: [(title: String, elements: [(name: String, segue: String, icon: String, iconHighlight: String)])] = [
@@ -50,7 +50,23 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
                       ("Licences tierces", "licencesSegue", "ic_copyright_outline_white_24dp.png", "ic_copyright_white_24dp.png")])
     ]
 
-    // MARK: - LifeCycle
+
+    // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
+
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        os_log("View loaded : SettingsTableViewController", type: .debug)
+
+        // Registering cells
+
+        let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
+        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.cellId)
+
+        // UI tweaks
+
+        self.splitViewController?.preferredDisplayMode = .allVisible
+    }
 
 
     override func viewWillAppear(_ animated: Bool) {
@@ -61,27 +77,21 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     }
 
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        os_log("View loaded : SettingsTableViewController", type: .debug)
+    // </editor-fold desc="LifeCycle">
 
-        backButton.target = self
-        backButton.action = #selector(SettingsTableViewController.onBackButtonClicked)
 
-        // Registering cells
+    // <editor-fold desc="UI Listeners"> MARK: - UI Listeners
 
-        let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
-        menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.cellId)
+
+    @IBAction func onBackButtonClicked(_ sender: Any) {
+        dismiss(animated: true)
     }
 
-    // MARK: - Listeners
+
+    // </editor-fold desc="UI Listeners">
 
 
-    @objc func onBackButtonClicked() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    // MARK: - UITableViewDataSource & UITableViewDelegate
+    // <editor-fold desc="UITableViewDataSource & UITableViewDelegate"> MARK: - UITableViewDataSource & UITableViewDelegate
 
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -126,6 +136,9 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: menuElements[indexPath.section].elements[indexPath.row].segue, sender: self)
     }
+
+
+    // </editor-fold desc="UITableViewDataSource & UITableViewDelegate">
 
 }
 

@@ -63,33 +63,6 @@
     _banettePicker.delegate = self;
     _banettePicker.dataSource = self;
 
-    _banettesNames = @{
-            @"en-preparation": @"À transmettre",
-            @"a-traiter": @"À traiter",
-            @"a-archiver": @"En fin de circuit",
-            @"retournes": @"Retournés",
-            @"en-cours": @"En cours",
-            @"a-venir": @"À venir",
-            @"recuperables": @"Récupérables",
-            @"en-retard": @"En retard",
-            @"traites": @"Traités",
-            @"dossiers-delegues": @"Dossiers en délégation",
-            @"no-corbeille": @"Toutes les banettes",
-            @"no-bureau": @"Tout i-Parapheur"};
-
-    _banettes = @[
-            @"en-preparation",
-            @"a-traiter",
-            @"a-archiver",
-            @"retournes",
-            @"en-cours",
-            @"a-venir",
-            @"recuperables",
-            @"en-retard",
-            @"traites",
-            @"dossiers-delegues",
-            @"no-corbeille",
-            @"no-bureau"];
 
     NSDictionary *currentFilter = ADLSingletonState.sharedSingletonState.currentFilter;
 

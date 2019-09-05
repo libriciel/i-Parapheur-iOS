@@ -33,52 +33,38 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-#import <UIKit/UIKit.h>
-#import "ADLSingletonState.h"
+import Foundation
+import UIKit
+import os
 
 
-@protocol FilterDelegate;
-@class ADLRestClient;
-
-@interface ADLFilterViewController : UIViewController
-        <UITableViewDataSource,
-        UITableViewDelegate,
-        UIPickerViewDataSource,
-        UIPickerViewDelegate,
-        UIPopoverControllerDelegate>
-
-@property(weak) id <FilterDelegate> delegate;
-
-@property(strong, nonatomic) IBOutlet UITextField *titreTextField;
-@property(strong, nonatomic) IBOutlet UITableView *typesTableView;
-@property(strong, nonatomic) IBOutlet UIButton *banetteButton;
-@property(strong, nonatomic) IBOutlet UINavigationBar *navigationBar;
-@property(nonatomic, strong) ADLRestClient *restClient;
-
-// Picker pour le choix des banettes, présent dans le popover en dessous.
-@property(strong, nonatomic) UIPickerView *banettePicker;
-@property(strong, nonatomic) UIPopoverController *pickerPopover;
-
-@end
+class FilterDialogController: UIViewController {
 
 
-// Protocol permettant le traitement de l'application du filtre
-@protocol FilterDelegate <NSObject>
+    let banettes = [
+        "en-preparation": "À transmettre",
+        "a-traiter": "À traiter",
+        "a-archiver": "En fin de circuit",
+        "retournes": "Retournés",
+        "en-cours": "En cours",
+        "a-venir": "À venir",
+        "recuperables": "Récupérables",
+        "en-retard": "En retard",
+        "traites": "Traités",
+        "dossiers-delegues": "Dossiers en délégation",
+        "no-corbeille": "Toutes les banettes",
+        "no-bureau": "Tout i-Parapheur"]
 
-@required
-- (void)shouldReload:(NSDictionary *)filter;
-
-@end
+    // <editor-fold desc="Lifecycle"> MARK: - LifeCycle
 
 
-// Protocol permettant de récupérer les infos du dossier à afficher
-/*@protocol FilterDataSource <NSObject>
-
-@required
-- (NSInteger *)numberOfTypeForDossier:(NSString *) dossier;
-- (NSInteger *)numberOfsousTypesForDossier:(NSString *)dossier andType:(NSString *)type;
-- (BOOL) isAvenirEnableForDossier:(NSString *)dossier;
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        os_log("View loaded : FilterDialogController", type: .debug)
+    }
 
 
-@end*/
+    // </editor-fold desc="Lifecycle">
 
+
+}

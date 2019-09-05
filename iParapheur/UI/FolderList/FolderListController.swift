@@ -514,6 +514,13 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         currentDossier = dossierClicked
         folderListDelegate?.onFolderSelected(dossierClicked, desk: currentDesk, restClient: currentRestClient)
+
+        // Toggle master view visibility
+
+        if (UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown),
+           let toggleButton = self.splitViewController?.displayModeButtonItem {
+            UIApplication.shared.sendAction(toggleButton.action!, to: toggleButton.target, from: nil, for: nil)
+        }
     }
 
 
