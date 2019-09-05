@@ -7,12 +7,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 
-## [Unreleased] - 2018-01-26
+## [Unreleased]
 
-### Ajouts
-- Intégration continue
-- Code coverage
-
+### Corrections
+- Petits crashfix
 
 
 ## [1.7.1] - 2019-09-05
