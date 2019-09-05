@@ -271,13 +271,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Kfu-fI-fnX">
-                                <rect key="frame" x="144" y="70" width="480" height="954"/>
+                                <rect key="frame" x="176" y="70" width="416" height="954"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="480" id="3qj-yX-zuL"/>
+                                    <constraint firstAttribute="width" constant="416" id="3qj-yX-zuL"/>
                                 </constraints>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="fCd-W5-xZN" userLabel="Footer">
-                                    <rect key="frame" x="0.0" y="94" width="480" height="66"/>
+                                    <rect key="frame" x="0.0" y="94" width="416" height="66"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1uB-BG-Vjg">
@@ -302,10 +302,10 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CertificateCell" rowHeight="66" id="gF2-z9-Vs6">
-                                        <rect key="frame" x="0.0" y="28" width="480" height="66"/>
+                                        <rect key="frame" x="0.0" y="28" width="416" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gF2-z9-Vs6" id="R5e-zi-Ahd">
-                                            <rect key="frame" x="0.0" y="0.0" width="480" height="65.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="416" height="65.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="102" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Exp. :date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BEV-e5-SY3">
@@ -528,7 +528,7 @@
                                     <constraint firstAttribute="width" constant="380" id="r17-cH-kHJ"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsLicencesTableViewCell" rowHeight="110" id="CG0-Vn-kWD" customClass="SettingsLicencesTableViewCell" customModule="iParapheur" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SettingsLicencesTableViewCell" rowHeight="110" id="CG0-Vn-kWD" customClass="SettingsLicencesTableViewCell" customModule="iParapheur" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="380" height="110"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CG0-Vn-kWD" id="19o-dw-Jr5">
@@ -536,13 +536,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Software" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKt-6Q-1GC">
-                                                    <rect key="frame" x="8" y="8" width="364" height="19.5"/>
+                                                    <rect key="frame" x="8" y="8" width="196" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Abj-M4-61b">
-                                                    <rect key="frame" x="8" y="35.5" width="364" height="66.5"/>
+                                                    <rect key="frame" x="8" y="35.5" width="196" height="66.5"/>
                                                     <string key="text">Version
 https://github.com/
 Licenced under the MIT License</string>
@@ -604,16 +604,16 @@ Licenced under the MIT License</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TC0-TB-ZPY">
-                                <rect key="frame" x="144" y="374" width="480" height="276"/>
+                                <rect key="frame" x="176" y="374" width="416" height="276"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I-Parapheur iOS - Version :version:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3yz-NB-ohU">
-                                        <rect key="frame" x="8" y="16" width="464" height="17"/>
+                                        <rect key="frame" x="8" y="16" width="400" height="17"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cXz-gc-g0D">
-                                        <rect key="frame" x="8" y="41" width="464" height="33.5"/>
+                                        <rect key="frame" x="8" y="41" width="400" height="33.5"/>
                                         <string key="text">Copyright © 2012–2017, Libriciel SCOP
 Initié et Developpé par Libriciel-SCOP.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -621,20 +621,20 @@ Initié et Developpé par Libriciel-SCOP.</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Informations légales" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nob-vK-T71">
-                                        <rect key="frame" x="8" y="90.5" width="464" height="17"/>
+                                        <rect key="frame" x="8" y="90.5" width="400" height="17"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vwp-TR-g7g">
-                                        <rect key="frame" x="8" y="115.5" width="464" height="50.5"/>
+                                        <rect key="frame" x="8" y="115.5" width="400" height="50.5"/>
                                         <string key="text">IPARAPHEUR-IOS est un logiciel libre ; vous pouvez le redistribuer ou le modifier suivant les termes de la Licence CeCILL v2 telle que publiée par le CEA, le CNRS et l'INRIA.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNC-o4-bJY">
-                                        <rect key="frame" x="8" y="174" width="464" height="67"/>
+                                        <rect key="frame" x="8" y="174" width="400" height="84"/>
                                         <string key="text">IPARAPHEUR-IOS est distribué dans l'espoir qu'il vous sera utile, mais SANS AUCUNE GARANTIE : sans même la garantie implicite de COMMERCIALISABILITÉ ni d'ADÉQUATION À UN OBJECTIF PARTICULIER. Consultez la Licence CeCILL v2 pour plus de détails.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -652,7 +652,7 @@ Initié et Developpé par Libriciel-SCOP.</string>
                                     <constraint firstAttribute="trailing" secondItem="Vwp-TR-g7g" secondAttribute="trailing" constant="8" id="Z72-ga-4ea"/>
                                     <constraint firstAttribute="trailing" secondItem="Nob-vK-T71" secondAttribute="trailing" constant="8" id="iwV-ZK-6Nu"/>
                                     <constraint firstItem="Nob-vK-T71" firstAttribute="leading" secondItem="TC0-TB-ZPY" secondAttribute="leading" constant="8" id="ljS-zY-6JY"/>
-                                    <constraint firstAttribute="width" constant="480" id="mCo-Nl-sUn"/>
+                                    <constraint firstAttribute="width" constant="416" id="mCo-Nl-sUn"/>
                                     <constraint firstItem="Vwp-TR-g7g" firstAttribute="top" secondItem="Nob-vK-T71" secondAttribute="bottom" constant="8" id="nXd-Jt-n4N"/>
                                     <constraint firstItem="gNC-o4-bJY" firstAttribute="leading" secondItem="TC0-TB-ZPY" secondAttribute="leading" constant="8" id="nn3-Ai-jiE"/>
                                     <constraint firstItem="Nob-vK-T71" firstAttribute="top" secondItem="cXz-gc-g0D" secondAttribute="bottom" constant="16" id="qWm-U1-enk"/>
@@ -692,22 +692,22 @@ Initié et Developpé par Libriciel-SCOP.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hhk-KM-cPm">
-                                <rect key="frame" x="144" y="32" width="480" height="960"/>
+                                <rect key="frame" x="176" y="32" width="416" height="960"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="480" id="GEi-jG-S8C"/>
+                                    <constraint firstAttribute="width" constant="416" id="GEi-jG-S8C"/>
                                 </constraints>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="96N-zA-D2I">
-                                    <rect key="frame" x="0.0" y="94" width="480" height="0.0"/>
+                                    <rect key="frame" x="0.0" y="94" width="416" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CertificateCell" rowHeight="66" id="MYA-OJ-qtG">
-                                        <rect key="frame" x="0.0" y="28" width="480" height="66"/>
+                                        <rect key="frame" x="0.0" y="28" width="416" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MYA-OJ-qtG" id="4ew-ah-4KU">
-                                            <rect key="frame" x="0.0" y="0.0" width="480" height="65.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="416" height="65.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cc8-mU-Rrd">
@@ -814,6 +814,6 @@ Initié et Developpé par Libriciel-SCOP.</string>
         <image name="ic_visibility_white_24dp.png" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="v0z-lX-j1p"/>
+        <segue reference="L4n-aH-5Fp"/>
     </inferredMetricsTieBreakers>
 </document>

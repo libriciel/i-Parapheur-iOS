@@ -54,14 +54,6 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
     // <editor-fold desc="LifeCycle"> MARK: - LifeCycle
 
 
-    override func viewWillAppear(_ animated: Bool) {
-
-        menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
-                                animated: false,
-                                scrollPosition: UITableView.ScrollPosition.none)
-    }
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         os_log("View loaded : SettingsTableViewController", type: .debug)
@@ -70,6 +62,18 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
         let nib = UINib(nibName: "SettingsTableViewHeaderFooterView", bundle: nil)
         menuTableView.register(nib, forHeaderFooterViewReuseIdentifier: SettingsTableViewHeaderFooterView.cellId)
+
+        // UI tweaks
+
+        self.splitViewController?.preferredDisplayMode = .allVisible
+    }
+
+
+    override func viewWillAppear(_ animated: Bool) {
+
+        menuTableView.selectRow(at: IndexPath(row: 0, section: 0),
+                                animated: false,
+                                scrollPosition: UITableView.ScrollPosition.none)
     }
 
 
@@ -80,23 +84,7 @@ class SettingsTableViewController: UIViewController, UITableViewDataSource, UITa
 
 
     @IBAction func onBackButtonClicked(_ sender: Any) {
-        switch UIDevice.current.orientation {
-
-            case .portrait,
-                 .portraitUpsideDown:
-
-                // Fold left panel, then dismiss
-                UIView.animate(withDuration: 0.3,
-                               animations: {
-                                   self.splitViewController?.preferredDisplayMode = .primaryHidden
-                               },
-                               completion: { _ in
-                                   self.splitViewController?.dismiss(animated: true)
-                               })
-
-            default:
-                dismiss(animated: true)
-        }
+        dismiss(animated: true)
     }
 
 
