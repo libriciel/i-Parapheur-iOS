@@ -536,11 +536,10 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         if positiveAction == .visa { floatingActionButton.addItem(item: visaItem) }
         if negativeAction == .reject { floatingActionButton.addItem(item: rejectItem) }
         if positiveAction == .sign && (!digitalSignatureMandatory) && !folder.isSignPapier { floatingActionButton.addItem(item: paperSignItem) }
+        if !ViewUtils.isConnectedToDemoAccount() { floatingActionButton.addItem(item: annotationItem) }
 
-        floatingActionButton.addItem(item: annotationItem)
-
-        if ((documentLoaded != nil) && floatingActionButton.isHidden) { floatingActionButton.isHidden = false }
-        if ((documentLoaded == nil) && !floatingActionButton.isHidden) { floatingActionButton.isHidden = true }
+        if (documentLoaded != nil) && floatingActionButton.isHidden { floatingActionButton.isHidden = false }
+        if (documentLoaded == nil) && !floatingActionButton.isHidden { floatingActionButton.isHidden = true }
     }
 
 
