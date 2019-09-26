@@ -513,7 +513,7 @@ class PdfReaderController: PdfController, FolderListDelegate, AnnotationDetailsC
         refreshFloatingActionButton(documentLoaded: pdfDocument)
 
         hideSpinner()
-        documentsButton.isEnabled = folder.documents.filter({ ($0.isMainDocument || $0.isPdfVisual) }).count > 1
+        documentsButton.isEnabled = folder.documents.filter({ $0.isMainDocument || $0.isPdfVisual }).count > 1
         detailsButton.isEnabled = true
     }
 
