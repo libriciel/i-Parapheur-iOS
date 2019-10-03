@@ -15,7 +15,7 @@ https://itunes.apple.com/fr/app/i-parapheur/id848611322?mt=8
 
 |   Certificates    |      Support        |
 | ----------------- |:-------------------:|
-| Class 0  (.p12)   |         ✓           |
+| Class 0 (.p12)    |         ✓           |
 | RGS* (.p12)       |         ✓           |
 | RGS** (hardware)  |  (coming ~Q1 2020)  |
 
