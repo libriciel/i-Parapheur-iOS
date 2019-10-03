@@ -11,17 +11,18 @@ The app is released on the official AppStore :
 https://itunes.apple.com/fr/app/i-parapheur/id848611322?mt=8
 
 
-## Compatibilities
+## Compatibilities charts
 
-|   Certificates    |           iOS           |  MacOS  |
-| ----------------- |:-----------------------:| :------:|
-| Class 0  (.p12)   |            ✓            |    ✘    |
-| RGS* (.p12)       |            ✓            |    ✘    |
-| RGS** (hardware)  | (beta, coming ~Q1 2020) |    ✘    |
+|   Certificates    |      Support        |
+| ----------------- |:-------------------:|
+| Class 0  (.p12)   |         ✓           |
+| RGS* (.p12)       |         ✓           |
+| RGS** (hardware)  |  (coming ~Q1 2020)  |
 
 
 |     Devices        |  Support  |
 | ------------------ |:---------:|
+| MacOS              |     ✘     |
 | iOS < 11           |     ✘     |
 | iOS >= 11.0        |     ✓     |
 | iPad               |     ✓     |
