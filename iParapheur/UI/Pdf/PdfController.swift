@@ -86,13 +86,14 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
     static func getBackgroundColor() -> UIColor {
         if #available(iOS 13.0, *) {
-            return UIColor.tertiarySystemBackground
-        } else {
+            return UIColor.systemGray
+        }
+        else {
             return UIColor.gray
         }
     }
-    
-    
+
+
     func showSpinner() {
 
         let spinnerView = UIView(frame: view.bounds)
