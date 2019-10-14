@@ -40,7 +40,6 @@ import os
 
 class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
-    static let backgroundColor = UIColor.gray
     @IBOutlet var pdfView: PDFView!
 
     let pdfDrawer = PdfAnnotationDrawer()
@@ -85,6 +84,15 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
     // </editor-fold desc="PdfAnnotationEventsDelegate">
 
 
+    static func getBackgroundColor() -> UIColor {
+        if #available(iOS 13.0, *) {
+            return UIColor.tertiarySystemBackground
+        } else {
+            return UIColor.gray
+        }
+    }
+    
+    
     func showSpinner() {
 
         let spinnerView = UIView(frame: view.bounds)
@@ -118,7 +126,7 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
         pdfView.minScaleFactor = pdfView.scaleFactorForSizeToFit
         pdfView.maxScaleFactor = 3
         pdfView.usePageViewController(true)
-        pdfView.backgroundColor = PdfController.backgroundColor
+        pdfView.backgroundColor = PdfController.getBackgroundColor()
 
         pdfAnnotationGestureRecognizer.drawingDelegate = pdfDrawer
         pdfAnnotationGestureRecognizer.eventsDelegate = self
