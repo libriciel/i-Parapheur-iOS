@@ -41,7 +41,7 @@ class StringsUtils: NSObject {
 
     static let dateFormatAnnotation = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     static let dateFormatIso8601 = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-    static let dateFormatPrettyPrint = "'le 'dd/mm/yyyy' à 'HH'h'mm"
+    static let dateFormatPrettyPrint = "'le 'dd/MM/yyyy' à 'HH'h'mm"
 
 
     @objc class func getMessage(error: NSError) -> NSString {

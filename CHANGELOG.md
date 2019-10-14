@@ -7,11 +7,85 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 
-## [Unreleased] - 2018-01-26
+## [Unreleased]
+
+### Corrections
+- Petits crashfix
+
+
+## [1.7.1] - 2019-09-05
+
+### Corrections
+- Petites retouches graphiques
+
+
+
+## [1.7.0] - 2019-08-27
 
 ### Ajouts
-- Intégration continue
-- Code coverage
+- Nouveau lecteur PDF
+- Actions déplacées dans le bouton flottant
+
+### Corrections
+- Signatures multiples corrigées
+- Petites retouches graphiques
+- Petits correctifs
+
+
+
+## [1.6.5] - 2018-07-23
+
+### Ajouts
+- Sentry
+- Gitlab-CI
+- Swift 5
+
+### Corrections
+- Début de migration d'ObjC vers Swift
+
+
+## [1.6.4] - 2018-02-07
+
+### Ajouts
+- Signature SHA1 avec certificat IN
+
+
+
+## [1.6.3] - 2018-01-11
+
+### Corrections
+- Crash au parse d'un caractère spécial dans un certificat
+
+
+
+## [1.6.2] - 2018-12-17
+
+### Corrections
+- Petites retouches graphiques
+
+
+
+## [1.6.1] - 2018-12-12
+
+### Corrections
+- Petites retouches graphiques
+- Alertes à la validation AppStore
+
+
+
+## [1.6.0] - 2018-12-11
+
+### Ajouts
+- Support des certificats de l'Imprimerie Nationale
+
+
+
+## [1.5.5] - 2018-20-06
+
+### Corrections
+- Cleanup pour l'IN
+- Petites retouches graphiques
+- Petits correctifs
 
 
 
@@ -26,7 +100,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [1.5.3] - 2018-01-11
 
-### Corrections
+### Ajouts
 - Signature PES
 
 
@@ -75,6 +149,15 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 [Unreleased]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tree/develop
+[1.7.1]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.7.1
+[1.7.0]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.7.0
+[1.6.5]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.6.5
+[1.6.4]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.6.4
+[1.6.3]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.6.3
+[1.6.2]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.6.2
+[1.6.1]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.6.1
+[1.6.0]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.6.0
+[1.5.5]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.5.5
 [1.5.4]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.5.4
 [1.5.3]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.5.3
 [1.5.2]: https://gitlab.libriciel.fr/i-parapheur/iParapheur-iOS/tags/1.5.2
