@@ -1097,7 +1097,6 @@
                                     <constraint firstAttribute="height" constant="30" id="UQi-og-GfJ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Requis" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2jv-mE-rIZ">
@@ -1125,7 +1124,6 @@
                                     <constraint firstAttribute="height" constant="30" id="g6i-1Q-uN8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mot de passe" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3e8-gi-yQO">
@@ -1135,12 +1133,12 @@
                                     <constraint firstAttribute="height" constant="30" id="ZZS-X5-ENe"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="upf-8A-Yue">
                                 <rect key="frame" x="265" y="246" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" systemColor="separatorColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ROY-Km-WVZ">
                                 <rect key="frame" x="0.0" y="270" width="550" height="50"/>
@@ -1164,7 +1162,7 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                             </textField>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="ecX-wQ-ryZ" firstAttribute="trailing" secondItem="e5i-qI-pCg" secondAttribute="trailingMargin" id="2h1-Cz-jVJ"/>
                             <constraint firstItem="ecX-wQ-ryZ" firstAttribute="top" secondItem="BAq-vl-btT" secondAttribute="bottom" constant="24" id="3Ra-oj-PEn"/>
@@ -1219,8 +1217,8 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WMJ-P5-llO">
                                 <rect key="frame" x="0.0" y="50" width="400" height="406"/>
-                                <color key="backgroundColor" red="0.92194187641143799" green="0.92041862010955811" blue="0.9422372579574585" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="separatorColor" red="0.73697161674499512" green="0.7313007116317749" blue="0.75709241628646851" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="separatorColor" systemColor="separatorColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="56" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="LwP-Xk-G2W" userLabel="Header">
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="28"/>
@@ -1228,13 +1226,13 @@
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d3B-i2-WmC" userLabel="Separator">
                                             <rect key="frame" x="0.0" y="27" width="400" height="1"/>
-                                            <color key="backgroundColor" red="0.73697161674499512" green="0.7313007116317749" blue="0.75709241628646851" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="backgroundColor" systemColor="separatorColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="QTT-Tx-XTa"/>
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.92194187641143799" green="0.92041862010955811" blue="0.9422372579574585" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="d3B-i2-WmC" secondAttribute="bottom" id="1YJ-Yu-96y"/>
                                         <constraint firstItem="d3B-i2-WmC" firstAttribute="leading" secondItem="LwP-Xk-G2W" secondAttribute="leading" id="3nF-jl-eHB"/>
@@ -1244,7 +1242,7 @@
                                 <view key="tableFooterView" contentMode="scaleToFill" id="N1A-0o-NpD" userLabel="Separator">
                                     <rect key="frame" x="0.0" y="128" width="400" height="1"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" red="0.73697161674499512" green="0.7313007116317749" blue="0.75709241628646851" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" systemColor="separatorColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AccountSelectionCell" id="Zb7-YR-UUi" customClass="AccountSelectionCell" customModule="iParapheur" customModuleProvider="target">
@@ -1270,7 +1268,6 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSz-w2-rVG">
                                                     <rect key="frame" x="56" y="11.5" width="310" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -1293,6 +1290,7 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
+                        <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="WMJ-P5-llO" firstAttribute="leading" secondItem="Zow-Uy-AGQ" secondAttribute="leading" id="BXA-Os-bfK"/>
                             <constraint firstItem="eu4-Nk-pfJ" firstAttribute="top" secondItem="WMJ-P5-llO" secondAttribute="bottom" id="FFJ-r5-nIs"/>
