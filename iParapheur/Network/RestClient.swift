@@ -40,7 +40,7 @@ import os
 
 class RestClient: NSObject {
 
-    var manager: Alamofire.SessionManager
+    var manager: Alamofire.Session
     @objc var serverUrl: NSURL
 
 
@@ -63,10 +63,10 @@ class RestClient: NSObject {
         // Create custom manager
 
         let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders
+        configuration.httpAdditionalHeaders = HTTPHeaders.default.dictionary
         configuration.httpAdditionalHeaders!["Authorization"] = "Basic \(loginHash)"
 
-        manager = Alamofire.SessionManager(configuration: configuration)
+        manager = Alamofire.Session(configuration: configuration)
     }
 
 
@@ -171,7 +171,7 @@ class RestClient: NSObject {
         // Cleanup
 
         try? FileManager.default.removeItem(at: filePathUrl)
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+        let destination: DownloadRequest.Destination = { _, _ in
             (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
         }
 
@@ -614,10 +614,10 @@ class RestClient: NSObject {
 
                     switch response.result {
 
-                        case .success:
+                        case .success(let value):
                             let jsonDecoder = JSONDecoder()
 
-                            guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
+                            guard let getSignInfoJsonData = value.data(using: .utf8),
                                   let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
                                   let data = signInfoWrapper["signatureInformations"] else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
@@ -963,7 +963,7 @@ class RestClient: NSObject {
         let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
         os_log("Document downloadUrl:%@", downloadFileUrl)
 
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+        let destination: DownloadRequest.Destination = { _, _ in
             (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }
 
@@ -979,15 +979,13 @@ class RestClient: NSObject {
         manager.download(downloadFileUrl, to: destination)
                 .validate()
                 .response { response in
+                    switch response.result {
 
-                    if let responseError = response.error {
-                        errorCallback?(responseError)
-                    }
-                    //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
-                    //		errorCallback?(response.error)
-                    //	}
-                    else {
-                        responseCallback?(response.destinationURL!.path)
+                        case .success(let value):
+                            responseCallback?(value!.path)
+
+                        case .failure(let error):
+                            errorCallback?(error)
                     }
                 }
     }

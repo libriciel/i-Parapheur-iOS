@@ -250,12 +250,12 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
 
         let manager = NetworkReachabilityManager(host: "www.apple.com")
 
-        manager?.listener = { status in
+        manager?.startListening { status in
 
             switch status {
 
                 case .reachable(.ethernetOrWiFi),
-                     .reachable(.wwan):
+                     .reachable(.cellular):
                     os_log("The network is reachable over the WiFi connection")
 
                     self.refreshControl?.beginRefreshing()
@@ -267,8 +267,6 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
                     os_log("The network is not reachable yet")
             }
         }
-
-        manager?.startListening()
     }
 
 
