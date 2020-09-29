@@ -45,27 +45,6 @@
 @synthesize managedObjectContext;
 
 
-- (void)checkUpdates {
-
-    // Previously, full p12 file path was keeped in the DB.
-    // But the app data folder path changes on every update.
-    // Here we have to check previous data stored, and patch it.
-
-    NSArray *keys = [self listPrivateKeys];
-
-    for (Certificate *oldKey in keys) {
-//        if (oldKey.p12Filename.pathComponents.count != 2) { TODO Adrien payload
-//
-//            NSString *relativePath = [NSString stringWithFormat:@"%@/%@",
-//                                                                [NSBundle mainBundle].bundleIdentifier,
-//                                                                oldKey.p12Filename.lastPathComponent];
-//            oldKey.p12Filename = relativePath;
-//
-//            [self.managedObjectContext save:nil];
-//        }
-    }
-}
-
 
 NSData *X509_to_NSData(X509 *cert) {
 

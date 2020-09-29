@@ -484,7 +484,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (_keyStore == nil) {
         _keyStore = ADLKeyStore.new;
         _keyStore.managedObjectContext = self.managedObjectContext;
-        [_keyStore checkUpdates];
     }
 
     return _keyStore;

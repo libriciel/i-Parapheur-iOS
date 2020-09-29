@@ -58,9 +58,6 @@ enum {
 #pragma mark - Key Management methods
 
 
-- (void)checkUpdates;
-
-
 - (NSArray *)listPrivateKeys;
 
 
