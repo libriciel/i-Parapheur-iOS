@@ -326,7 +326,7 @@ class CryptoUtils: NSObject {
                                       certificate: Certificate,
                                       restClient: RestClient) throws -> RemoteHasher {
 
-        for hashIndex in 0..<signInfo.hashesToSign.count {
+        for _ in 0..<signInfo.hashesToSign.count {
             switch signInfo.format {
 
                 case "xades":
