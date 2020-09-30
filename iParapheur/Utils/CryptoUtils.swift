@@ -254,7 +254,8 @@ class CryptoUtils: NSObject {
     }
 
 
-    class func signWithP12(hasher: RemoteHasher,
+    class func signWithP12(deskId: String,
+                           hasher: RemoteHasher,
                            certificate: Certificate,
                            password: String) {
 
@@ -266,9 +267,8 @@ class CryptoUtils: NSObject {
 
         // Building signature response
 
-        hasher.generateHashToSign(
-                onResponse: {
-                    (result: DataToSign) in
+        hasher.generateHashToSign(deskId: deskId,
+                                  onResponse: { (result: DataToSign) in
 
                     var signedHashList: [Data] = []
                     let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
@@ -296,8 +296,7 @@ class CryptoUtils: NSObject {
                                            title: "Erreur à la signature")
                     }
                 },
-                onError: {
-                    (error: Error) in
+                                  onError: { (error: Error) in
                     ViewUtils.logError(message: "Vérifier le réseau",
                                        title: "Erreur à la récupération du hash à signer")
                 })

@@ -17,6 +17,7 @@
  */
 
 import Foundation
+import Alamofire
 import os
 
 /**
@@ -59,7 +60,8 @@ class RemoteHasher {
     // <editor-fold desc="Hasher">
 
 
-    func generateHashToSign(onResponse responseCallback: ((DataToSign) -> Void)?,
+    func generateHashToSign(deskId: String,
+                            onResponse responseCallback: ((DataToSign) -> Void)?,
                             onError errorCallback: ((Error) -> Void)?) {
 
         os_log("RemoteHasher#generateHashToSign", type: .debug)
@@ -81,13 +83,12 @@ class RemoteHasher {
                                  publicKeyBase64: publicKeyBase64,
                                  signatureFormat: signInfo.format,
                                  payload: payload,
-                                 onResponse:
-                                 { (response: DataToSign) in
                                      os_log("mRestClient#getDataToSign hashes : %@", type: .debug, response.dataToSignBase64List)
+                                 onResponse: { (response: DataToSign) in
                                      self.dataToSign = response
                                      responseCallback?(response)
                                  },
-                                 onError: { (error: Error) in
+                                 onError: { [self] (error: Error) in
                                      os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
                                      errorCallback?(error)
                                  })

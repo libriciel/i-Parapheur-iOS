@@ -101,7 +101,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return certificateList.count
+        certificateList.count
     }
 
 
@@ -181,10 +181,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
             // Asking for the p12 password, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
             // That will re-call onValidateButtonClicked, and continue...
+
             if currentPassword == nil {
                 displayPasswordAlert()
                 return
             }
+
             // Checking the given password. May interrupt everything if it is wrong
             else {
                 guard let certificate = selectedCertificate,
@@ -252,6 +254,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     // <editor-fold desc="UIAlertViewDelegate">
+
 
     /**
         Yes, UIAlertView are deprecated, but UIAlertController can't be overlapped.
@@ -399,18 +402,6 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                     actionToPerform.error = error
                                     self.checkAndDismissPopup()
                                 })
-    }
-
-
-    /**
-        Here, we want to display the certificate list if everything is set
-    */
-    private func refreshCertificateListVisibility() {
-        let signatureToPerform = actionsToPerform.filter { $0.action == .sign }
-        if signatureToPerform.allSatisfy({ ($0.signInfo != nil) && ($0.folder.documents.count > 0) }) {
-            certificateList = ModelsDataController.fetchCertificates()
-            certificateTableView.reloadData()
-        }
     }
 
 
