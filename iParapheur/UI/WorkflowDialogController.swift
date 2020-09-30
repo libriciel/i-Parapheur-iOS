@@ -401,6 +401,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                 })
     }
 
+
     /**
         Here, we want to display the certificate list if everything is set
     */
@@ -434,4 +435,5 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
+    
 }
