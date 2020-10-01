@@ -23,8 +23,7 @@ class ActionToPerform {
 
     let folder: Dossier
     let action: Action
-    var signInfo: SignInfo?
-    var remoteHasher: RemoteHasher?
+    var signInfoList: [SignInfo]
     var isDone = false
     var error: Error?
 
@@ -37,27 +36,7 @@ class ActionToPerform {
         if (action == .sign) && folder.isSignPapier { realAction = .visa }
 
         self.action = realAction
-    }
-
-
-    func generateRemoteHasher(restClient: RestClient, certificate: Certificate?) {
-
-        guard let currentCertificate = certificate,
-              let currentSignInfo = signInfo else {
-            self.isDone = true
-            self.error = RuntimeError("Erreur à la génération de la signature")
-            return
-        }
-
-        do {
-            self.remoteHasher = try CryptoUtils.generateHasherWrappers(signInfo: currentSignInfo,
-                                                                       dossier: folder,
-                                                                       certificate: currentCertificate,
-                                                                       restClient: restClient)
-        } catch {
-            self.isDone = true
-            self.error = RuntimeError("Erreur à la génération de la signature")
-        }
+        signInfoList = []
     }
 
 }

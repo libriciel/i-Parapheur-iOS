@@ -172,7 +172,7 @@ class RestClient: NSObject {
     func getSignInfo(publicKeyBase64: String,
                      folder: Dossier,
                      bureau: NSString,
-                     onResponse responseCallback: ((SignInfo) -> Void)?,
+                     onResponse responseCallback: (([SignInfo]) -> Void)?,
                      onError errorCallback: ((Error) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/signature/\(bureau)/\(folder.identifier)"
@@ -218,13 +218,12 @@ class RestClient: NSObject {
                             let jsonDecoder = JSONDecoder()
 
                             guard let getSignInfoJsonData = value.data(using: .utf8),
-                                  let signInfoWrapper = try? jsonDecoder.decode([SignInfo].self, from: getSignInfoJsonData),
-                                  let signInfo = signInfoWrapper.first else {
+                                  let signInfoList = try? jsonDecoder.decode([SignInfo].self, from: getSignInfoJsonData) {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
 
-                            responseCallback?(data)
+                            responseCallback?(signInfoList)
 
                         case .failure(let error):
                             os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)

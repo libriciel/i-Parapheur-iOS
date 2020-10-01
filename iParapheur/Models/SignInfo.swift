@@ -24,6 +24,7 @@ public class SignInfo: NSObject, Decodable {
 
     let format: String?
     let dataToSignBase64List: [String]
+    var signaturesBase64List: [String]
     let signatureDateTime: Double?
 
 
@@ -45,6 +46,8 @@ public class SignInfo: NSObject, Decodable {
 
         let dataToSignBase64ListString = try values.decodeIfPresent(String.self, forKey: .dataToSignBase64List)
         dataToSignBase64List = dataToSignBase64ListString?.components(separatedBy: ",") ?? []
+
+        signaturesBase64List = []
     }
 
 

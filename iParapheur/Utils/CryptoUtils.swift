@@ -254,8 +254,8 @@ class CryptoUtils: NSObject {
     }
 
 
-    class func signWithP12(deskId: String,
-                           hasher: RemoteHasher,
+    class func signWithP12(folderId: String,
+                           signInfoList: [SignInfo],
                            certificate: Certificate,
                            password: String) {
 
@@ -267,75 +267,30 @@ class CryptoUtils: NSObject {
 
         // Building signature response
 
-        hasher.generateHashToSign(deskId: deskId,
-                                  onResponse: { (result: DataToSign) in
-
-                    var signedHashList: [Data] = []
-                    let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
                     do {
-                        for dataToSign in dataToSignList {
-
-                            let data = hasher.signatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
-                            var signedHash = try CryptoUtils.rsaSign(data: data as NSData,
+            for signInfo in signInfoList {
+                for hash in signInfo.dataToSignBase64List {
+                    var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
                                                                      keyFileUrl: p12Url,
-                                                                     signatureAlgorithm: hasher.signatureAlgorithm,
+                                                             signatureAlgorithm: .sha256WithRsa,
                                                                      password: password)
 
                             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
-                            signedHashList.append(Data(base64Encoded: signedHash)!)
+                    signInfo.signaturesBase64List.append(signedHash)
+                }
                         }
 
                         NotificationCenter.default.post(name: .signatureResult,
                                                         object: nil,
                                                         userInfo: [
-                                                            notifSignedData: signedHashList,
-                                                            notifFolderId: hasher.dossier.identifier
+                                                notifSignedData: signInfoList,
+                                                notifFolderId: folderId
                                                         ])
+
                     } catch let error {
                         ViewUtils.logError(message: error.localizedDescription as NSString,
                                            title: "Erreur à la signature")
                     }
-                },
-                                  onError: { (error: Error) in
-                    ViewUtils.logError(message: "Vérifier le réseau",
-                                       title: "Erreur à la récupération du hash à signer")
-                })
-    }
-
-
-    class func generateHasherWrappers(signInfo: SignInfo,
-                                      dossier: Dossier,
-                                      certificate: Certificate,
-                                      restClient: RestClient) throws -> RemoteHasher {
-
-        for _ in 0..<signInfo.dataToSignBase64List.count {
-            switch signInfo.format {
-
-                case "xades":
-
-                    throw NSError(domain: "Ce format (\(signInfo.format ?? "nil")) est obsolète", code: 0, userInfo: nil)
-
-
-                case "CMS",
-                     "PADES",
-                     "PADES-basic",
-                     "xades-env-1.2.2-sha256":
-
-                    let hasher = RemoteHasher(signInfo: signInfo,
-                                              publicKeyBase64: certificate.publicKey!.base64EncodedString(),
-                                              dossier: dossier,
-                                              restClient: restClient,
-                                              signatureAlgorithm: .sha256WithRsa)
-
-                    return hasher
-
-
-                default:
-                    print("Ce format (\(signInfo.format ?? "nil")) n'est pas supporté")
-            }
-        }
-
-        throw NSError(domain: "Ce format (\(signInfo.format ?? "nil")) n'est pas supporté", code: 0, userInfo: nil)
     }
 
 
