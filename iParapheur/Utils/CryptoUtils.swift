@@ -303,33 +303,23 @@ class CryptoUtils: NSObject {
     }
 
 
-    class func generateHasherWrappers(signInfo: SignInfoLegacy,
+    class func generateHasherWrappers(signInfo: SignInfo,
                                       dossier: Dossier,
                                       certificate: Certificate,
                                       restClient: RestClient) throws -> RemoteHasher {
 
-        for _ in 0..<signInfo.hashesToSign.count {
+        for _ in 0..<signInfo.dataToSignBase64List.count {
             switch signInfo.format {
 
                 case "xades":
 
-                    throw NSError(domain: "Ce format (\(signInfo.format)) est obsolète", code: 0, userInfo: nil)
+                    throw NSError(domain: "Ce format (\(signInfo.format ?? "nil")) est obsolète", code: 0, userInfo: nil)
 
 
                 case "CMS",
                      "PADES",
-                     "PADES-basic":
-
-                    let hasher = RemoteHasher(signInfo: signInfo,
-                                              publicKeyBase64: certificate.publicKey!.base64EncodedString(),
-                                              dossier: dossier,
-                                              restClient: restClient,
-                                              signatureAlgorithm: .sha1WithRsa)
-
-                    return hasher
-
-
-                case "xades-env-1.2.2-sha256":
+                     "PADES-basic",
+                     "xades-env-1.2.2-sha256":
 
                     let hasher = RemoteHasher(signInfo: signInfo,
                                               publicKeyBase64: certificate.publicKey!.base64EncodedString(),
@@ -339,12 +329,13 @@ class CryptoUtils: NSObject {
 
                     return hasher
 
+
                 default:
-                    print("Ce format (\(signInfo.format)) n'est pas supporté")
+                    print("Ce format (\(signInfo.format ?? "nil")) n'est pas supporté")
             }
         }
 
-        throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
+        throw NSError(domain: "Ce format (\(signInfo.format ?? "nil")) n'est pas supporté", code: 0, userInfo: nil)
     }
 
 

@@ -156,7 +156,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         if selectedCertificate?.sourceType == .imprimerieNationale {
 
             let signatureCount = signaturesToPerform.reduce(into: 0) { count, atp in
-                count += atp.signInfo?.hashesToSign.count ?? 0
+                count += atp.signInfo?.dataToSignBase64List.count ?? 0
             }
 
             if signatureCount > 1 {

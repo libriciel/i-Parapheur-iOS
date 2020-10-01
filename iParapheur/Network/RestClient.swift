@@ -213,8 +213,8 @@ class RestClient: NSObject {
                             let jsonDecoder = JSONDecoder()
 
                             guard let getSignInfoJsonData = value.data(using: .utf8),
-                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
-                                  let data = signInfoWrapper["signatureInformations"] else {
+                                  let signInfoWrapper = try? jsonDecoder.decode([SignInfo].self, from: getSignInfoJsonData),
+                                  let signInfo = signInfoWrapper.first else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
@@ -224,48 +224,6 @@ class RestClient: NSObject {
                         case .failure(let error):
                             os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)
                             errorCallback?(error)
-                    }
-                }
-    }
-
-
-    /**
-      Every i-Parapheur < 4.7
-     */
-    @objc func getSignInfoLegacy(folder: Dossier,
-                                 bureau: NSString,
-                                 onResponse responseCallback: ((SignInfoLegacy) -> Void)?,
-                                 onError errorCallback: ((NSError) -> Void)?) {
-
-        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
-
-        // Parameters
-
-        let parameters: Parameters = ["bureauCourant": bureau]
-
-        // Request
-
-        manager.request(getSignInfoUrl, parameters: parameters)
-                .validate()
-                .responseString { response in
-
-                    switch response.result {
-
-                        case .success(let value):
-                            let jsonDecoder = JSONDecoder()
-
-                            guard let getSignInfoJsonData = value.data(using: .utf8),
-                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfoLegacy].self, from: getSignInfoJsonData),
-                                  let data = signInfoWrapper["signatureInformations"] else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
-                                return
-                            }
-
-                            responseCallback?(data)
-
-                        case .failure(let error):
-                            os_log("getSignInfo fail ! %d", type: .error, error.responseCode!)
-                            errorCallback?(error as NSError)
                     }
                 }
     }

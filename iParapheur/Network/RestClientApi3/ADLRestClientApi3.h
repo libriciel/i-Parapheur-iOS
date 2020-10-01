@@ -32,15 +32,4 @@
             success:(void (^)(NSArray *))success
             failure:(void (^)(NSError *))failure;
 
-
-- (void)getCircuit:(NSString *)dossier
-           success:(void (^)(Circuit *))circuit
-           failure:(void (^)(NSError *))failure;
-
-
-- (void)getSignInfoForDossier:(NSString *)dossierId
-                    andBureau:(NSString *)bureauId
-                      success:(void (^)(SignInfoLegacy *))success
-                      failure:(void (^)(NSError *))failure;
-
 @end
