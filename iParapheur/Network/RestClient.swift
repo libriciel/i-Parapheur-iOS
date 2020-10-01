@@ -184,12 +184,17 @@ class RestClient: NSObject {
             "index": 0
         ]
 
-        // TODO : When the app will be iOS13+, use the JSONSerialization's .withoutEscapingSlashes options.
-        // instead of this ugly replacingOccurrences
+        let bodyData: Data
+        if #available(iOS 13.0, *) {
+            guard let bodyDataTemp = try? JSONSerialization.data(withJSONObject: bodyJson, options: [.withoutEscapingSlashes]) else { return }
+            bodyData = bodyDataTemp
+        }
+        else {
         guard let poorlyEscapedBodyData = try? JSONSerialization.data(withJSONObject: bodyJson) else { return }
         let poorlyEscapedBodyString = String(data: poorlyEscapedBodyData, encoding: .utf8)!
         let properBodyString = poorlyEscapedBodyString.replacingOccurrences(of: "\\/", with: "/")
-        let bodyData = properBodyString.data(using: .utf8)!
+            bodyData = properBodyString.data(using: .utf8)!
+        }
 
         os_log("getSignInfo url:%@", type: .debug, getSignInfoUrl)
         os_log("getSignInfo body:%@", type: .debug, String(data: bodyData, encoding: .utf8)!)
@@ -223,132 +228,6 @@ class RestClient: NSObject {
 
                         case .failure(let error):
                             os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)
-                            errorCallback?(error)
-                    }
-                }
-    }
-
-
-    func getDataToSign(remoteDocumentList: [RemoteDocument],
-                       publicKeyBase64: String,
-                       signatureFormat: String,
-                       payload: [String: String],
-                       onResponse responseCallback: ((DataToSign) -> Void)?,
-                       onError errorCallback: ((Error) -> Void)?) {
-
-        os_log("getDataToSign called", type: .debug)
-
-        let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/generateDataToSign"
-
-        // Parameters
-
-        // Alamofire can't stand Encodable object in its Parameters.
-        // We have to either re-create the full request, with a JSON raw data body
-        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
-        //
-        // ... Yep, I chose the second.
-        //
-        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
-
-        var remoteDocumentMapList: [[String: String]] = []
-        for remoteDocument in remoteDocumentList {
-            remoteDocumentMapList.append(["id": remoteDocument.id,
-                                          "digestBase64": remoteDocument.digestBase64])
-        }
-
-        let parameters: Parameters = [
-            "remoteDocumentList": remoteDocumentMapList,
-            "signatureFormat": signatureFormat,
-            "publicKeyBase64": publicKeyBase64,
-            "payload": payload
-        ]
-
-        // Request
-
-        os_log("getDataToSign request sent with parameters %@", type: .debug, parameters)
-        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-                .validate()
-                .responseString { response in
-
-                    os_log("getDataToSign response...", type: .debug)
-                    switch response.result {
-
-                        case .success:
-                            let jsonDecoder = JSONDecoder()
-                            guard let responseJsonData = response.value?.data(using: .utf8),
-                                  let dataToSign = try? jsonDecoder.decode(DataToSign.self, from: responseJsonData) else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                                return
-                            }
-
-                            os_log("getDataToSign response : %@", type: .debug, dataToSign)
-                            responseCallback?(dataToSign)
-
-                        case .failure(let error):
-                            os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
-                            errorCallback?(error)
-                    }
-                }
-    }
-
-
-    func getFinalSignature(remoteDocumentList: [RemoteDocument],
-                           publicKeyBase64: String,
-                           signatureDateTime: Int,
-                           signatureFormat: String,
-                           payload: [String: String],
-                           onResponse responseCallback: (([Data]) -> Void)?,
-                           onError errorCallback: ((Error) -> Void)?) {
-
-        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
-
-        // Parameters
-
-        // Alamofire can't stand Encodable object in its Parameters.
-        // We have to either re-create the full request, with a JSON raw data body
-        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
-        //
-        // ... Yep, I chose the second.
-        //
-        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
-
-        var remoteDocumentMapList: [[String: String]] = []
-        for remoteDocument in remoteDocumentList {
-            remoteDocumentMapList.append(["id": remoteDocument.id,
-                                          "digestBase64": remoteDocument.digestBase64,
-                                          "signatureBase64": remoteDocument.signatureBase64!])
-        }
-
-        let parameters: Parameters = [
-            "remoteDocumentList": remoteDocumentMapList,
-            "signatureFormat": signatureFormat,
-            "publicKeyBase64": publicKeyBase64,
-            "signatureDateTime": signatureDateTime,
-            "payload": payload
-        ]
-
-        // Request
-
-        os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
-        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-                .validate()
-                .responseString { response in
-
-                    switch response.result {
-
-                        case .success:
-
-                            let jsonDecoder = JSONDecoder()
-                            guard let responseJsonData = response.value?.data(using: .utf8),
-                                  let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
-                                                                               from: responseJsonData) else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                                return
-                            }
-
-                            responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
-
-                        case .failure(let error):
                             errorCallback?(error)
                     }
                 }
