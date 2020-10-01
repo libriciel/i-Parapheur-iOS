@@ -27,7 +27,7 @@ class RemoteHasher {
 
 
     let signatureAlgorithm: SignatureAlgorithm
-    let signInfo: SignInfo
+    let signInfo: SignInfoLegacy
     let publicKeyBase64: String
     var dossier: Dossier
     var payload: [String: String]
@@ -35,7 +35,7 @@ class RemoteHasher {
     @objc var restClient: RestClient
 
 
-    init(signInfo: SignInfo,
+    init(signInfo: SignInfoLegacy,
          publicKeyBase64: String,
          dossier: Dossier,
          restClient: RestClient,

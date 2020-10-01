@@ -23,7 +23,7 @@ class ActionToPerform {
 
     let folder: Dossier
     let action: Action
-    var signInfo: SignInfo?
+    var signInfo: SignInfoLegacy?
     var remoteHasher: RemoteHasher?
     var isDone = false
     var error: Error?

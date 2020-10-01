@@ -234,7 +234,7 @@ class RestClient: NSObject {
      */
     @objc func getSignInfoLegacy(folder: Dossier,
                                  bureau: NSString,
-                                 onResponse responseCallback: ((SignInfo) -> Void)?,
+                                 onResponse responseCallback: ((SignInfoLegacy) -> Void)?,
                                  onError errorCallback: ((NSError) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
@@ -255,7 +255,7 @@ class RestClient: NSObject {
                             let jsonDecoder = JSONDecoder()
 
                             guard let getSignInfoJsonData = value.data(using: .utf8),
-                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfoLegacy].self, from: getSignInfoJsonData),
                                   let data = signInfoWrapper["signatureInformations"] else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
                                 return

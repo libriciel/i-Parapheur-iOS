@@ -40,7 +40,7 @@
 
 - (void)getSignInfoForDossier:(NSString *)dossierId
                     andBureau:(NSString *)bureauId
-                      success:(void (^)(SignInfo *))success
+                      success:(void (^)(SignInfoLegacy *))success
                       failure:(void (^)(NSError *))failure;
 
 @end

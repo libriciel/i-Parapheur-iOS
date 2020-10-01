@@ -27,9 +27,9 @@ class RestClientMock: RestClient {
 
     override func getSignInfo(folder: Dossier,
                               bureau: NSString,
-                              onResponse responseCallback: ((SignInfo) -> Void)?,
+                              onResponse responseCallback: ((SignInfoLegacy) -> Void)?,
                               onError errorCallback: ((NSError) -> Void)?) {
-        responseCallback?(SignInfo(format: "PES", hashesToSign: ["hashToSign_01_\(folder.identifier)", "hashToSign_02_\(folder.identifier)"]))
+        responseCallback?(SignInfoLegacy(format: "PES", hashesToSign: ["hashToSign_01_\(folder.identifier)", "hashToSign_02_\(folder.identifier)"]))
     }
 
 

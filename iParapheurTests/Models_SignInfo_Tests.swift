@@ -45,7 +45,7 @@ class Models_SignInfo_Tests: XCTestCase {
         """
         let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
         let jsonDecoder = JSONDecoder()
-		let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,
+		let signInfoDict = try? jsonDecoder.decode([String: SignInfoLegacy].self,
                                                    from: getSignInfoJsonData)
 		
         XCTAssertNotNil(signInfoDict)
@@ -94,7 +94,7 @@ class Models_SignInfo_Tests: XCTestCase {
         """
         let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
         let jsonDecoder = JSONDecoder()
-		let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,
+		let signInfoDict = try? jsonDecoder.decode([String: SignInfoLegacy].self,
                                                    from: getSignInfoJsonData)
 
         XCTAssertNotNil(signInfoDict)
@@ -135,7 +135,7 @@ class Models_SignInfo_Tests: XCTestCase {
 		let getSignInfoJsonString = "{\"signatureInformations\" : {} }"
 		let getSignInfoJsonData = getSignInfoJsonString.data(using: .utf8)!
 		let jsonDecoder = JSONDecoder()
-		let signInfoDict = try? jsonDecoder.decode([String: SignInfo].self,
+		let signInfoDict = try? jsonDecoder.decode([String: SignInfoLegacy].self,
 												   from: getSignInfoJsonData)
 		
 		XCTAssertNotNil(signInfoDict)

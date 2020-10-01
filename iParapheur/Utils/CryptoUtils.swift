@@ -303,7 +303,7 @@ class CryptoUtils: NSObject {
     }
 
 
-    class func generateHasherWrappers(signInfo: SignInfo,
+    class func generateHasherWrappers(signInfo: SignInfoLegacy,
                                       dossier: Dossier,
                                       certificate: Certificate,
                                       restClient: RestClient) throws -> RemoteHasher {
