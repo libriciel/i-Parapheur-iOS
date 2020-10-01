@@ -169,6 +169,108 @@ class RestClient: NSObject {
     }
 
 
+    func getSignInfo(publicKeyBase64: String,
+                     folder: Dossier,
+                     bureau: NSString,
+                     onResponse responseCallback: ((SignInfo) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
+
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/signature/\(bureau)/\(folder.identifier)"
+
+        // Parameters
+
+        let bodyJson: [String: Any] = [
+            "certificate": publicKeyBase64,
+            "index": 0
+        ]
+
+        // TODO : When the app will be iOS13+, use the JSONSerialization's .withoutEscapingSlashes options.
+        // instead of this ugly replacingOccurrences
+        guard let poorlyEscapedBodyData = try? JSONSerialization.data(withJSONObject: bodyJson) else { return }
+        let poorlyEscapedBodyString = String(data: poorlyEscapedBodyData, encoding: .utf8)!
+        let properBodyString = poorlyEscapedBodyString.replacingOccurrences(of: "\\/", with: "/")
+        let bodyData = properBodyString.data(using: .utf8)!
+
+        os_log("getSignInfo url:%@", type: .debug, getSignInfoUrl)
+        os_log("getSignInfo body:%@", type: .debug, String(data: bodyData, encoding: .utf8)!)
+
+        // Request
+
+        var request = URLRequest(url: URL(string: getSignInfoUrl)!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = bodyData
+
+        manager.request(request)
+                .validate()
+                .responseString { response in
+
+                    switch response.result {
+
+                        case .success(let value):
+
+                            os_log("getSignInfo OK value:%@", type: .debug, value)
+                            let jsonDecoder = JSONDecoder()
+
+                            guard let getSignInfoJsonData = value.data(using: .utf8),
+                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let data = signInfoWrapper["signatureInformations"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(data)
+
+                        case .failure(let error):
+                            os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)
+                            errorCallback?(error)
+                    }
+                }
+    }
+
+
+    /**
+      Every i-Parapheur < 4.7
+     */
+    @objc func getSignInfoLegacy(folder: Dossier,
+                                 bureau: NSString,
+                                 onResponse responseCallback: ((SignInfo) -> Void)?,
+                                 onError errorCallback: ((NSError) -> Void)?) {
+
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
+
+        // Parameters
+
+        let parameters: Parameters = ["bureauCourant": bureau]
+
+        // Request
+
+        manager.request(getSignInfoUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
+
+                    switch response.result {
+
+                        case .success(let value):
+                            let jsonDecoder = JSONDecoder()
+
+                            guard let getSignInfoJsonData = value.data(using: .utf8),
+                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let data = signInfoWrapper["signatureInformations"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                return
+                            }
+
+                            responseCallback?(data)
+
+                        case .failure(let error):
+                            os_log("getSignInfo fail ! %d", type: .error, error.responseCode!)
+                            errorCallback?(error as NSError)
+                    }
+                }
+    }
+
+
     func getDataToSign(remoteDocumentList: [RemoteDocument],
                        publicKeyBase64: String,
                        signatureFormat: String,
@@ -578,44 +680,6 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getSignInfo(folder: Dossier,
-                           bureau: NSString,
-                           onResponse responseCallback: ((SignInfo) -> Void)?,
-                           onError errorCallback: ((NSError) -> Void)?) {
-
-        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
-
-        // Parameters
-
-        let parameters: Parameters = ["bureauCourant": bureau]
-
-        // Request
-
-        manager.request(getSignInfoUrl, parameters: parameters)
-                .validate()
-                .responseString { response in
-
-                    switch response.result {
-
-                        case .success(let value):
-                            let jsonDecoder = JSONDecoder()
-
-                            guard let getSignInfoJsonData = value.data(using: .utf8),
-                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
-                                  let data = signInfoWrapper["signatureInformations"] else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
-                                return
-                            }
-
-                            responseCallback?(data)
-
-                        case .failure(let error):
-                            errorCallback?(error as NSError)
-                    }
-                }
-    }
-
-
     func signDossier(dossierId: String,
                      bureauId: String,
                      publicAnnotation: String?,
@@ -764,7 +828,7 @@ class RestClient: NSObject {
         }
 
         // Send request. Using directly JSON in the body.
-        // Casting/passing it through a Parameter object doen't work well.
+        // Casting/passing it through a Parameter object doesn't work well.
 
         let annotationUrlSuffix = RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId)
         let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
@@ -815,7 +879,7 @@ class RestClient: NSObject {
         }
 
         // Send request. Using directly JSON in the body.
-        // Casting/passing it through a Parameter object doen't work well.
+        // Casting/passing it through a Parameter object doesn't work well.
 
         let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier)
         let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"

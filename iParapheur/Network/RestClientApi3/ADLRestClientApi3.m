@@ -87,18 +87,6 @@
 }
 
 
-- (void)cancelAllHTTPOperationsWithPath:(NSString *)path {
-
-//	[_swiftManager.manager.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-//		[self cancelTasksInArray:dataTasks
-//		                withPath:path];
-//		[self cancelTasksInArray:uploadTasks
-//		                withPath:path];
-//		[self cancelTasksInArray:downloadTasks
-//		                withPath:path];
-//	}];
-}
-
 
 #pragma mark - Requests
 
@@ -116,23 +104,6 @@
                                    }];
 }
 
-
-- (void)getSignInfoForDossier:(Dossier *)dossier
-                    andBureau:(NSString *)bureauId
-                      success:(void (^)(SignInfo *))success
-                      failure:(void (^)(NSError *))failure {
-
-    [self cancelAllHTTPOperationsWithPath:@"getSignInfo"];
-
-    [_swiftManager getSignInfoWithFolder:dossier
-                                  bureau:bureauId
-                              onResponse:^(SignInfo *response) {
-                                   success(response);
-                               }
-                                 onError:^(NSError *error) {
-                                      failure(error);
-                                  }];
-}
 
 
 #pragma mark - Simple actions

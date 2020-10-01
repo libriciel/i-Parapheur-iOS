@@ -26,13 +26,6 @@ import os
 class RemoteHasher {
 
 
-    static public let payloadKeyPesSignatureDateTime = "signaturedate"
-    static public let payloadKeyPesClaimedRole = "pesclaimedrole"
-    static public let payloadKeyPesPostalCode = "pespostalcode"
-    static public let payloadKeyPesCountryName = "pescountryname"
-    static public let payloadKeyPesCity = "pescity"
-
-
     let signatureAlgorithm: SignatureAlgorithm
     let signInfo: SignInfo
     let publicKeyBase64: String
@@ -88,7 +81,7 @@ class RemoteHasher {
                                      self.dataToSign = response
                                      responseCallback?(response)
                                  },
-                                 onError: { [self] (error: Error) in
+                                 onError: { (error: Error) in
                                      os_log("RemoteHasher#generateHashToSign error : %@", type: .error, error.localizedDescription)
                                      errorCallback?(error)
                                  })
