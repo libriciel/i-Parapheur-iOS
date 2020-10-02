@@ -64,14 +64,18 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             // If we come from a multi-selection list, the folder is not properly set
             // It misses the document list. That's what we fetch here.
 
+            os_log("getFolder...", type: .debug)
             if signatureToPerform.folder.documents.count == 0 {
+
                 restClient?.getFolder(folder: signatureToPerform.folder.identifier,
                                       desk: currentDeskId ?? "",
                                       onResponse: { folder in
+                                          os_log("getFolder response:%@", type: .debug, folder)
                                           signatureToPerform.folder.documents = folder.documents
-                                          self.refreshCertificateListVisibility()
+                                          self.checkForCertificateListSetup()
                                       },
                                       onError: { error in
+                                          os_log("getFolder error:%@", type: .error, error.localizedDescription)
                                           signatureToPerform.error = error
                                           signatureToPerform.isDone = true
                                       })
@@ -79,7 +83,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         
             // Then, refreshing certificate list
 
-            refreshCertificateListVisibility();
+            checkForCertificateListSetup();
         }
     }
 
@@ -289,11 +293,11 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     // </editor-fold desc="UIAlertViewDelegate">
 
 
-    func refreshCertificateListVisibility() {
+    func checkForCertificateListSetup() {
 
         if actionsToPerform
                    .filter({ $0.action == .sign })
-                   .allSatisfy({ $0.folder.documents.count == 0 }) {
+                   .allSatisfy({ $0.folder.documents.count != 0 }) {
 
             certificateList = ModelsDataController.fetchCertificates()
             certificateTableView.reloadData()
