@@ -76,20 +76,10 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                           signatureToPerform.isDone = true
                                       })
             }
+        
+            // Then, refreshing certificate list
 
-            // Retrieving SignInfo
-
-            restClient?.getSignInfo(folder: signatureToPerform.folder,
-                                    bureau: currentDeskId! as NSString,
-                                    onResponse: { signInfo in
-                                        signatureToPerform.signInfo = signInfo
-                                        self.refreshCertificateListVisibility()
-                                    },
-                                    onError: { error in
-                                        signatureToPerform.error = error
-                                        signatureToPerform.isDone = true
-                                    }
-            )
+            refreshCertificateListVisibility();
         }
     }
 
@@ -147,24 +137,8 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
         // Default cases
 
-        guard let deskId = currentDeskId,
-              let currentRestClient = restClient else { return }
-
+        guard let deskId = currentDeskId else { return }
         let signaturesToPerform = actionsToPerform.filter { ($0.action as Action) == .sign }
-        signaturesToPerform.forEach { $0.generateRemoteHasher(restClient: currentRestClient, certificate: self.selectedCertificate) }
-
-        if selectedCertificate?.sourceType == .imprimerieNationale {
-
-            let signatureCount = signaturesToPerform.reduce(into: 0) { count, atp in
-                count += atp.signInfo?.dataToSignBase64List.count ?? 0
-            }
-
-            if signatureCount > 1 {
-                ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
-                                   title: "Impossible de signer avec ce certificat")
-                return
-            }
-        }
 
         // Cannot reject without reason
 
@@ -208,9 +182,25 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             switch actionToPerform.action {
 
                 case .sign:
-                    signature(signatureToPerform: actionToPerform)
+
+                    guard let pubKeyData = selectedCertificate?.publicKey as Data?,
+                          let pubKey = String(data: pubKeyData, encoding: .utf8) else { return }
+                        
+                    restClient?.getSignInfo(publicKeyBase64: pubKey,
+                                            folder: actionToPerform.folder,
+                                            bureau: currentDeskId! as NSString,
+                                            onResponse: { signInfoList -> Swift.Void in
+                                                actionToPerform.signInfoList = signInfoList
+                                                self.checkForSignaturesSetup()
+                                            },
+                                            onError: { error -> Swift.Void in
+                                                os_log("Adrien getSignInfo ERROR !!! %@", type: .error, error.localizedDescription)
+                                                actionToPerform.error = error
+                                                actionToPerform.isDone = true
+                                            })
 
                 case .visa:
+                    
                     restClient?.visa(folder: actionToPerform.folder,
                                      bureauId: deskId,
                                      publicAnnotation: publicAnnotationTextView.text,
@@ -227,6 +217,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                      })
 
                 case .reject:
+                    
                     restClient?.reject(folder: actionToPerform.folder,
                                        bureauId: deskId,
                                        publicAnnotation: publicAnnotationTextView.text,
@@ -243,6 +234,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                        })
 
                 default:
+
                     ViewUtils.logError(message: "Cette action n'est pas disponible sur cette version du client i-Parapheur",
                                        title: "Action impossible")
             }
@@ -297,7 +289,30 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     // </editor-fold desc="UIAlertViewDelegate">
 
 
-    func signature(signatureToPerform: ActionToPerform) {
+    func refreshCertificateListVisibility() {
+
+        if actionsToPerform
+                   .filter({ $0.action == .sign })
+                   .allSatisfy({ $0.folder.documents.count == 0 }) {
+
+            certificateList = ModelsDataController.fetchCertificates()
+            certificateTableView.reloadData()
+        }
+    }
+
+
+    func checkForSignaturesSetup() {
+
+        if actionsToPerform
+                   .filter({ $0.action == .sign })
+                   .allSatisfy({ $0.signInfoList.count > 0 }) {
+
+            signature(signatureToPerform: actionsToPerform)
+        }
+    }
+
+
+    func signature(signatureToPerform: [ActionToPerform]) {
 
         let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
         guard let certificate = selectedCertificate,
@@ -307,38 +322,45 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
             case .imprimerieNationale:
 
+                // Special case : cannot sign multiple anything here
+
+                if (actionsToPerform
+                        .filter({ $0.action == .sign })
+                        .flatMap { $0.signInfoList }
+                        .compactMap { $0.dataToSignBase64List.count }
+                        .reduce(0, +) > 1) {
+
+                    ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
+                                       title: "Impossible de signer avec ce certificat")
+                    return
+                }
+
+                // Sending request through IN middle-ware
+
                 let jsonDecoder = JSONDecoder()
-                guard let signatureToPerform = signaturesToPerform.first,
-                      let hasher = signatureToPerform.remoteHasher,
+                guard let signatureToPerform = actionsToPerform.filter({ $0.action == .sign }).first,
+                      let signaturesBase64List = signatureToPerform.signInfoList.first?.signaturesBase64List,
                       let certificatePayload = certificate.payload as Data?,
                       let payload: [String: String] = try? jsonDecoder.decode([String: String].self, from: certificatePayload),
                       let certificateId = payload[Certificate.payloadExternalCertificateId] else {
                     return
                 }
 
-                hasher.generateHashToSign(onResponse:
-                                          { (result: DataToSign) in
-                                              os_log("signing with IN", type: .debug)
-                                              InController.sign(hashes: StringsUtils.toDataList(base64StringList: result.dataToSignBase64List),
-                                                                certificateId: certificateId,
-                                                                signatureAlgorithm: hasher.signatureAlgorithm)
-                                          },
-                                          onError: { (error: Error) in
-                                              signatureToPerform.isDone = true
-                                              signatureToPerform.error = RuntimeError("Erreur à la récupération du hash à signer")
-                                              self.checkAndDismissPopup()
-                                          }
-                )
+                InController.sign(hashes: StringsUtils.toDataList(base64StringList: signaturesBase64List),
+                                  certificateId: certificateId,
+                                  signatureAlgorithm: .sha256WithRsa)
 
             default:
 
-                guard let pass = currentPassword,
-                      let hasher = signatureToPerform.remoteHasher else { return }
+                guard let pass = currentPassword else { return }
 
                 os_log("signing with p12", type: .debug)
-                CryptoUtils.signWithP12(hasher: hasher,
-                                        certificate: certificate,
-                                        password: pass)
+                for signatureToPerform in signaturesToPerform {
+                    CryptoUtils.signWithP12(folderId: signatureToPerform.folder.identifier,
+                                            signInfoList: signatureToPerform.signInfoList,
+                                            certificate: certificate,
+                                            password: pass)
+                }
         }
     }
 
@@ -364,22 +386,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         // Throwing back result
 
         guard let currentAtp = actionToPerform,
-              let currentHasher = currentAtp.remoteHasher,
               let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as? [Data] else { return }
 
         os_log("Folder signed:%@ data:%@", currentAtp.folder.title ?? currentAtp.folder.identifier, signedDataList)
 
-        currentHasher.buildDataToReturn(signatureList: signedDataList,
-                                        onResponse: { (result: [Data]) in
-                                            let resultBase64List = StringsUtils.toBase64List(dataList: result)
-                                            self.sendFinalSignatureResult(actionToPerform: currentAtp,
-                                                                          signature: resultBase64List)
-                                        },
-                                        onError: { (error: Error) in
-                                            currentAtp.isDone = true
-                                            currentAtp.error = error
-                                            self.checkAndDismissPopup()
-                                        })
+        self.sendFinalSignatureResult(actionToPerform: currentAtp,
+                                      signature: StringsUtils.toBase64List(dataList: signedDataList))
     }
 
 
@@ -426,5 +438,5 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         }
     }
 
-    
+
 }

@@ -218,7 +218,7 @@ class RestClient: NSObject {
                             let jsonDecoder = JSONDecoder()
 
                             guard let getSignInfoJsonData = value.data(using: .utf8),
-                                  let signInfoList = try? jsonDecoder.decode([SignInfo].self, from: getSignInfoJsonData) {
+                                  let signInfoList = try? jsonDecoder.decode([SignInfo].self, from: getSignInfoJsonData) else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
