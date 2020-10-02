@@ -187,10 +187,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
                 case .sign:
 
-                    guard let pubKeyData = selectedCertificate?.publicKey as Data?,
-                          let pubKey = String(data: pubKeyData, encoding: .utf8) else { return }
-                        
-                    restClient?.getSignInfo(publicKeyBase64: pubKey,
+                    guard let pubKeyData = selectedCertificate?.publicKey as Data? else {
+                        os_log("pubKey cannot be retrieved", type: .error)
+                        return
+                    }
+
+                    restClient?.getSignInfo(publicKeyBase64: pubKeyData.base64EncodedString(),
                                             folder: actionToPerform.folder,
                                             bureau: currentDeskId! as NSString,
                                             onResponse: { signInfoList -> Swift.Void in
@@ -198,7 +200,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                                 self.checkForSignaturesSetup()
                                             },
                                             onError: { error -> Swift.Void in
-                                                os_log("Adrien getSignInfo ERROR !!! %@", type: .error, error.localizedDescription)
+                                                os_log("getSignInfo error:%@", type: .error, error.localizedDescription)
                                                 actionToPerform.error = error
                                                 actionToPerform.isDone = true
                                             })
@@ -261,7 +263,6 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
         // Prepare Popup
 
-        print("displayPasswordAlert called")
         let alertView = UIAlertView(title: "Entrer le mot de passe du certificat",
                                     message: "",
                                     delegate: self,
@@ -317,6 +318,8 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     func signature(signatureToPerform: [ActionToPerform]) {
+
+        os_log("signature...", type: .error)
 
         let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
         guard let certificate = selectedCertificate,
