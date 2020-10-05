@@ -60,15 +60,7 @@ class InController: NSObject {
         let mechanism = (signatureAlgorithm == .sha1WithRsa) ? "rsa" : "sha256rsa"
         var hashesJsonList: [String] = []
         for hash in hashes {
-
-            var hexDataToSign: String
-            if (signatureAlgorithm == .sha1WithRsa) {
-                hexDataToSign = "\(CryptoUtils.pkcs15Asn1HexPrefix)\(CryptoUtils.hex(data: hash.sha1()))"
-            }
-            else {
-                hexDataToSign = CryptoUtils.hex(data: hash)
-            }
-
+            let hexDataToSign = CryptoUtils.hex(data: hash)
             hashesJsonList.append("""
                                       {
                                           "certificateId" : " \(certificateId) ",
