@@ -68,12 +68,7 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
 
 
     static func getBackgroundColor() -> UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor.systemGray
-        }
-        else {
-            return UIColor.gray
-        }
+        UIColor.systemGray
     }
 
 
@@ -82,7 +77,7 @@ class PdfController: UIViewController, PdfAnnotationEventsDelegate {
         let spinnerView = UIView(frame: view.bounds)
         spinnerView.backgroundColor = pdfView.backgroundColor
 
-        let activityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
+        let activityIndicatorView = UIActivityIndicatorView(style: .large)
         activityIndicatorView.startAnimating()
         activityIndicatorView.center = spinnerView.center
 

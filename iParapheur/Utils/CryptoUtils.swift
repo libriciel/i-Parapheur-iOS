@@ -270,33 +270,33 @@ class CryptoUtils: NSObject {
 
         // Building signature response
 
-                    do {
+        do {
             for signInfo in signInfoList {
                 for hash in signInfo.dataToSignBase64List {
                     os_log("hashToSign:%@", type: .info, hash)
                     var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
-                                                                     keyFileUrl: p12Url,
+                                                             keyFileUrl: p12Url,
                                                              signatureAlgorithm: .sha256WithRsa,
-                                                                     password: password)
+                                                             password: password)
 
                     os_log("... signed !!:%@", type: .info, hash)
-                            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
+                    signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
                     signInfo.signaturesBase64List.append(signedHash)
                 }
-                        }
+            }
 
-                        NotificationCenter.default.post(name: .signatureResult,
-                                                        object: nil,
-                                                        userInfo: [
+            NotificationCenter.default.post(name: .signatureResult,
+                                            object: nil,
+                                            userInfo: [
                                                 notifSignedData: signInfoList,
                                                 notifFolderId: folderId
-                                                        ])
+                                            ])
 
-                    } catch let error {
+        } catch let error {
             os_log("signWithP12 error:%@", type: .error, error.localizedDescription)
-                        ViewUtils.logError(message: error.localizedDescription as NSString,
-                                           title: "Erreur à la signature")
-                    }
+            ViewUtils.logError(message: error.localizedDescription as NSString,
+                               title: "Erreur à la signature")
+        }
     }
 
 

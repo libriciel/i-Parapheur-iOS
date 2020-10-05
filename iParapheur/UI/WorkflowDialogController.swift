@@ -397,7 +397,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         guard let currentAtp = actionToPerform,
               let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as? [Data] else { return }
 
-        os_log("Folder signed:%@ data:%@", currentAtp.folder.title ?? currentAtp.folder.identifier, signedDataList)
+        os_log("Folder signed:%@ data:%@", type:.info, currentAtp.folder.title ?? currentAtp.folder.identifier, signedDataList)
 
         self.sendFinalSignatureResult(actionToPerform: currentAtp,
                                       signature: StringsUtils.toBase64List(dataList: signedDataList))

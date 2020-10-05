@@ -58,23 +58,4 @@ class ColorUtils: NSObject {
     }
 
 
-    static func compatibilitySecondaryBackground() -> UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor.secondarySystemBackground
-        }
-        else {
-            return ColorUtils.veryLightGrey
-        }
-    }
-
-
-    static func compatibilitySeparator() -> UIColor {
-        if #available(iOS 13.0, *) {
-            return UIColor.separator
-        }
-        else {
-            return ColorUtils.selectedCellGrey
-        }
-    }
-
 }

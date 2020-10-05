@@ -61,7 +61,7 @@ class DeskListController: UITableViewController, UISplitViewControllerDelegate {
                 object: nil)
 
         refreshControl = UIRefreshControl()
-        refreshControl?.tintColor = ColorUtils.compatibilitySeparator()
+        refreshControl?.tintColor = UIColor.separator
 
         refreshControl?.addTarget(
                 self,

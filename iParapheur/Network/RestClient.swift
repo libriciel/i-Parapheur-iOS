@@ -184,18 +184,7 @@ class RestClient: NSObject {
             "index": 0
         ]
 
-        let bodyData: Data
-        if #available(iOS 13.0, *) {
-            guard let bodyDataTemp = try? JSONSerialization.data(withJSONObject: bodyJson, options: [.withoutEscapingSlashes]) else { return }
-            bodyData = bodyDataTemp
-        }
-        else {
-            guard let poorlyEscapedBodyData = try? JSONSerialization.data(withJSONObject: bodyJson) else { return }
-            let poorlyEscapedBodyString = String(data: poorlyEscapedBodyData, encoding: .utf8)!
-            let properBodyString = poorlyEscapedBodyString.replacingOccurrences(of: "\\/", with: "/")
-            bodyData = properBodyString.data(using: .utf8)!
-        }
-
+        guard let bodyData = try? JSONSerialization.data(withJSONObject: bodyJson, options: [.withoutEscapingSlashes]) else { return }
         os_log("getSignInfo url:%@", type: .debug, getSignInfoUrl)
         os_log("getSignInfo body:%@", type: .debug, String(data: bodyData, encoding: .utf8)!)
 

@@ -66,7 +66,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         // UI
 
-        let topBackgroundColor = ColorUtils.compatibilitySecondaryBackground()
+        let topBackgroundColor = UIColor.secondarySystemBackground
         let topTextColor = ColorUtils.blue
 
         navigationItem.backBarButtonItem?.tintColor = topTextColor
@@ -75,7 +75,7 @@ class FolderListController: UITableViewController, UISearchResultsUpdating {
 
         refreshControl = ColorizedRefreshControl()
         refreshControl?.backgroundColor = topBackgroundColor
-        refreshControl?.tintColor = ColorUtils.compatibilitySeparator()
+        refreshControl?.tintColor = UIColor.separator
         refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
 
         // Setup UISearchController
