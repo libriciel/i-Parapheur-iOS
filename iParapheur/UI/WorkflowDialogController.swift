@@ -49,7 +49,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        os_log("View loaded : WorkflowDialogController", type: .debug)
+        os_log("View loaded : WorkflowDialogController", type: .info)
 
         let hasSignature = actionsToPerform.contains(where: { ($0.action == .sign) && !($0.folder.isSignPapier) })
         certificateLayout.isHidden = !hasSignature
@@ -70,7 +70,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                 restClient?.getFolder(folder: signatureToPerform.folder.identifier,
                                       desk: currentDeskId ?? "",
                                       onResponse: { folder in
-                                          os_log("getFolder response:%@", type: .debug, folder)
+                                          os_log("getFolder response:%@", type: .info, folder)
                                           signatureToPerform.folder.documents = folder.documents
                                           self.checkForCertificateListSetup()
                                       },
@@ -138,6 +138,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     @IBAction func onValidateButtonClicked(_ sender: Any) {
+        os_log("onValidateButtonClicked", type: .info)
 
         // Default cases
 
@@ -196,6 +197,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                             folder: actionToPerform.folder,
                                             bureau: currentDeskId! as NSString,
                                             onResponse: { signInfoList -> Swift.Void in
+                                                os_log("getSignInfo result:%@", type: .info, signInfoList)
                                                 actionToPerform.signInfoList = signInfoList
                                                 self.checkForSignaturesSetup()
                                             },
@@ -260,6 +262,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         This has to stay an UIAlertView, until iOS has a proper replacement.
     */
     private func displayPasswordAlert() {
+        os_log("displayPasswordAlert called", type: .debug)
 
         // Prepare Popup
 
@@ -318,8 +321,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     func signature(signatureToPerform: [ActionToPerform]) {
-
-        os_log("signature...", type: .error)
+        os_log("signature...", type: .info)
 
         let signaturesToPerform = actionsToPerform.filter({ $0.action == .sign })
         guard let certificate = selectedCertificate,
@@ -373,7 +375,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     @objc func onSignatureResult(notification: Notification) {
-        os_log("onSignatureResult", type: .debug)
+        os_log("onSignatureResult", type: .info)
 
         // Retrieving the signed document, with available information
 

@@ -259,7 +259,10 @@ class CryptoUtils: NSObject {
                            certificate: Certificate,
                            password: String) {
 
+        os_log("signWithP12...", type: .info)
+
         guard let p12Url = p12LocalUrl(certificate: certificate) else {
+            os_log("signWithP12 cannot open certificate", type: .error)
             ViewUtils.logError(message: "Impossible de récupérer le certificat",
                                title: "Erreur à la signature")
             return
@@ -270,11 +273,13 @@ class CryptoUtils: NSObject {
                     do {
             for signInfo in signInfoList {
                 for hash in signInfo.dataToSignBase64List {
+                    os_log("hashToSign:%@", type: .info, hash)
                     var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
                                                                      keyFileUrl: p12Url,
                                                              signatureAlgorithm: .sha256WithRsa,
                                                                      password: password)
 
+                    os_log("... signed !!:%@", type: .info, hash)
                             signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
                     signInfo.signaturesBase64List.append(signedHash)
                 }
@@ -288,6 +293,7 @@ class CryptoUtils: NSObject {
                                                         ])
 
                     } catch let error {
+            os_log("signWithP12 error:%@", type: .error, error.localizedDescription)
                         ViewUtils.logError(message: error.localizedDescription as NSString,
                                            title: "Erreur à la signature")
                     }
@@ -307,9 +313,11 @@ class CryptoUtils: NSObject {
         guard let result = CryptoUtils.rsaSign(data: data,
                                                signatureAlgorithm: signatureAlgorithm,
                                                privateKey: secKey) else {
+            os_log("rsaSign error on signature")
             throw NSError(domain: "Erreur inconnue", code: 0, userInfo: nil)
         }
 
+        os_log("rsaSign : %@", type: .info, result)
         return result
     }
 
@@ -321,10 +329,13 @@ class CryptoUtils: NSObject {
         let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
         var signedDataLength = signedData.length
 
+        let hashedData = (data as Data).sha256()
+        let hashedNsData = hashedData as NSData
+
         let err: OSStatus = SecKeyRawSign(privateKey,
-                                          signatureAlgorithm == SignatureAlgorithm.sha1WithRsa ? SecPadding.PKCS1SHA1 : SecPadding.PKCS1SHA256,
-                                          data.bytes.assumingMemoryBound(to: UInt8.self),
-                                          data.length,
+                                          SecPadding.PKCS1SHA256,
+                                          hashedNsData.bytes.assumingMemoryBound(to: UInt8.self),
+                                          hashedNsData.length,
                                           signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),
                                           &signedDataLength)
 

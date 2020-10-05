@@ -190,9 +190,9 @@ class RestClient: NSObject {
             bodyData = bodyDataTemp
         }
         else {
-        guard let poorlyEscapedBodyData = try? JSONSerialization.data(withJSONObject: bodyJson) else { return }
-        let poorlyEscapedBodyString = String(data: poorlyEscapedBodyData, encoding: .utf8)!
-        let properBodyString = poorlyEscapedBodyString.replacingOccurrences(of: "\\/", with: "/")
+            guard let poorlyEscapedBodyData = try? JSONSerialization.data(withJSONObject: bodyJson) else { return }
+            let poorlyEscapedBodyString = String(data: poorlyEscapedBodyData, encoding: .utf8)!
+            let properBodyString = poorlyEscapedBodyString.replacingOccurrences(of: "\\/", with: "/")
             bodyData = properBodyString.data(using: .utf8)!
         }
 
@@ -214,7 +214,7 @@ class RestClient: NSObject {
 
                         case .success(let value):
 
-                            os_log("getSignInfo OK value:%@", type: .debug, value)
+                            os_log("getSignInfo OK value:%@", type: .info, response.value!)
                             let jsonDecoder = JSONDecoder()
 
                             guard let getSignInfoJsonData = value.data(using: .utf8),
