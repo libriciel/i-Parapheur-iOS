@@ -375,7 +375,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     @objc func onSignatureResult(notification: Notification) {
-        os_log("onSignatureResult", type: .info)
+        os_log("onSignatureResult userInfo:%@", type: .info, notification.userInfo ?? "nil")
 
         // Retrieving the signed document, with available information
 
@@ -384,36 +384,51 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         if let signatureIndex = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int,
            signatureIndex < actionsToPerform.count,
            signatureIndex >= 0 {
+            os_log("onSignatureResult index:%@", type:.info, signatureIndex)
             actionToPerform = actionsToPerform[signatureIndex]
         }
 
         if let folderId = notification.userInfo![CryptoUtils.notifFolderId] as? String,
            let currentActionToPerform = actionsToPerform.filter({ $0.folder.identifier == folderId }).first {
+            os_log("onSignatureResult folderId:%@", type:.info, folderId)
             actionToPerform = currentActionToPerform
         }
 
         // Throwing back result
 
         guard let currentAtp = actionToPerform,
-              let signedDataList = notification.userInfo![CryptoUtils.notifSignedData] as? [Data] else { return }
+              let signedDataList = notification.userInfo?[CryptoUtils.notifSignedData] as? [SignInfo] else {
+            os_log("onSignatureResult something went wrong here", type:.error)
+            return
+        }
 
+        currentAtp.signInfoList = signedDataList
         os_log("Folder signed:%@ data:%@", type:.info, currentAtp.folder.title ?? currentAtp.folder.identifier, signedDataList)
 
-        self.sendFinalSignatureResult(actionToPerform: currentAtp,
-                                      signature: StringsUtils.toBase64List(dataList: signedDataList))
+        self.sendFinalSignatureResult(actionToPerform: currentAtp)
     }
 
 
-    private func sendFinalSignatureResult(actionToPerform: ActionToPerform, signature: [String]) {
+    private func sendFinalSignatureResult(actionToPerform: ActionToPerform) {
 
-        guard let deskId = currentDeskId else { return }
-        let signatureConcat = signature.joined(separator: ",")
+        guard let deskId = currentDeskId,
+                let pubKey = selectedCertificate?.publicKey?.base64EncodedString() else { return }
+
+        let signatureConcat: [String] = actionToPerform
+                .signInfoList
+                .flatMap{ $0.signaturesBase64List }
+
+        let signatureTimeConcat: [Double] = actionToPerform
+                .signInfoList
+                .compactMap{ $0.signatureDateTime }
 
         restClient?.signDossier(dossierId: actionToPerform.folder.identifier,
                                 bureauId: deskId,
                                 publicAnnotation: publicAnnotationTextView.text,
                                 privateAnnotation: privateAnnotationTextView.text,
-                                signature: signatureConcat,
+                                publicKeyBase64: pubKey,
+                                signatures: signatureConcat,
+                                signaturesTimes: signatureTimeConcat,
                                 responseCallback: { number in
                                     actionToPerform.isDone = true
                                     self.checkAndDismissPopup()

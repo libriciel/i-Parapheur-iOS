@@ -509,27 +509,61 @@ class RestClient: NSObject {
                      bureauId: String,
                      publicAnnotation: String?,
                      privateAnnotation: String?,
-                     signature: String,
+                     publicKeyBase64: String,
+                     signatures: [String],
+                     signaturesTimes: [Double],
                      responseCallback: ((NSNumber) -> Void)?,
                      errorCallback: ((Error) -> Void)?) {
 
-        var argumentDictionary: [String: String] = [:]
-        argumentDictionary["bureauCourant"] = bureauId
-        argumentDictionary["annotPriv"] = privateAnnotation
-        argumentDictionary["annotPub"] = publicAnnotation
-        argumentDictionary["signature"] = signature
+        let signatureRequest = SignatureRequest(
+                bureauCourant: bureauId,
+                certificate: publicKeyBase64,
+                annotPriv: privateAnnotation,
+                annotPub: publicAnnotation,
+                signatureBase64List: signatures,
+                signatureTimeList: signaturesTimes
+        )
+
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = .prettyPrinted
+        guard let requestBodyData = try? jsonEncoder.encode(signatureRequest) else {
+            errorCallback?(RuntimeError("Impossible de serializer la requête"))
+            return
+        }
+
+        os_log("SignDossier with body:%@", type: .info, String(data: requestBodyData, encoding: .utf8) ?? "nil")
 
         // Send request
 
-        self.sendSimpleAction(type: 1,
-                              url: "/parapheur/dossiers/\(dossierId)/signature",
-                              args: argumentDictionary,
-                              onResponse: { id in
-                                  responseCallback?(1)
-                              },
-                              onError: { error in
-                                  errorCallback?(error)
-                              })
+        var request = URLRequest(url: URL(string: "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossierId)/signature")!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = requestBodyData
+
+        manager.request(request)
+                .responseJSON { response in
+
+                    os_log("signDossier response:%@", type: .info, (response.value as? [String: String]) ?? "nil")
+                    switch response.result {
+
+                        case .success:
+
+                            guard let jsonResult = response.value as? [String: String],
+                                  let idString = jsonResult["id"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(1)
+
+                        case .failure(let error):
+
+                            os_log("signDossier error:%@", type: .error, error.localizedDescription)
+
+                            errorCallback?(error)
+                            print(error.localizedDescription)
+                    }
+                }
     }
 
 

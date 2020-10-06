@@ -55,6 +55,7 @@
 		AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */; };
 		AB3CA33CB50BB60A70BCEC31 /* FilterDialogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAD13B7AB25C7D4BF268E /* FilterDialogController.swift */; };
 		AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA35534D838DA33430B24 /* RemoteDocument.swift */; };
+		AB3CA4817C6D6CA90613428F /* SignatureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAE9ADC188D541CCD1F04 /* SignatureRequest.swift */; };
 		AB3CA7308A3156A154E82843 /* FolderListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */; };
 		AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAF227D6274311B6A5386 /* DeskListController.swift */; };
 		AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */; };
@@ -253,6 +254,7 @@
 		AB3CAD13B7AB25C7D4BF268E /* FilterDialogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDialogController.swift; sourceTree = "<group>"; };
 		AB3CAD72D74C194EDB8C06E8 /* SignInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInfo.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
+		AB3CAE9ADC188D541CCD1F04 /* SignatureRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureRequest.swift; sourceTree = "<group>"; };
 		AB3CAF0924513933931E34F9 /* SettingsLicencesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsLicencesTableViewCell.swift; sourceTree = "<group>"; };
 		AB3CAF0EA9B3E741548988B2 /* RGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGAppDelegate.h; sourceTree = "<group>"; };
 		AB3CAF227D6274311B6A5386 /* DeskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListController.swift; sourceTree = "<group>"; };
@@ -467,6 +469,14 @@
 			path = Crypto;
 			sourceTree = "<group>";
 		};
+		AB3CACC2D328828A4F9D88BD /* request */ = {
+			isa = PBXGroup;
+			children = (
+				AB3CAE9ADC188D541CCD1F04 /* SignatureRequest.swift */,
+			);
+			path = request;
+			sourceTree = "<group>";
+		};
 		AB3CAE8FB95F5B0AA7FEC012 /* DeskList */ = {
 			isa = PBXGroup;
 			children = (
@@ -632,6 +642,7 @@
 				C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */,
 				C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */,
 				64F348FF8B3A453ABB77C011 /* RestClient.swift */,
+				AB3CACC2D328828A4F9D88BD /* request */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1052,6 +1063,7 @@
 				AB3CAEC12541100C9611D719 /* SettingsLicencesTableViewCell.swift in Sources */,
 				AB3CA33CB50BB60A70BCEC31 /* FilterDialogController.swift in Sources */,
 				AB3CA0AC32D7B981B4E5625D /* SignInfo.swift in Sources */,
+				AB3CA4817C6D6CA90613428F /* SignatureRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
