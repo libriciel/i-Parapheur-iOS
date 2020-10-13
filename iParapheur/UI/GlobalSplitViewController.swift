@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import os
 
 class GlobalSplitViewController: UISplitViewController, UISplitViewControllerDelegate {
 
@@ -24,14 +25,21 @@ class GlobalSplitViewController: UISplitViewController, UISplitViewControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        self.preferredDisplayMode = .automatic
+        self.preferredDisplayMode = UIDevice.current.orientation.isLandscape ? .allVisible : .oneOverSecondary
+    }
+
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.preferredDisplayMode = UIDevice.current.orientation.isLandscape ? .allVisible : .oneOverSecondary
     }
 
 
     func splitViewController(_ splitViewController: UISplitViewController,
                              collapseSecondary secondaryViewController: UIViewController,
                              onto primaryViewController: UIViewController) -> Bool {
-        return true
+        true
     }
+
 
 }
