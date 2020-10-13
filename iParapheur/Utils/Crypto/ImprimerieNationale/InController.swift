@@ -17,6 +17,7 @@
  */
 
 import Foundation
+import os
 
 
 extension Notification.Name {
@@ -81,11 +82,11 @@ class InController: NSObject {
                         """
 
         let cleanedString = StringsUtils.trim(string: urlString)
-        print("Request sent :: \(cleanedString)")
         let urlEncodedString = cleanedString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let url = URL(string: urlEncodedString)!
 
-        print("Request sent :: \(url.absoluteString)")
+        os_log("Request sent :: %@", type: .debug, cleanedString)
+        os_log("Request sent :: %@", type: .debug, url.absoluteString)
 
         UIApplication.shared.open(url,
                                   completionHandler: { (result) in

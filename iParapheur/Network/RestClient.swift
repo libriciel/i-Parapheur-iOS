@@ -72,7 +72,7 @@ class RestClient: NSObject {
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
         let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
-                                                                  options: NSRegularExpression.Options.caseInsensitive)
+                                                                  options: .caseInsensitive)
 
         let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
                                                             options: NSRegularExpression.MatchingOptions.anchored,
@@ -184,7 +184,7 @@ class RestClient: NSObject {
             "index": 0
         ]
 
-        guard let bodyData = try? JSONSerialization.data(withJSONObject: bodyJson, options: [.withoutEscapingSlashes]) else { return }
+        guard let bodyData = try? JSONSerialization.data(withJSONObject: bodyJson, options: [.withoutEscapingSlashes, .prettyPrinted]) else { return }
         os_log("getSignInfo url:%@", type: .debug, getSignInfoUrl)
         os_log("getSignInfo body:%@", type: .debug, String(data: bodyData, encoding: .utf8)!)
 
@@ -525,7 +525,7 @@ class RestClient: NSObject {
         )
 
         let jsonEncoder = JSONEncoder()
-        jsonEncoder.outputFormatting = .prettyPrinted
+        jsonEncoder.outputFormatting = [.withoutEscapingSlashes, .prettyPrinted]
         guard let requestBodyData = try? jsonEncoder.encode(signatureRequest) else {
             errorCallback?(RuntimeError("Impossible de serializer la requête"))
             return
@@ -541,7 +541,8 @@ class RestClient: NSObject {
         request.httpBody = requestBodyData
 
         manager.request(request)
-                .responseJSON { response in
+                .validate()
+                .response { response in
 
                     os_log("signDossier response:%@", type: .info, (response.value as? [String: String]) ?? "nil")
                     switch response.result {

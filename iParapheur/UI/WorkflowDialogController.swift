@@ -348,14 +348,14 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
                 let jsonDecoder = JSONDecoder()
                 guard let signatureToPerform = actionsToPerform.filter({ $0.action == .sign }).first,
-                      let signaturesBase64List = signatureToPerform.signInfoList.first?.signaturesBase64List,
+                      let dataToSignBase64List = signatureToPerform.signInfoList.first?.dataToSignBase64List,
                       let certificatePayload = certificate.payload as Data?,
                       let payload: [String: String] = try? jsonDecoder.decode([String: String].self, from: certificatePayload),
                       let certificateId = payload[Certificate.payloadExternalCertificateId] else {
                     return
                 }
 
-                InController.sign(hashes: StringsUtils.toDataList(base64StringList: signaturesBase64List),
+                InController.sign(hashes: StringsUtils.toDataList(base64StringList: dataToSignBase64List),
                                   certificateId: certificateId,
                                   signatureAlgorithm: .sha256WithRsa)
 
@@ -381,29 +381,30 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
         var actionToPerform: ActionToPerform?
 
-        if let signatureIndex = notification.userInfo![CryptoUtils.notifSignatureIndex] as? Int,
-           signatureIndex < actionsToPerform.count,
-           signatureIndex >= 0 {
-            os_log("onSignatureResult index:%@", type:.info, signatureIndex)
-            actionToPerform = actionsToPerform[signatureIndex]
+        if let signatureIndex = notification.userInfo?[CryptoUtils.notifSignatureIndex] as? Int,
+           let currentActionToPerform = actionsToPerform.indices.contains(signatureIndex) ? actionsToPerform[signatureIndex] : nil,
+           let currentSignedData = notification.userInfo?[CryptoUtils.notifSignedData] as? [Data] {
+            os_log("onSignatureResult index:%d", type:.info, signatureIndex)
+            actionToPerform = currentActionToPerform
+            actionToPerform?.signInfoList[0].signaturesBase64List = currentSignedData.map({ $0.base64EncodedString() })
         }
 
         if let folderId = notification.userInfo![CryptoUtils.notifFolderId] as? String,
-           let currentActionToPerform = actionsToPerform.filter({ $0.folder.identifier == folderId }).first {
+           let currentActionToPerform = actionsToPerform.filter({ $0.folder.identifier == folderId }).first,
+           let signedDataList = notification.userInfo?[CryptoUtils.notifSignedData] as? [SignInfo] {
             os_log("onSignatureResult folderId:%@", type:.info, folderId)
             actionToPerform = currentActionToPerform
+            actionToPerform?.signInfoList = signedDataList
         }
 
-        // Throwing back result
-
-        guard let currentAtp = actionToPerform,
-              let signedDataList = notification.userInfo?[CryptoUtils.notifSignedData] as? [SignInfo] else {
+        guard let currentAtp = actionToPerform else {
             os_log("onSignatureResult something went wrong here", type:.error)
             return
         }
 
-        currentAtp.signInfoList = signedDataList
-        os_log("Folder signed:%@ data:%@", type:.info, currentAtp.folder.title ?? currentAtp.folder.identifier, signedDataList)
+        // Throwing back result
+
+        os_log("Folder signed:%@", type:.info, currentAtp.folder.title ?? currentAtp.folder.identifier)
 
         self.sendFinalSignatureResult(actionToPerform: currentAtp)
     }
