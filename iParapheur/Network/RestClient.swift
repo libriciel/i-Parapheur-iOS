@@ -542,27 +542,17 @@ class RestClient: NSObject {
 
         manager.request(request)
                 .validate()
-                .response { response in
+                .responseString { response in
 
-                    os_log("signDossier response:%@", type: .info, (response.value as? [String: String]) ?? "nil")
+                    os_log("signDossier response:%@", type: .info, response.value ?? "nil")
                     switch response.result {
 
                         case .success:
-
-                            guard let jsonResult = response.value as? [String: String],
-                                  let idString = jsonResult["id"] else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                                return
-                            }
-
                             responseCallback?(1)
 
                         case .failure(let error):
-
                             os_log("signDossier error:%@", type: .error, error.localizedDescription)
-
                             errorCallback?(error)
-                            print(error.localizedDescription)
                     }
                 }
     }
