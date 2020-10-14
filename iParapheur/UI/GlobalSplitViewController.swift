@@ -25,13 +25,16 @@ class GlobalSplitViewController: UISplitViewController, UISplitViewControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delegate = self
-        self.preferredDisplayMode = UIDevice.current.orientation.isLandscape ? .allVisible : .oneOverSecondary
+
+        // UIDevice orientation is not properly set here, we have to fetch the orientation through this
+        let isLandscape = (UIApplication.shared.windows.first?.windowScene?.interfaceOrientation.isLandscape ?? false)
+        self.preferredDisplayMode = isLandscape ? .automatic : .oneOverSecondary
     }
 
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        self.preferredDisplayMode = UIDevice.current.orientation.isLandscape ? .allVisible : .oneOverSecondary
+        self.preferredDisplayMode = UIDevice.current.orientation.isLandscape ? .automatic : .oneOverSecondary
     }
 
 
