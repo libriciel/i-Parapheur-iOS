@@ -215,8 +215,58 @@ class RestClient: NSObject {
                             responseCallback?(signInfoList)
 
                         case .failure(let error):
-                            os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)
-                            errorCallback?(error)
+
+                            // Special case
+                            // TODO : Should delete this when IP 4.6 support will be dropped.
+                            if (error.responseCode == 404) {
+                                os_log("Fallback to 4.6- methods", type: .info)
+                                return self.getSignInfoLegacy(folder: folder,
+                                                              bureau: bureau,
+                                                              onResponse: { signInfo in
+                                                                  responseCallback?([signInfo])
+                                                              },
+                                                              onError: { error in
+                                                                  errorCallback?(error)
+                                                              })
+                            }
+                            else {
+                                os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)
+                                errorCallback?(error)
+                            }
+                    }
+                }
+    }
+
+
+    func getSignInfoLegacy(folder: Dossier,
+                           bureau: NSString,
+                           onResponse responseCallback: ((SignInfo) -> Void)?,
+                           onError errorCallback: ((NSError) -> Void)?) {
+
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
+        let parameters: Parameters = ["bureauCourant": bureau]
+
+        manager.request(getSignInfoUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
+
+                    switch response.result {
+
+                        case .success:
+
+                            os_log("Adrien >> %@", response.value ?? "nil")
+
+                            guard let getSignInfoJsonData = response.value?.data(using: .utf8),
+                                  let signInfoWrapper = try? JSONDecoder().decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let data = signInfoWrapper["signatureInformations"] else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                return
+                            }
+
+                            responseCallback?(data)
+
+                        case .failure(let error):
+                            errorCallback?(error as NSError)
                     }
                 }
     }
