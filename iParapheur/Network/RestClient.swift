@@ -257,13 +257,14 @@ class RestClient: NSObject {
                             os_log("Adrien >> %@", response.value ?? "nil")
 
                             guard let getSignInfoJsonData = response.value?.data(using: .utf8),
-                                  let signInfoWrapper = try? JSONDecoder().decode([String: SignInfo].self, from: getSignInfoJsonData),
+                                  let signInfoWrapper = try? JSONDecoder().decode([String: SignInfoLegacy].self, from: getSignInfoJsonData),
                                   let data = signInfoWrapper["signatureInformations"] else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
                                 return
                             }
 
-                            responseCallback?(data)
+                            // TODO : call getDataToSignLegacy
+                            // responseCallback?(data)
 
                         case .failure(let error):
                             errorCallback?(error as NSError)

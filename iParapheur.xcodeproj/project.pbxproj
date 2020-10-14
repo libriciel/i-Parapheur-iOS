@@ -39,6 +39,7 @@
 		7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */; };
 		7AAE06A623141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAE06A523141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift */; };
 		7AB3CA3420936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */; };
+		7AC8773125374C2300E4574C /* SignInfoLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC8773025374C2300E4574C /* SignInfoLegacy.swift */; };
 		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */; };
 		7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */; };
 		7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */; };
@@ -215,6 +216,7 @@
 		7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AAE06A523141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI_WorkflowDialogController_Tests.swift; sourceTree = "<group>"; };
 		7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InSignedData_Test.swift; sourceTree = "<group>"; };
+		7AC8773025374C2300E4574C /* SignInfoLegacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInfoLegacy.swift; sourceTree = "<group>"; };
 		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InController_Test.swift; sourceTree = "<group>"; };
 		7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsUtils.swift; sourceTree = "<group>"; };
 		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				AB3CA35534D838DA33430B24 /* RemoteDocument.swift */,
 				AB3CA20B6CD290FE65CBEB5F /* ActionToPerform.swift */,
 				AB3CAD72D74C194EDB8C06E8 /* SignInfo.swift */,
+				7AC8773025374C2300E4574C /* SignInfoLegacy.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1023,6 +1026,7 @@
 				7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
+				7AC8773125374C2300E4574C /* SignInfoLegacy.swift in Sources */,
 				7AF3389E2077C58A00DE5F61 /* WorkflowDialogController.swift in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
 				7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */,
