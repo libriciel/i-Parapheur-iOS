@@ -273,6 +273,69 @@ class RestClient: NSObject {
     }
 
 
+    func getDataToSignLegacy(remoteDocumentList: [RemoteDocument],
+                             publicKeyBase64: String,
+                             signatureFormat: String,
+                             payload: [String: String],
+                             onResponse responseCallback: ((DataToSign) -> Void)?,
+                             onError errorCallback: ((Error) -> Void)?) {
+
+        os_log("getDataToSignLegacy called", type: .debug)
+
+        let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/generateDataToSign"
+
+        // Parameters
+
+        // Alamofire can't stand Encodable object in its Parameters.
+        // We have to either re-create the full request, with a JSON raw data body
+        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
+        //
+        // ... Yep, I chose the second.
+        //
+        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
+
+        var remoteDocumentMapList: [[String: String]] = []
+        for remoteDocument in remoteDocumentList {
+            remoteDocumentMapList.append(["id": remoteDocument.id,
+                                          "digestBase64": remoteDocument.digestBase64])
+        }
+
+        let parameters: Parameters = [
+            "remoteDocumentList": remoteDocumentMapList,
+            "signatureFormat": signatureFormat,
+            "publicKeyBase64": publicKeyBase64,
+            "payload": payload
+        ]
+
+        // Request
+
+        os_log("getDataToSign request sent with parameters %@", type: .debug, parameters)
+        manager.request(getDataToSignUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
+
+                    os_log("getDataToSign response...", type: .debug)
+                    switch response.result {
+
+                        case .success:
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let dataToSign = try? jsonDecoder.decode(DataToSign.self, from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            os_log("getDataToSign response : %@", type: .debug, dataToSign)
+                            responseCallback?(dataToSign)
+
+                        case .failure(let error):
+                            os_log("getDataToSign error : %@", type: .error, error.localizedDescription)
+                            errorCallback?(error)
+                    }
+                }
+    }
+
+
     func getDesks(onResponse responseCallback: (([Bureau]) -> Void)?,
                   onError errorCallback: ((Error) -> Void)?) {
 
