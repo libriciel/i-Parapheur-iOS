@@ -220,7 +220,8 @@ class RestClient: NSObject {
                             // TODO : Should delete this when IP 4.6 support will be dropped.
                             if (error.responseCode == 404) {
                                 os_log("Fallback to 4.6- methods", type: .info)
-                                return self.getSignInfoLegacy(folder: folder,
+                                return self.getSignInfoLegacy(publicKeyBase64: publicKeyBase64,
+                                                              folder: folder,
                                                               bureau: bureau,
                                                               onResponse: { signInfo in
                                                                   responseCallback?([signInfo])
@@ -238,10 +239,11 @@ class RestClient: NSObject {
     }
 
 
-    func getSignInfoLegacy(folder: Dossier,
+    func getSignInfoLegacy(publicKeyBase64: String,
+                           folder: Dossier,
                            bureau: NSString,
                            onResponse responseCallback: ((SignInfo) -> Void)?,
-                           onError errorCallback: ((NSError) -> Void)?) {
+                           onError errorCallback: ((Error) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
         let parameters: Parameters = ["bureauCourant": bureau]
@@ -254,20 +256,47 @@ class RestClient: NSObject {
 
                         case .success:
 
-                            os_log("Adrien >> %@", response.value ?? "nil")
-
                             guard let getSignInfoJsonData = response.value?.data(using: .utf8),
                                   let signInfoWrapper = try? JSONDecoder().decode([String: SignInfoLegacy].self, from: getSignInfoJsonData),
-                                  let data = signInfoWrapper["signatureInformations"] else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
+                                  let signInfoLegacy = signInfoWrapper.values.first else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
 
                             // TODO : call getDataToSignLegacy
-                            // responseCallback?(data)
+
+                            var remoteDocumentList: [RemoteDocument] = []
+                            for i in 0..<signInfoLegacy.hashesToSign.count {
+
+                                os_log("RemoteHasher#generateHashToSign %@", type: .debug, signInfoLegacy.hashesToSign)
+                                let hashToSignData: Data = CryptoUtils.data(hex: signInfoLegacy.hashesToSign[i])
+                                let hashToSignBase64 = hashToSignData.base64EncodedString()
+                                let remoteDocumentId = (signInfoLegacy.pesIds.count > 0) ? signInfoLegacy.pesIds[i] : folder.documents[i].identifier
+
+                                remoteDocumentList.append(RemoteDocument(id: remoteDocumentId,
+                                                                         digestBase64: hashToSignBase64,
+                                                                         signatureBase64: nil))
+                            }
+
+                            self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
+                                                     publicKeyBase64: publicKeyBase64,
+                                                     signatureFormat: signInfoLegacy.format,
+                                                     payload: [:],
+                                                     onResponse: { dataToSign in
+
+                                                         let signInfo = SignInfo(format: signInfoLegacy.format,
+                                                                                 dataToSignBase64List: dataToSign.dataToSignBase64List,
+                                                                                 signaturesBase64List: [],
+                                                                                 signatureDateTime: Double(dataToSign.signatureDateTime))
+
+                                                         responseCallback?(signInfo)
+                                                     },
+                                                     onError: { error in
+                                                         errorCallback?(error)
+                                                     })
 
                         case .failure(let error):
-                            errorCallback?(error as NSError)
+                            errorCallback?(error)
                     }
                 }
     }

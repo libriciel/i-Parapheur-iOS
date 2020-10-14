@@ -28,6 +28,17 @@ public class SignInfo: NSObject, Decodable {
     let signatureDateTime: Double?
 
 
+    public init(format: String?,
+                dataToSignBase64List: [String],
+                signaturesBase64List: [String],
+                signatureDateTime: Double?) {
+        self.format = format
+        self.dataToSignBase64List = dataToSignBase64List
+        self.signaturesBase64List = signaturesBase64List
+        self.signatureDateTime = signatureDateTime
+    }
+
+
     // <editor-fold desc="Json methods">
 
 
