@@ -23,6 +23,7 @@ import CoreData
 public class SignInfo: NSObject, Decodable {
 
     let format: String?
+    let documentIds: [String]
     let dataToSignBase64List: [String]
     var signaturesBase64List: [String]
     let signatureDateTime: Double?
@@ -30,11 +31,13 @@ public class SignInfo: NSObject, Decodable {
 
 
     public init(format: String?,
+                documentIds: [String],
                 dataToSignBase64List: [String],
                 signaturesBase64List: [String],
                 signatureDateTime: Double?,
                 legacySigned: Bool) {
 
+        self.documentIds = documentIds
         self.format = format
         self.dataToSignBase64List = dataToSignBase64List
         self.signaturesBase64List = signaturesBase64List
@@ -64,6 +67,7 @@ public class SignInfo: NSObject, Decodable {
 
         signaturesBase64List = []
         isLegacySigned = false
+        documentIds = []
     }
 
 

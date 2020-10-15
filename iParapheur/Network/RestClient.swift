@@ -283,6 +283,7 @@ class RestClient: NSObject {
                                                      onResponse: { dataToSign in
 
                                                          let signInfo = SignInfo(format: signInfoLegacy.format,
+                                                                                 documentIds: signInfoLegacy.pesIds,
                                                                                  dataToSignBase64List: dataToSign.dataToSignBase64List,
                                                                                  signaturesBase64List: [],
                                                                                  signatureDateTime: Double(dataToSign.signatureDateTime),
@@ -700,13 +701,14 @@ class RestClient: NSObject {
     }
 
 
-    func sigDossierLegacy(remoteDocumentList: [RemoteDocument],
-                          publicKeyBase64: String,
-                          signatureDateTime: Int,
-                          signatureFormat: String,
-                          payload: [String: String],
-                          onResponse responseCallback: (([Data]) -> Void)?,
-                          onError errorCallback: ((Error) -> Void)?) {
+    func signDossierLegacy(deskId: String,
+                           folderId: String,
+                           publicKeyBase64: String,
+                           publicAnnotation: String,
+                           privateAnnotation: String,
+                           signInfo: SignInfo,
+                           onResponse responseCallback: (() -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
 
         let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
 
@@ -721,18 +723,18 @@ class RestClient: NSObject {
         // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
 
         var remoteDocumentMapList: [[String: String]] = []
-        for remoteDocument in remoteDocumentList {
-            remoteDocumentMapList.append(["id": remoteDocument.id,
-                                          "digestBase64": remoteDocument.digestBase64,
-                                          "signatureBase64": remoteDocument.signatureBase64!])
+        for i in 0...signInfo.dataToSignBase64List.count {
+            remoteDocumentMapList.append(["id": signInfo.documentIds[i],
+                                          "digestBase64": signInfo.dataToSignBase64List[i],
+                                          "signatureBase64": signInfo.signaturesBase64List[i]])
         }
 
         let parameters: Parameters = [
             "remoteDocumentList": remoteDocumentMapList,
-            "signatureFormat": signatureFormat,
+            "signatureFormat": signInfo.format as Any,
             "publicKeyBase64": publicKeyBase64,
-            "signatureDateTime": signatureDateTime,
-            "payload": payload
+            "signatureDateTime": signInfo.signatureDateTime as Any,
+            "payload": [:]
         ]
 
         // Request
@@ -748,14 +750,31 @@ class RestClient: NSObject {
 
                             let jsonDecoder = JSONDecoder()
                             guard let responseJsonData = response.value?.data(using: .utf8),
-                                  let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
+                                  let finalSignature = try? jsonDecoder.decode(FinalSignatureLegacy.self,
                                                                                from: responseJsonData) else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
 
-                            // TODO : actual sign legacy
-                            // responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
+                            // Sending back
+
+                            var argumentDictionary: [String: String] = [:]
+                            argumentDictionary["bureauCourant"] = deskId
+                            argumentDictionary["annotPriv"] = privateAnnotation
+                            argumentDictionary["annotPub"] = publicAnnotation
+                            argumentDictionary["signature"] = finalSignature.signatureResultBase64List.joined(separator: ",")
+
+                            // Send request
+
+                            self.sendSimpleAction(type: 1,
+                                                  url: "/parapheur/dossiers/\(folderId)/signature",
+                                                  args: argumentDictionary,
+                                                  onResponse: { id in
+                                                      responseCallback?()
+                                                  },
+                                                  onError: { error in
+                                                      errorCallback?(error)
+                                                  })
 
                         case .failure(let error):
                             errorCallback?(error)

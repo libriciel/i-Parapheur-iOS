@@ -19,7 +19,7 @@
 import Foundation
 
 
-@objc public class FinalSignature: NSObject, Decodable {
+@objc public class FinalSignatureLegacy: NSObject, Decodable {
 
     let signatureResultBase64List: [String]
     let payload: [String: String]

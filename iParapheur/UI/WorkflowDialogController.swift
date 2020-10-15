@@ -424,22 +424,28 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                 .compactMap { $0.signatureDateTime }
 
         if (actionToPerform.signInfoList.first?.isLegacySigned ?? false) {
-            restClient?.signDossierLegacy(dossierId: actionToPerform.folder.identifier,
-                                          bureauId: deskId,
-                                          publicAnnotation: publicAnnotationTextView.text,
-                                          privateAnnotation: privateAnnotationTextView.text,
-                                          publicKeyBase64: pubKey,
-                                          signatures: signatureConcat,
-                                          signaturesTimes: signatureTimeConcat,
-                                          responseCallback: { number in
-                                              actionToPerform.isDone = true
-                                              self.checkAndDismissPopup()
-                                          },
-                                          errorCallback: { error in
-                                              actionToPerform.isDone = true
-                                              actionToPerform.error = error
-                                              self.checkAndDismissPopup()
-                                          })
+
+            guard let pubKeyBase64 = selectedCertificate?.publicKey?.base64EncodedString() else {
+                return
+            }
+
+            for signInfo in actionToPerform.signInfoList {
+                restClient?.signDossierLegacy(deskId: deskId,
+                                              folderId: actionToPerform.folder.identifier,
+                                              publicKeyBase64: pubKeyBase64,
+                                              publicAnnotation: publicAnnotationTextView.text,
+                                              privateAnnotation: privateAnnotationTextView.text,
+                                              signInfo: signInfo,
+                                              onResponse: {
+                                                  actionToPerform.isDone = true
+                                                  self.checkAndDismissPopup()
+                                              },
+                                              onError: { error in
+                                                  actionToPerform.isDone = true
+                                                  actionToPerform.error = error
+                                                  self.checkAndDismissPopup()
+                                              })
+            }
         }
         else {
             restClient?.signDossier(dossierId: actionToPerform.folder.identifier,
