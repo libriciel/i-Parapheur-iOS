@@ -80,7 +80,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                           signatureToPerform.isDone = true
                                       })
             }
-        
+
             // Then, refreshing certificate list
 
             checkForCertificateListSetup();
@@ -208,7 +208,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                             })
 
                 case .visa:
-                    
+
                     restClient?.visa(folder: actionToPerform.folder,
                                      bureauId: deskId,
                                      publicAnnotation: publicAnnotationTextView.text,
@@ -225,7 +225,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                      })
 
                 case .reject:
-                    
+
                     restClient?.reject(folder: actionToPerform.folder,
                                        bureauId: deskId,
                                        publicAnnotation: publicAnnotationTextView.text,
@@ -384,7 +384,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         if let signatureIndex = notification.userInfo?[CryptoUtils.notifSignatureIndex] as? Int,
            let currentActionToPerform = actionsToPerform.indices.contains(signatureIndex) ? actionsToPerform[signatureIndex] : nil,
            let currentSignedData = notification.userInfo?[CryptoUtils.notifSignedData] as? [Data] {
-            os_log("onSignatureResult index:%d", type:.info, signatureIndex)
+            os_log("onSignatureResult index:%d", type: .info, signatureIndex)
             actionToPerform = currentActionToPerform
             actionToPerform?.signInfoList[0].signaturesBase64List = currentSignedData.map({ $0.base64EncodedString() })
         }
@@ -392,19 +392,19 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         if let folderId = notification.userInfo![CryptoUtils.notifFolderId] as? String,
            let currentActionToPerform = actionsToPerform.filter({ $0.folder.identifier == folderId }).first,
            let signedDataList = notification.userInfo?[CryptoUtils.notifSignedData] as? [SignInfo] {
-            os_log("onSignatureResult folderId:%@", type:.info, folderId)
+            os_log("onSignatureResult folderId:%@", type: .info, folderId)
             actionToPerform = currentActionToPerform
             actionToPerform?.signInfoList = signedDataList
         }
 
         guard let currentAtp = actionToPerform else {
-            os_log("onSignatureResult something went wrong here", type:.error)
+            os_log("onSignatureResult something went wrong here", type: .error)
             return
         }
 
         // Throwing back result
 
-        os_log("Folder signed:%@", type:.info, currentAtp.folder.title ?? currentAtp.folder.identifier)
+        os_log("Folder signed:%@", type: .info, currentAtp.folder.title ?? currentAtp.folder.identifier)
 
         self.sendFinalSignatureResult(actionToPerform: currentAtp)
     }
@@ -413,32 +413,52 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     private func sendFinalSignatureResult(actionToPerform: ActionToPerform) {
 
         guard let deskId = currentDeskId,
-                let pubKey = selectedCertificate?.publicKey?.base64EncodedString() else { return }
+              let pubKey = selectedCertificate?.publicKey?.base64EncodedString() else { return }
 
         let signatureConcat: [String] = actionToPerform
                 .signInfoList
-                .flatMap{ $0.signaturesBase64List }
+                .flatMap { $0.signaturesBase64List }
 
         let signatureTimeConcat: [Double] = actionToPerform
                 .signInfoList
-                .compactMap{ $0.signatureDateTime }
+                .compactMap { $0.signatureDateTime }
 
-        restClient?.signDossier(dossierId: actionToPerform.folder.identifier,
-                                bureauId: deskId,
-                                publicAnnotation: publicAnnotationTextView.text,
-                                privateAnnotation: privateAnnotationTextView.text,
-                                publicKeyBase64: pubKey,
-                                signatures: signatureConcat,
-                                signaturesTimes: signatureTimeConcat,
-                                responseCallback: { number in
-                                    actionToPerform.isDone = true
-                                    self.checkAndDismissPopup()
-                                },
-                                errorCallback: { error in
-                                    actionToPerform.isDone = true
-                                    actionToPerform.error = error
-                                    self.checkAndDismissPopup()
-                                })
+        if (actionToPerform.signInfoList.first?.isLegacySigned ?? false) {
+            restClient?.signDossierLegacy(dossierId: actionToPerform.folder.identifier,
+                                          bureauId: deskId,
+                                          publicAnnotation: publicAnnotationTextView.text,
+                                          privateAnnotation: privateAnnotationTextView.text,
+                                          publicKeyBase64: pubKey,
+                                          signatures: signatureConcat,
+                                          signaturesTimes: signatureTimeConcat,
+                                          responseCallback: { number in
+                                              actionToPerform.isDone = true
+                                              self.checkAndDismissPopup()
+                                          },
+                                          errorCallback: { error in
+                                              actionToPerform.isDone = true
+                                              actionToPerform.error = error
+                                              self.checkAndDismissPopup()
+                                          })
+        }
+        else {
+            restClient?.signDossier(dossierId: actionToPerform.folder.identifier,
+                                    bureauId: deskId,
+                                    publicAnnotation: publicAnnotationTextView.text,
+                                    privateAnnotation: privateAnnotationTextView.text,
+                                    publicKeyBase64: pubKey,
+                                    signatures: signatureConcat,
+                                    signaturesTimes: signatureTimeConcat,
+                                    responseCallback: { number in
+                                        actionToPerform.isDone = true
+                                        self.checkAndDismissPopup()
+                                    },
+                                    errorCallback: { error in
+                                        actionToPerform.isDone = true
+                                        actionToPerform.error = error
+                                        self.checkAndDismissPopup()
+                                    })
+        }
     }
 
 
