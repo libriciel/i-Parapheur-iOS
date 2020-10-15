@@ -364,12 +364,75 @@ class RestClient: NSObject {
     }
 
 
+    func getFinalSignatureLegacy(remoteDocumentList: [RemoteDocument],
+                                 publicKeyBase64: String,
+                                 signatureDateTime: Int,
+                                 signatureFormat: String,
+                                 payload: [String: String],
+                                 onResponse responseCallback: (([Data]) -> Void)?,
+                                 onError errorCallback: ((Error) -> Void)?) {
+
+        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
+
+        // Parameters
+
+        // Alamofire can't stand Encodable object in its Parameters.
+        // We have to either re-create the full request, with a JSON raw data body
+        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
+        //
+        // ... Yep, I chose the second.
+        //
+        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
+
+        var remoteDocumentMapList: [[String: String]] = []
+        for remoteDocument in remoteDocumentList {
+            remoteDocumentMapList.append(["id": remoteDocument.id,
+                                          "digestBase64": remoteDocument.digestBase64,
+                                          "signatureBase64": remoteDocument.signatureBase64!])
+        }
+
+        let parameters: Parameters = [
+            "remoteDocumentList": remoteDocumentMapList,
+            "signatureFormat": signatureFormat,
+            "publicKeyBase64": publicKeyBase64,
+            "signatureDateTime": signatureDateTime,
+            "payload": payload
+        ]
+
+        // Request
+
+        os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
+        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
+
+                    switch response.result {
+
+                        case .success:
+
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
+                                                                               from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
+
+                        case .failure(let error):
+                            errorCallback?(error)
+                    }
+                }
+    }
+
+
     func getDesks(onResponse responseCallback: (([Bureau]) -> Void)?,
                   onError errorCallback: ((Error) -> Void)?) {
 
-        let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
+        let getDesksUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl)
+        manager.request(getDesksUrl)
                 .validate()
                 .responseString { response in
                     switch response.result {
@@ -377,14 +440,14 @@ class RestClient: NSObject {
                         case .success:
 
                             let jsonDecoder = JSONDecoder()
-                            guard let getBureauxJsonData = response.value?.data(using: .utf8),
-                                  let bureaux = try? jsonDecoder.decode([Bureau].self,
-                                                                        from: getBureauxJsonData) else {
+                            guard let getDeskJsonData = response.value?.data(using: .utf8),
+                                  let desks = try? jsonDecoder.decode([Bureau].self,
+                                                                      from: getDeskJsonData) else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
 
-                            responseCallback?(bureaux)
+                            responseCallback?(desks)
 
                         case .failure(let error):
                             errorCallback?(error as NSError)
