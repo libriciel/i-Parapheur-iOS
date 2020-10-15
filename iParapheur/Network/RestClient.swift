@@ -266,7 +266,6 @@ class RestClient: NSObject {
                             var remoteDocumentList: [RemoteDocument] = []
                             for i in 0..<signInfoLegacy.hashesToSign.count {
 
-                                os_log("RemoteHasher#generateHashToSign %@", type: .debug, signInfoLegacy.hashesToSign)
                                 let hashToSignData: Data = CryptoUtils.data(hex: signInfoLegacy.hashesToSign[i])
                                 let hashToSignBase64 = hashToSignData.base64EncodedString()
                                 let remoteDocumentId = (signInfoLegacy.pesIds.count > 0) ? signInfoLegacy.pesIds[i] : folder.documents[i].identifier
@@ -283,7 +282,7 @@ class RestClient: NSObject {
                                                      onResponse: { dataToSign in
 
                                                          let signInfo = SignInfo(format: signInfoLegacy.format,
-                                                                                 documentIds: signInfoLegacy.pesIds,
+                                                                                 documentIds: remoteDocumentList.map({ $0.id }),
                                                                                  dataToSignBase64List: dataToSign.dataToSignBase64List,
                                                                                  signaturesBase64List: [],
                                                                                  signatureDateTime: Double(dataToSign.signatureDateTime),
@@ -354,7 +353,6 @@ class RestClient: NSObject {
                                 return
                             }
 
-                            os_log("getDataToSign response : %@", type: .debug, dataToSign)
                             responseCallback?(dataToSign)
 
                         case .failure(let error):
@@ -723,7 +721,7 @@ class RestClient: NSObject {
         // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
 
         var remoteDocumentMapList: [[String: String]] = []
-        for i in 0...signInfo.dataToSignBase64List.count {
+        for i in 0..<signInfo.dataToSignBase64List.count {
             remoteDocumentMapList.append(["id": signInfo.documentIds[i],
                                           "digestBase64": signInfo.dataToSignBase64List[i],
                                           "signatureBase64": signInfo.signaturesBase64List[i]])
