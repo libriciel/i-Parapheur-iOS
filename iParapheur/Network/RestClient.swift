@@ -263,8 +263,6 @@ class RestClient: NSObject {
                                 return
                             }
 
-                            // TODO : call getDataToSignLegacy
-
                             var remoteDocumentList: [RemoteDocument] = []
                             for i in 0..<signInfoLegacy.hashesToSign.count {
 
@@ -287,7 +285,8 @@ class RestClient: NSObject {
                                                          let signInfo = SignInfo(format: signInfoLegacy.format,
                                                                                  dataToSignBase64List: dataToSign.dataToSignBase64List,
                                                                                  signaturesBase64List: [],
-                                                                                 signatureDateTime: Double(dataToSign.signatureDateTime))
+                                                                                 signatureDateTime: Double(dataToSign.signatureDateTime),
+                                                                                 legacySigned: true)
 
                                                          responseCallback?(signInfo)
                                                      },
