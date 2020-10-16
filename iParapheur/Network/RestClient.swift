@@ -275,7 +275,7 @@ class RestClient: NSObject {
                                                                          signatureBase64: nil))
                             }
 
-                            if (signInfoLegacy.format == "PES") { // TODO Adrien, do this only for SHA256
+                            if (signInfoLegacy.format == "xades-env-1.2.2-sha256") {
                                 self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
                                                          publicKeyBase64: publicKeyBase64,
                                                          signatureFormat: signInfoLegacy.format,

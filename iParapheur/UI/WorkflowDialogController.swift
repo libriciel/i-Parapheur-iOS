@@ -440,8 +440,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             }
 
             for signInfo in actionToPerform.signInfoList {
-                // TODO Adrien : only for PES
-                if (signInfo.format == "PES") {
+                if (signInfo.format == "xades-env-1.2.2-sha256") {
                     restClient?.getFinalSignatureLegacy(deskId: deskId,
                                                         folderId: actionToPerform.folder.identifier,
                                                         publicKeyBase64: pubKeyBase64,
