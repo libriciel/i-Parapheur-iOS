@@ -270,36 +270,28 @@ class RestClient: NSObject {
                                 let hashToSignBase64 = hashToSignData.base64EncodedString()
                                 let remoteDocumentId = (signInfoLegacy.pesIds.count > 0) ? signInfoLegacy.pesIds[i] : folder.documents[i].identifier
 
+                                os_log("hash:%@ b64:%@", type: .info, signInfoLegacy.hashesToSign[i], hashToSignBase64)
+
                                 remoteDocumentList.append(RemoteDocument(id: remoteDocumentId,
                                                                          digestBase64: hashToSignBase64,
                                                                          signatureBase64: nil))
                             }
 
-                            if (signInfoLegacy.format == "xades-env-1.2.2-sha256") {
-                                self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
-                                                         publicKeyBase64: publicKeyBase64,
-                                                         signatureFormat: signInfoLegacy.format,
-                                                         payload: [:],
-                                                         onResponse: { dataToSign in
-                                                             responseCallback?(SignInfo(format: signInfoLegacy.format,
-                                                                                        documentIds: remoteDocumentList.map({ $0.id }),
-                                                                                        dataToSignBase64List: dataToSign.dataToSignBase64List,
-                                                                                        signaturesBase64List: [],
-                                                                                        signatureDateTime: Double(dataToSign.signatureDateTime),
-                                                                                        legacySigned: true))
-                                                         },
-                                                         onError: { error in
-                                                             errorCallback?(error)
-                                                         })
-                            }
-                            else {
-                                responseCallback?(SignInfo(format: signInfoLegacy.format,
-                                                           documentIds: remoteDocumentList.map({ $0.id }),
-                                                           dataToSignBase64List: signInfoLegacy.hashesToSign,
-                                                           signaturesBase64List: [],
-                                                           signatureDateTime: nil,
-                                                           legacySigned: true))
-                            }
+                            self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
+                                                     publicKeyBase64: publicKeyBase64,
+                                                     signatureFormat: signInfoLegacy.format,
+                                                     payload: [:],
+                                                     onResponse: { dataToSign in
+                                                         responseCallback?(SignInfo(format: signInfoLegacy.format,
+                                                                                    documentIds: remoteDocumentList.map({ $0.id }),
+                                                                                    dataToSignBase64List: dataToSign.dataToSignBase64List,
+                                                                                    signaturesBase64List: [],
+                                                                                    signatureDateTime: Double(dataToSign.signatureDateTime),
+                                                                                    legacySigned: true))
+                                                     },
+                                                     onError: { error in
+                                                         errorCallback?(error)
+                                                     })
 
                         case .failure(let error):
                             errorCallback?(error)

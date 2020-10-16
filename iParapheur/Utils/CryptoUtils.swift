@@ -284,7 +284,7 @@ class CryptoUtils: NSObject {
                                                              signatureAlgorithm: algorithm,
                                                              password: password)
 
-                    os_log("... signed !!:%@", type: .info, hash)
+                    os_log("... signed !! hash:%@ sig:%@", type: .info, hash, signedHash)
                     signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
                     signInfo.signaturesBase64List.append(signedHash)
                 }

@@ -440,40 +440,21 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             }
 
             for signInfo in actionToPerform.signInfoList {
-                if (signInfo.format == "xades-env-1.2.2-sha256") {
-                    restClient?.getFinalSignatureLegacy(deskId: deskId,
-                                                        folderId: actionToPerform.folder.identifier,
-                                                        publicKeyBase64: pubKeyBase64,
-                                                        publicAnnotation: publicAnnotationTextView.text,
-                                                        privateAnnotation: privateAnnotationTextView.text,
-                                                        signInfo: signInfo,
-                                                        onResponse: {
-                                                            actionToPerform.isDone = true
-                                                            self.checkAndDismissPopup()
-                                                        },
-                                                        onError: { error in
-                                                            actionToPerform.isDone = true
-                                                            actionToPerform.error = error
-                                                            self.checkAndDismissPopup()
-                                                        })
-                }
-                else {
-                    restClient?.signDossierLegacy(deskId: deskId,
-                                                  folderId: actionToPerform.folder.identifier,
-                                                  publicKeyBase64: pubKeyBase64,
-                                                  publicAnnotation: publicAnnotationTextView.text,
-                                                  privateAnnotation: privateAnnotationTextView.text,
-                                                  signInfo: signInfo,
-                                                  onResponse: {
-                                                      actionToPerform.isDone = true
-                                                      self.checkAndDismissPopup()
-                                                  },
-                                                  onError: { error in
-                                                      actionToPerform.isDone = true
-                                                      actionToPerform.error = error
-                                                      self.checkAndDismissPopup()
-                                                  })
-                }
+                restClient?.getFinalSignatureLegacy(deskId: deskId,
+                                                    folderId: actionToPerform.folder.identifier,
+                                                    publicKeyBase64: pubKeyBase64,
+                                                    publicAnnotation: publicAnnotationTextView.text,
+                                                    privateAnnotation: privateAnnotationTextView.text,
+                                                    signInfo: signInfo,
+                                                    onResponse: {
+                                                        actionToPerform.isDone = true
+                                                        self.checkAndDismissPopup()
+                                                    },
+                                                    onError: { error in
+                                                        actionToPerform.isDone = true
+                                                        actionToPerform.error = error
+                                                        self.checkAndDismissPopup()
+                                                    })
             }
         }
         else {
