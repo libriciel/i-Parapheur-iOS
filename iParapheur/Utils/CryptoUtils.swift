@@ -281,7 +281,6 @@ class CryptoUtils: NSObject {
 
                     var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
                                                              keyFileUrl: p12Url,
-                                                             // TODO : test that
                                                              signatureAlgorithm: algorithm,
                                                              password: password)
 
