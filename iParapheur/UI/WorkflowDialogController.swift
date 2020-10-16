@@ -430,21 +430,41 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             }
 
             for signInfo in actionToPerform.signInfoList {
-                restClient?.signDossierLegacy(deskId: deskId,
-                                              folderId: actionToPerform.folder.identifier,
-                                              publicKeyBase64: pubKeyBase64,
-                                              publicAnnotation: publicAnnotationTextView.text,
-                                              privateAnnotation: privateAnnotationTextView.text,
-                                              signInfo: signInfo,
-                                              onResponse: {
-                                                  actionToPerform.isDone = true
-                                                  self.checkAndDismissPopup()
-                                              },
-                                              onError: { error in
-                                                  actionToPerform.isDone = true
-                                                  actionToPerform.error = error
-                                                  self.checkAndDismissPopup()
-                                              })
+                // TODO Adrien : only for PES
+                if (signInfo.format == "PES") {
+                    restClient?.getFinalSignatureLegacy(deskId: deskId,
+                                                        folderId: actionToPerform.folder.identifier,
+                                                        publicKeyBase64: pubKeyBase64,
+                                                        publicAnnotation: publicAnnotationTextView.text,
+                                                        privateAnnotation: privateAnnotationTextView.text,
+                                                        signInfo: signInfo,
+                                                        onResponse: {
+                                                            actionToPerform.isDone = true
+                                                            self.checkAndDismissPopup()
+                                                        },
+                                                        onError: { error in
+                                                            actionToPerform.isDone = true
+                                                            actionToPerform.error = error
+                                                            self.checkAndDismissPopup()
+                                                        })
+                }
+                else {
+                    restClient?.signDossierLegacy(deskId: deskId,
+                                                  folderId: actionToPerform.folder.identifier,
+                                                  publicKeyBase64: pubKeyBase64,
+                                                  publicAnnotation: publicAnnotationTextView.text,
+                                                  privateAnnotation: privateAnnotationTextView.text,
+                                                  signInfo: signInfo,
+                                                  onResponse: {
+                                                      actionToPerform.isDone = true
+                                                      self.checkAndDismissPopup()
+                                                  },
+                                                  onError: { error in
+                                                      actionToPerform.isDone = true
+                                                      actionToPerform.error = error
+                                                      self.checkAndDismissPopup()
+                                                  })
+                }
             }
         }
         else {

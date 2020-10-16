@@ -276,7 +276,9 @@ class CryptoUtils: NSObject {
                     os_log("hashToSign:%@", type: .info, hash)
                     var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
                                                              keyFileUrl: p12Url,
-                                                             signatureAlgorithm: .sha256WithRsa,
+                                                             // TODO : test that
+                                                             signatureAlgorithm: ["PADES-basic", "PADES"].contains(signInfo.format) && signInfo.isLegacySigned
+                                                                     ? .sha1WithRsa : .sha256WithRsa,
                                                              password: password)
 
                     os_log("... signed !!:%@", type: .info, hash)
@@ -326,23 +328,27 @@ class CryptoUtils: NSObject {
                        signatureAlgorithm: SignatureAlgorithm,
                        privateKey: SecKey!) -> String? {
 
-        let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
-        var signedDataLength = signedData.length
+        let keyData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
+        var keyDataLength = keyData.length
 
-        let hashedData = (data as Data).sha256()
+        os_log("Adrien == algorithm :: %@", type: .info, signatureAlgorithm == .sha1WithRsa ? "sha1" : "sha256")
+
+        var hashedData = data as Data
+        hashedData = (signatureAlgorithm == .sha1WithRsa) ? hashedData.sha1() : hashedData.sha256()
         let hashedNsData = hashedData as NSData
+        let padding = (signatureAlgorithm == .sha1WithRsa) ? SecPadding.PKCS1SHA1 : SecPadding.PKCS1SHA256
 
         let err: OSStatus = SecKeyRawSign(privateKey,
-                                          SecPadding.PKCS1SHA256,
+                                          padding,
                                           hashedNsData.bytes.assumingMemoryBound(to: UInt8.self),
                                           hashedNsData.length,
-                                          signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),
-                                          &signedDataLength)
+                                          keyData.mutableBytes.assumingMemoryBound(to: UInt8.self),
+                                          &keyDataLength)
 
         // Result
 
         if (err == errSecSuccess) {
-            return signedData.base64EncodedString()
+            return keyData.base64EncodedString()
         }
 
         return nil

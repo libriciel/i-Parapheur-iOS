@@ -275,24 +275,31 @@ class RestClient: NSObject {
                                                                          signatureBase64: nil))
                             }
 
-                            self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
-                                                     publicKeyBase64: publicKeyBase64,
-                                                     signatureFormat: signInfoLegacy.format,
-                                                     payload: [:],
-                                                     onResponse: { dataToSign in
-
-                                                         let signInfo = SignInfo(format: signInfoLegacy.format,
-                                                                                 documentIds: remoteDocumentList.map({ $0.id }),
-                                                                                 dataToSignBase64List: dataToSign.dataToSignBase64List,
-                                                                                 signaturesBase64List: [],
-                                                                                 signatureDateTime: Double(dataToSign.signatureDateTime),
-                                                                                 legacySigned: true)
-
-                                                         responseCallback?(signInfo)
-                                                     },
-                                                     onError: { error in
-                                                         errorCallback?(error)
-                                                     })
+                            if (signInfoLegacy.format == "PES") { // TODO Adrien, do this only for SHA256
+                                self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
+                                                         publicKeyBase64: publicKeyBase64,
+                                                         signatureFormat: signInfoLegacy.format,
+                                                         payload: [:],
+                                                         onResponse: { dataToSign in
+                                                             responseCallback?(SignInfo(format: signInfoLegacy.format,
+                                                                                        documentIds: remoteDocumentList.map({ $0.id }),
+                                                                                        dataToSignBase64List: dataToSign.dataToSignBase64List,
+                                                                                        signaturesBase64List: [],
+                                                                                        signatureDateTime: Double(dataToSign.signatureDateTime),
+                                                                                        legacySigned: true))
+                                                         },
+                                                         onError: { error in
+                                                             errorCallback?(error)
+                                                         })
+                            }
+                            else {
+                                responseCallback?(SignInfo(format: signInfoLegacy.format,
+                                                           documentIds: remoteDocumentList.map({ $0.id }),
+                                                           dataToSignBase64List: signInfoLegacy.hashesToSign,
+                                                           signaturesBase64List: [],
+                                                           signatureDateTime: nil,
+                                                           legacySigned: true))
+                            }
 
                         case .failure(let error):
                             errorCallback?(error)
@@ -699,14 +706,14 @@ class RestClient: NSObject {
     }
 
 
-    func signDossierLegacy(deskId: String,
-                           folderId: String,
-                           publicKeyBase64: String,
-                           publicAnnotation: String,
-                           privateAnnotation: String,
-                           signInfo: SignInfo,
-                           onResponse responseCallback: (() -> Void)?,
-                           onError errorCallback: ((Error) -> Void)?) {
+    func getFinalSignatureLegacy(deskId: String,
+                                 folderId: String,
+                                 publicKeyBase64: String,
+                                 publicAnnotation: String,
+                                 privateAnnotation: String,
+                                 signInfo: SignInfo,
+                                 onResponse responseCallback: (() -> Void)?,
+                                 onError errorCallback: ((Error) -> Void)?) {
 
         let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
 
@@ -778,6 +785,37 @@ class RestClient: NSObject {
                             errorCallback?(error)
                     }
                 }
+    }
+
+
+    func signDossierLegacy(deskId: String,
+                           folderId: String,
+                           publicKeyBase64: String,
+                           publicAnnotation: String,
+                           privateAnnotation: String,
+                           signInfo: SignInfo,
+                           onResponse responseCallback: (() -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
+
+        // Sending back
+
+        var argumentDictionary: [String: String] = [:]
+        argumentDictionary["bureauCourant"] = deskId
+        argumentDictionary["annotPriv"] = privateAnnotation
+        argumentDictionary["annotPub"] = publicAnnotation
+        argumentDictionary["signature"] = signInfo.signaturesBase64List.joined(separator: ",")
+
+        // Send request
+
+        self.sendSimpleAction(type: 1,
+                              url: "/parapheur/dossiers/\(folderId)/signature",
+                              args: argumentDictionary,
+                              onResponse: { id in
+                                  responseCallback?()
+                              },
+                              onError: { error in
+                                  errorCallback?(error)
+                              })
     }
 
 
