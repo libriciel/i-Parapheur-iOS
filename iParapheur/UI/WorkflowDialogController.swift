@@ -327,6 +327,16 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         guard let certificate = selectedCertificate,
               signaturesToPerform.count > 0 else { return }
 
+        if let unknownFormat = signaturesToPerform
+                .flatMap({ $0.signInfoList })
+                .map({ $0.format })
+                .filter({ !["PADES-basic", "PADES", "CMS", "xades-env-1.2.2-sha256"].contains($0) })
+                .first {
+            ViewUtils.logError(message: "Le type de signature (\(unknownFormat ?? "nil")) n'est pas supporté." as NSString,
+                               title: "Signature impossible")
+            return
+        }
+
         switch (certificate.sourceType) {
 
             case .imprimerieNationale:
