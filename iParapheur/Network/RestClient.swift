@@ -256,6 +256,7 @@ class RestClient: NSObject {
 
                         case .success:
 
+                            os_log("getSignInfoLegacy OK value:%@", type: .info, response.value!)
                             guard let getSignInfoJsonData = response.value?.data(using: .utf8),
                                   let signInfoWrapper = try? JSONDecoder().decode([String: SignInfoLegacy].self, from: getSignInfoJsonData),
                                   let signInfoLegacy = signInfoWrapper.values.first else {
@@ -266,11 +267,11 @@ class RestClient: NSObject {
                             var remoteDocumentList: [RemoteDocument] = []
                             for i in 0..<signInfoLegacy.hashesToSign.count {
 
-                                let hashToSignData: Data = CryptoUtils.data(hex: signInfoLegacy.hashesToSign[i])
+                                let hashToSignData: Data = signInfoLegacy.hashesToSign[i]
                                 let hashToSignBase64 = hashToSignData.base64EncodedString()
                                 let remoteDocumentId = (signInfoLegacy.pesIds.count > 0) ? signInfoLegacy.pesIds[i] : folder.documents[i].identifier
 
-                                os_log("hash:%@ b64:%@", type: .info, signInfoLegacy.hashesToSign[i], hashToSignBase64)
+                                os_log("hashBase64:%@", type: .info, hashToSignData.base64EncodedString())
 
                                 remoteDocumentList.append(RemoteDocument(id: remoteDocumentId,
                                                                          digestBase64: hashToSignBase64,

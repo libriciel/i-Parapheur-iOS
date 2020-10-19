@@ -197,7 +197,6 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                             folder: actionToPerform.folder,
                                             bureau: currentDeskId! as NSString,
                                             onResponse: { signInfoList -> Swift.Void in
-                                                os_log("getSignInfo result:%@", type: .info, signInfoList)
                                                 actionToPerform.signInfoList = signInfoList
                                                 self.checkForSignaturesSetup()
                                             },

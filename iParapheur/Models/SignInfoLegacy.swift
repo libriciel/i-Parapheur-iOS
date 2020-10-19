@@ -40,7 +40,7 @@ import CoreData
 public class SignInfoLegacy: NSObject, Decodable {
 
     let format: String
-    let hashesToSign: [String]
+    let hashesToSign: [Data]
     let p7s: String?
     let pesCity: String?
     let pesClaimedRole: String?
@@ -73,7 +73,7 @@ public class SignInfoLegacy: NSObject, Decodable {
     }
 
 
-    public init(format: String, hashesToSign: [String]) {
+    public init(format: String, hashesToSign: [Data]) {
         self.format = format
         self.hashesToSign = hashesToSign
         p7s = nil
@@ -110,7 +110,9 @@ public class SignInfoLegacy: NSObject, Decodable {
         // Comma-separated values
 
         if let hashesString = try values.decodeIfPresent(String.self, forKey: .hashToSign) {
-            hashesToSign = hashesString.components(separatedBy: ",")
+            hashesToSign = hashesString
+                    .components(separatedBy: ",")
+                    .map({ CryptoUtils.data(hex: $0) })
         }
         else {
             hashesToSign = []
