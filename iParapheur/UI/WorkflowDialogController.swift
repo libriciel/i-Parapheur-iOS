@@ -432,7 +432,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                 .signInfoList
                 .compactMap { $0.signatureDateTime }
 
-        if (actionToPerform.signInfoList.first?.isLegacySigned ?? false) {
+        if (actionToPerform.signInfoList.first?.legacyHashesHex != nil) {
 
             guard let pubKeyBase64 = selectedCertificate?.publicKey?.base64EncodedString() else {
                 return

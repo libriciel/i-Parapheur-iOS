@@ -288,7 +288,7 @@ class RestClient: NSObject {
                                                                                     dataToSignBase64List: dataToSign.dataToSignBase64List,
                                                                                     signaturesBase64List: [],
                                                                                     signatureDateTime: Double(dataToSign.signatureDateTime),
-                                                                                    legacySigned: true))
+                                                                                    legacyHashesHex: signInfoLegacy.hashesToSign))
                                                      },
                                                      onError: { error in
                                                          errorCallback?(error)
@@ -342,7 +342,7 @@ class RestClient: NSObject {
                 .validate()
                 .responseString { response in
 
-                    os_log("getDataToSign response...", type: .debug)
+                    os_log("getDataToSign response... %@", type: .debug, response.value ?? "nil")
                     switch response.result {
 
                         case .success:
@@ -723,7 +723,9 @@ class RestClient: NSObject {
         var remoteDocumentMapList: [[String: String]] = []
         for i in 0..<signInfo.dataToSignBase64List.count {
             remoteDocumentMapList.append(["id": signInfo.documentIds[i],
-                                          "digestBase64": signInfo.dataToSignBase64List[i],
+                                          "digestBase64": signInfo.legacyHashesHex!
+                                                  .map({ $0.base64EncodedString() })
+                                                  .joined(separator: ","),
                                           "signatureBase64": signInfo.signaturesBase64List[i]])
         }
 
@@ -742,6 +744,7 @@ class RestClient: NSObject {
                 .validate()
                 .responseString { response in
 
+                    os_log("getFinalSignatureLegacy response... %@", type: .debug, response.value ?? "nil")
                     switch response.result {
 
                         case .success:

@@ -27,7 +27,7 @@ public class SignInfo: NSObject, Decodable {
     let dataToSignBase64List: [String]
     var signaturesBase64List: [String]
     let signatureDateTime: Double?
-    let isLegacySigned: Bool
+    let legacyHashesHex: [Data]?
 
 
     public init(format: String?,
@@ -35,14 +35,14 @@ public class SignInfo: NSObject, Decodable {
                 dataToSignBase64List: [String],
                 signaturesBase64List: [String],
                 signatureDateTime: Double?,
-                legacySigned: Bool) {
+                legacyHashesHex: [Data]?) {
 
         self.documentIds = documentIds
         self.format = format
         self.dataToSignBase64List = dataToSignBase64List
         self.signaturesBase64List = signaturesBase64List
         self.signatureDateTime = signatureDateTime
-        self.isLegacySigned = legacySigned
+        self.legacyHashesHex = legacyHashesHex
     }
 
 
@@ -66,7 +66,7 @@ public class SignInfo: NSObject, Decodable {
         dataToSignBase64List = dataToSignBase64ListString?.components(separatedBy: ",") ?? []
 
         signaturesBase64List = []
-        isLegacySigned = false
+        legacyHashesHex = nil
         documentIds = []
     }
 

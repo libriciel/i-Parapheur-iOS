@@ -272,19 +272,19 @@ class CryptoUtils: NSObject {
 
         do {
             for signInfo in signInfoList {
-                for hash in signInfo.dataToSignBase64List {
-                    os_log("hashToSign:%@", type: .info, hash)
+                for dataToSign in signInfo.dataToSignBase64List {
+                    os_log("hashToSign:%@", type: .info, dataToSign)
 
-                    let algorithm: SignatureAlgorithm = ["PADES-basic", "PADES", "CMS"].contains(signInfo.format) && signInfo.isLegacySigned
+                    let algorithm: SignatureAlgorithm = ["PADES-basic", "PADES", "CMS"].contains(signInfo.format) && (signInfo.legacyHashesHex != nil)
                             ? .sha1WithRsa
                             : .sha256WithRsa
 
-                    var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: hash)!,
+                    var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: dataToSign)!,
                                                              keyFileUrl: p12Url,
                                                              signatureAlgorithm: algorithm,
                                                              password: password)
 
-                    os_log("... signed !! hash:%@ sig:%@", type: .info, hash, signedHash)
+                    os_log("... signed !! algo:%d, hash:%@ sig:%@", type: .info, algorithm.rawValue, dataToSign, signedHash)
                     signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
                     signInfo.signaturesBase64List.append(signedHash)
                 }
