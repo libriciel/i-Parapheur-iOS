@@ -357,16 +357,20 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
                 let jsonDecoder = JSONDecoder()
                 guard let signatureToPerform = actionsToPerform.filter({ $0.action == .sign }).first,
-                      let dataToSignBase64List = signatureToPerform.signInfoList.first?.dataToSignBase64List,
+                      let signInfo = signatureToPerform.signInfoList.first,
                       let certificatePayload = certificate.payload as Data?,
                       let payload: [String: String] = try? jsonDecoder.decode([String: String].self, from: certificatePayload),
                       let certificateId = payload[Certificate.payloadExternalCertificateId] else {
                     return
                 }
 
-                InController.sign(hashes: StringsUtils.toDataList(base64StringList: dataToSignBase64List),
+                let algorithm: SignatureAlgorithm = ["PADES-basic", "PADES", "CMS"].contains(signInfo.format) && (signInfo.legacyHashesHex != nil)
+                        ? .sha1WithRsa
+                        : .sha256WithRsa
+
+                InController.sign(hashes: StringsUtils.toDataList(base64StringList: signInfo.dataToSignBase64List),
                                   certificateId: certificateId,
-                                  signatureAlgorithm: .sha256WithRsa)
+                                  signatureAlgorithm: algorithm)
 
             default:
 
