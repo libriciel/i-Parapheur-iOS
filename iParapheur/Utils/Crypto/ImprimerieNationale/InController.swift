@@ -61,7 +61,15 @@ class InController: NSObject {
         let mechanism = (signatureAlgorithm == .sha1WithRsa) ? "rsa" : "sha256rsa"
         var hashesJsonList: [String] = []
         for hash in hashes {
-            let hexDataToSign = CryptoUtils.hex(data: hash)
+
+            var hexDataToSign: String
+            if (signatureAlgorithm == .sha1WithRsa) {
+                hexDataToSign = "\(CryptoUtils.pkcs15Asn1HexPrefix)\(CryptoUtils.hex(data: hash.sha1()))"
+            }
+            else {
+                hexDataToSign = CryptoUtils.hex(data: hash)
+            }
+
             hashesJsonList.append("""
                                       {
                                           "certificateId" : " \(certificateId) ",
@@ -103,6 +111,7 @@ class InController: NSObject {
             return false
         }
 
+        os_log("ParseIntent :: %@", type: .info, url.absoluteString)
         let jsonDecoder = JSONDecoder()
         let croppedUrl = String(url.path.dropFirst())
 
@@ -131,6 +140,8 @@ class InController: NSObject {
             // FIXME : Hardcoded (hopefully a temporary fix)
             inSignedData!.signedData.removeLast(4)
             let signedData = CryptoUtils.data(hex: inSignedData!.signedData)
+            os_log(" --hex>> %@", type: .info, inSignedData!.signedData)
+            os_log(" --b64>> %@", type: .info, signedData.base64EncodedString())
 
             NotificationCenter.default.post(name: .signatureResult,
                                             object: nil,
