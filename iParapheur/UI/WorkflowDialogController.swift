@@ -328,10 +328,9 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
         if let unknownFormat = signaturesToPerform
                 .flatMap({ $0.signInfoList })
-                .map({ $0.format })
-                .filter({ !["PADES-basic", "PADES", "CMS", "xades-env-1.2.2-sha256"].contains($0) })
+                .filter({ (!["PADES-basic", "PADES", "CMS", "xades-env-1.2.2-sha256"].contains($0.format)) && ($0.legacyHashesHex != nil) })
                 .first {
-            ViewUtils.logError(message: "Le type de signature (\(unknownFormat ?? "nil")) n'est pas supporté." as NSString,
+            ViewUtils.logError(message: "Le type de signature (\(unknownFormat.format ?? "nil")) n'est pas supporté." as NSString,
                                title: "Signature impossible")
             return
         }
