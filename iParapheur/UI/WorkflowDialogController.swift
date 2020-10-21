@@ -29,11 +29,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     static let alertViewTagP12Pass = 1
     static let alertViewTagPaperSignature = 2
 
-    @IBOutlet var certificateLayout: UIStackView!
-    @IBOutlet var certificateTableView: UITableView!
-    @IBOutlet var privateAnnotationTextView: UITextView!
-    @IBOutlet var publicAnnotationTextView: UITextView!
-    @IBOutlet var paperSignatureButton: UIButton!
+    @IBOutlet weak var certificateLayout: UIStackView!
+    @IBOutlet weak var certificateTableView: UITableView!
+    @IBOutlet weak var privateAnnotationTextView: UITextView!
+    @IBOutlet weak var publicAnnotationTextView: UITextView!
+    @IBOutlet weak var paperSignatureButton: UIButton!
+    @IBOutlet weak var validateButton: UIBarButtonItem!
 
     var restClient: RestClient?
     var currentAction: Action?
@@ -188,6 +189,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
                 case .sign:
 
+                    self.setUserAction(enabled: false)
                     guard let pubKeyData = selectedCertificate?.publicKey as Data? else {
                         os_log("pubKey cannot be retrieved", type: .error)
                         return
@@ -204,6 +206,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                                 os_log("getSignInfo error:%@", type: .error, error.localizedDescription)
                                                 actionToPerform.error = error
                                                 actionToPerform.isDone = true
+                                                self.setUserAction(enabled: true)
                                             })
 
                 case .visa:
@@ -294,6 +297,12 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
 
     // </editor-fold desc="UIAlertViewDelegate">
+
+
+    func setUserAction(enabled: Bool) {
+        self.certificateTableView.allowsSelection = enabled
+        self.validateButton.isEnabled = enabled
+    }
 
 
     func checkForCertificateListSetup() {
@@ -451,11 +460,13 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                                                     onResponse: {
                                                         actionToPerform.isDone = true
                                                         self.checkAndDismissPopup()
+                                                        self.setUserAction(enabled: true)
                                                     },
                                                     onError: { error in
                                                         actionToPerform.isDone = true
                                                         actionToPerform.error = error
                                                         self.checkAndDismissPopup()
+                                                        self.setUserAction(enabled: true)
                                                     })
             }
         }

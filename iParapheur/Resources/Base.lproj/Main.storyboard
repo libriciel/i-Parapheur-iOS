@@ -855,6 +855,7 @@
                         <outlet property="certificateTableView" destination="yYh-fW-UKe" id="oeM-jv-qUt"/>
                         <outlet property="privateAnnotationTextView" destination="34E-II-hCb" id="Dug-Ey-4Np"/>
                         <outlet property="publicAnnotationTextView" destination="Gh8-sQ-Ge1" id="WSl-TM-tTm"/>
+                        <outlet property="validateButton" destination="Oxg-t6-g9e" id="Yog-za-Tam"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>

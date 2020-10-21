@@ -18,16 +18,18 @@
 
 import Foundation
 
-@objc class DeskListEmptyView: UIView {
-	
-	@IBOutlet var icon: UIImageView!
+class DeskListEmptyView: UIView {
 
-	@objc class func instanceFromNib() -> DeskListEmptyView {
-		
-		let view: DeskListEmptyView = UINib(nibName: "DeskListEmptyView",
-			bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! DeskListEmptyView
-		
-		view.icon.image = view.icon.image!.withRenderingMode(.alwaysTemplate)
-		return view
-	}
+
+    @IBOutlet var icon: UIImageView!
+
+
+    @objc class func instanceFromNib() -> DeskListEmptyView {
+        let view: DeskListEmptyView = UINib(nibName: "DeskListEmptyView",
+                                            bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! DeskListEmptyView
+
+        view.icon.image = view.icon.image!.withRenderingMode(.alwaysTemplate)
+        return view
+    }
+
 }
