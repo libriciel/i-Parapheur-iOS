@@ -756,6 +756,9 @@
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gh8-sQ-Ge1">
                                                 <rect key="frame" x="0.0" y="26.5" width="508" height="145.5"/>
                                                 <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="145.5" id="1Q4-AE-mrx"/>
+                                                </constraints>
                                                 <color key="textColor" systemColor="labelColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -773,6 +776,9 @@
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34E-II-hCb">
                                                 <rect key="frame" x="0.0" y="26.5" width="508" height="145.5"/>
                                                 <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="145.5" id="PTP-cu-H0v"/>
+                                                </constraints>
                                                 <color key="textColor" systemColor="labelColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -837,20 +843,30 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="imV-Yt-eVS">
+                                <rect key="frame" x="0.0" y="56" width="540" height="564"/>
+                                <color key="backgroundColor" systemColor="separatorColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ZsO-T6-OgW" firstAttribute="top" secondItem="imV-Yt-eVS" secondAttribute="bottom" id="0em-el-4lJ"/>
                             <constraint firstItem="XGz-TV-tza" firstAttribute="top" secondItem="QR5-du-X1i" secondAttribute="top" id="1Bc-aN-MXa"/>
                             <constraint firstItem="uTC-XN-dLV" firstAttribute="top" secondItem="XGz-TV-tza" secondAttribute="bottom" constant="16" id="HRU-wa-YeX"/>
+                            <constraint firstAttribute="trailing" secondItem="imV-Yt-eVS" secondAttribute="trailing" id="JI4-Dj-Pty"/>
                             <constraint firstItem="XGz-TV-tza" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leading" id="Ty0-4k-dwu"/>
                             <constraint firstAttribute="trailing" secondItem="XGz-TV-tza" secondAttribute="trailing" id="Wba-DF-12P"/>
+                            <constraint firstItem="imV-Yt-eVS" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leading" id="asc-7W-wsZ"/>
                             <constraint firstItem="uTC-XN-dLV" firstAttribute="leading" secondItem="QR5-du-X1i" secondAttribute="leadingMargin" constant="-4" id="cnL-oq-Wgu"/>
                             <constraint firstItem="ZsO-T6-OgW" firstAttribute="top" secondItem="uTC-XN-dLV" secondAttribute="bottom" constant="16" id="iyB-vT-BKt"/>
                             <constraint firstItem="uTC-XN-dLV" firstAttribute="centerX" secondItem="XGz-TV-tza" secondAttribute="centerX" id="oGe-Yg-Kfe"/>
+                            <constraint firstItem="imV-Yt-eVS" firstAttribute="top" secondItem="XGz-TV-tza" secondAttribute="bottom" id="xV6-6n-3Rv"/>
                         </constraints>
                     </view>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="imV-Yt-eVS" id="6FO-bT-sqY"/>
+                        <outlet property="cancelButton" destination="G4K-dr-tYl" id="qv5-af-hAK"/>
                         <outlet property="certificateLayout" destination="mph-hb-Tib" id="CvP-wv-ikT"/>
                         <outlet property="certificateTableView" destination="yYh-fW-UKe" id="oeM-jv-qUt"/>
                         <outlet property="privateAnnotationTextView" destination="34E-II-hCb" id="Dug-Ey-4Np"/>
@@ -860,7 +876,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="khm-7k-Ygx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1694" y="-767"/>
+            <point key="canvasLocation" x="1693.9453125" y="-767.34992679355776"/>
         </scene>
         <!--Annotation Details Controller-->
         <scene sceneID="vb6-nv-MDg">

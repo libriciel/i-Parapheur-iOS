@@ -35,6 +35,8 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var publicAnnotationTextView: UITextView!
     @IBOutlet weak var paperSignatureButton: UIButton!
     @IBOutlet weak var validateButton: UIBarButtonItem!
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     var restClient: RestClient?
     var currentAction: Action?
@@ -302,6 +304,9 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     func setUserAction(enabled: Bool) {
         self.certificateTableView.allowsSelection = enabled
         self.validateButton.isEnabled = enabled
+        self.cancelButton.isEnabled = enabled
+        enabled ? self.activityIndicator.stopAnimating()
+                : self.activityIndicator.startAnimating()
     }
 
 
