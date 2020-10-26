@@ -224,7 +224,7 @@ class RestClient: NSObject {
                                                               folder: folder,
                                                               bureau: bureau,
                                                               onResponse: { signInfo in
-                                                                  responseCallback?([signInfo])
+                                                                  responseCallback?(signInfo)
                                                               },
                                                               onError: { error in
                                                                   errorCallback?(error)
@@ -242,7 +242,7 @@ class RestClient: NSObject {
     func getSignInfoLegacy(publicKeyBase64: String,
                            folder: Dossier,
                            bureau: NSString,
-                           onResponse responseCallback: ((SignInfo) -> Void)?,
+                           onResponse responseCallback: (([SignInfo]) -> Void)?,
                            onError errorCallback: ((Error) -> Void)?) {
 
         let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
@@ -283,12 +283,12 @@ class RestClient: NSObject {
                                                      signatureFormat: signInfoLegacy.format,
                                                      payload: [:],
                                                      onResponse: { dataToSign in
-                                                         responseCallback?(SignInfo(format: signInfoLegacy.format,
+                                                         responseCallback?([SignInfo(format: signInfoLegacy.format,
                                                                                     documentIds: remoteDocumentList.map({ $0.id }),
                                                                                     dataToSignBase64List: dataToSign.dataToSignBase64List,
                                                                                     signaturesBase64List: [],
                                                                                     signatureDateTime: Double(dataToSign.signatureDateTime),
-                                                                                    legacyHashesHex: signInfoLegacy.hashesToSign))
+                                                                                    legacyHashesHex: signInfoLegacy.hashesToSign)])
                                                      },
                                                      onError: { error in
                                                          errorCallback?(error)
