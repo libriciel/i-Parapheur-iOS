@@ -344,6 +344,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                 .flatMap({ $0.signInfoList })
                 .filter({ (!["PADES-basic", "PADES", "CMS", "xades-env-1.2.2-sha256"].contains($0.format)) && ($0.legacyHashesHex != nil) })
                 .first {
+            self.setUserAction(enabled: true)
             ViewUtils.logError(message: "Le type de signature (\(unknownFormat.format ?? "nil")) n'est pas supporté." as NSString,
                                title: "Signature impossible")
             return
@@ -361,6 +362,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                         .compactMap { $0.dataToSignBase64List.count }
                         .reduce(0, +) > 1) {
 
+                    self.setUserAction(enabled: true)
                     ViewUtils.logError(message: "Le certificat sélectionné ne permet pas la signature multiple (multi-documents ou multi-bordereaux)",
                                        title: "Impossible de signer avec ce certificat")
                     return
