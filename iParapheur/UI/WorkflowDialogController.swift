@@ -28,6 +28,7 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
     static let alertViewTagP12Pass = 1
     static let alertViewTagPaperSignature = 2
+    static var passwordSession: [String: (Date, String)] = [:]
 
     @IBOutlet weak var certificateLayout: UIStackView!
     @IBOutlet weak var certificateTableView: UITableView!
@@ -44,7 +45,6 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
     var actionsToPerform: [ActionToPerform] = []
     var certificateList: [Certificate] = []
     var selectedCertificate: Certificate?
-    var currentPassword: String?
 
 
     // <editor-fold desc="LifeCycle">
@@ -161,25 +161,26 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
         if selectedCertificate?.sourceType == .p12File,
            signaturesToPerform.count > 0 {
 
-            // Asking for the p12 password, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
-            // That will re-call onValidateButtonClicked, and continue...
+            // Password session
 
-            if currentPassword == nil {
+            guard let certificate = selectedCertificate,
+                  let certificateUrl = CryptoUtils.p12LocalUrl(certificate: certificate),
+                  let certificateId = CryptoUtils.p12LocalUrl(certificate: certificate)?.absoluteString,
+                  let currentSession = WorkflowDialogController.passwordSession[certificateId],
+                  currentSession.0 > Date().addingTimeInterval(-30 * 60) else {
+
+                // Asking for the p12 password, to be continued in the UIAlertViewDelegate's alertViewClickedButtonAt
+                // That will re-call onValidateButtonClicked, and continue...
                 displayPasswordAlert()
                 return
             }
 
             // Checking the given password. May interrupt everything if it is wrong
-            else {
-                guard let certificate = selectedCertificate,
-                      let certificateUrl = CryptoUtils.p12LocalUrl(certificate: certificate),
-                      let _ = CryptoUtils.pkcs12ReadKey(path: certificateUrl,
-                                                        password: currentPassword) else {
-                    currentPassword = nil
-                    ViewUtils.logError(message: "Erreur de mot de passe ?",
-                                       title: "Impossible de récupérer le certificat")
-                    return
-                }
+            guard let _ = CryptoUtils.pkcs12ReadKey(path: certificateUrl,
+                                                    password: currentSession.1) else {
+                ViewUtils.logError(message: "Erreur de mot de passe ?",
+                                   title: "Impossible de récupérer le certificat")
+                return
             }
         }
 
@@ -289,9 +290,11 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
             if (buttonIndex == 1) {
 
                 guard let textField = alertView.textField(at: 0),
-                      let givenPassword = textField.text else { return }
+                      let givenPassword = textField.text,
+                      let certificate = selectedCertificate,
+                      let certificateId = CryptoUtils.p12LocalUrl(certificate: certificate)?.absoluteString else { return }
 
-                currentPassword = givenPassword
+                WorkflowDialogController.passwordSession[certificateId] = (Date(), givenPassword)
                 onValidateButtonClicked("")
             }
         }
@@ -376,6 +379,8 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
                       let certificatePayload = certificate.payload as Data?,
                       let payload: [String: String] = try? jsonDecoder.decode([String: String].self, from: certificatePayload),
                       let certificateId = payload[Certificate.payloadExternalCertificateId] else {
+
+                    self.setUserAction(enabled: true)
                     return
                 }
 
@@ -389,14 +394,20 @@ class WorkflowDialogController: UIViewController, UITableViewDataSource, UITable
 
             default:
 
-                guard let pass = currentPassword else { return }
+                guard let certificate = selectedCertificate,
+                      let certificateId = CryptoUtils.p12LocalUrl(certificate: certificate)?.absoluteString,
+                      let currentSession = WorkflowDialogController.passwordSession[certificateId] else {
+
+                    self.setUserAction(enabled: true)
+                    return
+                }
 
                 os_log("signing with p12", type: .debug)
                 for signatureToPerform in signaturesToPerform {
                     CryptoUtils.signWithP12(folderId: signatureToPerform.folder.identifier,
                                             signInfoList: signatureToPerform.signInfoList,
                                             certificate: certificate,
-                                            password: pass)
+                                            password: currentSession.1)
                 }
         }
     }
