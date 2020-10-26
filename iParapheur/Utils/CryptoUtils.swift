@@ -36,7 +36,8 @@ class CryptoUtils: NSObject {
     static public let notifSignedData = "signedData"
     static public let notifSignatureIndex = "signatureIndex"
     static public let notifFolderId = "dossierId"
-    static public let pkcs15Asn1HexPrefix = "3021300906052B0E03021A05000414"
+    static public let pkcs15Asn1Sha1HexPrefix = "3021300906052B0E03021A05000414"
+    static public let pkcs15Asn1Sha256HexPrefix = "3031300d060960864801650304020105000420"
 
     static private let certificateTempSubDirectory = "Certificate_temp/"
     static private let publicKeyBeginCertificate = "-----BEGIN CERTIFICATE-----"

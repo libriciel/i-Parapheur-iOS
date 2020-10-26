@@ -21,7 +21,6 @@ import os
 
 
 extension Notification.Name {
-
     static let imprimerieNationaleCertificateImport = Notification.Name("ImprimerieNationaleCertificateImport")
 }
 
@@ -64,7 +63,7 @@ class InController: NSObject {
 
             var hexDataToSign: String
             if (signatureAlgorithm == .sha1WithRsa) {
-                hexDataToSign = "\(CryptoUtils.pkcs15Asn1HexPrefix)\(CryptoUtils.hex(data: hash.sha1()))"
+                hexDataToSign = "\(CryptoUtils.pkcs15Asn1Sha1HexPrefix)\(CryptoUtils.hex(data: hash.sha1()))"
             }
             else {
                 hexDataToSign = CryptoUtils.hex(data: hash)
