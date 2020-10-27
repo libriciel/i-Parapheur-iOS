@@ -231,7 +231,7 @@ class RestClient: NSObject {
                                                               })
                             }
                             else {
-                                os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode!, error.errorDescription!)
+                                os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode ?? "nil", error.errorDescription ?? "nil")
                                 errorCallback?(error)
                             }
                     }
