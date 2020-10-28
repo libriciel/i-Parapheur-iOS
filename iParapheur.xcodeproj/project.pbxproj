@@ -39,6 +39,7 @@
 		7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */; };
 		7AAE06A623141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAE06A523141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift */; };
 		7AB3CA3420936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */; };
+		7AC8773125374C2300E4574C /* SignInfoLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC8773025374C2300E4574C /* SignInfoLegacy.swift */; };
 		7ACBB9CF2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */; };
 		7ACBB9D120656B4600AF824F /* AnnotationsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */; };
 		7ACBB9D320656C2000AF824F /* Utils_AnnotationsUtils_Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */; };
@@ -49,12 +50,13 @@
 		7AF3389E2077C58A00DE5F61 /* WorkflowDialogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AF3389D2077C58A00DE5F61 /* WorkflowDialogController.swift */; };
 		8819A8F2B05E80AEC0130986 /* Pods_iParapheur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38706E74D4C0E850FCB5D477 /* Pods_iParapheur.framework */; };
 		952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 952E2E541888185E005C8D97 /* ADLFilterViewController.m */; };
+		AB3CA0AC32D7B981B4E5625D /* SignInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAD72D74C194EDB8C06E8 /* SignInfo.swift */; };
 		AB3CA19B2384EE7D819CDCD3 /* SignatureAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */; };
 		AB3CA2BD95BC68DB2A2E45B3 /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA3F16BE8CAC5C63C7C45 /* FolderListCell.swift */; };
-		AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */; };
+		AB3CA31999775EE7740571AD /* FinalSignatureLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAAAE9570830E0526ECE7 /* FinalSignatureLegacy.swift */; };
 		AB3CA33CB50BB60A70BCEC31 /* FilterDialogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAD13B7AB25C7D4BF268E /* FilterDialogController.swift */; };
 		AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA35534D838DA33430B24 /* RemoteDocument.swift */; };
-		AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */; };
+		AB3CA4817C6D6CA90613428F /* SignatureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAE9ADC188D541CCD1F04 /* SignatureRequest.swift */; };
 		AB3CA7308A3156A154E82843 /* FolderListEmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */; };
 		AB3CA80B53CE56DF43BA4543 /* DeskListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CAF227D6274311B6A5386 /* DeskListController.swift */; };
 		AB3CA85D46314ABFF06E0813 /* DeskListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3CA5AE866F78ECE1DB1F06 /* DeskListEmptyView.swift */; };
@@ -150,7 +152,6 @@
 		C5BC179E1A5FCFAE003D8E98 /* ADLRestClientApi3.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC179D1A5FCFAE003D8E98 /* ADLRestClientApi3.m */; };
 		C5BC17A41A5FCFD8003D8E98 /* ADLRestClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */; };
 		C5C0DA381FD38CAB00A993DB /* Models_SignInfo_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C0DA371FD38CAB00A993DB /* Models_SignInfo_Tests.swift */; };
-		C5C0DA3A1FD390BD00A993DB /* SignInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C0DA391FD390BD00A993DB /* SignInfo.swift */; };
 		C5C803581A5D90BA00D54F7D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803571A5D90BA00D54F7D /* Security.framework */; };
 		C5C8035A1A5D90C200D54F7D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C803591A5D90C200D54F7D /* QuartzCore.framework */; };
 		C5C8035C1A5D90CA00D54F7D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C8035B1A5D90CA00D54F7D /* MessageUI.framework */; };
@@ -215,6 +216,7 @@
 		7A8D218F2076126100D9D481 /* Certificate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Certificate+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7AAE06A523141DD7000BDA8F /* UI_WorkflowDialogController_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI_WorkflowDialogController_Tests.swift; sourceTree = "<group>"; };
 		7AB3CA3320936FEA0021B3FC /* Crypto_ImprimerieNationale_InSignedData_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InSignedData_Test.swift; sourceTree = "<group>"; };
+		7AC8773025374C2300E4574C /* SignInfoLegacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInfoLegacy.swift; sourceTree = "<group>"; };
 		7ACBB9CE2062BC4100AF824F /* Crypto_ImprimerieNationale_InController_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Crypto_ImprimerieNationale_InController_Test.swift; sourceTree = "<group>"; };
 		7ACBB9D020656B4600AF824F /* AnnotationsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsUtils.swift; sourceTree = "<group>"; };
 		7ACBB9D220656C2000AF824F /* Utils_AnnotationsUtils_Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils_AnnotationsUtils_Test.swift; sourceTree = "<group>"; };
@@ -243,9 +245,8 @@
 		AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLKeyStore.h; sourceTree = "<group>"; };
 		AB3CA81C79AD314BF8B41525 /* AnnotationDetailsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnnotationDetailsController.swift; sourceTree = "<group>"; };
 		AB3CA979B99BD39185F13A98 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
-		AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteHasher.swift; sourceTree = "<group>"; };
 		AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLKeyStore.m; sourceTree = "<group>"; };
-		AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignature.swift; sourceTree = "<group>"; };
+		AB3CAAAE9570830E0526ECE7 /* FinalSignatureLegacy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinalSignatureLegacy.swift; sourceTree = "<group>"; };
 		AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataToSign.swift; sourceTree = "<group>"; };
 		AB3CABD5DDB33626D5C41D14 /* PdfController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfController.swift; sourceTree = "<group>"; };
 		AB3CAC358CB819E8C757891C /* FolderListEmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FolderListEmptyView.xib; sourceTree = "<group>"; };
@@ -253,7 +254,9 @@
 		AB3CACB09A2782599DBA21A5 /* PdfReaderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PdfReaderController.swift; sourceTree = "<group>"; };
 		AB3CACFE02E5C18E9164442C /* FolderListEmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderListEmptyView.swift; sourceTree = "<group>"; };
 		AB3CAD13B7AB25C7D4BF268E /* FilterDialogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDialogController.swift; sourceTree = "<group>"; };
+		AB3CAD72D74C194EDB8C06E8 /* SignInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInfo.swift; sourceTree = "<group>"; };
 		AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureAlgorithm.swift; sourceTree = "<group>"; };
+		AB3CAE9ADC188D541CCD1F04 /* SignatureRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignatureRequest.swift; sourceTree = "<group>"; };
 		AB3CAF0924513933931E34F9 /* SettingsLicencesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsLicencesTableViewCell.swift; sourceTree = "<group>"; };
 		AB3CAF0EA9B3E741548988B2 /* RGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGAppDelegate.h; sourceTree = "<group>"; };
 		AB3CAF227D6274311B6A5386 /* DeskListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeskListController.swift; sourceTree = "<group>"; };
@@ -339,7 +342,6 @@
 		C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADLRestClient.h; sourceTree = "<group>"; };
 		C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADLRestClient.m; sourceTree = "<group>"; };
 		C5C0DA371FD38CAB00A993DB /* Models_SignInfo_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models_SignInfo_Tests.swift; sourceTree = "<group>"; };
-		C5C0DA391FD390BD00A993DB /* SignInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInfo.swift; sourceTree = "<group>"; };
 		C5C803551A5D90AF00D54F7D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C5C803571A5D90BA00D54F7D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C5C803591A5D90C200D54F7D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -417,12 +419,13 @@
 				7A0FC7AC201651A6002837CE /* Filter+CoreDataProperties.swift */,
 				64F341F438EA838A05990950 /* ParapheurType.swift */,
 				64F342B900CD2EE0E4AA64DD /* State.swift */,
-				C5C0DA391FD390BD00A993DB /* SignInfo.swift */,
 				AB3CABA1FCCB7734BD97A0AB /* DataToSign.swift */,
-				AB3CAAAE9570830E0526ECE7 /* FinalSignature.swift */,
+				AB3CAAAE9570830E0526ECE7 /* FinalSignatureLegacy.swift */,
 				AB3CADCDDE55BB64731E0246 /* SignatureAlgorithm.swift */,
 				AB3CA35534D838DA33430B24 /* RemoteDocument.swift */,
 				AB3CA20B6CD290FE65CBEB5F /* ActionToPerform.swift */,
+				AB3CAD72D74C194EDB8C06E8 /* SignInfo.swift */,
+				7AC8773025374C2300E4574C /* SignInfoLegacy.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -465,9 +468,16 @@
 				AB3CA8F47486E9DAF18C2252 /* ImprimerieNationale */,
 				AB3CA80E12B9505251CFCB20 /* ADLKeyStore.h */,
 				AB3CA9C7E2FDEA56FCB70221 /* ADLKeyStore.m */,
-				AB3CA9C61E798C37BC01E894 /* RemoteHasher.swift */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		AB3CACC2D328828A4F9D88BD /* request */ = {
+			isa = PBXGroup;
+			children = (
+				AB3CAE9ADC188D541CCD1F04 /* SignatureRequest.swift */,
+			);
+			path = request;
 			sourceTree = "<group>";
 		};
 		AB3CAE8FB95F5B0AA7FEC012 /* DeskList */ = {
@@ -635,6 +645,7 @@
 				C5BC17A31A5FCFD8003D8E98 /* ADLRestClient.m */,
 				C5BC17A21A5FCFD8003D8E98 /* ADLRestClient.h */,
 				64F348FF8B3A453ABB77C011 /* RestClient.swift */,
+				AB3CACC2D328828A4F9D88BD /* request */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -788,7 +799,7 @@
 			attributes = {
 				CLASSPREFIX = RG;
 				LastSwiftUpdateCheck = 1030;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					B4E5EC9D153AF65F00BD514D = {
 						DevelopmentTeam = WG6RXYLAQX;
@@ -999,7 +1010,6 @@
 				C50FC42B1DCCDA7400887B8D /* SettingsTableViewCell.swift in Sources */,
 				7A8D21902076126100D9D481 /* Certificate+CoreDataClass.swift in Sources */,
 				C5CED42F1FC5C67700FC15DD /* SettingsFiltersEmptyView.swift in Sources */,
-				C5C0DA3A1FD390BD00A993DB /* SignInfo.swift in Sources */,
 				C5065EDD1D8157FF008FE301 /* SettingsAboutController.swift in Sources */,
 				7A81712420765E2700C11F4C /* CertificateType.swift in Sources */,
 				C5B8745C1DA6479700909F80 /* SettingsTableViewHeaderFooterView.swift in Sources */,
@@ -1016,6 +1026,7 @@
 				7A6FDB60203E8E1B00F5252E /* StringsUtils.swift in Sources */,
 				952E2E551888185E005C8D97 /* ADLFilterViewController.m in Sources */,
 				1434F672168DFF98000C115D /* KeyStore.xcdatamodeld in Sources */,
+				7AC8773125374C2300E4574C /* SignInfoLegacy.swift in Sources */,
 				7AF3389E2077C58A00DE5F61 /* WorkflowDialogController.swift in Sources */,
 				1434F681168E087A000C115D /* ADLCertificateAlertView.m in Sources */,
 				7A8D21912076126100D9D481 /* Certificate+CoreDataProperties.swift in Sources */,
@@ -1030,12 +1041,11 @@
 				64F34C7DE0EEAF5125C6D9AE /* CryptoUtils.swift in Sources */,
 				AB3CA8A1EB69EA638242E7E8 /* Account+CoreDataClass.swift in Sources */,
 				AB3CAB8ADEB4CF2C2B7E212D /* DataToSign.swift in Sources */,
-				AB3CA31999775EE7740571AD /* FinalSignature.swift in Sources */,
+				AB3CA31999775EE7740571AD /* FinalSignatureLegacy.swift in Sources */,
 				AB3CADCFE689AEF2A833BEF8 /* InController.swift in Sources */,
 				AB3CADF64198B487FD53B30F /* InTokenData.swift in Sources */,
 				AB3CAD3E9A26BC332C8524F2 /* InSignedData.swift in Sources */,
 				AB3CAB1DB8D277DC320ABC6A /* ADLKeyStore.m in Sources */,
-				AB3CA50291E5721AF6D7ADBD /* RemoteHasher.swift in Sources */,
 				AB3CA19B2384EE7D819CDCD3 /* SignatureAlgorithm.swift in Sources */,
 				AB3CA4345F55AF0DD5488798 /* RemoteDocument.swift in Sources */,
 				AB3CAA8ABACC1BFC62256D8E /* ColorizedRefreshControl.swift in Sources */,
@@ -1056,6 +1066,8 @@
 				AB3CAF7D43A4A1B275659B5E /* ActionToPerform.swift in Sources */,
 				AB3CAEC12541100C9611D719 /* SettingsLicencesTableViewCell.swift in Sources */,
 				AB3CA33CB50BB60A70BCEC31 /* FilterDialogController.swift in Sources */,
+				AB3CA0AC32D7B981B4E5625D /* SignInfo.swift in Sources */,
+				AB3CA4817C6D6CA90613428F /* SignatureRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1145,6 +1157,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1171,7 +1184,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1198,6 +1211,7 @@
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1216,7 +1230,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
@@ -1238,7 +1252,8 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1.7.2;
+				CURRENT_PROJECT_VERSION = 1.8.0;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1246,13 +1261,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iParapheur/iParapheur-Prefix.pch";
 				INFOPLIST_FILE = "iParapheur/iParapheur-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "coop.adullact-projet.iparapheur";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1278,7 +1293,8 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1.7.2;
+				CURRENT_PROJECT_VERSION = 1.8.0;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1286,13 +1302,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iParapheur/iParapheur-Prefix.pch";
 				INFOPLIST_FILE = "iParapheur/iParapheur-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
 				);
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.8.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "coop.adullact-projet.iparapheur";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1327,7 +1343,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = iParapheurTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ADL.iParapheurTests;
@@ -1362,7 +1378,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = iParapheurTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = ADL.iParapheurTests;

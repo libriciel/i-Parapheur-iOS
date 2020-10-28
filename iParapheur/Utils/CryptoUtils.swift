@@ -1,36 +1,19 @@
 /*
- * Copyright 2012-2019, Libriciel SCOP.
+ * i-Parapheur iOS
+ * Copyright (C) 2012-2020 Libriciel-SCOP
  *
- * contact@libriciel.coop
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This software is a computer program whose purpose is to manage and sign
- * digital documents on an authorized iParapheur.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import Foundation
@@ -53,7 +36,7 @@ class CryptoUtils: NSObject {
     static public let notifSignedData = "signedData"
     static public let notifSignatureIndex = "signatureIndex"
     static public let notifFolderId = "dossierId"
-    static public let pkcs15Asn1HexPrefix = "3021300906052B0E03021A05000414"
+    static public let pkcs15Asn1Sha1HexPrefix = "3021300906052B0E03021A05000414"
 
     static private let certificateTempSubDirectory = "Certificate_temp/"
     static private let publicKeyBeginCertificate = "-----BEGIN CERTIFICATE-----"
@@ -271,11 +254,15 @@ class CryptoUtils: NSObject {
     }
 
 
-    class func signWithP12(hasher: RemoteHasher,
+    class func signWithP12(folderId: String,
+                           signInfoList: [SignInfo],
                            certificate: Certificate,
                            password: String) {
 
+        os_log("signWithP12...", type: .info)
+
         guard let p12Url = p12LocalUrl(certificate: certificate) else {
+            os_log("signWithP12 cannot open certificate", type: .error)
             ViewUtils.logError(message: "Impossible de récupérer le certificat",
                                title: "Erreur à la signature")
             return
@@ -283,86 +270,38 @@ class CryptoUtils: NSObject {
 
         // Building signature response
 
-        hasher.generateHashToSign(
-                onResponse: {
-                    (result: DataToSign) in
+        do {
+            for signInfo in signInfoList {
+                for dataToSign in signInfo.dataToSignBase64List {
+                    os_log("hashToSign:%@", type: .info, dataToSign)
 
-                    var signedHashList: [Data] = []
-                    let dataToSignList: [Data] = StringsUtils.toDataList(base64StringList: result.dataToSignBase64List)
-                    do {
-                        for dataToSign in dataToSignList {
+                    let algorithm: SignatureAlgorithm = ["PADES-basic", "PADES", "CMS"].contains(signInfo.format) && (signInfo.legacyHashesHex != nil)
+                            ? .sha1WithRsa
+                            : .sha256WithRsa
 
-                            let data = hasher.signatureAlgorithm == .sha1WithRsa ? dataToSign.sha1() : dataToSign.sha256()
-                            var signedHash = try CryptoUtils.rsaSign(data: data as NSData,
-                                                                     keyFileUrl: p12Url,
-                                                                     signatureAlgorithm: hasher.signatureAlgorithm,
-                                                                     password: password)
+                    var signedHash = try CryptoUtils.rsaSign(data: NSData(base64Encoded: dataToSign)!,
+                                                             keyFileUrl: p12Url,
+                                                             signatureAlgorithm: algorithm,
+                                                             password: password)
 
-                            signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
-                            signedHashList.append(Data(base64Encoded: signedHash)!)
-                        }
-
-                        NotificationCenter.default.post(name: .signatureResult,
-                                                        object: nil,
-                                                        userInfo: [
-                                                            notifSignedData: signedHashList,
-                                                            notifFolderId: hasher.dossier.identifier
-                                                        ])
-                    } catch let error {
-                        ViewUtils.logError(message: error.localizedDescription as NSString,
-                                           title: "Erreur à la signature")
-                    }
-                },
-                onError: {
-                    (error: Error) in
-                    ViewUtils.logError(message: "Vérifier le réseau",
-                                       title: "Erreur à la récupération du hash à signer")
-                })
-    }
-
-
-    class func generateHasherWrappers(signInfo: SignInfo,
-                                      dossier: Dossier,
-                                      certificate: Certificate,
-                                      restClient: RestClient) throws -> RemoteHasher {
-
-        for hashIndex in 0..<signInfo.hashesToSign.count {
-            switch signInfo.format {
-
-                case "xades":
-
-                    throw NSError(domain: "Ce format (\(signInfo.format)) est obsolète", code: 0, userInfo: nil)
-
-
-                case "CMS",
-                     "PADES",
-                     "PADES-basic":
-
-                    let hasher = RemoteHasher(signInfo: signInfo,
-                                              publicKeyBase64: certificate.publicKey!.base64EncodedString(),
-                                              dossier: dossier,
-                                              restClient: restClient,
-                                              signatureAlgorithm: .sha1WithRsa)
-
-                    return hasher
-
-
-                case "xades-env-1.2.2-sha256":
-
-                    let hasher = RemoteHasher(signInfo: signInfo,
-                                              publicKeyBase64: certificate.publicKey!.base64EncodedString(),
-                                              dossier: dossier,
-                                              restClient: restClient,
-                                              signatureAlgorithm: .sha256WithRsa)
-
-                    return hasher
-
-                default:
-                    print("Ce format (\(signInfo.format)) n'est pas supporté")
+                    os_log("... signed !! algo:%d, hash:%@ sig:%@", type: .info, algorithm.rawValue, dataToSign, signedHash)
+                    signedHash = signedHash.replacingOccurrences(of: "\n", with: "")
+                    signInfo.signaturesBase64List.append(signedHash)
+                }
             }
-        }
 
-        throw NSError(domain: "Ce format (\(signInfo.format)) n'est pas supporté", code: 0, userInfo: nil)
+            NotificationCenter.default.post(name: .signatureResult,
+                                            object: nil,
+                                            userInfo: [
+                                                notifSignedData: signInfoList,
+                                                notifFolderId: folderId
+                                            ])
+
+        } catch let error {
+            os_log("signWithP12 error:%@", type: .error, error.localizedDescription)
+            ViewUtils.logError(message: error.localizedDescription as NSString,
+                               title: "Erreur à la signature")
+        }
     }
 
 
@@ -379,9 +318,11 @@ class CryptoUtils: NSObject {
         guard let result = CryptoUtils.rsaSign(data: data,
                                                signatureAlgorithm: signatureAlgorithm,
                                                privateKey: secKey) else {
+            os_log("rsaSign error on signature")
             throw NSError(domain: "Erreur inconnue", code: 0, userInfo: nil)
         }
 
+        os_log("rsaSign : %@", type: .info, result)
         return result
     }
 
@@ -390,20 +331,27 @@ class CryptoUtils: NSObject {
                        signatureAlgorithm: SignatureAlgorithm,
                        privateKey: SecKey!) -> String? {
 
-        let signedData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
-        var signedDataLength = signedData.length
+        let keyData = NSMutableData(length: SecKeyGetBlockSize(privateKey))!
+        var keyDataLength = keyData.length
+
+        os_log("Adrien == algorithm :: %@", type: .info, signatureAlgorithm == .sha1WithRsa ? "sha1" : "sha256")
+
+        var hashedData = data as Data
+        hashedData = (signatureAlgorithm == .sha1WithRsa) ? hashedData.sha1() : hashedData.sha256()
+        let hashedNsData = hashedData as NSData
+        let padding = (signatureAlgorithm == .sha1WithRsa) ? SecPadding.PKCS1SHA1 : SecPadding.PKCS1SHA256
 
         let err: OSStatus = SecKeyRawSign(privateKey,
-                                          signatureAlgorithm == SignatureAlgorithm.sha1WithRsa ? SecPadding.PKCS1SHA1 : SecPadding.PKCS1SHA256,
-                                          data.bytes.assumingMemoryBound(to: UInt8.self),
-                                          data.length,
-                                          signedData.mutableBytes.assumingMemoryBound(to: UInt8.self),
-                                          &signedDataLength)
+                                          padding,
+                                          hashedNsData.bytes.assumingMemoryBound(to: UInt8.self),
+                                          hashedNsData.length,
+                                          keyData.mutableBytes.assumingMemoryBound(to: UInt8.self),
+                                          &keyDataLength)
 
         // Result
 
         if (err == errSecSuccess) {
-            return signedData.base64EncodedString()
+            return keyData.base64EncodedString()
         }
 
         return nil

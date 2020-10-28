@@ -1,36 +1,19 @@
 /*
- * Copyright 2012-2019, Libriciel SCOP.
+ * i-Parapheur iOS
+ * Copyright (C) 2012-2020 Libriciel-SCOP
  *
- * contact@libriciel.coop
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This software is a computer program whose purpose is to manage and sign
- * digital documents on an authorized iParapheur.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import Foundation
@@ -40,7 +23,7 @@ import os
 
 class RestClient: NSObject {
 
-    var manager: Alamofire.SessionManager
+    var manager: Alamofire.Session
     @objc var serverUrl: NSURL
 
 
@@ -63,10 +46,10 @@ class RestClient: NSObject {
         // Create custom manager
 
         let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders
+        configuration.httpAdditionalHeaders = HTTPHeaders.default.dictionary
         configuration.httpAdditionalHeaders!["Authorization"] = "Basic \(loginHash)"
 
-        manager = Alamofire.SessionManager(configuration: configuration)
+        manager = Alamofire.Session(configuration: configuration)
     }
 
 
@@ -89,7 +72,7 @@ class RestClient: NSObject {
         //			- then catch every char but "/"									([^\/]*)
         //			- then, ignore everything after the first "/" (if exists)		(?:\/.*)*$
         let regex: NSRegularExpression = try! NSRegularExpression(pattern: "^(?:.*:\\/\\/)*(?:m[-\\.])*([^\\/]*)(?:\\/.*)*$",
-                                                                  options: NSRegularExpression.Options.caseInsensitive)
+                                                                  options: .caseInsensitive)
 
         let match: NSTextCheckingResult? = regex.firstMatch(in: urlFixed,
                                                             options: NSRegularExpression.MatchingOptions.anchored,
@@ -171,7 +154,7 @@ class RestClient: NSObject {
         // Cleanup
 
         try? FileManager.default.removeItem(at: filePathUrl)
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+        let destination: DownloadRequest.Destination = { _, _ in
             (filePathUrl, [.createIntermediateDirectories, .removePreviousFile])
         }
 
@@ -186,14 +169,146 @@ class RestClient: NSObject {
     }
 
 
-    func getDataToSign(remoteDocumentList: [RemoteDocument],
-                       publicKeyBase64: String,
-                       signatureFormat: String,
-                       payload: [String: String],
-                       onResponse responseCallback: ((DataToSign) -> Void)?,
-                       onError errorCallback: ((Error) -> Void)?) {
+    func getSignInfo(publicKeyBase64: String,
+                     folder: Dossier,
+                     bureau: NSString,
+                     onResponse responseCallback: (([SignInfo]) -> Void)?,
+                     onError errorCallback: ((Error) -> Void)?) {
 
-        os_log("getDataToSign called", type: .debug)
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/signature/\(bureau)/\(folder.identifier)"
+
+        // Parameters
+
+        let bodyJson: [String: Any] = [
+            "certificate": publicKeyBase64,
+            "index": 0
+        ]
+
+        guard let bodyData = try? JSONSerialization.data(withJSONObject: bodyJson, options: [.withoutEscapingSlashes, .prettyPrinted]) else { return }
+        os_log("getSignInfo url:%@", type: .debug, getSignInfoUrl)
+        os_log("getSignInfo body:%@", type: .debug, String(data: bodyData, encoding: .utf8)!)
+
+        // Request
+
+        var request = URLRequest(url: URL(string: getSignInfoUrl)!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = bodyData
+
+        manager.request(request)
+                .validate()
+                .responseString { response in
+
+                    switch response.result {
+
+                        case .success(let value):
+
+                            os_log("getSignInfo OK value:%@", type: .info, response.value!)
+                            let jsonDecoder = JSONDecoder()
+
+                            guard let getSignInfoJsonData = value.data(using: .utf8),
+                                  let signInfoList = try? jsonDecoder.decode([SignInfo].self, from: getSignInfoJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            responseCallback?(signInfoList)
+
+                        case .failure(let error):
+
+                            // Special case
+                            // TODO : Should delete this when IP 4.6 support will be dropped.
+                            if (error.responseCode == 404) {
+                                os_log("Fallback to 4.6- methods", type: .info)
+                                return self.getSignInfoLegacy(publicKeyBase64: publicKeyBase64,
+                                                              folder: folder,
+                                                              bureau: bureau,
+                                                              onResponse: { signInfo in
+                                                                  responseCallback?(signInfo)
+                                                              },
+                                                              onError: { error in
+                                                                  errorCallback?(error)
+                                                              })
+                            }
+                            else {
+                                os_log("getSignInfo fail ! %d %@", type: .error, error.responseCode ?? "nil", error.errorDescription ?? "nil")
+                                errorCallback?(error)
+                            }
+                    }
+                }
+    }
+
+
+    func getSignInfoLegacy(publicKeyBase64: String,
+                           folder: Dossier,
+                           bureau: NSString,
+                           onResponse responseCallback: (([SignInfo]) -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
+
+        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
+        let parameters: Parameters = ["bureauCourant": bureau]
+
+        manager.request(getSignInfoUrl, parameters: parameters)
+                .validate()
+                .responseString { response in
+
+                    switch response.result {
+
+                        case .success:
+
+                            os_log("getSignInfoLegacy OK value:%@", type: .info, response.value!)
+                            guard let getSignInfoJsonData = response.value?.data(using: .utf8),
+                                  let signInfoWrapper = try? JSONDecoder().decode([String: SignInfoLegacy].self, from: getSignInfoJsonData),
+                                  let signInfoLegacy = signInfoWrapper.values.first else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            var remoteDocumentList: [RemoteDocument] = []
+                            for i in 0..<signInfoLegacy.hashesToSign.count {
+
+                                let hashToSignData: Data = signInfoLegacy.hashesToSign[i]
+                                let hashToSignBase64 = hashToSignData.base64EncodedString()
+                                let remoteDocumentId = (signInfoLegacy.pesIds.count > 0) ? signInfoLegacy.pesIds[i] : folder.documents[i].identifier
+
+                                os_log("hashBase64:%@", type: .info, hashToSignData.base64EncodedString())
+
+                                remoteDocumentList.append(RemoteDocument(id: remoteDocumentId,
+                                                                         digestBase64: hashToSignBase64,
+                                                                         signatureBase64: nil))
+                            }
+
+                            self.getDataToSignLegacy(remoteDocumentList: remoteDocumentList,
+                                                     publicKeyBase64: publicKeyBase64,
+                                                     signatureFormat: signInfoLegacy.format,
+                                                     payload: [:],
+                                                     onResponse: { dataToSign in
+                                                         responseCallback?([SignInfo(format: signInfoLegacy.format,
+                                                                                    documentIds: remoteDocumentList.map({ $0.id }),
+                                                                                    dataToSignBase64List: dataToSign.dataToSignBase64List,
+                                                                                    signaturesBase64List: [],
+                                                                                    signatureDateTime: Double(dataToSign.signatureDateTime),
+                                                                                    legacyHashesHex: signInfoLegacy.hashesToSign)])
+                                                     },
+                                                     onError: { error in
+                                                         errorCallback?(error)
+                                                     })
+
+                        case .failure(let error):
+                            errorCallback?(error)
+                    }
+                }
+    }
+
+
+    func getDataToSignLegacy(remoteDocumentList: [RemoteDocument],
+                             publicKeyBase64: String,
+                             signatureFormat: String,
+                             payload: [String: String],
+                             onResponse responseCallback: ((DataToSign) -> Void)?,
+                             onError errorCallback: ((Error) -> Void)?) {
+
+        os_log("getDataToSignLegacy called", type: .debug)
 
         let getDataToSignUrl = "\(serverUrl.absoluteString!)/crypto/api/generateDataToSign"
 
@@ -227,7 +342,7 @@ class RestClient: NSObject {
                 .validate()
                 .responseString { response in
 
-                    os_log("getDataToSign response...", type: .debug)
+                    os_log("getDataToSign response... %@", type: .debug, response.value ?? "nil")
                     switch response.result {
 
                         case .success:
@@ -238,7 +353,6 @@ class RestClient: NSObject {
                                 return
                             }
 
-                            os_log("getDataToSign response : %@", type: .debug, dataToSign)
                             responseCallback?(dataToSign)
 
                         case .failure(let error):
@@ -249,75 +363,12 @@ class RestClient: NSObject {
     }
 
 
-    func getFinalSignature(remoteDocumentList: [RemoteDocument],
-                           publicKeyBase64: String,
-                           signatureDateTime: Int,
-                           signatureFormat: String,
-                           payload: [String: String],
-                           onResponse responseCallback: (([Data]) -> Void)?,
-                           onError errorCallback: ((Error) -> Void)?) {
-
-        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
-
-        // Parameters
-
-        // Alamofire can't stand Encodable object in its Parameters.
-        // We have to either re-create the full request, with a JSON raw data body
-        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
-        //
-        // ... Yep, I chose the second.
-        //
-        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
-
-        var remoteDocumentMapList: [[String: String]] = []
-        for remoteDocument in remoteDocumentList {
-            remoteDocumentMapList.append(["id": remoteDocument.id,
-                                          "digestBase64": remoteDocument.digestBase64,
-                                          "signatureBase64": remoteDocument.signatureBase64!])
-        }
-
-        let parameters: Parameters = [
-            "remoteDocumentList": remoteDocumentMapList,
-            "signatureFormat": signatureFormat,
-            "publicKeyBase64": publicKeyBase64,
-            "signatureDateTime": signatureDateTime,
-            "payload": payload
-        ]
-
-        // Request
-
-        os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
-        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-                .validate()
-                .responseString { response in
-
-                    switch response.result {
-
-                        case .success:
-
-                            let jsonDecoder = JSONDecoder()
-                            guard let responseJsonData = response.value?.data(using: .utf8),
-                                  let finalSignature = try? jsonDecoder.decode(FinalSignature.self,
-                                                                               from: responseJsonData) else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
-                                return
-                            }
-
-                            responseCallback?(StringsUtils.toDataList(base64StringList: finalSignature.signatureResultBase64List))
-
-                        case .failure(let error):
-                            errorCallback?(error)
-                    }
-                }
-    }
-
-
     func getDesks(onResponse responseCallback: (([Bureau]) -> Void)?,
                   onError errorCallback: ((Error) -> Void)?) {
 
-        let getBureauxUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
+        let getDesksUrl = "\(serverUrl.absoluteString!)/parapheur/bureaux"
 
-        manager.request(getBureauxUrl)
+        manager.request(getDesksUrl)
                 .validate()
                 .responseString { response in
                     switch response.result {
@@ -325,14 +376,14 @@ class RestClient: NSObject {
                         case .success:
 
                             let jsonDecoder = JSONDecoder()
-                            guard let getBureauxJsonData = response.value?.data(using: .utf8),
-                                  let bureaux = try? jsonDecoder.decode([Bureau].self,
-                                                                        from: getBureauxJsonData) else {
+                            guard let getDeskJsonData = response.value?.data(using: .utf8),
+                                  let desks = try? jsonDecoder.decode([Bureau].self,
+                                                                      from: getDeskJsonData) else {
                                 errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
                                 return
                             }
 
-                            responseCallback?(bureaux)
+                            responseCallback?(desks)
 
                         case .failure(let error):
                             errorCallback?(error as NSError)
@@ -595,65 +646,168 @@ class RestClient: NSObject {
     }
 
 
-    @objc func getSignInfo(folder: Dossier,
-                           bureau: NSString,
-                           onResponse responseCallback: ((SignInfo) -> Void)?,
-                           onError errorCallback: ((NSError) -> Void)?) {
+    func signDossier(dossierId: String,
+                     bureauId: String,
+                     publicAnnotation: String?,
+                     privateAnnotation: String?,
+                     publicKeyBase64: String,
+                     signatures: [String],
+                     signaturesTimes: [Double],
+                     responseCallback: ((NSNumber) -> Void)?,
+                     errorCallback: ((Error) -> Void)?) {
 
-        let getSignInfoUrl = "\(serverUrl.absoluteString!)/parapheur/dossiers/\(folder.identifier)/getSignInfo"
+        let signatureRequest = SignatureRequest(
+                bureauCourant: bureauId,
+                certificate: publicKeyBase64,
+                annotPriv: privateAnnotation,
+                annotPub: publicAnnotation,
+                signatureBase64List: signatures,
+                signatureTimeList: signaturesTimes
+        )
 
-        // Parameters
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.outputFormatting = [.withoutEscapingSlashes, .prettyPrinted]
+        guard let requestBodyData = try? jsonEncoder.encode(signatureRequest) else {
+            errorCallback?(RuntimeError("Impossible de serializer la requête"))
+            return
+        }
 
-        let parameters: Parameters = ["bureauCourant": bureau]
+        os_log("SignDossier with body:%@", type: .info, String(data: requestBodyData, encoding: .utf8) ?? "nil")
 
-        // Request
+        // Send request
 
-        manager.request(getSignInfoUrl, parameters: parameters)
+        var request = URLRequest(url: URL(string: "\(serverUrl.absoluteString!)/parapheur/dossiers/\(dossierId)/signature")!)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = requestBodyData
+
+        manager.request(request)
                 .validate()
                 .responseString { response in
 
+                    os_log("signDossier response:%@", type: .info, response.value ?? "nil")
                     switch response.result {
 
                         case .success:
-                            let jsonDecoder = JSONDecoder()
-
-                            guard let getSignInfoJsonData = response.result.value?.data(using: .utf8),
-                                  let signInfoWrapper = try? jsonDecoder.decode([String: SignInfo].self, from: getSignInfoJsonData),
-                                  let data = signInfoWrapper["signatureInformations"] else {
-                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur") as NSError)
-                                return
-                            }
-
-                            responseCallback?(data)
+                            responseCallback?(1)
 
                         case .failure(let error):
-                            errorCallback?(error as NSError)
+                            os_log("signDossier error:%@", type: .error, error.localizedDescription)
+                            errorCallback?(error)
                     }
                 }
     }
 
 
-    func signDossier(dossierId: String,
-                     bureauId: String,
-                     publicAnnotation: String?,
-                     privateAnnotation: String?,
-                     signature: String,
-                     responseCallback: ((NSNumber) -> Void)?,
-                     errorCallback: ((Error) -> Void)?) {
+    func getFinalSignatureLegacy(deskId: String,
+                                 folderId: String,
+                                 publicKeyBase64: String,
+                                 publicAnnotation: String,
+                                 privateAnnotation: String,
+                                 signInfo: SignInfo,
+                                 onResponse responseCallback: (() -> Void)?,
+                                 onError errorCallback: ((Error) -> Void)?) {
+
+        let getFinalSignatureUrl = "\(serverUrl.absoluteString!)/crypto/api/generateSignature"
+
+        // Parameters
+
+        // Alamofire can't stand Encodable object in its Parameters.
+        // We have to either re-create the full request, with a JSON raw data body
+        // Or just create a [String:String] map list in a loop, and add the 2 or 3 parameters.
+        //
+        // ... Yep, I chose the second.
+        //
+        // RemoteObject is still an Encodable object, if in any future date, AlamoFire supports it.
+
+        var remoteDocumentMapList: [[String: String]] = []
+        for i in 0..<signInfo.dataToSignBase64List.count {
+            remoteDocumentMapList.append(["id": signInfo.documentIds[i],
+                                          "digestBase64": signInfo.legacyHashesHex!
+                                                  .map({ $0.base64EncodedString() })
+                                                  .joined(separator: ","),
+                                          "signatureBase64": signInfo.signaturesBase64List[i]])
+        }
+
+        let parameters: Parameters = [
+            "remoteDocumentList": remoteDocumentMapList,
+            "signatureFormat": signInfo.format as Any,
+            "publicKeyBase64": publicKeyBase64,
+            "signatureDateTime": signInfo.signatureDateTime as Any,
+            "payload": [:]
+        ]
+
+        // Request
+
+        os_log("getFinalSignature request sent with parameters %@", type: .debug, parameters)
+        manager.request(getFinalSignatureUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
+                .responseString { response in
+
+                    os_log("getFinalSignatureLegacy response... %@", type: .debug, response.value ?? "nil")
+                    switch response.result {
+
+                        case .success:
+
+                            let jsonDecoder = JSONDecoder()
+                            guard let responseJsonData = response.value?.data(using: .utf8),
+                                  let finalSignature = try? jsonDecoder.decode(FinalSignatureLegacy.self,
+                                                                               from: responseJsonData) else {
+                                errorCallback?(RuntimeError("Impossible de lire la réponse du serveur"))
+                                return
+                            }
+
+                            // Sending back
+
+                            var argumentDictionary: [String: String] = [:]
+                            argumentDictionary["bureauCourant"] = deskId
+                            argumentDictionary["annotPriv"] = privateAnnotation
+                            argumentDictionary["annotPub"] = publicAnnotation
+                            argumentDictionary["signature"] = finalSignature.signatureResultBase64List.joined(separator: ",")
+
+                            // Send request
+
+                            self.sendSimpleAction(type: 1,
+                                                  url: "/parapheur/dossiers/\(folderId)/signature",
+                                                  args: argumentDictionary,
+                                                  onResponse: { id in
+                                                      responseCallback?()
+                                                  },
+                                                  onError: { error in
+                                                      errorCallback?(error)
+                                                  })
+
+                        case .failure(let error):
+                            errorCallback?(error)
+                    }
+                }
+    }
+
+
+    func signDossierLegacy(deskId: String,
+                           folderId: String,
+                           publicKeyBase64: String,
+                           publicAnnotation: String,
+                           privateAnnotation: String,
+                           signInfo: SignInfo,
+                           onResponse responseCallback: (() -> Void)?,
+                           onError errorCallback: ((Error) -> Void)?) {
+
+        // Sending back
 
         var argumentDictionary: [String: String] = [:]
-        argumentDictionary["bureauCourant"] = bureauId
+        argumentDictionary["bureauCourant"] = deskId
         argumentDictionary["annotPriv"] = privateAnnotation
         argumentDictionary["annotPub"] = publicAnnotation
-        argumentDictionary["signature"] = signature
+        argumentDictionary["signature"] = signInfo.signaturesBase64List.joined(separator: ",")
 
         // Send request
 
         self.sendSimpleAction(type: 1,
-                              url: "/parapheur/dossiers/\(dossierId)/signature",
+                              url: "/parapheur/dossiers/\(folderId)/signature",
                               args: argumentDictionary,
                               onResponse: { id in
-                                  responseCallback?(1)
+                                  responseCallback?()
                               },
                               onError: { error in
                                   errorCallback?(error)
@@ -781,7 +935,7 @@ class RestClient: NSObject {
         }
 
         // Send request. Using directly JSON in the body.
-        // Casting/passing it through a Parameter object doen't work well.
+        // Casting/passing it through a Parameter object doesn't work well.
 
         let annotationUrlSuffix = RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId)
         let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
@@ -832,7 +986,7 @@ class RestClient: NSObject {
         }
 
         // Send request. Using directly JSON in the body.
-        // Casting/passing it through a Parameter object doen't work well.
+        // Casting/passing it through a Parameter object doesn't work well.
 
         let annotationUrlSuffix = String(format: "%@/%@", RestClient.getAnnotationsUrl(folderId: folderId, documentId: documentId), annotation.identifier)
         let annotationUrl = "\(serverUrl.absoluteString!)\(annotationUrlSuffix)"
@@ -963,7 +1117,7 @@ class RestClient: NSObject {
         let downloadFileUrl = "\(serverUrl)/api/node/workspace/SpacesStore/\(document.identifier)/content\(pdfSuffix)"
         os_log("Document downloadUrl:%@", downloadFileUrl)
 
-        let destination: DownloadRequest.DownloadFileDestination = { _, _ in
+        let destination: DownloadRequest.Destination = { _, _ in
             (filePath as URL, [.createIntermediateDirectories, .removePreviousFile])
         }
 
@@ -979,15 +1133,13 @@ class RestClient: NSObject {
         manager.download(downloadFileUrl, to: destination)
                 .validate()
                 .response { response in
+                    switch response.result {
 
-                    if let responseError = response.error {
-                        errorCallback?(responseError)
-                    }
-                    //	else if (response.error.code != -999) { // CFNetworkErrors.kCFURLErrorCancelled
-                    //		errorCallback?(response.error)
-                    //	}
-                    else {
-                        responseCallback?(response.destinationURL!.path)
+                        case .success(let value):
+                            responseCallback?(value!.path)
+
+                        case .failure(let error):
+                            errorCallback?(error)
                     }
                 }
     }
